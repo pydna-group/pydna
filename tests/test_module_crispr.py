@@ -23,14 +23,10 @@ def test_crispr():
     """
     )
 
-
-
     sgr_text = "GTTACTTTACCCGACGTCCCgttttagagctagaaatagcaagttaaaataagg"
     target = "GTTACTTTACCCGACGTCCCaGG"
 
-    for sg, tgt in [(sgr_text, target),
-                    (sgr_text.upper(), target.lower()),
-                    (sgr_text.lower(), target.upper())]:
+    for sg, tgt in [(sgr_text, target), (sgr_text.upper(), target.lower()), (sgr_text.lower(), target.upper())]:
         containing_sgRNA = Dseqrecord(sgr_text)
         target = Dseqrecord(target)
 

@@ -37,6 +37,7 @@ from pydna.utils import complement as _complement
 # from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
 from Bio.Restriction import RestrictionBatch as _RestrictionBatch
 from Bio.Restriction import CommOnly
+
 # from itertools import zip_longest
 
 from typing import (
@@ -56,82 +57,72 @@ left_fill_in__table = str.maketrans("PEXIpexi", "GATCgatc")
 right_fill_in__table = str.maketrans("QFZJqfzj", "GATCgatc")
 
 #                                       Watson Crick    >   dsIUPAC
-ss_to_ds_dct = {(b"P", b"Q"): b"G",   # P      Q            G
-                (b"E", b"F"): b"A",   # E      F            A
-                (b"X", b"Z"): b"T",   # X      Z            T
-                (b"I", b"J"): b"C",   # I      J            C
-
-                (b"p", b"q"): b"g",   # p      q            g
-                (b"e", b"f"): b"a",   # e      f            a
-                (b"x", b"z"): b"t",   # x      z            t
-                (b"i", b"j"): b"c",   # i      j            c
-
-                (b"p", b"Q"): b"g",   # p      Q            g
-                (b"e", b"F"): b"a",   # e      F            a
-                (b"x", b"Z"): b"t",   # x      Z            t
-                (b"i", b"J"): b"c",   # i      J            c
-
-                (b"P", b"q"): b"G",   # P      q            G
-                (b"E", b"f"): b"A",   # E      f            A
-                (b"X", b"z"): b"T",   # X      z            T
-                (b"I", b"j"): b"C",   # I      j            C
-
-                (b"P", b" "): b"P",   # P      q            G
-                (b"E", b" "): b"E",   # E      f            A
-                (b"X", b" "): b"X",   # X      z            T
-                (b"I", b" "): b"I",   # I      j            C
-
-                (b"Q", b"P"): b"G",   # Q      P            G
-                (b"F", b"E"): b"A",   # F      E            A
-                (b"Z", b"X"): b"T",   # Z      X            T
-                (b"J", b"I"): b"C",   # J      I            C
-
-                (b"q", b"p"): b"g",   # q      p            g
-                (b"f", b"e"): b"a",   # f      e            a
-                (b"z", b"x"): b"t",   # z      x            t
-                (b"j", b"i"): b"c",   # j      i            c
-
-                (b"q", b"P"): b"G",   # Q      P            G
-                (b"f", b"E"): b"A",   # F      E            A
-                (b"z", b"X"): b"T",   # Z      X            T
-                (b"j", b"I"): b"C",   # J      I            C
-
-                (b"Q", b"p"): b"g",   # q      p            g
-                (b"F", b"e"): b"a",   # f      e            a
-                (b"Z", b"x"): b"t",   # z      x            t
-                (b"J", b"i"): b"c",   # j      i            c
-
-                (b" ", b"Q"): b"Q",   # Q      P            G
-                (b" ", b"F"): b"F",   # F      E            A
-                (b" ", b"Z"): b"Z",   # Z      X            T
-                (b" ", b"J"): b"J",   # J      I            C
-
-                (b"G", b" "): b"P",
-                (b"A", b" "): b"E",
-                (b"T", b" "): b"X",
-                (b"C", b" "): b"I",
-                (b"g", b" "): b"p",
-                (b"a", b" "): b"e",
-                (b"t", b" "): b"x",
-                (b"c", b" "): b"i",
-
-                (b" ", b"G"): b"J",
-                (b" ", b"A"): b"Z",
-                (b" ", b"T"): b"F",
-                (b" ", b"C"): b"Q",
-                (b" ", b"g"): b"j",
-                (b" ", b"a"): b"z",
-                (b" ", b"t"): b"f",
-                (b" ", b"c"): b"q",
-
-                (b"G", b"C"): b"G",
-                (b"A", b"T"): b"A",
-                (b"T", b"A"): b"T",
-                (b"C", b"G"): b"C",
-                (b"g", b"c"): b"g",
-                (b"a", b"t"): b"a",
-                (b"t", b"a"): b"t",
-                (b"c", b"g"): b"c", }
+ss_to_ds_dct = {
+    (b"P", b"Q"): b"G",  # P      Q            G
+    (b"E", b"F"): b"A",  # E      F            A
+    (b"X", b"Z"): b"T",  # X      Z            T
+    (b"I", b"J"): b"C",  # I      J            C
+    (b"p", b"q"): b"g",  # p      q            g
+    (b"e", b"f"): b"a",  # e      f            a
+    (b"x", b"z"): b"t",  # x      z            t
+    (b"i", b"j"): b"c",  # i      j            c
+    (b"p", b"Q"): b"g",  # p      Q            g
+    (b"e", b"F"): b"a",  # e      F            a
+    (b"x", b"Z"): b"t",  # x      Z            t
+    (b"i", b"J"): b"c",  # i      J            c
+    (b"P", b"q"): b"G",  # P      q            G
+    (b"E", b"f"): b"A",  # E      f            A
+    (b"X", b"z"): b"T",  # X      z            T
+    (b"I", b"j"): b"C",  # I      j            C
+    (b"P", b" "): b"P",  # P      q            G
+    (b"E", b" "): b"E",  # E      f            A
+    (b"X", b" "): b"X",  # X      z            T
+    (b"I", b" "): b"I",  # I      j            C
+    (b"Q", b"P"): b"G",  # Q      P            G
+    (b"F", b"E"): b"A",  # F      E            A
+    (b"Z", b"X"): b"T",  # Z      X            T
+    (b"J", b"I"): b"C",  # J      I            C
+    (b"q", b"p"): b"g",  # q      p            g
+    (b"f", b"e"): b"a",  # f      e            a
+    (b"z", b"x"): b"t",  # z      x            t
+    (b"j", b"i"): b"c",  # j      i            c
+    (b"q", b"P"): b"G",  # Q      P            G
+    (b"f", b"E"): b"A",  # F      E            A
+    (b"z", b"X"): b"T",  # Z      X            T
+    (b"j", b"I"): b"C",  # J      I            C
+    (b"Q", b"p"): b"g",  # q      p            g
+    (b"F", b"e"): b"a",  # f      e            a
+    (b"Z", b"x"): b"t",  # z      x            t
+    (b"J", b"i"): b"c",  # j      i            c
+    (b" ", b"Q"): b"Q",  # Q      P            G
+    (b" ", b"F"): b"F",  # F      E            A
+    (b" ", b"Z"): b"Z",  # Z      X            T
+    (b" ", b"J"): b"J",  # J      I            C
+    (b"G", b" "): b"P",
+    (b"A", b" "): b"E",
+    (b"T", b" "): b"X",
+    (b"C", b" "): b"I",
+    (b"g", b" "): b"p",
+    (b"a", b" "): b"e",
+    (b"t", b" "): b"x",
+    (b"c", b" "): b"i",
+    (b" ", b"G"): b"J",
+    (b" ", b"A"): b"Z",
+    (b" ", b"T"): b"F",
+    (b" ", b"C"): b"Q",
+    (b" ", b"g"): b"j",
+    (b" ", b"a"): b"z",
+    (b" ", b"t"): b"f",
+    (b" ", b"c"): b"q",
+    (b"G", b"C"): b"G",
+    (b"A", b"T"): b"A",
+    (b"T", b"A"): b"T",
+    (b"C", b"G"): b"C",
+    (b"g", b"c"): b"g",
+    (b"a", b"t"): b"a",
+    (b"t", b"a"): b"t",
+    (b"c", b"g"): b"c",
+}
 
 if TYPE_CHECKING:
     from Bio.Restriction import AbstractCut as _AbstractCut
@@ -257,8 +248,8 @@ class Dseq(_Seq):
 
     @property
     def ovhg(self):
-        ohw = len(_re.match(b"^[PEXIpexi]*",self._data).group(0))
-        ohc = len(_re.match(b"^[QFZJqfzj]*",self._data).group(0))
+        ohw = len(_re.match(b"^[PEXIpexi]*", self._data).group(0))
+        ohc = len(_re.match(b"^[QFZJqfzj]*", self._data).group(0))
         return -ohw or ohc
 
     def __getitem__(self, sl: slice) -> "Dseq":
@@ -304,17 +295,38 @@ class Dseq(_Seq):
 
     def __repr__(self):
         header = f"{self.__class__.__name__}({({False: '-', True: 'o'}[self.circular])}{len(self)})"
-        m = _re.match(b"([PEXIpexi]*)([QFZJqfzj]*)(?=[GATCgatc])(.*)(?<=[GATCgatc])([PEXIpexi]*)([QFZJqfzj]*)|([PEXIpexiQFZJqfzj]+)", self._data)
+        m = _re.match(
+            b"([PEXIpexi]*)([QFZJqfzj]*)(?=[GATCgatc])(.*)(?<=[GATCgatc])([PEXIpexi]*)([QFZJqfzj]*)|([PEXIpexiQFZJqfzj]+)",
+            self._data,
+        )
         result = m.groups() if m else (b"",) * 7
         sticky_left5, sticky_left3, middle, sticky_right5, sticky_right3, single = result
         if len(self) > self.trunc:
-            sticky_left5 = sticky_left5[:4] + b"22" + sticky_left5[-4:] if sticky_left5 and len(sticky_left5) > 10 else sticky_left5
-            sticky_left3 = sticky_left3[:4] + b"11" + sticky_left3[-4:] if sticky_left3 and len(sticky_left3) > 10 else sticky_left3
+            sticky_left5 = (
+                sticky_left5[:4] + b"22" + sticky_left5[-4:]
+                if sticky_left5 and len(sticky_left5) > 10
+                else sticky_left5
+            )
+            sticky_left3 = (
+                sticky_left3[:4] + b"11" + sticky_left3[-4:]
+                if sticky_left3 and len(sticky_left3) > 10
+                else sticky_left3
+            )
             middle = middle[:4] + b".." + middle[-4:] if middle and len(middle) > 30 else middle
-            sticky_right5 = sticky_right5[:4] + b"22" + sticky_right5[-4:] if sticky_right5 and len(sticky_right5) > 10 else sticky_right5
-            sticky_right3 = sticky_right3[:4] + b"11" + sticky_right3[-4:] if sticky_right3 and len(sticky_right3) > 10 else sticky_right3
+            sticky_right5 = (
+                sticky_right5[:4] + b"22" + sticky_right5[-4:]
+                if sticky_right5 and len(sticky_right5) > 10
+                else sticky_right5
+            )
+            sticky_right3 = (
+                sticky_right3[:4] + b"11" + sticky_right3[-4:]
+                if sticky_right3 and len(sticky_right3) > 10
+                else sticky_right3
+            )
         r = (sticky_left5 or sticky_left3 or b"") + (middle or b"") + (sticky_right5 or sticky_right3 or single or b"")
-        return _pretty_str(f"{header}\n{r.translate(to_watson_table).decode().rstrip()}\n{_complement(r.translate(to_crick_table)).decode()}")
+        return _pretty_str(
+            f"{header}\n{r.translate(to_watson_table).decode().rstrip()}\n{_complement(r.translate(to_crick_table)).decode()}"
+        )
 
     def reverse_complement(self) -> "Dseq":
         """Dseq object where watson and crick have switched places.
@@ -405,12 +417,16 @@ class Dseq(_Seq):
 
         assert len(sticky_left_just) == len(sticky_right_just)
 
-        junction = b"".join([ss_to_ds_dct.get((bytes([w]), bytes([c])), b"-") for w, c in zip(sticky_left_just, sticky_right_just)])
+        junction = b"".join(
+            [ss_to_ds_dct.get((bytes([w]), bytes([c])), b"-") for w, c in zip(sticky_left_just, sticky_right_just)]
+        )
 
         if b"-" in junction:
             raise TypeError("DNA cannot be circularized.\n" "5' and 3' sticky ends not compatible!")
 
-        return self.__class__(junction + self._data[len(sticky_left) or None:-len(sticky_right) or None], circular=True)
+        return self.__class__(
+            junction + self._data[len(sticky_left) or None : -len(sticky_right) or None], circular=True
+        )
 
     def tolinear(self: DseqType) -> DseqType:  # pragma: no cover
         """Returns a blunt, linear copy of a circular Dseq object. This can
@@ -469,12 +485,16 @@ class Dseq(_Seq):
 
         assert len(sticky_self_just) == len(sticky_other_just)
 
-        junction = b"".join([ss_to_ds_dct.get((bytes([w]), bytes([c])), b"-") for w, c in zip(sticky_self_just, sticky_other_just)])
+        junction = b"".join(
+            [ss_to_ds_dct.get((bytes([w]), bytes([c])), b"-") for w, c in zip(sticky_self_just, sticky_other_just)]
+        )
 
         if b"-" in junction:
             raise TypeError("sticky ends not compatible!")
 
-        return self.__class__(self._data[:-len(sticky_self) or None] + junction + other._data[len(sticky_other) or None:])
+        return self.__class__(
+            self._data[: -len(sticky_self) or None] + junction + other._data[len(sticky_other) or None :]
+        )
 
     def __mul__(self: DseqType, number: int) -> DseqType:
         if not isinstance(number, int):
@@ -508,7 +528,7 @@ class Dseq(_Seq):
 
         end = ''.join(newletters[::-1])
 
-        return self.__class__(end.encode("ASCII") + self._data[len(sticky_left) or None:], circular=False)
+        return self.__class__(end.encode("ASCII") + self._data[len(sticky_left) or None :], circular=False)
 
     def _fill_in_five_prime(self: DseqType, nucleotides: str) -> str:
         """
@@ -533,7 +553,7 @@ class Dseq(_Seq):
 
         end = ''.join(newletters)
 
-        return self.__class__(self._data[:-len(sticky_right) or None] + end.encode("ASCII"), circular=False)
+        return self.__class__(self._data[: -len(sticky_right) or None] + end.encode("ASCII"), circular=False)
 
     def fill_in(self, nucleotides: _Union[None, str] = None) -> "Dseq":
         """Fill in of five prime protruding end with a DNA polymerase
@@ -685,9 +705,11 @@ class Dseq(_Seq):
 
         nucleotides = nucleotides if isinstance(nucleotides, bytes) else nucleotides.encode('ascii')
 
-        strp = self.lstrip(b"QFZJqfzj").rstrip(b"PEXIpexi").fill_in(nucleotides.decode("ascii"))  # remove 3' sticky ends on both sides
+        strp = (
+            self.lstrip(b"QFZJqfzj").rstrip(b"PEXIpexi").fill_in(nucleotides.decode("ascii"))
+        )  # remove 3' sticky ends on both sides
 
-        to_remove = bytes(set(b"GATCgatc") - set(nucleotides.upper()+nucleotides.lower()))
+        to_remove = bytes(set(b"GATCgatc") - set(nucleotides.upper() + nucleotides.lower()))
 
         def repl(m):
             breakpoint()
@@ -697,8 +719,13 @@ class Dseq(_Seq):
             print("hej")
             return sub
 
-      # new = _re.sub(b"([PEXIpexi]*)(?=[GATCgatc])([%b]+)(.+?)([%b]+)(?<=[GATCgatc])([QFZJqfzj]*)"% (_complement(to_remove), to_remove), repl, strp._data)
-        new = _re.sub(b"([PEXIpexi]*)(?=[GATCgatc])([%b]+)(.*?)([%b]*)(?<=[GATCgatc])([QFZJqfzj]*)"% (_complement(to_remove), to_remove), repl, strp._data)
+        # new = _re.sub(b"([PEXIpexi]*)(?=[GATCgatc])([%b]+)(.+?)([%b]+)(?<=[GATCgatc])([QFZJqfzj]*)"% (_complement(to_remove), to_remove), repl, strp._data)
+        new = _re.sub(
+            b"([PEXIpexi]*)(?=[GATCgatc])([%b]+)(.*?)([%b]*)(?<=[GATCgatc])([QFZJqfzj]*)"
+            % (_complement(to_remove), to_remove),
+            repl,
+            strp._data,
+        )
         return self.__class__(new).fill_in(nucleotides.decode("ascii"))
 
     t4 = T4  # alias for the T4 method.
@@ -761,7 +788,11 @@ class Dseq(_Seq):
         else:
             """docstring."""
             w = self._data.translate(to_watson_table).strip().decode("ascii").upper().replace(" ", "-")
-            c = _complement(self._data.translate(to_crick_table).strip().decode("ascii")).upper()[::-1].replace(" ", "-")
+            c = (
+                _complement(self._data.translate(to_crick_table).strip().decode("ascii"))
+                .upper()[::-1]
+                .replace(" ", "-")
+            )
             cs = _ldseguid(w, c, alphabet="{DNA-extended}")
         return cs
 
@@ -803,7 +834,11 @@ class Dseq(_Seq):
         >>> a.isblunt()
         False
         """
-        return (self._data[0] not in b"PEXIQFZJpexiqfzj") and (self._data[-1] not in b"PEXIQFZJpexiqfzj") and not self.circular
+        return (
+            (self._data[0] not in b"PEXIQFZJpexiqfzj")
+            and (self._data[-1] not in b"PEXIQFZJpexiqfzj")
+            and not self.circular
+        )
 
     def cas9(self, RNA: str) -> _Tuple[slice, ...]:
         """docstring."""
@@ -877,9 +912,11 @@ class Dseq(_Seq):
             table1 = {1.0: to_5tail_table, -1.0: to_3tail_table}[_math.copysign(1, w1 - c1)]
             table2 = {1.0: to_3tail_table, -1.0: to_5tail_table}[_math.copysign(1, w2 - c2)]
 
-            frags.append(self._data[min((w1, c1)):max((w1, c1))].translate(table1)
-                         + self._data[max((w1, c1)):min((w2, c2))]
-                         + self._data[min((w2, c2)):max((w2, c2))].translate(table2))
+            frags.append(
+                self._data[min((w1, c1)) : max((w1, c1))].translate(table1)
+                + self._data[max((w1, c1)) : min((w2, c2))]
+                + self._data[min((w2, c2)) : max((w2, c2))].translate(table2)
+            )
 
         return tuple(self.__class__(frag) for frag in frags)
 
@@ -1045,33 +1082,33 @@ if __name__ == "__main__":
 
     from Bio.Restriction import XmaI, SmaI, KpnI, Acc65I
 
-    s = Dseq("CCCGGGGCATCGTAGTGATCGGTACC") #  blunt
+    s = Dseq("CCCGGGGCATCGTAGTGATCGGTACC")  #  blunt
 
     assert s.looped()._data == s._data
 
-    a,b,c = s.cut([XmaI, Acc65I])
+    a, b, c = s.cut([XmaI, Acc65I])
 
-    assert repr(a+b+c) == repr(s)
+    assert repr(a + b + c) == repr(s)
 
-    a,b,c = s.cut([SmaI, Acc65I])
+    a, b, c = s.cut([SmaI, Acc65I])
 
-    assert repr(a+b+c) == repr(s)
+    assert repr(a + b + c) == repr(s)
 
-    a,b,c = s.cut([SmaI, KpnI])
+    a, b, c = s.cut([SmaI, KpnI])
 
-    assert repr(a+b+c) == repr(s)
+    assert repr(a + b + c) == repr(s)
 
     s = Dseq("PPCCCGGGGCATCGTAGTGATCGGTACC")
 
-    a,b,c = s.cut([XmaI, Acc65I])
+    a, b, c = s.cut([XmaI, Acc65I])
 
-    assert repr(a+b+c) == repr(s)
+    assert repr(a + b + c) == repr(s)
 
     s = Dseq("QQCCCGGGGCATCGTAGTGATCGGTACC")
 
-    a,b,c = s.cut([XmaI, Acc65I])
+    a, b, c = s.cut([XmaI, Acc65I])
 
-    assert repr(a+b+c) == repr(s)
+    assert repr(a + b + c) == repr(s)
 
     s = Dseq("PEXIAAAQFZJ")
 
@@ -1091,9 +1128,9 @@ if __name__ == "__main__":
     assert s._fill_in_three_prime("")._data == s._data
 
     assert s._fill_in_five_prime("gatc")._data == b'PEXIAAAGATC'
-    assert s._fill_in_five_prime("gat")._data ==  b'PEXIAAAGATJ'
-    assert s._fill_in_five_prime("ga")._data ==   b'PEXIAAAGAZJ'
-    assert s._fill_in_five_prime("g")._data ==    b'PEXIAAAGFZJ'
+    assert s._fill_in_five_prime("gat")._data == b'PEXIAAAGATJ'
+    assert s._fill_in_five_prime("ga")._data == b'PEXIAAAGAZJ'
+    assert s._fill_in_five_prime("g")._data == b'PEXIAAAGFZJ'
     assert s._fill_in_five_prime("")._data == s._data
 
     assert s._fill_in_five_prime("atc")._data == s._data
@@ -1114,29 +1151,22 @@ if __name__ == "__main__":
     assert Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=2, watson_ovhg=-2)._data == Dseq("FFAAFF")._data
     assert Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=-2, watson_ovhg=-2)._data == Dseq("EEAAFF")._data
 
-    assert repr(Dseq("XIpexiPEXIpexiAqfzjQFZJqfzjQF")) == ("Dseq(-29)\n"
-                                                           "TCgatcGATCgatcA\n"
-                                                           "              TctagCTAGctagCT")
+    assert repr(Dseq("XIpexiPEXIpexiAqfzjQFZJqfzjQF")) == (
+        "Dseq(-29)\n" "TCgatcGATCgatcA\n" "              TctagCTAGctagCT"
+    )
 
-    assert repr(Dseq("XIpexiPEXIpexiAAqfzjQFZJqfzjQF")) == ("Dseq(-30)\n"
-                                                             "TCgatcGATCgatcAA\n"
-                                                             "              TTctagCTAGctagCT")
+    assert repr(Dseq("XIpexiPEXIpexiAAqfzjQFZJqfzjQF")) == (
+        "Dseq(-30)\n" "TCgatcGATCgatcAA\n" "              TTctagCTAGctagCT"
+    )
 
-    assert repr(Dseq("EXIpexiPEXIpexiAqfzjQFZJqfzjQFZ")) == ("Dseq(-31)\n"
-                                                             "ATCg..gatcA\n"
-                                                             "          Tctag..gCTA")
+    assert repr(Dseq("EXIpexiPEXIpexiAqfzjQFZJqfzjQFZ")) == ("Dseq(-31)\n" "ATCg..gatcA\n" "          Tctag..gCTA")
 
-    assert repr(Dseq("XIpexiPEXIpexiAaAqfzjQFZJqfzjQF")) == ("Dseq(-31)\n"
-                                                             "TCga..gatcAaA\n"
-                                                             "          TtTctag..agCT")
-
-
+    assert repr(Dseq("XIpexiPEXIpexiAaAqfzjQFZJqfzjQF")) == ("Dseq(-31)\n" "TCga..gatcAaA\n" "          TtTctag..agCT")
 
     dsdna = """
                Dseq(
                 GGATCC
                aCCTAGGg"""
-
 
     assert Dseq.from_representation(dsdna)._data == b"zGGATCCj"
 
@@ -1149,6 +1179,5 @@ if __name__ == "__main__":
     self = Dseq('PEXIGGATCCQFZJ')
     # self = Dseq('PAGAJ')
     # self = Dseq('QFZJGGATCCPEXI')
-
 
     Dseq("pexiAqfzj").T4(b"GATC")

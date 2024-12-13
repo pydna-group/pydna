@@ -39,15 +39,13 @@ StrOrBytes = _TypeVar("StrOrBytes", str, bytes)
 
 _module_logger = _logging.getLogger("pydna." + __name__)
 _ambiguous_dna_complement.update(
-    {   # RNA
+    {  # RNA
         "U": "A",
-
         # dsIUPAC
         "P": "J",  # G in top strand, complementary strand empty.
         "E": "Z",  # A "
         "X": "F",  # T "
         "I": "Q",  # C "
-
         "J": "P",  # top strand empty, G in complementary strand.
         "Z": "E",  # "                 A "
         "F": "X",  # "                 T "

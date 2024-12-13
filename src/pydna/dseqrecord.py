@@ -1323,9 +1323,7 @@ class Dseqrecord(_SeqRecord):
                 features_need_transfer = [
                     f for f in features if (_location_boundaries(f.location)[1] <= abs(left_ovhg))
                 ]
-                features_need_transfer = [
-                    _shift_feature(f, -abs(left_ovhg), len(self)) for f in features_need_transfer
-                ]
+                features_need_transfer = [_shift_feature(f, -abs(left_ovhg), len(self)) for f in features_need_transfer]
 
                 #                                           ^                ^^^^^^^^^
                 # Now we have shifted the features that end before the cut (0 and 1, but not 3), as if

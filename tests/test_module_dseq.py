@@ -3,8 +3,10 @@
 
 import pytest
 
+
 def test_dsiupac():
     from pydna.dseq import Dseq
+
     assert str(Dseq("PEXIaaaQFZJ")) == "PEXIaaaQFZJ"
     assert str(Dseq("QFZJaaaPEXI")) == "QFZJaaaPEXI"
 
@@ -311,7 +313,7 @@ def test_dseq():
     assert obj.fill_in("at") == obj
 
     obj = Dseq("pexiAqfzj")
-    assert obj.t4(b"GATC") # == Dseq("gatcAAAAAAgatc", "gatcTTTTTTgatc")
+    assert obj.t4(b"GATC")  # == Dseq("gatcAAAAAAgatc", "gatcTTTTTTgatc")
 
     assert obj.t4("at") == obj
     assert obj.t4("atg") == Dseq("gatcAAAAAAgat", "gatcTTTTTTgat")
@@ -631,7 +633,6 @@ def test_cut_circular():
         assert c.ovhg == -4
         d = Dseq(nt, circular=True).cut(NotI)
         assert d == ()
-
 
     from pydna.dseq import Dseq
 
