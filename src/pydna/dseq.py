@@ -20,6 +20,7 @@ import itertools as _itertools
 import re as _re
 import sys as _sys
 import math as _math
+import inspect as _inspect
 
 from pydna.seq import Seq as _Seq
 from Bio.Seq import _translate_str, _SeqAbstractBaseClass
@@ -31,10 +32,12 @@ from seguid import cdseguid as _cdseguid
 from pydna.utils import rc as _rc
 from pydna.utils import flatten as _flatten
 from pydna.utils import cuts_overlap as _cuts_overlap
+from pydna.utils import complement as _complement
 
-from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
+# from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
 from Bio.Restriction import RestrictionBatch as _RestrictionBatch
 from Bio.Restriction import CommOnly
+# from itertools import zip_longest
 
 from typing import (
     TYPE_CHECKING,
@@ -44,6 +47,91 @@ from typing import (
     TypeVar as _TypeVar,
     Iterable as _Iterable,
 )
+
+to_watson_table = bytes.maketrans(b"PEXIQFZJpexiqfzj12", b"GATC    gatc     .")
+to_crick_table = bytes.maketrans(b"PEXIQFZJpexiqfzj12", b"    GATC    gatc. ")
+to_5tail_table = bytes.maketrans(b"GATCgatc", b"QFZJqfzj")
+to_3tail_table = bytes.maketrans(b"GATCgatc", b"PEXIpexi")
+left_fill_in__table = str.maketrans("PEXIpexi", "GATCgatc")
+right_fill_in__table = str.maketrans("QFZJqfzj", "GATCgatc")
+
+#                                       Watson Crick    >   dsIUPAC
+ss_to_ds_dct = {(b"P", b"Q"): b"G",   # P      Q            G
+                (b"E", b"F"): b"A",   # E      F            A
+                (b"X", b"Z"): b"T",   # X      Z            T
+                (b"I", b"J"): b"C",   # I      J            C
+
+                (b"p", b"q"): b"g",   # p      q            g
+                (b"e", b"f"): b"a",   # e      f            a
+                (b"x", b"z"): b"t",   # x      z            t
+                (b"i", b"j"): b"c",   # i      j            c
+
+                (b"p", b"Q"): b"g",   # p      Q            g
+                (b"e", b"F"): b"a",   # e      F            a
+                (b"x", b"Z"): b"t",   # x      Z            t
+                (b"i", b"J"): b"c",   # i      J            c
+
+                (b"P", b"q"): b"G",   # P      q            G
+                (b"E", b"f"): b"A",   # E      f            A
+                (b"X", b"z"): b"T",   # X      z            T
+                (b"I", b"j"): b"C",   # I      j            C
+
+                (b"P", b" "): b"P",   # P      q            G
+                (b"E", b" "): b"E",   # E      f            A
+                (b"X", b" "): b"X",   # X      z            T
+                (b"I", b" "): b"I",   # I      j            C
+
+                (b"Q", b"P"): b"G",   # Q      P            G
+                (b"F", b"E"): b"A",   # F      E            A
+                (b"Z", b"X"): b"T",   # Z      X            T
+                (b"J", b"I"): b"C",   # J      I            C
+
+                (b"q", b"p"): b"g",   # q      p            g
+                (b"f", b"e"): b"a",   # f      e            a
+                (b"z", b"x"): b"t",   # z      x            t
+                (b"j", b"i"): b"c",   # j      i            c
+
+                (b"q", b"P"): b"G",   # Q      P            G
+                (b"f", b"E"): b"A",   # F      E            A
+                (b"z", b"X"): b"T",   # Z      X            T
+                (b"j", b"I"): b"C",   # J      I            C
+
+                (b"Q", b"p"): b"g",   # q      p            g
+                (b"F", b"e"): b"a",   # f      e            a
+                (b"Z", b"x"): b"t",   # z      x            t
+                (b"J", b"i"): b"c",   # j      i            c
+
+                (b" ", b"Q"): b"Q",   # Q      P            G
+                (b" ", b"F"): b"F",   # F      E            A
+                (b" ", b"Z"): b"Z",   # Z      X            T
+                (b" ", b"J"): b"J",   # J      I            C
+
+                (b"G", b" "): b"P",
+                (b"A", b" "): b"E",
+                (b"T", b" "): b"X",
+                (b"C", b" "): b"I",
+                (b"g", b" "): b"p",
+                (b"a", b" "): b"e",
+                (b"t", b" "): b"x",
+                (b"c", b" "): b"i",
+
+                (b" ", b"G"): b"J",
+                (b" ", b"A"): b"Z",
+                (b" ", b"T"): b"F",
+                (b" ", b"C"): b"Q",
+                (b" ", b"g"): b"j",
+                (b" ", b"a"): b"z",
+                (b" ", b"t"): b"f",
+                (b" ", b"c"): b"q",
+
+                (b"G", b"C"): b"G",
+                (b"A", b"T"): b"A",
+                (b"T", b"A"): b"T",
+                (b"C", b"G"): b"C",
+                (b"g", b"c"): b"g",
+                (b"a", b"t"): b"a",
+                (b"t", b"a"): b"t",
+                (b"c", b"g"): b"c", }
 
 if TYPE_CHECKING:
     from Bio.Restriction import AbstractCut as _AbstractCut
@@ -56,419 +144,40 @@ CutSiteType = _Tuple[_Tuple[int, int], _Union["_AbstractCut", None]]
 
 
 class Dseq(_Seq):
-    """Dseq holds information for a double stranded DNA fragment.
+    """docstring.
 
-    Dseq also holds information describing the topology of
-    the DNA fragment (linear or circular).
-
-    Parameters
-    ----------
-    watson : str
-        a string representing the watson (sense) DNA strand.
-
-    crick : str, optional
-        a string representing the crick (antisense) DNA strand.
-
-    ovhg : int, optional
-        A positive or negative number to describe the stagger between the
-        watson and crick strands.
-        see below for a detailed explanation.
-
-    linear : bool, optional
-        True indicates that sequence is linear, False that it is circular.
-
-    circular : bool, optional
-        True indicates that sequence is circular, False that it is linear.
-
-
-    Examples
-    --------
-    Dseq is a subclass of the Biopython Seq object. It stores two
-    strings representing the watson (sense) and crick(antisense) strands.
-    two properties called linear and circular, and a numeric value ovhg
-    (overhang) describing the stagger for the watson and crick strand
-    in the 5' end of the fragment.
-
-    The most common usage is probably to create a Dseq object as a
-    part of a Dseqrecord object (see :class:`pydna.dseqrecord.Dseqrecord`).
-
-    There are three ways of creating a Dseq object directly listed below, but you can also
-    use the function Dseq.from_full_sequence_and_overhangs() to create a Dseq:
-
-    Only one argument (string):
-
-    >>> from pydna.dseq import Dseq
-    >>> Dseq("aaa")
-    Dseq(-3)
-    aaa
-    ttt
-
-    The given string will be interpreted as the watson strand of a
-    blunt, linear double stranded sequence object. The crick strand
-    is created automatically from the watson strand.
-
-    Two arguments (string, string):
-
-    >>> from pydna.dseq import Dseq
-    >>> Dseq("gggaaat","ttt")
-    Dseq(-7)
-    gggaaat
-       ttt
-
-    If both watson and crick are given, but not ovhg an attempt
-    will be made to find the best annealing between the strands.
-    There are limitations to this. For long fragments it is quite
-    slow. The length of the annealing sequences have to be at least
-    half the length of the shortest of the strands.
-
-    Three arguments (string, string, ovhg=int):
-
-    The ovhg parameter is an integer describing the length of the
-    crick strand overhang in the 5' end of the molecule.
-
-    The ovhg parameter controls the stagger at the five prime end::
-
-        dsDNA       overhang
-
-          nnn...    2
-        nnnnn...
-
-         nnnn...    1
-        nnnnn...
-
-        nnnnn...    0
-        nnnnn...
-
-        nnnnn...   -1
-         nnnn...
-
-        nnnnn...   -2
-          nnn...
-
-    Example of creating Dseq objects with different amounts of stagger:
-
-    >>> Dseq(watson="agt", crick="actta", ovhg=-2)
-    Dseq(-7)
-    agt
-      attca
-    >>> Dseq(watson="agt",crick="actta",ovhg=-1)
-    Dseq(-6)
-    agt
-     attca
-    >>> Dseq(watson="agt",crick="actta",ovhg=0)
-    Dseq(-5)
-    agt
-    attca
-    >>> Dseq(watson="agt",crick="actta",ovhg=1)
-    Dseq(-5)
-     agt
-    attca
-    >>> Dseq(watson="agt",crick="actta",ovhg=2)
-    Dseq(-5)
-      agt
-    attca
-
-    If the ovhg parameter is specified a crick strand also
-    needs to be supplied, otherwise an exception is raised.
-
-    >>> Dseq(watson="agt", ovhg=2)
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-      File "/usr/local/lib/python2.7/dist-packages/pydna_/dsdna.py", line 169, in __init__
-        else:
-    ValueError: ovhg defined without crick strand!
-
-
-    The shape of the fragment is set by circular = True, False
-
-    Note that both ends of the DNA fragment has to be compatible to set
-    circular = True.
-
-
-    >>> Dseq("aaa","ttt")
-    Dseq(-3)
-    aaa
-    ttt
-    >>> Dseq("aaa","ttt",ovhg=0)
-    Dseq(-3)
-    aaa
-    ttt
-    >>> Dseq("aaa","ttt",ovhg=1)
-    Dseq(-4)
-     aaa
-    ttt
-    >>> Dseq("aaa","ttt",ovhg=-1)
-    Dseq(-4)
-    aaa
-     ttt
-    >>> Dseq("aaa", "ttt", circular = True , ovhg=0)
-    Dseq(o3)
-    aaa
-    ttt
-
-    >>> a=Dseq("tttcccc","aaacccc")
-    >>> a
-    Dseq(-11)
-        tttcccc
-    ccccaaa
-    >>> a.ovhg
-    4
-
-    >>> b=Dseq("ccccttt","ccccaaa")
-    >>> b
-    Dseq(-11)
-    ccccttt
-        aaacccc
-    >>> b.ovhg
-    -4
-    >>>
-
-    Coercing to string
-
-    >>> str(a)
-    'ggggtttcccc'
-
-    A Dseq object can be longer that either the watson or crick strands.
-
-    ::
-
-        <-- length -->
-        GATCCTTT
-             AAAGCCTAG
-
-        <-- length -->
-              GATCCTTT
-        AAAGCCCTA
-
-    The slicing of a linear Dseq object works mostly as it does for a string.
-
-    >>> s="ggatcc"
-    >>> s[2:3]
-    'a'
-    >>> s[2:4]
-    'at'
-    >>> s[2:4:-1]
-    ''
-    >>> s[::2]
-    'gac'
-    >>> from pydna.dseq import Dseq
-    >>> d=Dseq(s, circular=False)
-    >>> d[2:3]
-    Dseq(-1)
-    a
-    t
-    >>> d[2:4]
-    Dseq(-2)
-    at
-    ta
-    >>> d[2:4:-1]
-    Dseq(-0)
-    <BLANKLINE>
-    <BLANKLINE>
-    >>> d[::2]
-    Dseq(-3)
-    gac
-    ctg
-
-
-    The slicing of a circular Dseq object has a slightly different meaning.
-
-
-    >>> s="ggAtCc"
-    >>> d=Dseq(s, circular=True)
-    >>> d
-    Dseq(o6)
-    ggAtCc
-    ccTaGg
-    >>> d[4:3]
-    Dseq(-5)
-    CcggA
-    GgccT
-
-
-    The slice [X:X] produces an empty slice for a string, while this
-    will return the linearized sequence starting at X:
-
-    >>> s="ggatcc"
-    >>> d=Dseq(s, circular=True)
-    >>> d
-    Dseq(o6)
-    ggatcc
-    cctagg
-    >>> d[3:3]
-    Dseq(-6)
-    tccgga
-    aggcct
-    >>>
-
-
-    See Also
-    --------
-    pydna.dseqrecord.Dseqrecord
-
+    here
     """
 
     trunc = 30
 
     def __init__(
         self,
-        watson: _Union[str, bytes],
-        crick: _Union[str, bytes, None] = None,
-        ovhg=None,
+        data,
         circular=False,
+        length=None,
         pos=0,
     ):
-        if isinstance(watson, bytes):
-            watson = watson.decode("ASCII")
-        if isinstance(crick, bytes):
-            crick = crick.decode("ASCII")
-
-        if crick is None:
-            if ovhg is not None:
-                raise ValueError("ovhg defined without crick strand!")
-            crick = _rc(watson)
-            ovhg = 0
-            self._data = bytes(watson, encoding="ASCII")
-
-        else:  # crick strand given
-            if ovhg is None:  # ovhg not given
-                olaps = _common_sub_strings(
-                    str(watson).lower(),
-                    str(_rc(crick).lower()),
-                    int(_math.log(len(watson)) / _math.log(4)),
-                )
-                if len(olaps) == 0:
-                    raise ValueError("Could not anneal the two strands." " Please provide ovhg value")
-
-                # We extract the positions and length of the first (longest) overlap, since
-                # common_sub_strings sorts the overlaps by length.
-                pos_watson, pos_crick, longest_olap_length = olaps[0]
-
-                # We see if there is another overlap of the same length
-                if any(olap[2] >= longest_olap_length for olap in olaps[1:]):
-                    raise ValueError("More than one way of annealing the" " strands. Please provide ovhg value")
-
-                ovhg = pos_crick - pos_watson
-
-                sns = (ovhg * " ") + _pretty_str(watson)
-                asn = (-ovhg * " ") + _pretty_str(_rc(crick))
-
-                self._data = bytes(
-                    "".join([a.strip() or b.strip() for a, b in _itertools.zip_longest(sns, asn, fillvalue=" ")]),
-                    encoding="ASCII",
-                )
-
-            else:  # ovhg given
-                if ovhg == 0:
-                    if len(watson) >= len(crick):
-                        self._data = bytes(watson, encoding="ASCII")
-                    else:
-                        self._data = bytes(
-                            watson + _rc(crick[: len(crick) - len(watson)]),
-                            encoding="ASCII",
-                        )
-                elif ovhg > 0:
-                    if ovhg + len(watson) > len(crick):
-                        self._data = bytes(_rc(crick[-ovhg:]) + watson, encoding="ASCII")
-                    else:
-                        self._data = bytes(
-                            _rc(crick[-ovhg:]) + watson + _rc(crick[: len(crick) - ovhg - len(watson)]),
-                            encoding="ASCII",
-                        )
-                else:  # ovhg < 0
-                    if -ovhg + len(crick) > len(watson):
-                        self._data = bytes(
-                            watson + _rc(crick[: -ovhg + len(crick) - len(watson)]),
-                            encoding="ASCII",
-                        )
-                    else:
-                        self._data = bytes(watson, encoding="ASCII")
-
+        super().__init__(data, length)
         self.circular = circular
-        self.watson = _pretty_str(watson)
-        self.crick = _pretty_str(crick)
-        self.length = len(self._data)
-        self.ovhg = ovhg
         self.pos = pos
-
-    @classmethod
-    def quick(
-        cls,
-        watson: str,
-        crick: str,
-        ovhg=0,
-        circular=False,
-        pos=0,
-    ):
-        obj = cls.__new__(cls)  # Does not call __init__
-        obj.watson = _pretty_str(watson)
-        obj.crick = _pretty_str(crick)
-        obj.ovhg = ovhg
-        obj.circular = circular
-        obj.length = max(len(watson) + max(0, ovhg), len(crick) + max(0, -ovhg))
-        obj.pos = pos
-        wb = bytes(watson, encoding="ASCII")
-        cb = bytes(crick, encoding="ASCII")
-        obj._data = _rc(cb[-max(0, ovhg) or len(cb) :]) + wb + _rc(cb[: max(0, len(cb) - ovhg - len(wb))])
-        return obj
-
-    @classmethod
-    def from_string(
-        cls,
-        dna: str,
-        *args,
-        # linear=True,
-        circular=False,
-        **kwargs,
-    ):
-        obj = cls.__new__(cls)  # Does not call __init__
-        obj.watson = _pretty_str(dna)
-        obj.crick = _pretty_str(_rc(dna))
-        obj.ovhg = 0
-        obj.circular = circular
-        # obj._linear = linear
-        obj.length = len(dna)
-        obj.pos = 0
-        obj._data = bytes(dna, encoding="ASCII")
-        return obj
-
-    @classmethod
-    def from_dsiupac(cls, dsdna: str, *args, **kwargs):
-        obj = cls.__new__(cls)  # Does not call __init__
-        obj.circular = False
-        ds_to_ss_dct = {"P": "G", "E": "A", "X": "T", "I": "C", "Q": "C", "F": "T", "Z": "A", "J": "G"}
-        ds_to_ss_dct.update(dict((k.lower(), v.lower()) for k, v in ds_to_ss_dct.items()))
-        ds_to_ss_table = str.maketrans(ds_to_ss_dct)
-        # keys = "".join(ds_to_ss_dct.keys())
-        if ovhg := len(dsdna) - len(dsdna.lstrip("PEXIpexi")):
-            watson = dsdna.rstrip("FQJZfqjz")
-            crick = _rc(dsdna).rstrip("FQJZfqjz")
-        elif ovhg := -len(dsdna) + len(dsdna.lstrip("FQJZfqjz")):
-            watson = dsdna.lstrip("FQJZfqjz")
-            crick = _rc(dsdna).lstrip("FQJZfqjz")
-        obj.watson = _pretty_str(watson.translate(ds_to_ss_table))
-        obj.crick = _pretty_str(crick.translate(ds_to_ss_table))
-        obj.pos = 0
-        obj.ovhg = -ovhg
-        obj.length = max(len(watson) + max(0, ovhg), len(crick) + max(0, -ovhg))
-        obj._data = bytes(dsdna.translate(ds_to_ss_table), encoding="ASCII")
-        # breakpoint()
-        return obj
 
     @classmethod
     def from_representation(cls, dsdna: str, *args, **kwargs):
         obj = cls.__new__(cls)  # Does not call __init__
-        w, c, *r = [ln for ln in dsdna.splitlines() if ln]
-        ovhg = obj.ovhg = len(w) - len(w.lstrip()) - (len(c) - len(c.lstrip()))
-        watson = obj.watson = _pretty_str(w.strip())
-        crick = obj.crick = _pretty_str(c.strip()[::-1])
         obj.circular = False
-        # obj._linear = True
-        obj.length = max(len(watson) + max(0, ovhg), len(crick) + max(0, -ovhg))
         obj.pos = 0
-        wb = bytes(watson, encoding="ASCII")
-        cb = bytes(crick, encoding="ASCII")
-        obj._data = _rc(cb[-max(0, ovhg) or len(cb) :]) + wb + _rc(cb[: max(0, len(cb) - ovhg - len(wb))])
+        dsdna = _inspect.cleandoc(dsdna)
+        # breakpoint()
+        watson, crick = [ln for ln in dsdna.splitlines() if ln.strip() and not ln.strip().startswith("Dseq(")]
+        watson = f"{watson:<{len(crick)}}"
+        crick = f"{crick:<{len(watson)}}"
+        data = bytearray()
+        # breakpoint()
+        for w, c in zip(watson, crick):
+            # print(w,c, ss_to_ds_dct[w.encode("ascii"), c.encode("ascii")])
+            data.extend(ss_to_ds_dct[w.encode("ascii"), c.encode("ascii")])
+        obj._data = data
         return obj
 
     @classmethod
@@ -516,42 +225,45 @@ class Dseq(_Seq):
           TTTT
 
         """
-        full_sequence_rev = str(Dseq(full_sequence).reverse_complement())
         watson = full_sequence
-        crick = full_sequence_rev
+        crick = _complement(full_sequence)
 
         # If necessary, we trim the left side
         if crick_ovhg < 0:
-            crick = crick[:crick_ovhg]
+            crick = -crick_ovhg * " " + crick[-crick_ovhg:]
         elif crick_ovhg > 0:
-            watson = watson[crick_ovhg:]
+            watson = crick_ovhg * " " + watson[crick_ovhg:]
 
         # If necessary, we trim the right side
         if watson_ovhg < 0:
-            watson = watson[:watson_ovhg]
+            watson = watson[:watson_ovhg] + " " * -watson_ovhg
         elif watson_ovhg > 0:
-            crick = crick[watson_ovhg:]
+            crick = crick[:-watson_ovhg] + " " * watson_ovhg
 
-        return Dseq(watson, crick=crick, ovhg=crick_ovhg)
+        data = bytearray()
 
-    # @property
-    # def ovhg(self):
-    #     """The ovhg property. This cannot be set directly, but is a
-    #     consequence of how the watson and crick strands anneal to
-    #     each other"""
-    #     return self._ovhg
+        for w, c in zip(watson, crick):
+            data.extend(ss_to_ds_dct[w.encode("ascii"), c.encode("ascii")])
 
-    # @property
-    # def linear(self):
-    #     """The linear property can not be set directly.
-    #     Use an empty slice [:] to create a linear object."""
-    #     return self._linear
+        return cls(data)
 
-    # @property
-    # def circular(self):
-    #     """The circular property can not be set directly.
-    #     Use :meth:`looped` to create a circular Dseq object"""
-    #     return self._circular
+    @property
+    def watson(self):
+        return self._data.translate(to_watson_table).strip().decode("ascii")
+
+    @property
+    def crick(self):
+        return _complement(self._data.translate(to_crick_table).strip().decode("ascii"))[::-1]
+
+    @property
+    def ovhg(self):
+        ohw = len(_re.match(b"^[PEXIpexi]*",self._data).group(0))
+        ohc = len(_re.match(b"^[QFZJqfzj]*",self._data).group(0))
+        return -ohw or ohc
+
+    def __getitem__(self, sl: slice) -> "Dseq":
+        """Returns a subsequence. This method is used by the slice notation"""
+        return self.__class__(super().__getitem__(sl))
 
     def mw(self) -> float:
         """This method returns the molecular weight of the DNA molecule
@@ -561,8 +273,7 @@ class Dseq(_Seq):
                     (C x 289.2) + (G x 329.2) +
                     (N x 308.9) + 79.0
         """
-        nts = (self.watson + self.crick).lower()
-
+        nts = f"{self.watson}{self.crick}".lower()
         return (
             313.2 * nts.count("a")
             + 304.2 * nts.count("t")
@@ -572,156 +283,6 @@ class Dseq(_Seq):
             + 79.0
         )
 
-    def upper(self: DseqType) -> DseqType:
-        """Return an upper case copy of the sequence.
-
-        >>> from pydna.dseq import Dseq
-        >>> my_seq = Dseq("aAa")
-        >>> my_seq
-        Dseq(-3)
-        aAa
-        tTt
-        >>> my_seq.upper()
-        Dseq(-3)
-        AAA
-        TTT
-
-        Returns
-        -------
-        Dseq
-            Dseq object in uppercase
-
-        See also
-        --------
-        pydna.dseq.Dseq.lower
-
-        """
-        return self.quick(
-            self.watson.upper(),
-            self.crick.upper(),
-            ovhg=self.ovhg,
-            # linear=self.linear,
-            circular=self.circular,
-            pos=self.pos,
-        )
-
-    def lower(self: DseqType) -> DseqType:
-        """Return a lower case copy of the sequence.
-
-        >>> from pydna.dseq import Dseq
-        >>> my_seq = Dseq("aAa")
-        >>> my_seq
-        Dseq(-3)
-        aAa
-        tTt
-        >>> my_seq.lower()
-        Dseq(-3)
-        aaa
-        ttt
-
-        Returns
-        -------
-        Dseq
-            Dseq object in lowercase
-
-        See also
-        --------
-        pydna.dseq.Dseq.upper
-        """
-        return self.quick(
-            self.watson.lower(),
-            self.crick.lower(),
-            ovhg=self.ovhg,
-            # linear=self.linear,
-            circular=self.circular,
-            pos=self.pos,
-        )
-
-    def find(self, sub: _Union[_SeqAbstractBaseClass, str, bytes], start=0, end=_sys.maxsize) -> int:
-        """This method behaves like the python string method of the same name.
-
-        Returns an integer, the index of the first occurrence of substring
-        argument sub in the (sub)sequence given by [start:end].
-
-        Returns -1 if the subsequence is NOT found.
-
-        Parameters
-        ----------
-
-        sub : string or Seq object
-            a string or another Seq object to look for.
-
-        start : int, optional
-            slice start.
-
-        end : int, optional
-            slice end.
-
-        Examples
-        --------
-        >>> from pydna.dseq import Dseq
-        >>> seq = Dseq("atcgactgacgtgtt")
-        >>> seq
-        Dseq(-15)
-        atcgactgacgtgtt
-        tagctgactgcacaa
-        >>> seq.find("gac")
-        3
-        >>> seq = Dseq(watson="agt",crick="actta",ovhg=-2)
-        >>> seq
-        Dseq(-7)
-        agt
-          attca
-        >>> seq.find("taa")
-        2
-        """
-
-        if not self.circular:
-            return _Seq.find(self, sub, start, end)
-
-        return (_pretty_str(self) + _pretty_str(self)).find(sub, start, end)
-
-    def __getitem__(self, sl: slice) -> "Dseq":
-        """Returns a subsequence. This method is used by the slice notation"""
-
-        if not self.circular:
-            x = len(self.crick) - self.ovhg - len(self.watson)
-
-            sns = (self.ovhg * " " + self.watson + x * " ")[sl]
-            asn = (-self.ovhg * " " + self.crick[::-1] + -x * " ")[sl]
-
-            ovhg = max((len(sns) - len(sns.lstrip()), -len(asn) + len(asn.lstrip())), key=abs)
-
-            return Dseq(
-                sns.strip(),
-                asn[::-1].strip(),
-                ovhg=ovhg,
-                # linear=True
-            )
-        else:
-            sl = slice(sl.start or 0, sl.stop or len(self), sl.step)
-            if sl.start > len(self) or sl.stop > len(self):
-                return Dseq("")
-            if sl.start < sl.stop:
-                return Dseq(
-                    self.watson[sl],
-                    self.crick[::-1][sl][::-1],
-                    ovhg=0,
-                    # linear=True
-                )
-            else:
-                try:
-                    stp = abs(sl.step)
-                except TypeError:
-                    stp = 1
-                start = sl.start
-                stop = sl.stop
-
-                w = self.watson[(start or len(self)) :: stp] + self.watson[: (stop or 0) : stp]
-                c = self.crick[len(self) - stop :: stp] + self.crick[: len(self) - start : stp]
-
-                return Dseq(w, c, ovhg=0)  # , linear=True)
-
     def __eq__(self, other: DseqType) -> bool:
         """Compare to another Dseq object OR an object that implements
         watson, crick and ovhg properties. This comparison is case
@@ -729,94 +290,31 @@ class Dseq(_Seq):
 
         """
         try:
-            same = (
-                other.watson.lower() == self.watson.lower()
-                and other.crick.lower() == self.crick.lower()
-                and other.ovhg == self.ovhg
-                and self.circular == other.circular
-            )
+            same = self._data.lower() == other._data.lower() and self.circular == other.circular
+            # same = (
+            #     other.watson.lower() == self.watson.lower()
+            #     and other.crick.lower() == self.crick.lower()
+            #     and other.ovhg == self.ovhg
+            #     and self.circular == other.circular
+            # )
             # Also test for alphabet ?
         except AttributeError:
             same = False
         return same
 
     def __repr__(self):
-        """Returns a representation of the sequence, truncated if
-        longer than 30 bp"""
-
-        if len(self) > Dseq.trunc:
-            if self.ovhg > 0:
-                d = self.crick[-self.ovhg :][::-1]
-                hej = len(d)
-                if len(d) > 10:
-                    d = "{}..{}".format(d[:4], d[-4:])
-                a = len(d) * " "
-
-            elif self.ovhg < 0:
-                a = self.watson[: max(0, -self.ovhg)]
-                hej = len(a)
-                if len(a) > 10:
-                    a = "{}..{}".format(a[:4], a[-4:])
-                d = len(a) * " "
-            else:
-                a = ""
-                d = ""
-                hej = 0
-
-            x = self.ovhg + len(self.watson) - len(self.crick)
-
-            if x > 0:
-                c = self.watson[len(self.crick) - self.ovhg :]
-                y = len(c)
-                if len(c) > 10:
-                    c = "{}..{}".format(c[:4], c[-4:])
-                f = len(c) * " "
-            elif x < 0:
-                f = self.crick[:-x][::-1]
-                y = len(f)
-                if len(f) > 10:
-                    f = "{}..{}".format(f[:4], f[-4:])
-                c = len(f) * " "
-            else:
-                c = ""
-                f = ""
-                y = 0
-
-            L = len(self) - hej - y
-            x1 = -min(0, self.ovhg)
-            x2 = x1 + L
-            x3 = -min(0, x)
-            x4 = x3 + L
-
-            b = self.watson[x1:x2]
-            e = self.crick[x3:x4][::-1]
-
-            if len(b) > 10:
-                b = "{}..{}".format(b[:4], b[-4:])
-                e = "{}..{}".format(e[:4], e[-4:])
-
-            return _pretty_str("{klass}({top}{size})\n" "{a}{b}{c}\n" "{d}{e}{f}").format(
-                klass=self.__class__.__name__,
-                top={False: "-", True: "o"}[self.circular],
-                size=len(self),
-                a=a,
-                b=b,
-                c=c,
-                d=d,
-                e=e,
-                f=f,
-            )
-
-        else:
-            return _pretty_str(
-                "{}({}{})\n{}\n{}".format(
-                    self.__class__.__name__,
-                    {False: "-", True: "o"}[self.circular],
-                    len(self),
-                    self.ovhg * " " + self.watson,
-                    -self.ovhg * " " + self.crick[::-1],
-                )
-            )
+        header = f"{self.__class__.__name__}({({False: '-', True: 'o'}[self.circular])}{len(self)})"
+        m = _re.match(b"([PEXIpexi]*)([QFZJqfzj]*)(?=[GATCgatc])(.*)(?<=[GATCgatc])([PEXIpexi]*)([QFZJqfzj]*)|([PEXIpexiQFZJqfzj]+)", self._data)
+        result = m.groups() if m else (b"",) * 7
+        sticky_left5, sticky_left3, middle, sticky_right5, sticky_right3, single = result
+        if len(self) > self.trunc:
+            sticky_left5 = sticky_left5[:4] + b"22" + sticky_left5[-4:] if sticky_left5 and len(sticky_left5) > 10 else sticky_left5
+            sticky_left3 = sticky_left3[:4] + b"11" + sticky_left3[-4:] if sticky_left3 and len(sticky_left3) > 10 else sticky_left3
+            middle = middle[:4] + b".." + middle[-4:] if middle and len(middle) > 30 else middle
+            sticky_right5 = sticky_right5[:4] + b"22" + sticky_right5[-4:] if sticky_right5 and len(sticky_right5) > 10 else sticky_right5
+            sticky_right3 = sticky_right3[:4] + b"11" + sticky_right3[-4:] if sticky_right3 and len(sticky_right3) > 10 else sticky_right3
+        r = (sticky_left5 or sticky_left3 or b"") + (middle or b"") + (sticky_right5 or sticky_right3 or single or b"")
+        return _pretty_str(f"{header}\n{r.translate(to_watson_table).decode().rstrip()}\n{_complement(r.translate(to_crick_table)).decode()}")
 
     def reverse_complement(self) -> "Dseq":
         """Dseq object where watson and crick have switched places.
@@ -839,12 +337,7 @@ class Dseq(_Seq):
         >>>
 
         """
-        return Dseq.quick(
-            self.crick,
-            self.watson,
-            ovhg=len(self.watson) - len(self.crick) + self.ovhg,
-            circular=self.circular,
-        )
+        return Dseq(_rc(self._data), circular=self.circular)
 
     rc = reverse_complement  # alias for reverse_complement
 
@@ -900,20 +393,24 @@ class Dseq(_Seq):
         """
         if self.circular:
             return _copy.deepcopy(self)
-        type5, sticky5 = self.five_prime_end()
-        type3, sticky3 = self.three_prime_end()
-        if type5 == type3 and str(sticky5) == str(_rc(sticky3)):
-            nseq = self.__class__.quick(
-                self.watson,
-                self.crick[-self.ovhg :] + self.crick[: -self.ovhg],
-                ovhg=0,
-                # linear=False,
-                circular=True,
-            )
-            # assert len(nseq.crick) == len(nseq.watson)
-            return nseq
-        else:
+
+        ms = _re.fullmatch(b"(?:.*)([GATCgatc])([QFZJqfzj]+|[PEXIpexi]+)", self._data)
+        mo = _re.fullmatch(b"([PEXIpexi]+|[QFZJqfzj]+)([GATCgatc])(?:.*)", self._data)
+
+        sticky_left = ms.group(2) if ms else b""
+        sticky_right = mo.group(1) if mo else b""
+
+        sticky_left_just = bytes(f"{sticky_left.decode():<{len(sticky_right)}}", 'utf8')
+        sticky_right_just = bytes(f"{sticky_right.decode():>{len(sticky_left)}}", 'utf8')
+
+        assert len(sticky_left_just) == len(sticky_right_just)
+
+        junction = b"".join([ss_to_ds_dct.get((bytes([w]), bytes([c])), b"-") for w, c in zip(sticky_left_just, sticky_right_just)])
+
+        if b"-" in junction:
             raise TypeError("DNA cannot be circularized.\n" "5' and 3' sticky ends not compatible!")
+
+        return self.__class__(junction + self._data[len(sticky_left) or None:-len(sticky_right) or None], circular=True)
 
     def tolinear(self: DseqType) -> DseqType:  # pragma: no cover
         """Returns a blunt, linear copy of a circular Dseq object. This can
@@ -949,160 +446,10 @@ class Dseq(_Seq):
             raise TypeError("DNA is not circular.\n")
         selfcopy = _copy.deepcopy(self)
         selfcopy.circular = False
-        return selfcopy  # self.__class__(self.watson, linear=True)
-
-    def to_dsiupac(self: DseqType) -> str:  # pragma: no cover
-        from Bio.Data.IUPACData import ambiguous_dna_complement as _ambiguous_dna_complement
-
-        y = "-" * -self.ovhg
-        x = "-" * self.ovhg
-        d = {(k, v): k for k, v in _ambiguous_dna_complement.items()}
-        d.update({(k, v.lower()): k for k, v in d})
-        d.update({(k.lower(), v): k.lower() for k, v in d})
-        d.update({(k.lower(), v.lower()): k.lower() for k, v in d})
-        d.update(
-            {
-                ("-", "G"): "Q",
-                ("-", "A"): "F",
-                ("-", "T"): "Z",
-                ("-", "C"): "J",
-                ("G", "-"): "P",
-                ("A", "-"): "E",
-                ("T", "-"): "X",
-                ("C", "-"): "I",
-                ("-", "g"): "q",
-                ("-", "a"): "f",
-                ("-", "t"): "z",
-                ("-", "c"): "j",
-                ("g", "-"): "p",
-                ("a", "-"): "e",
-                ("t", "-"): "x",
-                ("c", "-"): "i",
-            }
-        )
-
-        return "".join(d[t, b] for t, b in zip(f"{x}{self.watson}{y}", f"{y}{self.crick[::-1]}{x}"))
-
-    def five_prime_end(self) -> _Tuple[str, str]:
-        """Returns a tuple describing the structure of the 5' end of
-        the DNA fragment
-
-        Examples
-        --------
-        >>> from pydna.dseq import Dseq
-        >>> a=Dseq("aaa", "ttt")
-        >>> a
-        Dseq(-3)
-        aaa
-        ttt
-        >>> a.five_prime_end()
-        ('blunt', '')
-        >>> a=Dseq("aaa", "ttt", ovhg=1)
-        >>> a
-        Dseq(-4)
-         aaa
-        ttt
-        >>> a.five_prime_end()
-        ("3'", 't')
-        >>> a=Dseq("aaa", "ttt", ovhg=-1)
-        >>> a
-        Dseq(-4)
-        aaa
-         ttt
-        >>> a.five_prime_end()
-        ("5'", 'a')
-        >>>
-
-        See also
-        --------
-        pydna.dseq.Dseq.three_prime_end
-
-        """
-        if self.watson and not self.crick:
-            return "5'", self.watson.lower()
-        if not self.watson and self.crick:
-            return "3'", self.crick.lower()
-        if self.ovhg < 0:
-            sticky = self.watson[: -self.ovhg].lower()
-            type_ = "5'"
-        elif self.ovhg > 0:
-            sticky = self.crick[-self.ovhg :].lower()
-            type_ = "3'"
-        else:
-            sticky = ""
-            type_ = "blunt"
-        return type_, sticky
-
-    def three_prime_end(self) -> _Tuple[str, str]:
-        """Returns a tuple describing the structure of the 5' end of
-        the DNA fragment
-
-        >>> from pydna.dseq import Dseq
-        >>> a=Dseq("aaa", "ttt")
-        >>> a
-        Dseq(-3)
-        aaa
-        ttt
-        >>> a.three_prime_end()
-        ('blunt', '')
-        >>> a=Dseq("aaa", "ttt", ovhg=1)
-        >>> a
-        Dseq(-4)
-         aaa
-        ttt
-        >>> a.three_prime_end()
-        ("3'", 'a')
-        >>> a=Dseq("aaa", "ttt", ovhg=-1)
-        >>> a
-        Dseq(-4)
-        aaa
-         ttt
-        >>> a.three_prime_end()
-        ("5'", 't')
-        >>>
-
-        See also
-        --------
-        pydna.dseq.Dseq.five_prime_end
-
-        """
-
-        ovhg = len(self.watson) - len(self.crick) + self.ovhg
-
-        if ovhg < 0:
-            sticky = self.crick[:-ovhg].lower()
-            type_ = "5'"
-        elif ovhg > 0:
-            sticky = self.watson[-ovhg:].lower()
-            type_ = "3'"
-        else:
-            sticky = ""
-            type_ = "blunt"
-        return type_, sticky
-
-    def watson_ovhg(self) -> int:
-        """Returns the overhang of the watson strand at the three prime."""
-        return len(self.watson) - len(self.crick) + self.ovhg
+        return selfcopy
 
     def __add__(self: DseqType, other: DseqType) -> DseqType:
-        """Simulates ligation between two DNA fragments.
 
-        Add other Dseq object at the end of the sequence.
-        Type error is raised if any of the points below are fulfilled:
-
-        * one or more objects are circular
-        * if three prime sticky end of self is not the same type
-          (5' or 3') as the sticky end of other
-        * three prime sticky end of self complementary with five
-          prime sticky end of other.
-
-        Phosphorylation and dephosphorylation is not considered.
-
-        DNA is allways presumed to have the necessary 5' phospate
-        group necessary for ligation.
-
-        """
-        # test for circular DNA
         if self.circular:
             raise TypeError("circular DNA cannot be ligated!")
         try:
@@ -1111,18 +458,23 @@ class Dseq(_Seq):
         except AttributeError:
             pass
 
-        self_type, self_tail = self.three_prime_end()
-        other_type, other_tail = other.five_prime_end()
+        ms = _re.fullmatch(b"(?:.*)([GATCgatc])([QFZJqfzj]+|[PEXIpexi]+)", self._data)
+        mo = _re.fullmatch(b"([PEXIpexi]+|[QFZJqfzj]+)([GATCgatc])(?:.*)", other._data)
 
-        if self_type == other_type and str(self_tail) == str(_rc(other_tail)):
-            answer = Dseq.quick(self.watson + other.watson, other.crick + self.crick, self.ovhg)
-        elif not self:
-            answer = _copy.deepcopy(other)
-        elif not other:
-            answer = _copy.deepcopy(self)
-        else:
+        sticky_self = ms.group(2) if ms else b""
+        sticky_other = mo.group(1) if mo else b""
+
+        sticky_self_just = bytes(f"{sticky_self.decode():<{len(sticky_other)}}", 'utf8')
+        sticky_other_just = bytes(f"{sticky_other.decode():>{len(sticky_self)}}", 'utf8')
+
+        assert len(sticky_self_just) == len(sticky_other_just)
+
+        junction = b"".join([ss_to_ds_dct.get((bytes([w]), bytes([c])), b"-") for w, c in zip(sticky_self_just, sticky_other_just)])
+
+        if b"-" in junction:
             raise TypeError("sticky ends not compatible!")
-        return answer
+
+        return self.__class__(self._data[:-len(sticky_self) or None] + junction + other._data[len(sticky_other) or None:])
 
     def __mul__(self: DseqType, number: int) -> DseqType:
         if not isinstance(number, int):
@@ -1134,27 +486,54 @@ class Dseq(_Seq):
             new += self
         return new
 
-    def _fill_in_five_prime(self: DseqType, nucleotides: str) -> str:
-        stuffer = ""
-        type, se = self.five_prime_end()
-        if type == "5'":
-            for n in _rc(se):
-                if n in nucleotides:
-                    stuffer += n
-                else:
-                    break
-        return self.crick + stuffer, self.ovhg + len(stuffer)
-
     def _fill_in_three_prime(self: DseqType, nucleotides: str) -> str:
-        stuffer = ""
-        type, se = self.three_prime_end()
-        if type == "5'":
-            for n in _rc(se):
-                if n in nucleotides:
-                    stuffer += n
-                else:
-                    break
-        return self.watson + stuffer
+        """
+        PEXINNNN
+
+        GATCNNNN
+            NNNN
+
+        """
+        mleft = _re.fullmatch(b"([PEXIpexi]+)([GATCgatc])(?:.*)", self._data)
+        sticky_left = mleft.group(1).decode("ASCII")[::-1] if mleft else ""
+
+        allowed = _complement(nucleotides.upper())
+        newletters = list(sticky_left)
+
+        for i, letter in enumerate(sticky_left.translate(left_fill_in__table)):
+            if letter.upper() in allowed:
+                newletters[i] = letter
+            else:
+                break
+
+        end = ''.join(newletters[::-1])
+
+        return self.__class__(end.encode("ASCII") + self._data[len(sticky_left) or None:], circular=False)
+
+    def _fill_in_five_prime(self: DseqType, nucleotides: str) -> str:
+        """
+        NNNNQFZJ
+
+        NNNN
+        NNNNCTAG
+
+        """
+
+        mright = _re.fullmatch(b"(?:.*)([GATCgatc])([QFZJqfzj]+)", self._data)
+        sticky_right = mright.group(2).decode("ASCII") if mright else ""
+
+        allowed = nucleotides.upper()
+        newletters = list(sticky_right)
+
+        for i, letter in enumerate(sticky_right.translate(right_fill_in__table)):
+            if letter.upper() in allowed:
+                newletters[i] = letter
+            else:
+                break
+
+        end = ''.join(newletters)
+
+        return self.__class__(self._data[:-len(sticky_right) or None] + end.encode("ASCII"), circular=False)
 
     def fill_in(self, nucleotides: _Union[None, str] = None) -> "Dseq":
         """Fill in of five prime protruding end with a DNA polymerase
@@ -1214,18 +593,9 @@ class Dseq(_Seq):
 
         """
         if nucleotides is None:
-            nucleotides = "GATCRYWSMKHBVDN"
+            nucleotides = "GATCgatc"
 
-        nucleotides = set(nucleotides.lower() + nucleotides.upper())
-        crick, ovhg = self._fill_in_five_prime(nucleotides)
-        watson = self._fill_in_three_prime(nucleotides)
-        return Dseq(watson, crick, ovhg)
-
-    def transcribe(self) -> _Seq:
-        return _Seq(self.watson).transcribe()
-
-    def translate(self, table="Standard", stop_symbol="*", to_stop=False, cds=False, gap="-") -> _Seq:
-        return _Seq(_translate_str(str(self), table, stop_symbol, to_stop, cds, gap=gap))
+        return self._fill_in_five_prime(nucleotides)._fill_in_three_prime(nucleotides)
 
     def mung(self) -> "Dseq":
         """
@@ -1268,7 +638,8 @@ class Dseq(_Seq):
 
 
         """
-        return Dseq(self.watson[max(0, -self.ovhg) : min(len(self.watson), len(self.crick) - self.ovhg)])
+
+        return self.__class__(self._data.strip(b"PEXIQFZJpexiqfzj"), circular=False)
 
     def T4(self, nucleotides=None) -> "Dseq":
         """Fill in five prime protruding ends and chewing back
@@ -1312,42 +683,23 @@ class Dseq(_Seq):
 
         """
 
-        if not nucleotides:
-            nucleotides = "GATCRYWSMKHBVDN"
-        nucleotides = set(nucleotides.lower() + nucleotides.upper())
-        type, se = self.five_prime_end()
-        if type == "5'":
-            crick, ovhg = self._fill_in_five_prime(nucleotides)
-        else:
-            if type == "3'":
-                ovhg = 0
-                crick = self.crick[: -len(se)]
-            else:
-                ovhg = 0
-                crick = self.crick
-        x = len(crick) - 1
-        while x >= 0:
-            if crick[x] in nucleotides:
-                break
-            x -= 1
-        ovhg = x - len(crick) + 1 + ovhg
-        crick = crick[: x + 1]
-        if not crick:
-            ovhg = 0
-        watson = self.watson
-        type, se = self.three_prime_end()
-        if type == "5'":
-            watson = self._fill_in_three_prime(nucleotides)
-        else:
-            if type == "3'":
-                watson = self.watson[: -len(se)]
-        x = len(watson) - 1
-        while x >= 0:
-            if watson[x] in nucleotides:
-                break
-            x -= 1
-        watson = watson[: x + 1]
-        return Dseq(watson, crick, ovhg)
+        nucleotides = nucleotides if isinstance(nucleotides, bytes) else nucleotides.encode('ascii')
+
+        strp = self.lstrip(b"QFZJqfzj").rstrip(b"PEXIpexi").fill_in(nucleotides.decode("ascii"))  # remove 3' sticky ends on both sides
+
+        to_remove = bytes(set(b"GATCgatc") - set(nucleotides.upper()+nucleotides.lower()))
+
+        def repl(m):
+            breakpoint()
+            s2 = m.group(2).translate(to_3tail_table) or b""
+            s4 = m.group(4).translate(to_5tail_table) or b""
+            sub = m.group(1) + s2 + m.group(3) + s4 + m.group(5)
+            print("hej")
+            return sub
+
+      # new = _re.sub(b"([PEXIpexi]*)(?=[GATCgatc])([%b]+)(.+?)([%b]+)(?<=[GATCgatc])([QFZJqfzj]*)"% (_complement(to_remove), to_remove), repl, strp._data)
+        new = _re.sub(b"([PEXIpexi]*)(?=[GATCgatc])([%b]+)(.*?)([%b]*)(?<=[GATCgatc])([QFZJqfzj]*)"% (_complement(to_remove), to_remove), repl, strp._data)
+        return self.__class__(new).fill_in(nucleotides.decode("ascii"))
 
     t4 = T4  # alias for the T4 method.
 
@@ -1408,8 +760,8 @@ class Dseq(_Seq):
             cs = _cdseguid(self.watson.upper(), self.crick.upper(), alphabet="{DNA-extended}")
         else:
             """docstring."""
-            w = f"{self.ovhg * '-'}{self.watson}{'-' * (-self.ovhg + len(self.crick) - len(self.watson))}".upper()
-            c = f"{'-' * (self.ovhg + len(self.watson) - len(self.crick))}{self.crick}{-self.ovhg * '-'}".upper()
+            w = self._data.translate(to_watson_table).strip().decode("ascii").upper().replace(" ", "-")
+            c = _complement(self._data.translate(to_crick_table).strip().decode("ascii")).upper()[::-1].replace(" ", "-")
             cs = _ldseguid(w, c, alphabet="{DNA-extended}")
         return cs
 
@@ -1451,7 +803,7 @@ class Dseq(_Seq):
         >>> a.isblunt()
         False
         """
-        return self.ovhg == 0 and len(self.watson) == len(self.crick) and not self.circular
+        return (self._data[0] not in b"PEXIQFZJpexiqfzj") and (self._data[-1] not in b"PEXIQFZJpexiqfzj") and not self.circular
 
     def cas9(self, RNA: str) -> _Tuple[slice, ...]:
         """docstring."""
@@ -1516,59 +868,20 @@ class Dseq(_Seq):
         >>>
 
         """
+        cutsite_pairs = [((0, 0), None)] + self.get_cutsites(*enzymes) + [((len(self), len(self)), None)]
 
-        cutsites = self.get_cutsites(*enzymes)
-        cutsite_pairs = self.get_cutsite_pairs(cutsites)
-        return tuple(self.apply_cut(*cs) for cs in cutsite_pairs)
+        frags = []
 
-    def cutsite_is_valid(self, cutsite: CutSiteType) -> bool:
-        """Returns False if:
-        - Cut positions fall outside the sequence (could be moved to Biopython)
-        - Overhang is not double stranded
-        - Recognition site is not double stranded or is outside the sequence
-        - For enzymes that cut twice, it checks that at least one possibility is valid
-        """
+        for ((w1, c1), e), ((w2, c2), e) in _itertools.pairwise(cutsite_pairs):
 
-        assert cutsite is not None, "cutsite is None"
+            table1 = {1.0: to_5tail_table, -1.0: to_3tail_table}[_math.copysign(1, w1 - c1)]
+            table2 = {1.0: to_3tail_table, -1.0: to_5tail_table}[_math.copysign(1, w2 - c2)]
 
-        enz = cutsite[1]
-        watson, crick, ovhg = self.get_cut_parameters(cutsite, True)
+            frags.append(self._data[min((w1, c1)):max((w1, c1))].translate(table1)
+                         + self._data[max((w1, c1)):min((w2, c2))]
+                         + self._data[min((w2, c2)):max((w2, c2))].translate(table2))
 
-        # The cut positions fall within the sequence
-        # This could go into Biopython
-        if not self.circular and crick < 0 or crick > len(self):
-            return False
-
-        # The overhang is double stranded
-        overhang_dseq = self[watson:crick] if ovhg < 0 else self[crick:watson]
-        if overhang_dseq.ovhg != 0 or overhang_dseq.watson_ovhg() != 0:
-            return False
-
-        # The recognition site is double stranded and within the sequence
-        start_of_recognition_site = watson - enz.fst5
-        if start_of_recognition_site < 0:
-            start_of_recognition_site += len(self)
-        end_of_recognition_site = start_of_recognition_site + enz.size
-        if self.circular:
-            end_of_recognition_site %= len(self)
-        recognition_site = self[start_of_recognition_site:end_of_recognition_site]
-        if len(recognition_site) == 0 or recognition_site.ovhg != 0 or recognition_site.watson_ovhg() != 0:
-            if enz is None or enz.scd5 is None:
-                return False
-            else:
-                # For enzymes that cut twice, this might be referring to the second one
-                start_of_recognition_site = watson - enz.scd5
-                if start_of_recognition_site < 0:
-                    start_of_recognition_site += len(self)
-                end_of_recognition_site = start_of_recognition_site + enz.size
-                if self.circular:
-                    end_of_recognition_site %= len(self)
-                recognition_site = self[start_of_recognition_site:end_of_recognition_site]
-
-                if len(recognition_site) == 0 or recognition_site.ovhg != 0 or recognition_site.watson_ovhg() != 0:
-                    return False
-
-        return True
+        return tuple(self.__class__(frag) for frag in frags)
 
     def get_cutsites(self: DseqType, *enzymes: EnzymesType) -> _List[CutSiteType]:
         """Returns a list of cutsites, represented represented as `((cut_watson, ovhg), enz)`:
@@ -1629,141 +942,12 @@ class Dseq(_Seq):
 
         enzymes = _flatten(enzymes)
         out = list()
+
         for e in enzymes:
-            # Positions of the cut on the watson strand. They are 1-based, so we subtract
-            # 1 to get 0-based positions
-            cuts_watson = [c - 1 for c in e.search(self, linear=(not self.circular))]
+            cuts = [((i.start() + e.fst5, i.start() + e.size + e.fst3), e) for i in _re.finditer(e.compsite, str(self))]
+            out.extend(cuts)
 
-            out += [((w, e.ovhg), e) for w in cuts_watson]
-
-        return sorted([cutsite for cutsite in out if self.cutsite_is_valid(cutsite)])
-
-    def left_end_position(self) -> _Tuple[int, int]:
-        """
-        The index in the full sequence of the watson and crick start positions.
-
-        full sequence (str(self)) for all three cases is AAA
-        ::
-
-            AAA              AA               AAT
-             TT             TTT               TTT
-            Returns (0, 1)  Returns (1, 0)    Returns (0, 0)
-
-
-        """
-        if self.ovhg > 0:
-            return self.ovhg, 0
-        return 0, -self.ovhg
-
-    def right_end_position(self) -> _Tuple[int, int]:
-        """The index in the full sequence of the watson and crick end positions.
-
-        full sequence (str(self)) for all three cases is AAA
-
-        ```
-        AAA               AA                   AAA
-        TT                TTT                  TTT
-        Returns (3, 2)    Returns (2, 3)       Returns (3, 3)
-        ```
-
-        """
-        if self.watson_ovhg() < 0:
-            return len(self) + self.watson_ovhg(), len(self)
-        return len(self), len(self) - self.watson_ovhg()
-
-    def get_cut_parameters(self, cut: _Union[CutSiteType, None], is_left: bool) -> _Tuple[int, int, int]:
-        """For a given cut expressed as ((cut_watson, ovhg), enz), returns
-        a tuple (cut_watson, cut_crick, ovhg).
-
-        - cut_watson: see get_cutsites docs
-        - cut_crick: equivalent of cut_watson in the crick strand
-        - ovhg: see get_cutsites docs
-
-        The cut can be None if it represents the left or right end of the sequence.
-        Then it will return the position of the watson and crick ends with respect
-        to the "full sequence". The `is_left` parameter is only used in this case.
-
-        """
-        if cut is not None:
-            watson, ovhg = cut[0]
-            crick = watson - ovhg
-            if self.circular:
-                crick %= len(self)
-            return watson, crick, ovhg
-
-        assert not self.circular, "Circular sequences should not have None cuts"
-
-        if is_left:
-            return *self.left_end_position(), self.ovhg
-        # In the right end, the overhang does not matter
-        return *self.right_end_position(), self.watson_ovhg()
-
-    def apply_cut(self, left_cut: CutSiteType, right_cut: CutSiteType) -> "Dseq":
-        """Extracts a subfragment of the sequence between two cuts.
-
-        For more detail see the documentation of get_cutsite_pairs.
-
-        Parameters
-        ----------
-        left_cut : Union[tuple[tuple[int,int], _AbstractCut], None]
-        right_cut: Union[tuple[tuple[int,int], _AbstractCut], None]
-
-        Returns
-        -------
-        Dseq
-
-        Examples
-        --------
-        >>> from Bio.Restriction import EcoRI
-        >>> from pydna.dseq import Dseq
-        >>> dseq = Dseq('aaGAATTCaaGAATTCaa')
-        >>> cutsites = dseq.get_cutsites([EcoRI])
-        >>> cutsites
-        [((3, -4), EcoRI), ((11, -4), EcoRI)]
-        >>> p1, p2, p3 = dseq.get_cutsite_pairs(cutsites)
-        >>> p1
-        (None, ((3, -4), EcoRI))
-        >>> dseq.apply_cut(*p1)
-        Dseq(-7)
-        aaG
-        ttCTTAA
-        >>> p2
-        (((3, -4), EcoRI), ((11, -4), EcoRI))
-        >>> dseq.apply_cut(*p2)
-        Dseq(-12)
-        AATTCaaG
-            GttCTTAA
-        >>> p3
-        (((11, -4), EcoRI), None)
-        >>> dseq.apply_cut(*p3)
-        Dseq(-7)
-        AATTCaa
-            Gtt
-
-        >>> dseq = Dseq('TTCaaGAA', circular=True)
-        >>> cutsites = dseq.get_cutsites([EcoRI])
-        >>> cutsites
-        [((6, -4), EcoRI)]
-        >>> pair = dseq.get_cutsite_pairs(cutsites)[0]
-        >>> pair
-        (((6, -4), EcoRI), ((6, -4), EcoRI))
-        >>> dseq.apply_cut(*pair)
-        Dseq(-12)
-        AATTCaaG
-            GttCTTAA
-
-        """
-        if _cuts_overlap(left_cut, right_cut, len(self)):
-            raise ValueError("Cuts by {} {} overlap.".format(left_cut[1], right_cut[1]))
-
-        left_watson, left_crick, ovhg_left = self.get_cut_parameters(left_cut, True)
-        right_watson, right_crick, _ = self.get_cut_parameters(right_cut, False)
-        return Dseq(
-            str(self[left_watson:right_watson]),
-            # The line below could be easier to understand as _rc(str(self[left_crick:right_crick])), but it does not preserve the case
-            str(self.reverse_complement()[len(self) - right_crick : len(self) - left_crick]),
-            ovhg=ovhg_left,
-        )
+        return sorted([cutsite for cutsite in out])
 
     def get_cutsite_pairs(
         self, cutsites: _List[CutSiteType]
@@ -1820,11 +1004,151 @@ class Dseq(_Seq):
 
 
 if __name__ == "__main__":
-    import os as _os
+    # import os as _os
 
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
-    import doctest
+    # cached = _os.getenv("pydna_cached_funcs", "")
+    # _os.environ["pydna_cached_funcs"] = ""
+    # import doctest
 
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached
+    # doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
+    # _os.environ["pydna_cached_funcs"] = cached
+
+    # for x, y in [("abc", "abc"),("abc", "ab"),("ab", "abc")]:
+
+    #     a = f"{x:<{len(y)}}"
+    #     b = f"{y:<{len(x)}}"
+    #     print(repr(a))
+    #     print(repr(b))
+    #     print()
+
+    fiveoh = Dseq('PEXIaaaQFZJ')
+    assert str(fiveoh + fiveoh) == 'PEXIaaaGATCaaaQFZJ'
+    threeoh = Dseq('QFZJQtttPEXIP')
+    assert str(threeoh + threeoh) == "QFZJQtttGATCGtttPEXIP"
+
+    assert repr(Dseq("AIXEP") + Dseq("JZFQA")) == "Dseq(-6)\nACTAGA\nTGATCT"
+    assert repr(Dseq("AIXEP") + Dseq("ZFQA")) == "Dseq(-6)\nACTAGA\nT ATCT"
+    assert repr(Dseq("AIXE") + Dseq("JZFQA")) == "Dseq(-6)\nACTA A\nTGATCT"
+    assert repr(Dseq("AP") + Dseq("QA")) == "Dseq(-3)\nAGA\nTCT"
+    assert repr(Dseq("AE") + Dseq("FA")) == "Dseq(-3)\nAAA\nTTT"
+    assert repr(Dseq("AX") + Dseq("ZA")) == "Dseq(-3)\nATA\nTAT"
+    assert repr(Dseq("AI") + Dseq("JA")) == "Dseq(-3)\nACA\nTGT"
+    assert repr(Dseq("APP") + Dseq("QA")) == "Dseq(-4)\nAGGA\nT CT"
+    assert repr(Dseq("AEE") + Dseq("FA")) == "Dseq(-4)\nAAAA\nT TT"
+    assert repr(Dseq("AXX") + Dseq("ZA")) == "Dseq(-4)\nATTA\nT AT"
+    assert repr(Dseq("AII") + Dseq("JA")) == "Dseq(-4)\nACCA\nT GT"
+
+    assert repr(Dseq("AP") + Dseq("QQA")) == "Dseq(-4)\nAG A\nTCCT"
+    assert repr(Dseq("AE") + Dseq("FFA")) == "Dseq(-4)\nAA A\nTTTT"
+    assert repr(Dseq("AX") + Dseq("ZZA")) == "Dseq(-4)\nAT A\nTAAT"
+    assert repr(Dseq("AI") + Dseq("JJA")) == "Dseq(-4)\nAC A\nTGGT"
+
+    from Bio.Restriction import XmaI, SmaI, KpnI, Acc65I
+
+    s = Dseq("CCCGGGGCATCGTAGTGATCGGTACC") #  blunt
+
+    assert s.looped()._data == s._data
+
+    a,b,c = s.cut([XmaI, Acc65I])
+
+    assert repr(a+b+c) == repr(s)
+
+    a,b,c = s.cut([SmaI, Acc65I])
+
+    assert repr(a+b+c) == repr(s)
+
+    a,b,c = s.cut([SmaI, KpnI])
+
+    assert repr(a+b+c) == repr(s)
+
+    s = Dseq("PPCCCGGGGCATCGTAGTGATCGGTACC")
+
+    a,b,c = s.cut([XmaI, Acc65I])
+
+    assert repr(a+b+c) == repr(s)
+
+    s = Dseq("QQCCCGGGGCATCGTAGTGATCGGTACC")
+
+    a,b,c = s.cut([XmaI, Acc65I])
+
+    assert repr(a+b+c) == repr(s)
+
+    s = Dseq("PEXIAAAQFZJ")
+
+    assert s.looped()._data == b'GATCAAA'
+
+    s = Dseq("PEXIAAAQFZJ")
+
+    assert s._fill_in_three_prime("gatc")._data == b'GATCAAAQFZJ'
+    assert s._fill_in_three_prime("gat")._data == b'PATCAAAQFZJ'
+    assert s._fill_in_three_prime("ga")._data == b'PETCAAAQFZJ'
+    assert s._fill_in_three_prime("g")._data == b'PEXCAAAQFZJ'
+    assert s._fill_in_three_prime("")._data == s._data
+
+    assert s._fill_in_three_prime("atc")._data == s._data
+    assert s._fill_in_three_prime("at")._data == s._data
+    assert s._fill_in_three_prime("a")._data == s._data
+    assert s._fill_in_three_prime("")._data == s._data
+
+    assert s._fill_in_five_prime("gatc")._data == b'PEXIAAAGATC'
+    assert s._fill_in_five_prime("gat")._data ==  b'PEXIAAAGATJ'
+    assert s._fill_in_five_prime("ga")._data ==   b'PEXIAAAGAZJ'
+    assert s._fill_in_five_prime("g")._data ==    b'PEXIAAAGFZJ'
+    assert s._fill_in_five_prime("")._data == s._data
+
+    assert s._fill_in_five_prime("atc")._data == s._data
+    assert s._fill_in_five_prime("at")._data == s._data
+    assert s._fill_in_five_prime("a")._data == s._data
+    assert s._fill_in_five_prime("")._data == s._data
+
+    assert s.fill_in("gatc")._data == b'GATCAAAGATC'
+    assert s.fill_in("gat")._data == b'PATCAAAGATJ'
+    assert s.fill_in("ga")._data == b'PETCAAAGAZJ'
+    assert s.fill_in("g")._data == b'PEXCAAAGFZJ'
+    assert s.fill_in("")._data == s._data
+
+    assert s == Dseq.from_representation(repr(s))
+
+    assert Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=2, watson_ovhg=2)._data == Dseq("FFAAEE")._data
+    assert Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=-2, watson_ovhg=2)._data == Dseq("EEAAEE")._data
+    assert Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=2, watson_ovhg=-2)._data == Dseq("FFAAFF")._data
+    assert Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=-2, watson_ovhg=-2)._data == Dseq("EEAAFF")._data
+
+    assert repr(Dseq("XIpexiPEXIpexiAqfzjQFZJqfzjQF")) == ("Dseq(-29)\n"
+                                                           "TCgatcGATCgatcA\n"
+                                                           "              TctagCTAGctagCT")
+
+    assert repr(Dseq("XIpexiPEXIpexiAAqfzjQFZJqfzjQF")) == ("Dseq(-30)\n"
+                                                             "TCgatcGATCgatcAA\n"
+                                                             "              TTctagCTAGctagCT")
+
+    assert repr(Dseq("EXIpexiPEXIpexiAqfzjQFZJqfzjQFZ")) == ("Dseq(-31)\n"
+                                                             "ATCg..gatcA\n"
+                                                             "          Tctag..gCTA")
+
+    assert repr(Dseq("XIpexiPEXIpexiAaAqfzjQFZJqfzjQF")) == ("Dseq(-31)\n"
+                                                             "TCga..gatcAaA\n"
+                                                             "          TtTctag..agCT")
+
+
+
+    dsdna = """
+               Dseq(
+                GGATCC
+               aCCTAGGg"""
+
+
+    assert Dseq.from_representation(dsdna)._data == b"zGGATCCj"
+
+    dsdna = """Dseq(
+               aGGATCCg
+                CCTAGG"""
+
+    assert Dseq.from_representation(dsdna)._data == b"eGGATCCp"
+
+    self = Dseq('PEXIGGATCCQFZJ')
+    # self = Dseq('PAGAJ')
+    # self = Dseq('QFZJGGATCCPEXI')
+
+
+    Dseq("pexiAqfzj").T4(b"GATC")
