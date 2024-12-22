@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Dec 16 06:28:16 2024
+
+@author: bjorn
+"""
+from Bio.Seq import Seq
+from Bio.Restriction import FormattedSeq
+
+class QuickFormattedSeq(FormattedSeq):
+
+    def __init__(self, seq, linear=True):
+        self.lower = False
+        self.data = seq.decode("ascii")
+        self.linear = linear
+        self.klass = seq.__class__
+
+    def __getitem__(self, i):
+        return self.data[i]
+
+
+from Bio.Restriction import BamHI
+
+print(BamHI.search(Seq("GGATCC")))
+print(BamHI.search(FormattedSeq("GGATCC")))
+
+
+z = QuickFormattedSeq(b"GGATCC")

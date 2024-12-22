@@ -5,7 +5,7 @@
 A subclass of the Biopython SeqRecord class.
 
 Has a number of extra methods and uses
-the :class:`pydna._pretty_str.pretty_str` class instread of str for a
+the :class:`pydna._pretty_str.pretty_str` class instead of str for a
 nicer output in the IPython shell.
 """
 

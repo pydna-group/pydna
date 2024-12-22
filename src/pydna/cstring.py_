@@ -1,0 +1,75 @@
+class CircularString(str):
+    def __getitem__(self, key):
+        """
+        Overrides the str.__getitem__ method to add circular indexing and slicing.
+        """
+        if isinstance(key, int):  # Single index
+            return self._get_char(key)
+        elif isinstance(key, slice):  # Slicing
+            return self._get_slice(key)
+        else:
+            raise TypeError("Invalid argument type. Key must be int or slice.")
+
+    def _get_char(self, index: int) -> str:
+        """
+        Get a single character with circular indexing.
+        """
+        index = index % len(self)  # Circular adjustment
+        return super().__getitem__(index)
+
+    def _get_slice(self, slice_obj: slice) -> str:
+        """
+        Get a sliced portion with circular slicing.
+        """
+
+        start, stop, step = slice_obj.indices(len(self) * 2)
+        if start < 0:
+            start += len(self)
+            breakpoint()
+        if stop < 0:
+            stop += len(self)
+            breakpoint()
+
+        result = []
+        for i in range(start, stop, step or 1):
+            result.append(self[i % len(self)])
+        return ''.join(result)
+
+    def to_linear(self, origin: int = 0) -> str:
+        """
+        Returns a linear representation of the circular string starting from `origin`.
+
+        :param origin: The position to start the linear string from.
+        :return: A linearized string starting from the given origin.
+        """
+        origin = origin % len(self)  # Circular adjustment for origin
+        return self[origin:] + self[:origin]
+
+    def __repr__(self):
+        """
+        Representation of the CircularString object.
+        """
+        return f"CircularString({super().__repr__()})"
+
+
+# Example Usage
+if __name__ == "__main__":
+    cs = CircularString("TTggtctcAAgc")
+    cs[9:21]
+    cs[1:13]
+
+
+
+
+    print(cs[1])          # Output: 'b'
+    print(cs[-1])         # Output: 'f'
+    print(cs[5])          # Output: 'f'
+    print(cs[6])          # Output: 'a' (wraps around)
+    print(cs[:8])         # Output: 'abcdefab' (wraps around for slicing)
+    print(cs[-3:10:2])    # Output: 'dfb'
+    print(cs + "ghi")     # Output: 'abcdefghi' (inherits str functionality)
+    print(cs.startswith("abc"))  # Output: True (inherits str functionality)
+    print(cs.to_linear(2))  # Output: 'cdefab' (starts from index 2)
+    print(cs.to_linear(-2)) # Output: 'efabcd' (starts from index -2, adjusted to 4)
+    print(str(cs))        # Output: 'abcdef'
+    print(repr(cs))       # Output: CircularString('abcdef')

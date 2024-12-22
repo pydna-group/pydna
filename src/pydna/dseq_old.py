@@ -55,7 +55,7 @@ EnzymesType = _TypeVar("EnzymesType", _RestrictionBatch, _Iterable["_AbstractCut
 CutSiteType = _Tuple[_Tuple[int, int], _Union["_AbstractCut", None]]
 
 
-class Dseq(_Seq):
+class oDseq(_Seq):
     """Dseq holds information for a double stranded DNA fragment.
 
     Dseq also holds information describing the topology of
@@ -98,8 +98,8 @@ class Dseq(_Seq):
     Only one argument (string):
 
     >>> from pydna.dseq import Dseq
-    >>> Dseq("aaa")
-    Dseq(-3)
+    >>> oDseq("aaa")
+    oDseq(-3)
     aaa
     ttt
 
@@ -110,8 +110,8 @@ class Dseq(_Seq):
     Two arguments (string, string):
 
     >>> from pydna.dseq import Dseq
-    >>> Dseq("gggaaat","ttt")
-    Dseq(-7)
+    >>> oDseq("gggaaat","ttt")
+    oDseq(-7)
     gggaaat
        ttt
 
@@ -147,31 +147,31 @@ class Dseq(_Seq):
 
     Example of creating Dseq objects with different amounts of stagger:
 
-    >>> Dseq(watson="agt", crick="actta", ovhg=-2)
-    Dseq(-7)
+    >>> oDseq(watson="agt", crick="actta", ovhg=-2)
+    oDseq(-7)
     agt
       attca
-    >>> Dseq(watson="agt",crick="actta",ovhg=-1)
-    Dseq(-6)
+    >>> oDseq(watson="agt",crick="actta",ovhg=-1)
+    oDseq(-6)
     agt
      attca
-    >>> Dseq(watson="agt",crick="actta",ovhg=0)
-    Dseq(-5)
+    >>> oDseq(watson="agt",crick="actta",ovhg=0)
+    oDseq(-5)
     agt
     attca
-    >>> Dseq(watson="agt",crick="actta",ovhg=1)
-    Dseq(-5)
+    >>> oDseq(watson="agt",crick="actta",ovhg=1)
+    oDseq(-5)
      agt
     attca
-    >>> Dseq(watson="agt",crick="actta",ovhg=2)
-    Dseq(-5)
+    >>> oDseq(watson="agt",crick="actta",ovhg=2)
+    oDseq(-5)
       agt
     attca
 
     If the ovhg parameter is specified a crick strand also
     needs to be supplied, otherwise an exception is raised.
 
-    >>> Dseq(watson="agt", ovhg=2)
+    >>> oDseq(watson="agt", ovhg=2)
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
       File "/usr/local/lib/python2.7/dist-packages/pydna_/dsdna.py", line 169, in __init__
@@ -185,38 +185,38 @@ class Dseq(_Seq):
     circular = True.
 
 
-    >>> Dseq("aaa","ttt")
-    Dseq(-3)
+    >>> oDseq("aaa","ttt")
+    oDseq(-3)
     aaa
     ttt
-    >>> Dseq("aaa","ttt",ovhg=0)
-    Dseq(-3)
+    >>> oDseq("aaa","ttt",ovhg=0)
+    oDseq(-3)
     aaa
     ttt
-    >>> Dseq("aaa","ttt",ovhg=1)
-    Dseq(-4)
+    >>> oDseq("aaa","ttt",ovhg=1)
+    oDseq(-4)
      aaa
     ttt
-    >>> Dseq("aaa","ttt",ovhg=-1)
-    Dseq(-4)
+    >>> oDseq("aaa","ttt",ovhg=-1)
+    oDseq(-4)
     aaa
      ttt
-    >>> Dseq("aaa", "ttt", circular = True , ovhg=0)
-    Dseq(o3)
+    >>> oDseq("aaa", "ttt", circular = True , ovhg=0)
+    oDseq(o3)
     aaa
     ttt
 
-    >>> a=Dseq("tttcccc","aaacccc")
+    >>> a=oDseq("tttcccc","aaacccc")
     >>> a
-    Dseq(-11)
+    oDseq(-11)
         tttcccc
     ccccaaa
     >>> a.ovhg
     4
 
-    >>> b=Dseq("ccccttt","ccccaaa")
+    >>> b=oDseq("ccccttt","ccccaaa")
     >>> b
-    Dseq(-11)
+    oDseq(-11)
     ccccttt
         aaacccc
     >>> b.ovhg
@@ -252,21 +252,21 @@ class Dseq(_Seq):
     >>> s[::2]
     'gac'
     >>> from pydna.dseq import Dseq
-    >>> d=Dseq(s, circular=False)
+    >>> d=oDseq(s, circular=False)
     >>> d[2:3]
-    Dseq(-1)
+    oDseq(-1)
     a
     t
     >>> d[2:4]
-    Dseq(-2)
+    oDseq(-2)
     at
     ta
     >>> d[2:4:-1]
-    Dseq(-0)
+    oDseq(-0)
     <BLANKLINE>
     <BLANKLINE>
     >>> d[::2]
-    Dseq(-3)
+    oDseq(-3)
     gac
     ctg
 
@@ -275,13 +275,13 @@ class Dseq(_Seq):
 
 
     >>> s="ggAtCc"
-    >>> d=Dseq(s, circular=True)
+    >>> d=oDseq(s, circular=True)
     >>> d
-    Dseq(o6)
+    oDseq(o6)
     ggAtCc
     ccTaGg
     >>> d[4:3]
-    Dseq(-5)
+    oDseq(-5)
     CcggA
     GgccT
 
@@ -290,13 +290,13 @@ class Dseq(_Seq):
     will return the linearized sequence starting at X:
 
     >>> s="ggatcc"
-    >>> d=Dseq(s, circular=True)
+    >>> d=oDseq(s, circular=True)
     >>> d
-    Dseq(o6)
+    oDseq(o6)
     ggatcc
     cctagg
     >>> d[3:3]
-    Dseq(-6)
+    oDseq(-6)
     tccgga
     aggcct
     >>>
@@ -390,6 +390,7 @@ class Dseq(_Seq):
         self.length = len(self._data)
         self.ovhg = ovhg
         self.pos = pos
+        print(f"Dseq(\"{self.to_dsiupac()}\")")
 
     @classmethod
     def quick(
@@ -452,7 +453,7 @@ class Dseq(_Seq):
         obj.ovhg = -ovhg
         obj.length = max(len(watson) + max(0, ovhg), len(crick) + max(0, -ovhg))
         obj._data = bytes(dsdna.translate(ds_to_ss_table), encoding="ASCII")
-        # breakpoint()
+
         return obj
 
     @classmethod
@@ -499,24 +500,24 @@ class Dseq(_Seq):
         --------
 
         >>> Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=2, watson_ovhg=2)
-        Dseq(-6)
+        oDseq(-6)
           AAAA
         TTTT
         >>> Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=-2, watson_ovhg=2)
-        Dseq(-6)
+        oDseq(-6)
         AAAAAA
           TT
         >>> Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=2, watson_ovhg=-2)
-        Dseq(-6)
+        oDseq(-6)
           AA
         TTTTTT
         >>> Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=-2, watson_ovhg=-2)
-        Dseq(-6)
+        oDseq(-6)
         AAAA
           TTTT
 
         """
-        full_sequence_rev = str(Dseq(full_sequence).reverse_complement())
+        full_sequence_rev = str(oDseq(full_sequence).reverse_complement())
         watson = full_sequence
         crick = full_sequence_rev
 
@@ -532,7 +533,7 @@ class Dseq(_Seq):
         elif watson_ovhg > 0:
             crick = crick[watson_ovhg:]
 
-        return Dseq(watson, crick=crick, ovhg=crick_ovhg)
+        return oDseq(watson, crick=crick, ovhg=crick_ovhg)
 
     # @property
     # def ovhg(self):
@@ -576,13 +577,13 @@ class Dseq(_Seq):
         """Return an upper case copy of the sequence.
 
         >>> from pydna.dseq import Dseq
-        >>> my_seq = Dseq("aAa")
+        >>> my_seq = oDseq("aAa")
         >>> my_seq
-        Dseq(-3)
+        oDseq(-3)
         aAa
         tTt
         >>> my_seq.upper()
-        Dseq(-3)
+        oDseq(-3)
         AAA
         TTT
 
@@ -609,13 +610,13 @@ class Dseq(_Seq):
         """Return a lower case copy of the sequence.
 
         >>> from pydna.dseq import Dseq
-        >>> my_seq = Dseq("aAa")
+        >>> my_seq = oDseq("aAa")
         >>> my_seq
-        Dseq(-3)
+        oDseq(-3)
         aAa
         tTt
         >>> my_seq.lower()
-        Dseq(-3)
+        oDseq(-3)
         aaa
         ttt
 
@@ -660,16 +661,16 @@ class Dseq(_Seq):
         Examples
         --------
         >>> from pydna.dseq import Dseq
-        >>> seq = Dseq("atcgactgacgtgtt")
+        >>> seq = oDseq("atcgactgacgtgtt")
         >>> seq
-        Dseq(-15)
+        oDseq(-15)
         atcgactgacgtgtt
         tagctgactgcacaa
         >>> seq.find("gac")
         3
-        >>> seq = Dseq(watson="agt",crick="actta",ovhg=-2)
+        >>> seq = oDseq(watson="agt",crick="actta",ovhg=-2)
         >>> seq
-        Dseq(-7)
+        oDseq(-7)
         agt
           attca
         >>> seq.find("taa")
@@ -692,7 +693,7 @@ class Dseq(_Seq):
 
             ovhg = max((len(sns) - len(sns.lstrip()), -len(asn) + len(asn.lstrip())), key=abs)
 
-            return Dseq(
+            return oDseq(
                 sns.strip(),
                 asn[::-1].strip(),
                 ovhg=ovhg,
@@ -701,9 +702,9 @@ class Dseq(_Seq):
         else:
             sl = slice(sl.start or 0, sl.stop or len(self), sl.step)
             if sl.start > len(self) or sl.stop > len(self):
-                return Dseq("")
+                return oDseq("")
             if sl.start < sl.stop:
-                return Dseq(
+                return oDseq(
                     self.watson[sl],
                     self.crick[::-1][sl][::-1],
                     ovhg=0,
@@ -720,7 +721,7 @@ class Dseq(_Seq):
                 w = self.watson[(start or len(self)) :: stp] + self.watson[: (stop or 0) : stp]
                 c = self.crick[len(self) - stop :: stp] + self.crick[: len(self) - start : stp]
 
-                return Dseq(w, c, ovhg=0)  # , linear=True)
+                return oDseq(w, c, ovhg=0)  # , linear=True)
 
     def __eq__(self, other: DseqType) -> bool:
         """Compare to another Dseq object OR an object that implements
@@ -744,7 +745,7 @@ class Dseq(_Seq):
         """Returns a representation of the sequence, truncated if
         longer than 30 bp"""
 
-        if len(self) > Dseq.trunc:
+        if len(self) > oDseq.trunc:
             if self.ovhg > 0:
                 d = self.crick[-self.ovhg :][::-1]
                 hej = len(d)
@@ -826,20 +827,20 @@ class Dseq(_Seq):
         Examples
         --------
         >>> from pydna.dseq import Dseq
-        >>> a=Dseq("catcgatc")
+        >>> a=oDseq("catcgatc")
         >>> a
-        Dseq(-8)
+        oDseq(-8)
         catcgatc
         gtagctag
         >>> b=a.reverse_complement()
         >>> b
-        Dseq(-8)
+        oDseq(-8)
         gatcgatg
         ctagctac
         >>>
 
         """
-        return Dseq.quick(
+        return oDseq.quick(
             self.crick,
             self.watson,
             ovhg=len(self.watson) - len(self.crick) + self.ovhg,
@@ -867,25 +868,25 @@ class Dseq(_Seq):
         Examples
         --------
         >>> from pydna.dseq import Dseq
-        >>> a=Dseq("catcgatc")
+        >>> a=oDseq("catcgatc")
         >>> a
-        Dseq(-8)
+        oDseq(-8)
         catcgatc
         gtagctag
         >>> a.looped()
-        Dseq(o8)
+        oDseq(o8)
         catcgatc
         gtagctag
         >>> a.T4("t")
-        Dseq(-8)
+        oDseq(-8)
         catcgat
          tagctag
         >>> a.T4("t").looped()
-        Dseq(o7)
+        oDseq(o7)
         catcgat
         gtagcta
         >>> a.T4("a")
-        Dseq(-8)
+        oDseq(-8)
         catcga
           agctag
         >>> a.T4("a").looped()
@@ -926,13 +927,13 @@ class Dseq(_Seq):
         --------
 
         >>> from pydna.dseq import Dseq
-        >>> a=Dseq("catcgatc", circular=True)
+        >>> a=oDseq("catcgatc", circular=True)
         >>> a
-        Dseq(o8)
+        oDseq(o8)
         catcgatc
         gtagctag
         >>> a[:]
-        Dseq(-8)
+        oDseq(-8)
         catcgatc
         gtagctag
         >>>
@@ -956,32 +957,37 @@ class Dseq(_Seq):
 
         y = "-" * -self.ovhg
         x = "-" * self.ovhg
+        a = "-" * (len(self.crick) - len(self.watson) - self.ovhg)
+        b = "-" * (len(self.watson) - len(self.crick) + self.ovhg)
         d = {(k, v): k for k, v in _ambiguous_dna_complement.items()}
         d.update({(k, v.lower()): k for k, v in d})
         d.update({(k.lower(), v): k.lower() for k, v in d})
         d.update({(k.lower(), v.lower()): k.lower() for k, v in d})
         d.update(
             {
-                ("-", "G"): "Q",
-                ("-", "A"): "F",
-                ("-", "T"): "Z",
-                ("-", "C"): "J",
                 ("G", "-"): "P",
                 ("A", "-"): "E",
                 ("T", "-"): "X",
                 ("C", "-"): "I",
-                ("-", "g"): "q",
-                ("-", "a"): "f",
-                ("-", "t"): "z",
-                ("-", "c"): "j",
                 ("g", "-"): "p",
                 ("a", "-"): "e",
                 ("t", "-"): "x",
                 ("c", "-"): "i",
+
+                ("-", "g"): "j",
+                ("-", "a"): "z",
+                ("-", "t"): "f",
+                ("-", "c"): "q",
+                ("-", "G"): "J",
+                ("-", "A"): "Z",
+                ("-", "T"): "F",
+                ("-", "C"): "Q",
+
             }
         )
 
-        return "".join(d[t, b] for t, b in zip(f"{x}{self.watson}{y}", f"{y}{self.crick[::-1]}{x}"))
+        return "".join(d[t, b] for t, b in zip(f"{x}{self.watson}{a}",
+                                               f"{y}{self.crick[::-1]}{b}"))
 
     def five_prime_end(self) -> _Tuple[str, str]:
         """Returns a tuple describing the structure of the 5' end of
@@ -990,23 +996,23 @@ class Dseq(_Seq):
         Examples
         --------
         >>> from pydna.dseq import Dseq
-        >>> a=Dseq("aaa", "ttt")
+        >>> a=oDseq("aaa", "ttt")
         >>> a
-        Dseq(-3)
+        oDseq(-3)
         aaa
         ttt
         >>> a.five_prime_end()
         ('blunt', '')
-        >>> a=Dseq("aaa", "ttt", ovhg=1)
+        >>> a=oDseq("aaa", "ttt", ovhg=1)
         >>> a
-        Dseq(-4)
+        oDseq(-4)
          aaa
         ttt
         >>> a.five_prime_end()
         ("3'", 't')
-        >>> a=Dseq("aaa", "ttt", ovhg=-1)
+        >>> a=oDseq("aaa", "ttt", ovhg=-1)
         >>> a
-        Dseq(-4)
+        oDseq(-4)
         aaa
          ttt
         >>> a.five_prime_end()
@@ -1038,23 +1044,23 @@ class Dseq(_Seq):
         the DNA fragment
 
         >>> from pydna.dseq import Dseq
-        >>> a=Dseq("aaa", "ttt")
+        >>> a=oDseq("aaa", "ttt")
         >>> a
-        Dseq(-3)
+        oDseq(-3)
         aaa
         ttt
         >>> a.three_prime_end()
         ('blunt', '')
-        >>> a=Dseq("aaa", "ttt", ovhg=1)
+        >>> a=oDseq("aaa", "ttt", ovhg=1)
         >>> a
-        Dseq(-4)
+        oDseq(-4)
          aaa
         ttt
         >>> a.three_prime_end()
         ("3'", 'a')
-        >>> a=Dseq("aaa", "ttt", ovhg=-1)
+        >>> a=oDseq("aaa", "ttt", ovhg=-1)
         >>> a
-        Dseq(-4)
+        oDseq(-4)
         aaa
          ttt
         >>> a.three_prime_end()
@@ -1115,7 +1121,7 @@ class Dseq(_Seq):
         other_type, other_tail = other.five_prime_end()
 
         if self_type == other_type and str(self_tail) == str(_rc(other_tail)):
-            answer = Dseq.quick(self.watson + other.watson, other.crick + self.crick, self.ovhg)
+            answer = oDseq.quick(self.watson + other.watson, other.crick + self.crick, self.ovhg)
         elif not self:
             answer = _copy.deepcopy(other)
         elif not other:
@@ -1171,39 +1177,39 @@ class Dseq(_Seq):
         --------
 
         >>> from pydna.dseq import Dseq
-        >>> a=Dseq("aaa", "ttt")
+        >>> a=oDseq("aaa", "ttt")
         >>> a
-        Dseq(-3)
+        oDseq(-3)
         aaa
         ttt
         >>> a.fill_in()
-        Dseq(-3)
+        oDseq(-3)
         aaa
         ttt
-        >>> b=Dseq("caaa", "cttt")
+        >>> b=oDseq("caaa", "cttt")
         >>> b
-        Dseq(-5)
+        oDseq(-5)
         caaa
          tttc
         >>> b.fill_in()
-        Dseq(-5)
+        oDseq(-5)
         caaag
         gtttc
         >>> b.fill_in("g")
-        Dseq(-5)
+        oDseq(-5)
         caaag
         gtttc
         >>> b.fill_in("tac")
-        Dseq(-5)
+        oDseq(-5)
         caaa
          tttc
-        >>> c=Dseq("aaac", "tttg")
+        >>> c=oDseq("aaac", "tttg")
         >>> c
-        Dseq(-5)
+        oDseq(-5)
          aaac
         gttt
         >>> c.fill_in()
-        Dseq(-5)
+        oDseq(-5)
          aaac
         gttt
         >>>
@@ -1219,7 +1225,7 @@ class Dseq(_Seq):
         nucleotides = set(nucleotides.lower() + nucleotides.upper())
         crick, ovhg = self._fill_in_five_prime(nucleotides)
         watson = self._fill_in_three_prime(nucleotides)
-        return Dseq(watson, crick, ovhg)
+        return oDseq(watson, crick, ovhg)
 
     def transcribe(self) -> _Seq:
         return _Seq(self.watson).transcribe()
@@ -1241,22 +1247,22 @@ class Dseq(_Seq):
              tcctag            cctag
 
          >>> from pydna.dseq import Dseq
-         >>> b=Dseq("caaa", "cttt")
+         >>> b=oDseq("caaa", "cttt")
          >>> b
-         Dseq(-5)
+         oDseq(-5)
          caaa
           tttc
          >>> b.mung()
-         Dseq(-3)
+         oDseq(-3)
          aaa
          ttt
-         >>> c=Dseq("aaac", "tttg")
+         >>> c=oDseq("aaac", "tttg")
          >>> c
-         Dseq(-5)
+         oDseq(-5)
           aaac
          gttt
          >>> c.mung()
-         Dseq(-3)
+         oDseq(-3)
          aaa
          ttt
 
@@ -1268,7 +1274,7 @@ class Dseq(_Seq):
 
 
         """
-        return Dseq(self.watson[max(0, -self.ovhg) : min(len(self.watson), len(self.crick) - self.ovhg)])
+        return oDseq(self.watson[max(0, -self.ovhg) : min(len(self.watson), len(self.crick) - self.ovhg)])
 
     def T4(self, nucleotides=None) -> "Dseq":
         """Fill in five prime protruding ends and chewing back
@@ -1287,25 +1293,25 @@ class Dseq(_Seq):
         --------
 
         >>> from pydna.dseq import Dseq
-        >>> a=Dseq("gatcgatc")
+        >>> a=oDseq("gatcgatc")
         >>> a
-        Dseq(-8)
+        oDseq(-8)
         gatcgatc
         ctagctag
         >>> a.T4()
-        Dseq(-8)
+        oDseq(-8)
         gatcgatc
         ctagctag
         >>> a.T4("t")
-        Dseq(-8)
+        oDseq(-8)
         gatcgat
          tagctag
         >>> a.T4("a")
-        Dseq(-8)
+        oDseq(-8)
         gatcga
           agctag
         >>> a.T4("g")
-        Dseq(-8)
+        oDseq(-8)
         gatcg
            gctag
         >>>
@@ -1347,7 +1353,7 @@ class Dseq(_Seq):
                 break
             x -= 1
         watson = watson[: x + 1]
-        return Dseq(watson, crick, ovhg)
+        return oDseq(watson, crick, ovhg)
 
     t4 = T4  # alias for the T4 method.
 
@@ -1422,30 +1428,30 @@ class Dseq(_Seq):
         Examples
         --------
         >>> from pydna.dseq import Dseq
-        >>> a=Dseq("gat")
+        >>> a=oDseq("gat")
         >>> a
-        Dseq(-3)
+        oDseq(-3)
         gat
         cta
         >>> a.isblunt()
         True
-        >>> a=Dseq("gat", "atcg")
+        >>> a=oDseq("gat", "atcg")
         >>> a
-        Dseq(-4)
+        oDseq(-4)
          gat
         gcta
         >>> a.isblunt()
         False
-        >>> a=Dseq("gat", "gatc")
+        >>> a=oDseq("gat", "gatc")
         >>> a
-        Dseq(-4)
+        oDseq(-4)
         gat
         ctag
         >>> a.isblunt()
         False
-        >>> a=Dseq("gat", circular=True)
+        >>> a=oDseq("gat", circular=True)
         >>> a
-        Dseq(o3)
+        oDseq(o3)
         gat
         cta
         >>> a.isblunt()
@@ -1460,7 +1466,7 @@ class Dseq(_Seq):
         cuts = [0]
         for m in _re.finditer(bRNA, self._data):
             cuts.append(m.start() + 17)
-        cuts.append(self.length)
+        cuts.append(len(self))
         slices = tuple(slice(x, y, 1) for x, y in zip(cuts, cuts[1:]))
         return slices
 
@@ -1469,7 +1475,7 @@ class Dseq(_Seq):
         ovhg = self.ovhg
         if self.ovhg >= 0:
             ovhg += len(nucleotides)
-        return Dseq(self.watson + nucleotides, self.crick + nucleotides, ovhg)
+        return oDseq(self.watson + nucleotides, self.crick + nucleotides, ovhg)
 
     def cut(self: DseqType, *enzymes: EnzymesType) -> _Tuple[DseqType, ...]:
         """Returns a list of linear Dseq fragments produced in the digestion.
@@ -1491,26 +1497,26 @@ class Dseq(_Seq):
         --------
 
         >>> from pydna.dseq import Dseq
-        >>> seq=Dseq("ggatccnnngaattc")
+        >>> seq=oDseq("ggatccnnngaattc")
         >>> seq
-        Dseq(-15)
+        oDseq(-15)
         ggatccnnngaattc
         cctaggnnncttaag
         >>> from Bio.Restriction import BamHI,EcoRI
         >>> type(seq.cut(BamHI))
         <class 'tuple'>
         >>> for frag in seq.cut(BamHI): print(repr(frag))
-        Dseq(-5)
+        oDseq(-5)
         g
         cctag
-        Dseq(-14)
+        oDseq(-14)
         gatccnnngaattc
             gnnncttaag
         >>> seq.cut(EcoRI, BamHI) ==  seq.cut(BamHI, EcoRI)
         True
         >>> a,b,c = seq.cut(EcoRI, BamHI)
         >>> a+b+c
-        Dseq(-15)
+        oDseq(-15)
         ggatccnnngaattc
         cctaggnnncttaag
         >>>
@@ -1598,7 +1604,7 @@ class Dseq(_Seq):
 
         >>> from Bio.Restriction import EcoRI
         >>> from pydna.dseq import Dseq
-        >>> seq = Dseq('AAGAATTCAAGAATTC')
+        >>> seq = oDseq('AAGAATTCAAGAATTC')
         >>> seq.get_cutsites(EcoRI)
         [((3, -4), EcoRI), ((11, -4), EcoRI)]
 
@@ -1607,7 +1613,7 @@ class Dseq(_Seq):
 
         >>> dseq = Dseq.from_full_sequence_and_overhangs('aaGAATTCaa', 1, 0)
         >>> dseq
-        Dseq(-10)
+        oDseq(-10)
          aGAATTCaa
         ttCTTAAGtt
         >>> dseq.get_cutsites([EcoRI])
@@ -1616,7 +1622,7 @@ class Dseq(_Seq):
         Cuts are only returned if the recognition site and overhang are on the double-strand
         part of the sequence.
 
-        >>> Dseq('GAATTC').get_cutsites([EcoRI])
+        >>> oDseq('GAATTC').get_cutsites([EcoRI])
         [((1, -4), EcoRI)]
         >>> Dseq.from_full_sequence_and_overhangs('GAATTC', -1, 0).get_cutsites([EcoRI])
         []
@@ -1716,7 +1722,7 @@ class Dseq(_Seq):
         --------
         >>> from Bio.Restriction import EcoRI
         >>> from pydna.dseq import Dseq
-        >>> dseq = Dseq('aaGAATTCaaGAATTCaa')
+        >>> dseq = oDseq('aaGAATTCaaGAATTCaa')
         >>> cutsites = dseq.get_cutsites([EcoRI])
         >>> cutsites
         [((3, -4), EcoRI), ((11, -4), EcoRI)]
@@ -1724,23 +1730,23 @@ class Dseq(_Seq):
         >>> p1
         (None, ((3, -4), EcoRI))
         >>> dseq.apply_cut(*p1)
-        Dseq(-7)
+        oDseq(-7)
         aaG
         ttCTTAA
         >>> p2
         (((3, -4), EcoRI), ((11, -4), EcoRI))
         >>> dseq.apply_cut(*p2)
-        Dseq(-12)
+        oDseq(-12)
         AATTCaaG
             GttCTTAA
         >>> p3
         (((11, -4), EcoRI), None)
         >>> dseq.apply_cut(*p3)
-        Dseq(-7)
+        oDseq(-7)
         AATTCaa
             Gtt
 
-        >>> dseq = Dseq('TTCaaGAA', circular=True)
+        >>> dseq = oDseq('TTCaaGAA', circular=True)
         >>> cutsites = dseq.get_cutsites([EcoRI])
         >>> cutsites
         [((6, -4), EcoRI)]
@@ -1748,7 +1754,7 @@ class Dseq(_Seq):
         >>> pair
         (((6, -4), EcoRI), ((6, -4), EcoRI))
         >>> dseq.apply_cut(*pair)
-        Dseq(-12)
+        oDseq(-12)
         AATTCaaG
             GttCTTAA
 
@@ -1758,7 +1764,8 @@ class Dseq(_Seq):
 
         left_watson, left_crick, ovhg_left = self.get_cut_parameters(left_cut, True)
         right_watson, right_crick, _ = self.get_cut_parameters(right_cut, False)
-        return Dseq(
+
+        return oDseq(
             str(self[left_watson:right_watson]),
             # The line below could be easier to understand as _rc(str(self[left_crick:right_crick])), but it does not preserve the case
             str(self.reverse_complement()[len(self) - right_crick : len(self) - left_crick]),
@@ -1794,14 +1801,14 @@ class Dseq(_Seq):
 
         >>> from Bio.Restriction import EcoRI
         >>> from pydna.dseq import Dseq
-        >>> dseq = Dseq('aaGAATTCaaGAATTCaa')
+        >>> dseq = oDseq('aaGAATTCaaGAATTCaa')
         >>> cutsites = dseq.get_cutsites([EcoRI])
         >>> cutsites
         [((3, -4), EcoRI), ((11, -4), EcoRI)]
         >>> dseq.get_cutsite_pairs(cutsites)
         [(None, ((3, -4), EcoRI)), (((3, -4), EcoRI), ((11, -4), EcoRI)), (((11, -4), EcoRI), None)]
 
-        >>> dseq = Dseq('TTCaaGAA', circular=True)
+        >>> dseq = oDseq('TTCaaGAA', circular=True)
         >>> cutsites = dseq.get_cutsites([EcoRI])
         >>> cutsites
         [((6, -4), EcoRI)]
@@ -1819,12 +1826,61 @@ class Dseq(_Seq):
         return list(zip(cutsites, cutsites[1:]))
 
 
-if __name__ == "__main__":
-    import os as _os
+from Bio.Restriction import BsaI, KpnI, Acc65I, NotI, BamHI
 
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
-    import doctest
 
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached
+dig01 = oDseq("AGGTACCggtctcaAAA", circular=True).cut(BsaI, Acc65I)
+dig02 = oDseq("GGTACCggtctcaAAAA", circular=True).cut(BsaI, Acc65I)
+dig03 = oDseq("GTACCggtctcaAAAAG", circular=True).cut(BsaI, Acc65I)
+dig04 = oDseq("TACCggtctcaAAAAGG", circular=True).cut(BsaI, Acc65I)
+dig05 = oDseq("ACCggtctcaAAAAGGT", circular=True).cut(BsaI, Acc65I)
+dig06 = oDseq("CCggtctcaAAAAGGTA", circular=True).cut(BsaI, Acc65I)
+dig07 = oDseq("CggtctcaAAAAGGTAC", circular=True).cut(BsaI, Acc65I)
+dig08 = oDseq("ggtctcaAAAAGGTACC", circular=True).cut(BsaI, Acc65I)
+dig09 = oDseq("gtctcaAAAAGGTACCg", circular=True).cut(BsaI, Acc65I)
+dig10 = oDseq("tctcaAAAAGGTACCgg", circular=True).cut(BsaI, Acc65I)
+dig11 = oDseq("ctcaAAAAGGTACCggt", circular=True).cut(BsaI, Acc65I)
+dig12 = oDseq("tcaAAAAGGTACCggtc", circular=True).cut(BsaI, Acc65I)
+dig13 = oDseq("caAAAAGGTACCggtct", circular=True).cut(BsaI, Acc65I)
+dig14 = oDseq("AAAAGGTACCggtctca", circular=True).cut(BsaI, Acc65I)
+dig15 = oDseq("AAAGGTACCggtctcaA", circular=True).cut(BsaI, Acc65I)
+dig16 = oDseq("AAGGTACCggtctcaAA", circular=True).cut(BsaI, Acc65I)
+
+a = ( dig01, dig02, dig03, dig04, dig05, dig06, dig07, dig08, dig09, dig10,
+     dig11, dig12, dig13, dig14, dig15, dig16,)
+
+x, = set(str(sorted(d)) for d in a)
+
+test = "GTACCaaG"
+digested_Acc65I, = oDseq(test, circular=True).cut(Acc65I)
+
+for i in range(1, len(test)):
+    nt = test[i:] + test[:i]
+    a = oDseq(nt, circular=True).cut(Acc65I)[0]  # G^GTACC
+    assert a == digested_Acc65I
+
+digested_KpnI, = oDseq(test, circular=True).cut(KpnI)
+
+for i in range(1, len(test)):
+    nt = test[i:] + test[:i]
+    a = oDseq(nt, circular=True).cut(KpnI)[0]  # G^GTACC
+    assert a == digested_KpnI
+
+
+oDseq("ggtctcAAgcTT").get_cutsites(BsaI)
+oDseq("ggtctcAAgcTT").cut(BsaI)
+oDseq("TggtctcAAgcT").get_cutsites(BsaI)
+oDseq("TggtctcAAgcT").cut(BsaI)
+oDseq("TTggtctcAAgc").get_cutsites(BsaI)
+oDseq("TTggtctcAAgc").cut(BsaI)
+
+oDseq("gtctcAAgcTTg", circular=True).get_cutsites(BsaI) == [((6, -4), BsaI)]
+oDseq("gtctcAAgcTTg", circular=True).cut(BsaI)
+oDseq("ggtctcAAgcTT", circular=True).get_cutsites(BsaI) == [((7, -4), BsaI)]
+oDseq("ggtctcAAgcTT", circular=True).cut(BsaI)
+oDseq("TggtctcAAgcT", circular=True).get_cutsites(BsaI) == [((8, -4), BsaI)]
+oDseq("TggtctcAAgcT", circular=True).cut(BsaI)
+oDseq("TTggtctcAAgc", circular=True).get_cutsites(BsaI) == [((9, -4), BsaI)]
+oDseq("TTggtctcAAgc", circular=True).cut(BsaI)
+oDseq("cTTggtctcAAg", circular=True).get_cutsites(BsaI) == [((10, -4), BsaI)]
+oDseq("cTTggtctcAAg", circular=True).cut(BsaI)

@@ -22,7 +22,6 @@ import inspect as _inspect
 
 from pydna.seq import Seq as _Seq
 # from Bio.Seq import _translate_str, _SeqAbstractBaseClass
-from collections import namedtuple as _namedtuple
 
 from pydna._pretty import pretty_str as _pretty_str
 from seguid import ldseguid as _ldseguid
@@ -39,8 +38,6 @@ from Bio.Restriction import CommOnly
 
 # from itertools import zip_longest
 
-pos_w_enz = _namedtuple('enzpos', "position enzyme")
-
 from typing import (
     TYPE_CHECKING,
     List as _List,
@@ -54,8 +51,8 @@ to_watson_table = bytes.maketrans(b"PEXIQFZJpexiqfzj12", b"GATC    gatc     .")
 to_crick_table = bytes.maketrans(b"PEXIQFZJpexiqfzj12", b"    GATC    gatc. ")
 to_5tail_table = bytes.maketrans(b"GATCgatc", b"QFZJqfzj")
 to_3tail_table = bytes.maketrans(b"GATCgatc", b"PEXIpexi")
-# left_fill_in_table = str.maketrans("PEXIpexi", "GATCgatc")
-# right_fill_in_table = str.maketrans("QFZJqfzj", "GATCgatc")
+left_fill_in_table = str.maketrans("PEXIpexi", "GATCgatc")
+right_fill_in_table = str.maketrans("QFZJqfzj", "GATCgatc")
 
 #                                       Watson Crick    >   dsIUPAC
 ss_to_ds_dct = {
@@ -163,14 +160,6 @@ class Dseq(_Seq):
         self.pos = pos
 
     @classmethod
-    def quick(cls, data: bytes, *args, circular=False, pos=0, **kwargs):
-        obj = cls.__new__(cls)  # Does not call __init__
-        obj.circular = circular
-        obj.pos = pos
-        obj._data = data
-        return obj
-
-    @classmethod
     def from_representation(cls, dsdna: str, *args, **kwargs):
         obj = cls.__new__(cls)  # Does not call __init__
         obj.circular = False
@@ -267,132 +256,6 @@ class Dseq(_Seq):
         ohc = len(_re.match(b"^[QFZJqfzj]*", self._data).group(0))
         return -ohw or ohc
 
-    def watson_ovhg(self) -> int:
-        """Returns the overhang of the watson strand at the three prime."""
-        ohw = len(_re.search(b"[PEXIpexi]*$", self._data).group(0))
-        ohc = len(_re.search(b"[QFZJqfzj]*$", self._data).group(0))
-        return ohw or -ohc
-
-    def right_end_position(self) -> _Tuple[int, int]:
-        """The index in the full sequence of the watson and crick end positions.
-
-        full sequence (str(self)) for all three cases is AAA
-
-        ```
-        AAA               AA                   AAA
-        TT                TTT                  TTT
-        Returns (3, 2)    Returns (2, 3)       Returns (3, 3)
-        ```
-
-        """
-        if self.watson_ovhg() < 0:
-            return len(self) + self.watson_ovhg(), len(self)
-        return len(self), len(self) - self.watson_ovhg()
-
-    def left_end_position(self) -> _Tuple[int, int]:
-        """
-        The index in the full sequence of the watson and crick start positions.
-
-        full sequence (str(self)) for all three cases is AAA
-        ::
-
-            AAA              AA               AAT
-             TT             TTT               TTT
-            Returns (0, 1)  Returns (1, 0)    Returns (0, 0)
-
-
-        """
-        if self.ovhg > 0:
-            return self.ovhg, 0
-        return 0, -self.ovhg
-
-
-    def five_prime_end(self) -> _Tuple[str, str]:
-        """Returns a tuple describing the structure of the 5' end of
-        the DNA fragment
-
-        Examples
-        --------
-        >>> from pydna.dseq import Dseq
-        >>> a=Dseq("aaa")
-        >>> a
-        oDseq(-3)
-        aaa
-        ttt
-        >>> a.five_prime_end()
-        ('blunt', '')
-        >>> a=Dseq("faae")
-        >>> a
-        Dseq(-4)
-         aaa
-        ttt
-        >>> a.five_prime_end()
-        ("3'", 't')
-        >>> a=Dseq("eaaf")
-        >>> a
-        oDseq(-4)
-        aaa
-         ttt
-        >>> a.five_prime_end()
-        ("5'", 'a')
-        >>>
-
-        See also
-        --------
-        pydna.dseq.Dseq.three_prime_end
-
-        """
-        sticky5 = _re.match(b"^[PEXIpexi]*", self._data).group(0).translate(to_watson_table).lower()
-        sticky3 = _re.match(b"^[QFZJqfzj]*", self._data).group(0).translate(to_crick_table).lower()
-
-        key = bool((sticky5 and not sticky3) or (not sticky5 and sticky3))
-        type_ = {True:"5'", False:"3'"}.get(key, "blunt")
-
-        return type_, sticky5 or sticky3
-
-    def three_prime_end(self) -> _Tuple[str, str]:
-        """Returns a tuple describing the structure of the 5' end of
-        the DNA fragment
-
-        >>> from pydna.dseq import Dseq
-        >>> a=oDseq("aaa", "ttt")
-        >>> a
-        oDseq(-3)
-        aaa
-        ttt
-        >>> a.three_prime_end()
-        ('blunt', '')
-        >>> a=oDseq("aaa", "ttt", ovhg=1)
-        >>> a
-        oDseq(-4)
-         aaa
-        ttt
-        >>> a.three_prime_end()
-        ("3'", 'a')
-        >>> a=oDseq("aaa", "ttt", ovhg=-1)
-        >>> a
-        oDseq(-4)
-        aaa
-         ttt
-        >>> a.three_prime_end()
-        ("5'", 't')
-        >>>
-
-        See also
-        --------
-        pydna.dseq.Dseq.five_prime_end
-
-        """
-
-        sticky3 = _re.search(b"[PEXIpexi]*$", self._data).group(0).translate(to_watson_table).lower()
-        sticky5 = _re.search(b"[QFZJqfzj]*$", self._data).group(0).translate(to_crick_table).lower()
-
-        key = bool((sticky5 and not sticky3) or (not sticky5 and sticky3))
-        type_ = {True:"5'", False:"3'"}.get(key, "blunt")
-
-        return type_, sticky5 or sticky3
-
-
     def __getitem__(self, sl: slice) -> "Dseq":
         """Returns a subsequence. This method is used by the slice notation"""
         if isinstance(sl, slice):
@@ -474,8 +337,6 @@ class Dseq(_Seq):
         return _pretty_str(
             f"{header}\n{r.translate(to_watson_table).decode().rstrip()}\n{_complement(r.translate(to_crick_table)).decode().rstrip()}"
         )
-
-
 
     def reverse_complement(self) -> "Dseq":
         """Dseq object where watson and crick have switched places.
@@ -988,7 +849,7 @@ class Dseq(_Seq):
         cuts = [0]
         for m in _re.finditer(bRNA, self._data):
             cuts.append(m.start() + 17)
-        cuts.append(len(self))
+        cuts.append(self.length)
         slices = tuple(slice(x, y, 1) for x, y in zip(cuts, cuts[1:]))
         return slices
 
@@ -999,10 +860,6 @@ class Dseq(_Seq):
         return self.__class__(first + self._data + last)
 
     def cut(self: DseqType, *enzymes: EnzymesType) -> _Tuple[DseqType, ...]:
-        frags, cutsites, shift, ln = self._cut_w_params(*enzymes)
-        return frags
-
-    def _cut_w_params(self: DseqType, *enzymes: EnzymesType) -> _Tuple[DseqType, ...]:
         """Returns a list of linear Dseq fragments produced in the digestion.
         If there are no cuts, an empty list is returned.
 
@@ -1050,51 +907,47 @@ class Dseq(_Seq):
 
         class noenz(object):
             ovhg = 0
-            def is_5overhang(self):
-                return False
-            def is_3overhang(self):
-                return False
-            def __repr__(self):
-                return "noenz"
 
-        cutsites = self.get_cutsites(*enzymes)
+        e = noenz()
+
+        # self = Dseq("GGTACCa", circular=True) # [((1, 5), Acc65I)] PXEICaGQZFJ
+        # self = Dseq("GTACCaG", circular=True) # [((0, 4), Acc65I)] PXEICaGQZFJ
+        # self = Dseq("TACCaGG", circular=True) # [((6, 3), Acc65I)] PXEICaGQZFJ
+        self = Dseq("AGGTACCggtctcaAAA", circular=True)
+        enzymes = (BsaI, Acc65I)
+
+        cutsites = self.get_cutsites(*enzymes)[::-1]
 
         if not cutsites:
-            return tuple(), tuple(), None, None
+            return tuple()
 
-        frags = []
-
-        if not self.circular:
-            cutfrom = self._data
-            i = 0
-        else:
+        if self.circular:
             ln = len(self)
-            w, e = cutsites.pop(0)
-            i = w if e.is_5overhang() else w-e.ovhg
-            sh = self._data[i:] + self._data[:i]
-            oh = abs(e.ovhg)
-            cutfrom = (sh[:oh].translate(to_5tail_table if e.is_3overhang() else to_3tail_table)
-                       + sh[oh:ln]
-                       + sh[:oh].translate(to_5tail_table if e.is_5overhang() else to_3tail_table))
-            if cutsites:
-                cutsites = [pos_w_enz(w+-i, e) for w, e in cutsites]
-            else:
-                return (self.__class__(cutfrom),), (pos_w_enz(w, e),), i, len(cutfrom)
+            (w, c), e = cutsites.pop(0)
+            extra = max(abs(w - c), ln - abs(w - c))
+            i = {True: w, False: c}[(c - w) % ln > (w - c) % ln]
+            shifted = self._data[i:] + self._data[:i]
+            cutfrom = shifted + shifted[:extra]
+            cutsites = [(((w - i), (c - i)), e) for (w, c), e in cutsites]
+            a = {True: 0, False: extra}[(c - w) % ln > (w - c) % ln]
+            b = {True: extra, False: 0}[(c - w) % ln > (w - c) % ln]
+            cutsite_pairs = [((a, b), e),] + cutsites + [((a + ln, b + ln), e),]
+        else:
+            cutsite_pairs = [((0, 0), e)] + cutsites + [((len(self), len(self)), e)]
+            cutfrom = self._data
+        frags = []
+        for ((w1, c1), e1), ((w2, c2), e2) in _itertools.pairwise(cutsite_pairs):
 
-        cutsites = [pos_w_enz(0, noenz())] + cutsites + [pos_w_enz(len(cutfrom), noenz())]
-
-        for (w1, e1), (w2, e2) in _itertools.pairwise(cutsites):
-
-            table1 = {True: to_5tail_table, False: to_3tail_table}[e1.is_3overhang()]
-            table2 = {True: to_5tail_table, False: to_3tail_table}[e2.is_5overhang()]
+            table1 = {True: to_5tail_table, False: to_3tail_table}[abs(w1 - c1) == (w1 - c1)]
+            table2 = {True: to_3tail_table, False: to_5tail_table}[abs(w2 - c2) == (w2 - c2)]
 
             frags.append(
-                cutfrom[min(w1, w1 - e1.ovhg):max(w1, w1 - e1.ovhg)].translate(table1)
-                + cutfrom[max(w1, w1 - e1.ovhg):min(w2, w2 - e2.ovhg)]
-                + cutfrom[min(w2, w2 - e2.ovhg):max(w2, w2 - e2.ovhg)].translate(table2)
+                cutfrom[min((w1, c1)) : max((w1, c1))].translate(table1)
+                + cutfrom[max((w1, c1)) : min((w2, c2))]
+                + cutfrom[min((w2, c2)) : max((w2, c2))].translate(table2)
             )
 
-        return tuple(self.__class__(frag) for frag in frags), cutsites, i, len(cutfrom)
+        return tuple(self.__class__(frag) for frag in frags)
 
     def get_cutsites(self: DseqType, *enzymes: EnzymesType) -> _List[CutSiteType]:
         if len(enzymes) == 1 and isinstance(enzymes[0], _RestrictionBatch):
@@ -1107,21 +960,276 @@ class Dseq(_Seq):
         if self.circular:
             for e in enzymes:
                 csearch = search + search[:len(e) - 1]
-                cuts = [pos_w_enz((i.start() + e.fst5) % ln, e) for i in _re.finditer(e.compsite, csearch)]
+                cuts = [((i.start() + e.fst5) % ln, e) for i in _re.finditer(e.compsite, csearch)]
                 out.extend(cuts)
         else:
             for e in enzymes:
-                cuts = [pos_w_enz(i.start() + e.fst5, e) for i in _re.finditer(e.compsite, search) if i.start() + e.fst5 <= ln and (i.start() + e.fst5 - e.ovhg) <= ln]
+                cuts = [(i.start() + e.fst5, e) for i in _re.finditer(e.compsite, search) if i.start() <= ln and (i.start() + e.ovhg) <= ln]
                 out.extend(cuts)
         return sorted(out)
 
 
 if __name__ == "__main__":
-    import os as _os
+    # import os as _os
 
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
-    import doctest
+    # cached = _os.getenv("pydna_cached_funcs", "")
+    # _os.environ["pydna_cached_funcs"] = ""
+    # import doctest
 
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached
+    # doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
+    # _os.environ["pydna_cached_funcs"] = cached
+
+    # for x, y in [("abc", "abc"),("abc", "ab"),("ab", "abc")]:
+
+    #     a = f"{x:<{len(y)}}"
+    #     b = f"{y:<{len(x)}}"
+    #     print(repr(a))
+    #     print(repr(b))
+    #     print()
+
+    from Bio.Restriction import KpnI, Acc65I, BsaI, KpnI, BamHI
+
+    fiveoh = Dseq('PEXIaaaQFZJ')
+    assert str(fiveoh + fiveoh) == 'PEXIaaaGATCaaaQFZJ'
+    threeoh = Dseq('QFZJQtttPEXIP')
+    assert str(threeoh + threeoh) == "QFZJQtttGATCGtttPEXIP"
+
+    assert repr(Dseq("AIXEP") + Dseq("JZFQA")) == "Dseq(-6)\nACTAGA\nTGATCT"
+    assert repr(Dseq("AIXEP") + Dseq("ZFQA")) == "Dseq(-6)\nACTAGA\nT ATCT"
+    assert repr(Dseq("AIXE") + Dseq("JZFQA")) == "Dseq(-6)\nACTA A\nTGATCT"
+    assert repr(Dseq("AP") + Dseq("QA")) == "Dseq(-3)\nAGA\nTCT"
+    assert repr(Dseq("AE") + Dseq("FA")) == "Dseq(-3)\nAAA\nTTT"
+    assert repr(Dseq("AX") + Dseq("ZA")) == "Dseq(-3)\nATA\nTAT"
+    assert repr(Dseq("AI") + Dseq("JA")) == "Dseq(-3)\nACA\nTGT"
+    assert repr(Dseq("APP") + Dseq("QA")) == "Dseq(-4)\nAGGA\nT CT"
+    assert repr(Dseq("AEE") + Dseq("FA")) == "Dseq(-4)\nAAAA\nT TT"
+    assert repr(Dseq("AXX") + Dseq("ZA")) == "Dseq(-4)\nATTA\nT AT"
+    assert repr(Dseq("AII") + Dseq("JA")) == "Dseq(-4)\nACCA\nT GT"
+
+    assert repr(Dseq("AP") + Dseq("QQA")) == "Dseq(-4)\nAG A\nTCCT"
+    assert repr(Dseq("AE") + Dseq("FFA")) == "Dseq(-4)\nAA A\nTTTT"
+    assert repr(Dseq("AX") + Dseq("ZZA")) == "Dseq(-4)\nAT A\nTAAT"
+    assert repr(Dseq("AI") + Dseq("JJA")) == "Dseq(-4)\nAC A\nTGGT"
+
+    assert Dseq("QAP").looped()[:] == Dseq("GA")
+    assert Dseq("PAQ").looped()[:] == Dseq("GA")
+    assert Dseq("EAF").looped()[:] == Dseq("AA")
+    assert Dseq("FAE").looped()[:] == Dseq("AA")
+    assert Dseq("XAZ").looped()[:] == Dseq("TA")
+    assert Dseq("ZAX").looped()[:] == Dseq("TA")
+    assert Dseq("IAJ").looped()[:] == Dseq("CA")
+    assert Dseq("JAI").looped()[:] == Dseq("CA")
+
+    from Bio.Restriction import XmaI, SmaI, KpnI, Acc65I, BamHI
+
+    s = Dseq("CCCGGGGCATCGTAGTGATCGGTACC")  #  blunt
+
+    a, b, c = s.cut([XmaI, Acc65I])
+
+    assert repr(a + b + c) == repr(s)
+
+    a, b, c = s.cut([SmaI, Acc65I])
+
+    assert repr(a + b + c) == repr(s)
+
+    a, b, c = s.cut([SmaI, KpnI])
+
+    assert repr(a + b + c) == repr(s)
+
+    s = Dseq("PPCCCGGGGCATCGTAGTGATCGGTACC")
+
+    a, b, c = s.cut([XmaI, Acc65I])
+
+    assert repr(a + b + c) == repr(s)
+
+    s = Dseq("QQCCCGGGGCATCGTAGTGATCGGTACC")
+
+    a, b, c = s.cut([XmaI, Acc65I])
+
+    assert repr(a + b + c) == repr(s)
+
+    s = Dseq("PEXIAAAQFZJ")
+
+    assert s.looped()._data == b'GATCAAA'
+
+    s = Dseq("PEXIAAAQFZJ")
+
+    assert s._fill_in_three_prime("gatc")._data == b'GATCAAAQFZJ'
+    assert s._fill_in_three_prime("gat")._data == b'PATCAAAQFZJ'
+    assert s._fill_in_three_prime("ga")._data == b'PETCAAAQFZJ'
+    assert s._fill_in_three_prime("g")._data == b'PEXCAAAQFZJ'
+    assert s._fill_in_three_prime("")._data == s._data
+
+    assert s._fill_in_three_prime("atc")._data == s._data
+    assert s._fill_in_three_prime("at")._data == s._data
+    assert s._fill_in_three_prime("a")._data == s._data
+    assert s._fill_in_three_prime("")._data == s._data
+
+    assert s._fill_in_five_prime("gatc")._data == b'PEXIAAAGATC'
+    assert s._fill_in_five_prime("gat")._data == b'PEXIAAAGATJ'
+    assert s._fill_in_five_prime("ga")._data == b'PEXIAAAGAZJ'
+    assert s._fill_in_five_prime("g")._data == b'PEXIAAAGFZJ'
+    assert s._fill_in_five_prime("")._data == s._data
+
+    assert s._fill_in_five_prime("atc")._data == s._data
+    assert s._fill_in_five_prime("at")._data == s._data
+    assert s._fill_in_five_prime("a")._data == s._data
+    assert s._fill_in_five_prime("")._data == s._data
+
+    assert s.fill_in("gatc")._data == b'GATCAAAGATC'
+    assert s.fill_in("gat")._data == b'PATCAAAGATJ'
+    assert s.fill_in("ga")._data == b'PETCAAAGAZJ'
+    assert s.fill_in("g")._data == b'PEXCAAAGFZJ'
+    assert s.fill_in("")._data == s._data
+
+    assert s == Dseq.from_representation(repr(s))
+
+    assert Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=2, watson_ovhg=2)._data == Dseq("FFAAEE")._data
+    assert Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=-2, watson_ovhg=2)._data == Dseq("EEAAEE")._data
+    assert Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=2, watson_ovhg=-2)._data == Dseq("FFAAFF")._data
+    assert Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=-2, watson_ovhg=-2)._data == Dseq("EEAAFF")._data
+
+    assert repr(Dseq("XIpexiPEXIpexiAqfzjQFZJqfzjQF")) == (
+        "Dseq(-29)\n" "TCgatcGATCgatcA\n" "              TctagCTAGctagCT"
+    )
+
+    assert repr(Dseq("XIpexiPEXIpexiAAqfzjQFZJqfzjQF")) == ( "Dseq(-30)\n"
+                                                             "TCgatcGATCgatcAA\n"
+                                                             "              TTctagCTAGctagCT"
+    )
+
+    assert repr(Dseq("EXIpexiPEXIpexiAqfzjQFZJqfzjQFZ")) == ("Dseq(-31)\n" "ATCg..gatcA\n" "          Tctag..gCTA")
+
+    assert repr(Dseq("XIpexiPEXIpexiAaAqfzjQFZJqfzjQF")) == ("Dseq(-31)\n" "TCga..gatcAaA\n" "          TtTctag..agCT")
+
+    dsdna = """
+               Dseq(
+                GGATCC
+               aCCTAGGg"""
+
+    assert Dseq.from_representation(dsdna)._data == b"zGGATCCj"
+
+    dsdna = """Dseq(
+               aGGATCCg
+                CCTAGG"""
+
+    assert Dseq.from_representation(dsdna)._data == b"eGGATCCp"
+
+    dsdna = """Dseq(
+               GGATCCaa
+             cccctagg"""
+
+    assert Dseq.from_representation(dsdna)._data == b"qqGGATCCee"
+
+    dsdna = """Dseq(
+               ggtaccaa
+             ccccatgg"""
+
+    assert Dseq.from_representation(dsdna)._data == b"qqggtaccee"
+
+    assert Dseq("AP") + Dseq("") == Dseq("AP")
+    assert Dseq("AE") + Dseq("") == Dseq("AE")
+    assert Dseq("AX") + Dseq("") == Dseq("AX")
+    assert Dseq("AI") + Dseq("") == Dseq("AI")
+    assert Dseq("Ap") + Dseq("") == Dseq("Ap")
+    assert Dseq("Ax") + Dseq("") == Dseq("Ax")
+    assert Dseq("Ai") + Dseq("") == Dseq("Ai")
+
+    assert Dseq("AQ") + Dseq("") == Dseq("AQ")
+    assert Dseq("AF") + Dseq("") == Dseq("AF")
+    assert Dseq("AZ") + Dseq("") == Dseq("AZ")
+    assert Dseq("AJ") + Dseq("") == Dseq("AJ")
+    assert Dseq("Aq") + Dseq("") == Dseq("Aq")
+    assert Dseq("Af") + Dseq("") == Dseq("Af")
+    assert Dseq("Az") + Dseq("") == Dseq("Az")
+    assert Dseq("Ai") + Dseq("") == Dseq("Ai")
+
+    assert Dseq('PEXIGGATCCQFZJ').T4(b"CG") == Dseq(b'PEXCGGATCCGFZJ')
+    assert Dseq('PAGAJ').T4(b"ATG") == Dseq(b'PAGAJ')
+    assert Dseq('QFZJGGATCCPEXI').T4("") == Dseq("")
+
+    assert Dseq("pexiAqfzj").T4(b"gatc") == Dseq("gatcAgatc")
+
+    assert Dseq("qqGGATCCee").seguid() == 'ldseguid=F0z-LxHZqAK3HvqQiqjM7A28daE'
+
+    assert Dseq("ggatcc").cut(BamHI) == (Dseq("gqfzj"), Dseq("pexic"))
+
+    ##################################################################################
+
+    test = "GGTACCa"
+    digested_Acc65I, = Dseq(test, circular=True).cut(Acc65I)
+    assert digested_Acc65I == Dseq("PXEICaGQZFJ")
+    test = "GTACCaG"
+    digested_Acc65I, = Dseq(test, circular=True).cut(Acc65I)
+    assert digested_Acc65I == Dseq("PXEICaGQZFJ")
+    test = "TACCaGG"
+    digested_Acc65I, = Dseq(test, circular=True).cut(Acc65I)
+    assert digested_Acc65I == Dseq("PXEICaGQZFJ")
+
+    # test = "ACCaGGT"
+    # test = "CCaGGTA"
+    # test = "CaGGTAC"
+    # test = "aGGTACC"
+    # test = "aGGTACC"
+
+
+    ##################################################################################
+
+    digested_Acc65I == Dseq("PXEICaGQZFJ")
+    for i in range(0, len(test)):
+        nt = test[i:] + test[:i]
+        a, = Dseq(nt, circular=True).cut(Acc65I) # G^GTAC_C
+        assert a == digested_Acc65I
+
+    digested_KpnI, = Dseq(test, circular=True).cut(KpnI)
+    assert digested_KpnI == Dseq("QZFJCaGPXEI")
+
+    for i in range(1, len(test)):
+        nt = test[i:] + test[:i]
+        a, = Dseq(nt, circular=True).cut(KpnI)  # G_GTAC^C
+        assert a == digested_KpnI
+
+    dig01 = Dseq("AGGTACCggtctcaAAA", circular=True).cut(BsaI, Acc65I)
+    dig02 = Dseq("GGTACCggtctcaAAAA", circular=True).cut(BsaI, Acc65I)
+    dig03 = Dseq("GTACCggtctcaAAAAG", circular=True).cut(BsaI, Acc65I)
+    dig04 = Dseq("TACCggtctcaAAAAGG", circular=True).cut(BsaI, Acc65I)
+    dig05 = Dseq("ACCggtctcaAAAAGGT", circular=True).cut(BsaI, Acc65I)
+    dig06 = Dseq("CCggtctcaAAAAGGTA", circular=True).cut(BsaI, Acc65I)
+    dig07 = Dseq("CggtctcaAAAAGGTAC", circular=True).cut(BsaI, Acc65I)
+    dig08 = Dseq("ggtctcaAAAAGGTACC", circular=True).cut(BsaI, Acc65I)
+    dig09 = Dseq("gtctcaAAAAGGTACCg", circular=True).cut(BsaI, Acc65I)
+    dig10 = Dseq("tctcaAAAAGGTACCgg", circular=True).cut(BsaI, Acc65I)
+    dig11 = Dseq("ctcaAAAAGGTACCggt", circular=True).cut(BsaI, Acc65I)
+    dig12 = Dseq("tcaAAAAGGTACCggtc", circular=True).cut(BsaI, Acc65I)
+    dig13 = Dseq("caAAAAGGTACCggtct", circular=True).cut(BsaI, Acc65I)
+    dig14 = Dseq("AAAAGGTACCggtctca", circular=True).cut(BsaI, Acc65I)
+    dig15 = Dseq("AAAGGTACCggtctcaA", circular=True).cut(BsaI, Acc65I)
+    dig16 = Dseq("AAGGTACCggtctcaAA", circular=True).cut(BsaI, Acc65I)
+
+    a = dig01, dig02, dig03, dig04, dig05, dig06, dig07, dig08, dig09, dig10, dig11, dig12, dig13, dig14, dig15, dig16,
+
+    x, y = set(a)
+
+    assert sorted(x) == sorted(y)
+
+    assert Dseq("aa").get_cutsites(BamHI) == []
+
+    assert Dseq("ggtctcAAgcTT").get_cutsites(BsaI) == [((7, 11), BsaI)]
+    assert Dseq("ggtctcAAgcTT").cut(BsaI) == (Dseq("ggtctcAFqjZ"), Dseq("EpiXT"))
+    assert Dseq("TggtctcAAgcT").get_cutsites(BsaI) == [((8, 12), BsaI)]
+    assert Dseq("TggtctcAAgcT").cut(BsaI) == (Dseq("TggtctcAFqjZ"), Dseq("EpiX"))
+    assert Dseq("TTggtctcAAgc").get_cutsites(BsaI) == []
+    assert Dseq("TTggtctcAAgc").cut(BsaI) == ()
+
+    assert Dseq("gtctcAAgcTTg", circular=True).get_cutsites(BsaI) == [((6, 10), BsaI)]
+    assert Dseq("ggtctcAAgcTT", circular=True).get_cutsites(BsaI) == [((7, 11), BsaI)]
+    assert Dseq("TggtctcAAgcT", circular=True).get_cutsites(BsaI) == [((8, 0), BsaI)]
+    assert Dseq("TTggtctcAAgc", circular=True).get_cutsites(BsaI) == [((9, 1), BsaI)]
+    assert Dseq("cTTggtctcAAg", circular=True).get_cutsites(BsaI) == [((10, 2), BsaI)]
+    assert Dseq("gtctcAAgcTTg", circular=True).get_cutsites(BsaI) == [((6, 10), BsaI)]
+
+    assert Dseq("gtctcAAgcTTg", circular=True).cut(BsaI) == (Dseq("EpiXTggtctcAFqjZ"),)
+    assert Dseq("ggtctcAAgcTT", circular=True).cut(BsaI) == (Dseq("EpiXTggtctcAFqjZ"),)
+    assert Dseq("TggtctcAAgcT", circular=True).cut(BsaI) == (Dseq("EpiXTggtctcAFqjZ"),)
+    assert Dseq("TTggtctcAAgc", circular=True).cut(BsaI) == (Dseq("EpiXTggtctcAFqjZ"),)
+    assert Dseq("cTTggtctcAAg", circular=True).cut(BsaI) == (Dseq("EpiXTggtctcAFqjZ"),)

@@ -22,8 +22,8 @@ from pydna.utils import rc as _rc
 from pydna.utils import shift_location as _shift_location
 from pydna.utils import shift_feature as _shift_feature
 from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
-from Bio import SeqIO
 from Bio.SeqFeature import SeqFeature as _SeqFeature
+from Bio import SeqIO
 from Bio.SeqFeature import CompoundLocation as _CompoundLocation
 from Bio.SeqFeature import SimpleLocation as _SimpleLocation
 from pydna.seqrecord import SeqRecord as _SeqRecord
@@ -201,38 +201,38 @@ class Dseqrecord(_SeqRecord):
         self.n = n  # amount, set to 5E-14 which is 5 pmols
         self.annotations.update({"molecule_type": "DNA"})
 
-    # @classmethod
-    # def from_string(
-    #     cls,
-    #     record: str = "",
-    #     *args,
-    #     # linear=True,
-    #     circular=False,
-    #     n=5e-14,
-    #     **kwargs,
-    # ):
-    #     """docstring."""
-    #     # def from_string(cls, record:str="", *args,
-    #     # linear=True, circular=False, n = 5E-14, **kwargs):
-    #     obj = cls.__new__(cls)  # Does not call __init__
-    #     obj._per_letter_annotations = {}
-    #     obj.seq = _Dseq.quick(
-    #         record,
-    #         _rc(record),
-    #         ovhg=0,
-    #         # linear=linear,
-    #         circular=circular,
-    #     )
-    #     obj.id = _pretty_str("id")
-    #     obj.name = _pretty_str("name")
-    #     obj.description = _pretty_str("description")
-    #     obj.dbxrefs = []
-    #     obj.annotations = {"molecule_type": "DNA"}
-    #     obj.features = []
-    #     obj.map_target = None
-    #     obj.n = n
-    #     obj.__dict__.update(kwargs)
-    #     return obj
+    @classmethod
+    def from_string(
+        cls,
+        record: str = "",
+        *args,
+        # linear=True,
+        circular=False,
+        n=5e-14,
+        **kwargs,
+    ):
+        """docstring."""
+        # def from_string(cls, record:str="", *args,
+        # linear=True, circular=False, n = 5E-14, **kwargs):
+        obj = cls.__new__(cls)  # Does not call __init__
+        obj._per_letter_annotations = {}
+        obj.seq = _Dseq.quick(
+            record,
+            _rc(record),
+            ovhg=0,
+            # linear=linear,
+            circular=circular,
+        )
+        obj.id = _pretty_str("id")
+        obj.name = _pretty_str("name")
+        obj.description = _pretty_str("description")
+        obj.dbxrefs = []
+        obj.annotations = {"molecule_type": "DNA"}
+        obj.features = []
+        obj.map_target = None
+        obj.n = n
+        obj.__dict__.update(kwargs)
+        return obj
 
     @classmethod
     def from_SeqRecord(
@@ -1277,35 +1277,9 @@ class Dseqrecord(_SeqRecord):
 
         """
 
-        frags, cutsites, shift, ln = self.seq._cut_w_params(*enzymes)
-
-        if not frags:
-            return tuple()
-
-        newfeatures = _copy.deepcopy(self.features)
-
-        for feature in newfeatures:
-            feature.location += shift
-
-        newrecords = []
-
-        for frag, left, right in zip(frags, cutsites, cutsites[1:]):
-            features = _copy.deepcopy(newfeatures)
-            filtered_features = []
-            begin = left.position if left.enzyme.is_5overhang() else left.position - left.enzyme.ovhg
-            end =   right.position if right.enzyme.is_3overhang() else right.position - right.enzyme.ovhg
-            for feature in features:
-                if  begin <= feature.location.start and end >= feature.location.end:
-                    filtered_features.append(feature)
-            for feature in filtered_features:
-                feature.location -= begin
-            nr = self.__class__(frag, features = filtered_features)
-            newrecords.append(nr)
-
-        # if not newrecords:
-        #     newrecords = (self.__class__(frags[0], features = filtered_features),)
-
-        return tuple(newrecords)
+        cutsites = self.seq.get_cutsites(*enzymes)
+        cutsite_pairs = self.seq.get_cutsite_pairs(cutsites)
+        return tuple(self.apply_cut(*cs) for cs in cutsite_pairs)
 
     def apply_cut(self, left_cut, right_cut):
         dseq = self.seq.apply_cut(left_cut, right_cut)
@@ -1389,31 +1363,9 @@ class Dseqrecord(_SeqRecord):
 
 
 if __name__ == "__main__":
-    # cache = _os.getenv("pydna_cache")
-    # _os.environ["pydna_cache"] = "nocache"
-    # import doctest
+    cache = _os.getenv("pydna_cache")
+    _os.environ["pydna_cache"] = "nocache"
+    import doctest
 
-    # doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    # # _os.environ["pydna_cache"] = cache
-
-    from Bio.Restriction import Acc65I, KpnI
-
-    GGTACC = Dseqrecord("GGTACC")
-    GGTACC.add_feature(0,5)
-    GGTACC.add_feature(1,5)
-    GGTACC.add_feature(1,2)
-    GGTACC.add_feature(4,5)
-    GGTACC.add_feature(1,6)
-    GQZFJ, PXEIC = GGTACC.cut(Acc65I)
-    GPXEI, QZFJC = GGTACC.cut(KpnI)
-
-    assert GQZFJ.features == GGTACC.features[:4]
-    assert GPXEI.features == GGTACC.features[:4]
-    assert [f.location for f in PXEIC.features] == [f.location -1 for f in GGTACC.features[1:]]
-    assert [f.location for f in QZFJC.features] == [f.location -1 for f in GGTACC.features[1:]]
-
-
-    #oGGTACC = Dseqrecord("GGTACC", circular=True)
-
-    #oGGTACC.cut(Acc65I)
-    #oGGTACC.cut(KpnI)
+    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
+    # _os.environ["pydna_cache"] = cache
