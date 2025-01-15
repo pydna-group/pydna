@@ -42,7 +42,7 @@ Pereira, F., Azevedo, F., Carvalho, Â., Ribeiro, G. F., Budde, M. W., & Johanss
 
 ## Documentation and usage 📚
 
-Full documentation of all modules and classes can be found at [https://bjornfjohansson.github.io/pydna](https://bjornfjohansson.github.io/pydna).
+Full documentation of all modules and classes can be found at [https://pydna-group.github.io/pydna](https://pydna-group.github.io/pydna).
 
 To get started, we recommend you to have a look at the [example notebooks](docs/notebooks). Start by having a look at [Dseq](docs/notebooks/Dseq.ipynb), [Dseq_Features](docs/notebooks/Dseq_Features.ipynb) and [Importing_Seqs](docs/notebooks/Importing_Seqs.ipynb), which cover the basics of working with sequences. The rest of the notebooks cover how to use pydna for different cloning strategies, such as Gibson assembly, Restriction-Ligation, etc.
 
