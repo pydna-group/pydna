@@ -468,7 +468,7 @@ def test_shift_location():
 
     # TODO: more tests here
 
-    # Shifting of locations should be reversible (https://github.com/BjornFJohansson/pydna/issues/195)
+    # Shifting of locations should be reversible (https://github.com/pydna-group/pydna/issues/195)
     for strand in (1, -1, None):
         loc = SimpleLocation(0, 2, strand)
         assert shift_location(shift_location(loc, 1, 6), -1, 6) == loc
@@ -483,7 +483,7 @@ def test_shift_location():
             assert shift_location(loc, -1, 6) == SimpleLocation(5, 6, strand) + SimpleLocation(0, 3, strand)
 
     # Shifting ignoring the sequence length
-    # See https://github.com/BjornFJohansson/pydna/issues/281
+    # See https://github.com/pydna-group/pydna/issues/281
     for strand in (1, -1, None):
         loc = SimpleLocation(4, 6, strand)
         assert shift_location(loc, 1000, None) == SimpleLocation(1004, 1006, strand)

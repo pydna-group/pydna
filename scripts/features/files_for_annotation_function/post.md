@@ -2,7 +2,7 @@ genocad.com seems still down
 
 But I managed to download the supplementary files from the [paper](https://www.ncbi.nlm.nih.gov/pubmed/25925571).
 
-I put them [here](https://github.com/BjornFJohansson/pydna/tree/py3dev/scripts/files_for_annotation_function) 
+I put them [here](https://github.com/pydna-group/pydna/tree/py3dev/scripts/files_for_annotation_function) 
 
 A number of sbol files seems to hold most or all of the data:
 

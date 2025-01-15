@@ -806,7 +806,7 @@ class Dseqrecord(_SeqRecord):
 
         if not self.circular or sl_start < sl_stop:
             # TODO: special case for sl_end == 0 in circular sequences
-            # related to https://github.com/BjornFJohansson/pydna/issues/161
+            # related to https://github.com/pydna-group/pydna/issues/161
             if self.circular and sl.stop == 0:
                 sl = slice(sl.start, len(self.seq), sl.step)
             answer.features = super().__getitem__(sl).features
@@ -1283,7 +1283,7 @@ class Dseqrecord(_SeqRecord):
 
     def apply_cut(self, left_cut, right_cut):
         dseq = self.seq.apply_cut(left_cut, right_cut)
-        # TODO: maybe remove depending on https://github.com/BjornFJohansson/pydna/issues/161
+        # TODO: maybe remove depending on https://github.com/pydna-group/pydna/issues/161
 
         if left_cut == right_cut:
             # Not really a cut, but to handle the general case
@@ -1292,7 +1292,7 @@ class Dseqrecord(_SeqRecord):
             else:
                 # The features that span the origin if shifting with left_cut, but that do not cross
                 # the cut site should be included, and if there is a feature within the cut site, it should
-                # be duplicated. See https://github.com/BjornFJohansson/pydna/issues/180 for a practical example.
+                # be duplicated. See https://github.com/pydna-group/pydna/issues/180 for a practical example.
                 #
                 # Let's say we are going to open a circular plasmid like below (| inidicate cuts, numbers indicate
                 # features)
