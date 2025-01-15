@@ -435,7 +435,10 @@ poetry config virtualenvs.in-project true
 # Install dependencies (extras are required for tests to pass)
 poetry install --all-extras
 
-# Activate virtual environment
+# Activate virtual environment (poetry version 2)
+poetry env activate
+
+# Activate virtual environment (poetry version 1)
 poetry shell
 
 # Install pre-commit hooks

@@ -27,10 +27,7 @@ readme = "README.md"
 Changelog = "https://github.com/pydna-group/pydna/blob/master/docs/CHANGELOG.md#changelog"
 [tool.poetry]
 description = "Representing double stranded DNA and functions for simulating cloning and homologous recombination between DNA molecules."
-authors = [
-    {name = "Björn F. Johansson", email = "bjornjobb@gmail.com"},
-    {name = "Manuel Lera-Ramirez", email = "manulera14@gmail.com"}
-]
+authors = ["Björn F. Johansson<bjornjobb@gmail.com>", "Manuel Lera-Ramirez<manulera14@gmail.com>"]
 documentation = "https://pydna-group.github.io/pydna"
 homepage = "https://github.com/pydna-group/pydna#-pydna"
 license = "BSD"
