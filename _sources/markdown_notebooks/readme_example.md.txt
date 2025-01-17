@@ -2,20 +2,18 @@
 
 This notebook contains the example shown in the README file.
 
-<a target="_blank" href="https://colab.research.google.com/github/BjornFJohansson/pydna/blob/dev_bjorn/docs/notebooks/Example_Restriction.ipynb">
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Example_Restriction.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
 
 ```python
+%%capture
 # Install pydna (only when running on Colab)
 import sys
 if 'google.colab' in sys.modules:
-    %%capture
-    # Install the current development version of pydna (comment to install pip version)
-    !pip install git+https://github.com/BjornFJohansson/pydna@dev_bjorn
-    # Install pip version instead (uncomment to install)
-    # !pip install pydna
+    %pip install pydna
+
 ```
 
 

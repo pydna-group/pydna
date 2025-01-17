@@ -1,5 +1,5 @@
 # Restriction and Ligation 
-> Visit the full library documentation [here](https://bjornfjohansson.github.io/pydna/)
+> Visit the full library documentation [here](https://pydna-group.github.io/pydna/)
 
 In this page, we explore how to use pydna to cut, ligate, circularise DNA sequences. pydna works in conjugation with the `Bio.Restriction` module to apply a vast variety of restriction enzymes for cutting, whose module documentations can be found [here](https://biopython.org/DIST/docs/cookbook/Restriction.html).
 
@@ -7,20 +7,17 @@ In this page, we explore how to use pydna to cut, ligate, circularise DNA sequen
 
 Restriction enzymes recognise specific DNA sequences and cut them, leaving sticky ends or blunt ends. To cut a sequence using `pydna`, we can use the `cut` method on a `Dseqrecord` object. Here is an example showing how to use the `cut` method to genenrate EcoRI restriction digests. The record includes a 338bp circular sequence, with an example gene feature.
 
-<a target="_blank" href="https://colab.research.google.com/github/BjornFJohansson/pydna/blob/dev_bjorn/docs/notebooks/Restrict_Ligate_Cloning.ipynb">
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Restrict_Ligate_Cloning.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
 
 ```python
+%%capture
 # Install pydna (only when running on Colab)
 import sys
 if 'google.colab' in sys.modules:
-    %%capture
-    # Install the current development version of pydna (comment to install pip version)
-    !pip install git+https://github.com/BjornFJohansson/pydna@dev_bjorn
-    # Install pip version instead (uncomment to install)
-    # !pip install pydna
+    %pip install pydna
 
 ```
 

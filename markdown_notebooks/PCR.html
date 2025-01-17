@@ -78,24 +78,21 @@
   <section id="how-to-perform-a-polymerase-chain-reaction-pcr">
 <h1>How to Perform a Polymerase Chain Reaction (PCR)<a class="headerlink" href="#how-to-perform-a-polymerase-chain-reaction-pcr" title="Permalink to this heading"></a></h1>
 <blockquote>
-<div><p>Visit the full library documentation <a class="reference external" href="https://bjornfjohansson.github.io/pydna/">here</a></p>
+<div><p>Visit the full library documentation <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a></p>
 </div></blockquote>
 <p>This page walks you through how to perform a PCR, and design PCR primers, using <code class="docutils literal notranslate"><span class="pre">pydna</span></code>. A PCR amplifies a specific stretch of DNA defined by the primers, and it is critical to ensure primer binding specificity and appropriate primer melting temperature (tm) through careful design. <code class="docutils literal notranslate"><span class="pre">pydna</span></code> provides tools for quick modelling of PCR to check for correct PCR products, and methods for calculating tm and primer design, as performed in other popular web servcies (e.g Primer3Plus).</p>
 <section id="modelling-pcr-with-known-primers">
 <h2>Modelling PCR with Known Primers<a class="headerlink" href="#modelling-pcr-with-known-primers" title="Permalink to this heading"></a></h2>
 <p>To perform PCR, <code class="docutils literal notranslate"><span class="pre">pydna</span></code> provides the <code class="docutils literal notranslate"><span class="pre">anneal</span></code> class and the <code class="docutils literal notranslate"><span class="pre">pcr</span></code> method to quickly generate expected primer products, on a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object. The <code class="docutils literal notranslate"><span class="pre">pcr</span></code> method needs only the forward and reverse primers, and the sequence. The primers must be passed from the 5’ to the 3’ end, following biological convention. More information on <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> and importing DNA sequences can be found in the other guide pages.</p>
 <p>The following example uses a 300+ bp custom sample circular DNA, containing an example gene that we would like to clone. 18 bp forward and reverse primers have been provided.</p>
-<a target="_blank" href="https://colab.research.google.com/github/BjornFJohansson/pydna/blob/dev_bjorn/docs/notebooks/PCR.ipynb">
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/PCR.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Install pydna (only when running on Colab)
-import sys
-if &#39;google.colab&#39; in sys.modules:
-    %%capture
-    # Install the current development version of pydna (comment to install pip version)
-    !pip install git+https://github.com/BjornFJohansson/pydna@dev_bjorn
-    # Install pip version instead (uncomment to install)
-    # !pip install pydna
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
+<span class="c1"># Install pydna (only when running on Colab)</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span>
 
 </pre></div>
 </div>

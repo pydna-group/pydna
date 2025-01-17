@@ -78,7 +78,7 @@
   <section id="gibson-assembly-in-pydna">
 <h1>Gibson Assembly in pydna<a class="headerlink" href="#gibson-assembly-in-pydna" title="Permalink to this heading"></a></h1>
 <blockquote>
-<div><p>Visit the full library documentation <a class="reference external" href="https://bjornfjohansson.github.io/pydna/">here</a></p>
+<div><p>Visit the full library documentation <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a></p>
 </div></blockquote>
 <p>Gibson Assembly is a powerful method to assemble multiple DNA fragments into a single, continuous sequence in a seamless, one-step reaction. Developed by Daniel Gibson and colleagues in 2009, this method has been widely applied to work in molecular cloning, biotechnology, and synthetic biology.</p>
 <p><code class="docutils literal notranslate"><span class="pre">pydna</span></code> provides the <code class="docutils literal notranslate"><span class="pre">Assembly</span></code> class to simulate the assembly of DNA sequences. Below is an example fpr performing Gibson Assembly with pre-existing DNA fragments, followed by primer design for generating these fragments via the <code class="docutils literal notranslate"><span class="pre">pcr</span></code> method, if needed.</p>
@@ -88,17 +88,14 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">limit</span></code>: the minimum sequence homology required.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">algorithm</span></code>: the function used to find homology regions between DNA fragments. For Gibson Assembly, we use the <code class="docutils literal notranslate"><span class="pre">terminal_overlap</span></code> function, which finds homology regions only at the terminal regions. By default, the <code class="docutils literal notranslate"><span class="pre">Assembly</span></code> class uses the <code class="docutils literal notranslate"><span class="pre">common_sub_strings</span></code> function to find homology regions, which finds homology anywhere, as it could happen in a homologous recombination event.</p></li>
 </ul>
-<a target="_blank" href="https://colab.research.google.com/github/BjornFJohansson/pydna/blob/dev_bjorn/docs/notebooks/Gibson.ipynb">
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Gibson.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Install pydna (only when running on Colab)
-import sys
-if &#39;google.colab&#39; in sys.modules:
-    %%capture
-    # Install the current development version of pydna (comment to install pip version)
-    !pip install git+https://github.com/BjornFJohansson/pydna@dev_bjorn
-    # Install pip version instead (uncomment to install)
-    # !pip install pydna
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
+<span class="c1"># Install pydna (only when running on Colab)</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span>
 
 </pre></div>
 </div>

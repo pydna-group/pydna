@@ -78,21 +78,18 @@
   <section id="example-of-a-gibson-assembly-in-pydna">
 <h1>Example of a Gibson Assembly in pydna<a class="headerlink" href="#example-of-a-gibson-assembly-in-pydna" title="Permalink to this heading"></a></h1>
 <blockquote>
-<div><p>Visit the full library documentation <a class="reference external" href="https://bjornfjohansson.github.io/pydna/">here</a></p>
+<div><p>Visit the full library documentation <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a></p>
 </div></blockquote>
 <p>This example showcases a workflow of modelling Gibson assembly to clone gene fragments into plasmids for synthetic biology. The biological example is sourced <a class="reference external" href="https://www.nature.com/articles/nmeth.1318#MOESM319">here</a>, from the original Gibson assembly paper. This example constructs a synthetic pCC1BAC plasmid by joining sequence fragments from Ruminiclostridium (Clostridium) cellulolyticum. The R. cellulolyticum fragments joined are termed F1, F2, and F3, as in the paper.</p>
 <p>Source files can be found alongside this notebook, if you would like to follow along. Annotations are made alongside the code to describe key steps.</p>
-<a target="_blank" href="https://colab.research.google.com/github/BjornFJohansson/pydna/blob/dev_bjorn/docs/notebooks/Example_Gibson.ipynb">
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Example_Gibson.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Install pydna (only when running on Colab)
-import sys
-if &#39;google.colab&#39; in sys.modules:
-    %%capture
-    # Install the current development version of pydna (comment to install pip version)
-    !pip install git+https://github.com/BjornFJohansson/pydna@dev_bjorn
-    # Install pip version instead (uncomment to install)
-    # !pip install pydna
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
+<span class="c1"># Install pydna (only when running on Colab)</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span>
 
 </pre></div>
 </div>

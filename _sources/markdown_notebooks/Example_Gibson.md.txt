@@ -1,25 +1,22 @@
 # Example of a Gibson Assembly in pydna
-> Visit the full library documentation [here](https://bjornfjohansson.github.io/pydna/)
+> Visit the full library documentation [here](https://pydna-group.github.io/pydna/)
 
 This example showcases a workflow of modelling Gibson assembly to clone gene fragments into plasmids for synthetic biology. The biological example is sourced [here](https://www.nature.com/articles/nmeth.1318#MOESM319), from the original Gibson assembly paper. This example constructs a synthetic pCC1BAC plasmid by joining sequence fragments from Ruminiclostridium (Clostridium) cellulolyticum. The R. cellulolyticum fragments joined are termed F1, F2, and F3, as in the paper.
 
 Source files can be found alongside this notebook, if you would like to follow along. Annotations are made alongside the code to describe key steps.
 
 
-<a target="_blank" href="https://colab.research.google.com/github/BjornFJohansson/pydna/blob/dev_bjorn/docs/notebooks/Example_Gibson.ipynb">
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Example_Gibson.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
 
 ```python
+%%capture
 # Install pydna (only when running on Colab)
 import sys
 if 'google.colab' in sys.modules:
-    %%capture
-    # Install the current development version of pydna (comment to install pip version)
-    !pip install git+https://github.com/BjornFJohansson/pydna@dev_bjorn
-    # Install pip version instead (uncomment to install)
-    # !pip install pydna
+    %pip install pydna
 
 ```
 

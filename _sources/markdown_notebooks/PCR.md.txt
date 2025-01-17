@@ -1,6 +1,6 @@
 # How to Perform a Polymerase Chain Reaction (PCR)
 
-> Visit the full library documentation [here](https://bjornfjohansson.github.io/pydna/)
+> Visit the full library documentation [here](https://pydna-group.github.io/pydna/)
 
 This page walks you through how to perform a PCR, and design PCR primers, using `pydna`. A PCR amplifies a specific stretch of DNA defined by the primers, and it is critical to ensure primer binding specificity and appropriate primer melting temperature (tm) through careful design. `pydna` provides tools for quick modelling of PCR to check for correct PCR products, and methods for calculating tm and primer design, as performed in other popular web servcies (e.g Primer3Plus). 
 
@@ -10,20 +10,17 @@ To perform PCR, `pydna` provides the `anneal` class and the `pcr` method to quic
   
 The following example uses a 300+ bp custom sample circular DNA, containing an example gene that we would like to clone. 18 bp forward and reverse primers have been provided. 
 
-<a target="_blank" href="https://colab.research.google.com/github/BjornFJohansson/pydna/blob/dev_bjorn/docs/notebooks/PCR.ipynb">
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/PCR.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
 
 ```python
+%%capture
 # Install pydna (only when running on Colab)
 import sys
 if 'google.colab' in sys.modules:
-    %%capture
-    # Install the current development version of pydna (comment to install pip version)
-    !pip install git+https://github.com/BjornFJohansson/pydna@dev_bjorn
-    # Install pip version instead (uncomment to install)
-    # !pip install pydna
+    %pip install pydna
 
 ```
 

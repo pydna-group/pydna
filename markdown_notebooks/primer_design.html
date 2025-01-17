@@ -78,6 +78,17 @@
   <section id="primer-design-in-pydna">
 <h1>Primer design in pydna<a class="headerlink" href="#primer-design-in-pydna" title="Permalink to this heading"></a></h1>
 <p>You can use <code class="docutils literal notranslate"><span class="pre">pydna</span></code> for primer design in different contexts, let’s start with some basic primer functionalities.</p>
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/primer_design.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
+<span class="c1"># Install pydna (only when running on Colab)</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span>
+
+</pre></div>
+</div>
 <section id="checking-the-tm-of-a-primer">
 <h2>Checking the Tm of a primer<a class="headerlink" href="#checking-the-tm-of-a-primer" title="Permalink to this heading"></a></h2>
 <p>Primer design in pydna is very flexible, and supports different methods. For typical use-cases, we recommend using <code class="docutils literal notranslate"><span class="pre">tm_default</span></code>, which uses the method <code class="docutils literal notranslate"><span class="pre">Bio.SeqUtils.MeltingTemp</span></code> from biopython, nearest neighbor thermodynamics values from <a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/15139820/">SantaLucia &amp; Hicks (2004)</a> and common values for nucleotide concentration, salt concentration, etc. You can of course change those settings. For a full dive check <code class="docutils literal notranslate"><span class="pre">src/pydna/tm.py</span></code>.</p>

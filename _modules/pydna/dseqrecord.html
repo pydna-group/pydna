@@ -884,7 +884,7 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span> <span class="ow">or</span> <span class="n">sl_start</span> <span class="o">&lt;</span> <span class="n">sl_stop</span><span class="p">:</span>
             <span class="c1"># TODO: special case for sl_end == 0 in circular sequences</span>
-            <span class="c1"># related to https://github.com/BjornFJohansson/pydna/issues/161</span>
+            <span class="c1"># related to https://github.com/pydna-group/pydna/issues/161</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span> <span class="ow">and</span> <span class="n">sl</span><span class="o">.</span><span class="n">stop</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">sl</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="n">sl</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
             <span class="n">answer</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">sl</span><span class="p">)</span><span class="o">.</span><span class="n">features</span>
@@ -1361,7 +1361,7 @@
 
 <div class="viewcode-block" id="Dseqrecord.apply_cut"><a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.apply_cut">[docs]</a>    <span class="k">def</span> <span class="nf">apply_cut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left_cut</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">):</span>
         <span class="n">dseq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">apply_cut</span><span class="p">(</span><span class="n">left_cut</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">)</span>
-        <span class="c1"># TODO: maybe remove depending on https://github.com/BjornFJohansson/pydna/issues/161</span>
+        <span class="c1"># TODO: maybe remove depending on https://github.com/pydna-group/pydna/issues/161</span>
 
         <span class="k">if</span> <span class="n">left_cut</span> <span class="o">==</span> <span class="n">right_cut</span><span class="p">:</span>
             <span class="c1"># Not really a cut, but to handle the general case</span>
@@ -1370,7 +1370,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># The features that span the origin if shifting with left_cut, but that do not cross</span>
                 <span class="c1"># the cut site should be included, and if there is a feature within the cut site, it should</span>
-                <span class="c1"># be duplicated. See https://github.com/BjornFJohansson/pydna/issues/180 for a practical example.</span>
+                <span class="c1"># be duplicated. See https://github.com/pydna-group/pydna/issues/180 for a practical example.</span>
                 <span class="c1">#</span>
                 <span class="c1"># Let&#39;s say we are going to open a circular plasmid like below (| inidicate cuts, numbers indicate</span>
                 <span class="c1"># features)</span>

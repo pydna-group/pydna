@@ -78,7 +78,7 @@
   <section id="importing-and-viewing-sequence-files-in-pydna">
 <h1>Importing and viewing sequence files in pydna<a class="headerlink" href="#importing-and-viewing-sequence-files-in-pydna" title="Permalink to this heading"></a></h1>
 <blockquote>
-<div><p>Visit the full library documentation <a class="reference external" href="https://bjornfjohansson.github.io/pydna/">here</a></p>
+<div><p>Visit the full library documentation <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a></p>
 </div></blockquote>
 <p>pydna can be used to work with FASTA, Genbank, EMBL, and snapgene files (.fasta, .gb, .embl, .dna). You can read these files into a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> that one can view and work with. You can also instantiate <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> objects with strings.</p>
 <section id="importing-sequence-files">
@@ -89,17 +89,14 @@
 <li><p>A python string with the file content.</p></li>
 </ul>
 <p>The following code shows an example of how to use the <code class="docutils literal notranslate"><span class="pre">parse</span></code> function to import a FASTA file.</p>
-<a target="_blank" href="https://colab.research.google.com/github/BjornFJohansson/pydna/blob/dev_bjorn/docs/notebooks/Importing_Seqs.ipynb">
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Importing_Seqs.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Install pydna (only when running on Colab)
-import sys
-if &#39;google.colab&#39; in sys.modules:
-    %%capture
-    # Install the current development version of pydna (comment to install pip version)
-    !pip install git+https://github.com/BjornFJohansson/pydna@dev_bjorn
-    # Install pip version instead (uncomment to install)
-    # !pip install pydna
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
+<span class="c1"># Install pydna (only when running on Colab)</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span>
 
 </pre></div>
 </div>

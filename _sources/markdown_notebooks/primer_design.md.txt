@@ -2,6 +2,20 @@
 
 You can use `pydna` for primer design in different contexts, let's start with some basic primer functionalities.
 
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/primer_design.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+
+```python
+%%capture
+# Install pydna (only when running on Colab)
+import sys
+if 'google.colab' in sys.modules:
+    %pip install pydna
+
+```
+
 ## Checking the Tm of a primer
 
 Primer design in pydna is very flexible, and supports different methods. For typical use-cases, we recommend using `tm_default`, which uses the method `Bio.SeqUtils.MeltingTemp` from biopython, nearest neighbor thermodynamics values from [SantaLucia & Hicks (2004)](https://pubmed.ncbi.nlm.nih.gov/15139820/) and common values for nucleotide concentration, salt concentration, etc. You can of course change those settings. For a full dive check `src/pydna/tm.py`.

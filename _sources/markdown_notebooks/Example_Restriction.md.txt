@@ -1,5 +1,5 @@
 # Example of a Plasmid Restriction/Ligation Cloning
-> Visit the full library documentation [here](https://bjornfjohansson.github.io/pydna/)
+> Visit the full library documentation [here](https://pydna-group.github.io/pydna/)
 
 This example showcases a workflow of modelling molecular cloning with restriction enzymes, PCR, and ligases, to clone gene fragments into plasmids. This example constructs a synthetic plasmid by cloning the ase1 gene, which encodes a microtubule associated protein responsible for mitotic spindle assembly, into the pFA6a-kanMX6 cloning vector:
 
@@ -9,20 +9,17 @@ This example showcases a workflow of modelling molecular cloning with restrictio
 
 Source files can be found alongside this notebook, if you would like to follow along. Annotations are made alongside the code to describe key steps.
 
-<a target="_blank" href="https://colab.research.google.com/github/BjornFJohansson/pydna/blob/dev_bjorn/docs/notebooks/Example_Gibson.ipynb">
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Example_Gibson.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
 
 ```python
+%%capture
 # Install pydna (only when running on Colab)
 import sys
 if 'google.colab' in sys.modules:
-    %%capture
-    # Install the current development version of pydna (comment to install pip version)
-    !pip install git+https://github.com/BjornFJohansson/pydna@dev_bjorn
-    # Install pip version instead (uncomment to install)
-    # !pip install pydna
+    %pip install pydna
 
 ```
 

@@ -1,5 +1,5 @@
 # Importing and viewing sequence files in pydna
-> Visit the full library documentation [here](https://bjornfjohansson.github.io/pydna/)
+> Visit the full library documentation [here](https://pydna-group.github.io/pydna/)
 
 pydna can be used to work with FASTA, Genbank, EMBL, and snapgene files (.fasta, .gb, .embl, .dna). You can read these files into a `Dseqrecord` that one can view and work with. You can also instantiate `Dseqrecord` objects with strings.
 
@@ -12,20 +12,17 @@ To import files into pydna is simple. pydna provides the `parse` method to read 
 
 The following code shows an example of how to use the `parse` function to import a FASTA file.
 
-<a target="_blank" href="https://colab.research.google.com/github/BjornFJohansson/pydna/blob/dev_bjorn/docs/notebooks/Importing_Seqs.ipynb">
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Importing_Seqs.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
 
 ```python
+%%capture
 # Install pydna (only when running on Colab)
 import sys
 if 'google.colab' in sys.modules:
-    %%capture
-    # Install the current development version of pydna (comment to install pip version)
-    !pip install git+https://github.com/BjornFJohansson/pydna@dev_bjorn
-    # Install pip version instead (uncomment to install)
-    # !pip install pydna
+    %pip install pydna
 
 ```
 

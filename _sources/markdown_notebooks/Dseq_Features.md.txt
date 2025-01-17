@@ -2,27 +2,23 @@
 
 > Before working with features, check how to import sequences from files in the [Importing_Seqs notebook](./Importing_Seqs.ipynb).
 >
-> For full library documentation, visit [here](https://bjornfjohansson.github.io/pydna/).
+> For full library documentation, visit [here](https://pydna-group.github.io/pydna/).
 
 Some sequence file formats (like Genbank) include features, describing key biological properties of sequence regions. In Genbank, features "include genes, gene products, as well as regions of biological significance reported in the sequence." (See [here](https://www.ncbi.nlm.nih.gov/genbank/samplerecord/) for a description of a Genbank file and associated terminologies/annotations) Examples include coding sequences (CDS), introns, promoters, etc.
 
 pydna offers many ways to easily view, add, extract, and write features into a Genbank file via the `Dseqrecord` class. After reading a file into a `Dseqrecord` object, we can check out the list of features in the record using the following code. This example uses the sample record [U49845](https://www.ncbi.nlm.nih.gov/genbank/samplerecord/).
 
-<a target="_blank" href="https://colab.research.google.com/github/BjornFJohansson/pydna/blob/dev_bjorn/docs/notebooks/Dseq_Features.ipynb">
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Dseq_Features.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
 
 ```python
+%%capture
 # Install pydna (only when running on Colab)
 import sys
 if 'google.colab' in sys.modules:
-    %%capture
-    # Install the current development version of pydna (comment to install pip version)
-    !pip install git+https://github.com/BjornFJohansson/pydna@dev_bjorn
-    # Install pip version instead (uncomment to install)
-    # !pip install pydna
-
+    %pip install pydna
 ```
 
 

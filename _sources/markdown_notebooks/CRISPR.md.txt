@@ -1,25 +1,22 @@
 # How to Model CRISPR-Cas9 Experiments in pydna
 
-> Visit the full library documentation [here](https://bjornfjohansson.github.io/pydna/)
+> Visit the full library documentation [here](https://pydna-group.github.io/pydna/)
 
 The pydna package can simulate CRISPR-Cas9 editing, which allows one to cut DNA sequences at specific sites using guide RNAs (gRNAs) that direct the Cas9 protein. This page will guide you through the process of using the `pydna.crispr` module to model a CRISPR-Cas9 cut on a DNA sequence.
 
 The `pydna.crispr` module contains the `cas9` class to simulate the biological activites of the Cas9 protein and the guideRNA, which should be imported. In addtion, the `Dseqrecord` class has also been imported to generate an example target_sequence.
 
-<a target="_blank" href="https://colab.research.google.com/github/BjornFJohansson/pydna/blob/dev_bjorn/docs/notebooks/CRISPR.ipynb">
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/CRISPR.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
 
 ```python
+%%capture
 # Install pydna (only when running on Colab)
 import sys
 if 'google.colab' in sys.modules:
-    %%capture
-    # Install the current development version of pydna (comment to install pip version)
-    !pip install git+https://github.com/BjornFJohansson/pydna@dev_bjorn
-    # Install pip version instead (uncomment to install)
-    # !pip install pydna
+    %pip install pydna
 
 ```
 
