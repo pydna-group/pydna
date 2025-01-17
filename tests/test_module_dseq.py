@@ -544,7 +544,7 @@ def test_dseq():
     assert obj.cut(rb) == obj.cut(BamHI, BglII) == obj.cut(BglII, BamHI)
 
     obj = Dseq("ggatccAGATCT", circular=True)
-    # TODO: address this test change Related to https://github.com/BjornFJohansson/pydna/issues/78
+    # TODO: address this test change Related to https://github.com/pydna-group/pydna/issues/78
     assert obj.cut(rb) == obj.cut(BamHI, BglII) == obj.cut(BglII, BamHI)
 
     obj = Dseq("AGATCTggatcc", circular=True)
@@ -578,7 +578,7 @@ def test_Dseq_slicing2():
     from Bio.Restriction import BamHI, EcoRI, KpnI
 
     a = Dseq("aaGGATCCnnnnnnnnnGAATTCccc", circular=True)
-    # TODO: address this test change Related to https://github.com/BjornFJohansson/pydna/issues/78
+    # TODO: address this test change Related to https://github.com/pydna-group/pydna/issues/78
 
     assert a.cut(
         EcoRI,
@@ -608,7 +608,7 @@ def test_Dseq___getitem__():
     assert s[9:1] == Dseq("")
     assert t[9:1] == Dseq("")
 
-    # Indexing of full circular molecule (https://github.com/BjornFJohansson/pydna/issues/161)
+    # Indexing of full circular molecule (https://github.com/pydna-group/pydna/issues/161)
     s = Dseq("GGATCC", circular=True)
     str_seq = str(s)
     for shift in range(len(s)):
@@ -742,7 +742,7 @@ def test_misc():
     a, b = x.cut(NotI)
 
     z = (a + b).looped()
-    # TODO: address this test change Related to https://github.com/BjornFJohansson/pydna/issues/78
+    # TODO: address this test change Related to https://github.com/pydna-group/pydna/issues/78
     assert z.shifted(-6) == x
 
 

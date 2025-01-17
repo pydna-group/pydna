@@ -94,7 +94,7 @@ def shift_location(original_location, shift, lim):
         # in which consecutive parts do not have any bases between them.
         # This type of feature is generated to represent a feature that
         # spans the origin of a circular sequence. See more details in
-        # https://github.com/BjornFJohansson/pydna/issues/195
+        # https://github.com/pydna-group/pydna/issues/195
 
         if len(part) == 0:
             newparts.append(_sl(new_start, new_start, strand))

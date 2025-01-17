@@ -1,8 +1,8 @@
 # ![icon](docs/_static/pydna.resized.png) pydna
 
-| [![Tests & Coverage](https://github.com/BjornFJohansson/pydna/actions/workflows/pydna_test_and_coverage_workflow.yml/badge.svg?branch=dev_bjorn)](https://github.com/BjornFJohansson/pydna/actions/workflows/pydna_test_and_coverage_workflow.yml) | [![codecov](https://codecov.io/gh/BjornFJohansson/pydna/branch/master/graph/badge.svg)](https://codecov.io/gh/BjornFJohansson/pydna/branch/master) | [![PyPI version](https://badge.fury.io/py/pydna.svg)](https://badge.fury.io/py/pydna)                                                  | [![Google group : pydna](https://img.shields.io/badge/Google%20Group-pydna-blue.svg)](https://groups.google.com/g/pydna)              |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| [![Documentation Status](https://github.com/BjornFJohansson/pydna/actions/workflows/publish-docs.yml/badge.svg)](https://github.com/BjornFJohansson/pydna/actions/workflows/publish-docs.yml)                                                      | [![GitHub issues](https://img.shields.io/github/issues/BjornFJohansson/pydna.svg)](https://github.com/BjornFJohansson/pydna/issues)                | [![Anaconda-Server Badge2](https://anaconda.org/bjornfjohansson/pydna/badges/license.svg)](https://anaconda.org/bjornfjohansson/pydna) | [![GitHub stars](https://img.shields.io/github/stars/BjornFJohansson/pydna.svg)](https://github.com/BjornFJohansson/pydna/stargazers) |
+| [![Tests & Coverage](https://github.com/pydna-group/pydna/actions/workflows/pydna_test_and_coverage_workflow.yml/badge.svg?branch=dev_bjorn)](https://github.com/pydna-group/pydna/actions/workflows/pydna_test_and_coverage_workflow.yml) | [![codecov](https://codecov.io/gh/BjornFJohansson/pydna/branch/master/graph/badge.svg)](https://codecov.io/gh/BjornFJohansson/pydna/branch/master) | [![PyPI version](https://badge.fury.io/py/pydna.svg)](https://badge.fury.io/py/pydna)                                                  | [![Google group : pydna](https://img.shields.io/badge/Google%20Group-pydna-blue.svg)](https://groups.google.com/g/pydna)          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| [![Documentation Status](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml/badge.svg)](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml)                                                      | [![GitHub issues](https://img.shields.io/github/issues/BjornFJohansson/pydna.svg)](https://github.com/pydna-group/pydna/issues)                    | [![Anaconda-Server Badge2](https://anaconda.org/bjornfjohansson/pydna/badges/license.svg)](https://anaconda.org/bjornfjohansson/pydna) | [![GitHub stars](https://img.shields.io/github/stars/BjornFJohansson/pydna.svg)](https://github.com/pydna-group/pydna/stargazers) |
 
 <!-- docs/index.rst-start -->
 
@@ -42,7 +42,7 @@ Pereira, F., Azevedo, F., Carvalho, Â., Ribeiro, G. F., Budde, M. W., & Johanss
 
 ## Documentation and usage 📚
 
-Full documentation of all modules and classes can be found at [https://bjornfjohansson.github.io/pydna](https://bjornfjohansson.github.io/pydna).
+Full documentation of all modules and classes can be found at [https://pydna-group.github.io/pydna](https://pydna-group.github.io/pydna).
 
 To get started, we recommend you to have a look at the [example notebooks](docs/notebooks). Start by having a look at [Dseq](docs/notebooks/Dseq.ipynb), [Dseq_Features](docs/notebooks/Dseq_Features.ipynb) and [Importing_Seqs](docs/notebooks/Importing_Seqs.ipynb), which cover the basics of working with sequences. The rest of the notebooks cover how to use pydna for different cloning strategies, such as Gibson assembly, Restriction-Ligation, etc.
 
@@ -435,7 +435,10 @@ poetry config virtualenvs.in-project true
 # Install dependencies (extras are required for tests to pass)
 poetry install --all-extras
 
-# Activate virtual environment
+# Activate virtual environment (poetry version 2)
+poetry env activate
+
+# Activate virtual environment (poetry version 1)
 poetry shell
 
 # Install pre-commit hooks
@@ -487,7 +490,7 @@ supported python versions.
 ### Building the documentation locally 📚
 
 Documentation is built using [Sphinx](http://www.sphinx-doc.org/) from [docstrings](https://www.python.org/dev/peps/pep-0257/)
-using a GitHub [action](https://github.com/BjornFJohansson/pydna/actions/workflows/publish-docs.yml).
+using a GitHub [action](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml).
 The [numpy](https://www.numpy.org) [docstring format](https://numpy.org/doc/stable/dev/howto-docs.html#docstring-intro) is used.
 
 Below the commands to run a local sphinx server that auto-updated when files are changed.
@@ -505,7 +508,7 @@ More info about how to contribute to the documentation can be found [here](docs/
 
 ## Release process 🚀
 
-See the [releases](https://github.com/BjornFJohansson/pydna/releases) for changes and releases.
+See the [releases](https://github.com/pydna-group/pydna/releases) for changes and releases.
 
 The build workflow builds a PyPI packages using poetry. This workflow is triggered by publishing a Github release manually from the Github web interface.
 
@@ -535,4 +538,4 @@ In Cold Spring Harbor Laboratory (p. 2021.01.17.427048). [DOI](https://doi.org/1
 
 [An Automated Protein Synthesis Pipeline with Transcriptic and Snakemake](http://blog.booleanbiotech.com/transcriptic_protein_synthesis_pipeline.html)
 
-and other projects on [github](https://github.com/BjornFJohansson/pydna/network/dependents?package_id=UGFja2FnZS01MjQ2MjYzNQ%3D%3D)
+and other projects on [github](https://github.com/pydna-group/pydna/network/dependents?package_id=UGFja2FnZS01MjQ2MjYzNQ%3D%3D)

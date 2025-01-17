@@ -2,7 +2,7 @@
 
 
 The best way to get started is to follow our tutorial notebooks, you can find them in the
-repository folder [docs/notebooks](https://github.com/BjornFJohansson/pydna/tree/main/docs/notebooks) and
+repository folder [docs/notebooks](https://github.com/pydna-group/pydna/tree/master/docs/notebooks) and
 are reproduced here so they can serve as documentation.
 
 You can run the notebooks locally, but also on the browser using Google Colab, simply click in the badge of

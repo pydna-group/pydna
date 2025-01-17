@@ -48,14 +48,14 @@ test:
     - src
     - src/pydna
 about:
-  home: https://github.com/BjornFJohansson/pydna
+  home: https://github.com/pydna-group/pydna
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE.txt
   summary: Representing double stranded DNA and simulating cloning, homologous recombination, Gibson assembly, Gel electrophoresis etc.
   description: Representing double stranded DNA and simulating cloning, homologous recombination, Gibson assembly, Gel electrophoresis etc.
-  doc_url: https://pydna.readthedocs.io
-  dev_url: https://github.com/BjornFJohansson/pydna
+  doc_url: https://pydna-group.github.io/pydna
+  dev_url: https://github.com/pydna-group/pydna
 extra:
   maintainers:
    - "Björn Johansson <bjorn_johansson@bio.uminho.pt>"

@@ -1,7 +1,7 @@
 # Documentation
 
 Documentation is built using [Sphinx](http://www.sphinx-doc.org/) from [docstrings](https://www.python.org/dev/peps/pep-0257/)
-using a GitHub [action](https://github.com/BjornFJohansson/pydna/actions/workflows/publish-docs.yml).
+using a GitHub [action](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml).
 The [numpy](www.numpy.org) [docstring format](https://numpy.org/doc/stable/dev/howto-docs.html#docstring-intro) is used.
 
 Below the commands to run a local sphinx server that auto-updated when files are changed.

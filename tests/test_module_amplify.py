@@ -784,7 +784,7 @@ def test_shifts():
 def test_annotation():
     """
     Test that annotations are correctly added to the amplicon in primers with tails
-    https://github.com/BjornFJohansson/pydna/issues/279
+    https://github.com/pydna-group/pydna/issues/279
     """
     from pydna.amplify import pcr
     from pydna.dseqrecord import Dseqrecord

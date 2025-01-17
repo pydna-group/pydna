@@ -16,7 +16,7 @@ pydna
 Pydna is a python package providing code for simulation of the creation of
 recombinant DNA molecules using
 `molecular biology <https://en.wikipedia.org/wiki/Molecular_biology>`_
-techniques. Development of pydna happens in this Github `repository <https://github.com/BjornFJohansson/pydna>`_.
+techniques. Development of pydna happens in this Github `repository <https://github.com/pydna-group/pydna>`_.
 
 Provided:
   1. PCR simulation
@@ -87,7 +87,7 @@ function's docstring::
 
 The doctrings are also used to provide an automaticly generated reference
 manual available online at
-`read the docs <https://pydna.readthedocs.io>`_.
+`read the docs <https://pydna-group.github.io/pydna>`_.
 
 Docstrings can be explored using `IPython <http://ipython.org/>`_, an
 advanced Python shell with
@@ -112,7 +112,7 @@ pydna source code
 -----------------
 
 The pydna source code is
-`available on Github <https://github.com/BjornFJohansson/pydna>`_.
+`available on Github <https://github.com/pydna-group/pydna>`_.
 
 How to get more help
 --------------------
@@ -121,7 +121,7 @@ Please join the
 `Google group <https://groups.google.com/forum/#!forum/pydna>`_
 for pydna, this is the preferred location for help. If you find bugs
 in pydna itself, open an issue at the
-`Github repository <https://github.com/BjornFJohansson/pydna/issues>`_.
+`Github repository <https://github.com/pydna-group/pydna/issues>`_.
 
 Examples of pydna in use
 ------------------------

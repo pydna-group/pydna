@@ -1893,7 +1893,7 @@ def test___getitem__():
     assert len(seqRecord[2:20].features) == 1
     assert len(seqRecord[13:8].features) == 1
 
-    # Indexing of full circular molecule (https://github.com/BjornFJohansson/pydna/issues/161)
+    # Indexing of full circular molecule (https://github.com/pydna-group/pydna/issues/161)
     s = Dseqrecord("GGATCC", circular=True)
     str_seq = str(s.seq)
     for shift in range(len(s)):
