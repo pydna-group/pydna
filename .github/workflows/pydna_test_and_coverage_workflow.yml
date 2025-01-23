@@ -15,13 +15,11 @@ jobs:
       fail-fast: false
       matrix:
         os: ["macos-latest", "windows-latest"]
-        python-version: ["3.12", "3.11", "3.10", "3.9", "3.8"]
+        python-version: ["3.12", "3.11", "3.10", "3.9"]
         include:
           - os: ubuntu-latest
-            python-version: "3.8"
-            codecov: true
-          - os: ubuntu-latest
             python-version: "3.9"
+            codecov: true
           - os: ubuntu-latest
             python-version: "3.10"
           - os: ubuntu-latest
@@ -51,7 +49,6 @@ jobs:
         uses: snok/install-poetry@v1
         with:
           virtualenvs.prefer-active-python: true
-          version: ${{ matrix.python-version == '3.8' && '1.8.2' || 'latest' }}
       - name: 🔩 list Poetry settings
         run: poetry config --list
 

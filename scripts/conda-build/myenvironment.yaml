@@ -9,7 +9,7 @@
 ###############################################################################
 name: some-name-env
 dependencies:
-  - python>=3.8,<4.0
+  - python>=3.9,<4.0
   - conda-forge::appdirs>=1.4.4,<2.0.0
   - conda-forge::biopython>=1.80,<2.0
   - conda-forge::networkx>=2.8.8,<3.0.0
