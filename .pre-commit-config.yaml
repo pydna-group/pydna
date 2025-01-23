@@ -7,6 +7,8 @@ repos:
     args: [--branch, master]
   # Format yaml files
   - id: check-yaml
+  # Ignore conda build meta.yaml files
+    exclude: ^scripts/conda-build/meta.*\.yaml$
   # Fix end-of-file issues
   - id: end-of-file-fixer
   # Fix trailing whitespace
