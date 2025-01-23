@@ -50,10 +50,29 @@ class SeqRecord(_SeqRecord):
     nicer output in the IPython shell.
     """
 
-    def __init__(self, seq, *args, id="id", name="name", description="description", **kwargs):
+    def __init__(
+        self,
+        seq,
+        id="id",
+        name="name",
+        description="description",
+        dbxrefs=None,
+        features=None,
+        annotations=None,
+        letter_annotations=None,
+    ):
         if isinstance(seq, str):
             seq = _Seq(seq)
-        super().__init__(seq, *args, id=id, name=name, description=description, **kwargs)
+        super().__init__(
+            seq,
+            id=id,
+            name=name,
+            description=description,
+            dbxrefs=dbxrefs,
+            features=features,
+            annotations=annotations,
+            letter_annotations=letter_annotations,
+        )
         self._fix_attributes()
 
     def _fix_attributes(self):
@@ -612,7 +631,7 @@ class SeqRecord(_SeqRecord):
 
         if format == "pydnafasta":
             return _pretty_str(
-                f">{self.id} {len(self)} bp {dict(((True,'circular'),(False,'linear')))[self.seq.circular]}\n{str(self.seq)}\n"
+                f">{self.id} {len(self)} bp {dict(((True, 'circular'), (False, 'linear')))[self.seq.circular]}\n{str(self.seq)}\n"
             )
         if format == "primer":
             return _pretty_str(
