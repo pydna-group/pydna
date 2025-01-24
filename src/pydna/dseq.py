@@ -15,7 +15,6 @@ The Dseq class support the notion of circular and linear DNA topology.
 """
 import math as _math
 import copy as _copy
-import itertools as _itertools
 import re as _re
 import inspect as _inspect
 
@@ -47,6 +46,18 @@ from pydna.common_sub_strings import terminal_overlap as _terminal_overlap
 
 from Bio.Restriction import RestrictionBatch as _RestrictionBatch
 from Bio.Restriction import CommOnly
+
+try:
+    from itertools import pairwise as _pairwise
+except ImportError:
+
+    def _pairwise(iterable):
+        # pairwise('ABCDEFG') → AB BC CD DE EF FG
+        iterator = iter(iterable)
+        a = next(iterator, None)
+        for b in iterator:
+            yield a, b
+            a = b
 
 pos_w_enz = _namedtuple("enzpos", "position enzyme recsite")
 
@@ -1421,7 +1432,7 @@ class Dseq(_Seq):
 
         cutpairs = []
 
-        for (w1, e1, s1), (w2, e2, s2) in _itertools.pairwise(cutsites):
+        for (w1, e1, s1), (w2, e2, s2) in _pairwise(cutsites):
 
             table1 = {True: to_5tail_table, False: to_3tail_table}[e1.is_3overhang()]
             table2 = {True: to_5tail_table, False: to_3tail_table}[e2.is_5overhang()]
