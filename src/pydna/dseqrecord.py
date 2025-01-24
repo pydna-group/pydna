@@ -788,9 +788,10 @@ class Dseqrecord(_SeqRecord):
         if self.circular:
             raise TypeError("TypeError: can't multiply circular Dseqrecord.")
         if number > 0:
-            new = _copy.copy(self)
+            new = _copy.deepcopy(self)
             for i in range(1, number):
                 new += self
+            new._per_letter_annotations = self._per_letter_annotations
             return new
         else:
             return self.__class__("")
@@ -1061,7 +1062,10 @@ class Dseqrecord(_SeqRecord):
         pydna.dseqrecord.Dseqrecord.lower"""
 
         upper = _copy.deepcopy(self)
+        # This is because the @seq.setter methods otherwise sets the _per_letter_annotations to an empty dict
+        prev_per_letter_annotation = upper._per_letter_annotations
         upper.seq = upper.seq.upper()
+        upper._per_letter_annotations = prev_per_letter_annotation
         return upper
 
     def lower(self):
@@ -1092,7 +1096,9 @@ class Dseqrecord(_SeqRecord):
 
         """
         lower = _copy.deepcopy(self)
+        prev_per_letter_annotation = lower._per_letter_annotations
         lower.seq = lower.seq.lower()
+        lower._per_letter_annotations = prev_per_letter_annotation
         return lower
 
     def orfs(self, minsize=300):
