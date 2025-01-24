@@ -34,6 +34,18 @@ from Bio.SeqFeature import CompoundLocation as _cl
 
 from typing import Union as _Union, TypeVar as _TypeVar, List as _List
 
+try:
+    from itertools import pairwise as _pairwise
+except ImportError:
+
+    def _pairwise(iterable):
+        # pairwise('ABCDEFG') → AB BC CD DE EF FG
+        iterator = iter(iterable)
+        a = next(iterator, None)
+        for b in iterator:
+            yield a, b
+            a = b
+
 # For functions that take str or bytes as input and return str or bytes as output, matching the input type
 StrOrBytes = _TypeVar("StrOrBytes", str, bytes)
 
@@ -823,7 +835,7 @@ def shift_location(original_location, shift, lim):
 
 def unfold_location(location, length):
     newparts = []
-    for k, (i, j) in enumerate(_itertools.pairwise(location.parts)):
+    for k, (i, j) in enumerate(_pairwise(location.parts)):
         if i.strand != -1 and i.end == length and j.start == 0:
             edge = [_sl(i.start, j.end + length, 1)]
             newparts = location.parts[:k] + edge + [p + length for p in location.parts[k + 2 :]]
