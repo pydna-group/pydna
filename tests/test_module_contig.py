@@ -46,7 +46,13 @@ def test_contig(monkeypatch):
     cnt2 = asm.assemble_linear()[0]
 
     fig = (
-        "one|14\n" "    \\/\n" "    /\\\n" "    14|two|15\n" "           \\/\n" "           /\\\n" "           15|three"
+        "one|14\n"
+        "    \\/\n"
+        "    /\\\n"
+        "    14|two|15\n"
+        "           \\/\n"
+        "           /\\\n"
+        "           15|three"
     )
 
     assert fig == cnt2.figure()

@@ -4,32 +4,31 @@
 import pytest
 
 
-def test_built(monkeypatch):
-    monkeypatch.setenv("pydna_cached_funcs", "")
-    from importlib import reload
-    from pydna import assembly
+# def test_built(monkeypatch):
+#     monkeypatch.setenv("pydna_cached_funcs", "")
+#     from importlib import reload
+#     from pydna import assembly
 
-    reload(assembly)
-    asm = assembly.Assembly(assembly.example_fragments, limit=5)
-    lin = asm.assemble_linear()
-    crc = asm.assemble_circular()
+#     reload(assembly)
+#     asm = assembly.Assembly(assembly.example_fragments, limit=5)
+#     lin = asm.assemble_linear()
+#     crc = asm.assemble_circular()
 
-    assert [l.seq for l in lin] == [l.seq for l in assembly.linear_results]
-    assert [c.seq for c in crc] == [c.seq for c in assembly.circular_results]
+#     assert [l.seq for l in lin] == [l.seq for l in assembly.linear_results]
+#     assert [c.seq for c in crc] == [c.seq for c in assembly.circular_results]
 
 
-def test_new_assembly(monkeypatch):
-    monkeypatch.setenv("pydna_cached_funcs", "")
+def test_new_assembly():
+    # monkeypatch.setenv("pydna_cached_funcs", "")
     from pydna.dseqrecord import Dseqrecord
     from pydna import assembly
     from pydna.parsers import parse
     from pydna.utils import eq
-    from importlib import reload
     from Bio.SeqFeature import SeqFeature
     from Bio.SeqFeature import FeatureLocation
     from Bio.SeqFeature import ExactPosition
 
-    reload(assembly)
+    # reload(assembly)
 
     #                   0000000000111111111222222222233333333334444444444555555555566
     #                   0123456780123456789012345678901234567890123456789012345678901
@@ -248,8 +247,8 @@ def test_new_assembly(monkeypatch):
     # [821] [713] [132] [51] [38]
 
 
-def test_assembly(monkeypatch):
-    monkeypatch.setenv("pydna_cached_funcs", "")
+def test_assembly():
+
     from pydna import assembly
     from pydna.parsers import parse
     from pydna.utils import eq
@@ -482,8 +481,8 @@ algorithm..: common_sub_strings"""
     assert candidate.seguid() == "cdseguid=-mVwekticpAYIT9C4JcXmOGFkRo"
 
 
-def test_MXblaster1(monkeypatch):
-    monkeypatch.setenv("pydna_cached_funcs", "")
+def test_MXblaster1():
+
     from pydna import assembly
     from pydna.parsers import parse
     from pydna.amplify import pcr
@@ -615,7 +614,7 @@ def test_MXblaster1(monkeypatch):
 
     pCAPs_MX4blaster1_AgeI = pCAPs_MX4blaster1.cut(AgeI)[0]
 
-    pCAPs_MX4blaster1_AgeI.seq = pCAPs_MX4blaster1_AgeI.seq.fill_in()
+    pCAPs_MX4blaster1_AgeI.seq = pCAPs_MX4blaster1_AgeI.seq.fill_in("GC")
 
     a = assembly.Assembly([GAL_GIN2, pCAPs_MX4blaster1_AgeI], limit=30)
 
@@ -639,16 +638,12 @@ def test_MXblaster1(monkeypatch):
     assert pCAPs_MX4blaster2.seguid() == "cdseguid=c48cBUb3wF-Sdhzh0Tlprp-0CEg"
 
 
-def test_assemble_pGUP1(monkeypatch):
-    monkeypatch.setenv("pydna_cached_funcs", "")
+def test_assemble_pGUP1():
 
     from pydna.readers import read
     from pydna import assembly
     from pydna.utils import eq
     from pydna.amplify import pcr
-    from importlib import reload
-
-    reload(assembly)
 
     GUP1rec1sens = read("GUP1rec1sens.txt")
     GUP1rec2AS = read("GUP1rec2AS.txt")

@@ -13,33 +13,42 @@ which can hold more meta data.
 
 The Dseq class support the notion of circular and linear DNA topology.
 """
-
-
+import math as _math
 import copy as _copy
 import itertools as _itertools
 import re as _re
 import inspect as _inspect
 
 from pydna.seq import Seq as _Seq
+
 # from Bio.Seq import _translate_str, _SeqAbstractBaseClass
 from collections import namedtuple as _namedtuple
+from Bio.SeqFeature import SimpleLocation as _lc
 
-from pydna._pretty import pretty_str as _pretty_str
 from seguid import ldseguid as _ldseguid
 from seguid import cdseguid as _cdseguid
 
+from pydna._pretty import pretty_str as _pretty_str
+from pydna.utils import shift_location as _sl
 from pydna.utils import rc as _rc
 from pydna.utils import flatten as _flatten
+
 # from pydna.utils import cuts_overlap as _cuts_overlap
 from pydna.utils import complement as _complement
+from pydna.utils import bp_dict
+from pydna.utils import bp_dict_str
+from pydna.utils import to_watson_table
+from pydna.utils import to_crick_table
+from pydna.utils import to_5tail_table
+from pydna.utils import to_3tail_table
+from pydna.utils import to_full_sequence
+from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
+from pydna.common_sub_strings import terminal_overlap as _terminal_overlap
 
-# from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
 from Bio.Restriction import RestrictionBatch as _RestrictionBatch
 from Bio.Restriction import CommOnly
 
-# from itertools import zip_longest
-
-pos_w_enz = _namedtuple('enzpos', "position enzyme")
+pos_w_enz = _namedtuple("enzpos", "position enzyme recsite")
 
 from typing import (
     TYPE_CHECKING,
@@ -50,88 +59,6 @@ from typing import (
     Iterable as _Iterable,
 )
 
-to_watson_table = bytes.maketrans(b"PEXIQFZJpexiqfzj12", b"GATC    gatc     .")
-to_crick_table = bytes.maketrans(b"PEXIQFZJpexiqfzj12", b"    GATC    gatc. ")
-to_5tail_table = bytes.maketrans(b"GATCgatc", b"QFZJqfzj")
-to_3tail_table = bytes.maketrans(b"GATCgatc", b"PEXIpexi")
-# left_fill_in_table = str.maketrans("PEXIpexi", "GATCgatc")
-# right_fill_in_table = str.maketrans("QFZJqfzj", "GATCgatc")
-
-#                                       Watson Crick    >   dsIUPAC
-ss_to_ds_dct = {
-    (b"P", b"Q"): b"G",  # P      Q            G
-    (b"E", b"F"): b"A",  # E      F            A
-    (b"X", b"Z"): b"T",  # X      Z            T
-    (b"I", b"J"): b"C",  # I      J            C
-    (b"p", b"q"): b"g",  # p      q            g
-    (b"e", b"f"): b"a",  # e      f            a
-    (b"x", b"z"): b"t",  # x      z            t
-    (b"i", b"j"): b"c",  # i      j            c
-    (b"p", b"Q"): b"g",  # p      Q            g
-    (b"e", b"F"): b"a",  # e      F            a
-    (b"x", b"Z"): b"t",  # x      Z            t
-    (b"i", b"J"): b"c",  # i      J            c
-    (b"P", b"q"): b"G",  # P      q            G
-    (b"E", b"f"): b"A",  # E      f            A
-    (b"X", b"z"): b"T",  # X      z            T
-    (b"I", b"j"): b"C",  # I      j            C
-    (b"P", b" "): b"P",  # P      q            G
-    (b"E", b" "): b"E",  # E      f            A
-    (b"X", b" "): b"X",  # X      z            T
-    (b"I", b" "): b"I",  # I      j            C
-    (b"Q", b"P"): b"G",  # Q      P            G
-    (b"F", b"E"): b"A",  # F      E            A
-    (b"Z", b"X"): b"T",  # Z      X            T
-    (b"J", b"I"): b"C",  # J      I            C
-    (b"q", b"p"): b"g",  # q      p            g
-    (b"f", b"e"): b"a",  # f      e            a
-    (b"z", b"x"): b"t",  # z      x            t
-    (b"j", b"i"): b"c",  # j      i            c
-    (b"q", b"P"): b"G",  # Q      P            G
-    (b"f", b"E"): b"A",  # F      E            A
-    (b"z", b"X"): b"T",  # Z      X            T
-    (b"j", b"I"): b"C",  # J      I            C
-    (b"Q", b"p"): b"g",  # q      p            g
-    (b"F", b"e"): b"a",  # f      e            a
-    (b"Z", b"x"): b"t",  # z      x            t
-    (b"J", b"i"): b"c",  # j      i            c
-    (b" ", b"Q"): b"Q",  # Q      P            G
-    (b" ", b"F"): b"F",  # F      E            A
-    (b" ", b"Z"): b"Z",  # Z      X            T
-    (b" ", b"J"): b"J",  # J      I            C
-    (b"G", b" "): b"P",
-    (b"A", b" "): b"E",
-    (b"T", b" "): b"X",
-    (b"C", b" "): b"I",
-    (b"g", b" "): b"p",
-    (b"a", b" "): b"e",
-    (b"t", b" "): b"x",
-    (b"c", b" "): b"i",
-    (b" ", b"G"): b"J",
-    (b" ", b"A"): b"Z",
-    (b" ", b"T"): b"F",
-    (b" ", b"C"): b"Q",
-    (b" ", b"g"): b"j",
-    (b" ", b"a"): b"z",
-    (b" ", b"t"): b"f",
-    (b" ", b"c"): b"q",
-    (b"G", b"C"): b"G",
-    (b"A", b"T"): b"A",
-    (b"T", b"A"): b"T",
-    (b"C", b"G"): b"C",
-    (b"g", b"c"): b"g",
-    (b"a", b"t"): b"a",
-    (b"t", b"a"): b"t",
-    (b"c", b"g"): b"c",
-    (b"G", b"c"): b"G",
-    (b"A", b"t"): b"A",
-    (b"T", b"a"): b"T",
-    (b"C", b"g"): b"C",
-    (b"g", b"C"): b"g",
-    (b"a", b"T"): b"a",
-    (b"t", b"A"): b"t",
-    (b"c", b"G"): b"c",
-}
 
 if TYPE_CHECKING:
     from Bio.Restriction import AbstractCut as _AbstractCut
@@ -144,9 +71,279 @@ CutSiteType = _Tuple[_Tuple[int, int], _Union["_AbstractCut", None]]
 
 
 class Dseq(_Seq):
-    """docstring.
+    """Dseq holds information for a double stranded (ds) DNA fragment that can be linear or circular.
 
-    here
+    Dseq is a subclass of the Biopython Seq object. The DNA fragment can have single stranded (ss)
+    regions, typically at either end. Such fragments are typically produced by restriction enzymes
+    with staggered cuts.
+
+    dsIUPAC [#]_ is an nn extension to the IUPAC alphabet used to describe ss regions:
+    ::
+
+            aaaGATC       GATCccc          ad-hoc representations
+        CTAGttt               gggCTAG
+
+        QFZJaaaPEXI       PEXIcccQFZJ      dsIUPAC
+
+
+
+    Parameters
+    ----------
+    data : bytes, str
+        a bytestring or string representing the ds DNA.
+
+    circular : bool, optional
+        True indicates that sequence is circular, False that it is linear.
+
+
+    Examples
+    --------
+    The most common usage is probably to create a Dseq object as a
+    part of a Dseqrecord object (see :class:`pydna.dseqrecord.Dseqrecord`).
+    Dseqrecord object can hold metadata that closely follows the data stored in the
+    Genbank sequence flat file format.
+
+    There are three ways of creating a Dseq object directly listed below, but you can also
+    use the function Dseq.from_full_sequence_and_overhangs() to create a Dseq:
+
+    Only one argument (bytestring or string):
+
+    >>> from pydna.dseq import Dseq
+    >>> Dseq("aaa")
+    Dseq(-3)
+    aaa
+    ttt
+
+    The given string was interpreted as a blunt, linear double stranded
+    nucleic acids fragment.
+
+    We can use the dsIUPAC alphabet to create staggered DNA fragments:
+
+    >>> from pydna.dseq import Dseq
+    >>> Dseq("pexigggaaatqfzj")
+    Dseq(-15)
+    gatcgggaaat
+        ccctttactag
+    >>> Dseq("qfzjgggaaatpexi")
+    Dseq(-15)
+        gggaaatgatc
+    ctagcccttta
+
+    There is a check for internal consistency. A nuleic acid molecule has to have at
+    least one phosphodiester bond in every position.
+    ::
+
+        GATT GATT
+        CTAAG TAA
+
+    >>> from pydna.dseq import Dseq
+    >>> Dseq("GATTQPATT")
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "/home/bjorn/python_packages/pydna/src/pydna/dseq.py", line 351, in __init__
+        raise ValueError(f"Molecule is internally split: {', '.join([m.decode('ascii') for m in matches])}")
+    ValueError: Molecule is internally split: QP
+
+    A Dseq object can also be formed from the watson and crick strands using
+    the pydna.dseq.pair helper function.
+
+    The pair function accepts up to three arguments, watson, crick and ovhg=int.
+    watson and crick are bytestrings or strings representing the watson (sense)
+    or crick (antisense) strands of a double stranded DNA molecule.
+
+    The ovhg parameter is a positive or negative integer describing the length
+    of the crick strand overhang in at the left end (beginning) of the molecule.
+
+    The ovhg parameter controls the stagger at the five prime end::
+
+        dsDNA     ovhg (overhang)
+
+          n...    2
+        nnn...
+
+         nn...    1
+        nnn...
+
+        nnn...    0
+        nnn...
+
+        nnn...   -1
+         nn...
+
+        nnn...   -2
+          n...
+
+    >>> from pydna.dseq import Dseq, pair
+    >>> pair("GATT", "AATC", ovhg=0)
+    b'GATT'
+    >>> pair("aGATT", "AATC", ovhg=-1)
+    b'eGATT'
+    >>> pair("GATTa", "AATC", ovhg=0)
+    b'GATTe'
+    >>> pair("GATTa", "AATCc", ovhg=1)
+    b'qGATTe'
+    >>> Dseq(pair("GATTa", "AATCc", ovhg=1))
+    Dseq(-6)
+     GATTa
+    cCTAA
+
+    The ovhg parameter is optional. If both watson and crick are given, but not
+    ovhg an attempt will be made to find the best annealing between the strands.
+    There are limitations to this. For long fragments it is quite slow.
+
+    The length of the annealing sequences have to be at least half the length of
+    the shortest of the strands.
+
+    >>> from pydna.dseq import Dseq, pair
+    >>> pair("GATT", "AATC")
+    b'GATT'
+    >>> pair("aGATT", "AATC")
+    b'eGATT'
+    >>> pair("GATTa", "AATC")
+    b'GATTe'
+    >>> pair("GATTa", "AATCc")
+    b'qGATTe'
+    >>> Dseq(pair("GATTa", "AATCc"))
+    Dseq(-6)
+     GATTa
+    cCTAA
+
+    Example of creating Dseq objects with different amounts of stagger:
+
+    >>> Dseq(pair(watson="agt", crick="actta", ovhg=-2))
+    Dseq(-7)
+    agt
+      attca
+    >>> Dseq(pair(watson="ata",crick="actta", ovhg=-1))
+    Dseq(-6)
+    ata
+     attca
+    >>> Dseq(pair(watson="taa",crick="actta",ovhg=0))
+    Dseq(-5)
+    taa
+    attca
+    >>> Dseq(pair(watson="aag",crick="actta",ovhg=1))
+    Dseq(-5)
+     aag
+    attca
+    >>> Dseq(pair(watson="agt",crick="actta",ovhg=2))
+    Dseq(-5)
+      agt
+    attca
+
+    The topology or shape of the fragment is set by circular = True or False
+
+    >>> Dseq("aaa", circular = True)
+    Dseq(o3)
+    aaa
+    ttt
+    >>> Dseq("aaa", circular = False)
+    Dseq(-3)
+    aaa
+    ttt
+
+    >>> a=Dseq(pair("tttcccc","aaacccc"))
+    >>> a
+    Dseq(-11)
+        tttcccc
+    ccccaaa
+    >>> a.ovhg
+    4
+
+    >>> b=Dseq(pair("ccccttt","ccccaaa"))
+    >>> b
+    Dseq(-11)
+    ccccttt
+        aaacccc
+    >>> b.ovhg
+    -4
+    >>>
+
+    Coercing to string
+
+    >>> str(a)
+    'ggggtttcccc'
+
+    A Dseq object can be longer that either the watson or crick strands.
+
+    ::
+
+        <-- length -->
+        GATCCTTT
+             AAAGCCTAG
+
+        <-- length -->
+              GATCCTTT
+        AAAGCCCTA
+
+    The slicing of a linear Dseq object works mostly as it does for a string.
+
+    >>> s="ggatcc"
+    >>> s[2:3]
+    'a'
+    >>> s[2:4]
+    'at'
+    >>> s[2:4:-1]
+    ''
+    >>> s[::2]
+    'gac'
+    >>> from pydna.dseq import Dseq
+    >>> d=Dseq(s)
+    >>> d[2:3]
+    Dseq(-1)
+    a
+    t
+    >>> d[2:4]
+    Dseq(-2)
+    at
+    ta
+    >>> d[2:4:-1]
+    Dseq(-0)
+    <BLANKLINE>
+    <BLANKLINE>
+    >>> d[::2]
+    Dseq(-3)
+    gac
+    ctg
+
+
+    The slicing of a circular Dseq object produce a linear Dseq object.
+
+
+    >>> s="ggAtCc"
+    >>> d=Dseq(s, circular=True)
+    >>> d
+    Dseq(o6)
+    ggAtCc
+    ccTaGg
+    >>> d[1:5]
+    Dseq(-4)
+    gAtC
+    cTaG
+
+
+    The empty slice [:] returns a string or a linear Dseq unchanged, while
+    a linear Dseq is returned for a circular Dseq object.
+    This is the preferred way to linearize a circuler Dseq object.
+
+    >>> s="ggatcc"
+    >>> d=Dseq(s, circular=True)
+    >>> d
+    Dseq(o6)
+    ggatcc
+    cctagg
+    >>> d[:]
+    Dseq(-6)
+    ggatcc
+    cctagg
+    >>>
+
+
+    See Also
+    --------
+    pydna.dseqrecord.Dseqrecord
+    .. [#] http://en.wikipedia.org/wiki/Klenow_fragment#The_exo-_Klenow_fragment
+
     """
 
     trunc = 30
@@ -159,30 +356,30 @@ class Dseq(_Seq):
         pos=0,
     ):
         super().__init__(data, length)
+        t = self._data
+        if circular:
+            t += self._data[0:1]
+        if matches := _re.findall(b"[PEXIpexi][QFZJqfzj]|[QFZJqfzj][PEXIpexi]", t):
+            raise ValueError(f"Molecule is internally split: {', '.join([m.decode('ascii') for m in matches])}")
         self.circular = circular
         self.pos = pos
 
     @classmethod
-    def quick(cls, data: bytes, *args, circular=False, pos=0, **kwargs):
-        obj = cls.__new__(cls)  # Does not call __init__
-        obj.circular = circular
-        obj.pos = pos
-        obj._data = data
-        return obj
-
-    @classmethod
     def from_representation(cls, dsdna: str, *args, **kwargs):
-        obj = cls.__new__(cls)  # Does not call __init__
+        obj = cls.__new__(cls)
         obj.circular = False
         obj.pos = 0
-        dsdna = _inspect.cleandoc(dsdna)
-        watson, crick = [ln for ln in dsdna.splitlines() if ln.strip() and not ln.strip().startswith("Dseq(")]
+        clean = _inspect.cleandoc("\n" + dsdna)
+        watson, crick = [ln for ln in clean.splitlines() if ln.strip() and not ln.strip().startswith("Dseq(")]
         watson = f"{watson:<{len(crick)}}"
         crick = f"{crick:<{len(watson)}}"
         data = bytearray()
         for w, c in zip(watson, crick):
-            # print(w,c, ss_to_ds_dct[w.encode("ascii"), c.encode("ascii")])
-            data.extend(ss_to_ds_dct[w.encode("ascii"), c.encode("ascii")])
+            try:
+                data.extend(bp_dict[w.encode("ascii"), c.encode("ascii")])
+            except KeyError as err:
+                print(f"Base mismatch in representation {err}")
+                raise
         obj._data = bytes(data)
         return obj
 
@@ -249,9 +446,21 @@ class Dseq(_Seq):
         data = bytearray()
 
         for w, c in zip(watson, crick):
-            data.extend(ss_to_ds_dct[w.encode("ascii"), c.encode("ascii")])
+            data.extend(bp_dict[w.encode("ascii"), c.encode("ascii")])
 
         return cls(data)
+
+    @classmethod
+    def quick(cls, data: bytes, *args, circular=False, pos=0, **kwargs):
+        """Fastest way to instantiate an object of the Dseq class.
+
+        No checks of parameters are made.
+        """
+        obj = cls.__new__(cls)  # Does not call Bio.Seq.__init__() which has lots of time consuming checks.
+        obj.circular = circular
+        obj.pos = pos
+        obj._data = data
+        return obj
 
     @property
     def watson(self):
@@ -259,13 +468,17 @@ class Dseq(_Seq):
 
     @property
     def crick(self):
-        return _complement(self._data.translate(to_crick_table).strip().decode("ascii"))[::-1]
+        return self._data.translate(to_crick_table).strip().decode("ascii")[::-1]
 
     @property
     def ovhg(self):
         ohw = len(_re.match(b"^[PEXIpexi]*", self._data).group(0))
         ohc = len(_re.match(b"^[QFZJqfzj]*", self._data).group(0))
         return -ohw or ohc
+
+    @property  # TODO: talk about the naming
+    def full_sequence(self):
+        return self.__class__(self._data.translate(to_full_sequence), circular=self.circular)
 
     def watson_ovhg(self) -> int:
         """Returns the overhang of the watson strand at the three prime."""
@@ -306,7 +519,6 @@ class Dseq(_Seq):
             return self.ovhg, 0
         return 0, -self.ovhg
 
-
     def five_prime_end(self) -> _Tuple[str, str]:
         """Returns a tuple describing the structure of the 5' end of
         the DNA fragment
@@ -316,25 +528,25 @@ class Dseq(_Seq):
         >>> from pydna.dseq import Dseq
         >>> a=Dseq("aaa")
         >>> a
-        oDseq(-3)
+        Dseq(-3)
         aaa
         ttt
         >>> a.five_prime_end()
-        ('blunt', '')
-        >>> a=Dseq("faae")
-        >>> a
-        Dseq(-4)
-         aaa
-        ttt
-        >>> a.five_prime_end()
-        ("3'", 't')
-        >>> a=Dseq("eaaf")
-        >>> a
-        oDseq(-4)
-        aaa
-         ttt
-        >>> a.five_prime_end()
-        ("5'", 'a')
+         ('blunt', b'')
+        >>> b=Dseq("QZJaaa")
+        >>> b
+        Dseq(-6)
+           aaa
+        CAGttt
+        >>> b.five_prime_end()
+        ("3'", b'gac')
+        >>> c=Dseq("PXEaaa")
+        >>> c
+        Dseq(-6)
+        GTAaaa
+           ttt
+        >>> c.five_prime_end()
+        ("5'", b'gta')
         >>>
 
         See also
@@ -345,37 +557,46 @@ class Dseq(_Seq):
         sticky5 = _re.match(b"^[PEXIpexi]*", self._data).group(0).translate(to_watson_table).lower()
         sticky3 = _re.match(b"^[QFZJqfzj]*", self._data).group(0).translate(to_crick_table).lower()
 
-        key = bool((sticky5 and not sticky3) or (not sticky5 and sticky3))
-        type_ = {True:"5'", False:"3'"}.get(key, "blunt")
+        type_ = "blunt"
 
-        return type_, sticky5 or sticky3
+        assert (sticky5 or sticky3) or (not sticky5 and not sticky3), "End has to be either 5' or 3', not both."
+
+        if sticky5:
+            type_ = "5'"
+
+        if sticky3:
+            type_ = "3'"
+
+        return type_, sticky5 or sticky3[::-1]
 
     def three_prime_end(self) -> _Tuple[str, str]:
         """Returns a tuple describing the structure of the 5' end of
         the DNA fragment
 
+        Examples
+        --------
         >>> from pydna.dseq import Dseq
-        >>> a=oDseq("aaa", "ttt")
+        >>> a=Dseq("aaa")
         >>> a
-        oDseq(-3)
+        Dseq(-3)
         aaa
         ttt
         >>> a.three_prime_end()
-        ('blunt', '')
-        >>> a=oDseq("aaa", "ttt", ovhg=1)
-        >>> a
-        oDseq(-4)
-         aaa
-        ttt
-        >>> a.three_prime_end()
-        ("3'", 'a')
-        >>> a=oDseq("aaa", "ttt", ovhg=-1)
-        >>> a
-        oDseq(-4)
+        ('blunt', b'')
+        >>> b=Dseq("aaaQZJ")
+        >>> b
+        Dseq(-6)
         aaa
-         ttt
-        >>> a.three_prime_end()
-        ("5'", 't')
+        tttCAG
+        >>> b.three_prime_end()
+        ("5'", b'gac')
+        >>> c=Dseq("aaaPXE")
+        >>> c
+        Dseq(-6)
+        aaaGTA
+        ttt
+        >>> c.three_prime_end()
+        ("3'", b'gta')
         >>>
 
         See also
@@ -387,18 +608,42 @@ class Dseq(_Seq):
         sticky3 = _re.search(b"[PEXIpexi]*$", self._data).group(0).translate(to_watson_table).lower()
         sticky5 = _re.search(b"[QFZJqfzj]*$", self._data).group(0).translate(to_crick_table).lower()
 
-        key = bool((sticky5 and not sticky3) or (not sticky5 and sticky3))
-        type_ = {True:"5'", False:"3'"}.get(key, "blunt")
+        type_ = "blunt"
 
-        return type_, sticky5 or sticky3
+        assert (sticky5 or sticky3) or (not sticky5 and not sticky3), "End has to be either 5' or 3', not both."
 
+        if sticky5:
+            type_ = "5'"
+
+        if sticky3:
+            type_ = "3'"
+
+        return type_, sticky5[::-1] or sticky3
+
+    def translate(self, *args, **kwargs):  # TODO: discuss this
+        obj = _Seq(self.full_sequence._data)
+        return obj.translate(*args, **kwargs)
+
+    def __str__(self):
+        return self.full_sequence._data.decode("ascii")
+
+    # def __getitem__(self, sl: slice) -> "Dseq":
+    #     """Returns a subsequence. This method is used by the slice notation"""
+    #     if isinstance(sl, slice):
+    #         if sl.start == sl.stop and self.circular and (sl.start or sl.start==0) and (sl.stop or sl.stop==0):
+    #             return self[sl.start:] + self[:sl.start]
+    #     return self.__class__(super().__getitem__(sl))
 
     def __getitem__(self, sl: slice) -> "Dseq":
         """Returns a subsequence. This method is used by the slice notation"""
         if isinstance(sl, slice):
-            if sl.start == sl.stop and self.circular and (sl.start or sl.start==0) and (sl.stop or sl.stop==0):
-                return self[sl.start:] + self[:sl.start]
+            if sl.start is None and sl.stop is None and self.circular:
+                return self.__class__(self._data[sl])
         return self.__class__(super().__getitem__(sl))
+
+    def __contains__(self, item):
+        item = item if isinstance(item, bytes) else item.encode("ascii")
+        return self.full_sequence._data.__contains__(item)
 
     def mw(self) -> float:
         """This method returns the molecular weight of the DNA molecule
@@ -443,7 +688,7 @@ class Dseq(_Seq):
     def __repr__(self):
         header = f"{self.__class__.__name__}({({False: '-', True: 'o'}[self.circular])}{len(self)})"
         m = _re.match(
-            b"([PEXIpexi]*)([QFZJqfzj]*)(?=[GATCgatc])(.*)(?<=[GATCgatc])([PEXIpexi]*)([QFZJqfzj]*)|([PEXIpexiQFZJqfzj]+)",
+            b"([PEXIpexi]*)([QFZJqfzj]*)(?=[GATCUOgatcuo])(.*)(?<=[GATCUOgatcuo])([PEXIpexi]*)([QFZJqfzj]*)|([PEXIpexiQFZJqfzj]+)",
             self._data,
         )
         result = m.groups() if m else (b"",) * 6
@@ -472,10 +717,12 @@ class Dseq(_Seq):
             )
         r = (sticky_left5 or sticky_left3 or b"") + (middle or b"") + (sticky_right5 or sticky_right3 or single or b"")
         return _pretty_str(
-            f"{header}\n{r.translate(to_watson_table).decode().rstrip()}\n{_complement(r.translate(to_crick_table)).decode().rstrip()}"
+            f"{header}\n{r.translate(to_watson_table).decode().rstrip()}\n{r.translate(to_crick_table).decode().rstrip()}"
         )
 
-
+        # return _pretty_str(
+        #     f"{header}\n{r.translate(to_watson_table).decode().rstrip()}\n{_complement(r.translate(to_crick_table)).decode().rstrip()}"
+        # )
 
     def reverse_complement(self) -> "Dseq":
         """Dseq object where watson and crick have switched places.
@@ -510,7 +757,7 @@ class Dseq(_Seq):
         if not shift:
             return _copy.deepcopy(self)
         else:
-            return (self[shift:] + self[:shift]).looped()
+            return self.__class__(self._data[shift:] + self._data[:shift], circular=True)
 
     def looped(self: DseqType) -> DseqType:
         """Circularized Dseq object.
@@ -563,13 +810,13 @@ class Dseq(_Seq):
         sticky_left = ms.group(2) if ms else b""
         sticky_right = mo.group(1) if mo else b""
 
-        sticky_left_just = bytes(f"{sticky_left.decode():<{len(sticky_right)}}", 'utf8')
-        sticky_right_just = bytes(f"{sticky_right.decode():>{len(sticky_left)}}", 'utf8')
+        sticky_left_just = bytes(f"{sticky_left.decode():<{len(sticky_right)}}", "utf8")
+        sticky_right_just = bytes(f"{sticky_right.decode():>{len(sticky_left)}}", "utf8")
 
         assert len(sticky_left_just) == len(sticky_right_just)
 
         junction = b"".join(
-            [ss_to_ds_dct.get((bytes([w]), bytes([c])), b"-") for w, c in zip(sticky_left_just, sticky_right_just)]
+            [bp_dict.get((bytes([w]), bytes([c])), b"-") for w, c in zip(sticky_left_just, sticky_right_just)]
         )
 
         if b"-" in junction:
@@ -615,7 +862,47 @@ class Dseq(_Seq):
         selfcopy.circular = False
         return selfcopy
 
-    def __add__(self: DseqType, other: DseqType) -> DseqType:
+    # def _add(self: DseqType, other: DseqType, perfectmatch) -> DseqType:
+
+    #     if self.circular:
+    #         raise TypeError("circular DNA cannot be ligated!")
+    #     try:
+    #         if other.circular:
+    #             raise TypeError("circular DNA cannot be ligated!")
+    #     except AttributeError:
+    #         pass
+
+    #     if not other:
+    #         return _copy.deepcopy(self)
+    #     elif not self:
+    #         return _copy.deepcopy(other)
+
+    #     ms = _re.fullmatch(b"(?:.*)([GATCgatc])([QFZJqfzj]+|[PEXIpexi]+)", self._data)
+    #     mo = _re.fullmatch(b"([PEXIpexi]+|[QFZJqfzj]+)([GATCgatc])(?:.*)", other._data)
+
+    #     # ms = _re.search(b"([PEXIpexiQFZJqfzj])$", self._data)
+    #     # mo = _re.match(b"^([PEXIpexiQFZJqfzj]+)", other._data)
+
+    #     sticky_self = ms.group(2) if ms else b""
+    #     sticky_other = mo.group(1) if mo else b""
+
+    #     sticky_self_just = bytes(f"{sticky_self.decode():<{len(sticky_other)}}", 'utf8')
+    #     sticky_other_just = bytes(f"{sticky_other.decode():>{len(sticky_self)}}", 'utf8')
+
+    #     assert len(sticky_self_just) == len(sticky_other_just)
+
+    #     junction = b"".join(
+    #         [bp_dict.get((bytes([w]), bytes([c])), b"-") for w, c in zip(sticky_self_just, sticky_other_just)]
+    #     )
+
+    #     if b"-" in junction:
+    #         raise TypeError("sticky ends not compatible!")
+
+    #     return self.__class__(
+    #         self._data[: -len(sticky_self) or None] + junction + other._data[len(sticky_other) or None :]
+    #     )
+
+    def _add(self: DseqType, other: DseqType, perfectmatch) -> DseqType:
 
         if self.circular:
             raise TypeError("circular DNA cannot be ligated!")
@@ -630,27 +917,60 @@ class Dseq(_Seq):
         elif not self:
             return _copy.deepcopy(other)
 
-        ms = _re.fullmatch(b"(?:.*)([GATCgatc])([QFZJqfzj]+|[PEXIpexi]+)", self._data)
-        mo = _re.fullmatch(b"([PEXIpexi]+|[QFZJqfzj]+)([GATCgatc])(?:.*)", other._data)
+        ms = _re.search(b"([PEXIpexiQFZJqfzj]+)$", self._data)
+        mo = _re.match(b"^([PEXIpexiQFZJqfzj]+)", other._data)
 
-        sticky_self = ms.group(2) if ms else b""
-        sticky_other = mo.group(1) if mo else b""
+        sticky_self = ms.group() if ms else b""
+        sticky_other = mo.group() if mo else b""
 
-        sticky_self_just = bytes(f"{sticky_self.decode():<{len(sticky_other)}}", 'utf8')
-        sticky_other_just = bytes(f"{sticky_other.decode():>{len(sticky_self)}}", 'utf8')
+        sticky_self_just = bytes(f"{sticky_self.decode():<{len(sticky_other)}}", "utf8")
+        sticky_other_just = bytes(f"{sticky_other.decode():>{len(sticky_self)}}", "utf8")
 
         assert len(sticky_self_just) == len(sticky_other_just)
 
-        junction = b"".join(
-            [ss_to_ds_dct.get((bytes([w]), bytes([c])), b"-") for w, c in zip(sticky_self_just, sticky_other_just)]
-        )
+        if perfectmatch:
 
-        if b"-" in junction:
-            raise TypeError("sticky ends not compatible!")
+            junction = b"".join(
+                [bp_dict.get((bytes([w]), bytes([c])), b"-") for w, c in zip(sticky_self_just, sticky_other_just)]
+            )
+
+            if b"-" in junction:
+                raise TypeError("sticky ends not compatible!")
+
+        else:
+
+            result = _terminal_overlap(
+                sticky_self.translate(to_full_sequence).decode("ascii"),
+                sticky_other.translate(to_full_sequence).decode("ascii") + "@",
+                limit=1,
+            )
+
+            if not result:
+                return None
+
+            (startx, starty, length), *_ = result
+
+            sticky_self = sticky_self[startx : startx + length]
+            sticky_other = sticky_other[starty : starty + length]
+
+            junction = b"".join(
+                [bp_dict.get((bytes([w]), bytes([c])), b"-") for w, c in zip(sticky_self, sticky_other)]
+            )
 
         return self.__class__(
             self._data[: -len(sticky_self) or None] + junction + other._data[len(sticky_other) or None :]
         )
+
+    def __add__(self: DseqType, other: DseqType) -> DseqType:
+        return self._add(other, perfectmatch=True)
+
+    def __truediv__(self, other):
+        # x / y   	__rfloordiv__  https://www.pythonmorsels.com/every-dunder-method
+        return self._add(other, perfectmatch=False)
+
+    def __invert__(self):
+        # ~x https://www.pythonmorsels.com/every-dunder-method
+        return self.reverse_complement()
 
     def __mul__(self: DseqType, number: int) -> DseqType:
         if not isinstance(number, int):
@@ -669,9 +989,12 @@ class Dseq(_Seq):
         GATCNNNN
             NNNN
 
+        GATCNNNN
+        CTAGNNNN
+
         """
 
-        nucleotides = nucleotides if isinstance(nucleotides, bytes) else nucleotides.encode('ascii')
+        nucleotides = nucleotides if isinstance(nucleotides, bytes) else nucleotides.encode("ascii")
 
         if not nucleotides:
             return _copy.deepcopy(self)
@@ -687,11 +1010,14 @@ class Dseq(_Seq):
         """
         NNNNQFZJ
 
-        NNNN
+        NNNN----
+        NNNNCTAG
+
+        NNNNGATC
         NNNNCTAG
 
         """
-        nucleotides = nucleotides if isinstance(nucleotides, bytes) else nucleotides.encode('ascii')
+        nucleotides = nucleotides if isinstance(nucleotides, bytes) else nucleotides.encode("ascii")
 
         if not nucleotides:
             return _copy.deepcopy(self)
@@ -699,7 +1025,7 @@ class Dseq(_Seq):
         s = (nucleotides.upper() + nucleotides.lower()).translate(to_5tail_table)
 
         def repl(m):
-            return m.group(1).translate(to_crick_table)
+            return m.group(1).translate(to_full_sequence)
 
         return self.__class__(_re.sub(b"(?<=[GATCgatc])([%b]+)" % s, repl, self._data), circular=False)
 
@@ -717,7 +1043,7 @@ class Dseq(_Seq):
         --------
 
         >>> from pydna.dseq import Dseq
-        >>> a=Dseq("aaa", "ttt")
+        >>> a=Dseq("aaa")
         >>> a
         Dseq(-3)
         aaa
@@ -772,7 +1098,7 @@ class Dseq(_Seq):
              tcctag            cctag
 
          >>> from pydna.dseq import Dseq
-         >>> b=Dseq("caaa", "cttt")
+         >>> b=Dseq("iaaaq")
          >>> b
          Dseq(-5)
          caaa
@@ -781,7 +1107,7 @@ class Dseq(_Seq):
          Dseq(-3)
          aaa
          ttt
-         >>> c=Dseq("aaac", "tttg")
+         >>> c=Dseq("jaaai")
          >>> c
          Dseq(-5)
           aaac
@@ -840,11 +1166,9 @@ class Dseq(_Seq):
 
         """
 
-        nucleotides = nucleotides if isinstance(nucleotides, bytes) else nucleotides.encode('ascii')
+        nucleotides = nucleotides if isinstance(nucleotides, bytes) else nucleotides.encode("ascii")
         to_remove = bytes(set(b"GATCgatc") - set(nucleotides.upper() + nucleotides.lower()))
-        strp = (
-            self.lstrip(b"QFZJqfzj").rstrip(b"PEXIpexi")
-        )  # remove 3' sticky ends on both sides
+        strp = self.lstrip(b"QFZJqfzj").rstrip(b"PEXIpexi")  # remove 3' sticky ends on both sides
 
         if not to_remove:
             return strp.fill_in(nucleotides)
@@ -861,9 +1185,10 @@ class Dseq(_Seq):
 
         if not _re.search(b"([PEXIpexi]|[QFZJqfzj])[GATCgatc]+([PEXIpexi]|[QFZJqfzj])", final):
             import warnings as _warnings
+            from pydna import _PydnaWarning
 
             _warnings.warn(
-                "DNA fragment was completely digested by the 3'-5' nuclease activity of T4 DNA pol"
+                "DNA fragment was completely digested by the 3'-5' nuclease activity of T4 DNA pol", _PydnaWarning
             )
             final = b""
 
@@ -925,16 +1250,14 @@ class Dseq(_Seq):
     def seguid(self) -> str:
         """SEGUID checksum for the sequence."""
         if self.circular:
-            cs = _cdseguid(self.watson.upper(), self.crick.upper(), alphabet="{DNA-extended}")
+            cs = _cdseguid(self.watson.upper(), self.crick.upper(), alphabet="{DNA-extended},AU")
         else:
             """docstring."""
-            w = self._data.translate(to_watson_table).decode("ascii").upper().replace(" ", "-")
-            c = (
-                _complement(self._data.translate(to_crick_table).decode("ascii"))
-                .upper()[::-1]
-                .replace(" ", "-")
-            )
-            cs = _ldseguid(w, c, alphabet="{DNA-extended}")
+            oh_L = self.ovhg
+            oh_R = self.watson_ovhg()
+            w = oh_L * "-" + self.watson.upper().replace(" ", "-") + -oh_R * "-"
+            c = oh_R * "-" + self.crick.upper().replace(" ", "-") + -oh_L * "-"
+            cs = _ldseguid(w, c, alphabet="{DNA-extended},AU")
         return cs
 
     def isblunt(self) -> bool:
@@ -953,14 +1276,14 @@ class Dseq(_Seq):
         cta
         >>> a.isblunt()
         True
-        >>> a=Dseq("gat", "atcg")
+        >>> a=Dseq("jgat")
         >>> a
         Dseq(-4)
          gat
         gcta
         >>> a.isblunt()
         False
-        >>> a=Dseq("gat", "gatc")
+        >>> a=Dseq("gatj")
         >>> a
         Dseq(-4)
         gat
@@ -998,8 +1321,22 @@ class Dseq(_Seq):
         last = nucleotide.translate(to_3tail_table)
         return self.__class__(first + self._data + last)
 
+    def user(self):
+        """
+        USER Enzyme is a mixture of Uracil DNA glycosylase (UDG) and the
+        DNA glycosylase-lyase Endonuclease VIII. UDG catalyses the excision
+        of an uracil base, forming an abasic (apyrimidinic) site while leaving
+        the phosphodiester backbone intact (2,3).
+
+        Returns
+        -------
+        None.
+
+        """
+        return Dseq(self._data.translate(bytes.maketrans(b"UuOo", b"FfEe")))
+
     def cut(self: DseqType, *enzymes: EnzymesType) -> _Tuple[DseqType, ...]:
-        frags, cutsites, shift, ln = self._cut_w_params(*enzymes)
+        frags, cutpairs, shift, ln = self._cut_w_params(*enzymes)
         return frags
 
     def _cut_w_params(self: DseqType, *enzymes: EnzymesType) -> _Tuple[DseqType, ...]:
@@ -1050,10 +1387,13 @@ class Dseq(_Seq):
 
         class noenz(object):
             ovhg = 0
+
             def is_5overhang(self):
                 return False
+
             def is_3overhang(self):
                 return False
+
             def __repr__(self):
                 return "noenz"
 
@@ -1067,34 +1407,42 @@ class Dseq(_Seq):
         if not self.circular:
             cutfrom = self._data
             i = 0
+            length = len(cutfrom)
+            cutsites = [pos_w_enz(0, noenz(), (0, 0))] + cutsites + [pos_w_enz(length, noenz(), (length, length))]
         else:
-            ln = len(self)
-            w, e = cutsites.pop(0)
-            i = w if e.is_5overhang() else w-e.ovhg
-            sh = self._data[i:] + self._data[:i]
+            w, e, recsite = cutsites.pop(0)
+            i = w if e.is_5overhang() else w - e.ovhg
+            shifted = self._data[i:] + self._data[:i]
             oh = abs(e.ovhg)
-            cutfrom = (sh[:oh].translate(to_5tail_table if e.is_3overhang() else to_3tail_table)
-                       + sh[oh:ln]
-                       + sh[:oh].translate(to_5tail_table if e.is_5overhang() else to_3tail_table))
-            if cutsites:
-                cutsites = [pos_w_enz(w+-i, e) for w, e in cutsites]
-            else:
-                return (self.__class__(cutfrom),), (pos_w_enz(w, e),), i, len(cutfrom)
+            cutfrom = shifted + shifted[:oh]
+            length = len(self) + oh
+            cutsites = [pos_w_enz(w - i, e, tuple(p - i for p in recsite.parts)) for (w, e, recsite) in cutsites]
+            cutsites = [pos_w_enz(w - i, e, recsite)] + cutsites + [pos_w_enz(w + len(self) - i, e, recsite)]
 
-        cutsites = [pos_w_enz(0, noenz())] + cutsites + [pos_w_enz(len(cutfrom), noenz())]
+        cutpairs = []
 
-        for (w1, e1), (w2, e2) in _itertools.pairwise(cutsites):
+        for (w1, e1, s1), (w2, e2, s2) in _itertools.pairwise(cutsites):
 
             table1 = {True: to_5tail_table, False: to_3tail_table}[e1.is_3overhang()]
             table2 = {True: to_5tail_table, False: to_3tail_table}[e2.is_5overhang()]
 
-            frags.append(
-                cutfrom[min(w1, w1 - e1.ovhg):max(w1, w1 - e1.ovhg)].translate(table1)
-                + cutfrom[max(w1, w1 - e1.ovhg):min(w2, w2 - e2.ovhg)]
-                + cutfrom[min(w2, w2 - e2.ovhg):max(w2, w2 - e2.ovhg)].translate(table2)
-            )
+            table1 = to_5tail_table if e1.is_3overhang() else to_3tail_table
+            table2 = to_5tail_table if e2.is_5overhang() else to_3tail_table
 
-        return tuple(self.__class__(frag) for frag in frags), cutsites, i, len(cutfrom)
+            left_stck_begin = min(w1, w1 - e1.ovhg)
+            left_stck_end = max(w1, w1 - e1.ovhg)
+
+            right_stck_begin = min(w2, w2 - e2.ovhg)
+            right_stck_end = max(w2, w2 - e2.ovhg)
+
+            frags.append(
+                cutfrom[left_stck_begin:left_stck_end].translate(table1)
+                + cutfrom[left_stck_end:right_stck_begin]
+                + cutfrom[right_stck_begin:right_stck_end].translate(table2)
+            )
+            cutpairs.append((pos_w_enz(left_stck_begin, e1, s1), pos_w_enz(right_stck_end, e2, s2)))
+
+        return tuple(self.__class__(frag) for frag in frags), tuple(cutpairs), i, len(cutfrom)
 
     def get_cutsites(self: DseqType, *enzymes: EnzymesType) -> _List[CutSiteType]:
         if len(enzymes) == 1 and isinstance(enzymes[0], _RestrictionBatch):
@@ -1106,22 +1454,269 @@ class Dseq(_Seq):
         ln = len(self)
         if self.circular:
             for e in enzymes:
-                csearch = search + search[:len(e) - 1]
-                cuts = [pos_w_enz((i.start() + e.fst5) % ln, e) for i in _re.finditer(e.compsite, csearch)]
+                cuts = []
+                csearch = search + search[: len(e) - 1]
+                for i in _re.finditer(e.compsite, csearch):
+                    on_watson, on_crick, *_ = i.groups() + (None,)
+                    if on_watson:
+                        cutposition = (i.start() + e.fst5) % ln
+                        recsite = _sl(_lc(i.start(), i.start() + e.size), 0, ln)
+                        cuts.append(pos_w_enz(cutposition, e, recsite))
+                        if e.scd5:
+                            cutposition = (i.start() + e.scd5) % ln
+                            recsite = _sl(_lc(i.start(), i.start() + e.size), 0, ln)
+                            cuts.append(pos_w_enz(cutposition, e, recsite))
+                    elif on_crick:
+                        # breakpoint()
+                        cutposition = (i.start() - e.fst3) % ln
+                        recsite = _sl(_lc(i.start() - e.size, i.start()), 0, ln)
+                        cuts.append(pos_w_enz(cutposition, e, recsite))
+                        if e.scd3:
+                            cutposition = (i.start() - e.scd3) % ln
+                            recsite = _sl(_lc(i.start() - e.size, i.start()), 0, ln)
+                            cuts.append(pos_w_enz(cutposition, e, recsite))
                 out.extend(cuts)
         else:
             for e in enzymes:
-                cuts = [pos_w_enz(i.start() + e.fst5, e) for i in _re.finditer(e.compsite, search) if i.start() + e.fst5 <= ln and (i.start() + e.fst5 - e.ovhg) <= ln]
+                cuts = []
+                for i in _re.finditer(e.compsite, search):
+                    on_watson, on_crick, *_ = i.groups() + (None,)
+
+                    if on_watson and i.start() + e.fst5 <= ln and (i.start() + e.fst5 - e.ovhg) <= ln:
+                        cutposition = i.start() + e.fst5
+                        recsite = _lc(i.start(), i.start() + e.size)
+                        cuts.append(pos_w_enz(cutposition, e, recsite))
+                    elif on_crick and i.start() - e.fst3 <= ln and (i.start() - e.fst3 + e.ovhg) <= ln:
+                        cutposition = i.start() - e.fst3
+                        recsite = _lc(i.start() - e.size, i.start())
+                        cuts.append(pos_w_enz(cutposition, e, recsite))
+                    if e.scd5:
+                        if on_watson and i.start() + e.scd5 <= ln and (i.start() + e.scd5 - e.ovhg) <= ln:
+                            cutposition = (i.start() + e.scd5) % ln
+                            recsite = _lc(i.start(), i.start() + e.size)
+                            cuts.append(pos_w_enz(cutposition, e, recsite))
+                        elif on_crick and i.start() - e.scd3 <= ln and (i.start() - e.scd3 + e.ovhg) <= ln:
+                            cutposition = (i.start() - e.scd3) % ln
+                            recsite = _lc(i.start() - e.size, i.start())
+                            cuts.append(pos_w_enz(cutposition, e, recsite))
                 out.extend(cuts)
         return sorted(out)
 
+    def melt(self: DseqType, length) -> _List[CutSiteType]:
+        frags, cutpairs, shift, ln = self._melt_w_params(length)
+        return frags
+
+    def _melt_w_params(self: DseqType, length) -> _List[CutSiteType]:
+
+        if length < 1:
+            return ()
+
+        frags, meltpairs, shift = [], [], 0
+
+        regex = _re.compile(
+            "(^|[PEXIpexiQFZJqfzj])" f"([GATCgatcUuOo]{{1,{length}}})" "([PEXIpexiQFZJqfzj]|$)".encode("ascii")
+        )
+
+        def melt(fragment):
+
+            m = regex.search(fragment)
+
+            if not m:
+                return None
+
+            before, dsreg, after = m.groups()
+
+            upper = dsreg.translate(to_3tail_table)
+            lower = dsreg.translate(to_5tail_table)
+
+            left = cutfrom[: m.start()]
+            right = cutfrom[m.end() :]
+
+            if before in b"PEXIpexi" and after in b"QFZJqfzj":
+                left = left + before + upper
+                right = lower + after + right
+            elif before in b"QFZJqfzj" and after in b"PEXIpexi":
+                left = left + before + lower
+                right = upper + after + right
+            elif before in b"PEXIpexi" and after in b"PEXIpexi":
+                right = left + before + upper + after + right
+                left = lower
+            elif before in b"QFZJqfzj" and after in b"QFZJqfzj":
+                right = left + before + lower + after + right
+                left = upper
+
+            return left, right, 0, m.end(2), m.start(2), len(fragment)
+
+        cutfrom = self._data
+
+        frags = []
+
+        right = b""
+
+        rightstart = 0
+
+        if self.circular:
+
+            left, right, x1, y1, x2, y2 = melt(cutfrom)
+
+            right = cutfrom = right + left
+
+            shift = x2
+
+            meltpairs.append((0, y1))
+
+        while params := melt(cutfrom):
+
+            left, right, x1, y1, x2, y2 = params
+
+            frags.append(left)
+
+            rightstart += x2
+
+            cutfrom = right
+
+            meltpairs.append((x1, y1))
+
+        frags.append(right)
+
+        frags = tuple(Dseq(f) for f in frags if f)
+
+        if not frags:
+
+            meltpairs = ()
+
+        else:
+
+            meltpairs = tuple(meltpairs + [(x2, y2)])
+
+        return frags, meltpairs, shift, len(cutfrom)
+
+
+def pair(watson: [str, bytes], crick: [str, bytes], ovhg: int = None):
+    """
+    Pair two DNA strands, Watson and Crick, by finding their longest overlapping sequence.
+
+    The function returns the paired (annealed) DNA sequence in dsIUPAC as an ASCII encoded
+    bytes object.
+
+    Parameters
+    ----------
+    watson : str or bytes
+        The first DNA strand (Watson). Can be a string or a bytes object.
+        If bytes, it will be decoded to ASCII.
+    crick : str or bytes
+        The second DNA strand (Crick). Can be a string or a bytes object.
+        If bytes, it will be decoded to ASCII.
+    ovhg : int
+        Amount of stagger
+
+    Returns
+    -------
+    bytes
+        A bytes object representing the paired DNA sequence, encoded in ASCII.
+
+    Raises
+    ------
+    ValueError
+        If no overlapping sequences are found, or if there are multiple possible alignments
+        of the same maximum overlap length.
+
+    Notes
+    -----
+    - The function determines the overlap between the two DNA strands by identifying
+      the longest common substring between the lowercase Watson strand and the reverse
+      complement of the Crick strand.
+    - If multiple overlaps of the same maximum length exist, a `ValueError` is raised
+      to prevent ambiguity in the annealing process.
+    - The resulting alignment is calculated with stagger (`ovhg`), ensuring proper
+      alignment of the two DNA strands.
+
+    Examples
+    --------
+
+    >>> from pydna.dseq import pair
+    >>> watson = "ACGTACGT"
+    >>> crick =  "TACGTACG"
+    >>> pair(watson, crick)
+    b'ECGTACGTF'
+
+
+    """
+    watson = watson if isinstance(watson, str) else watson.decode("ascii")
+    crick = crick if isinstance(crick, str) else crick.decode("ascii")
+
+    if ovhg is None:
+
+        olaps = _common_sub_strings(
+            str(watson).lower(),
+            str(_rc(crick).lower()),
+            int(_math.log(len(watson)) / _math.log(4)),
+        )
+
+        if len(olaps) == 0:
+            raise ValueError("Could not anneal the two strands.")
+
+        # We extract the positions and length of the first (longest) overlap, since
+        # common_sub_strings sorts the overlaps by length.
+        pos_watson, pos_crick, longest_olap_length = olaps[0]
+
+        # We see if there is another overlap of the same length
+        if any(olap[2] >= longest_olap_length for olap in olaps[1:]):
+            raise ValueError("More than one way of annealing the" " strands.")
+
+        # ovhg is the stagger between the two strings
+        ovhg = pos_crick - pos_watson
+
+    # For fragments with a 5' protruding end at the left side
+
+    watson = watson.rjust(len(watson) + ovhg)
+    crick = crick[::-1].rjust(len(crick) - ovhg)
+
+    watson = watson.ljust(len(crick))
+    crick = crick.ljust(len(watson))
+
+    assert len(watson) == len(crick), "Sense and antisense are not of equal length"
+
+    return "".join(bp_dict_str[pair] for pair in zip(watson, crick)).encode("ascii")
+
 
 if __name__ == "__main__":
-    import os as _os
 
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
-    import doctest
+    pair(watson="aag", crick="attca"[::-1], ovhg=1)
 
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached
+    # import os as _os
+
+    # cached = _os.getenv("pydna_cached_funcs", "")
+    # _os.environ["pydna_cached_funcs"] = ""
+    # import doctest
+
+    # doctest.testmod(optionflags=doctest.ELLIPSIS)
+    # _os.environ["pydna_cached_funcs"] = cached
+
+    # GP    QFT     GGFT
+
+    # GG      T     GG T
+    # C     CTA     CCTA
+
+    # Dseq("GP") + Dseq("QFT")
+
+    # # GJ   IET      GCET
+
+    # # G    CAT      GCAT
+    # # CG     A      CG A
+
+    # Dseq("GJ") + Dseq("IET")
+
+    # # GJ   IET      GCET
+
+    # # G    CAT      GCAT
+    # # CG     A      CG A
+
+    # # GP    QFT     GGFT
+
+    # # GG      T     GG T
+    # # C     CTA     CCTA
+
+    # Dseq("GP") + Dseq("FQT")
+
+    # Dseq("GX") + Dseq("QT")

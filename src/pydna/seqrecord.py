@@ -452,17 +452,32 @@ class SeqRecord(_SeqRecord):
         'pydna lsseguid=gBw0Jp907Tg_yX3jNgS4qQWttj'
         """
         chksum = self.seq.seguid()
-        oldcomment = self.annotations.get("comment", "")
-        oldstamp = _re.findall(r"..seguid=\S{27}", oldcomment)
-        if oldstamp and oldstamp[0] == chksum:
-            return _pretty_str(oldstamp[0])
-        elif oldstamp:
-            _warn(
-                f"Stamp change.\nNew: {chksum}\nOld: {oldstamp[0]}",
-                _PydnaWarning,
-            )
-        self.annotations["comment"] = (f"{oldcomment}\n" f"{tool} {chksum} {now()} {comment}").strip()
+
+        re_tool = r"(?:pydna |ApEinfo:)?"  # Should find stamps by the ApE editor
+        re_seguid = r"(?:ld|cd|ls|cs)seguid=\S{27}"
+        re_datest = r"(?: \d{4}-\d{2}-\d{2}.\d{2}\:\d{2}\:\d{2}Z?)?"
+        pattern = re_tool + re_seguid + re_datest
+
+        oldcomments = self.annotations.get("comment", "")
+
+        if isinstance(oldcomments, list):
+            oldcomments = "\n".join(oldcomments)
+
+        oldstamps = _re.findall(pattern, oldcomments) or []  # Get all stamps
+
+        found = [s for s in oldstamps if chksum in s]
+
+        if found:
+            return _pretty_str("\n".join(found))
+        elif oldstamps and not found:
+            _warn(f"Stamp change.\nNew: {chksum}\nOld: {oldstamps[0]}\n\n", _PydnaWarning)
+        self.annotations["comment"] = (
+            self.annotations.get("comment", "").strip() + f"\n{tool} {chksum} {now()}"
+        ).strip()
         return _pretty_str(chksum)
+
+    def checkstamp(self):
+        return self.seq.seguid() in self.annotations.get("comment", "")
 
     def lcs(self, other, *args, limit=25, **kwargs):
         """Return the longest common substring between the sequence.
@@ -667,16 +682,17 @@ class SeqRecord(_SeqRecord):
         """
         return bool(self.seq)
 
-    def dump(self, filename, protocol=None):
-        """docstring."""
-        from pathlib import Path
 
-        pth = Path(filename)
-        if not pth.suffix:
-            pth = pth.with_suffix(".pickle")
-        with open(pth, "wb") as f:
-            _pickle.dump(self, f, protocol=protocol)
-        return _pretty_str(pth)
+#    def dump(self, filename, protocol=None):
+#        """docstring."""
+#        from pathlib import Path
+#
+#        pth = Path(filename)
+#        if not pth.suffix:
+#            pth = pth.with_suffix(".pickle")
+#        with open(pth, "wb") as f:
+#            _pickle.dump(self, f, protocol=protocol)
+#        return _pretty_str(pth)
 
 
 class ProteinSeqRecord(SeqRecord):

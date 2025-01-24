@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-A subclass of the Biopython SeqRecord class.
+A subclass of the Biopython Seq class.
 
 Has a number of extra methods and uses
 the :class:`pydna._pretty_str.pretty_str` class instead of str for a
@@ -142,15 +142,15 @@ class Seq(_Seq):
         ----------
         .. [#] http://wiki.christophchamp.com/index.php/SEGUID
         """
-        return _lsseguid(self._data.decode("utf8").upper(), alphabet="{DNA-extended}")
+        return _lsseguid(self._data.decode("ascii").upper(), alphabet="{DNA-extended},AU")
 
-    def __getitem__(self, key):
-        result = super().__getitem__(key)
-        try:
-            result.__class__ = self.__class__
-        except TypeError:
-            pass
-        return result
+    # def __getitem__(self, key):
+    #     result = super().__getitem__(key)
+    #     try:
+    #         result.__class__ = self.__class__
+    #     except TypeError:
+    #         pass
+    #     return result
 
     def reverse_complement(self):
         return self.__class__(_rc(self._data))

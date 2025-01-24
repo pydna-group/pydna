@@ -33,10 +33,7 @@ def ligate(fragments: list):
             if str(err) != "sticky ends not compatible!":
                 raise
         else:
-            if seq1.seq.three_prime_end() != (
-                "blunt",
-                "",
-            ) and seq2.seq.five_prime_end() != ("blunt", ""):
+            if seq1.seq.three_prime_end()[0] != "blunt" and seq2.seq.five_prime_end()[0] != "blunt":
                 G.add_edge(seq1, seq2)
                 try:
                     G.remove_edge("begin", seq2)

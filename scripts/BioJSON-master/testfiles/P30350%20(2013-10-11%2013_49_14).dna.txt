@@ -1,5 +1,5 @@
 LOCUS       pGREG505     9465 bp    DNA   CIRCULAR SYN        09-OCT-2013
-DEFINITION  
+DEFINITION
 ACCESSION   P30350
 KEYWORDS    .
 SOURCE      Unknown.
@@ -51,7 +51,7 @@ FEATURES             Location/Qualifiers
                      /gene="ori"
                      /SECDrawAs="Region"
 BASE COUNT     2682 a   2083 c   2060 g   2640 t
-ORIGIN      
+ORIGIN
         1 aaaagctgga gctcgtttaa acggcgcgcc tagtacggat tagaagccgc cgagcgggtg
        61 acagccctcc gaaggaagac tctcctccgt gcgtcctcgt cttcaccggt cgcgttcctg
       121 aaacgcagat gtgcctcgcg ccgcactgct ccgaacaata aagattctac aatactagct

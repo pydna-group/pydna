@@ -130,8 +130,8 @@ class Assembly(object):  # , metaclass=_Memoize):
         # The order of the fragments has significance
         fragments: _List[_FragmentDict] = [
             {
-                "upper": str(f.seq).upper(),
-                "mixed": str(f.seq),
+                "upper": str(f.seq.full_sequence).upper(),
+                "mixed": str(f.seq.full_sequence),
                 "name": f.name,
                 "features": f.features,
                 "nodes": [],
@@ -143,8 +143,8 @@ class Assembly(object):  # , metaclass=_Memoize):
         # complement as value
         rcfragments: _Dict[str, _FragmentDict] = {
             f["mixed"]: {
-                "upper": str(frc.seq).upper(),
-                "mixed": str(frc.seq),
+                "upper": str(frc.seq.full_sequence).upper(),
+                "mixed": str(frc.seq.full_sequence),
                 "name": frc.name,
                 "features": frc.features,
                 "nodes": [],

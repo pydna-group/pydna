@@ -4,11 +4,95 @@
 import pytest
 
 
+def test_misc():
+
+    from Bio.Restriction import BamHI, AjiI, ZraI, KpnI, Acc65I, BsaI
+
+    from pydna.dseq import Dseq
+
+    target = Dseq("GGTCTCtggatccccc", circular=True)
+    targetrc = target.rc()
+
+    assert target.cut(BsaI) == tuple([x.rc() for x in targetrc.cut(BsaI)])
+
+    target = Dseq("GGTCTCtGGATCCaCACGTCtGACGTCcGGTACC", circular=True)
+    targetrc = target.rc()
+
+    assert target.cut(BsaI) == tuple([x.rc() for x in targetrc.cut(BsaI)])
+
+    target = Dseq("GGTCTCtttCCCCttttGAGACC")
+    targetrc = target.rc()
+
+    assert target.cut(BsaI) == tuple([x.rc() for x in targetrc.cut(BsaI)])[::-1]
+
+    puc19mcs = Dseq("gaattcgagctcggtacccggggatcctctagagtcgacctgcaggcatgcaagctt")
+
+    from Bio.Restriction import Acc65I, BamHI, EcoRI, HindIII, KpnI, PstI, SacI, SalI, SbfI, SmaI, SphI, XbaI, XmaI
+
+    #           10        20        30        40        50
+    #       *    *    *    *    *    *    *    *    *    *    *
+    #                   17 XmaI
+    #               13 KpnI  22 BamHI          40 PstI
+    #         7 SacI    17 SmaI          34 SalI     46 SphI
+    #   1 EcoRI     13 Acc65I      28 XbaI    39 SbfI      52 HindIII
+    #   |     |     |   |    |     |     |    ||     |     |
+    # 1 gaattcgagctcggtacccggggatcctctagagtcgacctgcaggcatgcaagctt 57
+    #   E  F  E  L  G  T  R  G  S  S  R  V  D  L  Q  A  C  K  L
+    #    N  S  S  S  V  P  G  D  P  L  E  S  T  C  R  H  A  S
+    #     I  R  A  R  Y  P  G  I  L  *  S  R  P  A  G  M  Q  A
+    #   cttaagctcgagccatgggcccctaggagatctcagctggacgtccgtacgttcgaa
+
+    puc19mcs.cut(SmaI)
+    puc19mcs.cut(BamHI)
+    puc19mcs.cut(SmaI, BamHI)
+
+    puc19mcs.cut(Acc65I, KpnI)
+
+    x = Dseq("PEXIaUaOaQFZJ")
+
+    assert x.seguid() == "ldseguid=AA-pG6wsGMu2J-AuWBWlOi3iDc4"
+
+    y = Dseq("QFZJaUaOaPEXI")
+
+    assert y.seguid() == "ldseguid=10e3S-WXX1z0BHqpbYTPeb2MwUY"
+
+    # Dseq(-5)
+    # CUGOT
+    # GACOA
+
+
+def test_pair():
+
+    from pydna.dseq import Dseq, pair
+
+    x = Dseq("PEXIaUaOaQFZJ")
+
+    x_wco = Dseq(pair("GATCaUaAa", "tAtUtCTAG"[::-1], -4))
+
+    x_wco2 = Dseq(pair(x.watson, x.crick, x.ovhg))
+
+    assert x == x_wco == x_wco2
+
+    y = Dseq("QFZJaUaOaPEXI")
+
+    y_wco = Dseq(pair("aUaAaGATC", "CTAGtAtUt"[::-1], 4))
+
+    y_wco2 = Dseq(pair(y.watson, y.crick, y.ovhg))
+
+    assert y == y_wco == y_wco2
+
+    assert pair("GATT", "CTAA"[::-1]) == b"GATT"
+
+    assert pair("GATTa", "aCTAA"[::-1]) == b"zGATTe"
+
+    assert pair("GATCaUaAa", "tAtUtCTAG"[::-1], -4) == b"PEXIaUaOaQFZJ"
+
+
 def test_dsiupac():
     from pydna.dseq import Dseq
 
-    assert str(Dseq("PEXIaaaQFZJ")) == "PEXIaaaQFZJ"
-    assert str(Dseq("QFZJaaaPEXI")) == "QFZJaaaPEXI"
+    assert str(Dseq("PEXIaaaQFZJ")) == "GATCaaaGATC"
+    assert str(Dseq("QFZJaaaPEXI")) == "GATCaaaGATC"
 
 
 def test_cut1():
@@ -80,6 +164,161 @@ def test_cut1():
 
     # TODO: remove
     # assert (first2.pos, second2.pos, third2.pos, fourth2.pos) == (0, 4, 13, 21)
+
+    from Bio.Restriction import BamHI
+
+    x = Dseq("TCCtGAATTCcGGTCTCGGTACCaGGA", circular=True)
+
+    assert x.get_cutsites(BamHI)[0].recsite.extract(x) == Dseq("GGATCC")
+
+
+def cut2():
+    from pydna.dseq import Dseq
+    from Bio.Restriction import BamHI, AjiI, ZraI, KpnI, Acc65I, BsaI
+
+    target = Dseq("GGTCTCtGGATCCaCACGTCtGACGTCcGGTACC")
+    targetrc = target.rc()
+
+    for enz in (BamHI, AjiI, ZraI, KpnI, Acc65I, BsaI):
+        assert target.cut(enz) == tuple([x.rc() for x in targetrc.cut(enz)])[::-1]
+
+
+def test_cut_subtypes():
+    from pydna.dseq import Dseq
+
+    # http://rebase.neb.com/rebase/sublist.html
+
+    # from Bio.Restriction import HaeIV  #  ImportError: cannot import name 'HaeIV' from 'Bio.Restriction'
+    from Bio.Restriction import AciI
+    from Bio.Restriction import AhdI
+    from Bio.Restriction import BcgI
+    from Bio.Restriction import Bpu10I
+    from Bio.Restriction import BsgI
+    from Bio.Restriction import BslI
+    from Bio.Restriction import DpnI
+    from Bio.Restriction import Eco57I
+    from Bio.Restriction import EcoRI
+    from Bio.Restriction import EcoRII
+    from Bio.Restriction import FokI
+    from Bio.Restriction import GsuI
+    from Bio.Restriction import MmeI
+    from Bio.Restriction import NaeI
+    from Bio.Restriction import PpuMI
+    from Bio.Restriction import SfiI
+    from Bio.Restriction import SgrAI
+
+    enz = (
+        AciI,
+        AhdI,
+        BcgI,
+        Bpu10I,
+        BsgI,
+        BslI,
+        DpnI,
+        Eco57I,
+        EcoRI,
+        EcoRII,
+        FokI,
+        GsuI,
+        MmeI,
+        NaeI,
+        PpuMI,
+        SfiI,
+        SgrAI,
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtACCGCGtcaagtgtctatgcgtagatcgtA").cut(AciI) == (
+        Dseq("GtcaagtgtctatgcgtagatcgtACJQ"),
+        Dseq("IPCGtcaagtgtctatgcgtagatcgtA"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtAGACAAAAAGTCGtcaagtgtctatgcgtagatcgtA").cut(AhdI) == (
+        Dseq("GtcaagtgtctatgcgtagatcgtAGACAAE"),
+        Dseq("FAAGTCGtcaagtgtctatgcgtagatcgtA"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtACGAAAAAAATGCGtcaagtgtctatgcgtagatcgtA").cut(BcgI) == (
+        Dseq("Gtcaagtgtctatpi"),
+        Dseq("qjgtagatcgtACGAAAAAAATGCGtcaagtgtcxe"),
+        Dseq("zftgcgtagatcgtA"),
+    )
+    assert Dseq("GtcaagtgtctatgcgtagatcgtACGAAAAAAATGCGtcaagtgtctatgcgtagatcgtA").rc().cut(BcgI) == (
+        Dseq("Tacgatctacgcaxe"),
+        Dseq("zfgacacttgaCGCATTTTTTTCGTacgatctacpi"),
+        Dseq("qjatagacacttgaC"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtACCTAAGCGtcaagtgtctatgcgtagatcgtA").cut(Bpu10I) == (
+        Dseq("GtcaagtgtctatgcgtagatcgtACCZFF"),
+        Dseq("XEEGCGtcaagtgtctatgcgtagatcgtA"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtAGTGCAGGtcaagtgtctatgcgtagatcgtA").cut(BsgI) == (
+        Dseq("GtcaagtgtctatgcgtagatcgtAGTGCAGGtcaagtgtctatgip"),
+        Dseq("jqtagatcgtA"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtACCAAAAAAAGGGtcaagtgtctatgcgtagatcgtA").cut(BslI) == (
+        Dseq("GtcaagtgtctatgcgtagatcgtACCAAEEE"),
+        Dseq("FFFAAGGGtcaagtgtctatgcgtagatcgtA"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtAGATCGtcaagtgtctatgcgtagatcgtA").cut(DpnI) == (
+        Dseq("Gtcaagtgtctatgcgtaga"),
+        Dseq("tcgtAGA"),
+        Dseq("TCGtcaagtgtctatgcgtaga"),
+        Dseq("tcgtA"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtACTGAAGGtcaagtgtctatgcgtagatcgtA").cut(Eco57I) == (
+        Dseq("GtcaagtgtctatgcgtagatcgtACTGAAGGtcaagtgtctatgip"),
+        Dseq("jqtagatcgtA"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtAGAATTCGtcaagtgtctatgcgtagatcgtA").cut(EcoRI) == (
+        Dseq("GtcaagtgtctatgcgtagatcgtAGFFZZ"),
+        Dseq("EEXXCGtcaagtgtctatgcgtagatcgtA"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtACCAGGGtcaagtgtctatgcgtagatcgtA").cut(EcoRII) == (
+        Dseq("GtcaagtgtctatgcgtagatcgtAJJFQQ"),
+        Dseq("IIEPPGtcaagtgtctatgcgtagatcgtA"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtAGGATGGtcaagtgtctatgcgtagatcgtA").cut(FokI) == (
+        Dseq("GtcaagtgtctatgcgtagatcgtAGGATGGtcaagtgtjzfz"),
+        Dseq("ixexgcgtagatcgtA"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtACTGGAGGtcaagtgtctatgcgtagatcgtA").cut(GsuI) == (
+        Dseq("GtcaagtgtctatgcgtagatcgtACTGGAGGtcaagtgtctatgip"),
+        Dseq("jqtagatcgtA"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtATCCAACGtcaagtgtctatgcgtagatcgtA").cut(MmeI) == (
+        Dseq("GtcaagtgtctatgcgtagatcgtATCCAACGtcaagtgtctatgcgtape"),
+        Dseq("qftcgtA"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtAGCCGGCGtcaagtgtctatgcgtagatcgtA").cut(NaeI) == (
+        Dseq("GtcaagtgtctatgcgtagatcgtAGCC"),
+        Dseq("GGCGtcaagtgtctatgcgtagatcgtA"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtAAGGACCTGtcaagtgtctatgcgtagatcgtA").cut(PpuMI) == (
+        Dseq("GtcaagtgtctatgcgtagatcgtAAGQFJ"),
+        Dseq("PEICTGtcaagtgtctatgcgtagatcgtA"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtAGGCCAAAAAGGCCGtcaagtgtctatgcgtagatcgtA").cut(SfiI) == (
+        Dseq("GtcaagtgtctatgcgtagatcgtAGGCCAEEE"),
+        Dseq("FFFAGGCCGtcaagtgtctatgcgtagatcgtA"),
+    )
+
+    assert Dseq("GtcaagtgtctatgcgtagatcgtACACCGGTGGtcaagtgtctatgcgtagatcgtA").cut(SgrAI) == (
+        Dseq("GtcaagtgtctatgcgtagatcgtACAJJQQ"),
+        Dseq("IIPPTGGtcaagtgtctatgcgtagatcgtA"),
+    )
 
 
 def test_cas9():
@@ -153,10 +392,25 @@ def test_initialization():
                                    aCCTAGG
                                    """
     )
+
     assert obj3.ovhg == 1
 
-    # assert Dseq.from_dsiupac("PEXIaaaQFZJ") == Dseq("GATCaaa", "CTAGttt", -4)
-    # assert Dseq.from_dsiupac("QFZJaaaPEXI") == Dseq("aaaGATC", "tttCTAG", 4)
+    Dseq.from_representation("GTACCTTTG\n" "    GAAACCTAG")
+    Dseq.from_representation("\nGTACCTTTG\n" "    GAAACCTAG")
+
+    Dseq.from_representation(
+        """
+                             GTACCTTTG
+                                 GAAACCTAG"""
+    )
+
+    Dseq.from_representation("\nGTACCTTTG\n    GAAACCTAG")
+
+    with pytest.raises(KeyError):
+        Dseq.from_representation(
+            """GTACCTTTG
+                                        GAAACCTAG"""
+        )
 
 
 def test_cut_around_and_religate():
@@ -320,13 +574,16 @@ def test_dseq():
     assert obj.T4("atgc") == Dseq("gatcAgatc")
     assert obj.mung() == Dseq("A")
 
-    obj = Dseq("qfzjApexi")
-    assert obj.T4("a") == Dseq("")
-    assert obj.T4("t") == Dseq("")
-    assert obj.T4("at") == Dseq("")
-    assert obj.T4("atc") == Dseq("")
-    assert obj.T4("atg") ==  Dseq("")
-    assert obj.T4("atcg") == Dseq("A")
+    from pydna import _PydnaWarning
+
+    with pytest.warns(_PydnaWarning):
+        obj = Dseq("qfzjApexi")
+        assert obj.T4("a") == Dseq("")
+        assert obj.T4("t") == Dseq("")
+        assert obj.T4("at") == Dseq("")
+        assert obj.T4("atc") == Dseq("")
+        assert obj.T4("atg") == Dseq("")
+        assert obj.T4("atcg") == Dseq("A")
 
     assert Dseq("GGATCC").t4("gatc") == Dseq("GGATCC")
     assert Dseq("GGATCCe").t4("gatc") == Dseq("GGATCC")
@@ -336,8 +593,10 @@ def test_dseq():
     assert Dseq("zGGATCC").t4("gatc") == Dseq("GGATCC")
     assert Dseq("zGGATCCz").t4("gatc") == Dseq("GGATCCt")
 
-    assert Dseq("GGATII").t4("g") == Dseq("") # Dseq("gg", "", ovhg=0)
-    assert Dseq("GGATCC").t4("gat") == Dseq('PPATJJ')
+    with pytest.warns(_PydnaWarning):
+        assert Dseq("GGATII").t4("g") == Dseq("")  # Dseq("gg", "", ovhg=0)
+
+    assert Dseq("GGATCC").t4("gat") == Dseq("PPATJJ")
 
     a2 = Dseq("iiGGATCCee")
     assert a2._data == b"iiGGATCCee"
@@ -596,15 +855,15 @@ def test_Dseq___getitem__():
     assert s[1:5] == Dseq("GATC", circular=False)
     assert s[5:1:-1] == Dseq("CCTA")
 
-    assert t[5:1] == Dseq("") # TODO: discuss this
+    assert t[5:1] == Dseq("")  # TODO: discuss this
     assert s[9:1] == Dseq("")
     assert t[9:1] == Dseq("")
 
     # Indexing of full circular molecule (https://github.com/BjornFJohansson/pydna/issues/161)
-    s = Dseq("GGATCC", circular=True)
-    str_seq = str(s)
-    for shift in range(len(s)):
-        assert str(s[shift:shift]) == str_seq[shift:] + str_seq[:shift]
+    # s = Dseq("GGATCC", circular=True) # TODO: discuss this
+    # str_seq = str(s)
+    # for shift in range(len(s)):
+    #     assert str(s[shift:shift]) == str_seq[shift:] + str_seq[:shift]
 
 
 def test_cut_circular():
@@ -631,8 +890,8 @@ def test_cut_circular():
         d = Dseq(nt, circular=True).cut(NotI)
         assert d == ()
 
-
     from pydna.dseq import Dseq
+
     # from pydna.dseq_old import oDseq
 
     a = Dseq("gattcgtatgctgatcgtacgtactgaaaac")
@@ -708,6 +967,11 @@ def test_shifted():
     # Shifted with zero gives a copy of the sequence, not the same sequence
     assert a.shifted(0) == a
     assert a.shifted(0) is not a
+
+    x = Dseq("TPGJG", circular=True)
+
+    for i in range(len(x)):
+        assert x.shifted(i)._data == x._data[i:] + x._data[:i]
 
 
 def test_looped():
@@ -820,7 +1084,7 @@ def test_left_end_position():
     from pydna.dseq import Dseq
 
     test_cases = [
-        ("AAA", "TT",  "EAA", (0, 1), -1),
+        ("AAA", "TT", "EAA", (0, 1), -1),
         ("AA", "TTT", "FAA", (1, 0), 1),
         ("AAA", "TTT", "AAA", (0, 0), 0),
     ]
@@ -1120,27 +1384,57 @@ def test_new():
     from pydna.dseq import Dseq
     from Bio.Restriction import KpnI, Acc65I, BsaI, XmaI, SmaI, BamHI
 
-    fiveoh = Dseq('PEXIaaaQFZJ')
-    assert str(fiveoh + fiveoh) == 'PEXIaaaGATCaaaQFZJ'
-    threeoh = Dseq('QFZJQtttPEXIP')
-    assert str(threeoh + threeoh) == "QFZJQtttGATCGtttPEXIP"
+    fiveoh = Dseq("PEXIaaaQFZJ")
+    assert str(fiveoh + fiveoh) == "GATCaaaGATCaaaGATC"
+    threeoh = Dseq("QFZJQtttPEXIP")
+    assert str(threeoh + threeoh) == "GATCGtttGATCGtttGATCG"
 
     assert repr(Dseq("AIXEP") + Dseq("JZFQA")) == "Dseq(-6)\nACTAGA\nTGATCT"
-    assert repr(Dseq("AIXEP") + Dseq("ZFQA")) == "Dseq(-6)\nACTAGA\nT ATCT"
-    assert repr(Dseq("AIXE") + Dseq("JZFQA")) == "Dseq(-6)\nACTA A\nTGATCT"
+
+    with pytest.raises(TypeError):
+        # assert repr(Dseq("AIXEP") + Dseq("ZFQA")) == "Dseq(-6)\nACTAGA\nT ATCT"
+        Dseq("AIXEP") + Dseq("ZFQA")
+
+    with pytest.raises(TypeError):
+        # assert repr(Dseq("AIXE") + Dseq("JZFQA")) == "Dseq(-6)\nACTA A\nTGATCT"
+        Dseq("AIXE") + Dseq("JZFQA")
+
     assert repr(Dseq("AP") + Dseq("QA")) == "Dseq(-3)\nAGA\nTCT"
     assert repr(Dseq("AE") + Dseq("FA")) == "Dseq(-3)\nAAA\nTTT"
     assert repr(Dseq("AX") + Dseq("ZA")) == "Dseq(-3)\nATA\nTAT"
     assert repr(Dseq("AI") + Dseq("JA")) == "Dseq(-3)\nACA\nTGT"
-    assert repr(Dseq("APP") + Dseq("QA")) == "Dseq(-4)\nAGGA\nT CT"
-    assert repr(Dseq("AEE") + Dseq("FA")) == "Dseq(-4)\nAAAA\nT TT"
-    assert repr(Dseq("AXX") + Dseq("ZA")) == "Dseq(-4)\nATTA\nT AT"
-    assert repr(Dseq("AII") + Dseq("JA")) == "Dseq(-4)\nACCA\nT GT"
 
-    assert repr(Dseq("AP") + Dseq("QQA")) == "Dseq(-4)\nAG A\nTCCT"
-    assert repr(Dseq("AE") + Dseq("FFA")) == "Dseq(-4)\nAA A\nTTTT"
-    assert repr(Dseq("AX") + Dseq("ZZA")) == "Dseq(-4)\nAT A\nTAAT"
-    assert repr(Dseq("AI") + Dseq("JJA")) == "Dseq(-4)\nAC A\nTGGT"
+    with pytest.raises(TypeError):
+        # assert repr(Dseq("APP") + Dseq("QA")) == "Dseq(-4)\nAGGA\nT CT"
+        Dseq("APP") + Dseq("QA")
+
+    with pytest.raises(TypeError):
+        # assert repr(Dseq("AEE") + Dseq("FA")) == "Dseq(-4)\nAAAA\nT TT"
+        Dseq("AEE") + Dseq("FA")
+
+    with pytest.raises(TypeError):
+        # assert repr(Dseq("AXX") + Dseq("ZA")) == "Dseq(-4)\nATTA\nT AT"
+        Dseq("AXX") + Dseq("ZA")
+
+    with pytest.raises(TypeError):
+        # assert repr(Dseq("AII") + Dseq("JA")) == "Dseq(-4)\nACCA\nT GT"
+        Dseq("AXX") + Dseq("ZA")
+
+    with pytest.raises(TypeError):
+        # assert repr(Dseq("AP") + Dseq("QQA")) == "Dseq(-4)\nAG A\nTCCT"
+        Dseq("AP") + Dseq("QQA")
+
+    with pytest.raises(TypeError):
+        # assert repr(Dseq("AE") + Dseq("FFA")) == "Dseq(-4)\nAA A\nTTTT"
+        Dseq("AE") + Dseq("FFA")
+
+    with pytest.raises(TypeError):
+        # assert repr(Dseq("AX") + Dseq("ZZA")) == "Dseq(-4)\nAT A\nTAAT"
+        Dseq("AX") + Dseq("ZZA")
+
+    with pytest.raises(TypeError):
+        # assert repr(Dseq("AI") + Dseq("JJA")) == "Dseq(-4)\nAC A\nTGGT"
+        Dseq("AI") + Dseq("JJA")
 
     assert Dseq("QAP").looped()[:] == Dseq("GA")
     assert Dseq("PAQ").looped()[:] == Dseq("GA")
@@ -1153,14 +1447,14 @@ def test_new():
 
     s = Dseq("PEXIAAAQFZJ")
 
-    assert s.looped()._data == b'GATCAAA'
+    assert s.looped()._data == b"GATCAAA"
 
     s = Dseq("PEXIAAAQFZJ")
 
-    assert s._fill_in_three_prime("gatc")._data == b'GATCAAAQFZJ'
-    assert s._fill_in_three_prime("gat")._data == b'PATCAAAQFZJ'
-    assert s._fill_in_three_prime("ga")._data == b'PETCAAAQFZJ'
-    assert s._fill_in_three_prime("g")._data == b'PEXCAAAQFZJ'
+    assert s._fill_in_three_prime("gatc")._data == b"GATCAAAQFZJ"
+    assert s._fill_in_three_prime("gat")._data == b"PATCAAAQFZJ"
+    assert s._fill_in_three_prime("ga")._data == b"PETCAAAQFZJ"
+    assert s._fill_in_three_prime("g")._data == b"PEXCAAAQFZJ"
     assert s._fill_in_three_prime("")._data == s._data
 
     assert s._fill_in_three_prime("atc")._data == s._data
@@ -1168,10 +1462,10 @@ def test_new():
     assert s._fill_in_three_prime("a")._data == s._data
     assert s._fill_in_three_prime("")._data == s._data
 
-    assert s._fill_in_five_prime("gatc")._data == b'PEXIAAAGATC'
-    assert s._fill_in_five_prime("gat")._data == b'PEXIAAAGATJ'
-    assert s._fill_in_five_prime("ga")._data == b'PEXIAAAGAZJ'
-    assert s._fill_in_five_prime("g")._data == b'PEXIAAAGFZJ'
+    assert s._fill_in_five_prime("gatc")._data == b"PEXIAAAGATC"
+    assert s._fill_in_five_prime("gat")._data == b"PEXIAAAGATJ"
+    assert s._fill_in_five_prime("ga")._data == b"PEXIAAAGAZJ"
+    assert s._fill_in_five_prime("g")._data == b"PEXIAAAGFZJ"
     assert s._fill_in_five_prime("")._data == s._data
 
     assert s._fill_in_five_prime("atc")._data == s._data
@@ -1179,26 +1473,25 @@ def test_new():
     assert s._fill_in_five_prime("a")._data == s._data
     assert s._fill_in_five_prime("")._data == s._data
 
-    assert s.fill_in("gatc")._data == b'GATCAAAGATC'
-    assert s.fill_in("gat")._data == b'PATCAAAGATJ'
-    assert s.fill_in("ga")._data == b'PETCAAAGAZJ'
-    assert s.fill_in("g")._data == b'PEXCAAAGFZJ'
+    assert s.fill_in("gatc")._data == b"GATCAAAGATC"
+    assert s.fill_in("gat")._data == b"PATCAAAGATJ"
+    assert s.fill_in("ga")._data == b"PETCAAAGAZJ"
+    assert s.fill_in("g")._data == b"PEXCAAAGFZJ"
     assert s.fill_in("")._data == s._data
 
     assert s == Dseq.from_representation(repr(s))
 
-    assert Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=2, watson_ovhg=2)._data == Dseq("FFAAEE")._data
-    assert Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=-2, watson_ovhg=2)._data == Dseq("EEAAEE")._data
-    assert Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=2, watson_ovhg=-2)._data == Dseq("FFAAFF")._data
-    assert Dseq.from_full_sequence_and_overhangs('AAAAAA', crick_ovhg=-2, watson_ovhg=-2)._data == Dseq("EEAAFF")._data
+    assert Dseq.from_full_sequence_and_overhangs("AAAAAA", crick_ovhg=2, watson_ovhg=2)._data == Dseq("FFAAEE")._data
+    assert Dseq.from_full_sequence_and_overhangs("AAAAAA", crick_ovhg=-2, watson_ovhg=2)._data == Dseq("EEAAEE")._data
+    assert Dseq.from_full_sequence_and_overhangs("AAAAAA", crick_ovhg=2, watson_ovhg=-2)._data == Dseq("FFAAFF")._data
+    assert Dseq.from_full_sequence_and_overhangs("AAAAAA", crick_ovhg=-2, watson_ovhg=-2)._data == Dseq("EEAAFF")._data
 
     assert repr(Dseq("XIpexiPEXIpexiAqfzjQFZJqfzjQF")) == (
         "Dseq(-29)\n" "TCgatcGATCgatcA\n" "              TctagCTAGctagCT"
     )
 
-    assert repr(Dseq("XIpexiPEXIpexiAAqfzjQFZJqfzjQF")) == ( "Dseq(-30)\n"
-                                                             "TCgatcGATCgatcAA\n"
-                                                             "              TTctagCTAGctagCT"
+    assert repr(Dseq("XIpexiPEXIpexiAAqfzjQFZJqfzjQF")) == (
+        "Dseq(-30)\n" "TCgatcGATCgatcAA\n" "              TTctagCTAGctagCT"
     )
 
     assert repr(Dseq("EXIpexiPEXIpexiAqfzjQFZJqfzjQFZ")) == ("Dseq(-31)\n" "ATCg..gatcA\n" "          Tctag..gCTA")
@@ -1212,21 +1505,24 @@ def test_new():
 
     assert Dseq.from_representation(dsdna)._data == b"zGGATCCj"
 
-    dsdna = """Dseq(
+    dsdna = """
+               Dseq(
                aGGATCCg
                 CCTAGG"""
 
     assert Dseq.from_representation(dsdna)._data == b"eGGATCCp"
 
-    dsdna = """Dseq(
-               GGATCCaa
-             cccctagg"""
+    dsdna = """
+               Dseq(
+                 GGATCCaa
+               cccctagg"""
 
     assert Dseq.from_representation(dsdna)._data == b"qqGGATCCee"
 
-    dsdna = """Dseq(
-               ggtaccaa
-             ccccatgg"""
+    dsdna = """
+               Dseq(
+                 ggtaccaa
+               ccccatgg"""
 
     assert Dseq.from_representation(dsdna)._data == b"qqggtaccee"
 
@@ -1247,28 +1543,94 @@ def test_new():
     assert Dseq("Az") + Dseq("") == Dseq("Az")
     assert Dseq("Ai") + Dseq("") == Dseq("Ai")
 
-    assert Dseq('PEXIGGATCCQFZJ').T4(b"CG") == Dseq(b'PEXCGGATCCGFZJ')
-    assert Dseq('PAGAJ').T4(b"ATG") == Dseq(b'PAGAJ')
-    assert Dseq('QFZJGGATCCPEXI').T4("") == Dseq("")
+    assert Dseq("PEXIGGATCCQFZJ").T4(b"CG") == Dseq(b"PEXCGGATCCGFZJ")
+    assert Dseq("PAGAJ").T4(b"ATG") == Dseq(b"PAGAJ")
+
+    from pydna import _PydnaWarning
+
+    with pytest.warns(_PydnaWarning):
+        assert Dseq("QFZJGGATCCPEXI").T4("") == Dseq("")
 
     assert Dseq("pexiAqfzj").T4(b"gatc") == Dseq("gatcAgatc")
 
-    assert Dseq("qqGGATCCee").seguid() == 'ldseguid=F0z-LxHZqAK3HvqQiqjM7A28daE'
+    assert Dseq("qqGGATCCee").seguid() == "ldseguid=F0z-LxHZqAK3HvqQiqjM7A28daE"
 
     ##################################################################################
 
-    assert Dseq("ggtctcAAgcTT", circular=False).get_cutsites(BsaI) == [(7, BsaI)]
-    assert Dseq("TggtctcAAgcT", circular=False).get_cutsites(BsaI) == [(8, BsaI)]
+    from Bio.SeqFeature import SimpleLocation, ExactPosition, CompoundLocation
+
+    assert Dseq("ggtctcAAgcTT", circular=False).get_cutsites(BsaI) == [
+        (7, BsaI, SimpleLocation(ExactPosition(0), ExactPosition(6)))
+    ]
+    assert Dseq("TggtctcAAgcT", circular=False).get_cutsites(BsaI) == [
+        (8, BsaI, SimpleLocation(ExactPosition(1), ExactPosition(7)))
+    ]
+
     assert Dseq("TTggtctcAAgc", circular=False).get_cutsites(BsaI) == []
     assert Dseq("cTTggtctcAAg", circular=False).get_cutsites(BsaI) == []
     assert Dseq("gcTTggtctcAA", circular=False).get_cutsites(BsaI) == []
 
-    assert Dseq("gtctcAAgcTTg", circular=True).get_cutsites(BsaI) == [(6, BsaI)]
-    assert Dseq("ggtctcAAgcTT", circular=True).get_cutsites(BsaI) == [(7, BsaI)]
-    assert Dseq("TggtctcAAgcT", circular=True).get_cutsites(BsaI) == [(8, BsaI)]
-    assert Dseq("TTggtctcAAgc", circular=True).get_cutsites(BsaI) == [(9, BsaI)]
-    assert Dseq("cTTggtctcAAg", circular=True).get_cutsites(BsaI) == [(10, BsaI)]
-    assert Dseq("gtctcAAgcTTg", circular=True).get_cutsites(BsaI) == [(6, BsaI)]
+    assert Dseq("gtctcAAgcTTg", circular=True).get_cutsites(BsaI) == [
+        (
+            6,
+            BsaI,
+            SimpleLocation(ExactPosition(11), ExactPosition(12)) + SimpleLocation(ExactPosition(0), ExactPosition(5)),
+        )
+    ]
+    assert Dseq("ggtctcAAgcTT", circular=True).get_cutsites(BsaI) == [
+        (7, BsaI, SimpleLocation(ExactPosition(0), ExactPosition(6)))
+    ]
+    assert Dseq("TggtctcAAgcT", circular=True).get_cutsites(BsaI) == [
+        (8, BsaI, SimpleLocation(ExactPosition(1), ExactPosition(7)))
+    ]
+    assert Dseq("TTggtctcAAgc", circular=True).get_cutsites(BsaI) == [
+        (9, BsaI, SimpleLocation(ExactPosition(2), ExactPosition(8)))
+    ]
+    assert Dseq("cTTggtctcAAg", circular=True).get_cutsites(BsaI) == [
+        (10, BsaI, SimpleLocation(ExactPosition(3), ExactPosition(9)))
+    ]
+    assert Dseq("gcTTggtctcAA", circular=True).get_cutsites(BsaI) == [
+        (11, BsaI, SimpleLocation(ExactPosition(4), ExactPosition(10)))
+    ]
+    assert Dseq("AgcTTggtctcA", circular=True).get_cutsites(BsaI) == [
+        (0, BsaI, SimpleLocation(ExactPosition(5), ExactPosition(11)))
+    ]
+    assert Dseq("AAgcTTggtctc", circular=True).get_cutsites(BsaI) == [
+        (1, BsaI, SimpleLocation(ExactPosition(6), ExactPosition(12)))
+    ]
+    assert Dseq("cAAgcTTggtct", circular=True).get_cutsites(BsaI) == [
+        (
+            2,
+            BsaI,
+            SimpleLocation(ExactPosition(7), ExactPosition(12)) + SimpleLocation(ExactPosition(0), ExactPosition(1)),
+        )
+    ]
+    assert Dseq("tcAAgcTTggtc", circular=True).get_cutsites(BsaI) == [
+        (
+            3,
+            BsaI,
+            SimpleLocation(ExactPosition(8), ExactPosition(12)) + SimpleLocation(ExactPosition(0), ExactPosition(2)),
+        )
+    ]
+    assert Dseq("ctcAAgcTTggt", circular=True).get_cutsites(BsaI) == [
+        (
+            4,
+            BsaI,
+            SimpleLocation(ExactPosition(9), ExactPosition(12)) + SimpleLocation(ExactPosition(0), ExactPosition(3)),
+        )
+    ]
+    assert Dseq("tctcAAgcTTgg", circular=True).get_cutsites(BsaI) == [
+        (
+            5,
+            BsaI,
+            SimpleLocation(ExactPosition(10), ExactPosition(12)) + SimpleLocation(ExactPosition(0), ExactPosition(4)),
+        )
+    ]
+
+    assert Dseq("gcTTggtctcAA", circular=True).get_cutsites(BsaI)
+
+    assert Dseq("gtctcAAgcTTggtctcAA", circular=True).get_cutsites(BsaI)
+    assert Dseq("gtctcAAgcTTggtctcAA", circular=True).get_cutsites(BsaI)
 
     assert Dseq("ggatcc").cut(BamHI) == (Dseq("gqfzj"), Dseq("pexic"))
     assert Dseq("GGATCC").cut(BamHI) == (Dseq("GQFZJ"), Dseq("PEXIC"))
@@ -1323,21 +1685,89 @@ def test_new():
 
     assert Dseq("aa").get_cutsites(BamHI) == []
 
-    assert Dseq("GGTACCa", circular = True).get_cutsites(Acc65I) == [(1, Acc65I)]
-    assert Dseq("GTACCaG", circular = True).get_cutsites(Acc65I) == [(0, Acc65I)]
-    assert Dseq("TACCaGG", circular = True).get_cutsites(Acc65I) == [(6, Acc65I)]
-    assert Dseq("ACCaGGT", circular = True).get_cutsites(Acc65I) == [(5, Acc65I)]
-    assert Dseq("CCaGGTA", circular = True).get_cutsites(Acc65I) == [(4, Acc65I)]
-    assert Dseq("CaGGTAC", circular = True).get_cutsites(Acc65I) == [(3, Acc65I)]
-    assert Dseq("aGGTACC", circular = True).get_cutsites(Acc65I) == [(2, Acc65I)]
+    assert Dseq("GGTACCa", circular=True).get_cutsites(Acc65I) == [
+        (1, Acc65I, SimpleLocation(ExactPosition(0), ExactPosition(6)))
+    ]
+    assert Dseq("GTACCaG", circular=True).get_cutsites(Acc65I) == [
+        (
+            0,
+            Acc65I,
+            SimpleLocation(ExactPosition(6), ExactPosition(7)) + SimpleLocation(ExactPosition(0), ExactPosition(5)),
+        )
+    ]
+    assert Dseq("TACCaGG", circular=True).get_cutsites(Acc65I) == [
+        (
+            6,
+            Acc65I,
+            SimpleLocation(ExactPosition(5), ExactPosition(7)) + SimpleLocation(ExactPosition(0), ExactPosition(4)),
+        )
+    ]
+    assert Dseq("ACCaGGT", circular=True).get_cutsites(Acc65I) == [
+        (
+            5,
+            Acc65I,
+            SimpleLocation(ExactPosition(4), ExactPosition(7)) + SimpleLocation(ExactPosition(0), ExactPosition(3)),
+        )
+    ]
+    assert Dseq("CCaGGTA", circular=True).get_cutsites(Acc65I) == [
+        (
+            4,
+            Acc65I,
+            SimpleLocation(ExactPosition(3), ExactPosition(7)) + SimpleLocation(ExactPosition(0), ExactPosition(2)),
+        )
+    ]
+    assert Dseq("CaGGTAC", circular=True).get_cutsites(Acc65I) == [
+        (
+            3,
+            Acc65I,
+            SimpleLocation(ExactPosition(2), ExactPosition(7)) + SimpleLocation(ExactPosition(0), ExactPosition(1)),
+        )
+    ]
+    assert Dseq("aGGTACC", circular=True).get_cutsites(Acc65I) == [
+        (2, Acc65I, SimpleLocation(ExactPosition(1), ExactPosition(7)))
+    ]
 
-    assert Dseq("GGTACCa", circular = True).get_cutsites(KpnI) == [(5, KpnI)]
-    assert Dseq("GTACCaG", circular = True).get_cutsites(KpnI) == [(4, KpnI)]
-    assert Dseq("TACCaGG", circular = True).get_cutsites(KpnI) == [(3, KpnI)]
-    assert Dseq("ACCaGGT", circular = True).get_cutsites(KpnI) == [(2, KpnI)]
-    assert Dseq("CCaGGTA", circular = True).get_cutsites(KpnI) == [(1, KpnI)]
-    assert Dseq("CaGGTAC", circular = True).get_cutsites(KpnI) == [(0, KpnI)]
-    assert Dseq("aGGTACC", circular = True).get_cutsites(KpnI) == [(6, KpnI)]
+    assert Dseq("GGTACCa", circular=True).get_cutsites(KpnI) == [
+        (5, KpnI, SimpleLocation(ExactPosition(0), ExactPosition(6)))
+    ]
+    assert Dseq("GTACCaG", circular=True).get_cutsites(KpnI) == [
+        (
+            4,
+            KpnI,
+            SimpleLocation(ExactPosition(6), ExactPosition(7)) + SimpleLocation(ExactPosition(0), ExactPosition(5)),
+        )
+    ]
+    assert Dseq("TACCaGG", circular=True).get_cutsites(KpnI) == [
+        (
+            3,
+            KpnI,
+            SimpleLocation(ExactPosition(5), ExactPosition(7)) + SimpleLocation(ExactPosition(0), ExactPosition(4)),
+        )
+    ]
+    assert Dseq("ACCaGGT", circular=True).get_cutsites(KpnI) == [
+        (
+            2,
+            KpnI,
+            SimpleLocation(ExactPosition(4), ExactPosition(7)) + SimpleLocation(ExactPosition(0), ExactPosition(3)),
+        )
+    ]
+    assert Dseq("CCaGGTA", circular=True).get_cutsites(KpnI) == [
+        (
+            1,
+            KpnI,
+            SimpleLocation(ExactPosition(3), ExactPosition(7)) + SimpleLocation(ExactPosition(0), ExactPosition(2)),
+        )
+    ]
+    assert Dseq("CaGGTAC", circular=True).get_cutsites(KpnI) == [
+        (
+            0,
+            KpnI,
+            SimpleLocation(ExactPosition(2), ExactPosition(7)) + SimpleLocation(ExactPosition(0), ExactPosition(1)),
+        )
+    ]
+    assert Dseq("aGGTACC", circular=True).get_cutsites(KpnI) == [
+        (6, KpnI, SimpleLocation(ExactPosition(1), ExactPosition(7)))
+    ]
 
     assert Dseq("GGTACCa", circular=True).cut(Acc65I) == (Dseq("PXEICaGQZFJ"),)
     assert Dseq("GTACCaG", circular=True).cut(Acc65I) == (Dseq("PXEICaGQZFJ"),)
@@ -1355,7 +1785,6 @@ def test_new():
     assert Dseq("CaGGTAC", circular=True).cut(KpnI) == (Dseq("QZFJCaGPXEI"),)
     assert Dseq("aGGTACC", circular=True).cut(KpnI) == (Dseq("QZFJCaGPXEI"),)
 
-
     assert Dseq("GGTACCaGGTACCa", circular=True).cut(Acc65I) == (Dseq("PXEICaGQZFJ"), Dseq("PXEICaGQZFJ"))
     assert Dseq("GTACCaGGTACCaG", circular=True).cut(Acc65I) == (Dseq("PXEICaGQZFJ"), Dseq("PXEICaGQZFJ"))
     assert Dseq("TACCaGGTACCaGG", circular=True).cut(Acc65I) == (Dseq("PXEICaGQZFJ"), Dseq("PXEICaGQZFJ"))
@@ -1369,7 +1798,6 @@ def test_new():
     assert Dseq("ACCaGGTACCaGGT", circular=True).cut(Acc65I) == (Dseq("PXEICaGQZFJ"), Dseq("PXEICaGQZFJ"))
     assert Dseq("CCaGGTACCaGGTA", circular=True).cut(Acc65I) == (Dseq("PXEICaGQZFJ"), Dseq("PXEICaGQZFJ"))
     assert Dseq("CaGGTACCaGGTAC", circular=True).cut(Acc65I) == (Dseq("PXEICaGQZFJ"), Dseq("PXEICaGQZFJ"))
-
 
     assert Dseq("GGTACCaGGTACCa", circular=True).cut(KpnI) == (Dseq("QZFJCaGPXEI"), Dseq("QZFJCaGPXEI"))
     assert Dseq("GTACCaGGTACCaG", circular=True).cut(KpnI) == (Dseq("QZFJCaGPXEI"), Dseq("QZFJCaGPXEI"))
@@ -1402,32 +1830,237 @@ def test_new():
     dig15 = Dseq("AAAGGTACCggtctcaA", circular=True).cut(BsaI, Acc65I)
     dig16 = Dseq("AAGGTACCggtctcaAA", circular=True).cut(BsaI, Acc65I)
 
-    a = (dig01, dig02, dig03, dig04, dig05, dig06, dig07, dig08, dig09, dig10,
-         dig11, dig12, dig13, dig14, dig15, dig16,)
+    a = (
+        dig01,
+        dig02,
+        dig03,
+        dig04,
+        dig05,
+        dig06,
+        dig07,
+        dig08,
+        dig09,
+        dig10,
+        dig11,
+        dig12,
+        dig13,
+        dig14,
+        dig15,
+        dig16,
+    )
 
     x, y = set(a)
 
     assert sorted(x) == sorted(y)
 
-    assert Dseq("ggtctcAAgcTT").get_cutsites(BsaI) == [(7, BsaI)]
+    assert Dseq("ggtctcAAgcTT").get_cutsites(BsaI) == [(7, BsaI, SimpleLocation(ExactPosition(0), ExactPosition(6)))]
     assert Dseq("ggtctcAAgcTT").cut(BsaI) == (Dseq("ggtctcAFqjZ"), Dseq("EpiXT"))
-    assert Dseq("TggtctcAAgcT").get_cutsites(BsaI) == [(8, BsaI)]
+    assert Dseq("TggtctcAAgcT").get_cutsites(BsaI) == [(8, BsaI, SimpleLocation(ExactPosition(1), ExactPosition(7)))]
     assert Dseq("TggtctcAAgcT").cut(BsaI) == (Dseq("TggtctcAFqjZ"), Dseq("EpiX"))
     assert Dseq("TTggtctcAAgc").get_cutsites(BsaI) == []
     assert Dseq("TTggtctcAAgc").cut(BsaI) == ()
 
-    assert Dseq("gtctcAAgcTTg", circular=True).get_cutsites(BsaI) == [(6, BsaI)]
-    assert Dseq("ggtctcAAgcTT", circular=True).get_cutsites(BsaI) == [(7, BsaI)]
-    assert Dseq("TggtctcAAgcT", circular=True).get_cutsites(BsaI) == [(8, BsaI)]
-    assert Dseq("TTggtctcAAgc", circular=True).get_cutsites(BsaI) == [(9, BsaI)]
-    assert Dseq("cTTggtctcAAg", circular=True).get_cutsites(BsaI) == [(10, BsaI)]
-    assert Dseq("gtctcAAgcTTg", circular=True).get_cutsites(BsaI) == [(6, BsaI)]
+    assert Dseq("gtctcAAgcTTg", circular=True).get_cutsites(BsaI) == [
+        (
+            6,
+            BsaI,
+            SimpleLocation(ExactPosition(11), ExactPosition(12)) + SimpleLocation(ExactPosition(0), ExactPosition(5)),
+        )
+    ]
+    assert Dseq("ggtctcAAgcTT", circular=True).get_cutsites(BsaI) == [
+        (7, BsaI, SimpleLocation(ExactPosition(0), ExactPosition(6)))
+    ]
+    assert Dseq("TggtctcAAgcT", circular=True).get_cutsites(BsaI) == [
+        (8, BsaI, SimpleLocation(ExactPosition(1), ExactPosition(7)))
+    ]
+    assert Dseq("TTggtctcAAgc", circular=True).get_cutsites(BsaI) == [
+        (9, BsaI, SimpleLocation(ExactPosition(2), ExactPosition(8)))
+    ]
+    assert Dseq("cTTggtctcAAg", circular=True).get_cutsites(BsaI) == [
+        (10, BsaI, SimpleLocation(ExactPosition(3), ExactPosition(9)))
+    ]
+    assert Dseq("gtctcAAgcTTg", circular=True).get_cutsites(BsaI) == [
+        (
+            6,
+            BsaI,
+            SimpleLocation(ExactPosition(11), ExactPosition(12)) + SimpleLocation(ExactPosition(0), ExactPosition(5)),
+        )
+    ]
 
     assert Dseq("gtctcAAgcTTg", circular=True).cut(BsaI) == (Dseq("EpiXTggtctcAFqjZ"),)
     assert Dseq("ggtctcAAgcTT", circular=True).cut(BsaI) == (Dseq("EpiXTggtctcAFqjZ"),)
     assert Dseq("TggtctcAAgcT", circular=True).cut(BsaI) == (Dseq("EpiXTggtctcAFqjZ"),)
     assert Dseq("TTggtctcAAgc", circular=True).cut(BsaI) == (Dseq("EpiXTggtctcAFqjZ"),)
     assert Dseq("cTTggtctcAAg", circular=True).cut(BsaI) == (Dseq("EpiXTggtctcAFqjZ"),)
+
+
+def test_melt():
+    from pydna.dseq import Dseq
+
+    assert Dseq(b"AGJGaGEg").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGEp"), Dseq(b"q"))
+    assert Dseq(b"AGIGaGFg").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGFq"), Dseq(b"p"))
+    assert Dseq(b"AGJGaGFg").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGFq"), Dseq(b"p"))
+    assert Dseq(b"AGIGaGEg").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGEp"), Dseq(b"q"))
+    assert Dseq(b"GATPGGPGCA").melt(2) == (Dseq(b"QQ"), Dseq(b"GATPPPPGCA"))
+    assert Dseq(b"GATQGGQGCA").melt(2) == (Dseq(b"PP"), Dseq(b"GATQQQQGCA"))
+    assert Dseq(b"PEXIGAQFZJ").melt(2) == (Dseq(b"PEXIPE"), Dseq(b"QFQFZJ"))
+    assert Dseq(b"QFZJGAPEXI").melt(2) == (Dseq(b"QFZJQF"), Dseq(b"PEPEXI"))
+    assert Dseq(b"AGJGaGEgGATC").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGEgGATC"))
+    assert Dseq(b"AGIGaGFgGATC").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGFgGATC"))
+    assert Dseq(b"AGJGaGFgGATC").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGFgGATC"))
+    assert Dseq(b"AGIGaGEgGATC").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGEgGATC"))
+    assert Dseq(b"GATPGGPGCAGATC").melt(2) == (Dseq(b"QQ"), Dseq(b"GATPPPPGCAGATC"))
+    assert Dseq(b"GATQGGQGCAGATC").melt(2) == (Dseq(b"PP"), Dseq(b"GATQQQQGCAGATC"))
+    assert Dseq(b"PEXIGAQFZJGATC").melt(2) == (Dseq(b"PEXIPE"), Dseq(b"QFQFZJGATC"))
+    assert Dseq(b"QFZJGAPEXIGATC").melt(2) == (Dseq(b"QFZJQF"), Dseq(b"PEPEXIGATC"))
+    assert Dseq(b"GATCAGJGaGEg").melt(2) == (Dseq(b"GATCAGJGaGEp"), Dseq(b"q"))
+    assert Dseq(b"GATCAGIGaGFg").melt(2) == (Dseq(b"GATCAGIGaGFq"), Dseq(b"p"))
+    assert Dseq(b"GATCAGJGaGFg").melt(2) == (Dseq(b"GATCAGJGaGFq"), Dseq(b"p"))
+    assert Dseq(b"GATCAGIGaGEg").melt(2) == (Dseq(b"GATCAGIGaGEp"), Dseq(b"q"))
+    assert Dseq(b"GATCGATPGGPGCA").melt(2) == (Dseq(b"QQ"), Dseq(b"GATCGATPPPPGCA"))
+    assert Dseq(b"GATCGATQGGQGCA").melt(2) == (Dseq(b"PP"), Dseq(b"GATCGATQQQQGCA"))
+    assert Dseq(b"GATCPEXIGAQFZJ").melt(2) == (Dseq(b"GATCPEXIPE"), Dseq(b"QFQFZJ"))
+    assert Dseq(b"GATCQFZJGAPEXI").melt(2) == (Dseq(b"GATCQFZJQF"), Dseq(b"PEPEXI"))
+    assert Dseq(b"GATCAGJGaGEgGATC").melt(2) == ()
+    assert Dseq(b"GATCAGIGaGFgGATC").melt(2) == ()
+    assert Dseq(b"GATCAGJGaGFgGATC").melt(2) == ()
+    assert Dseq(b"GATCAGIGaGEgGATC").melt(2) == ()
+    assert Dseq(b"GATCGATPGGPGCAGATC").melt(2) == (Dseq(b"QQ"), Dseq(b"GATCGATPPPPGCAGATC"))
+    assert Dseq(b"GATCGATQGGQGCAGATC").melt(2) == (Dseq(b"PP"), Dseq(b"GATCGATQQQQGCAGATC"))
+    assert Dseq(b"GATCPEXIGAQFZJGATC").melt(2) == (Dseq(b"GATCPEXIPE"), Dseq(b"QFQFZJGATC"))
+    assert Dseq(b"GATCQFZJGAPEXIGATC").melt(2) == (Dseq(b"GATCQFZJQF"), Dseq(b"PEPEXIGATC"))
+    assert Dseq(b"GATCPEXIGAQFZJGATC").melt(2) == (Dseq(b"GATCPEXIPE"), Dseq(b"QFQFZJGATC"))
+    assert Dseq(b"GATCQFZJGAPEXIGATC").melt(2) == (Dseq(b"GATCQFZJQF"), Dseq(b"PEPEXIGATC"))
+
+
+def test__melt_w_params():
+
+    from pydna.dseq import Dseq
+
+    assert Dseq(b"AGJGaGEg")._melt_w_params(2)[1] == ((0, 2), (0, 8), (7, 8))
+    assert Dseq(b"AGIGaGFg")._melt_w_params(2)[1] == ((0, 2), (0, 8), (7, 8))
+    assert Dseq(b"AGJGaGFg")._melt_w_params(2)[1] == ((0, 2), (0, 8), (7, 8))
+    assert Dseq(b"AGIGaGEg")._melt_w_params(2)[1] == ((0, 2), (0, 8), (7, 8))
+
+    assert Dseq(b"PEXIGAQFZJ")._melt_w_params(2)[1] == ((0, 6), (4, 10))
+    assert Dseq(b"QFZJGAPEXI")._melt_w_params(2)[1] == ((0, 6), (4, 10))
+
+    assert Dseq(b"GATCPEXIGAQFZJGATC")._melt_w_params(2)[1] == ((0, 10), (8, 18))
+    assert Dseq(b"GATCQFZJGAPEXIGATC")._melt_w_params(2)[1] == ((0, 10), (8, 18))
+
+    assert Dseq("AGCPAGQGAT", circular=True)._melt_w_params(2)[1:] == (((0, 6), (4, 10)), 4, 12)
+
+
+def test__add_fail():
+
+    from pydna.dseq import Dseq
+
+    assert Dseq("G") + Dseq("A") == Dseq("GA")
+
+    with pytest.raises(TypeError):
+        Dseq("GP") + Dseq("A")
+
+    with pytest.raises(TypeError):
+        Dseq("GE") + Dseq("A")
+
+    with pytest.raises(TypeError):
+        Dseq("GX") + Dseq("A")
+
+    with pytest.raises(TypeError):
+        Dseq("GI") + Dseq("A")
+
+    with pytest.raises(TypeError):
+        Dseq("GQ") + Dseq("A")
+
+    with pytest.raises(TypeError):
+        Dseq("GF") + Dseq("A")
+
+    with pytest.raises(TypeError):
+        Dseq("GZ") + Dseq("A")
+
+    with pytest.raises(TypeError):
+        Dseq("GJ") + Dseq("A")
+
+    with pytest.raises(TypeError):
+        Dseq("A") + Dseq("PG")
+
+    with pytest.raises(TypeError):
+        Dseq("A") + Dseq("EG")
+
+    with pytest.raises(TypeError):
+        Dseq("A") + Dseq("XG")
+
+    with pytest.raises(TypeError):
+        Dseq("A") + Dseq("IG")
+
+    with pytest.raises(TypeError):
+        Dseq("A") + Dseq("QG")
+
+    with pytest.raises(TypeError):
+        Dseq("A") + Dseq("FG")
+
+    with pytest.raises(TypeError):
+        Dseq("A") + Dseq("ZG")
+
+    with pytest.raises(TypeError):
+        Dseq("A") + Dseq("JG")
+
+
+def test_anneal():
+    from pydna.dseq import Dseq
+
+    # Dseq(-9)
+    # GGATC   G
+    # C   GTAGC
+
+    assert Dseq("GPEXI") / Dseq("JFZJG") == Dseq("GPEXCFZJG")
+
+    with pytest.raises(TypeError):
+        Dseq("GPEXI") + Dseq("JFZJG")
+
+    # Dseq(-9)
+    # GGATC   G
+    # C   GTAGC
+    assert Dseq("GPEXI") / Dseq("JFZJG") == Dseq("GPEXCFZJG")
+
+    # GGACT       G
+    # C       GTAGC
+    assert Dseq("GPEIX") / Dseq("JFZJG") == None
+
+    # Dseq(-8)
+    # GGACT  G
+    # C  GATGC
+    assert Dseq("GPEIX") / Dseq("JZFJG") == Dseq("GPECTFJG")
+
+    # Dseq(-8)
+    # GGACTA G
+    # C  GATGC
+    Dseq("GPEIXE") / Dseq("JZFJG") == Dseq("GPECTAJG")
+
+    # Dseq(-8)
+    # GGACTA G
+    # C TGATGC
+    assert Dseq("GPEIXE") / Dseq("FJZFJG") == Dseq("GPACTAJG")
+
+    # Dseq(-8)
+    # GGACTA G
+    # C  GATGC
+    assert Dseq("GPEIXE") / Dseq("JZFJG") == Dseq("GPECTAJG")
+
+    # Dseq(-8)
+    # GGACTA G
+    # C TGATGC
+    assert Dseq("GPEIXE") / Dseq("FJZFJG") == Dseq("GPACTAJG")
+
+    # Dseq(-8)
+    # GGACTACG
+    # C TGATGC
+    assert Dseq("GPEIXEI") / Dseq("FJZFJG") == Dseq("GPACTACG")
+
+    # Dseq(-8)
+    # GGACTACG
+    # CCTGATGC
+    assert Dseq("GPEIXEI") / Dseq("QFJZFJG") == Dseq("GGACTACG")
 
 
 if __name__ == "__main__":

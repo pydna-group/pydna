@@ -7,7 +7,7 @@
 """Miscellaneous functions."""
 
 from Bio.Data.IUPACData import ambiguous_dna_complement as _ambiguous_dna_complement
-from Bio.Seq import _maketrans
+
 import shelve as _shelve
 import os as _os
 import re as _re
@@ -39,13 +39,13 @@ StrOrBytes = _TypeVar("StrOrBytes", str, bytes)
 
 _module_logger = _logging.getLogger("pydna." + __name__)
 _ambiguous_dna_complement.update(
-    {  # RNA
-        "U": "A",
-        # dsIUPAC
+    {  # dsIUPAC
         "P": "J",  # G in top strand, complementary strand empty.
         "E": "Z",  # A "
         "X": "F",  # T "
         "I": "Q",  # C "
+        "U": "O",  # U in top strand, A in complementary strand.
+        "O": "U",  # A in top strand, U in complementary strand.
         "J": "P",  # top strand empty, G in complementary strand.
         "Z": "E",  # "                 A "
         "F": "X",  # "                 T "
@@ -53,51 +53,736 @@ _ambiguous_dna_complement.update(
     }
 )
 
-_complement_table = _maketrans(_ambiguous_dna_complement)
+_keys = "".join(_ambiguous_dna_complement.keys()).encode("ASCII")
+_values = "".join(_ambiguous_dna_complement.values()).encode("ASCII")
+_complement_table = bytes.maketrans(_keys + _keys.lower(), _values + _values.lower())
+
+to_watson_table = bytes.maketrans(b"PEXIQFZJpexiqfzj" b"12" b"UuOoGATCgatc", b"GATC    gatc    " b" ." b"UuAaGATCgatc")
+
+to_crick_table = bytes.maketrans(
+    _keys + _keys.lower() + b"PEXIQFZJpexiqfzj" b"12" b"UuOoGATCgatc",
+    _values + _values.lower() + b"    CTAG    ctag" b". " b"AaUuCTAGctag",
+)
+
+to_5tail_table = bytes.maketrans(b"GATCgatc", b"QFZJqfzj")
+to_3tail_table = bytes.maketrans(b"GATCgatc", b"PEXIpexi")
+to_full_sequence = bytes.maketrans(b"PEXIpexiQFZJqfzj", b"GATCgatcGATCgatc")
+# left_fill_in_table = str.maketrans("PEXIpexi", "GATCgatc")
+# right_fill_in_table = str.maketrans("QFZJqfzj", "GATCgatc")
+
+#                                       Watson Crick    >   dsIUPAC
+
+iupac_regex = {  # IUPAC Ambiguity Codes for Nucleotide Degeneracy and U for Uracile
+    "A": "(?:A)",
+    "C": "(?:C)",
+    "G": "(?:G)",
+    "T": "(?:T|U)",
+    "U": "(?:U|T|U)",
+    "R": "(?:A|G|R)",
+    "Y": "(?:C|T|Y)",
+    "S": "(?:G|C|S)",
+    "W": "(?:A|T|W)",
+    "K": "(?:G|T|K)",
+    "M": "(?:A|C|M)",
+    "B": "(?:C|G|T|B)",
+    "D": "(?:A|G|T|D)",
+    "H": "(?:A|C|T|H)",
+    "V": "(?:A|C|G|V)",
+    "N": "(?:A|G|C|T|N)",
+}
+
+iupac_compl_regex = {  # IUPAC Ambiguity Code complements
+    "A": "(?:T|U)",
+    "C": "(?:G)",
+    "G": "(?:C)",
+    "T": "(?:A)",
+    "U": "(?:A)",
+    "R": "(?:T|C|Y)",
+    "Y": "(?:G|A|R)",
+    "S": "(?:G|C|S)",
+    "W": "(?:A|T|W)",
+    "K": "(?:C|AM)",
+    "M": "(?:T|G|K)",
+    "B": "(?:C|G|A|V)",
+    "D": "(?:A|C|T|H)",
+    "H": "(?:A|G|T|D)",
+    "V": "(?:T|C|G|B)",
+    "N": "(?:A|G|C|T|N)",
+}
+
+bp_dict = {
+    (b"P", b"Q"): b"G",  # P / Q  >>--->  G
+    (b"E", b"F"): b"A",  # E / F  >>--->  A
+    (b"X", b"Z"): b"T",  # X / Z  >>--->  T
+    (b"I", b"J"): b"C",  # I / J  >>--->  C
+    (b"p", b"q"): b"g",  # p / q  >>--->  g
+    (b"e", b"f"): b"a",  # e / f  >>--->  a
+    (b"x", b"z"): b"t",  # x / z  >>--->  t
+    (b"i", b"j"): b"c",  # i / j  >>--->  c
+    (b"p", b"Q"): b"g",  # p / Q  >>--->  g
+    (b"e", b"F"): b"a",  # e / F  >>--->  a
+    (b"x", b"Z"): b"t",  # x / Z  >>--->  t
+    (b"i", b"J"): b"c",  # i / J  >>--->  c
+    (b"P", b"q"): b"G",  # P / q  >>--->  G
+    (b"E", b"f"): b"A",  # E / f  >>--->  A
+    (b"X", b"z"): b"T",  # X / z  >>--->  T
+    (b"I", b"j"): b"C",  # I / j  >>--->  C
+    # (b"P", b" "): b"P",  # P / q  >>--->  G
+    # (b"E", b" "): b"E",  # E / f  >>--->  A
+    # (b"X", b" "): b"X",  # X / z  >>--->  T
+    # (b"I", b" "): b"I",  # I / j  >>--->  C
+    (b"Q", b"P"): b"G",  # Q / P  >>--->  G
+    (b"F", b"E"): b"A",  # F / E  >>--->  A
+    (b"Z", b"X"): b"T",  # Z / X  >>--->  T
+    (b"J", b"I"): b"C",  # J / I  >>--->  C
+    (b"q", b"p"): b"g",  # q / p  >>--->  g
+    (b"f", b"e"): b"a",  # f / e  >>--->  a
+    (b"z", b"x"): b"t",  # z / x  >>--->  t
+    (b"j", b"i"): b"c",  # j / i  >>--->  c
+    (b"q", b"P"): b"G",  # Q / P  >>--->  G
+    (b"f", b"E"): b"A",  # F / E  >>--->  A
+    (b"z", b"X"): b"T",  # Z / X  >>--->  T
+    (b"j", b"I"): b"C",  # J / I  >>--->  C
+    (b"Q", b"p"): b"g",  # q / p  >>--->  g
+    (b"F", b"e"): b"a",  # f / e  >>--->  a
+    (b"Z", b"x"): b"t",  # z / x  >>--->  t
+    (b"J", b"i"): b"c",  # j / i  >>--->  c
+    # (b" ", b"Q"): b"Q",  # Q / P  >>--->  G
+    # (b" ", b"F"): b"F",  # F / E  >>--->  A
+    # (b" ", b"Z"): b"Z",  # Z / X  >>--->  T
+    # (b" ", b"J"): b"J",  # J / I  >>--->  C
+    (b"G", b" "): b"P",
+    (b"A", b" "): b"E",
+    (b"T", b" "): b"X",
+    (b"C", b" "): b"I",
+    (b"g", b" "): b"p",
+    (b"a", b" "): b"e",
+    (b"t", b" "): b"x",
+    (b"c", b" "): b"i",
+    (b" ", b"G"): b"J",
+    (b" ", b"A"): b"Z",
+    (b" ", b"T"): b"F",
+    (b" ", b"C"): b"Q",
+    (b" ", b"g"): b"j",
+    (b" ", b"a"): b"z",
+    (b" ", b"t"): b"f",
+    (b" ", b"c"): b"q",
+    (b"G", b"C"): b"G",
+    (b"A", b"T"): b"A",
+    (b"T", b"A"): b"T",
+    (b"C", b"G"): b"C",
+    (b"g", b"c"): b"g",
+    (b"a", b"t"): b"a",
+    (b"t", b"a"): b"t",
+    (b"c", b"g"): b"c",
+    (b"G", b"c"): b"G",
+    (b"A", b"t"): b"A",
+    (b"T", b"a"): b"T",
+    (b"C", b"g"): b"C",
+    (b"g", b"C"): b"g",
+    (b"a", b"T"): b"a",
+    (b"t", b"A"): b"t",
+    (b"c", b"G"): b"c",
+    (b"U", b"O"): b"U",
+    (b"O", b"U"): b"A",
+    (b"u", b"o"): b"u",
+    (b"o", b"u"): b"a",
+    (b"u", b"O"): b"u",
+    (b"O", b"u"): b"A",
+    (b"U", b"o"): b"U",
+    (b"o", b"U"): b"a",
+    (b"U", b"A"): b"U",
+    (b"A", b"U"): b"O",
+    (b"u", b"a"): b"u",
+    (b"a", b"u"): b"o",
+    (b"u", b"A"): b"u",
+    (b"A", b"u"): b"O",
+    (b"U", b"a"): b"U",
+    (b"a", b"U"): b"o",
+    (b"M", b"T"): b"A",
+    (b"m", b"t"): b"a",
+    (b"M", b"t"): b"A",
+    (b"m", b"T"): b"a",
+    (b"T", b"M"): b"K",
+    (b"t", b"m"): b"k",
+    (b"T", b"m"): b"K",
+    (b"t", b"M"): b"k",
+    (b"M", b"G"): b"C",
+    (b"m", b"g"): b"c",
+    (b"M", b"g"): b"C",
+    (b"m", b"G"): b"c",
+    (b"G", b"M"): b"K",
+    (b"g", b"m"): b"k",
+    (b"G", b"m"): b"K",
+    (b"g", b"M"): b"k",
+    (b"R", b"T"): b"A",
+    (b"r", b"t"): b"a",
+    (b"R", b"t"): b"A",
+    (b"r", b"T"): b"a",
+    (b"T", b"R"): b"Y",
+    (b"t", b"r"): b"y",
+    (b"T", b"r"): b"Y",
+    (b"t", b"R"): b"y",
+    (b"R", b"C"): b"G",
+    (b"r", b"c"): b"g",
+    (b"R", b"c"): b"G",
+    (b"r", b"C"): b"g",
+    (b"C", b"R"): b"Y",
+    (b"c", b"r"): b"y",
+    (b"C", b"r"): b"Y",
+    (b"c", b"R"): b"y",
+    (b"W", b"T"): b"A",
+    (b"w", b"t"): b"a",
+    (b"W", b"t"): b"A",
+    (b"w", b"T"): b"a",
+    (b"T", b"W"): b"W",
+    (b"t", b"w"): b"w",
+    (b"T", b"w"): b"W",
+    (b"t", b"W"): b"w",
+    (b"W", b"A"): b"T",
+    (b"w", b"a"): b"t",
+    (b"W", b"a"): b"T",
+    (b"w", b"A"): b"t",
+    (b"A", b"W"): b"W",
+    (b"a", b"w"): b"w",
+    (b"A", b"w"): b"W",
+    (b"a", b"W"): b"w",
+    (b"S", b"G"): b"C",
+    (b"s", b"g"): b"c",
+    (b"S", b"g"): b"C",
+    (b"s", b"G"): b"c",
+    (b"G", b"S"): b"S",
+    (b"g", b"s"): b"s",
+    (b"G", b"s"): b"S",
+    (b"g", b"S"): b"s",
+    (b"S", b"C"): b"G",
+    (b"s", b"c"): b"g",
+    (b"S", b"c"): b"G",
+    (b"s", b"C"): b"g",
+    (b"C", b"S"): b"S",
+    (b"c", b"s"): b"s",
+    (b"C", b"s"): b"S",
+    (b"c", b"S"): b"s",
+    (b"Y", b"G"): b"C",
+    (b"y", b"g"): b"c",
+    (b"Y", b"g"): b"C",
+    (b"y", b"G"): b"c",
+    (b"G", b"Y"): b"R",
+    (b"g", b"y"): b"r",
+    (b"G", b"y"): b"R",
+    (b"g", b"Y"): b"r",
+    (b"Y", b"A"): b"T",
+    (b"y", b"a"): b"t",
+    (b"Y", b"a"): b"T",
+    (b"y", b"A"): b"t",
+    (b"A", b"Y"): b"R",
+    (b"a", b"y"): b"r",
+    (b"A", b"y"): b"R",
+    (b"a", b"Y"): b"r",
+    (b"K", b"C"): b"G",
+    (b"k", b"c"): b"g",
+    (b"K", b"c"): b"G",
+    (b"k", b"C"): b"g",
+    (b"C", b"K"): b"M",
+    (b"c", b"k"): b"m",
+    (b"C", b"k"): b"M",
+    (b"c", b"K"): b"m",
+    (b"K", b"A"): b"T",
+    (b"k", b"a"): b"t",
+    (b"K", b"a"): b"T",
+    (b"k", b"A"): b"t",
+    (b"A", b"K"): b"M",
+    (b"a", b"k"): b"m",
+    (b"A", b"k"): b"M",
+    (b"a", b"K"): b"m",
+    (b"V", b"T"): b"A",
+    (b"v", b"t"): b"a",
+    (b"V", b"t"): b"A",
+    (b"v", b"T"): b"a",
+    (b"T", b"V"): b"B",
+    (b"t", b"v"): b"b",
+    (b"T", b"v"): b"B",
+    (b"t", b"V"): b"b",
+    (b"V", b"G"): b"C",
+    (b"v", b"g"): b"c",
+    (b"V", b"g"): b"C",
+    (b"v", b"G"): b"c",
+    (b"G", b"V"): b"B",
+    (b"g", b"v"): b"b",
+    (b"G", b"v"): b"B",
+    (b"g", b"V"): b"b",
+    (b"V", b"C"): b"G",
+    (b"v", b"c"): b"g",
+    (b"V", b"c"): b"G",
+    (b"v", b"C"): b"g",
+    (b"C", b"V"): b"B",
+    (b"c", b"v"): b"b",
+    (b"C", b"v"): b"B",
+    (b"c", b"V"): b"b",
+    (b"H", b"T"): b"A",
+    (b"h", b"t"): b"a",
+    (b"H", b"t"): b"A",
+    (b"h", b"T"): b"a",
+    (b"T", b"H"): b"D",
+    (b"t", b"h"): b"d",
+    (b"T", b"h"): b"D",
+    (b"t", b"H"): b"d",
+    (b"H", b"G"): b"C",
+    (b"h", b"g"): b"c",
+    (b"H", b"g"): b"C",
+    (b"h", b"G"): b"c",
+    (b"G", b"H"): b"D",
+    (b"g", b"h"): b"d",
+    (b"G", b"h"): b"D",
+    (b"g", b"H"): b"d",
+    (b"H", b"A"): b"T",
+    (b"h", b"a"): b"t",
+    (b"H", b"a"): b"T",
+    (b"h", b"A"): b"t",
+    (b"A", b"H"): b"D",
+    (b"a", b"h"): b"d",
+    (b"A", b"h"): b"D",
+    (b"a", b"H"): b"d",
+    (b"D", b"T"): b"A",
+    (b"d", b"t"): b"a",
+    (b"D", b"t"): b"A",
+    (b"d", b"T"): b"a",
+    (b"T", b"D"): b"H",
+    (b"t", b"d"): b"h",
+    (b"T", b"d"): b"H",
+    (b"t", b"D"): b"h",
+    (b"D", b"C"): b"G",
+    (b"d", b"c"): b"g",
+    (b"D", b"c"): b"G",
+    (b"d", b"C"): b"g",
+    (b"C", b"D"): b"H",
+    (b"c", b"d"): b"h",
+    (b"C", b"d"): b"H",
+    (b"c", b"D"): b"h",
+    (b"D", b"A"): b"T",
+    (b"d", b"a"): b"t",
+    (b"D", b"a"): b"T",
+    (b"d", b"A"): b"t",
+    (b"A", b"D"): b"H",
+    (b"a", b"d"): b"h",
+    (b"A", b"d"): b"H",
+    (b"a", b"D"): b"h",
+    (b"B", b"G"): b"C",
+    (b"b", b"g"): b"c",
+    (b"B", b"g"): b"C",
+    (b"b", b"G"): b"c",
+    (b"G", b"B"): b"V",
+    (b"g", b"b"): b"v",
+    (b"G", b"b"): b"V",
+    (b"g", b"B"): b"v",
+    (b"B", b"C"): b"G",
+    (b"b", b"c"): b"g",
+    (b"B", b"c"): b"G",
+    (b"b", b"C"): b"g",
+    (b"C", b"B"): b"V",
+    (b"c", b"b"): b"v",
+    (b"C", b"b"): b"V",
+    (b"c", b"B"): b"v",
+    (b"B", b"A"): b"T",
+    (b"b", b"a"): b"t",
+    (b"B", b"a"): b"T",
+    (b"b", b"A"): b"t",
+    (b"A", b"B"): b"V",
+    (b"a", b"b"): b"v",
+    (b"A", b"b"): b"V",
+    (b"a", b"B"): b"v",
+    (b"N", b"C"): b"G",
+    (b"n", b"c"): b"g",
+    (b"N", b"c"): b"G",
+    (b"n", b"C"): b"g",
+    (b"C", b"N"): b"N",
+    (b"c", b"n"): b"n",
+    (b"C", b"n"): b"N",
+    (b"c", b"N"): b"n",
+    (b"N", b"T"): b"A",
+    (b"n", b"t"): b"a",
+    (b"N", b"t"): b"A",
+    (b"n", b"T"): b"a",
+    (b"T", b"N"): b"N",
+    (b"t", b"n"): b"n",
+    (b"T", b"n"): b"N",
+    (b"t", b"N"): b"n",
+    (b"N", b"A"): b"T",
+    (b"n", b"a"): b"t",
+    (b"N", b"a"): b"T",
+    (b"n", b"A"): b"t",
+    (b"A", b"N"): b"N",
+    (b"a", b"n"): b"n",
+    (b"A", b"n"): b"N",
+    (b"a", b"N"): b"n",
+    (b"N", b"G"): b"C",
+    (b"n", b"g"): b"c",
+    (b"N", b"g"): b"C",
+    (b"n", b"G"): b"c",
+    (b"G", b"N"): b"N",
+    (b"g", b"n"): b"n",
+    (b"G", b"n"): b"N",
+    (b"g", b"N"): b"n",
+}
+
+bp_dict_str = {
+    ("P", "Q"): "G",  # P / Q  >>--->  G
+    ("E", "F"): "A",  # E / F  >>--->  A
+    ("X", "Z"): "T",  # X / Z  >>--->  T
+    ("I", "J"): "C",  # I / J  >>--->  C
+    ("p", "q"): "g",  # p / q  >>--->  g
+    ("e", "f"): "a",  # e / f  >>--->  a
+    ("x", "z"): "t",  # x / z  >>--->  t
+    ("i", "j"): "c",  # i / j  >>--->  c
+    ("p", "Q"): "g",  # p / Q  >>--->  g
+    ("e", "F"): "a",  # e / F  >>--->  a
+    ("x", "Z"): "t",  # x / Z  >>--->  t
+    ("i", "J"): "c",  # i / J  >>--->  c
+    ("P", "q"): "G",  # P / q  >>--->  G
+    ("E", "f"): "A",  # E / f  >>--->  A
+    ("X", "z"): "T",  # X / z  >>--->  T
+    ("I", "j"): "C",  # I / j  >>--->  C
+    ("P", " "): "P",  # P / q  >>--->  G
+    ("E", " "): "E",  # E / f  >>--->  A
+    ("X", " "): "X",  # X / z  >>--->  T
+    ("I", " "): "I",  # I / j  >>--->  C
+    ("Q", "P"): "G",  # Q / P  >>--->  G
+    ("F", "E"): "A",  # F / E  >>--->  A
+    ("Z", "X"): "T",  # Z / X  >>--->  T
+    ("J", "I"): "C",  # J / I  >>--->  C
+    ("q", "p"): "g",  # q / p  >>--->  g
+    ("f", "e"): "a",  # f / e  >>--->  a
+    ("z", "x"): "t",  # z / x  >>--->  t
+    ("j", "i"): "c",  # j / i  >>--->  c
+    ("q", "P"): "G",  # Q / P  >>--->  G
+    ("f", "E"): "A",  # F / E  >>--->  A
+    ("z", "X"): "T",  # Z / X  >>--->  T
+    ("j", "I"): "C",  # J / I  >>--->  C
+    ("Q", "p"): "g",  # q / p  >>--->  g
+    ("F", "e"): "a",  # f / e  >>--->  a
+    ("Z", "x"): "t",  # z / x  >>--->  t
+    ("J", "i"): "c",  # j / i  >>--->  c
+    (" ", "Q"): "Q",  # Q / P  >>--->  G
+    (" ", "F"): "F",  # F / E  >>--->  A
+    (" ", "Z"): "Z",  # Z / X  >>--->  T
+    (" ", "J"): "J",  # J / I  >>--->  C
+    ("G", " "): "P",
+    ("A", " "): "E",
+    ("T", " "): "X",
+    ("C", " "): "I",
+    ("g", " "): "p",
+    ("a", " "): "e",
+    ("t", " "): "x",
+    ("c", " "): "i",
+    (" ", "G"): "J",
+    (" ", "A"): "Z",
+    (" ", "T"): "F",
+    (" ", "C"): "Q",
+    (" ", "g"): "j",
+    (" ", "a"): "z",
+    (" ", "t"): "f",
+    (" ", "c"): "q",
+    ("G", "C"): "G",
+    ("A", "T"): "A",
+    ("T", "A"): "T",
+    ("C", "G"): "C",
+    ("g", "c"): "g",
+    ("a", "t"): "a",
+    ("t", "a"): "t",
+    ("c", "g"): "c",
+    ("G", "c"): "G",
+    ("A", "t"): "A",
+    ("T", "a"): "T",
+    ("C", "g"): "C",
+    ("g", "C"): "g",
+    ("a", "T"): "a",
+    ("t", "A"): "t",
+    ("c", "G"): "c",
+    ("U", "O"): "U",
+    ("O", "U"): "A",
+    ("u", "o"): "u",
+    ("o", "u"): "a",
+    ("u", "O"): "u",
+    ("O", "u"): "A",
+    ("U", "o"): "U",
+    ("o", "U"): "a",
+    ("U", "A"): "U",
+    ("A", "U"): "O",
+    ("u", "a"): "u",
+    ("a", "u"): "o",
+    ("u", "A"): "u",
+    ("A", "u"): "O",
+    ("U", "a"): "U",
+    ("a", "U"): "o",
+    ("M", "T"): "A",
+    ("m", "t"): "a",
+    ("M", "t"): "A",
+    ("m", "T"): "a",
+    ("T", "M"): "K",
+    ("t", "m"): "k",
+    ("T", "m"): "K",
+    ("t", "M"): "k",
+    ("M", "G"): "C",
+    ("m", "g"): "c",
+    ("M", "g"): "C",
+    ("m", "G"): "c",
+    ("G", "M"): "K",
+    ("g", "m"): "k",
+    ("G", "m"): "K",
+    ("g", "M"): "k",
+    ("R", "T"): "A",
+    ("r", "t"): "a",
+    ("R", "t"): "A",
+    ("r", "T"): "a",
+    ("T", "R"): "Y",
+    ("t", "r"): "y",
+    ("T", "r"): "Y",
+    ("t", "R"): "y",
+    ("R", "C"): "G",
+    ("r", "c"): "g",
+    ("R", "c"): "G",
+    ("r", "C"): "g",
+    ("C", "R"): "Y",
+    ("c", "r"): "y",
+    ("C", "r"): "Y",
+    ("c", "R"): "y",
+    ("W", "T"): "A",
+    ("w", "t"): "a",
+    ("W", "t"): "A",
+    ("w", "T"): "a",
+    ("T", "W"): "W",
+    ("t", "w"): "w",
+    ("T", "w"): "W",
+    ("t", "W"): "w",
+    ("W", "A"): "T",
+    ("w", "a"): "t",
+    ("W", "a"): "T",
+    ("w", "A"): "t",
+    ("A", "W"): "W",
+    ("a", "w"): "w",
+    ("A", "w"): "W",
+    ("a", "W"): "w",
+    ("S", "G"): "C",
+    ("s", "g"): "c",
+    ("S", "g"): "C",
+    ("s", "G"): "c",
+    ("G", "S"): "S",
+    ("g", "s"): "s",
+    ("G", "s"): "S",
+    ("g", "S"): "s",
+    ("S", "C"): "G",
+    ("s", "c"): "g",
+    ("S", "c"): "G",
+    ("s", "C"): "g",
+    ("C", "S"): "S",
+    ("c", "s"): "s",
+    ("C", "s"): "S",
+    ("c", "S"): "s",
+    ("Y", "G"): "C",
+    ("y", "g"): "c",
+    ("Y", "g"): "C",
+    ("y", "G"): "c",
+    ("G", "Y"): "R",
+    ("g", "y"): "r",
+    ("G", "y"): "R",
+    ("g", "Y"): "r",
+    ("Y", "A"): "T",
+    ("y", "a"): "t",
+    ("Y", "a"): "T",
+    ("y", "A"): "t",
+    ("A", "Y"): "R",
+    ("a", "y"): "r",
+    ("A", "y"): "R",
+    ("a", "Y"): "r",
+    ("K", "C"): "G",
+    ("k", "c"): "g",
+    ("K", "c"): "G",
+    ("k", "C"): "g",
+    ("C", "K"): "M",
+    ("c", "k"): "m",
+    ("C", "k"): "M",
+    ("c", "K"): "m",
+    ("K", "A"): "T",
+    ("k", "a"): "t",
+    ("K", "a"): "T",
+    ("k", "A"): "t",
+    ("A", "K"): "M",
+    ("a", "k"): "m",
+    ("A", "k"): "M",
+    ("a", "K"): "m",
+    ("V", "T"): "A",
+    ("v", "t"): "a",
+    ("V", "t"): "A",
+    ("v", "T"): "a",
+    ("T", "V"): "B",
+    ("t", "v"): "b",
+    ("T", "v"): "B",
+    ("t", "V"): "b",
+    ("V", "G"): "C",
+    ("v", "g"): "c",
+    ("V", "g"): "C",
+    ("v", "G"): "c",
+    ("G", "V"): "B",
+    ("g", "v"): "b",
+    ("G", "v"): "B",
+    ("g", "V"): "b",
+    ("V", "C"): "G",
+    ("v", "c"): "g",
+    ("V", "c"): "G",
+    ("v", "C"): "g",
+    ("C", "V"): "B",
+    ("c", "v"): "b",
+    ("C", "v"): "B",
+    ("c", "V"): "b",
+    ("H", "T"): "A",
+    ("h", "t"): "a",
+    ("H", "t"): "A",
+    ("h", "T"): "a",
+    ("T", "H"): "D",
+    ("t", "h"): "d",
+    ("T", "h"): "D",
+    ("t", "H"): "d",
+    ("H", "G"): "C",
+    ("h", "g"): "c",
+    ("H", "g"): "C",
+    ("h", "G"): "c",
+    ("G", "H"): "D",
+    ("g", "h"): "d",
+    ("G", "h"): "D",
+    ("g", "H"): "d",
+    ("H", "A"): "T",
+    ("h", "a"): "t",
+    ("H", "a"): "T",
+    ("h", "A"): "t",
+    ("A", "H"): "D",
+    ("a", "h"): "d",
+    ("A", "h"): "D",
+    ("a", "H"): "d",
+    ("D", "T"): "A",
+    ("d", "t"): "a",
+    ("D", "t"): "A",
+    ("d", "T"): "a",
+    ("T", "D"): "H",
+    ("t", "d"): "h",
+    ("T", "d"): "H",
+    ("t", "D"): "h",
+    ("D", "C"): "G",
+    ("d", "c"): "g",
+    ("D", "c"): "G",
+    ("d", "C"): "g",
+    ("C", "D"): "H",
+    ("c", "d"): "h",
+    ("C", "d"): "H",
+    ("c", "D"): "h",
+    ("D", "A"): "T",
+    ("d", "a"): "t",
+    ("D", "a"): "T",
+    ("d", "A"): "t",
+    ("A", "D"): "H",
+    ("a", "d"): "h",
+    ("A", "d"): "H",
+    ("a", "D"): "h",
+    ("B", "G"): "C",
+    ("b", "g"): "c",
+    ("B", "g"): "C",
+    ("b", "G"): "c",
+    ("G", "B"): "V",
+    ("g", "b"): "v",
+    ("G", "b"): "V",
+    ("g", "B"): "v",
+    ("B", "C"): "G",
+    ("b", "c"): "g",
+    ("B", "c"): "G",
+    ("b", "C"): "g",
+    ("C", "B"): "V",
+    ("c", "b"): "v",
+    ("C", "b"): "V",
+    ("c", "B"): "v",
+    ("B", "A"): "T",
+    ("b", "a"): "t",
+    ("B", "a"): "T",
+    ("b", "A"): "t",
+    ("A", "B"): "V",
+    ("a", "b"): "v",
+    ("A", "b"): "V",
+    ("a", "B"): "v",
+    ("N", "C"): "G",
+    ("n", "c"): "g",
+    ("N", "c"): "G",
+    ("n", "C"): "g",
+    ("C", "N"): "N",
+    ("c", "n"): "n",
+    ("C", "n"): "N",
+    ("c", "N"): "n",
+    ("N", "T"): "A",
+    ("n", "t"): "a",
+    ("N", "t"): "A",
+    ("n", "T"): "a",
+    ("T", "N"): "N",
+    ("t", "n"): "n",
+    ("T", "n"): "N",
+    ("t", "N"): "n",
+    ("N", "A"): "T",
+    ("n", "a"): "t",
+    ("N", "a"): "T",
+    ("n", "A"): "t",
+    ("A", "N"): "N",
+    ("a", "n"): "n",
+    ("A", "n"): "N",
+    ("a", "N"): "n",
+    ("N", "G"): "C",
+    ("n", "g"): "c",
+    ("N", "g"): "C",
+    ("n", "G"): "c",
+    ("G", "N"): "N",
+    ("g", "n"): "n",
+    ("G", "n"): "N",
+    ("g", "N"): "n",
+}
 
 
-def three_frame_orfs(
-    dna: str,
-    limit: int = 100,
-    startcodons: tuple = ("ATG",),
-    stopcodons: tuple = ("TAG", "TAA", "TGA"),
-    # startcodons: tuple[str, ...] = ("ATG",),
-    # stopcodons: tuple[str, ...] = ("TAG", "TAA", "TGA"),
-):
-    """Overlapping orfs in three frames."""
-    # breakpoint()
-    limit = _ceil(limit / 3) - 1
-    dna = dna.upper()
+def location_boundaries(loc: _Union[_sl, _cl]):
+    if loc.strand == -1:
+        return loc.parts[-1].start, loc.parts[0].end
+    else:
+        return loc.parts[0].start, loc.parts[-1].end
 
-    orfs = []
 
-    for frame in (0, 1, 2):
+def locations_overlap(loc1: _Union[_sl, _cl], loc2: _Union[_sl, _cl], seq_len):
+    start1, end1 = location_boundaries(loc1)
+    start2, end2 = location_boundaries(loc2)
 
-        codons = [dna[i : i + 3] for i in range(frame, len(dna), 3)]
+    boundaries1 = [(start1, end1)]
+    boundaries2 = [(start2, end2)]
 
-        startdindices = [i for i, cd in enumerate(codons) if cd in startcodons]
-        stopdindices = [i for i, cd in enumerate(codons) if cd in stopcodons]
+    if start1 > end1:
+        boundaries1 = [
+            [start1, end1 + seq_len],
+            [start1 - seq_len, end1],
+        ]
+    if start2 > end2:
+        boundaries2 = [
+            [start2, end2 + seq_len],
+            [start2 - seq_len, end2],
+        ]
 
-        for startindex in startdindices:
-            try:
-                stopindex = stopdindices[_bisect(stopdindices, startindex)]
-            except IndexError:
-                pass
-            else:
-                if stopindex - startindex >= limit:
-                    orfs.append((frame, startindex * 3 + frame, (stopindex + 1) * 3 + frame))
-                # print(stopindex, startindex, limit)
-    return orfs
+    for b1, b2 in _itertools.product(boundaries1, boundaries2):
+        if b1[0] < b2[1] and b1[1] > b2[0]:
+            return True
+
+    return False
 
 
 def shift_location(original_location, shift, lim):
     """docstring."""
-    newparts = []
+
     strand = original_location.strand
     if lim is None:
         if min(original_location) + shift < 0:
             raise ValueError("Shift moves location below zero, use a `lim` to loop around if sequence is circular.")
         lim = _sys.maxsize
+
+    newparts = []
 
     for part in original_location.parts:
         new_start = (part.start + shift) % lim
@@ -136,13 +821,26 @@ def shift_location(original_location, shift, lim):
     return newloc
 
 
-# def shift_feature(feature, shift, lim):
-#     """Return a new feature with shifted location."""
-#     # TODO: Missing tests
-#     new_location = shift_location(feature.location, shift, lim)
-#     new_feature = _deepcopy(feature)
-#     new_feature.location = new_location
-#     return new_feature
+def unfold_location(location, length):
+    newparts = []
+    for k, (i, j) in enumerate(_itertools.pairwise(location.parts)):
+        if i.strand != -1 and i.end == length and j.start == 0:
+            edge = [_sl(i.start, j.end + length, 1)]
+            newparts = location.parts[:k] + edge + [p + length for p in location.parts[k + 2 :]]
+            break
+        elif i.strand == -1 and i.start == 0 and j.end == length:
+            edge = [_sl(j.start, i.end + length, -1)]
+            newparts = [p + length for p in location.parts[:k]] + edge + location.parts[k + 2 :]
+            break
+        elif i.strand != -1 and i.end > j.start:
+            newparts = location.parts[:k] + [i, j + length] + [p + length for p in location.parts[k + 2 :]]
+            break
+        elif i.strand == -1 and i.end > j.start:
+            newparts = [p + length for p in location.parts[:k]] + [i, j + length] + location.parts[k + 2 :]
+            break
+    else:
+        newparts = location.parts
+    return sum(newparts)
 
 
 def shift_feature(feature, shift, lim):
@@ -152,6 +850,47 @@ def shift_feature(feature, shift, lim):
     new_feature = _deepcopy(feature)
     new_feature.location = new_location
     return new_feature
+
+
+def unfold_feature(feature, length):
+    new_location = unfold_location(feature.location, length)
+    new_feature = _deepcopy(feature)
+    new_feature.location = new_location
+    return new_feature
+
+
+def three_frame_orfs(
+    dna: str,
+    limit: int = 100,
+    startcodons: tuple = ("ATG",),
+    stopcodons: tuple = ("TAG", "TAA", "TGA"),
+    # startcodons: tuple[str, ...] = ("ATG",),
+    # stopcodons: tuple[str, ...] = ("TAG", "TAA", "TGA"),
+):
+    """Overlapping orfs in three frames."""
+    # breakpoint()
+    limit = _ceil(limit / 3) - 1
+    dna = dna.upper()
+
+    orfs = []
+
+    for frame in (0, 1, 2):
+
+        codons = [dna[i : i + 3] for i in range(frame, len(dna), 3)]
+
+        startdindices = [i for i, cd in enumerate(codons) if cd in startcodons]
+        stopdindices = [i for i, cd in enumerate(codons) if cd in stopcodons]
+
+        for startindex in startdindices:
+            try:
+                stopindex = stopdindices[_bisect(stopdindices, startindex)]
+            except IndexError:
+                pass
+            else:
+                if stopindex - startindex >= limit:
+                    orfs.append((frame, startindex * 3 + frame, (stopindex + 1) * 3 + frame))
+                # print(stopindex, startindex, limit)
+    return orfs
 
 
 # def smallest_rotation(s):
@@ -213,6 +952,50 @@ def smallest_rotation(s):
 
     k = min_rotation(bytes(s, "ascii"))
     return s[k:] + s[:k]
+
+
+# def common_prefix_length(str1: str, str2: str) -> int:
+#     """
+#     The length of the common prefix shared by two strings.
+
+#     Args:
+#         str1 (str): The first string.
+#         str2 (str): The second string.
+
+#     Returns:
+#         int: The length of the common prefix.
+#     """
+#     # Find the minimum length of the two strings
+#     min_length = min(len(str1), len(str2))
+
+#     # Use binary search to find the length of the common prefix
+#     low, high = 0, min_length
+
+#     while low < high:
+#         mid = (low + high + 1) // 2
+#         if str1[:mid] == str2[:mid]:
+#             low = mid  # Try a longer prefix
+#         else:
+#             high = mid - 1  # Reduce the length
+
+#     return low
+
+
+def anneal_from_left(watson: str, crick: str) -> int:
+    """
+    The length of the common prefix shared by two strings.
+
+    Args:
+        str1 (str): The first string.
+        str2 (str): The second string.
+
+    Returns:
+        int: The length of the common prefix.
+    """
+
+    result = len(list(_itertools.takewhile(lambda x: bp_dict_str.get((x[0], x[1])), zip(watson, crick[::-1]))))
+
+    return result
 
 
 def cai(seq: str, organism: str = "sce", weights: dict = _weights):
@@ -715,38 +1498,6 @@ def cuts_overlap(left_cut, right_cut, seq_len):
     x = sorted([left_watson, left_crick])
     y = sorted([right_watson, right_crick])
     return (x[1] > y[0]) != (y[1] < x[0])
-
-
-def location_boundaries(loc: _Union[_sl, _cl]):
-    if loc.strand == -1:
-        return loc.parts[-1].start, loc.parts[0].end
-    else:
-        return loc.parts[0].start, loc.parts[-1].end
-
-
-def locations_overlap(loc1: _Union[_sl, _cl], loc2: _Union[_sl, _cl], seq_len):
-    start1, end1 = location_boundaries(loc1)
-    start2, end2 = location_boundaries(loc2)
-
-    boundaries1 = [(start1, end1)]
-    boundaries2 = [(start2, end2)]
-
-    if start1 > end1:
-        boundaries1 = [
-            [start1, end1 + seq_len],
-            [start1 - seq_len, end1],
-        ]
-    if start2 > end2:
-        boundaries2 = [
-            [start2, end2 + seq_len],
-            [start2 - seq_len, end2],
-        ]
-
-    for b1, b2 in _itertools.product(boundaries1, boundaries2):
-        if b1[0] < b2[1] and b1[1] > b2[0]:
-            return True
-
-    return False
 
 
 if __name__ == "__main__":

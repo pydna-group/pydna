@@ -22,8 +22,8 @@ def test_extract_from_text():
     from pydna.parsers import extract_from_text
 
     seqs, gaps = extract_from_text(text)
-    assert seqs == ('>a\naaaa\n', 'LOCUS\n//', '>b\nbbbbbb\n', 'ID\n//')
-    assert [g.strip() for g in gaps] == ['', '', '', '', '']
+    assert seqs == (">a\naaaa\n", "LOCUS\n//", ">b\nbbbbbb\n", "ID\n//")
+    assert [g.strip() for g in gaps] == ["", "", "", "", ""]
     text = """\
     comment 0
     LOCUS a
@@ -43,8 +43,8 @@ def test_extract_from_text():
     comment 4
     """
     seqs, gaps = extract_from_text(text)
-    assert seqs == ('LOCUS a\n//', 'LOCUS b\n//', '>c\nccccc', '>ddd\ndddddd\n', 'ID e\n//')
-    assert tuple(g.strip() for g in gaps) == ('comment 0', 'comment 1', 'comment 2', 'comment 3', '', 'comment 4')
+    assert seqs == ("LOCUS a\n//", "LOCUS b\n//", ">c\nccccc", ">ddd\ndddddd\n", "ID e\n//")
+    assert tuple(g.strip() for g in gaps) == ("comment 0", "comment 1", "comment 2", "comment 3", "", "comment 4")
 
     from pydna.parsers import embl_gb_fasta
 
@@ -88,7 +88,7 @@ def test_extract_from_text():
 
     a, c, t, g = embl_gb_fasta(text)
 
-    assert [x.annotations.get("topology") for x in (a, c, g, t)] == ['linear', 'linear', 'linear', 'linear']
+    assert [x.annotations.get("topology") for x in (a, c, g, t)] == ["linear", "linear", "linear", "linear"]
 
     text = """\
             >a circular
@@ -103,7 +103,7 @@ def test_extract_from_text():
 
     a, c, t, g = embl_gb_fasta(text)
 
-    assert [x.annotations.get("topology") for x in (a, c, g, t)] == ['circular', 'circular', 'circular', 'circular']
+    assert [x.annotations.get("topology") for x in (a, c, g, t)] == ["circular", "circular", "circular", "circular"]
 
 
 def test_parse1():
@@ -255,8 +255,8 @@ def test_parse_primers():
                              >ReversePrimer
                              tgtggttactgactctatcttg"""
     )
-    assert str(f0.seq) == 'gctactacacacgtactgactg'
-    assert str(r0.seq) == 'tgtggttactgactctatcttg'
+    assert str(f0.seq) == "gctactacacacgtactgactg"
+    assert str(r0.seq) == "tgtggttactgactctatcttg"
 
 
 def test_parse_error():
@@ -274,7 +274,7 @@ def test_parse_list():
 
     data = str(">1\n" "aaaa\n" ">2\n" "cccc\n")
 
-    assert [str(x.seq) for x in parse_primers([data, data])] == ['aaaa', 'cccc', 'aaaa', 'cccc']
+    assert [str(x.seq) for x in parse_primers([data, data])] == ["aaaa", "cccc", "aaaa", "cccc"]
 
 
 def test_misc_parse():

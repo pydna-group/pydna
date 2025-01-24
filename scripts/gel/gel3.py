@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 # Notice the 'from PIL' at the start of the line

@@ -16,14 +16,26 @@ def test_cut_feat():
     from Bio.Restriction import EcoRI
 
     puc19 = read("pUC19_MarkBudde.gb")
+
     assert len(puc19.features) == 19
     puc_lin = puc19[:]
     assert len(puc_lin.features) == 19
+
     ampl = primer_design(puc_lin)
     pf, pr = ampl.forward_primer, ampl.reverse_primer
+
+    # pf
+    # Out[3]: f2686 13-mer:5'-TCGCGCGTTTCGG-3'
+    # pr
+    # Out[4]: r2686 15-mer:5'-GACGAAAGGGCCTCG-3'
+
     pcrProd = pcr(pf, pr, puc19)
     assert len(pcrProd.features) == 21
     assert len(pcrProd.cut(EcoRI)[1].features) == 16
+
+    # from pydna.editor import ape
+    # ape(pcrProd)
+    # ape(puc_lin)
 
     def amplicon_to_dseqrecord(a):
         d = Dseqrecord(a.seq)

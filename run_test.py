@@ -77,3 +77,5 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+
+# pytest src tests --cov=pydna --cov-append --cov-report=html --cov-report=xml --capture=no --durations=10 --nbval --current-env --doctest-modules -vvv --profile

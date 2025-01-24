@@ -7,7 +7,15 @@ test parse
 import pytest
 from pydna.dseqrecord import Dseqrecord
 from pydna.parsers import parse, parse_primers
-from pydna.amplify import pcr, Anneal
+from pydna.amplify import pcr, Anneal, _annealing_positions
+
+
+def test_annealing_positions():
+    primer = "GTGATAtgtggttactgactctatcttg"
+    template = "gctactacacacgtactgactgcctccaagatagagtcagtaaccacactcgatag"
+
+    assert _annealing_positions(primer, template, limit=15) == [(26, 22)]
+    assert _annealing_positions(primer, template[26:], limit=15) == [(0, 22)]
 
 
 def test_set_primer_footprint():
@@ -614,6 +622,7 @@ def test_pcr():
     )
 
     for key, tst in enumerate(raw):
+        # pass
         # print(tst[0], pcr(tst[1:]).seguid(), tst[0] in pcr(tst[1:]).seguid())
         assert tst[0] in pcr(tst[1:]).seguid()
 

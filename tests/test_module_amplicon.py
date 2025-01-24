@@ -6,6 +6,7 @@ def test_amplicon():
     from pydna.amplify import Anneal
     from pydna.dseqrecord import Dseqrecord
     from pydna.primer import Primer
+    import textwrap
 
     template = Dseqrecord("AAAtacactcaccgtctatcattatctactatcgactgtatcatctgatagcacTTT")
 
@@ -15,6 +16,13 @@ def test_amplicon():
     ann = Anneal((p1, p2), template)
 
     prod = ann.products[0]
+
+    assert str(prod.seq) == str(("CCC" + template[3:-3] + "CCC").seq)
+
+    assert prod.forward_primer.seq == p1.seq
+    assert prod.reverse_primer.seq == p2.seq
+
+    prod.forward_primer.__dict__
 
     assert repr(prod) == "Amplicon(57)"
 
@@ -26,7 +34,7 @@ def test_amplicon():
 
     prod._repr_pretty_(pp, None)
 
-    # assert pp.text.assert_called_with('Amplicon(57)')
+    pp.text.assert_called_with("Amplicon(57)")
 
     fig = """\
        5tacactcaccgtctatcattatc...cgactgtatcatctgatagcac3
@@ -36,15 +44,15 @@ def test_amplicon():
         |||||||||||||||||||||||
        3atgtgagtggcagatagtaatag...gctgacatagtagactatcgtg5"""
 
+    assert prod.figure() == textwrap.dedent(fig)
+
     ctemplate = template.looped()
     cann = Anneal((p1, p2), ctemplate)
 
     cprod = cann.products[0]
     assert repr(cprod) == "Amplicon(57)"
 
-    import textwrap
-
-    assert prod.figure() == cprod.figure() == textwrap.dedent(fig)
+    assert cprod.figure() == textwrap.dedent(fig)
 
     # assert prod.program() == prod.taq_program()
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from pydna.design import primer_design
 from pydna.dseqrecord import Dseqrecord
 

@@ -25,6 +25,8 @@ class _cas(ABC):
     size = 0
     fst5 = 0
     fst3 = 0
+    scd5 = None
+    ovhg = None
 
     def __init__(self, protospacer):
         self.protospacer = protospacer.upper()
@@ -32,6 +34,16 @@ class _cas(ABC):
             f"(?=(?P<watson>{self.protospacer}{self.pam}))|(?=(?P<crick>{rc(self.pam)}{rc(self.protospacer)}))",
             re.UNICODE,
         )
+
+    @abstractmethod
+    def is_5overhang(self):
+        """To override in subclass."""
+        pass
+
+    @abstractmethod
+    def is_3overhang(self):
+        """To override in subclass."""
+        pass
 
     @abstractmethod
     def search(self, dna, linear=True):
@@ -52,54 +64,70 @@ class cas9(_cas):
 
     .. code-block::
 
-            |----size----------|
+            ----size-------------
 
-            ---protospacer------
-                            -fst3
-            fst5             |-|
-            |--------------|
-                                PAM
+       fst5 ===protospacer===-=== fst3
+                                     ___PAM
+                                 ___/
         5-NNGGAAGAGTAATACACTA-AAANGGNN-3
-        ||||||||||||||||||| ||||||||
+          ||||||||||||||||||| ||||||||
         3-NNCCTTCTCATTATGTGAT-TTTNCCNN-5
             ||||||||||||||||| |||
-        5-GGAAGAGTAATACACTA-AAAg-u-a-a-g-g  Scaffold
-            ---gRNA spacer---    u-a
-                                u-a
-                                u-a
-                                u-a
-                                a-u
-                                g-u-g
-                                a    a
-                                g-c-a
-                                c-g
-                                u-a
-                                a-u
-                                g   a  tetraloop
-                                a-a
+          5-GGAAGAGTAATACACTA-AAAg-u-a-a-g-g  Scaffold
+                                 u-a
+                                 u-a
+                                 u-a
+                                 u-a
+                                 a-u
+                                 g-u-g
+                                 a    a
+                                 g-c-a
+                                 c-g
+                                 u-a
+                                 a-u
+                                 g   a  tetraloop
+                                 a-a
     """
 
+    spacer = "N" * 20
     scaffold = "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGG"
     pam = ".GG"
-    size = 20
+    size = len(spacer) + len(pam)
     fst5 = 17
-    fst3 = -3
+    fst3 = -6
+    scd3 = None
+    scd5 = None
     ovhg = fst5 - (size + fst3)
+
+    def is_5overhang(self):
+        """docstring."""
+        return False
+
+    def is_3overhang(self):
+        """docstring."""
+        return False
 
     def search(self, dna, linear=True):
         """docstring."""
-        dna = str(dna).upper()
+        try:
+            dna = str(dna.seq).upper()
+        except AttributeError:
+            dna = str(dna).upper()
+
         if linear:
             dna = dna
         else:
             dna = dna + dna[1 : self.size]
+
         results = []
+
         for mobj in self.compsite.finditer(dna):
             w, c = mobj.groups()
             if w:
-                results.append(mobj.start("watson") + 1 + self.fst5)
+                results.append(mobj.start("watson") + self.fst5)
             if c:
-                results.append(mobj.start("crick") + len(self.pam) + 1 - self.fst3)
+                results.append(mobj.start("crick") - self.fst3)
+
         return results
 
     def __str__(self):
@@ -111,11 +139,13 @@ def protospacer(guide_construct, cas=cas9):
     """docstring."""
     in_watson = [
         mobj.group("ps")
-        for mobj in re.finditer(f"(?P<ps>.{{{cas.size}}})(?:{cas.scaffold})", str(guide_construct.seq).upper())
+        for mobj in re.finditer(f"(?P<ps>.{{{len(cas.spacer)}}})(?:{cas.scaffold})", str(guide_construct.seq).upper())
     ]
     in_crick = [
         rc(mobj.group("ps"))
-        for mobj in re.finditer(f"(?:{rc(cas.scaffold)})(?P<ps>.{{{cas.size}}})", str(guide_construct.seq).upper())
+        for mobj in re.finditer(
+            f"(?:{rc(cas.scaffold)})(?P<ps>.{{{len(cas.spacer)}}})", str(guide_construct.seq).upper()
+        )
     ]
     return in_watson + in_crick
 

@@ -2,7 +2,7 @@ genocad.com seems still down
 
 But I managed to download the supplementary files from the [paper](https://www.ncbi.nlm.nih.gov/pubmed/25925571).
 
-I put them [here](https://github.com/BjornFJohansson/pydna/tree/py3dev/scripts/files_for_annotation_function) 
+I put them [here](https://github.com/BjornFJohansson/pydna/tree/py3dev/scripts/files_for_annotation_function)
 
 A number of sbol files seems to hold most or all of the data:
 
@@ -46,12 +46,12 @@ Which seems to contain all that is necessary for describing a feature.
 These files could provide a way to store pydna features, but what is the best way to use them.
 
 A simple way would be to use a [sbol parser](https://pypi.python.org/pypi?%3Aaction=search&term=sbol&submit=search)
-and parse into Biopython SeqFeature objects and strings and then use some algorithm to match all features against 
+and parse into Biopython SeqFeature objects and strings and then use some algorithm to match all features against
 a sequence, probably with a new method for the Dseqrecord class.
 
 It might be overkill to pull in pySBOL as a dependecy for this as this is a wrapper around libSBOL which is C++.
 
-There is snekbol which is pure python https://github.com/tjomasc/snekbol 
+There is snekbol which is pure python https://github.com/tjomasc/snekbol
 
 `
 (bjorn3) bjorn@bjorn-ThinkPad-T450s:~$ pip install snekbol
@@ -59,10 +59,10 @@ Collecting snekbol
   Downloading snekbol-0.1.2.tar.gz
 Collecting lxml==3.7.3 (from snekbol)
   Downloading lxml-3.7.3-cp35-cp35m-manylinux1_x86_64.whl (7.1MB)
-    100% |████████████████████████████████| 7.1MB 220kB/s 
+    100% |████████████████████████████████| 7.1MB 220kB/s
 Collecting rdflib==4.2.2 (from snekbol)
   Downloading rdflib-4.2.2-py3-none-any.whl (344kB)
-    100% |████████████████████████████████| 348kB 3.4MB/s 
+    100% |████████████████████████████████| 348kB 3.4MB/s
 Collecting validators==0.11.2 (from snekbol)
   Downloading validators-0.11.2.tar.gz
 Collecting isodate (from rdflib==4.2.2->snekbol)
@@ -81,12 +81,3 @@ Installing collected packages: lxml, isodate, rdflib, validators, snekbol
 Successfully installed isodate-0.5.4 lxml-3.7.3 rdflib-4.2.2 snekbol-0.1.2 validators-0.11.2
 (bjorn3) bjorn@bjorn-ThinkPad-T450s:~$
 `
-
- 
-
-
-
-
-
-
-

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Lyndon.py
 Algorithms on strings and sequences based on Lyndon words.
 David Eppstein, October 2011."""
