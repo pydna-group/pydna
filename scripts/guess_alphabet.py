@@ -32,9 +32,7 @@ def guess_alphabet(sequence):
     else:
         if not isinstance(sequence, str):
             warnings.warn(
-                ("Input is {}, expected string, " "unicode string, Seq or SeqRecord " "objects!").format(
-                    type(sequence)
-                )
+                ("Input is {}, expected string, " "unicode string, Seq or SeqRecord " "objects!").format(type(sequence))
             )
         sequence = str(sequence)
 
