@@ -51,7 +51,7 @@ jobs:
         uses: snok/install-poetry@v1
         with:
           virtualenvs.prefer-active-python: true
-
+          version: ${{ matrix.python-version == '3.8' && '1.8.2' || 'latest' }}
       - name: 🔩 list Poetry settings
         run: poetry config --list
 
