@@ -17,7 +17,7 @@ def test_orfs():
     )
 
     lens = (1581, 1521, 1494, 1185, 1002)
-    for orf, ln in zip(s.orfs(1002), lens, strict=True):
+    for orf, ln in zip(s.orfs(1002), lens):
         assert len(orf) == ln
 
 
@@ -118,7 +118,7 @@ def test_initialization():
 
     circular = [True, True, False, False]
 
-    for b, ci in zip(a, circular, strict=True):
+    for b, ci in zip(a, circular):
         assert isinstance(b.seq, Dseq)
         assert str(b.seq.watson) == "attt"
         assert str(b.seq.crick) == "aaat"
