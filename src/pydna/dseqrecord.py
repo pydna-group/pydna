@@ -514,21 +514,25 @@ class Dseqrecord(_SeqRecord):
         name, ext = _os.path.splitext(filename)
         msg = f"<font face=monospace><a href='{filename}' target='_blank'>{filename}</a></font><br>"
         if _os.path.isfile(filename):
+            # The filename alread exists in current directory
+            # We assume it contains a sequence
             from pydna.readers import read
-
             old = read(filename)
             if self == old:
                 # The sequence object to be saved is identical to the on disk.
                 # Nothing needs to be saved.
                 return _display_html(msg, raw=True)
-            elif self.seq != old.seq:
+            elif self.seq.lower() != old.seq.lower():
                 # If new sequence is different from the old.
                 # old file is renamed with "_OLD_timestamp" suffix.
                 # new file is saved.
+
                 oldmtime = _datetime.datetime.fromtimestamp(_os.path.getmtime(filename)).isoformat()
                 tstmp = int(_time.time() * 1_000_000)
-                old_filename = f"{name}_OLD_{tstmp}{ext}"
-                _os.rename(filename, old_filename)
+                new_filename_for_old = f"{name}_OLD_{tstmp}{ext}"
+                _os.rename(filename, new_filename_for_old)
+                with open(filename, "w", encoding="utf8") as fp:
+                    fp.write(self.format(f))
                 newmtime = _datetime.datetime.fromtimestamp(_os.path.getmtime(filename)).isoformat()
                 msg = f"""
                 <table style="padding:10px 10px;
@@ -551,7 +555,7 @@ class Dseqrecord(_SeqRecord):
                   <tr style="color:#0000FF;border: 1px solid;text-align:left;">
                     <td>Filename</td>
                     <td style="color:#fe0000;border: 1px solid;text-align:left;"><a href='{filename}' target='_blank'>{filename}</a></td>
-                    <td style="color:#32cb00;border: 1px solid;text-align:left;"><a href='{old_filename}' target='_blank'>{old_filename}</a></td>
+                    <td style="color:#32cb00;border: 1px solid;text-align:left;"><a href='{new_filename_for_old}' target='_blank'>{new_filename_for_old}</a></td>
                   </tr>
                   <tr style="color:#0000FF;border: 1px solid;text-align:left;">
                     <td >Saved</td>
@@ -588,7 +592,7 @@ class Dseqrecord(_SeqRecord):
 
                 oldstamps = {m[2]: m[0] for m in _re.findall(pattern, oldcomments)}  # Get all stamps from oldfile.
                 newstamps = {m[2]: m[0] for m in _re.findall(pattern, newcomments)}  # Get all stamps from current.
-                # breakpoint()
+
                 newstamps.update(oldstamps)
 
                 stamplist = []
@@ -1334,28 +1338,20 @@ class Dseqrecord(_SeqRecord):
 
 
 if __name__ == "__main__":
-    # cache = _os.getenv("pydna_cache")
-    # _os.environ["pydna_cache"] = "nocache"
-    # import doctest
+    cache = _os.getenv("pydna_cache")
+    _os.environ["pydna_cache"] = "nocache"
+    import doctest
 
-    # doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    # # _os.environ["pydna_cache"] = cache
+    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
+    # _os.environ["pydna_cache"] = cache
 
-    from Bio.Restriction import Acc65I, BamHI
+    # import os
 
-    b = Dseqrecord("TACCTTTGGATCCGGGAAAGG", circular=True)
+    # a = Dseqrecord("aaa")
+    # b = Dseqrecord("aat")
 
-    b.features = [
-        _SeqFeature(_SimpleLocation(20, 21, 1) + _SimpleLocation(0, 12, 1)),
-        _SeqFeature(_SimpleLocation(12, 20, 1)),
-    ]
+    # os.remove("file_written_from_notebook.gb")
 
-    b = b.shifted(23)  # 9
+    # a.write("file_written_from_notebook.gb")
 
-    bb, ins = b.cut(Acc65I, BamHI)
-
-    # bb,ins = ins,bb
-
-    assert bb.features[0].extract(bb).seq == _Dseq("CGGGAAAG")
-
-    assert ins.features[0].extract(ins).seq == _Dseq("PXEICTTTGQFZJ")
+    # b.write("file_written_from_notebook.gb")
