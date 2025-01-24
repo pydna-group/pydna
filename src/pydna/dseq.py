@@ -1479,11 +1479,6 @@ class Dseq(_Seq):
         enz = cutsite[1]
         watson, crick, ovhg = self.get_cut_parameters(cutsite, True)
 
-        # The cut positions fall within the sequence
-        # This could go into Biopython
-        if not self.circular and crick < 0 or crick > len(self):
-            return False
-
         # The overhang is double stranded
         overhang_dseq = self[watson:crick] if ovhg < 0 else self[crick:watson]
         if overhang_dseq.ovhg != 0 or overhang_dseq.watson_ovhg() != 0:

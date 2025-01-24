@@ -116,16 +116,16 @@ def test_initialization():
 
     obj2 = Dseq("gata")
 
-    assert obj2.circular == False
+    assert not obj2.circular
 
-    l = Dseq("gt")
-    c = l.looped()
+    lin_seq = Dseq("gt")
+    cir_seq = lin_seq.looped()
 
-    assert not l.circular
-    assert c.circular
+    assert not lin_seq.circular
+    assert cir_seq.circular
 
-    assert Dseq("gt", circular=False) == l
-    assert Dseq("gt", circular=True) == c
+    assert Dseq("gt", circular=False) == lin_seq
+    assert Dseq("gt", circular=True) == cir_seq
 
     assert Dseq.from_string("A") == Dseq("A")
     assert Dseq.from_string("A", circular=True) == Dseq("A", circular=True)
@@ -218,7 +218,7 @@ def test_Dseq_cutting_adding():
         ovhg=0,
     )
 
-    f, d, l = c.cut((EcoRI, PstI))
+    f, d, _ = c.cut((EcoRI, PstI))
 
     assert d.watson == "GtcatctactatcatcgtagcgtactgatctattctgctgctcatcatcggtactctctataattatatatatatgcgcgtG"
     assert d.crick == "AATTCacgcgcatatatatataattatagagagtaccgatgatgagcagcagaatagatcagtacgctacgatgatagtagatgaCTGCA"
@@ -554,11 +554,6 @@ def test_dseq():
 
 def test_Dseq_slicing():
     from pydna.dseq import Dseq
-    from pydna.readers import read
-    from pydna.utils import eq
-
-    from Bio.Seq import Seq
-    from Bio.SeqRecord import SeqRecord as Srec
     from Bio.Restriction import BamHI
 
     a = Dseq("ggatcc", "ggatcc", 0)
@@ -947,7 +942,7 @@ def test_apply_cut():
 def test_cutsite_is_valid():
 
     from pydna.dseq import Dseq
-    from Bio.Restriction import EcoRI, BsaI, PacI, NmeDI, Acc65I, NotI, BamHI, EcoRV
+    from Bio.Restriction import EcoRI, PacI, NmeDI, EcoRV
 
     # Works for circular case
     seqs = ["GAATTC", "TTAATTAAC", "GATATC"]
@@ -977,7 +972,7 @@ def test_cutsite_is_valid():
                 assert len(dseq.get_cutsites([enz])) == 1
 
     # Special cases:
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAAAAAAAAAGCCGGCAAAAAAAAAAAA", 0, 0)
+    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 0, 0)
     assert len(dseq.get_cutsites([NmeDI])) == 2
     # Remove left cutting place
     assert len(dseq[2:].get_cutsites([NmeDI])) == 1
@@ -987,27 +982,27 @@ def test_cutsite_is_valid():
     assert len(dseq[2:-2].get_cutsites([NmeDI])) == 0
 
     # overhang left side
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAAAAAAAAAGCCGGCAAAAAAAAAAAA", -2, 0)
+    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", -2, 0)
     assert len(dseq.get_cutsites([NmeDI])) == 1
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAAAAAAAAAGCCGGCAAAAAAAAAAAA", 2, 0)
+    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 2, 0)
     assert len(dseq.get_cutsites([NmeDI])) == 1
 
     # overhang right side
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAAAAAAAAAGCCGGCAAAAAAAAAAAA", 0, 2)
+    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 0, 2)
     assert len(dseq.get_cutsites([NmeDI])) == 1
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAAAAAAAAAGCCGGCAAAAAAAAAAAA", 0, -2)
+    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 0, -2)
     assert len(dseq.get_cutsites([NmeDI])) == 1
 
     # overhang both sides
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAAAAAAAAAGCCGGCAAAAAAAAAAAA", 2, 2)
+    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 2, 2)
     assert len(dseq.get_cutsites([NmeDI])) == 0
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAAAAAAAAAGCCGGCAAAAAAAAAAAA", -2, -2)
+    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", -2, -2)
     assert len(dseq.get_cutsites([NmeDI])) == 0
 
     # overhang on recognition site removes both cutting places
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAAAAAAAAAGCCGGCAAAAAAAAAAAA", 16, 0)
+    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 16, 0)
     assert len(dseq.get_cutsites([NmeDI])) == 0
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAAAAAAAAAGCCGGCAAAAAAAAAAAA", 0, 16)
+    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 0, 16)
     assert len(dseq.get_cutsites([NmeDI])) == 0
 
 
