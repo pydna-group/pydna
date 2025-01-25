@@ -20,7 +20,7 @@ repos:
   rev: 24.2.0
   hooks:
   - id: black
- Further linting (e.g. module imported but not used)
+# Further linting (e.g. module imported but not used)
 - repo: https://github.com/PyCQA/flake8
   rev: 7.1.1
   hooks:
