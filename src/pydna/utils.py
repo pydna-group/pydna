@@ -1487,29 +1487,37 @@ def eq(*args, **kwargs):
 #         return loc.parts[0].start, loc.parts[-1].end
 
 
-def cuts_overlap(left_cut, right_cut, seq_len):
-    # Special cases:
-    if left_cut is None or right_cut is None or left_cut == right_cut:
-        return False
+# def cuts_overlap(left_cut, right_cut, seq_len):
+#     # Special cases:
+#     if left_cut is None or right_cut is None or left_cut == right_cut:
+#         return False
 
-    # This block of code would not be necessary if the cuts were
-    # initially represented like this
-    (left_watson, left_ovhg), _ = left_cut
-    (right_watson, right_ovhg), _ = right_cut
-    # Position of the cut on the crick strands on the left and right
-    left_crick = left_watson - left_ovhg
-    right_crick = right_watson - right_ovhg
-    if left_crick >= seq_len:
-        left_crick -= seq_len
-        left_watson -= seq_len
-    if right_crick >= seq_len:
-        right_crick -= seq_len
-        right_watson -= seq_len
+#     # This block of code would not be necessary if the cuts were
+#     # initially represented like this
+#     (left_watson, left_ovhg), _ = left_cut
+#     (right_watson, right_ovhg), _ = right_cut
+#     # Position of the cut on the crick strands on the left and right
+#     left_crick = left_watson - left_ovhg
+#     right_crick = right_watson - right_ovhg
+#     if left_crick >= seq_len:
+#         left_crick -= seq_len
+#         left_watson -= seq_len
+#     if right_crick >= seq_len:
+#         right_crick -= seq_len
+#         right_watson -= seq_len
 
-    # Convert into ranges x and y and see if ranges overlap
-    x = sorted([left_watson, left_crick])
-    y = sorted([right_watson, right_crick])
-    return (x[1] > y[0]) != (y[1] < x[0])
+#     # Convert into ranges x and y and see if ranges overlap
+#     x = sorted([left_watson, left_crick])
+#     y = sorted([right_watson, right_crick])
+#     return (x[1] > y[0]) != (y[1] < x[0])
+
+def cuts_overlap(cutsites):
+
+    srt_pos = [(tuple(sorted((ep.position, ep.position - ep.enzyme.ovhg))), ep) for ep in cutsites]
+
+    combs = {(ep1.enzyme, x, ep2.enzyme, y): (x[1] > y[0]) != (y[1] < x[0]) for ((x, ep1), (y, ep2)) in _itertools.combinations(srt_pos, 2)}
+
+    return [comb for comb, val in combs.items() if val]
 
 
 if __name__ == "__main__":

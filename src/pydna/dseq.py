@@ -32,7 +32,7 @@ from pydna.utils import shift_location as _sl
 from pydna.utils import rc as _rc
 from pydna.utils import flatten as _flatten
 
-# from pydna.utils import cuts_overlap as _cuts_overlap
+from pydna.utils import cuts_overlap as _cuts_overlap
 from pydna.utils import complement as _complement
 from pydna.utils import bp_dict
 from pydna.utils import bp_dict_str
@@ -1409,6 +1409,10 @@ class Dseq(_Seq):
                 return "noenz"
 
         cutsites = self.get_cutsites(*enzymes)
+
+        if overlaps := _cuts_overlap(cutsites):
+            raise ValueError(f"Enzyme pairs with cut overlap: {overlaps}")
+
 
         if not cutsites:
             return tuple(), tuple(), None, None
