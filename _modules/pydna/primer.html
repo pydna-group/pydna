@@ -1,22 +1,22 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pydna.primer &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -85,14 +85,16 @@
 
 <span class="sd">&quot;&quot;&quot;This module provide the Primer class that is a subclass of the biopython SeqRecord.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">pydna.seq</span> <span class="kn">import</span> <span class="n">Seq</span> <span class="k">as</span> <span class="n">_Seq</span>
-<span class="kn">from</span> <span class="nn">pydna.seqrecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span> <span class="k">as</span> <span class="n">_SeqRecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq</span> <span class="k">as</span> <span class="n">_Seq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span> <span class="k">as</span> <span class="n">_SeqRecord</span>
 
 
-<div class="viewcode-block" id="Primer"><a class="viewcode-back" href="../../modules/pydna_primer.html#pydna.primer.Primer">[docs]</a><span class="k">class</span> <span class="nc">Primer</span><span class="p">(</span><span class="n">_SeqRecord</span><span class="p">):</span>
+<div class="viewcode-block" id="Primer">
+<a class="viewcode-back" href="../../modules/pydna_primer.html#pydna.primer.Primer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Primer</span><span class="p">(</span><span class="n">_SeqRecord</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Primer and its position on a template, footprint and tail.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">amplicon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">amplicon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">):</span>  <span class="c1"># Seqrecord</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
@@ -105,22 +107,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_fp</span> <span class="o">=</span> <span class="n">footprint</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">footprint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">footprint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">_fp</span> <span class="p">:]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fp</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">tail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">_fp</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fp</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="nb">min</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">..</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span><span class="mi">15</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])),</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{id}</span><span class="s2"> </span><span class="si">{len}</span><span class="s2">-mer:5&#39;-</span><span class="si">{seq}</span><span class="s2">-3&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">seq</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="n">new</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__radd__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Primer</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_fp</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="s2">&quot;indices&quot;</span><span class="p">):</span>  <span class="c1"># index is a slice</span>
             <span class="n">i1</span><span class="p">,</span> <span class="n">i2</span><span class="p">,</span> <span class="n">i3</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">indices</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
@@ -128,21 +130,25 @@
             <span class="n">result</span><span class="o">.</span><span class="n">_fp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fp</span> <span class="o">-</span> <span class="p">(</span><span class="n">i1</span> <span class="o">-</span> <span class="n">j1</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">i1</span> <span class="o">-</span> <span class="n">j1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
 
-<div class="viewcode-block" id="Primer.reverse_complement"><a class="viewcode-back" href="../../modules/pydna_primer.html#pydna.primer.Primer.reverse_complement">[docs]</a>    <span class="k">def</span> <span class="nf">reverse_complement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Primer.reverse_complement">
+<a class="viewcode-back" href="../../modules/pydna_primer.html#pydna.primer.Primer.reverse_complement">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reverse_complement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the reverse complement of the sequence.&quot;&quot;&quot;</span>
         <span class="n">answer</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">answer</span><span class="o">.</span><span class="n">amplicon</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">answer</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">answer</span><span class="o">.</span><span class="n">_fp</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">answer</span></div></div>
+        <span class="k">return</span> <span class="n">answer</span></div>
+</div>
+
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">os</span> <span class="k">as</span> <span class="nn">_os</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
 
     <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
 
     <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>

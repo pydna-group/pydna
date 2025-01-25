@@ -1,23 +1,23 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Representing sequences in pydna &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -76,7 +76,7 @@
            <div itemprop="articleBody">
              
   <section id="representing-sequences-in-pydna">
-<h1>Representing sequences in pydna<a class="headerlink" href="#representing-sequences-in-pydna" title="Permalink to this heading"></a></h1>
+<h1>Representing sequences in pydna<a class="headerlink" href="#representing-sequences-in-pydna" title="Link to this heading"></a></h1>
 <blockquote>
 <div><p>Visit the full library documentation <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a></p>
 </div></blockquote>
@@ -85,7 +85,7 @@
 </a>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
 <span class="c1"># Install pydna (only when running on Colab)</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
     <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span>
 
@@ -106,10 +106,10 @@
 <div><p>NOTE: The <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> class is a subclass of biopython’s <code class="docutils literal notranslate"><span class="pre">Seq</span></code>, whose documentation can be found <a class="reference external" href="https://biopython.org/wiki/Seq">here</a>. <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> is a subclass of biopython’s <code class="docutils literal notranslate"><span class="pre">SeqRecord</span></code>, whose documentation can be found <a class="reference external" href="https://biopython.org/wiki/SeqRecord">here</a>.</p>
 </div></blockquote>
 <section id="dseq-class">
-<h2>Dseq Class<a class="headerlink" href="#dseq-class" title="Permalink to this heading"></a></h2>
+<h2>Dseq Class<a class="headerlink" href="#dseq-class" title="Link to this heading"></a></h2>
 <p>We can create a <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> object in different ways.</p>
 <p>For a linear sequence without overhangs, we create a <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> object passing a string with the sequence. For example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pydna.dseq</span> <span class="kn">import</span> <span class="n">Dseq</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span>
 <span class="n">my_seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;aatat&quot;</span><span class="p">)</span>
 <span class="n">my_seq</span>
 </pre></div>
@@ -278,9 +278,9 @@ atatt
 </div>
 </section>
 <section id="getitem-repr-and-str-methods">
-<h2><strong>getitem</strong>, <strong>repr</strong>, and  <strong>str</strong> methods<a class="headerlink" href="#getitem-repr-and-str-methods" title="Permalink to this heading"></a></h2>
+<h2><strong>getitem</strong>, <strong>repr</strong>, and  <strong>str</strong> methods<a class="headerlink" href="#getitem-repr-and-str-methods" title="Link to this heading"></a></h2>
 <section id="slicing-sequences-getitem">
-<h3>Slicing sequences (<code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>)<a class="headerlink" href="#slicing-sequences-getitem" title="Permalink to this heading"></a></h3>
+<h3>Slicing sequences (<code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>)<a class="headerlink" href="#slicing-sequences-getitem" title="Link to this heading"></a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> is the method that is called when you use the square brackets <code class="docutils literal notranslate"><span class="pre">[]</span></code> after a python object. Below is an example of the builtin python <code class="docutils literal notranslate"><span class="pre">list</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
 
@@ -333,7 +333,7 @@ atgcaagg
 </pre></div>
 </div>
 <section id="slicing-circular-sequences">
-<h4>Slicing circular sequences<a class="headerlink" href="#slicing-circular-sequences" title="Permalink to this heading"></a></h4>
+<h4>Slicing circular sequences<a class="headerlink" href="#slicing-circular-sequences" title="Link to this heading"></a></h4>
 <p>When slicing circular <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> objects we get linear sequences.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circular_seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;aatctaa&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">circular_seq</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
@@ -356,9 +356,9 @@ tttt
 </section>
 </section>
 <section id="printing-sequences-to-the-console-repr-and-str">
-<h3>Printing sequences to the console: <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> and <code class="docutils literal notranslate"><span class="pre">__str__</span></code><a class="headerlink" href="#printing-sequences-to-the-console-repr-and-str" title="Permalink to this heading"></a></h3>
+<h3>Printing sequences to the console: <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> and <code class="docutils literal notranslate"><span class="pre">__str__</span></code><a class="headerlink" href="#printing-sequences-to-the-console-repr-and-str" title="Link to this heading"></a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">__repr__</span></code> and <code class="docutils literal notranslate"><span class="pre">__str__</span></code> are methods present in all python classes that return a string representation of an object. <code class="docutils literal notranslate"><span class="pre">__str__</span></code> is called by the <code class="docutils literal notranslate"><span class="pre">print</span></code> function, and <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> is used by the console or notebook output when the object is not assigned to a variable. Below is an example with a <code class="docutils literal notranslate"><span class="pre">date</span></code> object:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 
 <span class="n">my_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2023</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
 
@@ -409,7 +409,7 @@ aaatta
 </section>
 </section>
 <section id="edge-cases">
-<h2>Edge cases<a class="headerlink" href="#edge-cases" title="Permalink to this heading"></a></h2>
+<h2>Edge cases<a class="headerlink" href="#edge-cases" title="Link to this heading"></a></h2>
 <p>You can create arbitrary double-stranded sequences that are not complementary if you specify both strands and an overhang, but you won’t be able to use them for molecular biology simulations. For example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;xxxx&quot;</span><span class="p">,</span> <span class="s2">&quot;atat&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>

@@ -1,22 +1,22 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pydna &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -209,15 +209,15 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<span class="kn">from</span> <span class="nn">pydna.utils</span> <span class="kn">import</span> <span class="n">open_folder</span> <span class="k">as</span> <span class="n">_open_folder</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span> <span class="k">as</span> <span class="n">_Path</span>
-<span class="kn">import</span> <span class="nn">os</span> <span class="k">as</span> <span class="nn">_os</span>
-<span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">_logging</span>
-<span class="kn">import</span> <span class="nn">logging.handlers</span> <span class="k">as</span> <span class="nn">_handlers</span>
-<span class="kn">import</span> <span class="nn">appdirs</span> <span class="k">as</span> <span class="nn">_appdirs</span>
-<span class="kn">import</span> <span class="nn">configparser</span> <span class="k">as</span> <span class="nn">_configparser</span>
-<span class="kn">import</span> <span class="nn">tempfile</span> <span class="k">as</span> <span class="nn">_tempfile</span>
-<span class="kn">from</span> <span class="nn">pydna._pretty</span> <span class="kn">import</span> <span class="n">PrettyTable</span> <span class="k">as</span> <span class="n">_PrettyTable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">open_folder</span> <span class="k">as</span> <span class="n">_open_folder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span> <span class="k">as</span> <span class="n">_Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging.handlers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_handlers</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">appdirs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_appdirs</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_configparser</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">PrettyTable</span> <span class="k">as</span> <span class="n">_PrettyTable</span>
 
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Björn Johansson&quot;</span>
@@ -344,7 +344,7 @@
 <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;__version__ = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">__version__</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">_PydnaWarning</span><span class="p">(</span><span class="ne">Warning</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_PydnaWarning</span><span class="p">(</span><span class="ne">Warning</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Pydna warning.</span>
 
 <span class="sd">    Pydna uses this warning (or subclasses of it), to make it easy to</span>
@@ -360,7 +360,7 @@
     <span class="k">pass</span>
 
 
-<span class="k">class</span> <span class="nc">_PydnaDeprecationWarning</span><span class="p">(</span><span class="n">_PydnaWarning</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_PydnaDeprecationWarning</span><span class="p">(</span><span class="n">_PydnaWarning</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;pydna deprecation warning.</span>
 
 <span class="sd">    Pydna uses this warning instead of the built in DeprecationWarning</span>
@@ -381,7 +381,9 @@
     <span class="k">pass</span>
 
 
-<div class="viewcode-block" id="open_current_folder"><a class="viewcode-back" href="../modules/pydna.html#pydna.open_current_folder">[docs]</a><span class="k">def</span> <span class="nf">open_current_folder</span><span class="p">():</span>
+<div class="viewcode-block" id="open_current_folder">
+<a class="viewcode-back" href="../modules/pydna.html#pydna.open_current_folder">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">open_current_folder</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Open the current working directory.</span>
 
 <span class="sd">    Opens in the default file manager. The location for this folder is</span>
@@ -390,10 +392,13 @@
     <span class="k">return</span> <span class="n">_open_folder</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span></div>
 
 
+
 <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Current working directory = os.getcwd() = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
 
 
-<div class="viewcode-block" id="open_cache_folder"><a class="viewcode-back" href="../modules/pydna.html#pydna.open_cache_folder">[docs]</a><span class="k">def</span> <span class="nf">open_cache_folder</span><span class="p">():</span>
+<div class="viewcode-block" id="open_cache_folder">
+<a class="viewcode-back" href="../modules/pydna.html#pydna.open_cache_folder">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">open_cache_folder</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Open the pydna cache folder.</span>
 
 <span class="sd">    Opens in the default file manager. The location for this folder is stored</span>
@@ -402,7 +407,10 @@
     <span class="k">return</span> <span class="n">_open_folder</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_data_dir&quot;</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="open_config_folder"><a class="viewcode-back" href="../modules/pydna.html#pydna.open_config_folder">[docs]</a><span class="k">def</span> <span class="nf">open_config_folder</span><span class="p">():</span>
+
+<div class="viewcode-block" id="open_config_folder">
+<a class="viewcode-back" href="../modules/pydna.html#pydna.open_config_folder">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">open_config_folder</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Open the pydna configuration folder.</span>
 
 <span class="sd">    Opens in the default file manager. The location for this folder is stored</span>
@@ -446,12 +454,18 @@
     <span class="k">return</span> <span class="n">_open_folder</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_config_dir&quot;</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="open_log_folder"><a class="viewcode-back" href="../modules/pydna.html#pydna.open_log_folder">[docs]</a><span class="k">def</span> <span class="nf">open_log_folder</span><span class="p">():</span>
+
+<div class="viewcode-block" id="open_log_folder">
+<a class="viewcode-back" href="../modules/pydna.html#pydna.open_log_folder">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">open_log_folder</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_open_folder</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_log_dir&quot;</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="get_env"><a class="viewcode-back" href="../modules/pydna.html#pydna.get_env">[docs]</a><span class="k">def</span> <span class="nf">get_env</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_env">
+<a class="viewcode-back" href="../modules/pydna.html#pydna.get_env">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_env</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Print a an ascii table containing all environmental variables.</span>
 
 <span class="sd">    Pydna related variables have names that starts with `pydna_`</span>
@@ -467,13 +481,16 @@
     <span class="k">return</span> <span class="n">_table</span></div>
 
 
-<div class="viewcode-block" id="logo"><a class="viewcode-back" href="../modules/pydna.html#pydna.logo">[docs]</a><span class="k">def</span> <span class="nf">logo</span><span class="p">():</span>
+
+<div class="viewcode-block" id="logo">
+<a class="viewcode-back" href="../modules/pydna.html#pydna.logo">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">logo</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Ascii-art logotype of pydna.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">pydna._pretty</span> <span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
 
     <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;pydna </span><span class="si">{</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">pyfiglet</span> <span class="kn">import</span> <span class="n">Figlet</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pyfiglet</span><span class="w"> </span><span class="kn">import</span> <span class="n">Figlet</span>
     <span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
         <span class="k">pass</span>
     <span class="k">else</span><span class="p">:</span>
@@ -482,12 +499,13 @@
     <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
 
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">os</span> <span class="k">as</span> <span class="nn">_os</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
 
     <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
 
     <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>

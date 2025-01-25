@@ -1,23 +1,23 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Importing and viewing sequence files in pydna &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -76,13 +76,13 @@
            <div itemprop="articleBody">
              
   <section id="importing-and-viewing-sequence-files-in-pydna">
-<h1>Importing and viewing sequence files in pydna<a class="headerlink" href="#importing-and-viewing-sequence-files-in-pydna" title="Permalink to this heading"></a></h1>
+<h1>Importing and viewing sequence files in pydna<a class="headerlink" href="#importing-and-viewing-sequence-files-in-pydna" title="Link to this heading"></a></h1>
 <blockquote>
 <div><p>Visit the full library documentation <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a></p>
 </div></blockquote>
 <p>pydna can be used to work with FASTA, Genbank, EMBL, and snapgene files (.fasta, .gb, .embl, .dna). You can read these files into a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> that one can view and work with. You can also instantiate <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> objects with strings.</p>
 <section id="importing-sequence-files">
-<h2>Importing Sequence Files<a class="headerlink" href="#importing-sequence-files" title="Permalink to this heading"></a></h2>
+<h2>Importing Sequence Files<a class="headerlink" href="#importing-sequence-files" title="Link to this heading"></a></h2>
 <p>To import files into pydna is simple. pydna provides the <code class="docutils literal notranslate"><span class="pre">parse</span></code> method to read all DNA sequences in a file into a list. As an input, <code class="docutils literal notranslate"><span class="pre">parse</span></code> can take:</p>
 <ul class="simple">
 <li><p>The path to a file from your computer</p></li>
@@ -94,13 +94,13 @@
 </a>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
 <span class="c1"># Install pydna (only when running on Colab)</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
     <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span>
 
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pydna.parsers</span> <span class="kn">import</span> <span class="n">parse</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
 
 <span class="c1">#Import your file into python using its path</span>
 <span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;./U49845.fasta&quot;</span>
@@ -120,7 +120,7 @@ ACCGCCAATAGACAACATATGTAA
 <p>Note that <code class="docutils literal notranslate"><span class="pre">parse</span></code> returns a <code class="docutils literal notranslate"><span class="pre">list</span></code> object, hence requiring <code class="docutils literal notranslate"><span class="pre">[0]</span></code> to take the first element of the list. When you have a FASTA file that contains multiple sequences, you can index the list accordingly (e.g  <code class="docutils literal notranslate"><span class="pre">[0]</span></code>, <code class="docutils literal notranslate"><span class="pre">[1]</span></code>, …)</p>
 <p>The last line of code uses the <code class="docutils literal notranslate"><span class="pre">format</span></code> method to generate a string representation of the sequence as a FASTA file.</p>
 <p>Another example, using a GenBank file (<a class="reference external" href="https://www.ncbi.nlm.nih.gov/nucleotide/U49845">U49845</a>), is shown below.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pydna.parsers</span> <span class="kn">import</span> <span class="n">parse</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
 
 <span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;./U49845.gb&quot;</span>
 <span class="n">files</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
@@ -298,9 +298,9 @@ ORIGIN
 <p>Now, you can work with the sequence record using pydna, using the <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> class. <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> provides ways to highlight regions of interest on the sequence, adding new features to the record, removing features, and creating new <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> objects to store and export your changes. Please refer to the <code class="docutils literal notranslate"><span class="pre">Dseq_Features</span></code> notebook for more information.</p>
 </section>
 <section id="importing-sequences-from-strings">
-<h2>Importing Sequences from Strings<a class="headerlink" href="#importing-sequences-from-strings" title="Permalink to this heading"></a></h2>
+<h2>Importing Sequences from Strings<a class="headerlink" href="#importing-sequences-from-strings" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">parse</span></code> also allows sequences to be read from a string alone. This could be useful to read FASTA sequences obtained from GenBank APIs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pydna.parsers</span> <span class="kn">import</span> <span class="n">parse</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
 
 <span class="n">my_record</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span>
 <span class="sd">&#39;&#39;&#39;</span>
@@ -339,10 +339,10 @@ TTTGGATCTTTGTTTTAA
 </div>
 </section>
 <section id="extra-info">
-<h2>Extra info<a class="headerlink" href="#extra-info" title="Permalink to this heading"></a></h2>
+<h2>Extra info<a class="headerlink" href="#extra-info" title="Link to this heading"></a></h2>
 <p>Note that pydna’s <code class="docutils literal notranslate"><span class="pre">parse</span></code> guesses whether the argument passed is a file path or a string, and also guesses the file type based on the content, so it can give unexpected behaviour if your files are not well formatted. To have more control over the parsing of sequences, you can use biopython’s <code class="docutils literal notranslate"><span class="pre">parse</span></code> from <code class="docutils literal notranslate"><span class="pre">Bio.SeqIO</span></code>, and then instantiate a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> from the biopython’s <code class="docutils literal notranslate"><span class="pre">SeqRecord</span></code></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Bio.SeqIO</span> <span class="kn">import</span> <span class="n">parse</span> <span class="k">as</span> <span class="n">seqio_parse</span>
-<span class="kn">from</span> <span class="nn">pydna.dseqrecord</span> <span class="kn">import</span> <span class="n">Dseqrecord</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqIO</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span> <span class="k">as</span> <span class="n">seqio_parse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
 
 <span class="n">file_path</span> <span class="o">=</span> <span class="s1">&#39;./U49845.gb&#39;</span>
 

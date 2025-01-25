@@ -1,23 +1,23 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Restriction and Ligation &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -76,28 +76,28 @@
            <div itemprop="articleBody">
              
   <section id="restriction-and-ligation">
-<h1>Restriction and Ligation<a class="headerlink" href="#restriction-and-ligation" title="Permalink to this heading"></a></h1>
+<h1>Restriction and Ligation<a class="headerlink" href="#restriction-and-ligation" title="Link to this heading"></a></h1>
 <blockquote>
 <div><p>Visit the full library documentation <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a></p>
 </div></blockquote>
 <p>In this page, we explore how to use pydna to cut, ligate, circularise DNA sequences. pydna works in conjugation with the <code class="docutils literal notranslate"><span class="pre">Bio.Restriction</span></code> module to apply a vast variety of restriction enzymes for cutting, whose module documentations can be found <a class="reference external" href="https://biopython.org/DIST/docs/cookbook/Restriction.html">here</a>.</p>
 <section id="cutting-with-one-or-more-restriction-enzymes">
-<h2>Cutting with one or more restriction enzymes<a class="headerlink" href="#cutting-with-one-or-more-restriction-enzymes" title="Permalink to this heading"></a></h2>
+<h2>Cutting with one or more restriction enzymes<a class="headerlink" href="#cutting-with-one-or-more-restriction-enzymes" title="Link to this heading"></a></h2>
 <p>Restriction enzymes recognise specific DNA sequences and cut them, leaving sticky ends or blunt ends. To cut a sequence using <code class="docutils literal notranslate"><span class="pre">pydna</span></code>, we can use the <code class="docutils literal notranslate"><span class="pre">cut</span></code> method on a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object. Here is an example showing how to use the <code class="docutils literal notranslate"><span class="pre">cut</span></code> method to genenrate EcoRI restriction digests. The record includes a 338bp circular sequence, with an example gene feature.</p>
 <a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Restrict_Ligate_Cloning.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
 <span class="c1"># Install pydna (only when running on Colab)</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
     <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span>
 
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pydna.dseqrecord</span> <span class="kn">import</span> <span class="n">Dseqrecord</span>
-<span class="kn">from</span> <span class="nn">pydna.parsers</span> <span class="kn">import</span> <span class="n">parse</span>
-<span class="kn">from</span> <span class="nn">Bio.Restriction</span> <span class="kn">import</span> <span class="n">EcoRI</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">EcoRI</span>
 
 <span class="c1"># Create a Dseqrecord with your FASTA/GenBank file</span>
 <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;./sample_seq.gb&quot;</span>
@@ -126,7 +126,7 @@ AATTCTTC..TGTG
 </div>
 <p>The circular <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> is cut into a linear <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object, since there is only one EcoRI recognition site. <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> also shows the 5’ sticky end after cutting.</p>
 <p>The sequence can also be cut with multiple restriction enzymes, into multiple linear DNA sequences. We can simply import all the restriction enzymes, and use the cut method as normal.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Bio.Restriction</span> <span class="kn">import</span> <span class="n">EcoRV</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">EcoRV</span>
 
 <span class="c1"># Cut with a multiple enzymes</span>
 <span class="n">multi_cut_records</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">EcoRI</span><span class="p">,</span> <span class="n">EcoRV</span><span class="p">)</span>
@@ -181,7 +181,7 @@ TAGA..TCTA
 <p>You can model any, and and number of, enzymes with the <code class="docutils literal notranslate"><span class="pre">cut</span></code> method and <code class="docutils literal notranslate"><span class="pre">Bio.Restriction</span></code> module. This makes <code class="docutils literal notranslate"><span class="pre">pydna</span></code> a quick and powerful method to plan your molecular cloning experiments, for instance to check the restriction digests of a 10kb plasmid with multiple enzymes. <code class="docutils literal notranslate"><span class="pre">cut</span></code> is also a method of the <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> class, so <code class="docutils literal notranslate"><span class="pre">Dseq</span></code>s can be used as well.</p>
 </section>
 <section id="ligating-fragments">
-<h2>Ligating fragments<a class="headerlink" href="#ligating-fragments" title="Permalink to this heading"></a></h2>
+<h2>Ligating fragments<a class="headerlink" href="#ligating-fragments" title="Link to this heading"></a></h2>
 <p>After cutting a DNA sequence, you can ligate the fragments back together in <code class="docutils literal notranslate"><span class="pre">pydna</span></code> using the <code class="docutils literal notranslate"><span class="pre">+</span></code> operator on <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> or <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> objects. Ligation can occur via complementary sticky ends or blunt ends. For instance, we can select the first and second fragments from <code class="docutils literal notranslate"><span class="pre">multi_cut_records</span></code> via indexing, and then ligate sticky ends produced by EcoRI to make a single linear sequence.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ligated_product</span> <span class="o">=</span> <span class="n">multi_cut_records</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">multi_cut_records</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ligated_product</span><span class="p">)</span>
@@ -207,7 +207,7 @@ TAGA..ACTA
 </ol>
 </section>
 <section id="circularizing-fragments">
-<h2>Circularizing fragments<a class="headerlink" href="#circularizing-fragments" title="Permalink to this heading"></a></h2>
+<h2>Circularizing fragments<a class="headerlink" href="#circularizing-fragments" title="Link to this heading"></a></h2>
 <p>To circularize a cut DNA sequence use the <code class="docutils literal notranslate"><span class="pre">looped</span></code> method, which returns a new sequence object.</p>
 <p>🚨🚨 <strong>VERY IMPORTANT</strong> 🚨🚨 <code class="docutils literal notranslate"><span class="pre">.looped()</span></code> method does not act in place, so a new variable should be created to store the new circularised sequence, as shown in the following example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circular_record</span> <span class="o">=</span> <span class="n">ligated_product</span><span class="o">.</span><span class="n">looped</span><span class="p">()</span>
@@ -237,9 +237,9 @@ TAGA..ACTA
 </div>
 </section>
 <section id="extra-notes-what-happens-to-features-when-cutting-ligating">
-<h2>Extra Notes: What happens to features when cutting/ligating?<a class="headerlink" href="#extra-notes-what-happens-to-features-when-cutting-ligating" title="Permalink to this heading"></a></h2>
+<h2>Extra Notes: What happens to features when cutting/ligating?<a class="headerlink" href="#extra-notes-what-happens-to-features-when-cutting-ligating" title="Link to this heading"></a></h2>
 <p>A feature is removed from a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> if the features is truncated by the cut. For instance, the example_gene feature is removed from the record after cutting <code class="docutils literal notranslate"><span class="pre">record</span></code> with PstI, which has recognition site within example_gene.  within the cutand if the feature is completely within the cut, it is retained.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Bio.Restriction</span> <span class="kn">import</span> <span class="n">PstI</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">PstI</span>
 
 <span class="n">cut_record2</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">PstI</span><span class="p">)</span>
 

@@ -1,23 +1,23 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pydna.assembly &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -128,8 +128,8 @@
            <div itemprop="articleBody">
              
   <section id="pydna-assembly">
-<h1>pydna.assembly<a class="headerlink" href="#pydna-assembly" title="Permalink to this heading"></a></h1>
-<span class="target" id="module-pydna.assembly"></span><p>Assembly of sequences by homologous recombination.</p>
+<h1>pydna.assembly<a class="headerlink" href="#pydna-assembly" title="Link to this heading"></a></h1>
+<p id="module-pydna.assembly">Assembly of sequences by homologous recombination.</p>
 <p>Should also be useful for related techniques such as Gibson assembly and fusion
 PCR. Given a list of sequences (Dseqrecords), all sequences are analyzed for
 shared homology longer than the set limit.</p>
@@ -160,7 +160,7 @@ sequences separating the overlapping regions form edges.</p>
 graph.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pydna.assembly.Assembly">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydna.assembly.</span></span><span class="sig-name descname"><span class="pre">Assembly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Callable" title="(in Python v3.8)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">common_sub_strings</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/assembly.html#Assembly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly.Assembly" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydna.assembly.</span></span><span class="sig-name descname"><span class="pre">Assembly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Callable" title="(in Python v3.8)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">common_sub_strings</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/assembly.html#Assembly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly.Assembly" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Assembly of a list of linear DNA fragments into linear or circular
 constructs. The Assembly is meant to replace the Assembly method as it
@@ -179,8 +179,8 @@ manage sequences with a high number of shared sub sequences.</p></li>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pydna.assembly</span> <span class="kn">import</span> <span class="n">Assembly</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pydna.dseqrecord</span> <span class="kn">import</span> <span class="n">Dseqrecord</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly</span><span class="w"> </span><span class="kn">import</span> <span class="n">Assembly</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;acgatgctatactgCCCCCtgtgctgtgctcta&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;tgtgctgtgctctaTTTTTtattctggctgtatc&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;tattctggctgtatcGGGGGtacgatgctatactg&quot;</span><span class="p">)</span>
@@ -199,12 +199,12 @@ manage sequences with a high number of shared sub sequences.</p></li>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="pydna.assembly.Assembly.assemble_linear">
-<span class="sig-name descname"><span class="pre">assemble_linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pydna.assembly.Assembly.assemble_linear" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">assemble_linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pydna.assembly.Assembly.assemble_linear" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pydna.assembly.Assembly.assemble_circular">
-<span class="sig-name descname"><span class="pre">assemble_circular</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pydna.assembly.Assembly.assemble_circular" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">assemble_circular</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pydna.assembly.Assembly.assemble_circular" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

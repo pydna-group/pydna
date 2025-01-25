@@ -1,22 +1,22 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pydna.utils &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -84,33 +84,33 @@
 <span class="c1"># as part of this package.</span>
 <span class="sd">&quot;&quot;&quot;Miscellaneous functions.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">Bio.Data.IUPACData</span> <span class="kn">import</span> <span class="n">ambiguous_dna_complement</span> <span class="k">as</span> <span class="n">_ambiguous_dna_complement</span>
-<span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">_maketrans</span>
-<span class="kn">import</span> <span class="nn">shelve</span> <span class="k">as</span> <span class="nn">_shelve</span>
-<span class="kn">import</span> <span class="nn">os</span> <span class="k">as</span> <span class="nn">_os</span>
-<span class="kn">import</span> <span class="nn">re</span> <span class="k">as</span> <span class="nn">_re</span>
-<span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">_logging</span>
-<span class="kn">import</span> <span class="nn">base64</span> <span class="k">as</span> <span class="nn">_base64</span>
-<span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">_pickle</span>
-<span class="kn">import</span> <span class="nn">hashlib</span> <span class="k">as</span> <span class="nn">_hashlib</span>
-<span class="kn">import</span> <span class="nn">keyword</span> <span class="k">as</span> <span class="nn">_keyword</span>
-<span class="kn">import</span> <span class="nn">collections</span> <span class="k">as</span> <span class="nn">_collections</span>
-<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">_itertools</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span> <span class="k">as</span> <span class="n">_deepcopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Data.IUPACData</span><span class="w"> </span><span class="kn">import</span> <span class="n">ambiguous_dna_complement</span> <span class="k">as</span> <span class="n">_ambiguous_dna_complement</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">_maketrans</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shelve</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_shelve</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">keyword</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_keyword</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_collections</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_itertools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span> <span class="k">as</span> <span class="n">_deepcopy</span>
 
-<span class="kn">import</span> <span class="nn">sys</span> <span class="k">as</span> <span class="nn">_sys</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">subprocess</span> <span class="k">as</span> <span class="nn">_subprocess</span>
-<span class="kn">from</span> <span class="nn">bisect</span> <span class="kn">import</span> <span class="n">bisect</span> <span class="k">as</span> <span class="n">_bisect</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span> <span class="k">as</span> <span class="n">_ceil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bisect</span><span class="w"> </span><span class="kn">import</span> <span class="n">bisect</span> <span class="k">as</span> <span class="n">_bisect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">ceil</span> <span class="k">as</span> <span class="n">_ceil</span>
 
-<span class="kn">from</span> <span class="nn">pydna.codon</span> <span class="kn">import</span> <span class="n">weights</span> <span class="k">as</span> <span class="n">_weights</span>
-<span class="kn">from</span> <span class="nn">pydna.codon</span> <span class="kn">import</span> <span class="n">rare_codons</span> <span class="k">as</span> <span class="n">_rare_codons</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.codon</span><span class="w"> </span><span class="kn">import</span> <span class="n">weights</span> <span class="k">as</span> <span class="n">_weights</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.codon</span><span class="w"> </span><span class="kn">import</span> <span class="n">rare_codons</span> <span class="k">as</span> <span class="n">_rare_codons</span>
 
-<span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="kn">import</span> <span class="n">SimpleLocation</span> <span class="k">as</span> <span class="n">_sl</span>
-<span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="kn">import</span> <span class="n">CompoundLocation</span> <span class="k">as</span> <span class="n">_cl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span> <span class="k">as</span> <span class="n">_sl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompoundLocation</span> <span class="k">as</span> <span class="n">_cl</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span> <span class="k">as</span> <span class="n">_Union</span><span class="p">,</span> <span class="n">TypeVar</span> <span class="k">as</span> <span class="n">_TypeVar</span><span class="p">,</span> <span class="n">List</span> <span class="k">as</span> <span class="n">_List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span> <span class="k">as</span> <span class="n">_Union</span><span class="p">,</span> <span class="n">TypeVar</span> <span class="k">as</span> <span class="n">_TypeVar</span><span class="p">,</span> <span class="n">List</span> <span class="k">as</span> <span class="n">_List</span>
 
 <span class="c1"># For functions that take str or bytes as input and return str or bytes as output, matching the input type</span>
 <span class="n">StrOrBytes</span> <span class="o">=</span> <span class="n">_TypeVar</span><span class="p">(</span><span class="s2">&quot;StrOrBytes&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span>
@@ -120,7 +120,9 @@
 <span class="n">_complement_table</span> <span class="o">=</span> <span class="n">_maketrans</span><span class="p">(</span><span class="n">_ambiguous_dna_complement</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="three_frame_orfs"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.three_frame_orfs">[docs]</a><span class="k">def</span> <span class="nf">three_frame_orfs</span><span class="p">(</span>
+<div class="viewcode-block" id="three_frame_orfs">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.three_frame_orfs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">three_frame_orfs</span><span class="p">(</span>
     <span class="n">dna</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
     <span class="n">startcodons</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;ATG&quot;</span><span class="p">,),</span>
@@ -154,7 +156,10 @@
     <span class="k">return</span> <span class="n">orfs</span></div>
 
 
-<div class="viewcode-block" id="shift_location"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.shift_location">[docs]</a><span class="k">def</span> <span class="nf">shift_location</span><span class="p">(</span><span class="n">original_location</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">lim</span><span class="p">):</span>
+
+<div class="viewcode-block" id="shift_location">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.shift_location">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">shift_location</span><span class="p">(</span><span class="n">original_location</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">lim</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="n">newparts</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">strand</span> <span class="o">=</span> <span class="n">original_location</span><span class="o">.</span><span class="n">strand</span>
@@ -200,6 +205,7 @@
     <span class="k">return</span> <span class="n">newloc</span></div>
 
 
+
 <span class="c1"># def shift_feature(feature, shift, lim):</span>
 <span class="c1">#     &quot;&quot;&quot;Return a new feature with shifted location.&quot;&quot;&quot;</span>
 <span class="c1">#     # TODO: Missing tests</span>
@@ -209,13 +215,16 @@
 <span class="c1">#     return new_feature</span>
 
 
-<div class="viewcode-block" id="shift_feature"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.shift_feature">[docs]</a><span class="k">def</span> <span class="nf">shift_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">lim</span><span class="p">):</span>
+<div class="viewcode-block" id="shift_feature">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.shift_feature">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">shift_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">lim</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a new feature with shifted location.&quot;&quot;&quot;</span>
     <span class="c1"># TODO: Missing tests</span>
     <span class="n">new_location</span> <span class="o">=</span> <span class="n">shift_location</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">lim</span><span class="p">)</span>
     <span class="n">new_feature</span> <span class="o">=</span> <span class="n">_deepcopy</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
     <span class="n">new_feature</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">new_location</span>
     <span class="k">return</span> <span class="n">new_feature</span></div>
+
 
 
 <span class="c1"># def smallest_rotation(s):</span>
@@ -258,7 +267,9 @@
 <span class="c1">#                 return &quot;&quot;.join(w * rep)</span>
 
 
-<div class="viewcode-block" id="smallest_rotation"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.smallest_rotation">[docs]</a><span class="k">def</span> <span class="nf">smallest_rotation</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<div class="viewcode-block" id="smallest_rotation">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.smallest_rotation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">smallest_rotation</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Smallest rotation of a string.</span>
 
 <span class="sd">    Algorithm described in Pierre Duval, Jean. 1983. Factorizing Words</span>
@@ -273,20 +284,26 @@
 <span class="sd">    &gt;&gt;&gt; smallest_rotation(&quot;taaa&quot;)</span>
 <span class="sd">    &#39;aaat&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">pydivsufsort</span> <span class="kn">import</span> <span class="n">min_rotation</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydivsufsort</span><span class="w"> </span><span class="kn">import</span> <span class="n">min_rotation</span>
 
     <span class="n">k</span> <span class="o">=</span> <span class="n">min_rotation</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">&quot;ascii&quot;</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="n">k</span><span class="p">:]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="cai"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.cai">[docs]</a><span class="k">def</span> <span class="nf">cai</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">organism</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sce&quot;</span><span class="p">,</span> <span class="n">weights</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">_weights</span><span class="p">):</span>
+
+<div class="viewcode-block" id="cai">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.cai">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cai</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">organism</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sce&quot;</span><span class="p">,</span> <span class="n">weights</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">_weights</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">cai2</span> <span class="kn">import</span> <span class="n">CAI</span> <span class="k">as</span> <span class="n">_CAI</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">cai2</span><span class="w"> </span><span class="kn">import</span> <span class="n">CAI</span> <span class="k">as</span> <span class="n">_CAI</span>
 
     <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">_CAI</span><span class="p">(</span><span class="n">seq</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">[</span><span class="n">organism</span><span class="p">]),</span> <span class="mi">3</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rarecodons"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.rarecodons">[docs]</a><span class="k">def</span> <span class="nf">rarecodons</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">organism</span><span class="o">=</span><span class="s2">&quot;sce&quot;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="rarecodons">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.rarecodons">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rarecodons</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">organism</span><span class="o">=</span><span class="s2">&quot;sce&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="n">rare</span> <span class="o">=</span> <span class="n">_rare_codons</span><span class="p">[</span><span class="n">organism</span><span class="p">]</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
@@ -299,7 +316,10 @@
     <span class="k">return</span> <span class="n">slices</span></div>
 
 
-<div class="viewcode-block" id="express"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.express">[docs]</a><span class="k">def</span> <span class="nf">express</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">organism</span><span class="o">=</span><span class="s2">&quot;sce&quot;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="express">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.express">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">express</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">organism</span><span class="o">=</span><span class="s2">&quot;sce&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.</span>
 
 <span class="sd">    **NOT IMPLEMENTED YET**</span>
@@ -327,7 +347,10 @@
     <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
-<div class="viewcode-block" id="open_folder"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.open_folder">[docs]</a><span class="k">def</span> <span class="nf">open_folder</span><span class="p">(</span><span class="n">pth</span><span class="p">):</span>
+
+<div class="viewcode-block" id="open_folder">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.open_folder">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">open_folder</span><span class="p">(</span><span class="n">pth</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">_sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
         <span class="n">_subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="n">pth</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -340,7 +363,10 @@
             <span class="k">return</span> <span class="s2">&quot;no cache to open.&quot;</span></div>
 
 
-<div class="viewcode-block" id="rc"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.rc">[docs]</a><span class="k">def</span> <span class="nf">rc</span><span class="p">(</span><span class="n">sequence</span><span class="p">:</span> <span class="n">StrOrBytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StrOrBytes</span><span class="p">:</span>
+
+<div class="viewcode-block" id="rc">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.rc">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rc</span><span class="p">(</span><span class="n">sequence</span><span class="p">:</span> <span class="n">StrOrBytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StrOrBytes</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reverse complement.</span>
 
 <span class="sd">    accepts mixed DNA/RNA</span>
@@ -348,7 +374,10 @@
     <span class="k">return</span> <span class="n">sequence</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">_complement_table</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="complement"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.complement">[docs]</a><span class="k">def</span> <span class="nf">complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+
+<div class="viewcode-block" id="complement">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.complement">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Complement.</span>
 
 <span class="sd">    accepts mixed DNA/RNA</span>
@@ -356,14 +385,17 @@
     <span class="k">return</span> <span class="n">sequence</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">_complement_table</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="memorize"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.memorize">[docs]</a><span class="k">def</span> <span class="nf">memorize</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+
+<div class="viewcode-block" id="memorize">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.memorize">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">memorize</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Cache functions and classes.</span>
 
 <span class="sd">    see pydna.download</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">wrappee</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">wrappee</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="n">_module_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;#### memorizer ####&quot;</span><span class="p">)</span>
             <span class="n">_module_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;cache filename                   = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
             <span class="n">_module_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -401,7 +433,10 @@
     <span class="k">return</span> <span class="n">decorator</span></div>
 
 
-<div class="viewcode-block" id="identifier_from_string"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.identifier_from_string">[docs]</a><span class="k">def</span> <span class="nf">identifier_from_string</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+
+<div class="viewcode-block" id="identifier_from_string">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.identifier_from_string">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">identifier_from_string</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a valid python identifier.</span>
 
 <span class="sd">    based on the argument s or an empty string</span>
@@ -416,7 +451,10 @@
     <span class="k">return</span> <span class="n">s</span></div>
 
 
-<div class="viewcode-block" id="flatten"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.flatten">[docs]</a><span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_List</span><span class="p">:</span>
+
+<div class="viewcode-block" id="flatten">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.flatten">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">flatten</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_List</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Flattens an iterable of iterables.</span>
 
 <span class="sd">    Down to str, bytes, bytearray or any of the pydna or Biopython seq objects</span>
@@ -436,7 +474,10 @@
     <span class="k">return</span> <span class="n">output</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="seq31"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.seq31">[docs]</a><span class="k">def</span> <span class="nf">seq31</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+
+<div class="viewcode-block" id="seq31">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.seq31">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">seq31</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Turn a three letter code protein sequence into one with one letter code.</span>
 
 <span class="sd">    The single input argument &#39;seq&#39; should be a protein sequence using single</span>
@@ -496,21 +537,30 @@
     <span class="k">return</span> <span class="n">padding</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">threecode</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">aa</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">aa</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="randomRNA"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.randomRNA">[docs]</a><span class="k">def</span> <span class="nf">randomRNA</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">maxlength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="randomRNA">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.randomRNA">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">randomRNA</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">maxlength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">maxlength</span> <span class="ow">and</span> <span class="n">maxlength</span> <span class="o">&gt;</span> <span class="n">length</span><span class="p">:</span>
         <span class="n">length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">triangular</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">maxlength</span><span class="p">)))</span>
     <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">&quot;GAUC&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">)])</span></div>
 
 
-<div class="viewcode-block" id="randomDNA"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.randomDNA">[docs]</a><span class="k">def</span> <span class="nf">randomDNA</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">maxlength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="randomDNA">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.randomDNA">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">randomDNA</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">maxlength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">maxlength</span> <span class="ow">and</span> <span class="n">maxlength</span> <span class="o">&gt;</span> <span class="n">length</span><span class="p">:</span>
         <span class="n">length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">triangular</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">maxlength</span><span class="p">)))</span>
     <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">&quot;GATC&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">)])</span></div>
 
 
-<div class="viewcode-block" id="randomORF"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.randomORF">[docs]</a><span class="k">def</span> <span class="nf">randomORF</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">maxlength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="randomORF">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.randomORF">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">randomORF</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">maxlength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="n">length</span> <span class="o">-=</span> <span class="mi">2</span>
     <span class="k">if</span> <span class="n">maxlength</span> <span class="ow">and</span> <span class="n">maxlength</span> <span class="o">&gt;</span> <span class="n">length</span><span class="p">:</span>
@@ -586,14 +636,20 @@
     <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">starts</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">cdns</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">)])</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">stops</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="randomprot"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.randomprot">[docs]</a><span class="k">def</span> <span class="nf">randomprot</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">maxlength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="randomprot">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.randomprot">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">randomprot</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">maxlength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">maxlength</span> <span class="ow">and</span> <span class="n">maxlength</span> <span class="o">&gt;</span> <span class="n">length</span><span class="p">:</span>
         <span class="n">length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">triangular</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">maxlength</span><span class="p">)))</span>
     <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">&quot;ACDEFGHIKLMNPQRSTVWY&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">)])</span></div>
 
 
-<div class="viewcode-block" id="eq"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.eq">[docs]</a><span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+<div class="viewcode-block" id="eq">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.eq">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">eq</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare two or more DNA sequences for equality.</span>
 
 <span class="sd">    Compares two or more DNA sequences for equality i.e. if they</span>
@@ -724,6 +780,7 @@
     <span class="k">return</span> <span class="n">same</span></div>
 
 
+
 <span class="c1"># def cuts_overlap(left_cut, right_cut, seq_len):</span>
 <span class="c1">#     # Special cases:</span>
 <span class="c1">#     if left_cut is None or right_cut is None or left_cut == right_cut:</span>
@@ -756,7 +813,9 @@
 <span class="c1">#         return loc.parts[0].start, loc.parts[-1].end</span>
 
 
-<div class="viewcode-block" id="cuts_overlap"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.cuts_overlap">[docs]</a><span class="k">def</span> <span class="nf">cuts_overlap</span><span class="p">(</span><span class="n">left_cut</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">):</span>
+<div class="viewcode-block" id="cuts_overlap">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.cuts_overlap">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cuts_overlap</span><span class="p">(</span><span class="n">left_cut</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">):</span>
     <span class="c1"># Special cases:</span>
     <span class="k">if</span> <span class="n">left_cut</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">right_cut</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">left_cut</span> <span class="o">==</span> <span class="n">right_cut</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
@@ -781,14 +840,20 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="location_boundaries"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.location_boundaries">[docs]</a><span class="k">def</span> <span class="nf">location_boundaries</span><span class="p">(</span><span class="n">loc</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_sl</span><span class="p">,</span> <span class="n">_cl</span><span class="p">]):</span>
+
+<div class="viewcode-block" id="location_boundaries">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.location_boundaries">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">location_boundaries</span><span class="p">(</span><span class="n">loc</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_sl</span><span class="p">,</span> <span class="n">_cl</span><span class="p">]):</span>
     <span class="k">if</span> <span class="n">loc</span><span class="o">.</span><span class="n">strand</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">loc</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">loc</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">end</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">loc</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">loc</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end</span></div>
 
 
-<div class="viewcode-block" id="locations_overlap"><a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.locations_overlap">[docs]</a><span class="k">def</span> <span class="nf">locations_overlap</span><span class="p">(</span><span class="n">loc1</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_sl</span><span class="p">,</span> <span class="n">_cl</span><span class="p">],</span> <span class="n">loc2</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_sl</span><span class="p">,</span> <span class="n">_cl</span><span class="p">],</span> <span class="n">seq_len</span><span class="p">):</span>
+
+<div class="viewcode-block" id="locations_overlap">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.locations_overlap">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">locations_overlap</span><span class="p">(</span><span class="n">loc1</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_sl</span><span class="p">,</span> <span class="n">_cl</span><span class="p">],</span> <span class="n">loc2</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_sl</span><span class="p">,</span> <span class="n">_cl</span><span class="p">],</span> <span class="n">seq_len</span><span class="p">):</span>
     <span class="n">start1</span><span class="p">,</span> <span class="n">end1</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">loc1</span><span class="p">)</span>
     <span class="n">start2</span><span class="p">,</span> <span class="n">end2</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">loc2</span><span class="p">)</span>
 
@@ -813,10 +878,11 @@
     <span class="k">return</span> <span class="kc">False</span></div>
 
 
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
 
     <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>

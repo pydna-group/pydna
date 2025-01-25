@@ -1,22 +1,22 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pydna.parsers &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -85,15 +85,15 @@
 
 <span class="sd">&quot;&quot;&quot;Provides two functions, parse and parse_primers&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os</span> <span class="k">as</span> <span class="nn">_os</span>
-<span class="kn">import</span> <span class="nn">re</span> <span class="k">as</span> <span class="nn">_re</span>
-<span class="kn">import</span> <span class="nn">io</span> <span class="k">as</span> <span class="nn">_io</span>
-<span class="kn">import</span> <span class="nn">textwrap</span> <span class="k">as</span> <span class="nn">_textwrap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_textwrap</span>
 
-<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span> <span class="k">as</span> <span class="n">_SeqIO</span>
-<span class="kn">from</span> <span class="nn">pydna.genbankfile</span> <span class="kn">import</span> <span class="n">GenbankFile</span> <span class="k">as</span> <span class="n">_GenbankFile</span>
-<span class="kn">from</span> <span class="nn">pydna.dseqrecord</span> <span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
-<span class="kn">from</span> <span class="nn">pydna.primer</span> <span class="kn">import</span> <span class="n">Primer</span> <span class="k">as</span> <span class="n">_Primer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqIO</span> <span class="k">as</span> <span class="n">_SeqIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.genbankfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenbankFile</span> <span class="k">as</span> <span class="n">_GenbankFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span> <span class="k">as</span> <span class="n">_Primer</span>
 
 <span class="c1"># from pydna.amplify import pcr as _pcr</span>
 <span class="c1"># from copy import deepcopy as _deepcopy</span>
@@ -101,10 +101,10 @@
 <span class="c1"># import xml.etree.ElementTree as _et</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">pairwise</span> <span class="k">as</span> <span class="n">_pairwise</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">pairwise</span> <span class="k">as</span> <span class="n">_pairwise</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
 
-    <span class="k">def</span> <span class="nf">_pairwise</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_pairwise</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
         <span class="c1"># pairwise(&#39;ABCDEFG&#39;) → AB BC CD DE EF FG</span>
         <span class="n">iterator</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
         <span class="n">a</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">iterator</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -125,16 +125,18 @@
 <span class="c1"># use https://regex101.com to get an idea how it works.</span>
 
 
-<div class="viewcode-block" id="extract_from_text"><a class="viewcode-back" href="../../modules/pydna_parsers.html#pydna.all.extract_from_text">[docs]</a><span class="k">def</span> <span class="nf">extract_from_text</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<div class="viewcode-block" id="extract_from_text">
+<a class="viewcode-back" href="../../modules/pydna_parsers.html#pydna.all.extract_from_text">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_from_text</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">_textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
     <span class="n">mos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">_re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">gb_fasta_embl_regex</span><span class="p">,</span> <span class="n">data</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">_re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">))</span>
 
-    <span class="k">class</span> <span class="nc">Fakemo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Fakemo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">return</span> <span class="mi">0</span>
 
     <span class="n">mofirst</span> <span class="o">=</span> <span class="n">molast</span> <span class="o">=</span> <span class="n">Fakemo</span><span class="p">()</span>
@@ -147,7 +149,10 @@
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">mo</span> <span class="ow">in</span> <span class="n">mos</span><span class="p">),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">gaps</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="embl_gb_fasta"><a class="viewcode-back" href="../../modules/pydna_parsers.html#pydna.all.embl_gb_fasta">[docs]</a><span class="k">def</span> <span class="nf">embl_gb_fasta</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+
+<div class="viewcode-block" id="embl_gb_fasta">
+<a class="viewcode-back" href="../../modules/pydna_parsers.html#pydna.all.embl_gb_fasta">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">embl_gb_fasta</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse embl, genbank or fasta format from text.</span>
 
 <span class="sd">    Returns list of Bio.SeqRecord.SeqRecord</span>
@@ -202,7 +207,10 @@
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">result_list</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="parse"><a class="viewcode-back" href="../../modules/pydna_parsers.html#pydna.all.parse">[docs]</a><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="parse">
+<a class="viewcode-back" href="../../modules/pydna_parsers.html#pydna.all.parse">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return *all* DNA sequences found in data.</span>
 
 <span class="sd">    If no sequences are found, an empty list is returned. This is a greedy</span>
@@ -281,15 +289,19 @@
     <span class="k">return</span> <span class="n">sequences</span></div>
 
 
-<div class="viewcode-block" id="parse_primers"><a class="viewcode-back" href="../../modules/pydna_parsers.html#pydna.all.parse_primers">[docs]</a><span class="k">def</span> <span class="nf">parse_primers</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+
+<div class="viewcode-block" id="parse_primers">
+<a class="viewcode-back" href="../../modules/pydna_parsers.html#pydna.all.parse_primers">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_primers</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">_Primer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">parse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span></div>
+
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
 
     <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>

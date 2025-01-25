@@ -1,23 +1,23 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>How to Model CRISPR-Cas9 Experiments in pydna &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -76,7 +76,7 @@
            <div itemprop="articleBody">
              
   <section id="how-to-model-crispr-cas9-experiments-in-pydna">
-<h1>How to Model CRISPR-Cas9 Experiments in pydna<a class="headerlink" href="#how-to-model-crispr-cas9-experiments-in-pydna" title="Permalink to this heading"></a></h1>
+<h1>How to Model CRISPR-Cas9 Experiments in pydna<a class="headerlink" href="#how-to-model-crispr-cas9-experiments-in-pydna" title="Link to this heading"></a></h1>
 <blockquote>
 <div><p>Visit the full library documentation <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a></p>
 </div></blockquote>
@@ -87,19 +87,19 @@
 </a>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
 <span class="c1"># Install pydna (only when running on Colab)</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
     <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span>
 
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pydna.crispr</span> <span class="kn">import</span> <span class="n">cas9</span><span class="p">,</span> <span class="n">protospacer</span>
-<span class="kn">from</span> <span class="nn">pydna.dseqrecord</span> <span class="kn">import</span> <span class="n">Dseqrecord</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.crispr</span><span class="w"> </span><span class="kn">import</span> <span class="n">cas9</span><span class="p">,</span> <span class="n">protospacer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
 </pre></div>
 </div>
 <p>The target sequence and guideRNA (gRNA) sequence needs to be generated. Note the the sequence can be passed as a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pydna.dseqrecord</span> <span class="kn">import</span> <span class="n">Dseqrecord</span>
-<span class="kn">from</span> <span class="nn">pydna.crispr</span> <span class="kn">import</span> <span class="n">cas9</span><span class="p">,</span> <span class="n">protospacer</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.crispr</span><span class="w"> </span><span class="kn">import</span> <span class="n">cas9</span><span class="p">,</span> <span class="n">protospacer</span>
 
 <span class="c1">#         &lt;----protospacer---&gt;&lt;-------scaffold-----------------&gt;</span>
 <span class="n">guide</span> <span class="o">=</span>  <span class="s2">&quot;GTTACTTTACCCGACGTCCCgttttagagctagaaatagcaagttaaaataagg&quot;</span>

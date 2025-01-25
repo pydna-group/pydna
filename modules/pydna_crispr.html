@@ -1,23 +1,23 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pydna.crispr &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -134,15 +134,15 @@
            <div itemprop="articleBody">
              
   <section id="pydna-crispr">
-<h1>pydna.crispr<a class="headerlink" href="#pydna-crispr" title="Permalink to this heading"></a></h1>
-<span class="target" id="module-pydna.crispr"></span><p>Provides the Dseq class for handling double stranded DNA sequences.</p>
+<h1>pydna.crispr<a class="headerlink" href="#pydna-crispr" title="Link to this heading"></a></h1>
+<p id="module-pydna.crispr">Provides the Dseq class for handling double stranded DNA sequences.</p>
 <p>Dseq is a subclass of <code class="xref py py-class docutils literal notranslate"><span class="pre">Bio.Seq.Seq</span></code>. The Dseq class
 is mostly useful as a part of the <a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydna.dseqrecord.Dseqrecord</span></code></a> class
 which can hold more meta data.</p>
 <p>The Dseq class support the notion of circular and linear DNA topology.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pydna.crispr.cas9">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydna.crispr.</span></span><span class="sig-name descname"><span class="pre">cas9</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protospacer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/crispr.html#cas9"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.crispr.cas9" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydna.crispr.</span></span><span class="sig-name descname"><span class="pre">cas9</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protospacer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/crispr.html#cas9"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.crispr.cas9" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_cas</span></code></p>
 <p>docstring.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="o">|----</span><span class="n">size</span><span class="o">----------|</span>
@@ -174,37 +174,37 @@ which can hold more meta data.</p>
 </div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pydna.crispr.cas9.scaffold">
-<span class="sig-name descname"><span class="pre">scaffold</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGG'</span></em><a class="headerlink" href="#pydna.crispr.cas9.scaffold" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">scaffold</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGG'</span></em><a class="headerlink" href="#pydna.crispr.cas9.scaffold" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pydna.crispr.cas9.pam">
-<span class="sig-name descname"><span class="pre">pam</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'.GG'</span></em><a class="headerlink" href="#pydna.crispr.cas9.pam" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">pam</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'.GG'</span></em><a class="headerlink" href="#pydna.crispr.cas9.pam" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pydna.crispr.cas9.size">
-<span class="sig-name descname"><span class="pre">size</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">20</span></em><a class="headerlink" href="#pydna.crispr.cas9.size" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">size</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">20</span></em><a class="headerlink" href="#pydna.crispr.cas9.size" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pydna.crispr.cas9.fst5">
-<span class="sig-name descname"><span class="pre">fst5</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">17</span></em><a class="headerlink" href="#pydna.crispr.cas9.fst5" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fst5</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">17</span></em><a class="headerlink" href="#pydna.crispr.cas9.fst5" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pydna.crispr.cas9.fst3">
-<span class="sig-name descname"><span class="pre">fst3</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-3</span></em><a class="headerlink" href="#pydna.crispr.cas9.fst3" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fst3</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-3</span></em><a class="headerlink" href="#pydna.crispr.cas9.fst3" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pydna.crispr.cas9.ovhg">
-<span class="sig-name descname"><span class="pre">ovhg</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pydna.crispr.cas9.ovhg" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ovhg</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pydna.crispr.cas9.ovhg" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pydna.crispr.cas9.search">
-<span class="sig-name descname"><span class="pre">search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dna</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/crispr.html#cas9.search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.crispr.cas9.search" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dna</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/crispr.html#cas9.search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.crispr.cas9.search" title="Link to this definition"></a></dt>
 <dd><p>docstring.</p>
 </dd></dl>
 
@@ -212,7 +212,7 @@ which can hold more meta data.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.crispr.protospacer">
-<span class="sig-prename descclassname"><span class="pre">pydna.crispr.</span></span><span class="sig-name descname"><span class="pre">protospacer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guide_construct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">cas9</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/crispr.html#protospacer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.crispr.protospacer" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.crispr.</span></span><span class="sig-name descname"><span class="pre">protospacer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guide_construct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">cas9</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/crispr.html#protospacer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.crispr.protospacer" title="Link to this definition"></a></dt>
 <dd><p>docstring.</p>
 </dd></dl>
 

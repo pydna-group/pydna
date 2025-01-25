@@ -1,22 +1,22 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pydna.amplicon &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -88,21 +88,23 @@
 <span class="sd">This class is not meant to be use directly but is</span>
 <span class="sd">used by the :mod:`amplify` module&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">pydna.tm</span> <span class="kn">import</span> <span class="n">dbd_program</span> <span class="k">as</span> <span class="n">_dbd_program</span>
-<span class="kn">from</span> <span class="nn">pydna.tm</span> <span class="kn">import</span> <span class="n">program</span> <span class="k">as</span> <span class="n">_program</span>
-<span class="kn">from</span> <span class="nn">pydna.primer</span> <span class="kn">import</span> <span class="n">Primer</span> <span class="k">as</span> <span class="n">_Primer</span>
-<span class="kn">from</span> <span class="nn">pydna._pretty</span> <span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
-<span class="kn">from</span> <span class="nn">pydna.dseqrecord</span> <span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
-<span class="kn">from</span> <span class="nn">pydna.seqrecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span> <span class="k">as</span> <span class="n">_SeqRecord</span>
-<span class="kn">import</span> <span class="nn">textwrap</span> <span class="k">as</span> <span class="nn">_textwrap</span>
-<span class="kn">import</span> <span class="nn">copy</span> <span class="k">as</span> <span class="nn">_copy</span>
-<span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">_logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.tm</span><span class="w"> </span><span class="kn">import</span> <span class="n">dbd_program</span> <span class="k">as</span> <span class="n">_dbd_program</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.tm</span><span class="w"> </span><span class="kn">import</span> <span class="n">program</span> <span class="k">as</span> <span class="n">_program</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span> <span class="k">as</span> <span class="n">_Primer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span> <span class="k">as</span> <span class="n">_SeqRecord</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_textwrap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_logging</span>
 
 
 <span class="n">_module_logger</span> <span class="o">=</span> <span class="n">_logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pydna.&quot;</span> <span class="o">+</span> <span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Amplicon"><a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon">[docs]</a><span class="k">class</span> <span class="nc">Amplicon</span><span class="p">(</span><span class="n">_Dseqrecord</span><span class="p">):</span>
+<div class="viewcode-block" id="Amplicon">
+<a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Amplicon</span><span class="p">(</span><span class="n">_Dseqrecord</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The Amplicon class holds information about a PCR reaction involving two</span>
 <span class="sd">    primers and one template. This class is used by the Anneal class and is not</span>
 <span class="sd">    meant to be instantiated directly.</span>
@@ -121,7 +123,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">forward_primer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reverse_primer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">forward_primer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reverse_primer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">template</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">forward_primer</span> <span class="o">=</span> <span class="n">forward_primer</span>
@@ -131,13 +133,16 @@
         <span class="c1"># https://medium.com/@chipiga86/circular-references-without-memory-</span>
         <span class="c1"># leaks-and-destruction-of-objects-in-python-43da57915b8d</span>
 
-<div class="viewcode-block" id="Amplicon.from_SeqRecord"><a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.from_SeqRecord">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_SeqRecord</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Amplicon.from_SeqRecord">
+<a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.from_SeqRecord">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_SeqRecord</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">from_SeqRecord</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sl</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sl</span><span class="p">):</span>
         <span class="n">answer</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">answer</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">answer</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">sl</span><span class="p">)</span>
         <span class="c1"># answer.seq.alphabet = self.seq.alphabet</span>
@@ -146,17 +151,19 @@
         <span class="n">answer</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">_SeqRecord</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">sr</span><span class="p">,</span> <span class="n">sl</span><span class="p">)</span><span class="o">.</span><span class="n">features</span>
         <span class="k">return</span> <span class="n">answer</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;returns a short string representation of the object&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;Amplicon(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__len__</span><span class="p">())</span>
 
-    <span class="k">def</span> <span class="nf">_repr_pretty_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">cycle</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_repr_pretty_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">cycle</span><span class="p">):</span>
         <span class="n">p</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;Amplicon(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()))</span>
 
-    <span class="k">def</span> <span class="nf">_repr_html_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_repr_html_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;Amplicon(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__len__</span><span class="p">())</span>
 
-<div class="viewcode-block" id="Amplicon.reverse_complement"><a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.reverse_complement">[docs]</a>    <span class="k">def</span> <span class="nf">reverse_complement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Amplicon.reverse_complement">
+<a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.reverse_complement">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reverse_complement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">r</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">())</span>
         <span class="n">r</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">rc</span><span class="p">()</span>
         <span class="n">r</span><span class="o">.</span><span class="n">forward_primer</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse_primer</span><span class="p">)</span>
@@ -164,9 +171,12 @@
         <span class="n">r</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">position</span>
         <span class="k">return</span> <span class="n">r</span></div>
 
+
     <span class="n">rc</span> <span class="o">=</span> <span class="n">reverse_complement</span>
 
-<div class="viewcode-block" id="Amplicon.figure"><a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.figure">[docs]</a>    <span class="k">def</span> <span class="nf">figure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Amplicon.figure">
+<a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.figure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">figure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method returns a simple figure of the two primers binding</span>
 <span class="sd">        to a part of the template.</span>
@@ -211,28 +221,45 @@
         <span class="c1"># breakpoint()</span>
         <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">_textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Amplicon.set_forward_primer_footprint"><a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.set_forward_primer_footprint">[docs]</a>    <span class="k">def</span> <span class="nf">set_forward_primer_footprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Amplicon.set_forward_primer_footprint">
+<a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.set_forward_primer_footprint">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_forward_primer_footprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">forward_primer</span> <span class="o">=</span> <span class="n">_Primer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">tail</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span><span class="n">length</span><span class="p">],</span> <span class="n">footprint</span><span class="o">=</span><span class="n">length</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Amplicon.set_reverse_primer_footprint"><a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.set_reverse_primer_footprint">[docs]</a>    <span class="k">def</span> <span class="nf">set_reverse_primer_footprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Amplicon.set_reverse_primer_footprint">
+<a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.set_reverse_primer_footprint">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_reverse_primer_footprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reverse_primer</span> <span class="o">=</span> <span class="n">_Primer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">tail</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span><span class="n">length</span><span class="p">],</span> <span class="n">footprint</span><span class="o">=</span><span class="n">length</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Amplicon.program"><a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.program">[docs]</a>    <span class="k">def</span> <span class="nf">program</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Amplicon.program">
+<a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.program">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">program</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">_program</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Amplicon.dbd_program"><a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.dbd_program">[docs]</a>    <span class="k">def</span> <span class="nf">dbd_program</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Amplicon.dbd_program">
+<a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.dbd_program">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dbd_program</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">_dbd_program</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Amplicon.primers"><a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.primers">[docs]</a>    <span class="k">def</span> <span class="nf">primers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_primer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_primer</span></div></div>
+
+<div class="viewcode-block" id="Amplicon.primers">
+<a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.primers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">primers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_primer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_primer</span></div>
+</div>
+
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">os</span> <span class="k">as</span> <span class="nn">_os</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
 
     <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
 
     <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>

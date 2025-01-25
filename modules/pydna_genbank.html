@@ -1,23 +1,23 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pydna.genbank &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -128,15 +128,15 @@
            <div itemprop="articleBody">
              
   <section id="pydna-genbank">
-<h1>pydna.genbank<a class="headerlink" href="#pydna-genbank" title="Permalink to this heading"></a></h1>
-<span class="target" id="module-pydna.genbank"></span><p>This module provides a class for downloading sequences from genbank
+<h1>pydna.genbank<a class="headerlink" href="#pydna-genbank" title="Link to this heading"></a></h1>
+<p id="module-pydna.genbank">This module provides a class for downloading sequences from genbank
 called Genbank and an function that does the same thing called genbank.</p>
 <p>The function can be used if the environmental variable <strong>pydna_email</strong> has
 been set to a valid email address. The easiest way to do this permanantly is to edit the
 <cite>pydna.ini</cite> file. See the documentation of <a class="reference internal" href="pydna.html#pydna.open_config_folder" title="pydna.open_config_folder"><code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.open_config_folder()</span></code></a></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pydna.genbank.Genbank">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydna.genbank.</span></span><span class="sig-name descname"><span class="pre">Genbank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">users_email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pydna'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbank.html#Genbank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbank.Genbank" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydna.genbank.</span></span><span class="sig-name descname"><span class="pre">Genbank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">users_email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pydna'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbank.html#Genbank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbank.Genbank" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class to facilitate download from genbank. It is easier and
 quicker to use the <a class="reference internal" href="#pydna.genbank.genbank" title="pydna.genbank.genbank"><code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.genbank.genbank()</span></code></a> function directly.</p>
@@ -147,7 +147,7 @@ Genbanks who you are, so that they can contact you.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pydna.genbank</span> <span class="kn">import</span> <span class="n">Genbank</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.genbank</span><span class="w"> </span><span class="kn">import</span> <span class="n">Genbank</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">gb</span><span class="o">=</span><span class="n">Genbank</span><span class="p">(</span><span class="s2">&quot;bjornjobb@gmail.com&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rec</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">nucleotide</span><span class="p">(</span><span class="s2">&quot;LP002422.1&quot;</span><span class="p">)</span>   <span class="c1"># &lt;- entry from genbank</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="p">))</span>
@@ -156,14 +156,14 @@ Genbanks who you are, so that they can contact you.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="pydna.genbank.Genbank.nucleotide">
-<span class="sig-name descname"><span class="pre">nucleotide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pydna.genbank.Genbank.nucleotide" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">nucleotide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pydna.genbank.Genbank.nucleotide" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.genbank.genbank">
-<span class="sig-prename descclassname"><span class="pre">pydna.genbank.</span></span><span class="sig-name descname"><span class="pre">genbank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accession</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'CS570233.1'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pydna_genbankrecord.html#pydna.genbankrecord.GenbankRecord" title="pydna.genbankrecord.GenbankRecord"><span class="pre">GenbankRecord</span></a></span></span><a class="reference internal" href="../_modules/pydna/genbank.html#genbank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbank.genbank" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.genbank.</span></span><span class="sig-name descname"><span class="pre">genbank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accession</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'CS570233.1'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pydna_genbankrecord.html#pydna.genbankrecord.GenbankRecord" title="pydna.genbankrecord.GenbankRecord"><span class="pre">GenbankRecord</span></a></span></span><a class="reference internal" href="../_modules/pydna/genbank.html#genbank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbank.genbank" title="Link to this definition"></a></dt>
 <dd><p>Download a genbank nuclotide record.</p>
 <p>This function takes the same paramenters as the
 :func:pydna.genbank.Genbank.nucleotide method. The email address stored
@@ -178,7 +178,7 @@ connection to Genbank.</p>
 the pydna.ini file.
 See the documentation of <a class="reference internal" href="pydna.html#pydna.open_config_folder" title="pydna.open_config_folder"><code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.open_config_folder()</span></code></a></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">LOCUS</span>       <span class="n">CS570233</span>                  <span class="mi">14</span> <span class="n">bp</span>    <span class="n">DNA</span>     <span class="n">linear</span>   <span class="n">PAT</span> <span class="mi">18</span><span class="o">-</span><span class="n">MAY</span><span class="o">-</span><span class="mi">2007</span>
-<span class="n">DEFINITION</span>  <span class="n">Sequence</span> <span class="mi">6</span> <span class="kn">from</span> <span class="nn">Patent</span> <span class="n">WO2007025016</span><span class="o">.</span>
+<span class="n">DEFINITION</span>  <span class="n">Sequence</span> <span class="mi">6</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Patent</span> <span class="n">WO2007025016</span><span class="o">.</span>
 <span class="n">ACCESSION</span>   <span class="n">CS570233</span>
 <span class="n">VERSION</span>     <span class="n">CS570233</span><span class="mf">.1</span>
 <span class="n">KEYWORDS</span>    <span class="o">.</span>

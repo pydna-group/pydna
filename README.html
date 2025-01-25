@@ -1,23 +1,23 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Documentation &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="_static/favicon.ico"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="_static/doctools.js?v=888ff710"></script>
-      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="_static/documentation_options.js?v=d848064a"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -76,7 +76,7 @@
            <div itemprop="articleBody">
              
   <section id="documentation">
-<h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading"></a></h1>
+<h1>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h1>
 <p>Documentation is built using <a class="reference external" href="http://www.sphinx-doc.org/">Sphinx</a> from <a class="reference external" href="https://www.python.org/dev/peps/pep-0257/">docstrings</a>
 using a GitHub <a class="reference external" href="https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml">action</a>.
 The <a class="reference internal" href="#www.numpy.org"><span class="xref myst">numpy</span></a> <a class="reference external" href="https://numpy.org/doc/stable/dev/howto-docs.html#docstring-intro">docstring format</a> is used.</p>
@@ -95,11 +95,11 @@ then rebuilds it.</p>
 </pre></div>
 </div>
 <section id="adding-new-sections-to-the-documentation">
-<h2>Adding new sections to the documentation<a class="headerlink" href="#adding-new-sections-to-the-documentation" title="Permalink to this heading"></a></h2>
+<h2>Adding new sections to the documentation<a class="headerlink" href="#adding-new-sections-to-the-documentation" title="Link to this heading"></a></h2>
 <p>You can add new sections (equivalent to “Getting started” or “Example gallery”) by creating a new <code class="docutils literal notranslate"><span class="pre">.rst</span></code> or <code class="docutils literal notranslate"><span class="pre">.md</span></code> file in the <code class="docutils literal notranslate"><span class="pre">docs</span></code> folder, and then adding a reference to it in the <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">toctree::</span></code> directive in the <code class="docutils literal notranslate"><span class="pre">docs/index.rst</span></code> file.</p>
 </section>
 <section id="auto-generated-files">
-<h2>Auto-generated files<a class="headerlink" href="#auto-generated-files" title="Permalink to this heading"></a></h2>
+<h2>Auto-generated files<a class="headerlink" href="#auto-generated-files" title="Link to this heading"></a></h2>
 <p>The script <code class="docutils literal notranslate"><span class="pre">autogen_docs.sh</span></code> is run in the github action before creating the docs. If you want to reproduce locally, you
 should run it from the <code class="docutils literal notranslate"><span class="pre">docs</span></code> folder</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>docs
@@ -135,7 +135,7 @@ a <code class="docutils literal notranslate"><span class="pre">docs/modules/inde
 </ul>
 </section>
 <section id="text-imported-from-readme-md">
-<h2>Text imported from README.md<a class="headerlink" href="#text-imported-from-readme-md" title="Permalink to this heading"></a></h2>
+<h2>Text imported from README.md<a class="headerlink" href="#text-imported-from-readme-md" title="Link to this heading"></a></h2>
 <p>To avoid having to maintain the same text in multiple files, fragments of the <code class="docutils literal notranslate"><span class="pre">README.md</span></code> are imported using the directive
 <code class="docutils literal notranslate"><span class="pre">include</span></code>. For instance, in the <code class="docutils literal notranslate"><span class="pre">installation.rst</span></code> file, you can find the code below. What this does is to import the text of the README.md file between the start and end markers, which are markdown comments and therefore not rendered.</p>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">include</span><span class="p">::</span> ../README.md
@@ -146,16 +146,16 @@ a <code class="docutils literal notranslate"><span class="pre">docs/modules/inde
 </div>
 </section>
 <section id="including-notebooks-in-the-getting-started-and-example-sections">
-<h2>Including notebooks in the getting started and example sections<a class="headerlink" href="#including-notebooks-in-the-getting-started-and-example-sections" title="Permalink to this heading"></a></h2>
+<h2>Including notebooks in the getting started and example sections<a class="headerlink" href="#including-notebooks-in-the-getting-started-and-example-sections" title="Link to this heading"></a></h2>
 <p>You can see the example of how to do this in the <code class="docutils literal notranslate"><span class="pre">getting_started.md</span></code> file. Note that the notebooks present in the <code class="docutils literal notranslate"><span class="pre">docs/notebooks</span></code> folder will automatically be converted to markdown in the <code class="docutils literal notranslate"><span class="pre">docs/markdown_notebooks</span></code> folder. So if you have a notebook <code class="docutils literal notranslate"><span class="pre">docs/notebooks/Example_Gibson.ipynb</span></code>, it will be converted to <code class="docutils literal notranslate"><span class="pre">docs/markdown_notebooks/Example_Gibson.md</span></code> and you can use that file path to make a link to it.</p>
 </section>
 <section id="custom-css">
-<h2>Custom CSS<a class="headerlink" href="#custom-css" title="Permalink to this heading"></a></h2>
+<h2>Custom CSS<a class="headerlink" href="#custom-css" title="Link to this heading"></a></h2>
 <p>For now, I have used css to make notebook outputs that are too long scrollable, and to add a small label <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">code</span></code> to the code cells and <code class="docutils literal notranslate"><span class="pre">output</span></code> to the output cells.</p>
 <p>For further customization, you can edit the <code class="docutils literal notranslate"><span class="pre">custom.css</span></code> file.</p>
 </section>
 <section id="misc">
-<h2>Misc<a class="headerlink" href="#misc" title="Permalink to this heading"></a></h2>
+<h2>Misc<a class="headerlink" href="#misc" title="Link to this heading"></a></h2>
 <p>Other changes, such as changing the favicon, the css etc., can be made in the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file. See the <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html">sphinx docs</a> and the <a class="reference external" href="https://sphinx-rtd-theme.readthedocs.io/en/stable/configuring.html">sphinx-rtd-theme</a> docs for more information.</p>
 </section>
 </section>

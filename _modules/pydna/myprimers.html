@@ -1,22 +1,22 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pydna.myprimers &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -112,20 +112,22 @@
 <span class="sd">primerdict returns a dict where the key is the id of the object.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os</span> <span class="k">as</span> <span class="nn">_os</span>
-<span class="kn">import</span> <span class="nn">re</span> <span class="k">as</span> <span class="nn">_re</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">copy</span> <span class="k">as</span> <span class="nn">_copy</span>
-<span class="kn">from</span> <span class="nn">keyword</span> <span class="kn">import</span> <span class="n">iskeyword</span> <span class="k">as</span> <span class="n">_iskeyword</span>
-<span class="kn">from</span> <span class="nn">pydna.parsers</span> <span class="kn">import</span> <span class="n">parse_primers</span> <span class="k">as</span> <span class="n">_parse_primers</span>
-<span class="kn">from</span> <span class="nn">pydna._pretty</span> <span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">UserList</span> <span class="k">as</span> <span class="n">_UserList</span>
-<span class="kn">from</span> <span class="nn">pydna.utils</span> <span class="kn">import</span> <span class="n">open_folder</span> <span class="k">as</span> <span class="n">_open_folder</span>
-<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="vm">__dict__</span> <span class="k">as</span> <span class="n">_kw</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keyword</span><span class="w"> </span><span class="kn">import</span> <span class="n">iskeyword</span> <span class="k">as</span> <span class="n">_iskeyword</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_primers</span> <span class="k">as</span> <span class="n">_parse_primers</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserList</span> <span class="k">as</span> <span class="n">_UserList</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">open_folder</span> <span class="k">as</span> <span class="n">_open_folder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">builtins</span><span class="w"> </span><span class="kn">import</span> <span class="vm">__dict__</span> <span class="k">as</span> <span class="n">_kw</span>
 
 
-<div class="viewcode-block" id="PrimerList"><a class="viewcode-back" href="../../modules/pydna_myprimers.html#pydna.all.PrimerList">[docs]</a><span class="k">class</span> <span class="nc">PrimerList</span><span class="p">(</span><span class="n">_UserList</span><span class="p">):</span>
+<div class="viewcode-block" id="PrimerList">
+<a class="viewcode-back" href="../../modules/pydna_myprimers.html#pydna.all.PrimerList">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PrimerList</span><span class="p">(</span><span class="n">_UserList</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read a text file with primers.</span>
 
 <span class="sd">    The primers can be of any format readable by the parse_primers</span>
@@ -141,7 +143,7 @@
 <span class="sd">    property.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">initlist</span><span class="p">:</span> <span class="n">Iterable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">path</span><span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -163,7 +165,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">identifier</span><span class="si">}</span><span class="s2"> is not a valid identifier.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save indices of accessed items.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
@@ -180,7 +182,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">accessed_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
 
-    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Items already present can be set to the same value.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;index </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
@@ -191,11 +193,13 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">accessed_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">accessed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">accessed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessed_indices</span><span class="p">]</span>
 
-<div class="viewcode-block" id="PrimerList.assign_numbers"><a class="viewcode-back" href="../../modules/pydna_myprimers.html#pydna.all.PrimerList.assign_numbers">[docs]</a>    <span class="k">def</span> <span class="nf">assign_numbers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lst</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<div class="viewcode-block" id="PrimerList.assign_numbers">
+<a class="viewcode-back" href="../../modules/pydna_myprimers.html#pydna.all.PrimerList.assign_numbers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">assign_numbers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lst</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find new primers in lst.</span>
 
 <span class="sd">        Returns a string containing new primers with their assigned</span>
@@ -225,7 +229,10 @@
         <span class="n">newold</span> <span class="o">=</span> <span class="n">new</span> <span class="o">+</span> <span class="n">found</span>
         <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;primer&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">newold</span><span class="p">]))</span></div>
 
-<div class="viewcode-block" id="PrimerList.pydna_code_from_list"><a class="viewcode-back" href="../../modules/pydna_myprimers.html#pydna.all.PrimerList.pydna_code_from_list">[docs]</a>    <span class="k">def</span> <span class="nf">pydna_code_from_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lst</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PrimerList.pydna_code_from_list">
+<a class="viewcode-back" href="../../modules/pydna_myprimers.html#pydna.all.PrimerList.pydna_code_from_list">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pydna_code_from_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lst</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Pydna code for a list of primer objects.&quot;&quot;&quot;</span>
         <span class="n">indices</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">prstrs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
@@ -250,17 +257,24 @@
         <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&#39;&#39;&#39;)&quot;</span>
         <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="PrimerList.open_folder"><a class="viewcode-back" href="../../modules/pydna_myprimers.html#pydna.all.PrimerList.open_folder">[docs]</a>    <span class="k">def</span> <span class="nf">open_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PrimerList.open_folder">
+<a class="viewcode-back" href="../../modules/pydna_myprimers.html#pydna.all.PrimerList.open_folder">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open folder where primer file is located.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
             <span class="n">_open_folder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;path property not set.&quot;</span><span class="p">)</span></div>
 
+
     <span class="n">code</span> <span class="o">=</span> <span class="n">pydna_code_from_list</span></div>
 
 
-<div class="viewcode-block" id="check_primer_numbers"><a class="viewcode-back" href="../../modules/pydna_myprimers.html#pydna.all.check_primer_numbers">[docs]</a><span class="k">def</span> <span class="nf">check_primer_numbers</span><span class="p">(</span><span class="n">pl</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="check_primer_numbers">
+<a class="viewcode-back" href="../../modules/pydna_myprimers.html#pydna.all.check_primer_numbers">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_primer_numbers</span><span class="p">(</span><span class="n">pl</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find primers whose number do not match position in list.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">pl</span><span class="p">:</span>
         <span class="n">pl</span> <span class="o">=</span> <span class="n">PrimerList</span><span class="p">()</span>
@@ -271,14 +285,20 @@
     <span class="k">return</span> <span class="n">primers_with_wrong_number</span></div>
 
 
-<div class="viewcode-block" id="undefined_sequence"><a class="viewcode-back" href="../../modules/pydna_myprimers.html#pydna.all.undefined_sequence">[docs]</a><span class="k">def</span> <span class="nf">undefined_sequence</span><span class="p">(</span><span class="n">pl</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="undefined_sequence">
+<a class="viewcode-back" href="../../modules/pydna_myprimers.html#pydna.all.undefined_sequence">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">undefined_sequence</span><span class="p">(</span><span class="n">pl</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Primers in list with N or n instead of a sequence.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">pl</span><span class="p">:</span>
         <span class="n">pl</span> <span class="o">=</span> <span class="n">PrimerList</span><span class="p">()</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pl</span> <span class="k">if</span> <span class="n">_re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;N+&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">upper</span><span class="p">()))]</span></div>
 
 
-<div class="viewcode-block" id="find_duplicate_primers"><a class="viewcode-back" href="../../modules/pydna_myprimers.html#pydna.all.find_duplicate_primers">[docs]</a><span class="k">def</span> <span class="nf">find_duplicate_primers</span><span class="p">(</span><span class="n">pl</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="find_duplicate_primers">
+<a class="viewcode-back" href="../../modules/pydna_myprimers.html#pydna.all.find_duplicate_primers">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_duplicate_primers</span><span class="p">(</span><span class="n">pl</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find a list of lists with duplicated primer sequences.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">pl</span><span class="p">:</span>
         <span class="n">pl</span> <span class="o">=</span> <span class="n">PrimerList</span><span class="p">()</span>
@@ -288,10 +308,11 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">pl</span> <span class="k">for</span> <span class="n">ps</span><span class="p">,</span> <span class="n">pl</span> <span class="ow">in</span> <span class="n">pg</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pl</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span></div>
 
 
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">cache</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cache&quot;</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cache&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;nocache&quot;</span>
-    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
 
     <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cache&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cache</span>

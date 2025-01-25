@@ -1,22 +1,22 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pydna.genbankfixer &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -102,8 +102,8 @@
 <span class="sd">which is the formatted genbank string.&quot;&quot;&quot;</span>
 
 
-<span class="kn">import</span> <span class="nn">re</span> <span class="k">as</span> <span class="nn">_re</span>
-<span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">_pp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyparsing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_pp</span>
 
 <span class="n">GoodLocus</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">_pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="s2">&quot;LOCUS&quot;</span><span class="p">)</span>
@@ -230,7 +230,9 @@
 <span class="n">featLocation</span> <span class="o">=</span> <span class="n">_pp</span><span class="o">.</span><span class="n">Group</span><span class="p">(</span><span class="n">SimpleSlice</span> <span class="o">|</span> <span class="n">complexSlice</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="parseGBLoc"><a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.parseGBLoc">[docs]</a><span class="k">def</span> <span class="nf">parseGBLoc</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">l_</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="parseGBLoc">
+<a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.parseGBLoc">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parseGBLoc</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">l_</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;retwingles parsed genbank location strings, assumes no joins of RC and FWD sequences&quot;&quot;&quot;</span>
     <span class="n">strand</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">locationlist</span> <span class="o">=</span> <span class="p">[]</span>
@@ -248,18 +250,25 @@
     <span class="k">return</span> <span class="p">[[</span><span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="n">locationlist</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;strand&quot;</span><span class="p">,</span> <span class="n">strand</span><span class="p">]]</span></div>
 
 
+
 <span class="n">featLocation</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="n">parseGBLoc</span><span class="p">)</span>
 
 <span class="c1"># ==== Genbank Feature Key-Value Pairs</span>
 
 
-<div class="viewcode-block" id="strip_multiline"><a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.strip_multiline">[docs]</a><span class="k">def</span> <span class="nf">strip_multiline</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">l_</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<div class="viewcode-block" id="strip_multiline">
+<a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.strip_multiline">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">strip_multiline</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">l_</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
     <span class="n">whitespace</span> <span class="o">=</span> <span class="n">_re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;[</span><span class="se">\n</span><span class="s2">]</span><span class="si">{1}</span><span class="s2">[ ]+&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">whitespace</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="toInt"><a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.toInt">[docs]</a><span class="k">def</span> <span class="nf">toInt</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">l_</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+
+<div class="viewcode-block" id="toInt">
+<a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.toInt">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">toInt</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">l_</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
 
 
 <span class="c1"># Quoted KeyVal:   /key=&quot;value&quot;</span>
@@ -341,12 +350,17 @@
 <span class="c1"># Main JSON Conversion Routine</span>
 
 
-<div class="viewcode-block" id="strip_indent"><a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.strip_indent">[docs]</a><span class="k">def</span> <span class="nf">strip_indent</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="strip_indent">
+<a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.strip_indent">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">strip_indent</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
     <span class="n">whitespace</span> <span class="o">=</span> <span class="n">_re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;[</span><span class="se">\n</span><span class="s2">]</span><span class="si">{1}</span><span class="s2">(COMMENT){0,1}[ ]+&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">whitespace</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="concat_dict"><a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.concat_dict">[docs]</a><span class="k">def</span> <span class="nf">concat_dict</span><span class="p">(</span><span class="n">dlist</span><span class="p">):</span>
+
+<div class="viewcode-block" id="concat_dict">
+<a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.concat_dict">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">concat_dict</span><span class="p">(</span><span class="n">dlist</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;more or less dict(list of string pairs) but merges</span>
 <span class="sd">    vals with the same keys so no duplicates occur</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -359,7 +373,10 @@
     <span class="k">return</span> <span class="n">newdict</span></div>
 
 
-<div class="viewcode-block" id="toJSON"><a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.toJSON">[docs]</a><span class="k">def</span> <span class="nf">toJSON</span><span class="p">(</span><span class="n">gbkstring</span><span class="p">):</span>
+
+<div class="viewcode-block" id="toJSON">
+<a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.toJSON">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">toJSON</span><span class="p">(</span><span class="n">gbkstring</span><span class="p">):</span>
     <span class="n">parsed</span> <span class="o">=</span> <span class="n">multipleGB</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">gbkstring</span><span class="p">)</span>
 
     <span class="n">jseqlist</span> <span class="o">=</span> <span class="p">[]</span>
@@ -408,7 +425,10 @@
     <span class="k">return</span> <span class="n">jseqlist</span></div>
 
 
-<div class="viewcode-block" id="wrapstring"><a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.wrapstring">[docs]</a><span class="k">def</span> <span class="nf">wrapstring</span><span class="p">(</span><span class="n">str_</span><span class="p">,</span> <span class="n">rowstart</span><span class="p">,</span> <span class="n">rowend</span><span class="p">,</span> <span class="n">padfirst</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="wrapstring">
+<a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.wrapstring">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">wrapstring</span><span class="p">(</span><span class="n">str_</span><span class="p">,</span> <span class="n">rowstart</span><span class="p">,</span> <span class="n">rowend</span><span class="p">,</span> <span class="n">padfirst</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    wraps the provided string in lines of length rowend-rowstart</span>
 <span class="sd">    and padded on the left by rowstart.</span>
@@ -438,7 +458,10 @@
     <span class="k">return</span> <span class="n">wrappedstr</span></div>
 
 
-<div class="viewcode-block" id="locstr"><a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.locstr">[docs]</a><span class="k">def</span> <span class="nf">locstr</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">strand</span><span class="p">):</span>
+
+<div class="viewcode-block" id="locstr">
+<a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.locstr">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">locstr</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">strand</span><span class="p">):</span>
     <span class="s2">&quot;genbank formatted location string, assumes no join&#39;d combo of rev and fwd seqs&quot;</span>
     <span class="c1"># slice format is like: 1..10,20..30,101..200</span>
     <span class="n">locstr</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">((</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;..&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span> <span class="n">locs</span><span class="p">))</span>
@@ -449,7 +472,10 @@
     <span class="k">return</span> <span class="n">locstr</span></div>
 
 
-<div class="viewcode-block" id="originstr"><a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.originstr">[docs]</a><span class="k">def</span> <span class="nf">originstr</span><span class="p">(</span><span class="n">sequence</span><span class="p">):</span>
+
+<div class="viewcode-block" id="originstr">
+<a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.originstr">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">originstr</span><span class="p">(</span><span class="n">sequence</span><span class="p">):</span>
     <span class="s2">&quot;formats dna sequence as broken, numbered lines ala genbank&quot;</span>
     <span class="n">wordlen</span> <span class="o">=</span> <span class="mi">10</span>
     <span class="n">cols</span> <span class="o">=</span> <span class="mi">6</span>
@@ -477,7 +503,10 @@
     <span class="k">return</span> <span class="n">outstr</span></div>
 
 
-<div class="viewcode-block" id="toGB"><a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.toGB">[docs]</a><span class="k">def</span> <span class="nf">toGB</span><span class="p">(</span><span class="n">jseq</span><span class="p">):</span>
+
+<div class="viewcode-block" id="toGB">
+<a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.toGB">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">toGB</span><span class="p">(</span><span class="n">jseq</span><span class="p">):</span>
     <span class="s2">&quot;parses json jseq data and prints out ApE compatible genbank&quot;</span>
 
     <span class="c1"># construct the LOCUS header string</span>
@@ -567,7 +596,10 @@
     <span class="k">return</span> <span class="n">locusstr</span> <span class="o">+</span> <span class="n">gbprops</span> <span class="o">+</span> <span class="n">featuresstr</span> <span class="o">+</span> <span class="n">gborigin</span></div>
 
 
-<div class="viewcode-block" id="gbtext_clean"><a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.gbtext_clean">[docs]</a><span class="k">def</span> <span class="nf">gbtext_clean</span><span class="p">(</span><span class="n">gbtext</span><span class="p">):</span>
+
+<div class="viewcode-block" id="gbtext_clean">
+<a class="viewcode-back" href="../../modules/pydna_genbankfixer.html#pydna.all.gbtext_clean">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gbtext_clean</span><span class="p">(</span><span class="n">gbtext</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This function takes a string containing **one** genbank sequence</span>
 <span class="sd">    in Genbank format and returns a named tuple containing two fields,</span>
 <span class="sd">    the gbtext containing a string with the corrected genbank sequence and</span>
@@ -642,20 +674,21 @@
 
     <span class="n">jseqlist</span> <span class="o">=</span> <span class="n">toJSON</span><span class="p">(</span><span class="n">gbtext</span><span class="p">)</span>
     <span class="n">jseq</span> <span class="o">=</span> <span class="n">jseqlist</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-    <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span> <span class="k">as</span> <span class="n">_namedtuple</span>
-    <span class="kn">from</span> <span class="nn">pydna._pretty</span> <span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span> <span class="k">as</span> <span class="n">_namedtuple</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
 
     <span class="n">Result</span> <span class="o">=</span> <span class="n">_namedtuple</span><span class="p">(</span><span class="s2">&quot;Result&quot;</span><span class="p">,</span> <span class="s2">&quot;gbtext jseq&quot;</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">Result</span><span class="p">(</span><span class="n">_pretty_str</span><span class="p">(</span><span class="n">toGB</span><span class="p">(</span><span class="n">jseq</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span> <span class="n">jseq</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result</span></div>
 
 
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">os</span> <span class="k">as</span> <span class="nn">_os</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
 
     <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
 
     <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>

@@ -1,22 +1,22 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pydna.fusionpcr &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -79,18 +79,20 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">from</span> <span class="nn">pydna.common_sub_strings</span> <span class="kn">import</span> <span class="n">terminal_overlap</span>
-<span class="kn">from</span> <span class="nn">pydna.dseq</span> <span class="kn">import</span> <span class="n">Dseq</span>
-<span class="kn">from</span> <span class="nn">pydna.dseqrecord</span> <span class="kn">import</span> <span class="n">Dseqrecord</span>
-<span class="kn">from</span> <span class="nn">pydna.utils</span> <span class="kn">import</span> <span class="n">rc</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.common_sub_strings</span><span class="w"> </span><span class="kn">import</span> <span class="n">terminal_overlap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">combinations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">copy</span>
 
 
-<div class="viewcode-block" id="fuse_by_pcr"><a class="viewcode-back" href="../../modules/pydna_fusionpcr.html#pydna.fusionpcr.fuse_by_pcr">[docs]</a><span class="k">def</span> <span class="nf">fuse_by_pcr</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
+<div class="viewcode-block" id="fuse_by_pcr">
+<a class="viewcode-back" href="../../modules/pydna_fusionpcr.html#pydna.fusionpcr.fuse_by_pcr">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fuse_by_pcr</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">anneal</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">anneal</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="n">new</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">rc</span><span class="p">()),</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">rc</span><span class="p">(),</span> <span class="n">y</span><span class="p">)]:</span>
@@ -137,7 +139,10 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fragments</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">argument</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="list_parts"><a class="viewcode-back" href="../../modules/pydna_fusionpcr.html#pydna.fusionpcr.list_parts">[docs]</a><span class="k">def</span> <span class="nf">list_parts</span><span class="p">(</span><span class="n">fusion_pcr_fragment</span><span class="p">):</span>
+
+<div class="viewcode-block" id="list_parts">
+<a class="viewcode-back" href="../../modules/pydna_fusionpcr.html#pydna.fusionpcr.list_parts">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_parts</span><span class="p">(</span><span class="n">fusion_pcr_fragment</span><span class="p">):</span>
     <span class="n">stack</span> <span class="o">=</span> <span class="p">[</span><span class="n">fusion_pcr_fragment</span><span class="p">]</span>
     <span class="n">processed</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -162,6 +167,7 @@
         <span class="n">msg</span> <span class="o">+=</span> <span class="nb">repr</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
 
     <span class="k">return</span> <span class="n">msg</span></div>
+
 </pre></div>
 
            </div>

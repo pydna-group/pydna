@@ -1,22 +1,22 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pydna.amplify &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -91,25 +91,25 @@
 <span class="sd">Primers with 5&#39; tails as well as inverse PCR on circular templates are handled</span>
 <span class="sd">correctly.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">pydna._pretty</span> <span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
-<span class="kn">from</span> <span class="nn">pydna.utils</span> <span class="kn">import</span> <span class="n">flatten</span> <span class="k">as</span> <span class="n">_flatten</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">flatten</span> <span class="k">as</span> <span class="n">_flatten</span>
 
 <span class="c1"># from pydna.utils import memorize as _memorize</span>
-<span class="kn">from</span> <span class="nn">pydna.utils</span> <span class="kn">import</span> <span class="n">rc</span> <span class="k">as</span> <span class="n">_rc</span><span class="p">,</span> <span class="n">shift_feature</span> <span class="k">as</span> <span class="n">_shift_feature</span>
-<span class="kn">from</span> <span class="nn">pydna.amplicon</span> <span class="kn">import</span> <span class="n">Amplicon</span> <span class="k">as</span> <span class="n">_Amplicon</span>
-<span class="kn">from</span> <span class="nn">pydna.primer</span> <span class="kn">import</span> <span class="n">Primer</span> <span class="k">as</span> <span class="n">_Primer</span>
-<span class="kn">from</span> <span class="nn">pydna.seqrecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span> <span class="k">as</span> <span class="n">_SeqRecord</span>
-<span class="kn">from</span> <span class="nn">pydna.dseqrecord</span> <span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
-<span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="kn">import</span> <span class="n">SeqFeature</span> <span class="k">as</span> <span class="n">_SeqFeature</span>
-<span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="kn">import</span> <span class="n">SimpleLocation</span> <span class="k">as</span> <span class="n">_SimpleLocation</span>
-<span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="kn">import</span> <span class="n">CompoundLocation</span> <span class="k">as</span> <span class="n">_CompoundLocation</span>
-<span class="kn">from</span> <span class="nn">pydna.seq</span> <span class="kn">import</span> <span class="n">Seq</span> <span class="k">as</span> <span class="n">_Seq</span>
-<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">_itertools</span>
-<span class="kn">import</span> <span class="nn">re</span> <span class="k">as</span> <span class="nn">_re</span>
-<span class="kn">import</span> <span class="nn">copy</span> <span class="k">as</span> <span class="nn">_copy</span>
-<span class="kn">import</span> <span class="nn">operator</span> <span class="k">as</span> <span class="nn">_operator</span>
-<span class="kn">import</span> <span class="nn">os</span> <span class="k">as</span> <span class="nn">_os</span>
-<span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">_logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rc</span> <span class="k">as</span> <span class="n">_rc</span><span class="p">,</span> <span class="n">shift_feature</span> <span class="k">as</span> <span class="n">_shift_feature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplicon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Amplicon</span> <span class="k">as</span> <span class="n">_Amplicon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span> <span class="k">as</span> <span class="n">_Primer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span> <span class="k">as</span> <span class="n">_SeqRecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqFeature</span> <span class="k">as</span> <span class="n">_SeqFeature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span> <span class="k">as</span> <span class="n">_SimpleLocation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompoundLocation</span> <span class="k">as</span> <span class="n">_CompoundLocation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq</span> <span class="k">as</span> <span class="n">_Seq</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_operator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_logging</span>
 
 <span class="n">_module_logger</span> <span class="o">=</span> <span class="n">_logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pydna.&quot;</span> <span class="o">+</span> <span class="vm">__name__</span><span class="p">)</span>
 
@@ -133,7 +133,7 @@
 <span class="p">}</span>
 
 
-<span class="k">def</span> <span class="nf">_annealing_positions</span><span class="p">(</span><span class="n">primer</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_annealing_positions</span><span class="p">(</span><span class="n">primer</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Finds the annealing position(s) for a primer on a template where the</span>
 <span class="sd">    primer anneals perfectly with at least limit nucleotides in the 3&#39; part.</span>
 <span class="sd">    The primer is the lower strand in the figure below.</span>
@@ -202,7 +202,9 @@
 <span class="c1">#         return super().__call__(*args, **kwargs)</span>
 
 
-<div class="viewcode-block" id="Anneal"><a class="viewcode-back" href="../../modules/pydna_amplify.html#pydna.all.Anneal">[docs]</a><span class="k">class</span> <span class="nc">Anneal</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>  <span class="c1"># ), metaclass=_Memoize):</span>
+<div class="viewcode-block" id="Anneal">
+<a class="viewcode-back" href="../../modules/pydna_amplify.html#pydna.all.Anneal">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Anneal</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>  <span class="c1"># ), metaclass=_Memoize):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The Anneal class has the following important attributes:</span>
 
 <span class="sd">    Attributes</span>
@@ -218,7 +220,7 @@
 <span class="sd">    limit : int, optional</span>
 <span class="sd">        The limit of PCR primer annealing, default is 13 bp.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">primers</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">primers</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The Anneal class has to be initiated with at least an iterable of</span>
 <span class="sd">        primers and a template.</span>
 
@@ -411,7 +413,7 @@
                 <span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">products</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">products</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_products</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_products</span>
 
@@ -452,7 +454,7 @@
                     <span class="k">elif</span> <span class="s2">&quot;note&quot;</span> <span class="ow">in</span> <span class="n">ft</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">:</span>
                         <span class="n">new_identifier</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ft</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">])</span>
 
-                <span class="kn">from</span> <span class="nn">pydna.utils</span> <span class="kn">import</span> <span class="p">(</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
                     <span class="n">identifier_from_string</span> <span class="k">as</span> <span class="n">_identifier_from_string</span><span class="p">,</span>
                 <span class="p">)</span>  <span class="c1"># TODO:  clean this up</span>
 
@@ -481,11 +483,11 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_products</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;returns a short string representation&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;Reaction(products = </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">forward_primers</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse_primers</span><span class="p">)))</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;returns a short report describing if or where primer</span>
 <span class="sd">        anneal on the template.&quot;&quot;&quot;</span>
 
@@ -511,7 +513,10 @@
     <span class="n">report</span> <span class="o">=</span> <span class="fm">__str__</span></div>
 
 
-<div class="viewcode-block" id="pcr"><a class="viewcode-back" href="../../modules/pydna_amplify.html#pydna.all.pcr">[docs]</a><span class="k">def</span> <span class="nf">pcr</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Amplicon</span><span class="p">:</span>
+
+<div class="viewcode-block" id="pcr">
+<a class="viewcode-back" href="../../modules/pydna_amplify.html#pydna.all.pcr">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pcr</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Amplicon</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;pcr is a convenience function for the Anneal class to simplify its</span>
 <span class="sd">    usage, especially from the command line. If more than one or no PCR</span>
 <span class="sd">    product is formed, a ValueError is raised.</span>
@@ -606,10 +611,11 @@
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PCR not specific! </span><span class="si">{</span><span class="nb">format</span><span class="p">(</span><span class="n">anneal_primers</span><span class="o">.</span><span class="n">report</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
 
     <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>

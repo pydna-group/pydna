@@ -1,23 +1,23 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Working with Features using the Dseqrecord class &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -76,7 +76,7 @@
            <div itemprop="articleBody">
              
   <section id="working-with-features-using-the-dseqrecord-class">
-<h1>Working with Features using the Dseqrecord class<a class="headerlink" href="#working-with-features-using-the-dseqrecord-class" title="Permalink to this heading"></a></h1>
+<h1>Working with Features using the Dseqrecord class<a class="headerlink" href="#working-with-features-using-the-dseqrecord-class" title="Link to this heading"></a></h1>
 <blockquote>
 <div><p>Before working with features, check how to import sequences from files in the <a class="reference internal" href="#./Importing_Seqs.ipynb"><span class="xref myst">Importing_Seqs notebook</span></a>.</p>
 <p>For full library documentation, visit <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a>.</p>
@@ -88,13 +88,13 @@
 </a>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
 <span class="c1"># Install pydna (only when running on Colab)</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
     <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pydna.dseqrecord</span> <span class="kn">import</span> <span class="n">Dseqrecord</span>
-<span class="kn">from</span> <span class="nn">pydna.parsers</span> <span class="kn">import</span> <span class="n">parse</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
 
 <span class="c1">#Import your file into python. </span>
 <span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;./U49845.gb&quot;</span>
@@ -171,14 +171,14 @@ qualifiers:
 </div>
 <p>Additional ways to view and search for particular features are shown at the bottom of the page under “Other Methods to Viewing Features”</p>
 <section id="adding-features-and-qualifiers">
-<h2>Adding Features and Qualifiers<a class="headerlink" href="#adding-features-and-qualifiers" title="Permalink to this heading"></a></h2>
+<h2>Adding Features and Qualifiers<a class="headerlink" href="#adding-features-and-qualifiers" title="Link to this heading"></a></h2>
 <p>To add new feature to describe a region of interest to a record, for instance a region that you would like to perform a PCR, you need to create a <code class="docutils literal notranslate"><span class="pre">SeqFeature</span></code> (sequence feature). The minimal information required is:</p>
 <ul class="simple">
 <li><p>A <code class="docutils literal notranslate"><span class="pre">FeatureLocation</span></code>: position of the feature in the sequence.</p></li>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">type</span></code> of feature you want to add.</p></li>
 </ul>
 <p>🚨🚨 <strong>VERY IMPORTANT</strong> 🚨🚨. Note that <code class="docutils literal notranslate"><span class="pre">FeatureLocation</span></code>s are like python ranges (zero-based open intervals), whereas in GenBank files, locations are one-based closed intervals. For instance, the following code adds a new feature from the 2nd to the 5th nucleotide (<code class="docutils literal notranslate"><span class="pre">FeatureLocation(3,</span> <span class="pre">15)</span></code>), of the <code class="docutils literal notranslate"><span class="pre">gene</span></code> type, but in the GenBank file will be represented as <code class="docutils literal notranslate"><span class="pre">4..15</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="kn">import</span> <span class="n">FeatureLocation</span><span class="p">,</span> <span class="n">SeqFeature</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureLocation</span><span class="p">,</span> <span class="n">SeqFeature</span>
 
 <span class="c1"># Create a dummy record</span>
 <span class="n">dummy_record</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;aaaATGCGTACGTGAacgt&quot;</span><span class="p">)</span>
@@ -336,10 +336,10 @@ ORIGIN
 </pre></div>
 </div>
 <section id="adding-a-feature-with-parts">
-<h3>Adding a Feature with Parts<a class="headerlink" href="#adding-a-feature-with-parts" title="Permalink to this heading"></a></h3>
+<h3>Adding a Feature with Parts<a class="headerlink" href="#adding-a-feature-with-parts" title="Link to this heading"></a></h3>
 <p>To add a feature with parts, like a CDS with introns, we need to use a <code class="docutils literal notranslate"><span class="pre">CompoundLocation</span></code> object when creating a <code class="docutils literal notranslate"><span class="pre">SeqFeature</span></code>.</p>
 <p>The example code below adds a CDS with two parts, between 3-9bp and 12-15bp, to my features list. In a real-world scenario this would represent a CDS with an intron that skips the <code class="docutils literal notranslate"><span class="pre">ACG</span></code> codon: ATGCGT~~ACG~~TGA</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="kn">import</span> <span class="n">CompoundLocation</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompoundLocation</span>
 
 <span class="c1"># Define the locations of the CDS</span>
 <span class="n">locations</span> <span class="o">=</span> <span class="p">[</span><span class="n">FeatureLocation</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="n">FeatureLocation</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">)]</span>
@@ -402,13 +402,13 @@ ProteinSeq(&#39;MR&#39;)
 </div>
 </section>
 <section id="standard-feature-types-and-qualifiers">
-<h3>Standard Feature Types and Qualifiers<a class="headerlink" href="#standard-feature-types-and-qualifiers" title="Permalink to this heading"></a></h3>
+<h3>Standard Feature Types and Qualifiers<a class="headerlink" href="#standard-feature-types-and-qualifiers" title="Link to this heading"></a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">pydna</span></code> and <code class="docutils literal notranslate"><span class="pre">Bio.SeqFeature</span></code> suppports all the conventional feature types through the <code class="docutils literal notranslate"><span class="pre">type</span></code> parameters. A non-exhaustive list include gene, CDS, promoter, exon, intron, 5’ UTR, 3’ UTR, terminator, enhancer, and RBS. You can also define custom features, which could be useful for synthetic biology applications. For instance, you might want to have Bio_brick or spacer features to describe a synthetic standardised plasmid construct.</p>
 <p>It is important to note that while <code class="docutils literal notranslate"><span class="pre">pydna</span></code> and <code class="docutils literal notranslate"><span class="pre">Bio.SeqFeature</span></code> does not restrict the feature types you can use, sticking to standard types helps maintain compatibility with other bioinformatics tools and databases. Please refer to the official <a class="reference external" href="https://www.insdc.org/submitting-standards/feature-table/#2">GenBank_Feature_Table</a>, that lists the standard feature types and their associated qualifiers.</p>
 <p>Further documentation for <code class="docutils literal notranslate"><span class="pre">SeqFeature</span></code>, <code class="docutils literal notranslate"><span class="pre">CompoundLocation</span></code>, and <code class="docutils literal notranslate"><span class="pre">FeatureLocation</span></code> can be found in the <code class="docutils literal notranslate"><span class="pre">SeqFeature</span></code> module <a class="reference external" href="https://biopython.org/docs/1.75/api/Bio.SeqFeature.html">here</a>.</p>
 </section>
 <section id="handling-origin-spanning-features">
-<h3>Handling Origin Spanning Features<a class="headerlink" href="#handling-origin-spanning-features" title="Permalink to this heading"></a></h3>
+<h3>Handling Origin Spanning Features<a class="headerlink" href="#handling-origin-spanning-features" title="Link to this heading"></a></h3>
 <p>An origin spanning feature is a special type of feature that crosses over a circular sequence’s origin. In pydna, such a feature is represented as a feature with parts, joining the part of the sequence immediately before the origin and immediately after the origin. They can be added using <code class="docutils literal notranslate"><span class="pre">CompoundLocation</span></code> as normal.</p>
 <p>An origin spanning feature, between base 19 to base 6, in a 25bp long circular sequence, is represented like so:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">:</span> <span class="n">gene</span> 
@@ -464,7 +464,7 @@ ORIGIN
 </div>
 </section>
 <section id="other-methods-to-viewing-features">
-<h3>Other Methods to Viewing Features<a class="headerlink" href="#other-methods-to-viewing-features" title="Permalink to this heading"></a></h3>
+<h3>Other Methods to Viewing Features<a class="headerlink" href="#other-methods-to-viewing-features" title="Link to this heading"></a></h3>
 <p>pydna also provides the <code class="docutils literal notranslate"><span class="pre">list_features</span></code> method as a simple way to list all the features in a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">sample_record</span><span class="o">.</span><span class="n">list_features</span><span class="p">())</span>
 </pre></div>
@@ -541,7 +541,7 @@ qualifiers:
 <p>If you would like to search for another type of features, simply replace the <code class="docutils literal notranslate"><span class="pre">&quot;gene&quot;</span></code> with your desired feature type in quotation marks.</p>
 </section>
 <section id="removing-features">
-<h3>Removing Features<a class="headerlink" href="#removing-features" title="Permalink to this heading"></a></h3>
+<h3>Removing Features<a class="headerlink" href="#removing-features" title="Link to this heading"></a></h3>
 <p>In pydna, we can search for the feature that we would like to remove using the feature’s types or qualififers. For instance, we can modify the features list to exclude all CDS:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Remove all CDS type features from my feature list</span>
 <span class="n">sample_record</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">sample_record</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CDS&quot;</span><span class="p">)]</span>

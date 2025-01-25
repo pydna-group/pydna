@@ -1,22 +1,22 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pydna.editor &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -94,19 +94,21 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">time</span> <span class="k">as</span> <span class="nn">_time</span>
-<span class="kn">import</span> <span class="nn">tempfile</span> <span class="k">as</span> <span class="nn">_tempfile</span>
-<span class="kn">import</span> <span class="nn">os</span> <span class="k">as</span> <span class="nn">_os</span>
-<span class="kn">import</span> <span class="nn">subprocess</span> <span class="k">as</span> <span class="nn">_subprocess</span>
-<span class="kn">import</span> <span class="nn">operator</span> <span class="k">as</span> <span class="nn">_operator</span>
-<span class="kn">import</span> <span class="nn">string</span> <span class="k">as</span> <span class="nn">_string</span>
-<span class="kn">import</span> <span class="nn">copy</span> <span class="k">as</span> <span class="nn">_copy</span>
-<span class="kn">import</span> <span class="nn">uuid</span> <span class="k">as</span> <span class="nn">_uuid</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_operator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">string</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_string</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_uuid</span>
 
 <span class="n">_wl</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">-_.()&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_string</span><span class="o">.</span><span class="n">ascii_letters</span><span class="p">,</span> <span class="n">_string</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Editor"><a class="viewcode-back" href="../../modules/pydna_editor.html#pydna.all.Editor">[docs]</a><span class="k">class</span> <span class="nc">Editor</span><span class="p">:</span>
+<div class="viewcode-block" id="Editor">
+<a class="viewcode-back" href="../../modules/pydna_editor.html#pydna.all.Editor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Editor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The Editor class needs to be instantiated before use.</span>
 
@@ -129,7 +131,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shell_command_for_editor</span><span class="p">,</span> <span class="n">tmpdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shell_command_for_editor</span><span class="p">,</span> <span class="n">tmpdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path_to_editor</span> <span class="o">=</span> <span class="n">shell_command_for_editor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmpdir</span> <span class="o">=</span> <span class="n">tmpdir</span> <span class="ow">or</span> <span class="n">_os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">(),</span> <span class="s2">&quot;ApE&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -137,7 +139,9 @@
         <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-<div class="viewcode-block" id="Editor.open"><a class="viewcode-back" href="../../modules/pydna_editor.html#pydna.all.Editor.open">[docs]</a>    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_to_open</span><span class="p">):</span>
+<div class="viewcode-block" id="Editor.open">
+<a class="viewcode-back" href="../../modules/pydna_editor.html#pydna.all.Editor.open">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_to_open</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open a sequence for editing in an external (DNA) editor.</span>
 
 <span class="sd">        Parameters</span>
@@ -175,23 +179,28 @@
             <span class="n">stdout</span><span class="o">=</span><span class="n">_tempfile</span><span class="o">.</span><span class="n">TemporaryFile</span><span class="p">(),</span>
             <span class="n">stderr</span><span class="o">=</span><span class="n">_tempfile</span><span class="o">.</span><span class="n">TemporaryFile</span><span class="p">(),</span>
         <span class="p">)</span><span class="o">.</span><span class="n">pid</span>
-        <span class="n">_time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span></div></div>
+        <span class="n">_time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span></div>
+</div>
+
 
 
 <span class="n">apeloader</span> <span class="o">=</span> <span class="n">Editor</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_ape&quot;</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="ape"><a class="viewcode-back" href="../../modules/pydna_editor.html#pydna.all.ape">[docs]</a><span class="k">def</span> <span class="nf">ape</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ape">
+<a class="viewcode-back" href="../../modules/pydna_editor.html#pydna.all.ape">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ape</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">apeloader</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">os</span> <span class="k">as</span> <span class="nn">_os</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
 
     <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
 
     <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>

@@ -1,23 +1,23 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pydna.genbankfixer &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -134,8 +134,8 @@
            <div itemprop="articleBody">
              
   <section id="pydna-genbankfixer">
-<h1>pydna.genbankfixer<a class="headerlink" href="#pydna-genbankfixer" title="Permalink to this heading"></a></h1>
-<span class="target" id="module-pydna.genbankfixer"></span><p>This module provides the <a class="reference internal" href="#pydna.genbankfixer.gbtext_clean" title="pydna.genbankfixer.gbtext_clean"><code class="xref py py-func docutils literal notranslate"><span class="pre">gbtext_clean()</span></code></a> function which can clean up broken Genbank files enough to
+<h1>pydna.genbankfixer<a class="headerlink" href="#pydna-genbankfixer" title="Link to this heading"></a></h1>
+<p id="module-pydna.genbankfixer">This module provides the <a class="reference internal" href="#pydna.genbankfixer.gbtext_clean" title="pydna.genbankfixer.gbtext_clean"><code class="xref py py-func docutils literal notranslate"><span class="pre">gbtext_clean()</span></code></a> function which can clean up broken Genbank files enough to
 pass the BioPython Genbank parser</p>
 <p>Almost all of this code was lifted from BioJSON (<a class="reference external" href="https://github.com/levskaya/BioJSON">https://github.com/levskaya/BioJSON</a>) by Anselm Levskaya.
 The original code was not accompanied by any software licence. This parser is based on pyparsing.</p>
@@ -148,40 +148,40 @@ This should not be a difficult fix. The returned result has two properties,
 which is the formatted genbank string.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.genbankfixer.parseGBLoc">
-<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">parseGBLoc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#parseGBLoc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.parseGBLoc" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">parseGBLoc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#parseGBLoc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.parseGBLoc" title="Link to this definition"></a></dt>
 <dd><p>retwingles parsed genbank location strings, assumes no joins of RC and FWD sequences</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.genbankfixer.strip_multiline">
-<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">strip_multiline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#strip_multiline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.strip_multiline" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">strip_multiline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#strip_multiline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.strip_multiline" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.genbankfixer.toInt">
-<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">toInt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#toInt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.toInt" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">toInt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#toInt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.toInt" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.genbankfixer.strip_indent">
-<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">strip_indent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#strip_indent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.strip_indent" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">strip_indent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#strip_indent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.strip_indent" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.genbankfixer.concat_dict">
-<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">concat_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dlist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#concat_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.concat_dict" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">concat_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dlist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#concat_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.concat_dict" title="Link to this definition"></a></dt>
 <dd><p>more or less dict(list of string pairs) but merges
 vals with the same keys so no duplicates occur</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.genbankfixer.toJSON">
-<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">toJSON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gbkstring</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#toJSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.toJSON" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">toJSON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gbkstring</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#toJSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.toJSON" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.genbankfixer.wrapstring">
-<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">wrapstring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowstart</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padfirst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#wrapstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.wrapstring" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">wrapstring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowstart</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padfirst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#wrapstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.wrapstring" title="Link to this definition"></a></dt>
 <dd><p>wraps the provided string in lines of length rowend-rowstart
 and padded on the left by rowstart.
 -&gt; if padfirst is false the first line is not padded</p>
@@ -189,25 +189,25 @@ and padded on the left by rowstart.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.genbankfixer.locstr">
-<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">locstr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#locstr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.locstr" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">locstr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#locstr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.locstr" title="Link to this definition"></a></dt>
 <dd><p>genbank formatted location string, assumes no join’d combo of rev and fwd seqs</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.genbankfixer.originstr">
-<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">originstr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#originstr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.originstr" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">originstr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#originstr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.originstr" title="Link to this definition"></a></dt>
 <dd><p>formats dna sequence as broken, numbered lines ala genbank</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.genbankfixer.toGB">
-<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">toGB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jseq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#toGB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.toGB" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">toGB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jseq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#toGB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.toGB" title="Link to this definition"></a></dt>
 <dd><p>parses json jseq data and prints out ApE compatible genbank</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.genbankfixer.gbtext_clean">
-<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">gbtext_clean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gbtext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#gbtext_clean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.gbtext_clean" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.genbankfixer.</span></span><span class="sig-name descname"><span class="pre">gbtext_clean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gbtext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbankfixer.html#gbtext_clean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbankfixer.gbtext_clean" title="Link to this definition"></a></dt>
 <dd><p>This function takes a string containing <strong>one</strong> genbank sequence
 in Genbank format and returns a named tuple containing two fields,
 the gbtext containing a string with the corrected genbank sequence and
@@ -224,7 +224,7 @@ jseq which contains the JSON intermediate.</p>
 <span class="gp">... </span><span class="s1">ORIGIN</span>
 <span class="gp">... </span><span class="s1">        1 aaa</span>
 <span class="gp">... </span><span class="s1">//&#39;&#39;&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pydna.readers</span> <span class="kn">import</span> <span class="n">read</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.readers</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">read</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  
 <span class="go">/home/bjorn/anaconda3/envs/bjorn36/lib/python3.6/site-packages/Bio/GenBank/Scanner.py:1388: BiopythonParserWarning: Malformed LOCUS line found - is this correct?</span>
 <span class="go">:&#39;LOCUS       New_DNA      3 bp    DNA   CIRCULAR SYN        19-JUN-2013\n&#39;</span>
@@ -243,7 +243,7 @@ jseq which contains the JSON intermediate.</p>
 <span class="gr">ValueError</span>: <span class="n">No sequences found in data:</span>
 <span class="x">(LOCUS       New_DNA      3 bp    DNA   CIRCULAR SYN        19-JUN-2013</span>
 <span class="x">DEFINITI)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pydna.genbankfixer</span> <span class="kn">import</span> <span class="n">gbtext_clean</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.genbankfixer</span><span class="w"> </span><span class="kn">import</span> <span class="n">gbtext_clean</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s2</span><span class="p">,</span> <span class="n">j2</span> <span class="o">=</span> <span class="n">gbtext_clean</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
 <span class="go">LOCUS       New_DNA                    3 bp ds-DNA     circular SYN 19-JUN-2013</span>

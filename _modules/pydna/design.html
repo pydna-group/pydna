@@ -1,22 +1,22 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pydna.design &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -92,23 +92,23 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">pydna.tm</span> <span class="kn">import</span> <span class="n">tm_default</span> <span class="k">as</span> <span class="n">_tm_default</span>
-<span class="kn">import</span> <span class="nn">math</span> <span class="k">as</span> <span class="nn">_math</span>
-<span class="kn">import</span> <span class="nn">os</span> <span class="k">as</span> <span class="nn">_os</span>
-<span class="kn">import</span> <span class="nn">copy</span> <span class="k">as</span> <span class="nn">_copy</span>
-<span class="kn">from</span> <span class="nn">pydna.amplicon</span> <span class="kn">import</span> <span class="n">Amplicon</span> <span class="k">as</span> <span class="n">_Amplicon</span>
-<span class="kn">from</span> <span class="nn">pydna.amplify</span> <span class="kn">import</span> <span class="n">Anneal</span> <span class="k">as</span> <span class="n">_Anneal</span>
-<span class="kn">from</span> <span class="nn">pydna.amplify</span> <span class="kn">import</span> <span class="n">pcr</span> <span class="k">as</span> <span class="n">_pcr</span>
-<span class="kn">from</span> <span class="nn">pydna.dseqrecord</span> <span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
-<span class="kn">from</span> <span class="nn">pydna.primer</span> <span class="kn">import</span> <span class="n">Primer</span> <span class="k">as</span> <span class="n">_Primer</span>
-<span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">_logging</span>
-<span class="kn">import</span> <span class="nn">operator</span> <span class="k">as</span> <span class="nn">_operator</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.tm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tm_default</span> <span class="k">as</span> <span class="n">_tm_default</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplicon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Amplicon</span> <span class="k">as</span> <span class="n">_Amplicon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplify</span><span class="w"> </span><span class="kn">import</span> <span class="n">Anneal</span> <span class="k">as</span> <span class="n">_Anneal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplify</span><span class="w"> </span><span class="kn">import</span> <span class="n">pcr</span> <span class="k">as</span> <span class="n">_pcr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span> <span class="k">as</span> <span class="n">_Primer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_operator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span>
 
 <span class="n">_module_logger</span> <span class="o">=</span> <span class="n">_logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pydna.&quot;</span> <span class="o">+</span> <span class="vm">__name__</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_design_primer</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_design_primer</span><span class="p">(</span>
     <span class="n">target_tm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">template</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">tm_func</span><span class="p">,</span> <span class="n">starting_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;returns a tuple (temp, primer)&quot;&quot;&quot;</span>
@@ -148,7 +148,9 @@
         <span class="k">return</span> <span class="n">prev_primer</span>
 
 
-<div class="viewcode-block" id="primer_design"><a class="viewcode-back" href="../../modules/pydna_design.html#pydna.all.primer_design">[docs]</a><span class="k">def</span> <span class="nf">primer_design</span><span class="p">(</span>
+<div class="viewcode-block" id="primer_design">
+<a class="viewcode-back" href="../../modules/pydna_design.html#pydna.all.primer_design">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">primer_design</span><span class="p">(</span>
     <span class="n">template</span><span class="p">,</span> <span class="n">fp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">target_tm</span><span class="o">=</span><span class="mf">55.0</span><span class="p">,</span> <span class="n">tm_func</span><span class="o">=</span><span class="n">_tm_default</span><span class="p">,</span> <span class="n">estimate_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This function designs a forward primer and a reverse primer for PCR amplification</span>
@@ -248,7 +250,7 @@
 <span class="sd">    r64 32-mer:5&#39;-catcgtaagtttcga..atc-3&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">design</span><span class="p">(</span><span class="n">target_tm</span><span class="p">,</span> <span class="n">template</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">design</span><span class="p">(</span><span class="n">target_tm</span><span class="p">,</span> <span class="n">template</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">estimate_function</span><span class="p">:</span>
             <span class="n">first_guess</span> <span class="o">=</span> <span class="n">_design_primer</span><span class="p">(</span><span class="n">target_tm</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">estimate_function</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">_design_primer</span><span class="p">(</span><span class="n">target_tm</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">tm_func</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">first_guess</span><span class="p">))</span>
@@ -306,15 +308,18 @@
     <span class="n">prod</span> <span class="o">=</span> <span class="n">ampl</span><span class="o">.</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">ampl</span><span class="o">.</span><span class="n">products</span> <span class="k">else</span> <span class="n">_Amplicon</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ampl</span><span class="o">.</span><span class="n">products</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">warnings</span> <span class="k">as</span> <span class="nn">_warnings</span>
-        <span class="kn">from</span> <span class="nn">pydna</span> <span class="kn">import</span> <span class="n">_PydnaWarning</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_warnings</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pydna</span><span class="w"> </span><span class="kn">import</span> <span class="n">_PydnaWarning</span>
 
         <span class="n">_warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;designed primers do not yield a unique PCR product&quot;</span><span class="p">,</span> <span class="n">_PydnaWarning</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">prod</span></div>
 
 
-<div class="viewcode-block" id="assembly_fragments"><a class="viewcode-back" href="../../modules/pydna_design.html#pydna.all.assembly_fragments">[docs]</a><span class="k">def</span> <span class="nf">assembly_fragments</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">overlap</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> <span class="n">maxlink</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="assembly_fragments">
+<a class="viewcode-back" href="../../modules/pydna_design.html#pydna.all.assembly_fragments">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">assembly_fragments</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">overlap</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> <span class="n">maxlink</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This function return a list of :mod:`pydna.amplicon.Amplicon` objects where</span>
 <span class="sd">    primers have been modified with tails so that the fragments can be fused in</span>
 <span class="sd">    the order they appear in the list by for example Gibson assembly or homologous</span>
@@ -831,13 +836,16 @@
     <span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="circular_assembly_fragments"><a class="viewcode-back" href="../../modules/pydna_design.html#pydna.all.circular_assembly_fragments">[docs]</a><span class="k">def</span> <span class="nf">circular_assembly_fragments</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">overlap</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> <span class="n">maxlink</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
+
+<div class="viewcode-block" id="circular_assembly_fragments">
+<a class="viewcode-back" href="../../modules/pydna_design.html#pydna.all.circular_assembly_fragments">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">circular_assembly_fragments</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">overlap</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> <span class="n">maxlink</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Equivalent to `assembly_fragments` with `circular=True`.</span>
 
 <span class="sd">    Deprecated, kept for backward compatibility. Use `assembly_fragments` with `circular=True` instead.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">warnings</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
         <span class="s2">&quot;The circular_assembly_fragments function is deprecated. Use assembly_fragments with circular=True instead.&quot;</span><span class="p">,</span>
@@ -847,10 +855,11 @@
     <span class="k">return</span> <span class="n">assembly_fragments</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">overlap</span><span class="o">=</span><span class="n">overlap</span><span class="p">,</span> <span class="n">maxlink</span><span class="o">=</span><span class="n">maxlink</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
 
     <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
     <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>

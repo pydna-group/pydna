@@ -1,23 +1,23 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>How to Perform a Polymerase Chain Reaction (PCR) &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
 
   
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=6efefdf6"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -76,13 +76,13 @@
            <div itemprop="articleBody">
              
   <section id="how-to-perform-a-polymerase-chain-reaction-pcr">
-<h1>How to Perform a Polymerase Chain Reaction (PCR)<a class="headerlink" href="#how-to-perform-a-polymerase-chain-reaction-pcr" title="Permalink to this heading"></a></h1>
+<h1>How to Perform a Polymerase Chain Reaction (PCR)<a class="headerlink" href="#how-to-perform-a-polymerase-chain-reaction-pcr" title="Link to this heading"></a></h1>
 <blockquote>
 <div><p>Visit the full library documentation <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a></p>
 </div></blockquote>
 <p>This page walks you through how to perform a PCR, and design PCR primers, using <code class="docutils literal notranslate"><span class="pre">pydna</span></code>. A PCR amplifies a specific stretch of DNA defined by the primers, and it is critical to ensure primer binding specificity and appropriate primer melting temperature (tm) through careful design. <code class="docutils literal notranslate"><span class="pre">pydna</span></code> provides tools for quick modelling of PCR to check for correct PCR products, and methods for calculating tm and primer design, as performed in other popular web servcies (e.g Primer3Plus).</p>
 <section id="modelling-pcr-with-known-primers">
-<h2>Modelling PCR with Known Primers<a class="headerlink" href="#modelling-pcr-with-known-primers" title="Permalink to this heading"></a></h2>
+<h2>Modelling PCR with Known Primers<a class="headerlink" href="#modelling-pcr-with-known-primers" title="Link to this heading"></a></h2>
 <p>To perform PCR, <code class="docutils literal notranslate"><span class="pre">pydna</span></code> provides the <code class="docutils literal notranslate"><span class="pre">anneal</span></code> class and the <code class="docutils literal notranslate"><span class="pre">pcr</span></code> method to quickly generate expected primer products, on a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object. The <code class="docutils literal notranslate"><span class="pre">pcr</span></code> method needs only the forward and reverse primers, and the sequence. The primers must be passed from the 5’ to the 3’ end, following biological convention. More information on <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> and importing DNA sequences can be found in the other guide pages.</p>
 <p>The following example uses a 300+ bp custom sample circular DNA, containing an example gene that we would like to clone. 18 bp forward and reverse primers have been provided.</p>
 <a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/PCR.ipynb">
@@ -90,15 +90,15 @@
 </a>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
 <span class="c1"># Install pydna (only when running on Colab)</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
     <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span>
 
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pydna.amplify</span> <span class="kn">import</span> <span class="n">pcr</span>
-<span class="kn">from</span> <span class="nn">pydna.dseqrecord</span> <span class="kn">import</span> <span class="n">Dseqrecord</span>
-<span class="kn">from</span> <span class="nn">pydna.parsers</span> <span class="kn">import</span> <span class="n">parse</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplify</span><span class="w"> </span><span class="kn">import</span> <span class="n">pcr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
 
 <span class="c1">#Importing GenBank file containing sample sequence </span>
 <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;./sample_seq.gb&quot;</span>
@@ -183,7 +183,7 @@ ORIGIN
 <p>For more information on restriction digests and ligation, please refer to the Restriction and Ligation page.</p>
 </section>
 <section id="other-ways-of-visualising-the-pcr-products">
-<h2>Other ways of visualising the PCR products<a class="headerlink" href="#other-ways-of-visualising-the-pcr-products" title="Permalink to this heading"></a></h2>
+<h2>Other ways of visualising the PCR products<a class="headerlink" href="#other-ways-of-visualising-the-pcr-products" title="Link to this heading"></a></h2>
 <p>In addition to the normal <code class="docutils literal notranslate"><span class="pre">print</span></code> function and the <code class="docutils literal notranslate"><span class="pre">.format()</span></code> method (More information can be found in Dseq and Importing_Seqs pages, respectively), pcr products can also be visualized in other ways.</p>
 <p>We can check the sequence of the pcr products alone using the <code class="docutils literal notranslate"><span class="pre">.seq</span></code> attribute on a PCR product:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">pcr_product</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
@@ -207,10 +207,10 @@ ORIGIN
 </section>
 </section>
 <section id="designing-primers-and-calculating-tm-in-pydna">
-<h1>Designing Primers and Calculating Tm in pydna<a class="headerlink" href="#designing-primers-and-calculating-tm-in-pydna" title="Permalink to this heading"></a></h1>
+<h1>Designing Primers and Calculating Tm in pydna<a class="headerlink" href="#designing-primers-and-calculating-tm-in-pydna" title="Link to this heading"></a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">pydna</span></code> also provides the <code class="docutils literal notranslate"><span class="pre">primer_design</span></code> method to design primer sequences based on the desired pcr product and the template sequence’s melting temperature (Tm). The <code class="docutils literal notranslate"><span class="pre">primer_design</span></code> method can be imported from the <code class="docutils literal notranslate"><span class="pre">pydna.design</span></code> module, and needs the user to supply the PCR template sequence (as a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object) and the Tm. The template sequence should be given as the first parameter, and the Tm give through the <code class="docutils literal notranslate"><span class="pre">target_tm=</span></code> argument, as demonstrated below. If you have no specific Tm in mind, the method uses the default Tm of 55 degrees celcius.</p>
 <p>Note that in the following example below, I used zero-based indexing on the <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> to find the sequence of my example gene, of which I would like to clone via PCR. Please refer to the <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> page for more information on how to index a sequence.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pydna.design</span> <span class="kn">import</span> <span class="n">primer_design</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.design</span><span class="w"> </span><span class="kn">import</span> <span class="n">primer_design</span>
 
 <span class="c1">#Designing the primers</span>
 <span class="n">primers</span> <span class="o">=</span> <span class="n">primer_design</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">51</span><span class="p">],</span> <span class="n">target_tm</span><span class="o">=</span><span class="mf">50.0</span><span class="p">)</span>
@@ -249,7 +249,7 @@ ORIGIN
 <p>The forward and reverse primer sequences are printed in the features list of the <code class="docutils literal notranslate"><span class="pre">Amplicon</span></code> object. Note how the feature representing the example gene is retained, as appropriate.</p>
 <p>If you already have a forward / reverse primer, <code class="docutils literal notranslate"><span class="pre">primer_design</span></code> also allows this information to be taken as arguments. <code class="docutils literal notranslate"><span class="pre">fp</span></code> specifies the forward primer, <code class="docutils literal notranslate"><span class="pre">rp</span></code> specifies the reverse primers. <code class="docutils literal notranslate"><span class="pre">fp</span></code> and <code class="docutils literal notranslate"><span class="pre">rp</span></code> can be should be given as <code class="docutils literal notranslate"><span class="pre">Primer</span></code> class objects, which should be imported from <code class="docutils literal notranslate"><span class="pre">pydna</span></code> too.</p>
 <p>For instance, if I already have a forward primer containing an EcoRI restriction site, and I aim to to generate a reverse primer of a similar Tm, I can apply the following code:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pydna.primer</span> <span class="kn">import</span> <span class="n">Primer</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span>
 
 <span class="n">forward_primer</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="s2">&quot;GAATTCATTCCTGCAGAGTACATCA&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;forward_primer&quot;</span><span class="p">)</span>
 
@@ -285,9 +285,9 @@ ORIGIN
 </pre></div>
 </div>
 <section id="calculating-tm">
-<h2>Calculating Tm<a class="headerlink" href="#calculating-tm" title="Permalink to this heading"></a></h2>
+<h2>Calculating Tm<a class="headerlink" href="#calculating-tm" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">pydna</span></code> comes with some functions to calculate Tms. The default function <code class="docutils literal notranslate"><span class="pre">tm_default</span></code> used is the previously mentioned one by Rychlik et al (1990), which takes a string as input. Another function derive from the Tm calculation adapted for primers using polymerases with a DNA binding domain (e.g Phusion polymerase). The default values for Tm calculation, including primer concentration, buffer strengths, and more, can also be modified through arguments in the <code class="docutils literal notranslate"><span class="pre">tm_default</span></code> method. Please refer to the <code class="docutils literal notranslate"><span class="pre">pydna.tm</span></code> module docstring for more information. An example is provided with a pair of primers; the temperature is given in degrees celcius.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pydna.tm</span> <span class="kn">import</span> <span class="n">tm_default</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.tm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tm_default</span>
 
 <span class="c1"># Example Tm calculation for a pair of primers</span>
 <span class="n">primer_f</span> <span class="o">=</span> <span class="s2">&quot;ATTCCTGCAGAGTACATCA&quot;</span>
