@@ -1092,6 +1092,7 @@ def test_left_end_position():
         dseq = Dseq(dsiupac, circular=False)
         assert dseq.left_end_position() == expected
 
+
 def test_overlapping_cuts():
 
     import pytest
