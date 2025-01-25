@@ -1092,6 +1092,35 @@ def test_left_end_position():
         dseq = Dseq(dsiupac, circular=False)
         assert dseq.left_end_position() == expected
 
+def test_overlapping_cuts():
+
+    import pytest
+    from pydna.dseq import Dseq
+    from Bio.Restriction import PstI, SbfI, BamHI, DpnI, BcgI
+
+    s = Dseq("CCTGCAGG")
+
+    assert s.cut(PstI) == (Dseq(b'CCXPIE'), Dseq(b'ZQJFGG'))
+    assert s.cut(SbfI) == (Dseq(b'CCXPIE'), Dseq(b'ZQJFGG'))
+
+    with pytest.raises(ValueError):
+        s.cut(PstI, SbfI)
+
+    t = Dseq("GGATCC")
+
+    assert t.cut(BamHI) == (Dseq("GQFZJ"), Dseq("PEXIC"))
+    assert t.cut(DpnI) == (Dseq("GGA"), Dseq("TCC"))
+
+    with pytest.raises(ValueError):
+        t.cut(BamHI, DpnI)
+
+    q = Dseq("TgcgtagatcgtACGAggatccTGCGtcaagtgtctat")
+
+    with pytest.raises(ValueError):
+        q.cut(BamHI, BamHI)
+
+    assert q.cut(BamHI, BcgI) == (Dseq("Tpi"), Dseq("qjgtagatcgtACGAgqfzj"), Dseq("pexicTGCGtcaagtgtcxe"), Dseq("zft"))
+
 
 # def test_apply_cut():
 #     from pydna.dseq import Dseq
