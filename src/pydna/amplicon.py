@@ -123,12 +123,12 @@ class Amplicon(_Dseqrecord):
         fzc = tp.seq.crick[::-1][fp.position - fp._fp : fp.position]
         rzc = tp.seq.crick[::-1][rp.position : rp.position + rp._fp]
         f = f"""
-            {" " *ft}5{faz}...{raz}3
+            {" " * ft}5{faz}...{raz}3
              {sp3}{"|" * rp._fp}
             {sp3}3{rp.seq[::-1]}5
             5{fp.seq}3
-             {"|" *fp._fp:>{len(fp)}}
-            {" " *ft}3{fzc}...{rzc}5
+             {"|" * fp._fp:>{len(fp)}}
+            {" " * ft}3{fzc}...{rzc}5
             """
         # breakpoint()
         return _pretty_str(_textwrap.dedent(f).strip("\n"))

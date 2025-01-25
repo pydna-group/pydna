@@ -46,6 +46,7 @@ except ImportError:
             yield a, b
             a = b
 
+
 # For functions that take str or bytes as input and return str or bytes as output, matching the input type
 StrOrBytes = _TypeVar("StrOrBytes", str, bytes)
 
@@ -1511,11 +1512,15 @@ def eq(*args, **kwargs):
 #     y = sorted([right_watson, right_crick])
 #     return (x[1] > y[0]) != (y[1] < x[0])
 
+
 def cuts_overlap(cutsites):
 
     srt_pos = [(tuple(sorted((ep.position, ep.position - ep.enzyme.ovhg))), ep) for ep in cutsites]
 
-    combs = {(ep1.enzyme, x, ep2.enzyme, y): (x[1] > y[0]) != (y[1] < x[0]) for ((x, ep1), (y, ep2)) in _itertools.combinations(srt_pos, 2)}
+    combs = {
+        (ep1.enzyme, x, ep2.enzyme, y): (x[1] > y[0]) != (y[1] < x[0])
+        for ((x, ep1), (y, ep2)) in _itertools.combinations(srt_pos, 2)
+    }
 
     return [comb for comb, val in combs.items() if val]
 

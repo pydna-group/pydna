@@ -17,7 +17,7 @@ from pydna._pretty import pretty_str as _pretty_str
 from pydna.utils import flatten as _flatten
 
 from pydna.utils import iupac_compl_regex as _iupac_compl_regex
-from pydna.utils import rc as _rc, shift_feature as _shift_feature
+from pydna.utils import shift_feature as _shift_feature
 from pydna.utils import anneal_from_left as _anneal_from_left
 from pydna.amplicon import Amplicon as _Amplicon
 from pydna.primer import Primer as _Primer
@@ -27,7 +27,8 @@ from Bio.SeqFeature import SeqFeature as _SeqFeature
 from Bio.SeqFeature import SimpleLocation as _SimpleLocation
 from Bio.SeqFeature import CompoundLocation as _CompoundLocation
 from pydna.seq import Seq as _Seq
-import itertools as _itertools
+
+# import itertools as _itertools
 import re as _re
 import copy as _copy
 import operator as _operator

@@ -17,7 +17,8 @@ from pydna.dseq import Dseq as _Dseq
 from pydna._pretty import pretty_str as _pretty_str
 from pydna.utils import flatten as _flatten, location_boundaries as _location_boundaries
 from pydna.utils import unfold_feature as _unfold_feature
-from pydna.utils import rc as _rc
+
+# from pydna.utils import rc as _rc
 from pydna.utils import shift_location as _shift_location
 from pydna.utils import shift_feature as _shift_feature
 from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
@@ -25,7 +26,8 @@ from Bio import SeqIO
 from Bio.SeqFeature import SeqFeature as _SeqFeature
 from Bio.SeqFeature import CompoundLocation as _CompoundLocation
 from Bio.SeqFeature import SimpleLocation as _SimpleLocation
-from Bio.SeqFeature import ExactPosition as _ExactPosition
+
+# from Bio.SeqFeature import ExactPosition as _ExactPosition
 from pydna.seqrecord import SeqRecord as _SeqRecord
 from Bio.Seq import translate as _translate
 from pydna.utils import identifier_from_string as _identifier_from_string
@@ -517,6 +519,7 @@ class Dseqrecord(_SeqRecord):
             # The filename alread exists in current directory
             # We assume it contains a sequence
             from pydna.readers import read
+
             old = read(filename)
             if self == old:
                 # The sequence object to be saved is identical to the on disk.

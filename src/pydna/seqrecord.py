@@ -29,7 +29,8 @@ from pydna.seq import Seq as _Seq
 from pydna._pretty import PrettyTable as _PrettyTable
 
 import re as _re
-import pickle as _pickle
+
+# import pickle as _pickle
 from copy import copy as _copy
 
 from pydna import _PydnaWarning
@@ -627,7 +628,7 @@ class SeqRecord(_SeqRecord):
 
         if format == "pydnafasta":
             return _pretty_str(
-                f">{self.id} {len(self)} bp {dict(((True,'circular'),(False,'linear')))[self.seq.circular]}\n{str(self.seq)}\n"
+                f">{self.id} {len(self)} bp {dict(((True, 'circular'), (False, 'linear')))[self.seq.circular]}\n{str(self.seq)}\n"
             )
         if format == "primer":
             return _pretty_str(

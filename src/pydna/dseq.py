@@ -47,6 +47,15 @@ from pydna.common_sub_strings import terminal_overlap as _terminal_overlap
 from Bio.Restriction import RestrictionBatch as _RestrictionBatch
 from Bio.Restriction import CommOnly
 
+from typing import (
+    TYPE_CHECKING,
+    List as _List,
+    Tuple as _Tuple,
+    Union as _Union,
+    TypeVar as _TypeVar,
+    Iterable as _Iterable,
+)
+
 try:
     from itertools import pairwise as _pairwise
 except ImportError:
@@ -59,16 +68,8 @@ except ImportError:
             yield a, b
             a = b
 
-pos_w_enz = _namedtuple("enzpos", "position enzyme recsite")
 
-from typing import (
-    TYPE_CHECKING,
-    List as _List,
-    Tuple as _Tuple,
-    Union as _Union,
-    TypeVar as _TypeVar,
-    Iterable as _Iterable,
-)
+pos_w_enz = _namedtuple("enzpos", "position enzyme recsite")
 
 
 if TYPE_CHECKING:
@@ -1412,7 +1413,6 @@ class Dseq(_Seq):
 
         if overlaps := _cuts_overlap(cutsites):
             raise ValueError(f"Enzyme pairs with cut overlap: {overlaps}")
-
 
         if not cutsites:
             return tuple(), tuple(), None, None

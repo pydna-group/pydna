@@ -6,4 +6,4 @@ select = B,C,E,F,W,T4,B9
 exclude =
     tests,
     scripts,
-    docs*
+    docs
