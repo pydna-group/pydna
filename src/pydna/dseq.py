@@ -273,8 +273,13 @@ class Dseq(_Seq):
 
     Coercing to string
 
-    >>> str(a)
+    >>> str(a.full_sequence)
     'ggggtttcccc'
+
+    Coercing to string containing dsIUPAC code.
+
+    >>> str(a)
+    'qqqqtttiiii'
 
     A Dseq object can be longer that either the watson or crick strands.
 
@@ -637,7 +642,7 @@ class Dseq(_Seq):
         return obj.translate(*args, **kwargs)
 
     def __str__(self):
-        return self.full_sequence._data.decode("ascii")
+        return self._data.decode("ascii")  # self.full_sequence._data.decode("ascii")
 
     # def __getitem__(self, sl: slice) -> "Dseq":
     #     """Returns a subsequence. This method is used by the slice notation"""

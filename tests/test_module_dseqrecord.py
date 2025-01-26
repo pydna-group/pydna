@@ -249,7 +249,7 @@ def test_initialization():
     assert dsr.seq.crick == "taaa"
     assert dsr.circular == False
     assert dsr.seq.circular == False
-    assert str(dsr.seq) == "attta"
+    assert str(dsr.seq) == "etttf"
 
     dsr = Dseqrecord(ds, circular=True)
 

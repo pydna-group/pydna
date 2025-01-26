@@ -91,8 +91,8 @@ def test_pair():
 def test_dsiupac():
     from pydna.dseq import Dseq
 
-    assert str(Dseq("PEXIaaaQFZJ")) == "GATCaaaGATC"
-    assert str(Dseq("QFZJaaaPEXI")) == "GATCaaaGATC"
+    assert str(Dseq("PEXIaaaQFZJ")) == "PEXIaaaQFZJ"
+    assert str(Dseq("QFZJaaaPEXI")) == "QFZJaaaPEXI"
 
 
 def test_cut1():
@@ -1415,9 +1415,9 @@ def test_new():
     from Bio.Restriction import KpnI, Acc65I, BsaI, XmaI, SmaI, BamHI
 
     fiveoh = Dseq("PEXIaaaQFZJ")
-    assert str(fiveoh + fiveoh) == "GATCaaaGATCaaaGATC"
+    assert str(fiveoh + fiveoh) == "PEXIaaaGATCaaaQFZJ"
     threeoh = Dseq("QFZJQtttPEXIP")
-    assert str(threeoh + threeoh) == "GATCGtttGATCGtttGATCG"
+    assert str(threeoh + threeoh) == "QFZJQtttGATCGtttPEXIP"
 
     assert repr(Dseq("AIXEP") + Dseq("JZFQA")) == "Dseq(-6)\nACTAGA\nTGATCT"
 
