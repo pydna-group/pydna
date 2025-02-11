@@ -19,6 +19,7 @@ from pydna.utils import flatten as _flatten, location_boundaries as _location_bo
 from pydna.utils import unfold_feature as _unfold_feature
 
 # from pydna.utils import rc as _rc
+from pydna.utils import get_cutsite_pairs as _get_cutsite_pairs
 from pydna.utils import shift_location as _shift_location
 from pydna.utils import shift_feature as _shift_feature
 from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
@@ -1307,54 +1308,79 @@ class Dseqrecord(_SeqRecord):
 
         """
 
-        frags, cutsitepairs, shift, ln = self.seq._cut_w_params(*enzymes)
+        cutsites = self.seq.get_cutsites(*enzymes)
 
-        # frags: a list of Dsq objects resulting from digestion with the specified restriction enzymes
-        # cutsites: a sorted list of tuples containing (cutsite, enzyme)
-        # shift:
-        #
-
-        if not frags:
+        if not cutsites:
             return tuple()
 
-        newfeatures = [_shift_feature(f, -shift, len(self)) for f in self.features]
-        newfeatures = [_unfold_feature(f, len(self)) for f in newfeatures]
+        cutsite_pairs, shift, stuffer = _get_cutsite_pairs(cutsites, self.seq.circular, len(self))
+
+        frags = tuple(self.seq.apply_cut(*cutsite_pair, shift, stuffer) for cutsite_pair in cutsite_pairs)
+
+        # frags, cutsitepairs, shift, ln = self.seq._cut_w_params(*enzymes)
+
+        # frags: a list of Dsq objects resulting from digestion with the specified restriction enzymes
+        # cutsites: a sorted list of tuples, where each tuple is (cutsite on watson strand, overhang), enzyme)
+        # shift: The shift is the distance from the sequence origin and the first cut.
+        #        This is zero for linear sequences
+        # stuffer: How much longer a circular sequence is after the first cut as the linear sequence may have
+        #          sticky ends
+
+        new_features = [_shift_feature(f, -shift, len(self)) for f in self.features]
+        new_features = [_unfold_feature(f, len(self)) for f in new_features]
 
         newrecords = []
 
-        for frag, (left, right) in zip(frags, cutsitepairs):
-            features = _copy.deepcopy(newfeatures)
+        for frag, (left_cut, right_cut) in zip(frags, cutsite_pairs):
+
+            (left_watson_cut, left_overhang), left_meta = left_cut
+            (right_watson_cut, right_overhang), right_meta = right_cut
+
+            left_border = min((left_watson_cut, left_watson_cut - left_overhang))
+            right_border = max((right_watson_cut, right_watson_cut - right_overhang))
+
+            features = _copy.deepcopy(new_features)
             filtered_features = []
+
             for feature in features:
-                if left.position <= feature.location.start and right.position >= feature.location.end:
+                if left_border <= feature.location.start and right_border >= feature.location.end:
                     filtered_features.append(feature)
             for feature in filtered_features:
-                feature.location -= left.position
+                feature.location -= left_border
+
             nr = Dseqrecord(frag, features=filtered_features)
+
             newrecords.append(nr)
 
         if not newrecords:
-            filtered_features = [f for f in newfeatures if f.location.start >= 0 and f.location.end <= 6]
+            filtered_features = [f for f in new_features if f.location.start >= 0 and f.location.end <= 6]
             newrecords = (Dseqrecord(frags[0], features=filtered_features),)
 
         return tuple(newrecords)
 
 
 if __name__ == "__main__":
-    cache = _os.getenv("pydna_cache")
-    _os.environ["pydna_cache"] = "nocache"
-    import doctest
+    # cache = _os.getenv("pydna_cache")
+    # _os.environ["pydna_cache"] = "nocache"
+    # import doctest
 
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    # _os.environ["pydna_cache"] = cache
+    # doctest.testmod(verbose=False, optionflags=doctest.ELLIPSIS)
 
-    # import os
+    a = Dseqrecord("ggatcc")
+    from Bio.Restriction import BamHI
 
-    # a = Dseqrecord("aaa")
-    # b = Dseqrecord("aat")
+    a.add_feature(1, 5)
+    a.figure()
+    frag1, frag2 = a.cut(BamHI)
 
-    # os.remove("file_written_from_notebook.gb")
+    print(frag1.figure())
+    print(frag2.figure())
 
-    # a.write("file_written_from_notebook.gb")
+    a = Dseqrecord("ggatcc", circular=True)
+    from Bio.Restriction import BamHI
 
-    # b.write("file_written_from_notebook.gb")
+    a.add_feature(1, 5)
+    a.figure()
+    (frag3,) = a.cut(BamHI)
+
+    print(frag3.figure())

@@ -77,6 +77,8 @@ to_crick_table = bytes.maketrans(
     _values + _values.lower() + b"    CTAG    ctag" b". " b"AaUuCTAGctag",
 )
 
+to_N = rd = bytes.maketrans(b"PEXIpexiQFZJqfzjUuOo", b"NNNNNNNNNNNNNNNNNNNN")
+
 to_5tail_table = bytes.maketrans(b"GATCgatc", b"QFZJqfzj")
 to_3tail_table = bytes.maketrans(b"GATCgatc", b"PEXIpexi")
 to_full_sequence = bytes.maketrans(b"PEXIpexiQFZJqfzj", b"GATCgatcGATCgatc")
@@ -1488,41 +1490,90 @@ def eq(*args, **kwargs):
 #         return loc.parts[0].start, loc.parts[-1].end
 
 
-def cuts_overlap(left_cut, right_cut, seq_len):
-    # Special cases:
-    if left_cut is None or right_cut is None or left_cut == right_cut:
+# def cuts_overlap(left_cut, right_cut, seq_len):
+#     # Special cases:
+#     if left_cut is None or right_cut is None or left_cut == right_cut:
+#         return False
+#     breakpoint()
+#     # This block of code would not be necessary if the cuts were
+#     # initially represented like this
+#     (left_watson, left_ovhg), _ = left_cut
+#     (right_watson, right_ovhg), _ = right_cut
+#     # Position of the cut on the crick strands on the left and right
+#     left_crick = left_watson - left_ovhg
+#     right_crick = right_watson - right_ovhg
+#     if left_crick >= seq_len:
+#         left_crick -= seq_len
+#         left_watson -= seq_len
+#     if right_crick >= seq_len:
+#         right_crick -= seq_len
+#         right_watson -= seq_len
+
+#     # Convert into ranges x and y and see if ranges overlap
+#     x = sorted([left_watson, left_crick])
+#     y = sorted([right_watson, right_crick])
+
+#     return (x[1] > y[0]) != (y[1] < x[0])
+
+
+def cuts_overlap(left_cut, right_cut, seq_len, circular):
+    (left_watson_position, left_ovhg), _ = left_cut
+    (right_watson_position, right_ovhg), _ = right_cut
+
+    if circular:
+        left_watson_position %= seq_len
+        right_watson_position %= seq_len
+
+    if (left_watson_position, left_ovhg) == (0, 0):
+        return False
+    elif (right_watson_position, left_ovhg) == (0, 0):
         return False
 
-    # This block of code would not be necessary if the cuts were
-    # initially represented like this
-    (left_watson, left_ovhg), _ = left_cut
-    (right_watson, right_ovhg), _ = right_cut
-    # Position of the cut on the crick strands on the left and right
-    left_crick = left_watson - left_ovhg
-    right_crick = right_watson - right_ovhg
-    if left_crick >= seq_len:
-        left_crick -= seq_len
-        left_watson -= seq_len
-    if right_crick >= seq_len:
-        right_crick -= seq_len
-        right_watson -= seq_len
-
     # Convert into ranges x and y and see if ranges overlap
-    x = sorted([left_watson, left_crick])
-    y = sorted([right_watson, right_crick])
-    return (x[1] > y[0]) != (y[1] < x[0])
+    x = sorted([left_watson_position, left_watson_position - left_ovhg])
+    y = sorted([right_watson_position, right_watson_position - right_ovhg])
+
+    # if (x[1] > y[0]) != (y[1] < x[0]) and x != y:
+    #     breakpoint()
+
+    return (x[1] > y[0]) != (y[1] < x[0]) and x != y
 
 
-def cuts_overlap2(cutsites):
+def get_cutsite_pairs(cutsites, circular, length):
 
-    srt_pos = [(tuple(sorted((cs[0], cs[0] - cs[1]))), cs) for cs in cutsites]
+    if len(cutsites) == 0:
+        return [], None, None
 
-    combs = {
-        (ep1.enzyme, x, ep2.enzyme, y): (x[1] > y[0]) != (y[1] < x[0])
-        for ((x, ep1), (y, ep2)) in _itertools.combinations(srt_pos, 2)
-    }
+    if not circular:
 
-    return [comb for comb, val in combs.items() if val]
+        shift = 0
+        stuffer = 0
+        cutsites = [((0, 0), None), *cutsites, ((length, 0), None)]
+
+    else:
+        # Add the first cutsite at the end, for circular cuts
+        (firstcut, offset), *rest = cutsites[0]
+
+        cutsites.append(((firstcut + length, offset), *rest))
+
+        shift = min(firstcut, firstcut - offset)
+
+        stuffer = abs(offset)
+
+        cutsites = [((position - shift, offset), *rest) for (position, offset), *rest in cutsites]
+
+    assert all(firstcut >= 0 for (firstcut, offset), *rest in cutsites)
+
+    return list(zip(cutsites, cutsites[1:])), shift, stuffer
+
+
+# def cuts_overlap2(cutsites):
+#     srt_pos = [(tuple(sorted((cs[0], cs[0] - cs[1]))), cs) for cs in cutsites]
+#     combs = {
+#         (ep1.enzyme, x, ep2.enzyme, y): (x[1] > y[0]) != (y[1] < x[0])
+#         for ((x, ep1), (y, ep2)) in _itertools.combinations(srt_pos, 2)
+#     }
+#     return [comb for comb, val in combs.items() if val]
 
 
 if __name__ == "__main__":
@@ -1530,5 +1581,5 @@ if __name__ == "__main__":
     _os.environ["pydna_cached_funcs"] = ""
     import doctest
 
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
+    doctest.testmod(verbose=False, optionflags=doctest.ELLIPSIS)
     _os.environ["pydna_cached_funcs"] = cached

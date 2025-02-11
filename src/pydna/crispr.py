@@ -69,11 +69,11 @@ class cas9(_cas):
        fst5 ===protospacer===-=== fst3
                                      ___PAM
                                  ___/
-        5-NNGGAAGAGTAATACACTA-AAANGGNN-3
-          ||||||||||||||||||| ||||||||
-        3-NNCCTTCTCATTATGTGAT-TTTNCCNN-5
+        5-..GGAAGAGTAATACACTA-AAANGGNN-3
+            ||||||||||||||||| ||||||||
+        3-..CCTTCTCATTATGTGAT-TTTNCCNN-5
             ||||||||||||||||| |||
-          5-GGAAGAGTAATACACTA-AAAg-u-a-a-g-g  Scaffold
+          5-GGAAGAGTAATACACTA-AAAg-u-a-a-g-g  Scaffold in lower case
                                  u-a
                                  u-a
                                  u-a
@@ -117,16 +117,16 @@ class cas9(_cas):
         if linear:
             dna = dna
         else:
-            dna = dna + dna[1 : self.size]
+            dna = dna + dna[: self.size - 1]
 
         results = []
 
         for mobj in self.compsite.finditer(dna):
             w, c = mobj.groups()
             if w:
-                results.append(mobj.start("watson") + self.fst5)
+                results.append(mobj.start("watson") + self.fst5 + 1)
             if c:
-                results.append(mobj.start("crick") - self.fst3)
+                results.append(mobj.start("crick") - self.fst3 + 1)
 
         return results
 

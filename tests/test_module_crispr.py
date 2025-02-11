@@ -28,10 +28,10 @@ def test_crispr():
 
     # assert target.cut(c9) == (a, b)
 
-    assert c9.search(target) == [17]
-    assert c9.search(target.seq) == [17]
-    assert c9.search(str(target.seq)) == [17]
-    assert c9.search(str(target.seq).lower()) == [17]
+    assert c9.search(target) == [18]
+    assert c9.search(target.seq) == [18]
+    assert c9.search(str(target.seq)) == [18]
+    assert c9.search(str(target.seq).lower()) == [18]
 
     containing_sgRNA_rc = containing_sgRNA.rc()
 
@@ -41,10 +41,10 @@ def test_crispr():
 
     target_rc = target.rc()
 
-    assert c9.search(target_rc) == [6]
-    assert c9.search(target_rc.seq) == [6]
-    assert c9.search(str(target_rc.seq)) == [6]
-    assert c9.search(str(target_rc.seq).lower()) == [6]
+    assert c9.search(target_rc) == [7]
+    assert c9.search(target_rc.seq) == [7]
+    assert c9.search(str(target_rc.seq)) == [7]
+    assert c9.search(str(target_rc.seq).lower()) == [7]
 
     assert [s.seq for s in target_rc.cut(c9)] == [b.seq.rc(), a.seq.rc()]
 
