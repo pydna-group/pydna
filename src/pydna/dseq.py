@@ -1421,9 +1421,42 @@ class Dseq(_Seq):
     def melt(self, length):
         if not length or length < 1:
             return tuple()
-        cutsites = self.get_ds_meltsites(length)
+
+        new, strands = self.shed_ss_dna(length)
+
+        cutsites = new.get_ds_meltsites(length)
+
         cutsite_pairs, shift, stuffer = _get_cutsite_pairs(cutsites, self.circular, len(self))
-        return tuple(self.apply_cut(*cutsite_pair, shift, stuffer) for cutsite_pair in cutsite_pairs)
+
+        result = tuple(new.apply_cut(*cutsite_pair, shift, stuffer) for cutsite_pair in cutsite_pairs)
+
+        result = tuple([new]) if strands and not result else result
+
+        return strands + result
+
+    def shed_ss_dna(self, length):
+
+        watsonnicks, cricknicks = self.get_ss_meltsites(length)
+
+        watsonstrands = []
+        crickstrands = []
+
+        new = self._data
+
+        for x, y in watsonnicks:
+            stuffer = new[x:y]
+            ss = Dseq.quick(stuffer.translate(to_5tail_table))
+            new = new[:x] + stuffer.translate(to_3tail_table) + new[y:]
+            watsonstrands.append((x, ss))
+        for x, y in cricknicks:
+            stuffer = new[x:y]
+            ss = Dseq.quick(stuffer.translate(to_3tail_table))
+            new = new[:x] + stuffer.translate(to_5tail_table) + new[y:]
+            crickstrands.append((x, ss))
+
+        strands = tuple(Dseq(ss) for x, ss in sorted(watsonstrands + crickstrands))
+
+        return Dseq(new), strands
 
     def apply_cut(self, left_cut: CutSiteType, right_cut: CutSiteType, shift, stuffer) -> "Dseq":
         """Extracts a subfragment of the sequence between two cuts.
@@ -1672,7 +1705,7 @@ class Dseq(_Seq):
                 cut2 = m.end() + spacer
                 crickcuts.append((cut1, cut2))
 
-        return
+        return watsoncuts, crickcuts
 
     def get_ds_meltsites(self: DseqType, length) -> _List[CutSiteType]:
         """Double stranded DNA melt sites
@@ -1858,40 +1891,40 @@ def helper(dseqs):
 
 if __name__ == "__main__":
 
-    # assert Dseq(b"AGJGaGEg").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGEp"), Dseq(b"q"))
-    # assert Dseq(b"AGIGaGFg").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGFq"), Dseq(b"p"))
-    # assert Dseq(b"AGJGaGFg").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGFq"), Dseq(b"p"))
-    # assert Dseq(b"AGIGaGEg").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGEp"), Dseq(b"q"))
+    assert Dseq(b"AGJGaGEg").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGEp"), Dseq(b"q"))
+    assert Dseq(b"AGIGaGFg").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGFq"), Dseq(b"p"))
+    assert Dseq(b"AGJGaGFg").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGFq"), Dseq(b"p"))
+    assert Dseq(b"AGIGaGEg").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGEp"), Dseq(b"q"))
     assert Dseq(b"GATPGGPGCA").melt(2) == (Dseq(b"QQ"), Dseq(b"GATPPPPGCA"))
-#     assert Dseq(b"GATQGGQGCA").melt(2) == (Dseq(b"PP"), Dseq(b"GATQQQQGCA"))
-#     assert Dseq(b"PEXIGAQFZJ").melt(2) == (Dseq(b"PEXIPE"), Dseq(b"QFQFZJ"))
-#     assert Dseq(b"QFZJGAPEXI").melt(2) == (Dseq(b"QFZJQF"), Dseq(b"PEPEXI"))
-#     assert Dseq(b"AGJGaGEgGATC").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGEgGATC"))
-#     assert Dseq(b"AGIGaGFgGATC").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGFgGATC"))
-#     assert Dseq(b"AGJGaGFgGATC").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGFgGATC"))
-#     assert Dseq(b"AGIGaGEgGATC").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGEgGATC"))
-#     assert Dseq(b"GATPGGPGCAGATC").melt(2) == (Dseq(b"QQ"), Dseq(b"GATPPPPGCAGATC"))
-#     assert Dseq(b"GATQGGQGCAGATC").melt(2) == (Dseq(b"PP"), Dseq(b"GATQQQQGCAGATC"))
-#     assert Dseq(b"PEXIGAQFZJGATC").melt(2) == (Dseq(b"PEXIPE"), Dseq(b"QFQFZJGATC"))
-#     assert Dseq(b"QFZJGAPEXIGATC").melt(2) == (Dseq(b"QFZJQF"), Dseq(b"PEPEXIGATC"))
-#     assert Dseq(b"GATCAGJGaGEg").melt(2) == (Dseq(b"GATCAGJGaGEp"), Dseq(b"q"))
-#     assert Dseq(b"GATCAGIGaGFg").melt(2) == (Dseq(b"GATCAGIGaGFq"), Dseq(b"p"))
-#     assert Dseq(b"GATCAGJGaGFg").melt(2) == (Dseq(b"GATCAGJGaGFq"), Dseq(b"p"))
-#     assert Dseq(b"GATCAGIGaGEg").melt(2) == (Dseq(b"GATCAGIGaGEp"), Dseq(b"q"))
-#     assert Dseq(b"GATCGATPGGPGCA").melt(2) == (Dseq(b"QQ"), Dseq(b"GATCGATPPPPGCA"))
-#     assert Dseq(b"GATCGATQGGQGCA").melt(2) == (Dseq(b"PP"), Dseq(b"GATCGATQQQQGCA"))
-#     assert Dseq(b"GATCPEXIGAQFZJ").melt(2) == (Dseq(b"GATCPEXIPE"), Dseq(b"QFQFZJ"))
-#     assert Dseq(b"GATCQFZJGAPEXI").melt(2) == (Dseq(b"GATCQFZJQF"), Dseq(b"PEPEXI"))
-#     assert Dseq(b"GATCAGJGaGEgGATC").melt(2) == ()
-#     assert Dseq(b"GATCAGIGaGFgGATC").melt(2) == ()
-#     assert Dseq(b"GATCAGJGaGFgGATC").melt(2) == ()
-#     assert Dseq(b"GATCAGIGaGEgGATC").melt(2) == ()
-#     assert Dseq(b"GATCGATPGGPGCAGATC").melt(2) == (Dseq(b"QQ"), Dseq(b"GATCGATPPPPGCAGATC"))
-#     assert Dseq(b"GATCGATQGGQGCAGATC").melt(2) == (Dseq(b"PP"), Dseq(b"GATCGATQQQQGCAGATC"))
-#     assert Dseq(b"GATCPEXIGAQFZJGATC").melt(2) == (Dseq(b"GATCPEXIPE"), Dseq(b"QFQFZJGATC"))
-#     assert Dseq(b"GATCQFZJGAPEXIGATC").melt(2) == (Dseq(b"GATCQFZJQF"), Dseq(b"PEPEXIGATC"))
-#     assert Dseq(b"GATCPEXIGAQFZJGATC").melt(2) == (Dseq(b"GATCPEXIPE"), Dseq(b"QFQFZJGATC"))
-#     assert Dseq(b"GATCQFZJGAPEXIGATC").melt(2) == (Dseq(b"GATCQFZJQF"), Dseq(b"PEPEXIGATC"))
+    assert Dseq(b"GATQGGQGCA").melt(2) == (Dseq(b"PP"), Dseq(b"GATQQQQGCA"))
+    assert Dseq(b"PEXIGAQFZJ").melt(2) == (Dseq(b"PEXIPE"), Dseq(b"QFQFZJ"))
+    assert Dseq(b"QFZJGAPEXI").melt(2) == (Dseq(b"QFZJQF"), Dseq(b"PEPEXI"))
+    assert Dseq(b"AGJGaGEgGATC").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGEgGATC"))
+    assert Dseq(b"AGIGaGFgGATC").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGFgGATC"))
+    assert Dseq(b"AGJGaGFgGATC").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGFgGATC"))
+    assert Dseq(b"AGIGaGEgGATC").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGEgGATC"))
+    assert Dseq(b"GATPGGPGCAGATC").melt(2) == (Dseq(b"QQ"), Dseq(b"GATPPPPGCAGATC"))
+    assert Dseq(b"GATQGGQGCAGATC").melt(2) == (Dseq(b"PP"), Dseq(b"GATQQQQGCAGATC"))
+    assert Dseq(b"PEXIGAQFZJGATC").melt(2) == (Dseq(b"PEXIPE"), Dseq(b"QFQFZJGATC"))
+    assert Dseq(b"QFZJGAPEXIGATC").melt(2) == (Dseq(b"QFZJQF"), Dseq(b"PEPEXIGATC"))
+    assert Dseq(b"GATCAGJGaGEg").melt(2) == (Dseq(b"GATCAGJGaGEp"), Dseq(b"q"))
+    assert Dseq(b"GATCAGIGaGFg").melt(2) == (Dseq(b"GATCAGIGaGFq"), Dseq(b"p"))
+    assert Dseq(b"GATCAGJGaGFg").melt(2) == (Dseq(b"GATCAGJGaGFq"), Dseq(b"p"))
+    assert Dseq(b"GATCAGIGaGEg").melt(2) == (Dseq(b"GATCAGIGaGEp"), Dseq(b"q"))
+    assert Dseq(b"GATCGATPGGPGCA").melt(2) == (Dseq(b"QQ"), Dseq(b"GATCGATPPPPGCA"))
+    assert Dseq(b"GATCGATQGGQGCA").melt(2) == (Dseq(b"PP"), Dseq(b"GATCGATQQQQGCA"))
+    assert Dseq(b"GATCPEXIGAQFZJ").melt(2) == (Dseq(b"GATCPEXIPE"), Dseq(b"QFQFZJ"))
+    assert Dseq(b"GATCQFZJGAPEXI").melt(2) == (Dseq(b"GATCQFZJQF"), Dseq(b"PEPEXI"))
+    assert Dseq(b"GATCAGJGaGEgGATC").melt(2) == ()
+    assert Dseq(b"GATCAGIGaGFgGATC").melt(2) == ()
+    assert Dseq(b"GATCAGJGaGFgGATC").melt(2) == ()
+    assert Dseq(b"GATCAGIGaGEgGATC").melt(2) == ()
+    assert Dseq(b"GATCGATPGGPGCAGATC").melt(2) == (Dseq(b"QQ"), Dseq(b"GATCGATPPPPGCAGATC"))
+    assert Dseq(b"GATCGATQGGQGCAGATC").melt(2) == (Dseq(b"PP"), Dseq(b"GATCGATQQQQGCAGATC"))
+    assert Dseq(b"GATCPEXIGAQFZJGATC").melt(2) == (Dseq(b"GATCPEXIPE"), Dseq(b"QFQFZJGATC"))
+    assert Dseq(b"GATCQFZJGAPEXIGATC").melt(2) == (Dseq(b"GATCQFZJQF"), Dseq(b"PEPEXIGATC"))
+    assert Dseq(b"GATCPEXIGAQFZJGATC").melt(2) == (Dseq(b"GATCPEXIPE"), Dseq(b"QFQFZJGATC"))
+    assert Dseq(b"GATCQFZJGAPEXIGATC").melt(2) == (Dseq(b"GATCQFZJQF"), Dseq(b"PEPEXIGATC"))
 
 
 # from Bio.Restriction import Acc65I, NlaIV, KpnI, NotI

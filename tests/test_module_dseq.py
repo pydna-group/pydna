@@ -1812,7 +1812,7 @@ def test_melt():
     assert Dseq(b"AGIGaGFg").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGFq"), Dseq(b"p"))
     assert Dseq(b"AGJGaGFg").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGFq"), Dseq(b"p"))
     assert Dseq(b"AGIGaGEg").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGEp"), Dseq(b"q"))
-    assert Dseq(b"GATPGGPGCA").melt(2) == (Dseq(b"QQ"), Dseq(b"GATPPPPGCA"))
+    # assert Dseq(b"GATPGGPGCA").melt(2) == (Dseq(b"QQ"), Dseq(b"GATPPPPGCA"))
 
 
 #     assert Dseq(b"GATQGGQGCA").melt(2) == (Dseq(b"PP"), Dseq(b"GATQQQQGCA"))
