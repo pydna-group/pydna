@@ -22,6 +22,9 @@ from pydna.utils import unfold_feature as _unfold_feature
 from pydna.utils import get_cutsite_pairs as _get_cutsite_pairs
 from pydna.utils import shift_location as _shift_location
 from pydna.utils import shift_feature as _shift_feature
+from pydna.utils import to_watson_table
+from pydna.utils import to_crick_table
+from pydna.seq import Seq as _Seq
 from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
 from Bio import SeqIO
 from Bio.SeqFeature import SeqFeature as _SeqFeature
@@ -1358,29 +1361,62 @@ class Dseqrecord(_SeqRecord):
 
         return tuple(newrecords)
 
+    def melt(self, length):
+
+        from pydna.utils import feature_in_span
+
+        if not length or length < 1:
+            return tuple()
+
+        new, strands = self.shed_ss_dna(length)
+
+        cutsites = new.seq.get_ds_meltsites(length)
+
+        cutsite_pairs, shift, stuffer = _get_cutsite_pairs(cutsites, self.circular, len(self))
+
+        new_features = [_shift_feature(f, -shift, len(self)) for f in self.features]
+        new_features = [_unfold_feature(f, len(self)) for f in new_features]
+
+        fragments = []
+
+        for pair in cutsite_pairs:
+            ((x1, y1), meta1), ((x2, y2), meta2) = pair
+            start = min(x1 - y1, x1)
+            end = max(x2 - y2, x2)
+            features = [feature_in_span(f, start, end) for f in new_features]
+            features = [_shift_feature(f, -start, len(new)) for f in features if f]
+            sequence = new.seq.apply_cut(*pair, shift, stuffer)
+            fragment = Dseqrecord(sequence, features=features)
+            fragments.append(fragment)
+
+        result = fragments
+
+        result = tuple([new]) if strands and not result else result
+
+        return strands + result
+
+    def shed_ss_dna(self, length):
+
+        features = _copy.deepcopy(self.features)
+
+        new, strands, intervals = self.seq._shed_ss_dna(length)
+
+        srs = []
+
+        for strand, (x, y) in zip(strands, intervals):
+            fs = [f._shift(-x) for f in features if x in f.location and (y - 1) in f.location]
+            ss = (
+                strand._data.translate(to_watson_table).strip() or strand._data.translate(to_crick_table)[::-1].strip()
+            )
+            srs.append(_SeqRecord(_Seq(ss), features=fs))  # FIXME: direction of feature
+
+        return Dseqrecord(new, features=_copy.copy(self.features)), srs
+
 
 if __name__ == "__main__":
-    # cache = _os.getenv("pydna_cache")
-    # _os.environ["pydna_cache"] = "nocache"
-    # import doctest
+    cached = _os.getenv("pydna_cached_funcs", "")
+    _os.environ["pydna_cached_funcs"] = ""
+    import doctest
 
-    # doctest.testmod(verbose=False, optionflags=doctest.ELLIPSIS)
-
-    a = Dseqrecord("ggatcc")
-    from Bio.Restriction import BamHI
-
-    a.add_feature(1, 5)
-    a.figure()
-    frag1, frag2 = a.cut(BamHI)
-
-    print(frag1.figure())
-    print(frag2.figure())
-
-    a = Dseqrecord("ggatcc", circular=True)
-    from Bio.Restriction import BamHI
-
-    a.add_feature(1, 5)
-    a.figure()
-    (frag3,) = a.cut(BamHI)
-
-    print(frag3.figure())
+    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
+    _os.environ["pydna_cached_funcs"] = cached

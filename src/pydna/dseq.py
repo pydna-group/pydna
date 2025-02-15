@@ -22,13 +22,14 @@ from pydna.seq import Seq as _Seq
 
 # from Bio.Seq import _translate_str, _SeqAbstractBaseClass
 # from collections import namedtuple as _namedtuple
-from Bio.SeqFeature import SimpleLocation as _lc
+# from Bio.SeqFeature import SimpleLocation as _lc
 
 from seguid import ldseguid as _ldseguid
 from seguid import cdseguid as _cdseguid
 
 from pydna._pretty import pretty_str as _pretty_str
-from pydna.utils import shift_location as _sl
+
+# from pydna.utils import shift_location as _sl
 from pydna.utils import rc as _rc
 from pydna.utils import flatten as _flatten
 
@@ -578,7 +579,7 @@ class Dseq(_Seq):
         aaa
         ttt
         >>> a.five_prime_end()
-         ('blunt', b'')
+        ('blunt', b'')
         >>> b=Dseq("QZJaaa")
         >>> b
         Dseq(-6)
@@ -1436,6 +1437,12 @@ class Dseq(_Seq):
 
     def shed_ss_dna(self, length):
 
+        new, strands, intervals = self._shed_ss_dna(length)
+
+        return Dseq(new), strands
+
+    def _shed_ss_dna(self, length):
+
         watsonnicks, cricknicks = self.get_ss_meltsites(length)
 
         watsonstrands = []
@@ -1447,16 +1454,25 @@ class Dseq(_Seq):
             stuffer = new[x:y]
             ss = Dseq.quick(stuffer.translate(to_5tail_table))
             new = new[:x] + stuffer.translate(to_3tail_table) + new[y:]
-            watsonstrands.append((x, ss))
+            watsonstrands.append((x, y, ss))
+
         for x, y in cricknicks:
             stuffer = new[x:y]
             ss = Dseq.quick(stuffer.translate(to_3tail_table))
             new = new[:x] + stuffer.translate(to_5tail_table) + new[y:]
-            crickstrands.append((x, ss))
+            crickstrands.append((x, y, ss))
 
-        strands = tuple(Dseq(ss) for x, ss in sorted(watsonstrands + crickstrands))
+        ordered_strands = sorted(watsonstrands + crickstrands)
 
-        return Dseq(new), strands
+        strands = []
+
+        for x, y, ss in ordered_strands:
+            seq = ss._data[::-1].translate(to_watson_table).strip() or ss._data.translate(to_crick_table).strip()
+            strands.append(_Seq(seq))
+
+        intervals = tuple((x, y) for x, y, ss in ordered_strands)
+
+        return Dseq(new), tuple(strands), intervals
 
     def apply_cut(self, left_cut: CutSiteType, right_cut: CutSiteType, shift, stuffer) -> "Dseq":
         """Extracts a subfragment of the sequence between two cuts.
@@ -1482,7 +1498,7 @@ class Dseq(_Seq):
         >>> cutsites
         [((3, -4), EcoRI), ((11, -4), EcoRI)]
         >>> pairs, shift, stuffer = get_cutsite_pairs(cutsites, circular=False, length=len(dseq))
-        p1, p2, p3 = pairs
+        >>> p1, p2, p3 = pairs
         >>> p1
         (((0, 0), None), ((3, -4), EcoRI))
         >>> dseq.apply_cut(*p1, shift, stuffer)
@@ -1508,8 +1524,8 @@ class Dseq(_Seq):
         [((6, -4), EcoRI)]
         >>> pair, shift, stuffer = get_cutsite_pairs(cutsites, circular=True, length=len(dseq))
         >>> pair
-        [(((0, -4), EcoRI), ((8, -4), EcoRI)), (((8, -4), EcoRI), ((8, -4), EcoRI))]
-        >>> dseq.apply_cut(*pair[1], shift, stuffer)
+        [(((0, -4), EcoRI), ((8, -4), EcoRI))]
+        >>> dseq.apply_cut(*pair[0], shift, stuffer)
         Dseq(-12)
         AATTCaaG
             GttCTTAA
@@ -1743,10 +1759,10 @@ class Dseq(_Seq):
         for m in regex.finditer(cutfrom):
 
             if m.lastgroup == "watson":
-                cut = (m.end() + spacer, m.end() - m.start()), None
+                cut = (m.end() - spacer, m.end() - m.start()), None
             else:
                 assert m.lastgroup == "crick"
-                cut = (m.start() + spacer, m.start() - m.end()), None
+                cut = (m.start() - spacer, m.start() - m.end()), None
 
             cuts.append(cut)
 
@@ -1886,81 +1902,15 @@ def pair(watson: [str, bytes], crick: [str, bytes], ovhg: int = None):
 
 
 def helper(dseqs):
-    print("assert XXX == (" + ", ".join(f"Dseq(\"{d._data.decode()}\")" for d in dseqs) + ")")
+    print("assert XXX == (" + ", ".join(f'Dseq("{d._data.decode()}")' for d in dseqs) + ")")
 
 
 if __name__ == "__main__":
+    import os as _os
 
-    assert Dseq(b"AGJGaGEg").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGEp"), Dseq(b"q"))
-    assert Dseq(b"AGIGaGFg").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGFq"), Dseq(b"p"))
-    assert Dseq(b"AGJGaGFg").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGFq"), Dseq(b"p"))
-    assert Dseq(b"AGIGaGEg").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGEp"), Dseq(b"q"))
-    assert Dseq(b"GATPGGPGCA").melt(2) == (Dseq(b"QQ"), Dseq(b"GATPPPPGCA"))
-    assert Dseq(b"GATQGGQGCA").melt(2) == (Dseq(b"PP"), Dseq(b"GATQQQQGCA"))
-    assert Dseq(b"PEXIGAQFZJ").melt(2) == (Dseq(b"PEXIPE"), Dseq(b"QFQFZJ"))
-    assert Dseq(b"QFZJGAPEXI").melt(2) == (Dseq(b"QFZJQF"), Dseq(b"PEPEXI"))
-    assert Dseq(b"AGJGaGEgGATC").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGEgGATC"))
-    assert Dseq(b"AGIGaGFgGATC").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGFgGATC"))
-    assert Dseq(b"AGJGaGFgGATC").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGFgGATC"))
-    assert Dseq(b"AGIGaGEgGATC").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGEgGATC"))
-    assert Dseq(b"GATPGGPGCAGATC").melt(2) == (Dseq(b"QQ"), Dseq(b"GATPPPPGCAGATC"))
-    assert Dseq(b"GATQGGQGCAGATC").melt(2) == (Dseq(b"PP"), Dseq(b"GATQQQQGCAGATC"))
-    assert Dseq(b"PEXIGAQFZJGATC").melt(2) == (Dseq(b"PEXIPE"), Dseq(b"QFQFZJGATC"))
-    assert Dseq(b"QFZJGAPEXIGATC").melt(2) == (Dseq(b"QFZJQF"), Dseq(b"PEPEXIGATC"))
-    assert Dseq(b"GATCAGJGaGEg").melt(2) == (Dseq(b"GATCAGJGaGEp"), Dseq(b"q"))
-    assert Dseq(b"GATCAGIGaGFg").melt(2) == (Dseq(b"GATCAGIGaGFq"), Dseq(b"p"))
-    assert Dseq(b"GATCAGJGaGFg").melt(2) == (Dseq(b"GATCAGJGaGFq"), Dseq(b"p"))
-    assert Dseq(b"GATCAGIGaGEg").melt(2) == (Dseq(b"GATCAGIGaGEp"), Dseq(b"q"))
-    assert Dseq(b"GATCGATPGGPGCA").melt(2) == (Dseq(b"QQ"), Dseq(b"GATCGATPPPPGCA"))
-    assert Dseq(b"GATCGATQGGQGCA").melt(2) == (Dseq(b"PP"), Dseq(b"GATCGATQQQQGCA"))
-    assert Dseq(b"GATCPEXIGAQFZJ").melt(2) == (Dseq(b"GATCPEXIPE"), Dseq(b"QFQFZJ"))
-    assert Dseq(b"GATCQFZJGAPEXI").melt(2) == (Dseq(b"GATCQFZJQF"), Dseq(b"PEPEXI"))
-    assert Dseq(b"GATCAGJGaGEgGATC").melt(2) == ()
-    assert Dseq(b"GATCAGIGaGFgGATC").melt(2) == ()
-    assert Dseq(b"GATCAGJGaGFgGATC").melt(2) == ()
-    assert Dseq(b"GATCAGIGaGEgGATC").melt(2) == ()
-    assert Dseq(b"GATCGATPGGPGCAGATC").melt(2) == (Dseq(b"QQ"), Dseq(b"GATCGATPPPPGCAGATC"))
-    assert Dseq(b"GATCGATQGGQGCAGATC").melt(2) == (Dseq(b"PP"), Dseq(b"GATCGATQQQQGCAGATC"))
-    assert Dseq(b"GATCPEXIGAQFZJGATC").melt(2) == (Dseq(b"GATCPEXIPE"), Dseq(b"QFQFZJGATC"))
-    assert Dseq(b"GATCQFZJGAPEXIGATC").melt(2) == (Dseq(b"GATCQFZJQF"), Dseq(b"PEPEXIGATC"))
-    assert Dseq(b"GATCPEXIGAQFZJGATC").melt(2) == (Dseq(b"GATCPEXIPE"), Dseq(b"QFQFZJGATC"))
-    assert Dseq(b"GATCQFZJGAPEXIGATC").melt(2) == (Dseq(b"GATCQFZJQF"), Dseq(b"PEPEXIGATC"))
+    cached = _os.getenv("pydna_cached_funcs", "")
+    _os.environ["pydna_cached_funcs"] = ""
+    import doctest
 
-
-# from Bio.Restriction import Acc65I, NlaIV, KpnI, NotI
-
-# assert Dseq("aa").cut(NotI) == ()
-
-# obj = Dseq("GGTACC")
-
-# obj_Acc65I = obj.cut(Acc65I)
-# obj_KpnI = obj.cut(KpnI)
-# obj_NlaIV = obj.cut(NlaIV)
-
-# assert obj_Acc65I == (Dseq("GQZFJ"), Dseq("PXEIC"))
-# assert obj_KpnI == (Dseq("GPXEI"), Dseq("QZFJC"))
-# assert obj_NlaIV == (Dseq("GGT"), Dseq("ACC"))
-
-# cobj = obj.looped()
-
-# for i in range(len(cobj) + 1):
-#     shifted_obj = cobj.shifted(i)
-#     assert shifted_obj.cut(Acc65I) == (Dseq("").join(obj_Acc65I[::-1]),)
-#     assert shifted_obj.cut(KpnI) == (Dseq("").join(obj_KpnI[::-1]),)
-#     assert shifted_obj.cut(NlaIV) == (Dseq("").join(obj_NlaIV[::-1]),)
-
-# from Bio.Restriction import RestrictionBatch
-# from Bio.Restriction import BamHI, BglII, BsaI, KpnI, Acc65I, XhoII, DpnI, BcgI, NlaIV
-# from Bio.Restriction.Restriction_Dictionary import rest_dict, typedict
-
-# enzymes = RestrictionBatch((BamHI, BglII, BsaI, KpnI, Acc65I, XhoII))
-
-# obj = Dseq("GGTACCnnnGGtaCC")
-
-# obj_Acc65I = obj.cut(Acc65I)
-# obj_KpnI = obj.cut(KpnI)
-# obj_NlaIV = obj.cut(NlaIV)
-
-# assert obj_Acc65I == (Dseq("GQZFJ"), Dseq("PXEICnnnGQzfJ"), Dseq("PxeIC"))
-# assert obj_KpnI == (Dseq("GPXEI"), Dseq("QZFJCnnnGPxeI"), Dseq("QzfJC"))
-# assert obj_NlaIV == (Dseq("GGT"), Dseq("ACCnnnGGt"), Dseq("aCC"))
+    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
+    _os.environ["pydna_cached_funcs"] = cached

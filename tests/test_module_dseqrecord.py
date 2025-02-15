@@ -2284,6 +2284,33 @@ def test_assemble_YEp24PGK_XK():
     assert eq(YEp24PGK_XK, YEp24PGK_XK_correct)
 
 
+def test_melt():
+
+    from pydna.dseqrecord import Dseqrecord
+    from Bio.SeqFeature import ExactPosition, SimpleLocation
+
+    dr = Dseqrecord("GATCGATPGAPGCAGATC")
+    dr.add_feature(8, 10)
+
+    # GATCGATGGAGGCAGATC
+    # CTAGCTA CT CGTCTAG
+    #         ==
+
+    dr2, srs = dr.shed_ss_dna(2)
+    (seqrec,) = srs
+    seqrec.features[0].location == SimpleLocation(ExactPosition(0), ExactPosition(2), strand=1)
+
+    dr = Dseqrecord("GATCAGJGaGEgatc")
+    dr.add_feature(7, 10)
+
+    # GATCAG GaGAgatc
+    # CTAGTCGCtC ctag
+    #        ===
+
+    dr.figure()
+    a, b = dr.melt(3)
+
+
 # def test_apply_cut():
 
 #     from pydna.dseqrecord import Dseqrecord

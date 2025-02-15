@@ -1516,7 +1516,15 @@ def eq(*args, **kwargs):
 #     return (x[1] > y[0]) != (y[1] < x[0])
 
 
+def feature_in_span(feature, x, y):
+    if x <= feature.location.start and y >= feature.location.end:
+        return feature
+    else:
+        return None
+
+
 def cuts_overlap(left_cut, right_cut, seq_len, circular):
+
     (left_watson_position, left_ovhg), _ = left_cut
     (right_watson_position, right_ovhg), _ = right_cut
 
@@ -1524,6 +1532,8 @@ def cuts_overlap(left_cut, right_cut, seq_len, circular):
         left_watson_position %= seq_len
         right_watson_position %= seq_len
 
+    if (left_watson_position, left_ovhg) == (right_watson_position, left_ovhg):
+        return False
     if (left_watson_position, left_ovhg) == (0, 0):
         return False
     elif (right_watson_position, left_ovhg) == (0, 0):
@@ -1536,7 +1546,7 @@ def cuts_overlap(left_cut, right_cut, seq_len, circular):
     # if (x[1] > y[0]) != (y[1] < x[0]) and x != y:
     #     breakpoint()
 
-    return (x[1] > y[0]) != (y[1] < x[0]) and x != y
+    return (x[1] > y[0]) != (y[1] < x[0])
 
 
 def get_cutsite_pairs(cutsites, circular, length):
@@ -1545,13 +1555,13 @@ def get_cutsite_pairs(cutsites, circular, length):
         return [], None, None
 
     if not circular:
-
         shift = 0
         stuffer = 0
         cutsites = [((0, 0), None), *cutsites, ((length, 0), None)]
 
     else:
         # Add the first cutsite at the end, for circular cuts
+
         (firstcut, offset), *rest = cutsites[0]
 
         cutsites.append(((firstcut + length, offset), *rest))
