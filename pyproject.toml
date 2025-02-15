@@ -33,7 +33,7 @@ license = "BSD"
 name = "pydna"
 readme = "README.md"
 repository = "https://github.com/pydna-group/pydna/tree/master"
-version = "6.0.0-a.24.post.17+b7b559bd66"
+version = "6.0.0-a.30.post.41+0ee3463f17"
 [tool.poetry.dependencies]
 appdirs = ">=1.4.4"
 biopython = ">=1.80,<1.85"
@@ -66,7 +66,7 @@ gel = ["scipy", "matplotlib", "pillow"]
 build-backend = "poetry_dynamic_versioning.backend"
 requires = ["poetry-core", "poetry-dynamic-versioning"]
 [tool.poetry-dynamic-versioning]
-enable = true
+enable = false
 style = "semver"
 vcs = "git"
 [tool.poetry-dynamic-versioning.substitution]

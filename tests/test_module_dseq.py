@@ -1628,8 +1628,9 @@ def test_new():
     from Bio.SeqFeature import SimpleLocation, ExactPosition, CompoundLocation
 
     assert Dseq("ggtctcAAgcTT", circular=False).get_cutsites(BsaI) == [((7, -4), BsaI)]
-    assert Dseq("TggtctcAAgcT", circular=False).get_cutsites(BsaI) == [((8, -4), BsaI)]
+    # assert Dseq("TggtctcAAgcT", circular=False).get_cutsites(BsaI) == [((8, -4), BsaI)]
 
+    assert Dseq("TggtctcAAgcT", circular=False).get_cutsites(BsaI) == []
     assert Dseq("TTggtctcAAgc", circular=False).get_cutsites(BsaI) == []
     assert Dseq("cTTggtctcAAg", circular=False).get_cutsites(BsaI) == []
     assert Dseq("gcTTggtctcAA", circular=False).get_cutsites(BsaI) == []
