@@ -43,7 +43,7 @@ from pydna.utils import to_crick_table
 from pydna.utils import to_5tail_table
 from pydna.utils import to_3tail_table
 from pydna.utils import to_full_sequence
-from pydna.utils import to_N as _to_N
+
 from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
 from pydna.common_sub_strings import terminal_overlap as _terminal_overlap
 
@@ -1623,62 +1623,12 @@ class Dseq(_Seq):
         # The out list will eventually contain all valid cuts.
         out = []
 
-        # The restriction enzyme search method only allows letters in the IUPAC extended alphabet.
-        # See the Bio.Restriction.FormattedSequence for details.
-        # For this reason we need to construct a temporary sequence where we filter and rplace with N
-        model = Dseq.quick(self._data.translate(_to_N))
-        # The ln variable contains the length so that we do not have to calculate it repeatedly.
-        ln = len(self)
-
         for e in enzymes:
-
-            # The ovhg property of the enzyme indicate the offset between the
-            # cut in the watson strand and the cut in the complementary crick
-            # strand. This can be positive or negative as indicated below for
-            # three common enzymes that cut the same sequence in different ways.
-
-            oh = e.ovhg
-
-            # G|G T A C C    Acc65I.ovhg = -4
-            #  ---------
-            # C C A T G|G
-
-            # G G T|A C C    NlaIV.ovhg = 0
-            # C C A|T G G
-
-            # G G T A C|C    KpnI.ovhg = 4
-            #  ---------
-            # C|C A T G G
-
             # Positions of the cut on the watson strand. They are 1-based, so we subtract
             # 1 to get 0-based positions
-            cuts_watson = [c - 1 for c in e.search(model, linear=not self.circular)]
-            # The search method of the enzyme can handle linear or circular sequences
-            # Cuts in circular sequences are reported even enzyme straddles the sequence origin
+            cuts_watson = [c - 1 for c in e.search(self, linear=(not self.circular))]
 
-            if self.circular:
-                # If the sequence is circular, we need to construct a temporary sequence
-                # with a stuffer on each end in case the enzyme overhang cuts before or after
-                # the origin
-                spacer = abs(oh)
-                cutfrom = Dseq.quick(self._data[-spacer:] + self._data + self._data[:spacer])
-                cuts_watson_inside = cuts_watson
-            else:
-                # If the sequence is linear, we need to filter cuts that cut outside
-                spacer = 0
-                cuts_watson_inside = [c for c in cuts_watson if 0 <= c - oh <= ln]
-                # Here we cut from original sequence, no spacers needed
-                cutfrom = self
-
-            for cut_on_watson in cuts_watson_inside:
-                begin, end = sorted((cut_on_watson, cut_on_watson - oh))
-                # We extract the sticky end from the temporary sequence
-                sticky_end = cutfrom[begin + spacer : end + spacer]
-                # If sticky end is all double stranded, the cut is valid.
-                # This implies that the sequence does not contain any
-                # letter associated with single stranded DNA (dsIUPAC)
-                if all(c not in "PEXIpexiQFZJqfzj" for c in sticky_end):
-                    out.append(((cut_on_watson, oh), e))
+            out += [((w, e.ovhg), e) for w in cuts_watson]
 
         return sorted(out)
 

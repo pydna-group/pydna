@@ -141,6 +141,7 @@ import appdirs as _appdirs
 import configparser as _configparser
 import tempfile as _tempfile
 from pydna._pretty import PrettyTable as _PrettyTable
+from Bio.Restriction import FormattedSeq
 
 
 __author__ = "Björn Johansson"
@@ -403,6 +404,21 @@ def logo():
         f = Figlet()
         message = f.renderText(message)
     return _pretty_str(message)
+
+
+## Override Bio.Restriction.FormattedSeq._table
+
+
+def _make_FormattedSeq_table() -> bytes:
+    table = bytearray(256)
+    upper_to_lower = ord("A") - ord("a")
+    for c in b"ABCDEFGHIJKLMNOPQRSTUVWXYZ":  # Only allow IUPAC letters
+        table[c] = c  # map uppercase to uppercase
+        table[c - upper_to_lower] = c  # map lowercase to uppercase
+    return bytes(table)
+
+
+FormattedSeq._table = _make_FormattedSeq_table()
 
 
 if __name__ == "__main__":
