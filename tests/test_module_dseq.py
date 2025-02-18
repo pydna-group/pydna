@@ -1809,10 +1809,15 @@ def test_new():
 
     assert sorted(x) == sorted(y)
 
+
+def test_BsaI():
+    from pydna.dseq import Dseq
+    from Bio.Restriction import BsaI
+
     assert Dseq("ggtctcAAgcTT").get_cutsites(BsaI) == [((7, -4), BsaI)]
     assert Dseq("ggtctcAAgcTT").cut(BsaI) == (Dseq("ggtctcAFqjZ"), Dseq("EpiXT"))
     assert Dseq("TggtctcAAgcT").get_cutsites(BsaI) == []
-    assert Dseq("TggtctcAAgcT").cut(BsaI) == (Dseq("TggtctcAFqjZ"), Dseq("EpiX"))
+    assert Dseq("TggtctcAAgcT").cut(BsaI) == ()  # (Dseq("TggtctcAFqjZ"), Dseq("EpiX"))
     assert Dseq("TTggtctcAAgc").get_cutsites(BsaI) == []
     assert Dseq("TTggtctcAAgc").cut(BsaI) == ()
 
