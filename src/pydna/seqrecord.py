@@ -41,6 +41,8 @@ import datetime
 
 _module_logger = _logging.getLogger("pydna." + __name__)
 
+defaultkwargs = {"<unknown id>": "id", "<unknown name>": "name", "<unknown description>": "description"}
+
 
 class SeqRecord(_SeqRecord):
     """
@@ -51,16 +53,17 @@ class SeqRecord(_SeqRecord):
     nicer output in the IPython shell.
     """
 
-    def __init__(self, seq, *args, id="id", name="name", description="description", **kwargs):
+    def __init__(self, seq, *args, **kwargs):  # id="id", name="name", description="description",
+
         if isinstance(seq, str):
             seq = _Seq(seq)
-        super().__init__(seq, *args, id=id, name=name, description=description, **kwargs)
+        super().__init__(seq, *args, **kwargs)  # , id=id, name=name, description=description,
         self._fix_attributes()
 
     def _fix_attributes(self):
-        self.id = _pretty_str(self.id)
-        self.name = _pretty_str(self.name)
-        self.description = _pretty_str(self.description)
+        self.id = _pretty_str(defaultkwargs.get(self.id, self.id))
+        self.name = _pretty_str(defaultkwargs.get(self.name, self.name))
+        self.description = _pretty_str(defaultkwargs.get(self.description, self.description))
 
         self.annotations.update({"molecule_type": "DNA"})
         self.map_target = None

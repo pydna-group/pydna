@@ -37,7 +37,7 @@ DNA = _Dseqrecord("gatcGAAGACtagagtctgattcg")
 
 a, b = DNA.cut(BbsI)
 
-assert a + b == DNA
+assert (a + b).seq == DNA.seq
 
 
 # MoClo
