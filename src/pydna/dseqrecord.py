@@ -1068,66 +1068,64 @@ class Dseqrecord(_SeqRecord):
         _module_logger.info("synced")
         return result
 
-    def upper(self):
-        """Returns an uppercase copy.
-        >>> from pydna.dseqrecord import Dseqrecord
-        >>> my_seq = Dseqrecord("aAa")
-        >>> my_seq.seq
-        Dseq(-3)
-        aAa
-        tTt
-        >>> upper = my_seq.upper()
-        >>> upper.seq
-        Dseq(-3)
-        AAA
-        TTT
-        >>>
+    # def upper(self):
+    #     """Returns an uppercase copy.
+    #     >>> from pydna.dseqrecord import Dseqrecord
+    #     >>> my_seq = Dseqrecord("aAa")
+    #     >>> my_seq.seq
+    #     Dseq(-3)
+    #     aAa
+    #     tTt
+    #     >>> upper = my_seq.upper()
+    #     >>> upper.seq
+    #     Dseq(-3)
+    #     AAA
+    #     TTT
+    #     >>>
 
+    #     Returns
+    #     -------
+    #     Dseqrecord
+    #         Dseqrecord object in uppercase
 
-        Returns
-        -------
-        Dseqrecord
-            Dseqrecord object in uppercase
+    #     See also
+    #     --------
+    #     pydna.dseqrecord.Dseqrecord.lower"""
 
+    #     upper = _copy.deepcopy(self)
+    #     upper.seq = upper.seq.upper()
+    #     return upper
 
-        See also
-        --------
-        pydna.dseqrecord.Dseqrecord.lower"""
+    # def lower(self):
+    #     """>>> from pydna.dseqrecord import Dseqrecord
+    #     >>> my_seq = Dseqrecord("aAa")
+    #     >>> my_seq.seq
+    #     Dseq(-3)
+    #     aAa
+    #     tTt
+    #     >>> upper = my_seq.upper()
+    #     >>> upper.seq
+    #     Dseq(-3)
+    #     AAA
+    #     TTT
+    #     >>> lower = my_seq.lower()
+    #     >>> lower
+    #     Dseqrecord(-3)
+    #     >>>
 
-        upper = _copy.deepcopy(self)
-        upper.seq = upper.seq.upper()
-        return upper
+    #     Returns
+    #     -------
+    #     Dseqrecord
+    #         Dseqrecord object in lowercase
 
-    def lower(self):
-        """>>> from pydna.dseqrecord import Dseqrecord
-        >>> my_seq = Dseqrecord("aAa")
-        >>> my_seq.seq
-        Dseq(-3)
-        aAa
-        tTt
-        >>> upper = my_seq.upper()
-        >>> upper.seq
-        Dseq(-3)
-        AAA
-        TTT
-        >>> lower = my_seq.lower()
-        >>> lower
-        Dseqrecord(-3)
-        >>>
+    #     See also
+    #     --------
+    #     pydna.dseqrecord.Dseqrecord.upper
 
-        Returns
-        -------
-        Dseqrecord
-            Dseqrecord object in lowercase
-
-        See also
-        --------
-        pydna.dseqrecord.Dseqrecord.upper
-
-        """
-        lower = _copy.deepcopy(self)
-        lower.seq = lower.seq.lower()
-        return lower
+    #     """
+    #     lower = _copy.deepcopy(self)
+    #     lower.seq = lower.seq.lower()
+    #     return lower
 
     def orfs(self, minsize=300):
         """docstring."""
