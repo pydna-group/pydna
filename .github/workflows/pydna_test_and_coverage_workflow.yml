@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ["macos-latest", "windows-latest"]
-        python-version: ["3.12", "3.11", "3.10", "3.9"]
+        python-version: ["3.13", "3.12", "3.11", "3.10", "3.9"]
         include:
           - os: ubuntu-latest
             python-version: "3.9"
@@ -25,6 +25,8 @@ jobs:
             python-version: "3.11"
           - os: ubuntu-latest
             python-version: "3.12"
+          - os: ubuntu-latest
+            python-version: "3.13"
             codecov: true
     defaults:
       run:
