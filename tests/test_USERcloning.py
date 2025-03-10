@@ -40,12 +40,6 @@ def test_USER_cloning():
     assert p.seq.crick == "GAUCGGCCGGATCCAAATGACTGAATTCAAGGCCGtCTTGAAAAAAGCCTGTGAGATCTAAGTCGACATCG"
 
 
-
-
-
-
-
-
 # hej = p.seq
 
 # from Bio.SeqFeature import SeqFeature
