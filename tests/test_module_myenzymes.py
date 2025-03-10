@@ -50,7 +50,8 @@ def test_IOError(monkeypatch, caplog):
     monkeypatch.setenv("pydna_enzymes", "my_test_enzymes.txt")
 
     from unittest.mock import patch
-    from unittest.mock import mock_open
+
+    # from unittest.mock import mock_open
 
     with patch("pydna.myenzymes.open") as mocked_open:
         mocked_open.side_effect = IOError()
@@ -73,7 +74,8 @@ def test_Exception(monkeypatch, caplog):
     monkeypatch.setenv("pydna_enzymes", "my_test_enzymes.txt")
 
     from unittest.mock import patch
-    from unittest.mock import mock_open
+
+    # from unittest.mock import mock_open
 
     with patch("pydna.myenzymes.open") as mocked_open:
         mocked_open.side_effect = Exception()

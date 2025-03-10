@@ -171,20 +171,20 @@ def test_parse1():
     correct = """ATGACTGAATTCAAGGCCGGTTCTGCTAAGAAAGGTGCTACACTTTTCAAGACTAGATGTCTACAATGCCACACCGTGGAAAAGGGTGGCCCACATAAGGTTGGTCCAAACTTGCATGGTATCTTTGGCAGACACTCTGGTCAAGCTGAAGGGTATTCGTACACAGATGCCAATATCAAGAAAAACGTGTTGTGGGACGAAAATAACATGTCAGAGTACTTGACTAACCCAAAGAAATATATTCCTGGTACCAAGATGGCCTTTGGTGGGTTGAAGAAGGAAAAAGACAGAAACGACTTAATTACCTACTTGAAAAAAGCCTGTGAGTAA"""
 
     assert str(result.seq) == correct
-    assert result.circular == False
+    assert result.circular is False
 
     seqs = parse("RefDataBjorn.fas")
     assert len(seqs) == 771
     assert list(set([len(a) for a in seqs])) == [901]
 
     pAG25 = read("pAG25.gb")
-    assert pAG25.circular == True
+    assert pAG25.circular is True
 
     pCAPs = read("pCAPs.gb")
-    assert pCAPs.circular == True
+    assert pCAPs.circular is True
 
     pUC19 = read("pUC19.gb")
-    assert pUC19.circular == True
+    assert pUC19.circular is True
 
     input = """
     ID   example    standard; DNA; UNC; 3 BP.
@@ -224,7 +224,8 @@ def test_parse1():
 
 def test_parse2():
     from pydna.parsers import parse
-    from pydna.readers import read
+
+    # from pydna.readers import read
 
     seqs = parse("RefDataBjorn.fas")
 
@@ -234,7 +235,7 @@ def test_parse2():
     for i, s in enumerate(seqs):
         a = s.description
         b = a.split()
-        c = "|".join([b[0], b[1], b[3]])
+        # c = "|".join([b[0], b[1], b[3]])
         s.id = b[2].replace(" ", "_") + "_" + str(i)
         s.description = ""
         if b[3] == "Zenion hololepis":
@@ -280,13 +281,14 @@ def test_parse_list():
 def test_misc_parse():
 
     from pydna.parsers import parse
-    from Bio.SeqIO import read as BPread
+
+    # from Bio.SeqIO import read as BPread
     from Bio.SeqIO import parse as BPparse
 
-    q = BPread("read1.gb", "gb")
-    w = BPread("read2.gb", "gb")
-    e = BPread("read3.fasta", "fasta")
-    r = BPread("read4.fasta", "fasta")
+    # q = BPread("read1.gb", "gb")
+    # w = BPread("read2.gb", "gb")
+    # e = BPread("read3.fasta", "fasta")
+    # r = BPread("read4.fasta", "fasta")
 
     with open("pth1.txt", "r", encoding="utf-8") as f:
         a, b = BPparse(f, "gb")
