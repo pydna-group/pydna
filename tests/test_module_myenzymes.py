@@ -15,13 +15,11 @@ def test_myenzymes(monkeypatch):
     assert len(list(myenzymes.myenzymes)) == 621
 
 
-
-
-
 def test_file_is_folder(monkeypatch, caplog):
     monkeypatch.setenv("pydna_enzymes", "subfolder")
     from pydna import myenzymes
     from importlib import reload
+
     reload(myenzymes)
     assert len(list(myenzymes.myenzymes)) == 0
     assert len(caplog.records) == 1

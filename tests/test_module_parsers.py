@@ -20,9 +20,10 @@ def test_extract_from_text():
             //
             """
     from pydna.parsers import extract_from_text
+
     seqs, gaps = extract_from_text(text)
-    assert seqs == ('>a\naaaa\n', 'LOCUS\n//', '>b\nbbbbbb\n', 'ID\n//')
-    assert [g.strip() for g in gaps] == ['', '', '', '', '']
+    assert seqs == (">a\naaaa\n", "LOCUS\n//", ">b\nbbbbbb\n", "ID\n//")
+    assert [g.strip() for g in gaps] == ["", "", "", "", ""]
     text = """\
     comment 0
     LOCUS a
@@ -42,14 +43,12 @@ def test_extract_from_text():
     comment 4
     """
     seqs, gaps = extract_from_text(text)
-    assert seqs == ('LOCUS a\n//', 'LOCUS b\n//', '>c\nccccc', '>ddd\ndddddd\n', 'ID e\n//')
-    assert tuple(g.strip() for g in gaps) == ('comment 0', 'comment 1', 'comment 2', 'comment 3', '', 'comment 4')
-
-
+    assert seqs == ("LOCUS a\n//", "LOCUS b\n//", ">c\nccccc", ">ddd\ndddddd\n", "ID e\n//")
+    assert tuple(g.strip() for g in gaps) == ("comment 0", "comment 1", "comment 2", "comment 3", "", "comment 4")
 
     from pydna.parsers import embl_gb_fasta
 
-    text =  """\
+    text = """\
             LOCUS       New_linear_DNA             2 bp    DNA     linear       29-MAR-2024
             DEFINITION  .
             ACCESSION
@@ -76,7 +75,7 @@ def test_extract_from_text():
 
     assert crc.annotations.get("topology") == "circular"
 
-    text =  """\
+    text = """\
             >a
             aaa
             >c
@@ -87,11 +86,11 @@ def test_extract_from_text():
             ttt
             """
 
-    a,c,t,g = embl_gb_fasta(text)
+    a, c, t, g = embl_gb_fasta(text)
 
-    assert [x.annotations.get("topology") for x in (a,c,g,t)] == ['linear', 'linear', 'linear', 'linear']
+    assert [x.annotations.get("topology") for x in (a, c, g, t)] == ["linear", "linear", "linear", "linear"]
 
-    text =  """\
+    text = """\
             >a circular
             aaa
             >c circular
@@ -102,10 +101,9 @@ def test_extract_from_text():
             ttt
             """
 
-    a,c,t,g = embl_gb_fasta(text)
+    a, c, t, g = embl_gb_fasta(text)
 
-    assert [x.annotations.get("topology") for x in (a,c,g,t)] == ['circular', 'circular', 'circular', 'circular']
-
+    assert [x.annotations.get("topology") for x in (a, c, g, t)] == ["circular", "circular", "circular", "circular"]
 
 
 def test_parse1():
@@ -221,7 +219,7 @@ def test_parse1():
     //
     """
     result = parse(input).pop()
-    assert str(result.seq) == "A"*100
+    assert str(result.seq) == "A" * 100
 
 
 def test_parse2():
@@ -245,17 +243,21 @@ def test_parse2():
 
 def test_parse_primers():
     from pydna.parsers import parse_primers
+
     data = str(">1\n" "aaaa\n" ">2\n" "cccc\n")
     parse_primers(data)
 
-    f0, r0 = parse_primers("""
+    f0, r0 = parse_primers(
+        """
                              >ForwardPrimer
                              gctactacacacgtactgactg
 
                              >ReversePrimer
-                             tgtggttactgactctatcttg""")
-    assert str(f0.seq) == 'gctactacacacgtactgactg'
-    assert str(r0.seq) == 'tgtggttactgactctatcttg'
+                             tgtggttactgactctatcttg"""
+    )
+    assert str(f0.seq) == "gctactacacacgtactgactg"
+    assert str(r0.seq) == "tgtggttactgactctatcttg"
+
 
 def test_parse_error():
     from pydna.parsers import parse
@@ -272,7 +274,7 @@ def test_parse_list():
 
     data = str(">1\n" "aaaa\n" ">2\n" "cccc\n")
 
-    assert [str(x.seq) for x in parse_primers([data, data])] == ['aaaa', 'cccc', 'aaaa', 'cccc']
+    assert [str(x.seq) for x in parse_primers([data, data])] == ["aaaa", "cccc", "aaaa", "cccc"]
 
 
 def test_misc_parse():
@@ -314,8 +316,10 @@ def test_dna2949():
     assert len(seqlist) == 1
     assert seqlist[0].seguid() == "ldseguid=ScLoSddUf2c0GIAGpvIi33nLvFY"
 
+
 def proteins():
     from pydna.parsers import embl_gb_fasta
+
     proteins = """\
     >pdb|3VQM|V Chain V, C-terminal peptide from Small heat shock protein StHsp14.0
     VIKIE
@@ -354,7 +358,6 @@ def proteins():
             1 vikie
     //
     """
-
 
     fa, gb = embl_gb_fasta(proteins)
 
