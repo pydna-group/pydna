@@ -1,4 +1,4 @@
-# ![icon](docs/_static/pydna.resized.png) pydna
+# ![icon](https://github.com/pydna-group/pydna/blob/master/docs/_static/pydna.resized.png?raw=true) pydna
 
 | [![Tests & Coverage](https://github.com/pydna-group/pydna/actions/workflows/pydna_test_and_coverage_workflow.yml/badge.svg?branch=dev_bjorn)](https://github.com/pydna-group/pydna/actions/workflows/pydna_test_and_coverage_workflow.yml) | [![codecov](https://codecov.io/gh/BjornFJohansson/pydna/branch/master/graph/badge.svg)](https://codecov.io/gh/BjornFJohansson/pydna/branch/master) | [![PyPI version](https://badge.fury.io/py/pydna.svg)](https://badge.fury.io/py/pydna)                                                  | [![Google group : pydna](https://img.shields.io/badge/Google%20Group-pydna-blue.svg)](https://groups.google.com/g/pydna)          |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -395,7 +395,7 @@ Below are the instructions for developers who want to contribute to pydna. Pleas
 
 Fork the entire repository (not just the `master` branch by unticking the "Copy the `master` branch only" box)
 
-<img src="docs/_static/create-fork.png" alt="Fork repository" width="400">
+![Fork](https://github.com/pydna-group/pydna/blob/master/docs/_static/create-fork.png?raw=true)
 
 Create your branch starting from `dev_bjorn`, and if your changes are related to an issue, call the branch `issue_<number>`.
 
