@@ -310,3 +310,63 @@ The behaviour is summarised in the following graphics for linear and circular as
 ![assembly_fragments behaviour](../_static/assembly_fragment_slide_circular.png)
 
 
+
+### Using the NEB Tm calculator for primer design
+
+You can use the NEB Tm calculator for primer design, but it is much slower than the other methods because it relies on making requests to the NEB server.
+
+You can use the `estimate_function` argument to pass another function that will be used to estimate a first Tm, then the NEB calculator will be used to refine it.
+
+The `estimate_function` and `tm_method` only takes the sequence string as argument, so you need to make an adapter function for the the case of `tm_neb` (see below)
+
+
+```python
+
+def custom_tm_function(seq):
+    # We include the print statement to show that is only called a few times
+    print('Estimating Tm using NEB Tm calculator')
+    return tm_neb(seq, 0.5, 'q5-0')
+
+print("With an estimate function")
+primer_design(template, tm_func=custom_tm_function, estimate_function=tm_default)
+print()
+
+print("Without an estimate function")
+primer_design(template, tm_func=custom_tm_function)
+```
+
+    With an estimate function
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    
+    Without an estimate function
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+    Estimating Tm using NEB Tm calculator
+
+
+
+
+
+Amplicon(54)
+
+

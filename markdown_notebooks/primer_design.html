@@ -367,6 +367,56 @@ TCGTATACGTTTGTCATTACTACCTACTGTAAGTTTCGTGACTAAGATAACGACTTTTTCTATTAGTGAGATTATTACTT
 <img alt="assembly_fragments behaviour" src="../_images/assembly_fragment_slide_circular.png" /></p>
 </section>
 </section>
+<section id="using-the-neb-tm-calculator-for-primer-design">
+<h3>Using the NEB Tm calculator for primer design<a class="headerlink" href="#using-the-neb-tm-calculator-for-primer-design" title="Link to this heading"></a></h3>
+<p>You can use the NEB Tm calculator for primer design, but it is much slower than the other methods because it relies on making requests to the NEB server.</p>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">estimate_function</span></code> argument to pass another function that will be used to estimate a first Tm, then the NEB calculator will be used to refine it.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">estimate_function</span></code> and <code class="docutils literal notranslate"><span class="pre">tm_method</span></code> only takes the sequence string as argument, so you need to make an adapter function for the the case of <code class="docutils literal notranslate"><span class="pre">tm_neb</span></code> (see below)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="k">def</span><span class="w"> </span><span class="nf">custom_tm_function</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+    <span class="c1"># We include the print statement to show that is only called a few times</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Estimating Tm using NEB Tm calculator&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tm_neb</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;q5-0&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;With an estimate function&quot;</span><span class="p">)</span>
+<span class="n">primer_design</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">tm_func</span><span class="o">=</span><span class="n">custom_tm_function</span><span class="p">,</span> <span class="n">estimate_function</span><span class="o">=</span><span class="n">tm_default</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Without an estimate function&quot;</span><span class="p">)</span>
+<span class="n">primer_design</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">tm_func</span><span class="o">=</span><span class="n">custom_tm_function</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>With an estimate function
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+
+Without an estimate function
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+</pre></div>
+</div>
+<p>Amplicon(54)</p>
+</section>
 </section>
 </section>
 
