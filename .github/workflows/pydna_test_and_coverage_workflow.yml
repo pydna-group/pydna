@@ -61,7 +61,7 @@ jobs:
         if: matrix.fresh-install == 'true'
 
       - name: 🔩 Install with Poetry
-        run: poetry install
+        run: poetry install --all-extras
 
       - name: 🔎 poetry run python run_test.py
         run: poetry run python run_test.py
