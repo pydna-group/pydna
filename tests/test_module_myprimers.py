@@ -65,8 +65,11 @@ def test_PrimerList_init(monkeypatch, capsys):
     assert [s.name for s in parse_primers(np)] == ["4_abc", "0_primer"]
 
     with pytest.raises(ValueError):
+        # ValueError: efg 8-mer:5'-tttttttt-3' is not in list
         pl2.pydna_code_from_list(newlist)
+
     captured = capsys.readouterr()
+
     assert captured.out == ">abc 3-mer\naaa\n\n"
 
     import textwrap

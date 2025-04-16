@@ -634,9 +634,9 @@ class SeqRecord(_SeqRecord):
                 f">{self.id} {len(self)} bp {dict(((True, 'circular'), (False, 'linear')))[self.seq.circular]}\n{str(self.seq)}\n"
             )
         if format == "primer":
-            return _pretty_str(
-                f">{self.id} {len(self)}-mer {removeprefix(self.description, self.name).strip()}\n{str(self.seq)}\n"
-            )
+            meta = removeprefix(self.description, self.name).strip()
+            meta = f" {meta}" if meta.strip() else ""
+            return _pretty_str(f">{self.id} {len(self)}-mer{meta}\n{str(self.seq)}\n")
         return _pretty_str(super().__format__(format))
 
     def __add__(self, other):
