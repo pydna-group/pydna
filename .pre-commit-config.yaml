@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.5.0
+  rev: v5.0.0
   hooks:
   # Prevent committing to the master branch
   - id: no-commit-to-branch
@@ -17,13 +17,13 @@ repos:
   - id: mixed-line-ending
 # Code formatting
 - repo: https://github.com/ambv/black
-  rev: 24.10.0
+  rev: 25.1.0
   hooks:
   - id: black
     exclude: tests
 # Further linting (e.g. module imported but not used)
 - repo: https://github.com/PyCQA/flake8
-  rev: 7.1.1
+  rev: 7.2.0
   hooks:
   - id: flake8
     exclude: ^(tests/|scripts/|docs/)

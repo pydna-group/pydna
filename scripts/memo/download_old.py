@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Provides a class for downloading sequences from genbank.
-"""
+"""Provides a class for downloading sequences from genbank."""
 import pickle as _pickle
 import shelve as _shelve
 import os as _os

@@ -635,7 +635,7 @@ class SeqRecord(_SeqRecord):
             )
         if format == "primer":
             return _pretty_str(
-                f">{self.id} {len(self)}-mer{removeprefix(self.description, self.name).strip()}\n{str(self.seq)}\n"
+                f">{self.id} {len(self)}-mer {removeprefix(self.description, self.name).strip()}\n{str(self.seq)}\n"
             )
         return _pretty_str(super().__format__(format))
 
