@@ -12,6 +12,8 @@ import re as _re
 import io as _io
 import textwrap as _textwrap
 
+from pydna.seq import Seq as _Seq
+from pydna.seqrecord import SeqRecord as _SeqRecord
 from Bio import SeqIO as _SeqIO
 from pydna.genbankfile import GenbankFile as _GenbankFile
 from pydna.dseqrecord import Dseqrecord as _Dseqrecord
@@ -120,7 +122,10 @@ def embl_gb_fasta(text):
         assert parsed.annotations.get("molecule_type"), "molecule_type  must be set"
         if not parsed.annotations.get("molecule_type"):
             print(parsed)
+        parsed.seq.__class__ = _Seq
+        parsed.__class__ = _SeqRecord
         result_list.append(parsed)
+
     return tuple(result_list)
 
 
