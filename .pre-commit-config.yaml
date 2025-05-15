@@ -27,28 +27,6 @@ repos:
   hooks:
   - id: flake8
     exclude: ^(tests/|scripts/|docs/)
-# Verify that requirements.txt is up to date with poetry dependencies every commit
-- repo: https://github.com/python-poetry/poetry
-  rev: 1.8.3
-  hooks:
-    - id: poetry-export
-      args: [
-        "-f",
-        "requirements.txt",
-        "--output",
-        "requirements.txt",
-        "--with",
-        "dev",
-        "--with",
-        "test",
-        "--with",
-        "docs",
-        "-E",
-        "clipboard download express gel",
-      ]
-      files: 'requirements.txt'
-# Remove metadata from jupyter notebooks. This will always be triggered when you commit a change in a notebook.
-# Simply do `git add` and commit again.
 - repo: local
   hooks:
     - id: nbstripout
@@ -58,3 +36,9 @@ repos:
       language: system
       files: \.ipynb$
       exclude: tests/
+    - id: poetry-export
+      name: poetry-export
+      entry: |
+        bash -c poetry export -f requirements.txt --output requirements.txt --with dev --with test --with docs -E clipboard -E download -E express -E gel
+      language: system
+      files: ^(pyproject\.toml|poetry\.lock)$
