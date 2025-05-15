@@ -1122,8 +1122,8 @@ def test_overlapping_cuts():
 
     s = Dseq("CCTGCAGG")
 
-    assert s.cut(PstI) == (Dseq(b'CCXPIE'), Dseq(b'ZQJFGG'))
-    assert s.cut(SbfI) == (Dseq(b'CCXPIE'), Dseq(b'ZQJFGG'))
+    assert s.cut(PstI) == (Dseq(b"CCXPIE"), Dseq(b"ZQJFGG"))
+    assert s.cut(SbfI) == (Dseq(b"CCXPIE"), Dseq(b"ZQJFGG"))
 
     with pytest.raises(ValueError):
         s.cut(PstI, SbfI)
@@ -1836,8 +1836,8 @@ def test_melt():
     assert Dseq(b"AGIGaGFg").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGFq"), Dseq(b"p"))
     assert Dseq(b"AGJGaGFg").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGFq"), Dseq(b"p"))
     assert Dseq(b"AGIGaGEg").melt(2) == (Dseq(b"FQ"), Dseq(b"EPIGaGEp"), Dseq(b"q"))
-    assert Dseq(b"GATPGCPGCA").melt(2) == (Seq('CG'), Dseq(b"GATPPIPGCA"))
-    assert Dseq(b"GATQGCQGCA").melt(2) == (Seq('CG'), Dseq(b"GATQQJQGCA"))
+    assert Dseq(b"GATPGCPGCA").melt(2) == (Seq("CG"), Dseq(b"GATPPIPGCA"))
+    assert Dseq(b"GATQGCQGCA").melt(2) == (Seq("CG"), Dseq(b"GATQQJQGCA"))
     assert Dseq(b"PEXIGAQFZJ").melt(2) == (Dseq(b"PEXIPE"), Dseq(b"QFQFZJ"))
     assert Dseq(b"QFZJGAPEXI").melt(2) == (Dseq(b"QFZJQF"), Dseq(b"PEPEXI"))
     assert Dseq(b"AGJGaGEgGATC").melt(2) == (Dseq(b"EP"), Dseq(b"FQJGaGEgGATC"))
