@@ -54,7 +54,7 @@ python = ">=3.9,<4.0"
 requests = { version = ">=2.26.0", optional = true }
 scipy = [
   { version = ">=1.11.3", python = ">=3.12", optional = true },
-  { version = ">=1.9.3", python = "<3.12", optional = true },
+  { version = ">=1.11.2", python = "<3.12", optional = true },
 ]
 seguid = ">=0.0.5"
 [tool.poetry.extras]
