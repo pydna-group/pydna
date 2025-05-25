@@ -70,7 +70,7 @@ def test_PrimerList_init(monkeypatch, capsys):
 
     captured = capsys.readouterr()
 
-    assert captured.out == ">abc 3-mer\naaa\n\n"
+    assert captured.out == ">abc 3-mer\naaa\n"
 
     import textwrap
 
@@ -84,16 +84,12 @@ def test_PrimerList_init(monkeypatch, capsys):
 
     >0_primer 8-mer
     tttttttt
-
     >1_primer 8-mer
     gggggggg
-
     >2_primer 8-mer
     cccccccc
-
     >3_primer 8-mer
     aaaaaaaa
-
     ''')"""
     )
 
