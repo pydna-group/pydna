@@ -528,7 +528,7 @@ class Dseqrecord(_SeqRecord):
             if self == old:
                 # The sequence object to be saved is identical to the on disk.
                 # Nothing needs to be saved.
-                return _display_html(msg, raw=True)
+                return _display_html(msg, raw=False)
             elif self.seq.lower() != old.seq.lower():
                 # If new sequence is different from the old.
                 # old file is renamed with "_OLD_timestamp" suffix.
@@ -617,7 +617,7 @@ class Dseqrecord(_SeqRecord):
         with open(filename, "w", encoding="utf8") as fp:
             fp.write((newobj or self).format(f))
 
-        return _display_html(msg, raw=True)
+        return _display_html(msg, raw=False)
 
     def find(self, other):
         # TODO allow strings, seqs, seqrecords or Dseqrecords
