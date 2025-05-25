@@ -600,7 +600,7 @@ def test_write_content_to_existing_file_with_same_content():
         mp.setattr("pydna.dseqrecord._display_html", mock_display_html)
         mp.setattr("builtins.open", m_open)
         msg, raw = s.write(filename="Ggatcc.gb")
-        assert raw is True
+        assert raw is False
         assert msg == "<font face=monospace><a href='Ggatcc.gb' target='_blank'>Ggatcc.gb</a></font><br>"
         m_open.assert_not_called()
 
@@ -629,7 +629,7 @@ def test_write_content_to_existing_file_with_different_content():
         mp.setattr("builtins.open", m_open)
         s.write(filename="Ggatcc.gb")
         msg, raw = s.write(filename="Ggatcc.gb")
-        assert raw is True
+        assert raw is False
         assert "Ggatcc_OLD_" in msg
         m_open.assert_called_with("Ggatcc.gb", "w", encoding="utf8")
         assert m_open().write.call_args[0][0] == data
@@ -679,7 +679,7 @@ def test_write_content_to_stamped_existing_file_with_different_content():
         mp.setattr("pydna.dseqrecord._display_html", mock_display_html)
         mp.setattr("builtins.open", m_open)
         msg, raw = new.write(filename="Ggatcc.gb")
-        assert raw is True
+        assert raw is False
         assert msg == "<font face=monospace><a href='Ggatcc.gb' target='_blank'>Ggatcc.gb</a></font><br>"
         m_open.assert_called_with("Ggatcc.gb", "w", encoding="utf8")
         assert m_open().write.call_args[0][0] == data
