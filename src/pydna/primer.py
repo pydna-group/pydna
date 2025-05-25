@@ -58,6 +58,9 @@ class Primer(_SeqRecord):
         answer._fp = len(self)
         return answer
 
+    def write(self, filename=None, f="primer"):
+        return super().write(filename=filename, f=f)
+
 
 if __name__ == "__main__":
     import os as _os
