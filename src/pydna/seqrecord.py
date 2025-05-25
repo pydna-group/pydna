@@ -29,15 +29,25 @@ from pydna.seq import Seq as _Seq
 from pydna._pretty import PrettyTable as _PrettyTable
 
 import re as _re
+import os as _os
 
 # import pickle as _pickle
-from copy import copy as _copy
+import copy as _copy
 
 from pydna import _PydnaWarning
 from warnings import warn as _warn
 
 import logging as _logging
-import datetime
+import time as _time
+from datetime import datetime as _datetime
+
+try:
+    from IPython.display import display_html as _display_html
+except ImportError:
+
+    def _display_html(item, raw=None):
+        return item
+
 
 _module_logger = _logging.getLogger("pydna." + __name__)
 
@@ -425,7 +435,7 @@ class SeqRecord(_SeqRecord):
 
     def datefunction():
         """docstring."""
-        return datetime.datetime.now().replace(microsecond=0).isoformat()
+        return _datetime.now().replace(microsecond=0).isoformat()
 
     def stamp(self, now=datefunction, tool="pydna", separator=" ", comment=""):
         """Add seguid checksum to COMMENTS sections
@@ -577,7 +587,7 @@ class SeqRecord(_SeqRecord):
 
     def copy(self):
         """docstring."""
-        return _copy(self)
+        return _copy.copy(self)
 
     def __lt__(self, other):
         """docstring."""
@@ -623,18 +633,16 @@ class SeqRecord(_SeqRecord):
     def __format__(self, format):
         """docstring."""
 
-        def removeprefix(text, prefix):
-            """Until Python 3.8 is dropped, then use str.removeprefix."""
-            if text.startswith(prefix):
-                return text[len(prefix) :]
-            return text
+        # def removeprefix(text, prefix):
+        #     """Until Python 3.8 is dropped, then use str.removeprefix."""
+        #     if text.startswith(prefix):
+        #         return text[len(prefix) :]
+        #     return text
 
         if format == "pydnafasta":
-            return _pretty_str(
-                f">{self.id} {len(self)} bp {dict(((True, 'circular'), (False, 'linear')))[self.seq.circular]}\n{str(self.seq)}\n"
-            )
+            return _pretty_str(f">{self.id} {len(self)} bp {self.seguid()}\n{str(self.seq)}\n")
         if format == "primer":
-            meta = removeprefix(self.description, self.name).strip()
+            meta = self.description.removeprefix(self.name).strip()
             meta = f" {meta}" if meta.strip() else ""
             return _pretty_str(f">{self.id} {len(self)}-mer{meta}\n{str(self.seq)}\n")
         return _pretty_str(super().__format__(format))
@@ -686,17 +694,183 @@ class SeqRecord(_SeqRecord):
         """
         return bool(self.seq)
 
+    #    def dump(self, filename, protocol=None):
+    #        """docstring."""
+    #        from pathlib import Path
+    #
+    #        pth = Path(filename)
+    #        if not pth.suffix:
+    #            pth = pth.with_suffix(".pickle")
+    #        with open(pth, "wb") as f:
+    #            _pickle.dump(self, f, protocol=protocol)
+    #        return _pretty_str(pth)
 
-#    def dump(self, filename, protocol=None):
-#        """docstring."""
-#        from pathlib import Path
-#
-#        pth = Path(filename)
-#        if not pth.suffix:
-#            pth = pth.with_suffix(".pickle")
-#        with open(pth, "wb") as f:
-#            _pickle.dump(self, f, protocol=protocol)
-#        return _pretty_str(pth)
+    def format(self, f="gb"):
+        """Sequence as a string in a format supported by Biopython
+        SeqIO [#]_. Default is "gb" which is short for Genbank.
+
+        Examples
+        --------
+        >>> from pydna.seqrecord import SeqRecord
+        >>> x=SeqRecord("aaa")
+        >>> x.annotations['date'] = '02-FEB-2013'
+        >>> x
+        SeqRecord(seq=Seq('aaa'), id='id', name='name', description='description', dbxrefs=[])
+        >>> print(x.format("gb"))
+        LOCUS       name                       3 bp    DNA              UNK 02-FEB-2013
+        DEFINITION  description.
+        ACCESSION   id
+        VERSION     id
+        KEYWORDS    .
+        SOURCE      .
+          ORGANISM  .
+                    .
+        FEATURES             Location/Qualifiers
+        ORIGIN
+                1 aaa
+        //
+
+
+        References
+        ----------
+
+        .. [#] http://biopython.org/wiki/SeqIO
+
+
+        """
+
+        return super().format(f).strip()
+
+    def write(self, filename=None, f="gb"):
+        """Writes the Dseqrecord to a file using the format f, which must
+        be a format supported by Biopython SeqIO for writing [#]_. Default
+        is "gb" which is short for Genbank. Note that Biopython SeqIO reads
+        more formats than it writes.
+
+        Filename is the path to the file where the sequece is to be
+        written. The filename is optional, if it is not given, the
+        description property (string) is used together with the format.
+
+        If obj is the Dseqrecord object, the default file name will be:
+
+        ``<obj.locus>.<f>``
+
+        Where <f> is "gb" by default. If the filename already exists and
+        AND the sequence it contains is different, a new file name will be
+        used so that the old file is not lost:
+
+        ``<obj.locus>_NEW.<f>``
+
+        References
+        ----------
+        .. [#] http://biopython.org/wiki/SeqIO
+
+        """
+
+        newobj = None
+        if not filename:
+            filename = "{name}.{type}".format(name=self.locus, type=f)
+        name, ext = _os.path.splitext(filename)
+        msg = f"<font face=monospace><a href='{filename}' target='_blank'>{filename}</a></font><br>"
+        if _os.path.isfile(filename):
+            # The filename alread exists in current directory
+            # We assume it contains a sequence
+            from pydna.readers import read
+
+            old = read(filename, ds=False)
+            if self == old:
+                # The sequence object to be saved is identical to the on disk.
+                # Nothing needs to be saved.
+                return _display_html(msg, raw=False)
+            elif self.seq.lower() != old.seq.lower():
+                # If new sequence is different from the old.
+                # old file is renamed with "_OLD_timestamp" suffix.
+                # new file is saved.
+
+                oldmtime = _datetime.fromtimestamp(_os.path.getmtime(filename)).isoformat()
+                tstmp = int(_time.time() * 1_000_000)
+                new_filename_for_old = f"{name}_OLD_{tstmp}{ext}"
+                _os.rename(filename, new_filename_for_old)
+                with open(filename, "w", encoding="utf8") as fp:
+                    fp.write(self.format(f))
+                newmtime = _datetime.fromtimestamp(_os.path.getmtime(filename)).isoformat()
+                msg = f"""
+                <table style="padding:10px 10px;
+                word-break:normal;
+                border-color:#fe0000;
+                border-collapse:collapse;
+                border-spacing:1;
+                font-family:monospace;
+                font-size:large;
+                font-weight:bold;
+                text-align:left;
+                border: 5px solid red;">
+                <thead>
+                  <tr style="color:#0000FF;border: 1px solid;text-align:left;">
+                    <th style="color:#fe0000;border: 1px solid;text-align:center;font-size:xxx-large;text-align:left;">&#9888</th>
+                    <th style="color:#f56b00;border: 1px solid;text-align:left;" colspan="2">Sequence change</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="color:#0000FF;border: 1px solid;text-align:left;">
+                    <td>Filename</td>
+                    <td style="color:#fe0000;border: 1px solid;text-align:left;"><a href='{filename}' target='_blank'>{filename}</a></td>
+                    <td style="color:#32cb00;border: 1px solid;text-align:left;"><a href='{new_filename_for_old}' target='_blank'>{new_filename_for_old}</a></td>
+                  </tr>
+                  <tr style="color:#0000FF;border: 1px solid;text-align:left;">
+                    <td >Saved</td>
+                    <td style="color:#fe0000;border: 1px solid;text-align:left;">{newmtime}</td>
+                    <td style="color:#32cb00;border: 1px solid;text-align:left;">{oldmtime}</td>
+                  </tr>
+                  <tr style="color:#0000FF;border: 1px solid;text-align:left;">
+                    <td>Length</td>
+                    <td style="color:#fe0000;border: 1px solid;text-align:left;">{len(self)}</td>
+                    <td style="color:#32cb00;border: 1px solid;text-align:left;">{len(old)}</td>
+                  </tr>
+                  <tr style="color:#0000FF;border: 1px solid;text-align:left;">
+                    <td>SEGUID</td>
+                    <td style="color:#fe0000;border: 1px solid;text-align:left;">{self.seguid()}</td>
+                    <td style="color:#32cb00;border: 1px solid;text-align:left;">{old.seguid()}</td>
+                  </tr>
+                </tbody>
+                </table>
+                """
+            else:
+                # The sequence to be saved is the same as the one already in the saved file.
+                # Other parts of the object, such as annotations are different.
+                # Here we want to recover old file stamps in the saved file.
+                re_tool = r"(pydna |ApEinfo:)?"
+                re_seguid = r"((?:ld|cd|ls|cs)seguid=\S{27})"
+                re_datest = r"( \d{4}-\d{2}-\d{2}.\d{2}\:\d{2}\:\d{2}Z?)?"
+                pattern = "(" + re_tool + re_seguid + re_datest + ")"
+
+                oldcomments = old.annotations.get("comment", "")
+                newcomments = self.annotations.get("comment", "")
+
+                if isinstance(newcomments, list):
+                    newcomments = "\n".join(newcomments)
+
+                oldstamps = {m[2]: m[0] for m in _re.findall(pattern, oldcomments)}  # Get all stamps from oldfile.
+                newstamps = {m[2]: m[0] for m in _re.findall(pattern, newcomments)}  # Get all stamps from current.
+
+                newstamps.update(oldstamps)
+
+                stamplist = []
+
+                for stamp, stamp_w_date in newstamps.items():
+                    newcomments = _re.sub(re_tool + re_seguid + " .{19}", stamp_w_date, newcomments)
+                    if stamp not in newcomments:
+                        stamplist.append(stamp_w_date)
+
+                stamplist.reverse()
+
+                newobj = _copy.deepcopy(self)
+                newobj.annotations["comment"] = newcomments.lstrip() + "\n" + "\n".join(stamplist)
+
+        with open(filename, "w", encoding="utf8") as fp:
+            fp.write((newobj or self).format(f))
+
+        return _display_html(msg, raw=False)
 
 
 class ProteinSeqRecord(SeqRecord):
@@ -733,7 +907,7 @@ class ProteinSeqRecord(SeqRecord):
 
 
 if __name__ == "__main__":
-    import os as _os
+    # import os as _os
 
     cached = _os.getenv("pydna_cached_funcs", "")
     _os.environ["pydna_cached_funcs"] = ""
