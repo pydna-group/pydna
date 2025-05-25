@@ -1403,9 +1403,10 @@ class Dseqrecord(_SeqRecord):
 
         for strand, (x, y) in zip(strands, intervals):
             fs = [f._shift(-x) for f in features if x in f.location and (y - 1) in f.location]
-            ss = (
-                strand._data.translate(to_watson_table).strip() or strand._data.translate(to_crick_table)[::-1].strip()
-            )
+            ss = strand._data.translate(to_watson_table).strip()
+            if not ss:
+                ss = strand._data.translate(to_crick_table)[::-1].strip()
+
             srs.append(_SeqRecord(_Seq(ss), features=fs))  # FIXME: direction of feature
 
         return Dseqrecord(new, features=_copy.copy(self.features)), srs
