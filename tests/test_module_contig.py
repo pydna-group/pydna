@@ -186,13 +186,47 @@ def test_linear(monkeypatch):
 
 
 def test_rich(monkeypatch):
-    from pydna.myprimers import PrimerList
+
     from pydna.readers import read
     from pydna.amplify import pcr
-
+    from pydna.parsers import parse_primers
     from pydna.myprimers import PrimerList
 
-    pl = PrimerList()
+    p = {}
+
+    p[1113], p[987], p[1196], p[1195], p[978], p[977], p[984], p[983], p[1804], p[1347] = parse_primers('''
+
+    >1113_Amp.fw.nw 55-mer
+    GAAAAGCGTTTACCTCGGAACTCTATTGTAGAACCCCTATTTGTTTATTTTTCTA
+
+    >987_Amp.REV 52-merAmp.REV
+    AGAAAGTCTACACCTTACGCTGATTGGATTTGAAGTTTTAAATCAATCTAAA
+
+    >1196_Pbr.FW 49-mer
+    AATCCAATCAGCGTAAGGTGTAGACTTTCTCTGTCAGACCAAGTTTACT
+
+    >1195_Pbr.REV 44-mer
+    GTTGACTACTATTTACGCAGCAGATACGATCTCGTTTCATCGGT
+
+    >978_Crp.FW 46-merCrp.FW
+    AACTGTAAAATCAGGTATCTCGTAGTCCGTGTTCTGATCCTCGAGC
+
+    >977_Crp.REV 47-merCrp.REV
+    TACAATAGAGTTCCGAGGTAAACGCTTTTCGTTCTTGTCTCATTGCC
+
+    >984_Micron.FW 49-merMicron.FW
+    ATCGTATCTGCTGCGTAAATAGTAGTCAACGATCGTACTTGTTACCCAT
+
+    >983_Micron.REV 48-merMicron.REV
+    CAGAGCAGACAGTTCCTTTACGAGATTTTAGATCCAATATCAAAGGAA
+
+    >1804_TRP1fp_pTA 51-merreplaces 1348 & 1680
+    TAAAATCTCGTAAAGGAACTGTCTGCTCTGtataaaaataggcgtatcacg
+
+    >1347_TRP1rp_pTA 51-mer
+    ACGGACTACGAGATACCTGATTTTACAGTTGATCTTTTATGCTTGCTTTTC
+
+    ''')
 
     lol = [
         ['pBR322.gb', 1113, 987, 'amp'],
@@ -206,8 +240,8 @@ def test_rich(monkeypatch):
 
     for row in lol:
         template, fp, rp, target = row
-        fp = pl[int(fp)]
-        rp = pl[int(rp)]
+        fp = p[int(fp)]
+        rp = p[int(rp)]
         template = read(template.strip())
         fragment = pcr(fp, rp, template)
         fragment.name = target.strip()
@@ -221,7 +255,8 @@ def test_rich(monkeypatch):
 
     cp = cps[0]
 
-    cp.graphic_figure()
+    result = cp.graphic_figure()
+    # TODO: test for graph content
     # cp.graphic_figure_plotly()
 
 

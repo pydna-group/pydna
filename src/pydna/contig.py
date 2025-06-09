@@ -309,7 +309,7 @@ class Contig(_Dseqrecord):
         ax.set_xlim(-2.2, 2.2)
         ax.set_ylim(-2.2, 2.2)
         ax.axis("off")
-        plt.show()
+        return plt  # plt.show()
 
     def graphic_figure_plotly(self):
         import plotly.graph_objects as go
