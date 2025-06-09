@@ -185,5 +185,45 @@ def test_linear(monkeypatch):
     assert x.detailed_figure()
 
 
+def test_rich(monkeypatch):
+    from pydna.myprimers import PrimerList
+    from pydna.readers import read
+    from pydna.amplify import pcr
+
+    from pydna.myprimers import PrimerList
+
+    pl = PrimerList()
+
+    lol = [
+        ['pBR322.gb', 1113, 987, 'amp'],
+        ['pBR322.gb', 1196, 1195, 'pBR'],
+        ['pYPKpw.gb', 978, 977, 'Δcrp'],
+        ['YEplac195_snapgene.gb', 984, 983, '2µ'],
+        ['YIplac204_snapgene.gb', 1804, 1347, 'TRP1'],
+    ]
+
+    fragments = []
+
+    for row in lol:
+        template, fp, rp, target = row
+        fp = pl[int(fp)]
+        rp = pl[int(rp)]
+        template = read(template.strip())
+        fragment = pcr(fp, rp, template)
+        fragment.name = target.strip()
+        fragments.append(fragment)
+
+    from pydna.assembly import Assembly
+
+    asm = Assembly(fragments)
+
+    cps = asm.assemble_circular()
+
+    cp = cps[0]
+
+    cp.graphic_figure()
+    # cp.graphic_figure_plotly()
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-vv", "-s"])
