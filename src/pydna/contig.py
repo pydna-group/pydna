@@ -61,7 +61,7 @@ class Contig(_Dseqrecord):
     rc = reverse_complement
 
     def detailed_figure(self):
-        """Returns a text representation of the assembled fragments.
+        """Text representation of the assembled fragments.
 
         Linear:
 
@@ -87,7 +87,6 @@ class Contig(_Dseqrecord):
 
 
         """
-
         fig = ""
         fragmentposition = 0
         nodeposition = 0
@@ -235,6 +234,141 @@ class Contig(_Dseqrecord):
             fig += "|{space}   |\n".format(space=" " * (space))
             fig += " {space}".format(space="-" * (space + 3))
         return _pretty_str(_textwrap.dedent(fig))
+
+    def graphic_figure(self):
+
+        import matplotlib.pyplot as plt
+        import matplotlib.patches as mpatches
+        import numpy as np
+
+        def pick_n_colors(n, cmap_name="tab20"):
+            cmap = plt.get_cmap(cmap_name)
+            return [cmap(i / n) for i in range(n)]
+
+        # Circle parameters
+        center = 0, 0
+        small_radius = 1.1
+        middle_radius = 1.3
+        outer_radius = 1.5
+
+        arc_width = 0.1  # Arc thickness
+        circ = len(self)
+        fig, ax = plt.subplots()
+
+        arcs = self.graph
+
+        radii = [outer_radius, middle_radius] * (len(arcs) // 2)
+
+        if len(arcs) % 2 != 0:
+            radii.append(small_radius)
+
+        colors = pick_n_colors(len(radii))
+
+        edges = list(self.graph.edges(data=True))
+
+        start = 0 - len(edges[0][0])
+
+        for edge, radius, color in zip(edges, radii, colors):
+
+            node1, node2, meta = edge
+            slc = meta["piece"]
+            length = slc.stop - slc.start + len(node1)
+
+            theta1 = 90.0 - 360.0 / circ * start
+            theta2 = 90.0 - 360.0 / circ * (start + length)
+
+            # Create arc
+            arc_patch = mpatches.Wedge(
+                center=center,
+                r=radius,
+                theta1=theta2,
+                theta2=theta1,
+                width=arc_width,
+                edgecolor=color,
+                facecolor=(1, 1, 1, 0),
+                linewidth=1,
+            )
+            ax.add_patch(arc_patch)
+
+            # Compute label position slightly outside the arc
+            mid_angle = (theta1 + theta2) / 2
+            rad = np.deg2rad(mid_angle)
+            label_radius = radius + arc_width + 0.1  # place outside the arc
+            x = label_radius * np.cos(rad)
+            y = label_radius * np.sin(rad)
+
+            # Choose alignment based on angle
+            ha = "left" if np.cos(rad) >= 0 else "right"
+            va = "center"
+
+            ax.text(x, y, meta["name"], ha=ha, va=va, fontsize=10)
+
+            start += length - len(node2)
+
+        ax.set_aspect("equal")
+        ax.set_xlim(-2.2, 2.2)
+        ax.set_ylim(-2.2, 2.2)
+        ax.axis("off")
+        plt.show()
+
+    def graphic_figure_plotly(self):
+        import plotly.graph_objects as go
+        import numpy as np
+
+        circ = len(self)
+        arcs = list(self.graph.edges(data=True))
+
+        # Radii setup
+        small_radius = 1.1
+        middle_radius = 1.3
+        outer_radius = 1.5
+        arc_width = 0.1
+
+        radii = [outer_radius, middle_radius] * (len(arcs) // 2)
+        if len(arcs) % 2 != 0:
+            radii.append(small_radius)
+
+        fig = go.Figure()
+        start = 0 - len(arcs[0][0])
+
+        for (node1, node2, meta), radius in zip(arcs, radii):
+            slc = meta["piece"]
+            length = slc.stop - slc.start + len(node1)
+
+            theta1 = 90.0 - 360.0 / circ * start
+            theta2 = 90.0 - 360.0 / circ * (start + length)
+
+            # Generate arc points
+            theta = np.linspace(theta1, theta2, 50)
+            theta_rev = theta[::-1]
+
+            r_outer = np.full_like(theta, radius)
+            r_inner = np.full_like(theta_rev, radius - arc_width)
+
+            r = np.concatenate([r_outer, r_inner])
+            t = np.concatenate([theta, theta_rev])
+
+            fig.add_trace(
+                go.Scatterpolar(
+                    r=r,
+                    theta=t,
+                    fill="toself",
+                    mode="lines",
+                    line_color="rgba(0,100,200,0.6)",
+                    hoverinfo="text",
+                    text=meta["name"],
+                    name=meta["name"],
+                )
+            )
+
+            start += length - len(node2)
+
+        fig.update_layout(
+            polar=dict(radialaxis=dict(visible=False), angularaxis=dict(visible=False)),
+            showlegend=False,
+        )
+
+        fig.show("browser")
 
 
 if __name__ == "__main__":
