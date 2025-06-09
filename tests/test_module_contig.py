@@ -194,7 +194,8 @@ def test_rich(monkeypatch):
 
     p = {}
 
-    p[1113], p[987], p[1196], p[1195], p[978], p[977], p[984], p[983], p[1804], p[1347] = parse_primers('''
+    p[1113], p[987], p[1196], p[1195], p[978], p[977], p[984], p[983], p[1804], p[1347] = parse_primers(
+        '''
 
     >1113_Amp.fw.nw 55-mer
     GAAAAGCGTTTACCTCGGAACTCTATTGTAGAACCCCTATTTGTTTATTTTTCTA
@@ -226,7 +227,8 @@ def test_rich(monkeypatch):
     >1347_TRP1rp_pTA 51-mer
     ACGGACTACGAGATACCTGATTTTACAGTTGATCTTTTATGCTTGCTTTTC
 
-    ''')
+    '''
+    )
 
     lol = [
         ['pBR322.gb', 1113, 987, 'amp'],
