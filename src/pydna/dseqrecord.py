@@ -127,6 +127,8 @@ class Dseqrecord(_SeqRecord):
 
     """
 
+    seq: _Dseq
+
     def __init__(
         self,
         record,
