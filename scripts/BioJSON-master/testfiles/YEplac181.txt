@@ -1,8 +1,8 @@
 LOCUS       YEplac181	5741 bp 	DNA	SYN
 DEFINITION  YEplac181
-ACCESSION   
-KEYWORDS    
-SOURCE      
+ACCESSION
+KEYWORDS
+SOURCE
   ORGANISM  other sequences; artificial sequences; vectors.
 COMMENT     This file was downloaded from the addgene website
 COMMENT     https://www.addgene.org/browse/sequence_vdb/4893/
@@ -162,4 +162,3 @@ ORIGIN
  5641 gattctgtgg ataaccgtat taccgccttt gagtgagctg ataccgctcg ccgcagccga
  5701 acgaccgagc gcagcgagtc agtgagcgag gaagcggaag a
 //
-

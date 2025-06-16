@@ -7,11 +7,12 @@
 
 from pydna.dseqrecord import Dseqrecord
 import os as _os
-import logging as _logging
+
+# import logging as _logging
 from Bio.Blast import NCBIWWW
 from Bio.Blast import NCBIXML
 
-_module_logger = _logging.getLogger("pydna." + __name__)
+# _module_logger = _logging.getLogger("pydna." + __name__)
 
 
 email = _os.getenv("pydna_email")
@@ -54,10 +55,6 @@ def genbank_accession(s: str) -> Dseqrecord:
 
 
 if __name__ == "__main__":
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
     import doctest
 
     doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached
-    pass

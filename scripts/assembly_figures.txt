@@ -8,10 +8,10 @@ Amplicon1         Amplicon3
 
                      ⇣
              pydna.design.assembly_fragments
-                     ⇣ 
+                     ⇣
 
 >       <-       ->       <-                       pydna.assembly.Assembly
-Amplicon1         Amplicon3                         
+Amplicon1         Amplicon3
          Amplicon2         Amplicon4     ➤  Amplicon1Amplicon2Amplicon3Amplicon4
         ->       <-       ->       <
 
@@ -22,11 +22,11 @@ Amplicon1         Amplicon3
 >       <         >       <
 Amplicon1         Amplicon2
          Dseqrecd1         Dseqrecd2
-              
+
                      ⇣
              pydna.design.assembly_fragments
-                     ⇣ 
-                  
+                     ⇣
+
 >       <--     -->       <--                     pydna.assembly.Assembly
 Amplicon1         Amplicon2
          Dseqrecd1         Dseqrecd2     ➤  Amplicon1Dseqrecd1Amplicon2Dseqrecd2
@@ -56,10 +56,10 @@ Dseqrecd1         Amplicon2
        -->       <-
                      ⇣
              pydna.design.assembly_fragments
-                     ⇣ 
+                     ⇣
                                                    pydna.assembly.Assembly
                  ->       <==
-Dseqrecd1         Amplicon2                    -Dseqrecd1Amplicon1Amplicon2-  
+Dseqrecd1         Amplicon2                    -Dseqrecd1Amplicon1Amplicon2-
          Amplicon1                       ➤     |                             |
        -->       <-                            -----------------------------
 
@@ -72,27 +72,22 @@ Amplicon1         Amplicon3
 
                      ⇣
              pydna.design.assembly_fragments
-                     ⇣ 
+                     ⇣
 
->       <=       ->       <-        
-Amplicon1         Amplicon3                  
+>       <=       ->       <-
+Amplicon1         Amplicon3
          Amplicon2         Amplicon1
         ->       <-       +>       <
 
                      ⇣
-             make new Amplicon using the Amplicon1.template and 
+             make new Amplicon using the Amplicon1.template and
              the last fwd primer and the first rev primer.
                      ⇣
 
-+>       <=       ->       <-        
++>       <=       ->       <-
  Amplicon1         Amplicon3                            -Amplicon1Amplicon2Amplicon3-
           Amplicon2                                ➤     |                            |
          ->       <-                                     ----------------------------
 
 
 ---------------------------------------------------------------------------------------------
-
-
-
-
-

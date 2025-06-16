@@ -11,7 +11,7 @@ The function can be used if the environmental variable **pydna_email** has
 been set to a valid email address. The easiest way to do this permanantly is to edit the
 `pydna.ini` file. See the documentation of :func:`pydna.open_config_folder`"""
 
-from pydna.utils import memorize as _memorize
+# from pydna.utils import memorize as _memorize
 from pydna.genbankrecord import GenbankRecord as _GenbankRecord
 from pydna.readers import read as _read
 
@@ -19,9 +19,10 @@ from Bio import Entrez as _Entrez
 from typing import Literal as _Literal, Optional as _Optional
 import re as _re
 import os as _os
-import logging as _logging
 
-_module_logger = _logging.getLogger("pydna." + __name__)
+# import logging as _logging
+
+# _module_logger = _logging.getLogger("pydna." + __name__)
 
 
 # TODO http://httpbin.org/ use for testing?
@@ -56,9 +57,9 @@ class Genbank:
         if not _re.match(r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}", users_email, _re.IGNORECASE):
             raise ValueError("email address {} is not valid.".format(users_email))
 
-        _module_logger.info("#### Genbank ititiation ####")
-        _module_logger.info("Genbank initiated with email: %s", users_email)
-        _module_logger.info("Genbank initiated with tool : %s", tool)
+        # _module_logger.info("#### Genbank ititiation ####")
+        # _module_logger.info("Genbank initiated with email: %s", users_email)
+        # _module_logger.info("Genbank initiated with tool : %s", tool)
 
         if users_email == "someone@example.com":
             raise ValueError("you have to set your email address in order to download from Genbank")
@@ -69,7 +70,7 @@ class Genbank:
         """This method returns a short representation containing the email used to initiate."""
         return "GenbankConnection({})".format(self.email)
 
-    @_memorize("pydna.genbank.Genbank.nucleotide")
+    # @_memorize("pydna.genbank.Genbank.nucleotide")
     def nucleotide(
         self,
         item: str,
@@ -147,17 +148,17 @@ class Genbank:
             except (KeyError, AttributeError):
                 strand = 1
 
-        _module_logger.info("#### Genbank download ####")
-        _module_logger.info("item  %s", item)
-        _module_logger.info("start %s", seq_start)
-        _module_logger.info("stop  %s", seq_stop)
+        # _module_logger.info("#### Genbank download ####")
+        # _module_logger.info("item  %s", item)
+        # _module_logger.info("start %s", seq_start)
+        # _module_logger.info("stop  %s", seq_stop)
 
-        _module_logger.info("strand  %s", str(strand))
+        # _module_logger.info("strand  %s", str(strand))
 
         _Entrez.email = self.email
         _Entrez.tool = self.tool
 
-        _module_logger.info("Entrez.email  %s", self.email)
+        # _module_logger.info("Entrez.email  %s", self.email)
         text = _Entrez.efetch(
             db="nuccore",
             id=item,
@@ -168,7 +169,7 @@ class Genbank:
             retmode="text",
         ).read()
 
-        _module_logger.info("text[:160]  %s", text[:160])
+        # _module_logger.info("text[:160]  %s", text[:160])
 
         return _GenbankRecord(_read(text), item=item, start=seq_start, stop=seq_stop, strand=strand)
 
@@ -219,18 +220,14 @@ def genbank(accession: str = "CS570233.1", *args, **kwargs) -> _GenbankRecord:
 
     """
     email = _os.getenv("pydna_email")
-    _module_logger.info("#### genbank function called ####")
-    _module_logger.info("email      %s", email)
-    _module_logger.info("accession  %s", email)
+    # _module_logger.info("#### genbank function called ####")
+    # _module_logger.info("email      %s", email)
+    # _module_logger.info("accession  %s", email)
     gb = Genbank(email)
     return gb.nucleotide(accession, *args, **kwargs)
 
 
 if __name__ == "__main__":
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
     import doctest
 
     doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached
-    pass

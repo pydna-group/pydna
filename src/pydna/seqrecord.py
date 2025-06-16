@@ -35,10 +35,10 @@ from copy import copy as _copy
 from pydna import _PydnaWarning
 from warnings import warn as _warn
 
-import logging as _logging
+# import logging as _logging
 import datetime
 
-_module_logger = _logging.getLogger("pydna." + __name__)
+# _module_logger = _logging.getLogger("pydna." + __name__)
 
 
 class SeqRecord(_SeqRecord):
@@ -732,11 +732,6 @@ class ProteinSeqRecord(SeqRecord):
 
 
 if __name__ == "__main__":
-    import os as _os
-
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
     import doctest
 
     doctest.testmod(verbose=True, optionflags=(doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE))
-    _os.environ["pydna_cached_funcs"] = cached

@@ -102,7 +102,7 @@ COMMENT     REVIEWED REFSEQ: This record has been curated by NCBI staff. The
             reference sequence was derived from AC019131.7, BM849222.1 and
             AC093836.3.
             On Aug 11, 2020 this sequence version replaced NM_001130679.2.
-            
+
             Summary: The protein encoded by this gene is a component of the
             eukaryotic translation initiation factor 4F complex, which
             recognizes the 7-methylguanosine cap structure at the 5' end of
@@ -114,21 +114,21 @@ COMMENT     REVIEWED REFSEQ: This record has been curated by NCBI staff. The
             tumorigenesis. Several pseudogenes of this gene are found on other
             chromosomes. Alternative splicing results in multiple transcript
             variants. [provided by RefSeq, Sep 2015].
-            
+
             Transcript Variant: This variant (2) contains an alternate in-frame
             exon in the 3' coding region compared to variant 1. It encodes
             isoform 2, which is longer than isoform 1.
-            
+
             Sequence Note: This RefSeq record was created from transcript and
             genomic sequence data because transcript sequence consistent with
             the reference genome assembly was not available for all regions of
             the RefSeq transcript. The extent of this transcript is supported
             by transcript alignments.
-            
+
             Publication Note:  This RefSeq record includes a subset of the
             publications that are available for this gene. Please see the Gene
             record to access additional publications.
-            
+
             ##Evidence-Data-START##
             Transcript exon combination :: BM849222.1, BG715205.1 [ECO:0000332]
             ##Evidence-Data-END##
@@ -255,7 +255,7 @@ FEATURES             Location/Qualifiers
                      /gene_synonym="AUTS19; CBP; eIF-4E; EIF4E1; EIF4EL1;
                      EIF4F"
                      /note="major polyA site"
-ORIGIN      
+ORIGIN
         1 gtgcgatcag atcgatctaa gatggcgact gtcgaaccgg aaaccacccc tactcctaat
        61 cccccgacta cagaagagga gaaaacggaa tctaatcagg aggttgctaa cccagaacac
       121 tatattaaac atcccctaca gaacagatgg gcactctggt tttttaaaaa tgataaaagc
@@ -299,4 +299,3 @@ ORIGIN
      2401 gaatggaaat tattattttg agaggaaaat ttgtctttga atggtgatta tgacttaatc
      2461 attttaaaac tgataaactt gacaaaaacc ctgtatgaaa taaacatgaa attaatagca
 //
-

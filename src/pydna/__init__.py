@@ -132,19 +132,20 @@ See this repository for a collection of
 """
 
 
-from pydna.utils import open_folder as _open_folder
-from pathlib import Path as _Path
+# from pydna.utils import open_folder as _open_folder
+# from pathlib import Path as _Path
 import os as _os
-import logging as _logging
-import logging.handlers as _handlers
-import appdirs as _appdirs
-import configparser as _configparser
-import tempfile as _tempfile
+
+# import logging as _logging
+# import logging.handlers as _handlers
+# import appdirs as _appdirs
+# import configparser as _configparser
+# import tempfile as _tempfile
 from pydna._pretty import PrettyTable as _PrettyTable
 
 
 __author__ = "Björn Johansson"
-__copyright__ = "Copyright 2013 - 2021 Björn Johansson"
+__copyright__ = "Copyright 2013 - 2023 Björn Johansson"
 __credits__ = ["Björn Johansson", "Mark Budde"]
 __license__ = "BSD"
 __maintainer__ = "Björn Johansson"
@@ -153,90 +154,82 @@ __status__ = "Development"  # "Production" #"Prototype"
 __version__ = "0.0.0"
 
 
-# create config directory
-_os.environ["pydna_config_dir"] = _os.getenv("pydna_config_dir", _appdirs.user_config_dir("pydna"))
-config_dir = _Path(_os.environ["pydna_config_dir"])
-config_dir.mkdir(parents=True, exist_ok=True)
+# obtain config directory from env or appdirs
+# _os.environ["pydna_config_dir"] = _os.getenv("pydna_config_dir", _appdirs.user_config_dir("pydna"))
+# config_dir = _Path(_os.environ["pydna_config_dir"])
+# config_dir.mkdir(parents=True, exist_ok=True)
 
 # set path for the pydna.ini file
-_ini_path = config_dir / "pydna.ini"
+# _ini_path = config_dir / "pydna.ini"
 
 # define user_data_dir
-user_data_dir = _Path(_appdirs.user_data_dir("pydna"))
+# user_data_dir = _Path(_appdirs.user_data_dir("pydna"))
 
-default_ini = {
-    "ape": "put/path/to/ape/here",
-    "cached_funcs": "pydna.genbank.genbank.nucleotide",
-    "data_dir": str(user_data_dir),
-    "email": "someone@example.com",
-    "enzymes": str(user_data_dir / "enzymes.md"),
-    "log_dir": _appdirs.user_log_dir("pydna"),
-    "loglevel": str(_logging.WARNING),
-    "primers": str(user_data_dir / "primers.md"),
-    "assembly_limit": str(10),
-}
+# default_ini = {
+#     "ape": "put/path/to/ape/here",
+#     "cached_funcs": "pydna.genbank.genbank.nucleotide",
+#     "data_dir": str(user_data_dir),
+#     "email": "someone@example.com",
+#     "enzymes": str(user_data_dir / "enzymes.md"),
+#     "log_dir": _appdirs.user_log_dir("pydna"),
+#     "loglevel": str(_logging.WARNING),
+#     "primers": str(user_data_dir / "primers.md"),
+#     "assembly_limit": str(10),
+# }
+
+# ini = default_ini.copy()
 
 # initiate a config parser instance
-_parser = _configparser.ConfigParser()
+# _parser = _configparser.ConfigParser()
 
 # if a pydna.ini exists, it is read
-if _ini_path.exists():
-    _parser.read(_ini_path)
-else:  # otherwise it is created with default settings
-    _parser["main"] = default_ini
-    _temp_ini_file = _tempfile.NamedTemporaryFile(dir=_ini_path.parent, delete=False)
-    _temp_ini_path = _Path(_temp_ini_file.name)
-    try:
-        _temp_ini_file.close()
-        with _temp_ini_path.open("w", encoding="utf-8") as f:  # TODO needs encoding?
-            _parser.write(f)
-        _temp_ini_path.replace(_ini_path)
-    finally:
-        _temp_ini_path.unlink(missing_ok=True)
-
+# if _ini_path.exists():
+#     _parser.read(_ini_path)
 # pydna related environmental variables are set
 # from pydna.ini if they are not set already
-_main = _parser["main"]
+# _main = _parser["main"]
+# ini.update(_main)
 
-for key in default_ini:
-    _os.environ[f"pydna_{key}"] = _os.getenv(f"pydna_{key}", _main.get(key, default_ini[key]))
 
-logdir = _Path(_os.environ["pydna_log_dir"])
+# for key, value in ini.items():
+#     _os.environ[f"pydna_{key}"] = _os.getenv(f"pydna_{key}", value)
+
+# logdir = _Path(_os.environ["pydna_log_dir"])
 
 # create log directory if not present
-logdir.mkdir(parents=True, exist_ok=True)
-_logmsg = "Log directory {}".format(logdir)
+# logdir.mkdir(parents=True, exist_ok=True)
+# _logmsg = "Log directory {}".format(logdir)
 
 # create logger
-_logger = _logging.getLogger("pydna")
-_logger.setLevel(int(_os.environ["pydna_loglevel"]))
-_hdlr = _handlers.RotatingFileHandler(
-    logdir / "pydna.log",
-    mode="a",
-    maxBytes=10 * 1024 * 1024,
-    backupCount=10,
-    encoding="utf-8",
-)
+# _logger = _logging.getLogger("pydna")
+# _logger.setLevel(int(_os.environ["pydna_loglevel"]))
+# _hdlr = _handlers.RotatingFileHandler(
+#     logdir / "pydna.log",
+#     mode="a",
+#     maxBytes=10 * 1024 * 1024,
+#     backupCount=10,
+#     encoding="utf-8",
+# )
 
-_formatter = _logging.Formatter(("%(asctime)s %(levelname)s" " %(funcName)s %(message)s"))
-_hdlr.setFormatter(_formatter)
-_logger.addHandler(_hdlr)
-_logger.info(_logmsg)
-_logger.info("Environmental variable pydna_ape          = %s", _os.environ["pydna_ape"])
-_logger.info("Environmental variable pydna_cached_funcs = %s", _os.environ["pydna_cached_funcs"])
-_logger.info("Environmental variable pydna_data_dir     = %s", _os.environ["pydna_data_dir"])
-_logger.info("Environmental variable pydna_email        = %s", _os.environ["pydna_email"])
-_logger.info("Environmental variable pydna_log_dir      = %s", _os.environ["pydna_log_dir"])
-_logger.info("Environmental variable pydna_loglevel     = %s", _os.environ["pydna_loglevel"])
-_logger.info("Environmental variable pydna_primers      = %s", _os.environ["pydna_primers"])
-_logger.info(
-    "Environmental variable pydna_assembly_limit = %s",
-    _os.environ["pydna_assembly_limit"],
-)
+# _formatter = _logging.Formatter(("%(asctime)s %(levelname)s" " %(funcName)s %(message)s"))
+# _hdlr.setFormatter(_formatter)
+# _logger.addHandler(_hdlr)
+# _logger.info(_logmsg)
+# _logger.info("Environmental variable pydna_ape          = %s", _os.environ["pydna_ape"])
+# _logger.info("Environmental variable pydna_cached_funcs = %s", _os.environ["pydna_cached_funcs"])
+# _logger.info("Environmental variable pydna_data_dir     = %s", _os.environ["pydna_data_dir"])
+# _logger.info("Environmental variable pydna_email        = %s", _os.environ["pydna_email"])
+# _logger.info("Environmental variable pydna_log_dir      = %s", _os.environ["pydna_log_dir"])
+# _logger.info("Environmental variable pydna_loglevel     = %s", _os.environ["pydna_loglevel"])
+# _logger.info("Environmental variable pydna_primers      = %s", _os.environ["pydna_primers"])
+# _logger.info(
+#     "Environmental variable pydna_assembly_limit = %s",
+#     _os.environ["pydna_assembly_limit"],
+# )
 
 # create cache directory if not present
 
-_Path(_os.environ["pydna_data_dir"]).mkdir(parents=True, exist_ok=True)
+# _Path(_os.environ["pydna_data_dir"]).mkdir(parents=True, exist_ok=True)
 
 # find out if optional dependecies for gel module are in place
 #
@@ -264,7 +257,7 @@ _Path(_os.environ["pydna_data_dir"]).mkdir(parents=True, exist_ok=True)
 #    _logger.info("gel simulation is available," " optional dependencies were found.")
 #
 
-_logger.info("__version__ = %s", __version__)
+# _logger.info("__version__ = %s", __version__)
 
 
 class _PydnaWarning(Warning):
@@ -304,74 +297,74 @@ class _PydnaDeprecationWarning(_PydnaWarning):
     pass
 
 
-def open_current_folder():
-    """Open the current working directory.
+# def open_current_folder():
+#     """Open the current working directory.
 
-    Opens in the default file manager. The location for this folder is
-    given by the :func:`os.getcwd` function
-    """
-    return _open_folder(_os.getcwd())
-
-
-_logger.info("Current working directory = os.getcwd() = %s", _os.getcwd())
+#     Opens in the default file manager. The location for this folder is
+#     given by the :func:`os.getcwd` function
+#     """
+#     return _open_folder(_os.getcwd())
 
 
-def open_cache_folder():
-    """Open the pydna cache folder.
-
-    Opens in the default file manager. The location for this folder is stored
-    in the *pydna_data_dir* environmental variable.
-    """
-    return _open_folder(_os.environ["pydna_data_dir"])
+# _logger.info("Current working directory = os.getcwd() = %s", _os.getcwd())
 
 
-def open_config_folder():
-    """Open the pydna configuration folder.
+# def open_cache_folder():
+#     """Open the pydna cache folder.
 
-    Opens in the default file manager. The location for this folder is stored
-    in the *pydna_config_dir* environmental variable.
-
-    The `pydna.ini` file can be edited to make pydna quicker to use.
-    See the documentation of the :class:configparser.ConfigParser´ class.
-
-    Below is the content of a typical `pydna.ini` file on a Linux
-    system.
-
-    ::
-
-        [main]
-        loglevel=30
-        email=myemail@example.org
-        data_dir=/home/bjorn/.local/share/pydna
-        log_dir=/home/bjorn/.cache/pydna/log
-        ape=tclsh /home/bjorn/.ApE/AppMain.tcl
-        cached_funcs=Genbank_nucleotide
-        primers=/home/bjorn/Dropbox/wikidata/PRIMERS.txt
-        enzymes=/home/bjorn/Dropbox/wikidata/RestrictionEnzymes.txt
-
-    The email address is set to someone@example.com by default. If you change
-    this to you own address, the :func:`pydna.genbank.genbank` function can be
-    used to download sequences from Genbank directly without having to
-    explicitly add the email address.
-
-    Pydna can cache results from the following functions or methods:
-
-    - :func:`pydna.genbank.Genbank.nucleotide`   Genbank_nucleotide
-    - :func:`pydna.amplify.Anneal`               amplify_Anneal
-    - :func:`pydna.assembly.Assembly`            assembly_Assembly
-    - :func:`pydna.download.download_text`       download.download_text
-    - :func:`pydna.dseqrecord.Dseqrecord.synced` Dseqrecord_synced
-
-    These can be added separated by a comma to the cached_funcs entry
-    in **pydna.ini** file or the pydna_cached_funcs environment variable.
-
-    """
-    return _open_folder(_os.environ["pydna_config_dir"])
+#     Opens in the default file manager. The location for this folder is stored
+#     in the *pydna_data_dir* environmental variable.
+#     """
+#     return _open_folder(_os.environ["pydna_data_dir"])
 
 
-def open_log_folder():
-    """docstring."""
-    return _open_folder(_os.environ["pydna_log_dir"])
+# def open_config_folder():
+#     """Open the pydna configuration folder.
+
+#     Opens in the default file manager. The location for this folder is stored
+#     in the *pydna_config_dir* environmental variable.
+
+#     The `pydna.ini` file can be edited to make pydna quicker to use.
+#     See the documentation of the :class:configparser.ConfigParser´ class.
+
+#     Below is the content of a typical `pydna.ini` file on a Linux
+#     system.
+
+#     ::
+
+#         [main]
+#         loglevel=30
+#         email=myemail@example.org
+#         data_dir=/home/bjorn/.local/share/pydna
+#         log_dir=/home/bjorn/.cache/pydna/log
+#         ape=tclsh /home/bjorn/.ApE/AppMain.tcl
+#         cached_funcs=Genbank_nucleotide
+#         primers=/home/bjorn/Dropbox/wikidata/PRIMERS.txt
+#         enzymes=/home/bjorn/Dropbox/wikidata/RestrictionEnzymes.txt
+
+#     The email address is set to someone@example.com by default. If you change
+#     this to you own address, the :func:`pydna.genbank.genbank` function can be
+#     used to download sequences from Genbank directly without having to
+#     explicitly add the email address.
+
+#     Pydna can cache results from the following functions or methods:
+
+#     - :func:`pydna.genbank.Genbank.nucleotide`   Genbank_nucleotide
+#     - :func:`pydna.amplify.Anneal`               amplify_Anneal
+#     - :func:`pydna.assembly.Assembly`            assembly_Assembly
+#     - :func:`pydna.download.download_text`       download.download_text
+#     - :func:`pydna.dseqrecord.Dseqrecord.synced` Dseqrecord_synced
+
+#     These can be added separated by a comma to the cached_funcs entry
+#     in **pydna.ini** file or the pydna_cached_funcs environment variable.
+
+#     """
+#     return _open_folder(_os.environ["pydna_config_dir"])
+
+
+# def open_log_folder():
+#     """docstring."""
+#     return _open_folder(_os.environ["pydna_log_dir"])
 
 
 def get_env():
@@ -406,11 +399,6 @@ def logo():
 
 
 if __name__ == "__main__":
-    import os as _os
-
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
     import doctest
 
     doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached
