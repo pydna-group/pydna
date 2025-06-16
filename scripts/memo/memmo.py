@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 def deco(func):
     def __init__(self, bird):
         self.bird = bird

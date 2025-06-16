@@ -1,10 +1,11 @@
+# -*- coding: utf-8 -*-
 """
 GenBank FlatFile Writer
 
 Given a JSON representation, writes out a GenBank Flatfile (GFF) parseable by ApE
 
 Copyright (c) 2011 Anselm Levskaya (http://anselmlevskaya.com)
-Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.  
+Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
 """
 
 import json

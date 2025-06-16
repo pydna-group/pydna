@@ -66,13 +66,14 @@ from typing import (
     TypedDict as _TypedDict,
 )
 import itertools as _itertools
-import logging as _logging
+
+# import logging as _logging
 
 # from func_timeout import func_set_timeout
 # from wrapt_timeout_decorator import timeout
 from pydna.threading_timer_decorator_exit import exit_after
 
-_module_logger = _logging.getLogger("pydna." + __name__)
+# _module_logger = _logging.getLogger("pydna." + __name__)
 
 
 class Assembly(object):  # , metaclass=_Memoize):
@@ -532,11 +533,6 @@ class _FragmentDict(_TypedDict):
 
 
 if __name__ == "__main__":
-    import os as _os
-
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
     import doctest
 
     doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached

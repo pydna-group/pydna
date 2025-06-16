@@ -78,11 +78,11 @@ Table 1.Electrophoresis conditions and best-fit parameters
 a) The maximum and minimum lengths of DNA fragments that could be enumerated.
 b) Best-fit parameters obtained from Eq. (1a) using full range of observed lengths
 c) The x2 values for fits to Eq. (1a) using the parameters listed
-d) The maximum length DNA fragment which could be included in the fitting procedure to yield 
+d) The maximum length DNA fragment which could be included in the fitting procedure to yield
    the neww20values (all$0.999).
-   
-Rill, R.L., Beheshti, A., Van Winkle, D.H., 2002. DNA electrophoresis in agarose gels: 
-effects of field and gel concentration on the exponential dependence of reciprocal mobility 
+
+Rill, R.L., Beheshti, A., Van Winkle, D.H., 2002. DNA electrophoresis in agarose gels:
+effects of field and gel concentration on the exponential dependence of reciprocal mobility
 on DNA length. Electrophoresis 23, 2710–2719.
 """
 

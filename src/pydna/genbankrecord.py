@@ -121,7 +121,7 @@ class GenbankRecord(_Dseqrecord):
 
         code = (
             "from pydna.genbank import Genbank\n"
-            f"gb = Genbank('{_os.environ['pydna_email']}')\n"
+            f"gb = Genbank('{_os.getenv('pydna_email')}')\n"
             f"seq = gb.nucleotide('{self.item}'"
         )
         if self.start and self.start:
@@ -141,7 +141,7 @@ class GenbankRecord(_Dseqrecord):
 
         code = (
             "from Bio import Entrez, SeqIO\n"
-            f"Entrez.email = '{_os.environ['pydna_email']}'\n"
+            f"Entrez.email = '{_os.getenv('pydna_email')}'\n"
             "handle = Entrez.efetch(db='nuccore',\n"
             f"                       id='{self.item}',\n"
             "                       rettype='gbwithparts',\n"
@@ -163,9 +163,6 @@ class GenbankRecord(_Dseqrecord):
 
 
 if __name__ == "__main__":
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
     import doctest
 
     doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached

@@ -37,9 +37,9 @@ import time as _time
 import datetime as _datetime
 
 
-import logging as _logging
+# import logging as _logging
 
-_module_logger = _logging.getLogger("pydna." + __name__)
+# _module_logger = _logging.getLogger("pydna." + __name__)
 
 
 try:
@@ -135,12 +135,12 @@ class Dseqrecord(_SeqRecord):
         n=5e-14,  # mol ( = 0.05 pmol)
         **kwargs,
     ):
-        _module_logger.info("### Dseqrecord initialized ###")
-        _module_logger.info("argument circular = %s", circular)
-        _module_logger.info("circular = %s", circular)
+        #        _module_logger.info("### Dseqrecord initialized ###")
+        #        _module_logger.info("argument circular = %s", circular)
+        #        _module_logger.info("circular = %s", circular)
 
         if isinstance(record, str):
-            _module_logger.info("record is a string")
+            #           _module_logger.info("record is a string")
             super().__init__(
                 _Dseq.from_string(
                     record,
@@ -157,12 +157,12 @@ class Dseqrecord(_SeqRecord):
                 record = record[:]
             elif circular is True:
                 record = record.looped()
-            _module_logger.info("record is a Dseq object")
+            #           _module_logger.info("record is a Dseq object")
             super().__init__(record, *args, **kwargs)
 
         # record is a Bio.Seq object ?
         elif hasattr(record, "transcribe"):
-            _module_logger.info("record is a Seq object")
+            #           _module_logger.info("record is a Seq object")
             super().__init__(
                 _Dseq(
                     str(record),
@@ -175,7 +175,7 @@ class Dseqrecord(_SeqRecord):
 
         # record is a Bio.SeqRecord or Dseqrecord object ?
         elif hasattr(record, "features"):
-            _module_logger.info("record is a Bio.SeqRecord or Dseqrecord object")
+            #           _module_logger.info("record is a Bio.SeqRecord or Dseqrecord object")
             for key, value in list(record.__dict__.items()):
                 setattr(self, key, value)
             self.letter_annotations = {}
@@ -1032,7 +1032,7 @@ class Dseqrecord(_SeqRecord):
             result = newseq
         else:
             result = newseq.shifted(start)
-        _module_logger.info("synced")
+        #       _module_logger.info("synced")
         return result
 
     def upper(self):
@@ -1371,9 +1371,6 @@ class Dseqrecord(_SeqRecord):
 
 
 if __name__ == "__main__":
-    cache = _os.getenv("pydna_cache")
-    _os.environ["pydna_cache"] = "nocache"
     import doctest
 
     doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    # _os.environ["pydna_cache"] = cache

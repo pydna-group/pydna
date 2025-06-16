@@ -14,10 +14,10 @@ pathlib.Path(".coverage").unlink(missing_ok=True)
 
 def main():
     """docstring."""
-    os.environ["pydna_data_dir"] = tempfile.mkdtemp(prefix="pydna_data_dir_")
-    os.environ["pydna_log_dir"] = tempfile.mkdtemp(prefix="pydna_log_dir_")
-    os.environ["pydna_config_dir"] = tempfile.mkdtemp(prefix="pydna_config_dir_")
-    os.environ["pydna_loglevel"] = str(logging.DEBUG)
+    # os.environ["pydna_data_dir"] = tempfile.mkdtemp(prefix="pydna_data_dir_")
+    # os.environ["pydna_log_dir"] = tempfile.mkdtemp(prefix="pydna_log_dir_")
+    # os.environ["pydna_config_dir"] = tempfile.mkdtemp(prefix="pydna_config_dir_")
+    # os.environ["pydna_loglevel"] = str(logging.DEBUG)
 
     args = [
         "src",  # doctestdir

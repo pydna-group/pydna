@@ -18,10 +18,11 @@ from pydna.dseqrecord import Dseqrecord as _Dseqrecord
 from pydna.seqrecord import SeqRecord as _SeqRecord
 import textwrap as _textwrap
 import copy as _copy
-import logging as _logging
+
+# import logging as _logging
 
 
-_module_logger = _logging.getLogger("pydna." + __name__)
+# _module_logger = _logging.getLogger("pydna." + __name__)
 
 
 class Amplicon(_Dseqrecord):
@@ -150,11 +151,6 @@ class Amplicon(_Dseqrecord):
 
 
 if __name__ == "__main__":
-    import os as _os
-
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
     import doctest
 
     doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached

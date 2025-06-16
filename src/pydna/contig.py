@@ -238,11 +238,6 @@ class Contig(_Dseqrecord):
 
 
 if __name__ == "__main__":
-    import os as _os
-
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
     import doctest
 
     doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached

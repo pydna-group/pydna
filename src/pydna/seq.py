@@ -25,9 +25,10 @@ from Bio.Seq import Seq as _Seq
 from pydna._pretty import PrettyTable as _PrettyTable
 
 from typing import List as _List, Optional as _Optional, Tuple as _Tuple
-import logging as _logging
 
-_module_logger = _logging.getLogger("pydna." + __name__)
+# import logging as _logging
+
+# _module_logger = _logging.getLogger("pydna." + __name__)
 
 
 class Seq(_Seq):
@@ -235,11 +236,6 @@ class ProteinSeq(_Seq):
 
 
 if __name__ == "__main__":
-    import os as _os
-
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
     import doctest
 
     doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached

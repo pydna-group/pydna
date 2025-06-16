@@ -37,7 +37,7 @@ from typing import Union as _Union, TypeVar as _TypeVar, List as _List
 # For functions that take str or bytes as input and return str or bytes as output, matching the input type
 StrOrBytes = _TypeVar("StrOrBytes", str, bytes)
 
-_module_logger = _logging.getLogger("pydna." + __name__)
+# _module_logger = _logging.getLogger("pydna." + __name__)
 _ambiguous_dna_complement.update({"U": "A"})
 _complement_table = _maketrans(_ambiguous_dna_complement)
 
@@ -278,49 +278,49 @@ def complement(sequence: str):
     return sequence.translate(_complement_table)
 
 
-def memorize(filename):
-    """Cache functions and classes.
+# def memorize(filename):
+#     """Cache functions and classes.
 
-    see pydna.download
-    """
+#     see pydna.download
+#     """
 
-    def decorator(f):
-        def wrappee(*args, **kwargs):
-            _module_logger.info("#### memorizer ####")
-            _module_logger.info("cache filename                   = %s", filename)
-            _module_logger.info(
-                "os.environ['pydna_cached_funcs'] = %s",
-                _os.getenv("pydna_cached_funcs", ""),
-            )
-            if filename not in _os.getenv("pydna_cached_funcs", ""):
-                _module_logger.info("cache filename not among cached functions, made it new!")
-                return f(*args, **kwargs)
-            key = _base64.urlsafe_b64encode(_hashlib.sha1(_pickle.dumps((args, kwargs))).digest()).decode("ascii")
-            _module_logger.info("key = %s", key)
-            cache = _shelve.open(
-                _os.path.join(_os.environ["pydna_data_dir"], identifier_from_string(filename)),
-                writeback=False,
-            )
-            try:
-                result = cache[key]
-            except KeyError:
-                _module_logger.info(
-                    "no result for key %s in shelve %s",
-                    key,
-                    identifier_from_string(filename),
-                )
-                result = f(*args, **kwargs)
-                _module_logger.info("made it new!")
-                cache[key] = result
-                _module_logger.info("saved result under key %s", key)
-            else:
-                _module_logger.info("found %s in cache", key)
-            cache.close()
-            return result
+#     def decorator(f):
+#         def wrappee(*args, **kwargs):
+#             _module_logger.info("#### memorizer ####")
+#             _module_logger.info("cache filename                   = %s", filename)
+#             _module_logger.info(
+#                 "os.environ['pydna_cached_funcs'] = %s",
+#                 _os.getenv("pydna_cached_funcs", ""),
+#             )
+#             if filename not in _os.getenv("pydna_cached_funcs", ""):
+#                 _module_logger.info("cache filename not among cached functions, made it new!")
+#                 return f(*args, **kwargs)
+#             key = _base64.urlsafe_b64encode(_hashlib.sha1(_pickle.dumps((args, kwargs))).digest()).decode("ascii")
+#             _module_logger.info("key = %s", key)
+#             cache = _shelve.open(
+#                 _os.path.join(_os.environ["pydna_data_dir"], identifier_from_string(filename)),
+#                 writeback=False,
+#             )
+#             try:
+#                 result = cache[key]
+#             except KeyError:
+#                 _module_logger.info(
+#                     "no result for key %s in shelve %s",
+#                     key,
+#                     identifier_from_string(filename),
+#                 )
+#                 result = f(*args, **kwargs)
+#                 _module_logger.info("made it new!")
+#                 cache[key] = result
+#                 _module_logger.info("saved result under key %s", key)
+#             else:
+#                 _module_logger.info("found %s in cache", key)
+#             cache.close()
+#             return result
 
-        return wrappee
+#         return wrappee
 
-    return decorator
+#     return decorator
 
 
 def identifier_from_string(s: str) -> str:
@@ -736,9 +736,6 @@ def locations_overlap(loc1: _Union[_sl, _cl], loc2: _Union[_sl, _cl], seq_len):
 
 
 if __name__ == "__main__":
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
     import doctest
 
     doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached

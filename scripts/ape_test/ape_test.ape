@@ -1,16 +1,16 @@
 LOCUS       ape_test                  40 bp ds-DNA     linear       18-JUN-2016
 DEFINITION  .
-ACCESSION   
-VERSION     
+ACCESSION
+VERSION
 SOURCE      .
   ORGANISM  .
-COMMENT     
-COMMENT     
+COMMENT
+COMMENT
 COMMENT     ApEinfo:methylated:1
 FEATURES             Location/Qualifiers
      misc_feature    3..6
                      /note=hej
-                     /label=hejhej               
+                     /label=hejhej
                      /ApEinfo_fwdcolor="cyan"
                      /ApEinfo_revcolor="green"
                      /ApEinfo_graphicformat="arrow_data {{0 1 2 0 0 -1} {} 0}
@@ -28,5 +28,5 @@ FEATURES             Location/Qualifiers
                      /ApEinfo_graphicformat="arrow_data {{0 1 2 0 0 -1} {} 0}
                      width 5 offset 0"
 ORIGIN
-        1 aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa  
+        1 aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa aaaaaaaaaa
 //

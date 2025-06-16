@@ -1,11 +1,11 @@
 LOCUS       MySeq2                    80 bp ds-DNA     linear       18-APR-2018
 DEFINITION  .
-ACCESSION   
-VERSION     
+ACCESSION
+VERSION
 SOURCE      .
   ORGANISM  .
-COMMENT     
-COMMENT     
+COMMENT
+COMMENT
 COMMENT     ApEinfo:methylated:1
 FEATURES             Location/Qualifiers
      CDS             8..73
@@ -26,5 +26,5 @@ FEATURES             Location/Qualifiers
                      width 5 offset 0"
 ORIGIN
         1 atgtcgtATG aaaccgttat cgatcatatg tGcgaaatgt cgcgcgtcat ctacgtatca
-       61 tcgatctact TAAacgtgta    
+       61 tcgatctact TAAacgtgta
 //

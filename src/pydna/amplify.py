@@ -31,9 +31,10 @@ import re as _re
 import copy as _copy
 import operator as _operator
 import os as _os
-import logging as _logging
 
-_module_logger = _logging.getLogger("pydna." + __name__)
+# import logging as _logging
+
+# _module_logger = _logging.getLogger("pydna." + __name__)
 
 _table = {  # IUPAC Ambiguity Codes for Nucleotide Degeneracy and U for Uracile
     "A": "A",
@@ -529,9 +530,6 @@ tatcgactgtatcatctgatagcac")
 
 
 if __name__ == "__main__":
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
     import doctest
 
     doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached

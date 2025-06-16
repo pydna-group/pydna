@@ -1,4 +1,5 @@
 #!/home/bjorn/anaconda/envs/bjorn/bin/python
+# -*- coding: utf-8 -*-
 """
 import os
 import sys
