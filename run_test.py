@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import os
-import logging
-import tempfile
+# import os
+# import logging
+# import tempfile
 import pathlib
 import pytest
 
