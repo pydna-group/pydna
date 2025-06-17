@@ -8,13 +8,15 @@
 
 from Bio.Data.IUPACData import ambiguous_dna_complement as _ambiguous_dna_complement
 from Bio.Seq import _maketrans
-import shelve as _shelve
-import os as _os
+
+# import shelve as _shelve
+# import os as _os
 import re as _re
-import logging as _logging
-import base64 as _base64
-import pickle as _pickle
-import hashlib as _hashlib
+
+# import logging as _logging
+# import base64 as _base64
+# import pickle as _pickle
+# import hashlib as _hashlib
 import keyword as _keyword
 import collections as _collections
 import itertools as _itertools
@@ -733,9 +735,3 @@ def locations_overlap(loc1: _Union[_sl, _cl], loc2: _Union[_sl, _cl], seq_len):
             return True
 
     return False
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
