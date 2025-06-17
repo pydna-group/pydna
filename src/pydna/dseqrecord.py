@@ -1368,9 +1368,3 @@ class Dseqrecord(_SeqRecord):
             features = self[left_edge:right_edge].features
 
         return Dseqrecord(dseq, features=features)
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
