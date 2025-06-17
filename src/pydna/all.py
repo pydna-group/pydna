@@ -41,7 +41,7 @@ __all__ = [
     # "ape",
     "primer_design",
     "assembly_fragments",
-    "circular_assembly_fragments",
+    # "circular_assembly_fragments",
     "eq",
     "gbtext_clean",
     # "PrimerList",
@@ -64,14 +64,9 @@ from pydna.parsers import parse_primers
 # from pydna.editor import ape
 from pydna.design import primer_design
 from pydna.design import assembly_fragments
-from pydna.design import circular_assembly_fragments
+
+# from pydna.design import circular_assembly_fragments
 from pydna.utils import eq
 from pydna.genbankfixer import gbtext_clean
 
 # from pydna.myprimers import PrimerList
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
