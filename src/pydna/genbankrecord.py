@@ -160,9 +160,3 @@ class GenbankRecord(_Dseqrecord):
         code += "record = SeqIO.read(handle, 'genbank')"
 
         return _ps(code)
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)

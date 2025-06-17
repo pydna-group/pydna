@@ -1757,9 +1757,3 @@ class Dseq(_Seq):
             cutsites.append(cutsites[0])
 
         return list(zip(cutsites, cutsites[1:]))
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)

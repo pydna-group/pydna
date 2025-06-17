@@ -729,9 +729,3 @@ class ProteinSeqRecord(SeqRecord):
     def __format__(self, format):
         """docstring."""
         return _pretty_str(_SeqRecord.__format__(self, format))
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=(doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE))

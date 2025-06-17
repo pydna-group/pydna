@@ -95,9 +95,3 @@ def gel(samples=None, gel_length=600, margin=50, interpolator=interpolator(mwstd
 # from PIL import ImageOps
 # im_invert = ImageOps.invert(im)
 # im.rotate(90, expand=1)
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)

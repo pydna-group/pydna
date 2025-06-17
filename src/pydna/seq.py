@@ -233,9 +233,3 @@ class ProteinSeq(_Seq):
         Guruprasad K., Reddy B.V.B., Pandit M.W. Protein Engineering 4:155-161(1990).
         """
         return self._pa().instability_index()
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)

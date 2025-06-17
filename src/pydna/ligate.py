@@ -56,9 +56,3 @@ def ligate(fragments: list):
     lsequences = [reduce(add, lp[1:-1]) for lp in lpaths]
 
     return csequences, lsequences
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)

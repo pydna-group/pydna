@@ -57,9 +57,3 @@ class Primer(_SeqRecord):
         answer.position = None
         answer._fp = len(self)
         return answer
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)

@@ -54,9 +54,3 @@ def read_primer(data):
     The usage is similar to the :func:`parse_primer` function."""
 
     return _Primer(read(data, ds=False))
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)

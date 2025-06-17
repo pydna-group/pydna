@@ -396,9 +396,3 @@ def logo():
         f = Figlet()
         message = f.renderText(message)
     return _pretty_str(message)
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)

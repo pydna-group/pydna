@@ -376,9 +376,3 @@ def tm_neb(primer, conc=0.5, prodcode="q5-0"):
         return r["data"]["tm1"]
     else:
         raise requests.exceptions.HTTPError(r["error"])
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
