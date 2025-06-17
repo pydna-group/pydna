@@ -7,7 +7,7 @@
 
 """Provides two functions, parse and parse_primers"""
 
-import os as _os
+# import os as _os
 import re as _re
 import io as _io
 import textwrap as _textwrap
@@ -95,7 +95,7 @@ def embl_gb_fasta(text):
             except ValueError:
                 handle.seek(0)
                 try:
-                    parsed = _SeqIO.read(handle, "fasta")
+                    parsed = _SeqIO.read(handle, "fasta-blast")
                 except ValueError:
                     handle.close()
                     continue
@@ -206,9 +206,3 @@ def parse(data, ds=True):
 def parse_primers(data):
     """docstring."""
     return [_Primer(x) for x in parse(data, ds=False)]
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
