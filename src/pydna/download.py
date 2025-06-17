@@ -8,7 +8,7 @@
 
 import textwrap as _textwrap
 
-import os as _os
+# import os as _os
 from pydna._pretty import pretty_str as _pretty_str
 
 # from pydna.utils import memorize as _memorize
@@ -30,9 +30,3 @@ def download_text(url):
     result = result.replace("\r\n", "\n").replace("\r", "\n")
     #    _module_logger.info("result[:160] = %s", result[:160])
     return _pretty_str(result)
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
