@@ -16,7 +16,8 @@
 
 from pydna.tm import tm_default as _tm_default
 import math as _math
-import os as _os
+
+# import os as _os
 import copy as _copy
 from pydna.amplicon import Amplicon as _Amplicon
 from pydna.amplify import Anneal as _Anneal
@@ -718,18 +719,18 @@ def assembly_fragments(f, overlap=35, maxlink=40, circular=False):
         else:  # secnd is larger than maxlink
             if hasattr(first, "template") and hasattr(secnd, "template"):
                 lnk = str(first.seq[-tail_length:])
-                ##_module_logger.debug("4 %s", lnk)
+                # #_module_logger.debug("4 %s", lnk)
                 secnd.forward_primer = lnk + secnd.forward_primer
                 lnk = str(secnd.seq[:tail_length].reverse_complement())
-                ##_module_logger.debug("5 %s", lnk)
+                # #_module_logger.debug("5 %s", lnk)
                 first.reverse_primer = lnk + first.reverse_primer
             elif hasattr(first, "template"):
                 lnk = str(secnd.seq[:overlap].reverse_complement())
-                ##_module_logger.debug("6 %s", lnk)
+                # #_module_logger.debug("6 %s", lnk)
                 first.reverse_primer = lnk + first.reverse_primer
             elif hasattr(secnd, "template"):
                 lnk = str(first.seq[-overlap:])
-                ##_module_logger.debug("7 %s", lnk)
+                # #_module_logger.debug("7 %s", lnk)
                 secnd.forward_primer = lnk + secnd.forward_primer
         f[i] = first
         f[i + 1] = secnd
@@ -767,9 +768,3 @@ def circular_assembly_fragments(f, overlap=35, maxlink=40):
         stacklevel=2,
     )
     return assembly_fragments(f, overlap=overlap, maxlink=maxlink, circular=True)
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
