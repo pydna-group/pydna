@@ -118,9 +118,3 @@ def protospacer(guide_construct, cas=cas9):
         for mobj in re.finditer(f"(?:{rc(cas.scaffold)})(?P<ps>.{{{cas.size}}})", str(guide_construct.seq).upper())
     ]
     return in_watson + in_crick
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)

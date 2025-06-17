@@ -530,9 +530,3 @@ class _FragmentDict(_TypedDict):
     name: str
     features: _List[_SeqFeature]
     nodes: _List[_NodeTuple]
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)

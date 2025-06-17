@@ -52,9 +52,3 @@ def genbank_accession(s: str) -> Dseqrecord:
         description=(f"{best_alignment.accession} " f"REGION: {start}..{stop}"),
     )
     return result
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)

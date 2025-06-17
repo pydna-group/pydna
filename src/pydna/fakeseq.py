@@ -44,9 +44,3 @@ class FakeSeq:
     def __str__(self) -> str:
         """docstring."""
         return self.__repr__()
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)

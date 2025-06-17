@@ -225,9 +225,3 @@ def genbank(accession: str = "CS570233.1", *args, **kwargs) -> _GenbankRecord:
     # _module_logger.info("accession  %s", email)
     gb = Genbank(email)
     return gb.nucleotide(accession, *args, **kwargs)
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)

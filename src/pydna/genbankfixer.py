@@ -570,9 +570,3 @@ def gbtext_clean(gbtext):
     Result = _namedtuple("Result", "gbtext jseq")
     result = Result(_pretty_str(toGB(jseq).strip()), jseq)
     return result
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)

@@ -391,9 +391,3 @@ def terminal_overlap(stringx: str, stringy: str, limit: int = 15) -> _List[Match
         for m in common_sub_strings(stringx, stringy, limit)
         if (m[0] == 0 and m[1] + m[2] == len(stringy)) or (m[1] == 0 and m[0] + m[2] == len(stringx))
     ]
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)

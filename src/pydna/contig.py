@@ -235,9 +235,3 @@ class Contig(_Dseqrecord):
             fig += "|{space}   |\n".format(space=" " * (space))
             fig += " {space}".format(space="-" * (space + 3))
         return _pretty_str(_textwrap.dedent(fig))
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
