@@ -83,7 +83,9 @@ def test_initialization():
     a.append(Dseqrecord(Seq("attt"), id="3"))
     a.append(Dseqrecord(Srec(Seq("attt"), id="4")))
     a.append(Dseqrecord(Dseqrecord("attt"), id="5"))
-    a.append(Dseqrecord(Dseqrecord(Dseq("attt", circular=True)), id="6", circular=False))
+    a.append(
+        Dseqrecord(Dseqrecord(Dseq("attt", circular=True)), id="6", circular=False)
+    )
 
     for b in a:
         assert isinstance(b.seq, Dseq)
@@ -213,8 +215,14 @@ def test_initialization():
     b = Dseqrecord(s)
     b.features.append(feature)
     cb = Dseqrecord(b, circular=True)
-    assert b.features[0].extract(b).seq.watson.lower() == cb.features[0].extract(b).seq.watson.lower()
-    assert b.features[0].extract(b).seq.crick.lower() == cb.features[0].extract(b).seq.crick.lower()
+    assert (
+        b.features[0].extract(b).seq.watson.lower()
+        == cb.features[0].extract(b).seq.watson.lower()
+    )
+    assert (
+        b.features[0].extract(b).seq.crick.lower()
+        == cb.features[0].extract(b).seq.crick.lower()
+    )
     s = Dseq("aagct", "aagct")
     # print s.fig()
     # Dseq(-6)
@@ -233,8 +241,14 @@ def test_initialization():
     b = Dseqrecord(s)
     b.features.append(feature)
     cb = Dseqrecord(b, circular=True)
-    assert b.features[0].extract(b).seq.watson.lower() == cb.features[0].extract(b).seq.watson.lower()
-    assert b.features[0].extract(b).seq.crick.lower() == cb.features[0].extract(b).seq.crick.lower()
+    assert (
+        b.features[0].extract(b).seq.watson.lower()
+        == cb.features[0].extract(b).seq.watson.lower()
+    )
+    assert (
+        b.features[0].extract(b).seq.crick.lower()
+        == cb.features[0].extract(b).seq.crick.lower()
+    )
 
 
 def test_linear_circular():
@@ -651,7 +665,9 @@ def test_cut_add():
     from pydna.utils import eq
     from Bio.Restriction import BamHI, EcoRI, PstI, SmaI
 
-    a = Dseqrecord("GGATCCtcatctactatcatcgtagcgtactgatctattctgctgctcatcatcggtactctctataattatatatatatgcgcgtGGATCC").seq
+    a = Dseqrecord(
+        "GGATCCtcatctactatcatcgtagcgtactgatctattctgctgctcatcatcggtactctctataattatatatatatgcgcgtGGATCC"
+    ).seq
     b = a.cut(BamHI)[1]
     c = Dseqrecord(
         "nCTGCAGtcatctactatcatcgtagcgtactgatctattctgctgctcatcatcggtactctctataattatatatatatgcgcgtGAATTCn"
@@ -768,7 +784,11 @@ def test_Dseqrecord_cutting_adding_2():
                 -4,
             )
         ),
-        Dseqrecord(Dseq("CACANGGTACCNGGTACCNGCGGATATC", "GTGTNCCATGGNCCATGGNCGCCTATAG"[::-1], 0)),
+        Dseqrecord(
+            Dseq(
+                "CACANGGTACCNGGTACCNGCGGATATC", "GTGTNCCATGGNCCATGGNCGCCTATAG"[::-1], 0
+            )
+        ),
         Dseqrecord(
             Dseq(
                 "CACANGGTACCNGGTACCNGCGGATATC",
@@ -1004,7 +1024,9 @@ ORIGIN
         "NlaIV-3",
     ]
     e = b + c + d
-    assert sorted([x.qualifiers["label"][0] for x in e.features]) == [x.qualifiers["label"][0] for x in a.features]
+    assert sorted([x.qualifiers["label"][0] for x in e.features]) == [
+        x.qualifiers["label"][0] for x in a.features
+    ]
     assert str(a.seq) == str(e.seq)
 
     b, c, d = a.cut(KpnI)
@@ -1024,7 +1046,9 @@ ORIGIN
         "NlaIV-3",
     ]
     e = b + c + d
-    assert sorted([x.qualifiers["label"][0] for x in e.features]) == [x.qualifiers["label"][0] for x in a.features]
+    assert sorted([x.qualifiers["label"][0] for x in e.features]) == [
+        x.qualifiers["label"][0] for x in a.features
+    ]
 
     b, c, d = a.cut(NlaIV)
     assert [x.qualifiers["label"][0] for x in b.features] == ["Acc65I-1", "NlaIV-1"]
@@ -1196,8 +1220,16 @@ def test_features_change_ori():
     for i in range(1, len(s3)):
         b = s3.shifted(i)
 
-        assert [str(f.extract(b).seq) for f in b.features if f.qualifiers["label"][0] == "ins"][0] == "GTACCTTTGGATC"
-        assert [str(f.extract(b).seq) for f in b.features if f.qualifiers["label"][0] == "bb"][0] == "CGGGAAAG"
+        assert [
+            str(f.extract(b).seq)
+            for f in b.features
+            if f.qualifiers["label"][0] == "ins"
+        ][0] == "GTACCTTTGGATC"
+        assert [
+            str(f.extract(b).seq)
+            for f in b.features
+            if f.qualifiers["label"][0] == "bb"
+        ][0] == "CGGGAAAG"
 
     from Bio.Restriction import Acc65I, BamHI
 
@@ -1288,7 +1320,9 @@ def test_figure():
         == "Dseqrecord(-37)\n\x1b[48;5;11m\x1b[0mgatcggtaccgatcATGAAATAAgatcGGGCCCgatc\nctagccatggctagTACTTTATTctagCCCGGGctag"
     )
 
-    linearDseqrecord.features.append(SeqFeature(SimpleLocation(14, 17, 1) + SimpleLocation(20, 23, 1), type="test"))
+    linearDseqrecord.features.append(
+        SeqFeature(SimpleLocation(14, 17, 1) + SimpleLocation(20, 23, 1), type="test")
+    )
 
     expect = "Dseqrecord(-37)\ngatcggtaccgatc\x1b[48;5;11mATG\x1b[0mAAA\x1b[48;5;11mTAA\x1b[0mgatcGGGCCCgatc\nctagccatggctagTACTTTATTctagCCCGGGctag"  # noqa: B950
     assert linearDseqrecord.figure() == expect
@@ -1308,7 +1342,8 @@ def test_figure():
 
     a1, b1, c1 = linearDseqrecord.cut(Acc65I, Bsp120I)
     assert (
-        b1.figure() == "Dseqrecord(-27)\ngtaccgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcG    \n    gctagTACTTTATTctagCCCGG"
+        b1.figure()
+        == "Dseqrecord(-27)\ngtaccgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcG    \n    gctagTACTTTATTctagCCCGG"
     )
     assert b1.extract_feature(0).seq == feat
     assert b1.rc().extract_feature(0).seq == feat
@@ -1319,7 +1354,8 @@ def test_figure():
 
     a2, b2, c2 = linearDseqrecord.cut(KpnI, Bsp120I)
     assert (
-        b2.figure() == "Dseqrecord(-27)\n    cgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcG    \ncatggctagTACTTTATTctagCCCGG"
+        b2.figure()
+        == "Dseqrecord(-27)\n    cgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcG    \ncatggctagTACTTTATTctagCCCGG"
     )
     assert b2.extract_feature(0).seq == feat
     assert b2.rc().extract_feature(0).seq == feat
@@ -1330,7 +1366,8 @@ def test_figure():
 
     a3, b3, c3 = linearDseqrecord.cut(Acc65I, ApaI)
     assert (
-        b3.figure() == "Dseqrecord(-27)\ngtaccgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcGGGCC\n    gctagTACTTTATTctagC    "
+        b3.figure()
+        == "Dseqrecord(-27)\ngtaccgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcGGGCC\n    gctagTACTTTATTctagC    "
     )
     assert b3.extract_feature(0).seq == feat
     assert b3.rc().extract_feature(0).seq == feat
@@ -1341,7 +1378,8 @@ def test_figure():
 
     a4, b4, c4 = linearDseqrecord.cut(KpnI, ApaI)
     assert (
-        b4.figure() == "Dseqrecord(-27)\n    cgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcGGGCC\ncatggctagTACTTTATTctagC    "
+        b4.figure()
+        == "Dseqrecord(-27)\n    cgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcGGGCC\ncatggctagTACTTTATTctagC    "
     )
     assert b4.extract_feature(0).seq == feat
     assert b4.rc().extract_feature(0).seq == feat
@@ -1361,31 +1399,36 @@ def test_figure():
 
     a5, b5 = circularDseqrecord.cut(Acc65I, Bsp120I)
     assert (
-        a5.figure() == "Dseqrecord(-27)\ngtaccgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcG    \n    gctagTACTTTATTctagCCCGG"
+        a5.figure()
+        == "Dseqrecord(-27)\ngtaccgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcG    \n    gctagTACTTTATTctagCCCGG"
     )
     assert a5.extract_feature(0).seq == feat
 
     a6, b6 = circularDseqrecord.cut(KpnI, Bsp120I)
     assert (
-        a6.figure() == "Dseqrecord(-27)\n    cgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcG    \ncatggctagTACTTTATTctagCCCGG"
+        a6.figure()
+        == "Dseqrecord(-27)\n    cgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcG    \ncatggctagTACTTTATTctagCCCGG"
     )
     assert a6.extract_feature(0).seq == feat
 
     a7, b7 = circularDseqrecord.cut(Acc65I, ApaI)
     assert (
-        a7.figure() == "Dseqrecord(-27)\ngtaccgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcGGGCC\n    gctagTACTTTATTctagC    "
+        a7.figure()
+        == "Dseqrecord(-27)\ngtaccgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcGGGCC\n    gctagTACTTTATTctagC    "
     )
     assert a7.extract_feature(0).seq == feat
 
     a8, b8 = circularDseqrecord.cut(KpnI, ApaI)
     assert (
-        a8.figure() == "Dseqrecord(-27)\n    cgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcGGGCC\ncatggctagTACTTTATTctagC    "
+        a8.figure()
+        == "Dseqrecord(-27)\n    cgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcGGGCC\ncatggctagTACTTTATTctagC    "
     )
     assert a8.extract_feature(0).seq == feat
 
     a9, b9 = circularDseqrecord.cut(Bsp120I, KpnI)
     assert (
-        a9.figure() == "Dseqrecord(-27)\n    cgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcG    \ncatggctagTACTTTATTctagCCCGG"
+        a9.figure()
+        == "Dseqrecord(-27)\n    cgatc\x1b[48;5;11mATGAAATAA\x1b[0mgatcG    \ncatggctagTACTTTATTctagCCCGG"
     )
     assert a9.extract_feature(0).seq == feat
 
@@ -1407,7 +1450,8 @@ def test_figure():
 
     a10, b10, c10 = linearDseqrecord.cut(Acc65I, Bsp120I)
     assert (
-        b10.figure() == "Dseqrecord(-27)\n\x1b[48;5;11mgtaccgatcATGAAATAAgatcG    \x1b[0m\n    gctagTACTTTATTctagCCCGG"
+        b10.figure()
+        == "Dseqrecord(-27)\n\x1b[48;5;11mgtaccgatcATGAAATAAgatcG    \x1b[0m\n    gctagTACTTTATTctagCCCGG"
     )
     feat10 = Dseq.from_representation(
         """
@@ -1424,7 +1468,8 @@ def test_figure():
 
     a11, b11, c11 = linearDseqrecord.cut(KpnI, Bsp120I)
     assert (
-        b11.figure() == "Dseqrecord(-27)\n\x1b[48;5;11m    cgatcATGAAATAAgatcG    \x1b[0m\ncatggctagTACTTTATTctagCCCGG"
+        b11.figure()
+        == "Dseqrecord(-27)\n\x1b[48;5;11m    cgatcATGAAATAAgatcG    \x1b[0m\ncatggctagTACTTTATTctagCCCGG"
     )
     feat11 = Dseq.from_representation(
         """
@@ -1441,7 +1486,8 @@ def test_figure():
 
     a12, b12, c12 = linearDseqrecord.cut(Acc65I, ApaI)
     assert (
-        b12.figure() == "Dseqrecord(-27)\n\x1b[48;5;11mgtaccgatcATGAAATAAgatcGGGCC\x1b[0m\n    gctagTACTTTATTctagC    "
+        b12.figure()
+        == "Dseqrecord(-27)\n\x1b[48;5;11mgtaccgatcATGAAATAAgatcGGGCC\x1b[0m\n    gctagTACTTTATTctagC    "
     )
     feat12 = Dseq.from_representation(
         """
@@ -1458,7 +1504,8 @@ def test_figure():
 
     a13, b13, c13 = linearDseqrecord.cut(KpnI, ApaI)
     assert (
-        b13.figure() == "Dseqrecord(-27)\n\x1b[48;5;11m    cgatcATGAAATAAgatcGGGCC\x1b[0m\ncatggctagTACTTTATTctagC    "
+        b13.figure()
+        == "Dseqrecord(-27)\n\x1b[48;5;11m    cgatcATGAAATAAgatcGGGCC\x1b[0m\ncatggctagTACTTTATTctagC    "
     )
     feat13 = Dseq.from_representation(
         """
@@ -1479,7 +1526,8 @@ def test_figure():
     circularDseqrecord.figure()
     a14, b14 = circularDseqrecord.cut(KpnI, Bsp120I)
     assert (
-        a14.figure() == "Dseqrecord(-27)\n\x1b[48;5;11m    cgatcATGAAATAAgatcG    \x1b[0m\ncatggctagTACTTTATTctagCCCGG"
+        a14.figure()
+        == "Dseqrecord(-27)\n\x1b[48;5;11m    cgatcATGAAATAAgatcG    \x1b[0m\ncatggctagTACTTTATTctagCCCGG"
     )
     feat14 = Dseq.from_representation(
         """
@@ -1491,7 +1539,8 @@ def test_figure():
 
     a15, b15 = circularDseqrecord.cut(KpnI, ApaI)
     assert (
-        a15.figure() == "Dseqrecord(-27)\n\x1b[48;5;11m    cgatcATGAAATAAgatcGGGCC\x1b[0m\ncatggctagTACTTTATTctagC    "
+        a15.figure()
+        == "Dseqrecord(-27)\n\x1b[48;5;11m    cgatcATGAAATAAgatcGGGCC\x1b[0m\ncatggctagTACTTTATTctagC    "
     )
     feat15 = Dseq.from_representation(
         """
@@ -1503,7 +1552,8 @@ def test_figure():
 
     a16, b16 = circularDseqrecord.cut(Acc65I, Bsp120I)
     assert (
-        a16.figure() == "Dseqrecord(-27)\n\x1b[48;5;11mgtaccgatcATGAAATAAgatcG    \x1b[0m\n    gctagTACTTTATTctagCCCGG"
+        a16.figure()
+        == "Dseqrecord(-27)\n\x1b[48;5;11mgtaccgatcATGAAATAAgatcG    \x1b[0m\n    gctagTACTTTATTctagCCCGG"
     )
     feat16 = Dseq.from_representation(
         """
@@ -1515,7 +1565,8 @@ def test_figure():
 
     a17, b17 = circularDseqrecord.cut(Acc65I, ApaI)
     assert (
-        a17.figure() == "Dseqrecord(-27)\n\x1b[48;5;11mgtaccgatcATGAAATAAgatcGGGCC\x1b[0m\n    gctagTACTTTATTctagC    "
+        a17.figure()
+        == "Dseqrecord(-27)\n\x1b[48;5;11mgtaccgatcATGAAATAAgatcGGGCC\x1b[0m\n    gctagTACTTTATTctagC    "
     )
     feat17 = Dseq.from_representation(
         """
@@ -1543,19 +1594,31 @@ def test_figure():
     assert circularDseqrecord.extract_feature(0).seq == feat
 
     a18, b18 = circularDseqrecord.cut(KpnI, Bsp120I)
-    assert b18.figure() == "Dseqrecord(-18)\nGGCC\x1b[48;5;11mCgatcgatcg\x1b[0mgtac\n    Gctagctagc    "
+    assert (
+        b18.figure()
+        == "Dseqrecord(-18)\nGGCC\x1b[48;5;11mCgatcgatcg\x1b[0mgtac\n    Gctagctagc    "
+    )
     assert b18.extract_feature(0).seq == feat
 
     a19, b19 = circularDseqrecord.cut(KpnI, ApaI)
-    assert b19.figure() == "Dseqrecord(-18)\n    \x1b[48;5;11mCgatcgatcg\x1b[0mgtac\nCCGGGctagctagc    "
+    assert (
+        b19.figure()
+        == "Dseqrecord(-18)\n    \x1b[48;5;11mCgatcgatcg\x1b[0mgtac\nCCGGGctagctagc    "
+    )
     assert b19.extract_feature(0).seq == feat
 
     a20, b20 = circularDseqrecord.cut(Acc65I, Bsp120I)
-    assert b20.figure() == "Dseqrecord(-18)\nGGCC\x1b[48;5;11mCgatcgatcg\x1b[0m    \n    Gctagctagccatg"
+    assert (
+        b20.figure()
+        == "Dseqrecord(-18)\nGGCC\x1b[48;5;11mCgatcgatcg\x1b[0m    \n    Gctagctagccatg"
+    )
     assert b20.extract_feature(0).seq == feat
 
     a21, b21 = circularDseqrecord.cut(Acc65I, ApaI)
-    assert b21.figure() == "Dseqrecord(-18)\n    \x1b[48;5;11mCgatcgatcg\x1b[0m    \nCCGGGctagctagccatg"
+    assert (
+        b21.figure()
+        == "Dseqrecord(-18)\n    \x1b[48;5;11mCgatcgatcg\x1b[0m    \nCCGGGctagctagccatg"
+    )
     assert b21.extract_feature(0).seq == feat
 
     # Wrap around feature circular on crick
@@ -1579,19 +1642,31 @@ def test_figure():
     a22, b22 = circularDseqrecord.cut(KpnI, Bsp120I)
 
     # Passes the tests if changed to "Dseqrecord(-18)\n    cgatcgatcG    \ncatg\x1b[48;5;11mgctagctagC\x1b[0mCCGG"
-    assert b22.figure() == "Dseqrecord(-18)\n    cgatcgatcG    \ncatg\x1b[48;5;11mgctagctagC\x1b[0mCCGG"
+    assert (
+        b22.figure()
+        == "Dseqrecord(-18)\n    cgatcgatcG    \ncatg\x1b[48;5;11mgctagctagC\x1b[0mCCGG"
+    )
     assert b22.extract_feature(0).seq == feat
 
     a23, b23 = circularDseqrecord.cut(KpnI, ApaI)
-    assert b23.figure() == "Dseqrecord(-18)\n    cgatcgatcGGGCC\ncatg\x1b[48;5;11mgctagctagC\x1b[0m    "
+    assert (
+        b23.figure()
+        == "Dseqrecord(-18)\n    cgatcgatcGGGCC\ncatg\x1b[48;5;11mgctagctagC\x1b[0m    "
+    )
     assert b23.extract_feature(0).seq == feat
 
     a24, b24 = circularDseqrecord.cut(Acc65I, Bsp120I)
-    assert b24.figure() == "Dseqrecord(-18)\ngtaccgatcgatcG    \n    \x1b[48;5;11mgctagctagC\x1b[0mCCGG"
+    assert (
+        b24.figure()
+        == "Dseqrecord(-18)\ngtaccgatcgatcG    \n    \x1b[48;5;11mgctagctagC\x1b[0mCCGG"
+    )
     assert b24.extract_feature(0).seq == feat
 
     a25, b25 = circularDseqrecord.cut(Acc65I, ApaI)
-    assert b25.figure() == "Dseqrecord(-18)\ngtaccgatcgatcGGGCC\n    \x1b[48;5;11mgctagctagC\x1b[0m    "
+    assert (
+        b25.figure()
+        == "Dseqrecord(-18)\ngtaccgatcgatcGGGCC\n    \x1b[48;5;11mgctagctagC\x1b[0m    "
+    )
     assert b25.extract_feature(0).seq == feat
 
 
@@ -1631,21 +1706,35 @@ def test_synced():
 
     for i in range(1, len(bb_ins)):
         cand = bb_ins.shifted(i)
-        assert str(cand.synced("tcgcgcgtttcg", limit=11).seq).upper() == str(bb_ins.seq.upper())
-        assert str(cand.synced(Dseq("tcgcgcgtttcg"), limit=11).seq).upper() == str(bb_ins.seq.upper())
-        assert str(cand.synced(Seq("tcgcgcgtttcg"), limit=11).seq).upper() == str(bb_ins.seq.upper())
-        assert str(cand.synced(SeqRecord(Seq("tcgcgcgtttcg")), limit=11).seq).upper() == str(bb_ins.seq.upper())
+        assert str(cand.synced("tcgcgcgtttcg", limit=11).seq).upper() == str(
+            bb_ins.seq.upper()
+        )
+        assert str(cand.synced(Dseq("tcgcgcgtttcg"), limit=11).seq).upper() == str(
+            bb_ins.seq.upper()
+        )
+        assert str(cand.synced(Seq("tcgcgcgtttcg"), limit=11).seq).upper() == str(
+            bb_ins.seq.upper()
+        )
+        assert str(
+            cand.synced(SeqRecord(Seq("tcgcgcgtttcg")), limit=11).seq
+        ).upper() == str(bb_ins.seq.upper())
 
     pGUP1 = read("pGUP1_correct.gb")
     pGREG505 = read("pGREG505.gb")
     pGUP1_not_synced = read("pGUP1_not_synced.gb")
-    assert pGUP1_not_synced.synced(pGREG505).seguid() == "cdseguid=QiK2pH9yioTPfSobUTLz4CPiNzY" == pGUP1.seguid()
+    assert (
+        pGUP1_not_synced.synced(pGREG505).seguid()
+        == "cdseguid=QiK2pH9yioTPfSobUTLz4CPiNzY"
+        == pGUP1.seguid()
+    )
 
     bb_ins = Dseqrecord("tcgcgcgtttcgAgtgatgacggtgaA", circular=True)
 
     for i in range(1, len(bb_ins)):
         cand = bb_ins.shifted(i)
-        assert str(cand.synced("tcgcgcgtttcg", limit=11).seq).upper() == str(bb_ins.seq.upper())
+        assert str(cand.synced("tcgcgcgtttcg", limit=11).seq).upper() == str(
+            bb_ins.seq.upper()
+        )
 
     a = Dseqrecord("gtatcgttctagctattggctagta", circular=True)
     b = Dseqrecord("ggttagtcagttatatcggcttatc", circular=True)
@@ -1679,30 +1768,42 @@ def test_map_pCR_MCT1_HA46():
 
     map_ = pCR_MCT1_HA46.map_trace_files("*.ab1")
 
-    assert set(map_) == set(["28-1rev_D04_026.ab1", "32-3rev_H04_018.ab1", "36-5rev_D05_041.ab1"])
+    assert set(map_) == set(
+        ["28-1rev_D04_026.ab1", "32-3rev_H04_018.ab1", "36-5rev_D05_041.ab1"]
+    )
 
     assert set([x.fname for x in pCR_MCT1_HA46.matching_reads]) == set(
         ["28-1rev_D04_026.ab1", "32-3rev_H04_018.ab1", "36-5rev_D05_041.ab1"]
     )
 
-    assert set([x.fname for x in pCR_MCT1_HA46.not_matching_reads]) == set(["02-G1_B01_013.ab1"])
+    assert set([x.fname for x in pCR_MCT1_HA46.not_matching_reads]) == set(
+        ["02-G1_B01_013.ab1"]
+    )
 
-    assert pCR_MCT1_HA46.find_aa("YPYDVPDYA".replace(" ", "")) == slice(1088, 1115, None)
+    assert pCR_MCT1_HA46.find_aa("YPYDVPDYA".replace(" ", "")) == slice(
+        1088, 1115, None
+    )
 
-    assert pCR_MCT1_HA46.find_aa("VFFKE YPYDVPDYA IEG".replace(" ", "")) == slice(1073, 1124, None)
+    assert pCR_MCT1_HA46.find_aa("VFFKE YPYDVPDYA IEG".replace(" ", "")) == slice(
+        1073, 1124, None
+    )
 
     pCR_MCT1_HA46.add_feature(1073, 1124)
     mt = pCR_MCT1_HA46.features[-1]
     pCR_MCT1_HA46.map_target = mt
 
     map_ = pCR_MCT1_HA46.map_trace_files("*.ab1")
-    assert set(map_) == set(["28-1rev_D04_026.ab1", "32-3rev_H04_018.ab1", "36-5rev_D05_041.ab1"])
+    assert set(map_) == set(
+        ["28-1rev_D04_026.ab1", "32-3rev_H04_018.ab1", "36-5rev_D05_041.ab1"]
+    )
 
     pCR_MCT1_HA46.map_target = None
 
     map_ = pCR_MCT1_HA46.map_trace_files("*.ab1")
 
-    assert set(map_) == set(["32-3rev_H04_018.ab1", "36-5rev_D05_041.ab1", "28-1rev_D04_026.ab1"])
+    assert set(map_) == set(
+        ["32-3rev_H04_018.ab1", "36-5rev_D05_041.ab1", "28-1rev_D04_026.ab1"]
+    )
 
 
 def test_map_short():
@@ -1834,7 +1935,9 @@ def test___getitem__():
     # Test how slicing works with features (using sequence as in test_features_change_ori)
     seqRecord = Dseqrecord("aaagGTACCTTTGGATCcggg", circular=True)
     f1 = SeqFeature(SimpleLocation(4, 17, 1), type="misc_feature")
-    f2 = SeqFeature(SimpleLocation(17, 21, 1) + SimpleLocation(0, 4, 1), type="misc_feature")
+    f2 = SeqFeature(
+        SimpleLocation(17, 21, 1) + SimpleLocation(0, 4, 1), type="misc_feature"
+    )
     seqRecord.features = [f1, f2]
 
     # Exact feature sliced for normal and origin-spanning features
@@ -2197,7 +2300,9 @@ def test_assemble_YEp24PGK_XK():
 
     assert YEp24PGK_XK.seguid() == "cdseguid=Rszaoc76OKSdw6Q78zj2RZzmR0I"
 
-    YEp24PGK_XK = YEp24PGK_XK.synced("gaattctgaaccagtcctaaaacgagtaaataggaccggcaattc")  # YEp24PGK)
+    YEp24PGK_XK = YEp24PGK_XK.synced(
+        "gaattctgaaccagtcctaaaacgagtaaataggaccggcaattc"
+    )  # YEp24PGK)
 
     assert YEp24PGK_XK.seguid() == "cdseguid=Rszaoc76OKSdw6Q78zj2RZzmR0I"
 
@@ -2234,9 +2339,13 @@ def test_apply_cut():
                 new_locs = sorted(str(f.location) for f in open_seq.features)
                 assert str(open_seq.seq) == "ATGaattacgtATG"
                 if strand == 1:
-                    assert new_locs == sorted(["[0:3](+)", "[0:4](+)", "[11:14](+)", "[10:14](+)"])
+                    assert new_locs == sorted(
+                        ["[0:3](+)", "[0:4](+)", "[11:14](+)", "[10:14](+)"]
+                    )
                 elif strand == -1:
-                    assert new_locs == sorted(["[0:3](-)", "[0:4](-)", "[11:14](-)", "[10:14](-)"])
+                    assert new_locs == sorted(
+                        ["[0:3](-)", "[0:4](-)", "[11:14](-)", "[10:14](-)"]
+                    )
                 if strand is None:
                     assert new_locs == sorted(["[0:3]", "[0:4]", "[11:14]", "[10:14]"])
 
@@ -2268,9 +2377,13 @@ def test_apply_cut2():
                 new_locs = sorted(str(f.location) for f in open_seq.features)
                 assert str(open_seq.seq) == "ATGaattacgtATG"
                 if strand == 1:
-                    assert new_locs == sorted(["[0:3](+)", "[0:4](+)", "[11:14](+)", "[10:14](+)"])
+                    assert new_locs == sorted(
+                        ["[0:3](+)", "[0:4](+)", "[11:14](+)", "[10:14](+)"]
+                    )
                 elif strand == -1:
-                    assert new_locs == sorted(["[0:3](-)", "[0:4](-)", "[11:14](-)", "[10:14](-)"])
+                    assert new_locs == sorted(
+                        ["[0:3](-)", "[0:4](-)", "[11:14](-)", "[10:14](-)"]
+                    )
                 if strand is None:
                     assert new_locs == sorted(["[0:3]", "[0:4]", "[11:14]", "[10:14]"])
 
