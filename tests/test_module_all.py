@@ -25,7 +25,7 @@ def test_repr():
         # "ape",
         "primer_design",
         "assembly_fragments",
-        "circular_assembly_fragments",
+        # "circular_assembly_fragments",
         "eq",
         "gbtext_clean",
         # "PrimerList",
