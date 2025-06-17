@@ -30,7 +30,8 @@ import itertools as _itertools
 import re as _re
 import copy as _copy
 import operator as _operator
-import os as _os
+
+# import os as _os
 
 # import logging as _logging
 
@@ -527,9 +528,3 @@ tatcgactgtatcatctgatagcac")
     elif len(anneal_primers.products) == 0:
         raise ValueError(f"No PCR product! {anneal_primers.report()}")
     raise ValueError(f"PCR not specific! {format(anneal_primers.report())}")
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
