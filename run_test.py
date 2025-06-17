@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+
 # import os
 # import logging
 # import tempfile
@@ -46,7 +47,7 @@ def main():
         "--durations=10",
         # "--import-mode=importlib",
         "--nbval",
-        "--current-env",
+        "--nbval-current-env",
         "--doctest-modules",
         "--capture=no",
         "-vvv",
