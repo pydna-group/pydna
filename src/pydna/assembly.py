@@ -240,7 +240,9 @@ class Assembly(object):  # , metaclass=_Memoize):
             before = G.order()
             G.add_nodes_from(
                 (node, {"order": order + od, "length": length})
-                for od, (start, length, node) in enumerate(n for n in f["nodes"] if n[2] not in G)
+                for od, (start, length, node) in enumerate(
+                    n for n in f["nodes"] if n[2] not in G
+                )
             )
             order += G.order() - before
 
@@ -252,7 +254,8 @@ class Assembly(object):  # , metaclass=_Memoize):
                 feats = [
                     ft
                     for ft in f["features"]
-                    if start1 <= ft.location.start and start2 + G.nodes[node2]["length"] >= ft.location.end
+                    if start1 <= ft.location.start
+                    and start2 + G.nodes[node2]["length"] >= ft.location.end
                 ]
 
                 # for feat in feats:
@@ -268,7 +271,11 @@ class Assembly(object):  # , metaclass=_Memoize):
                 )  # string
 
         self.G = _nx.create_empty_copy(G)
-        self.G.add_edges_from(sorted(G.edges(data=True), key=lambda t: len(t[2].get("seq", 1)), reverse=True))
+        self.G.add_edges_from(
+            sorted(
+                G.edges(data=True), key=lambda t: len(t[2].get("seq", 1)), reverse=True
+            )
+        )
         self.nodemap = {**nodemap, **{nodemap[i]: i for i in nodemap}}
         self.limit = limit
         self.fragments = fragments
@@ -289,7 +296,11 @@ class Assembly(object):  # , metaclass=_Memoize):
                 "begin",
                 node,
                 piece=slice(0, start),
-                features=[f for f in firstfragment["features"] if start + length >= f.location.end],
+                features=[
+                    f
+                    for f in firstfragment["features"]
+                    if start + length >= f.location.end
+                ],
                 seq=firstfragment["mixed"],
                 name=firstfragment["name"],
             )
@@ -302,7 +313,11 @@ class Assembly(object):  # , metaclass=_Memoize):
                 "begin_rc",
                 node,
                 piece=slice(0, start),
-                features=[f for f in firstfragmentrc["features"] if start + length >= f.location.end],
+                features=[
+                    f
+                    for f in firstfragmentrc["features"]
+                    if start + length >= f.location.end
+                ],
                 seq=firstfragmentrc["mixed"],
                 name=firstfragmentrc["name"],
             )
@@ -314,7 +329,9 @@ class Assembly(object):  # , metaclass=_Memoize):
                 node,
                 "end",
                 piece=slice(start, len(lastfragment["mixed"])),
-                features=[f for f in lastfragment["features"] if start <= f.location.start],
+                features=[
+                    f for f in lastfragment["features"] if start <= f.location.start
+                ],
                 seq=lastfragment["mixed"],
                 name=lastfragment["name"],
             )
@@ -327,7 +344,9 @@ class Assembly(object):  # , metaclass=_Memoize):
                 node,
                 "end_rc",
                 piece=slice(start, len(lastfragmentrc["mixed"])),
-                features=[f for f in lastfragmentrc["features"] if start <= f.location.start],
+                features=[
+                    f for f in lastfragmentrc["features"] if start <= f.location.start
+                ],
                 seq=lastfragmentrc["mixed"],
                 name=lastfragmentrc["name"],
             )
@@ -337,9 +356,15 @@ class Assembly(object):  # , metaclass=_Memoize):
         linearpaths = list(
             _itertools.chain(
                 _nx.all_simple_paths(_nx.DiGraph(G), "begin", "end", cutoff=max_nodes),
-                _nx.all_simple_paths(_nx.DiGraph(G), "begin", "end_rc", cutoff=max_nodes),
-                _nx.all_simple_paths(_nx.DiGraph(G), "begin_rc", "end", cutoff=max_nodes),
-                _nx.all_simple_paths(_nx.DiGraph(G), "begin_rc", "end_rc", cutoff=max_nodes),
+                _nx.all_simple_paths(
+                    _nx.DiGraph(G), "begin", "end_rc", cutoff=max_nodes
+                ),
+                _nx.all_simple_paths(
+                    _nx.DiGraph(G), "begin_rc", "end", cutoff=max_nodes
+                ),
+                _nx.all_simple_paths(
+                    _nx.DiGraph(G), "begin_rc", "end_rc", cutoff=max_nodes
+                ),
             )
         )
 
@@ -413,7 +438,9 @@ class Assembly(object):  # , metaclass=_Memoize):
         for (
             _,
             cp,
-        ) in cpaths_sorted:  # cpaths is a list of nodes representing a circular assembly
+        ) in (
+            cpaths_sorted
+        ):  # cpaths is a list of nodes representing a circular assembly
             edgelol = []  # edgelol is a list of lists of all edges along cp
             cp += cp[0:1]
             for u, v in zip(cp, cp[1:]):
@@ -453,8 +480,12 @@ class Assembly(object):  # , metaclass=_Memoize):
                         elif f.location.end > len(ct):
                             f.location = _CompoundLocation(
                                 (
-                                    _SimpleLocation(f.location.start, _ExactPosition(len(ct))),
-                                    _SimpleLocation(_ExactPosition(0), f.location.end - len(ct)),
+                                    _SimpleLocation(
+                                        f.location.start, _ExactPosition(len(ct))
+                                    ),
+                                    _SimpleLocation(
+                                        _ExactPosition(0), f.location.end - len(ct)
+                                    ),
                                 )
                             )
 
@@ -490,7 +521,9 @@ class Assembly(object):  # , metaclass=_Memoize):
             "limit(bp)..: {limit}\n"
             "G.nodes....: {nodes}\n"
             "algorithm..: {al}".format(
-                sequences=" ".join("{}bp".format(len(x["mixed"])) for x in self.fragments),
+                sequences=" ".join(
+                    "{}bp".format(len(x["mixed"])) for x in self.fragments
+                ),
                 limit=self.limit,
                 nodes=self.G.order(),
                 al=self.algorithm.__name__,

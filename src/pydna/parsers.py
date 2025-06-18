@@ -40,7 +40,9 @@ except ImportError:
 
 # gb_fasta_embl_regex = r"(?:>.+\n^(?:^[^>]+?)(?=\n\n|>|LOCUS|ID))|(?:(?:LOCUS|ID)(?:(?:.|\n)+?)^//)"
 
-gb_fasta_embl_regex = r"(?:^>.+\n^(?:^[^>]+?)(?=\n\n|>|^LOCUS|^ID))|(?:(?:^LOCUS|^ID)(?:(?:.|\n)+?)^//)"
+gb_fasta_embl_regex = (
+    r"(?:^>.+\n^(?:^[^>]+?)(?=\n\n|>|^LOCUS|^ID))|(?:(?:^LOCUS|^ID)(?:(?:.|\n)+?)^//)"
+)
 
 # The gb_fasta_embl_regex is meant to be able to extract sequences from
 # text where sequences are mixed with other contents as well

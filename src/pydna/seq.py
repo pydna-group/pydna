@@ -44,7 +44,9 @@ class Seq(_Seq):
         **kwargs,
     ) -> "ProteinSeq":
         """Translate.."""
-        p = super().translate(*args, stop_symbol=stop_symbol, to_stop=to_stop, cds=cds, gap=gap, **kwargs)
+        p = super().translate(
+            *args, stop_symbol=stop_symbol, to_stop=to_stop, cds=cds, gap=gap, **kwargs
+        )
         return ProteinSeq(p._data)
 
     def gc(self) -> float:
@@ -79,10 +81,17 @@ class Seq(_Seq):
 
     def express(self, organism: str = "sce") -> _PrettyTable:
         """docstring."""
-        x = _PrettyTable(["cds", "len", "cai", "gc", "sta", "stp", "n-end"] + _rare_codons[organism] + ["rare"])
+        x = _PrettyTable(
+            ["cds", "len", "cai", "gc", "sta", "stp", "n-end"]
+            + _rare_codons[organism]
+            + ["rare"]
+        )
         val = []
 
-        val.append(f"{self._data.upper().decode('ASCII')[:3]}..." f"{self._data.upper().decode('ASCII')[-3:]}")
+        val.append(
+            f"{self._data.upper().decode('ASCII')[:3]}..."
+            f"{self._data.upper().decode('ASCII')[-3:]}"
+        )
         val.append(len(self) / 3)
         val.append(self.cai(organism))
         val.append(self.gc())
@@ -104,7 +113,9 @@ class Seq(_Seq):
 
     def orfs2(self, minsize: int = 30) -> _List[str]:
         """docstring."""
-        orf = _re.compile(f"ATG(?:...){{{minsize},}}?(?:TAG|TAA|TGA)", flags=_re.IGNORECASE)
+        orf = _re.compile(
+            f"ATG(?:...){{{minsize},}}?(?:TAG|TAA|TGA)", flags=_re.IGNORECASE
+        )
         start = 0
         matches: _List[slice] = []
         s = self._data.decode("ASCII")
@@ -204,7 +215,9 @@ class ProteinSeq(_Seq):
         ----------
         .. [#] http://wiki.christophchamp.com/index.php/SEGUID
         """
-        return _lsseguid(self._data.decode("utf8").upper(), alphabet="{protein-extended}")
+        return _lsseguid(
+            self._data.decode("utf8").upper(), alphabet="{protein-extended}"
+        )
 
     def __getitem__(self, key):
         result = super().__getitem__(key)

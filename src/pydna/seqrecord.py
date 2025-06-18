@@ -87,7 +87,9 @@ class SeqRecord(_SeqRecord):
             self.seq = _Seq(self.seq)
 
         self.seq._data = b"".join(self.seq._data.split())  # remove whitespaces
-        self.annotations = {_pretty_str(k): _pretty_str(v) for k, v in self.annotations.items()}
+        self.annotations = {
+            _pretty_str(k): _pretty_str(v) for k, v in self.annotations.items()
+        }
 
     @classmethod
     def from_Bio_SeqRecord(clc, sr: _SeqRecord):
@@ -109,7 +111,9 @@ class SeqRecord(_SeqRecord):
         if len(value) > 16:
             shortvalue = value[:16]
             _warn(
-                ("locus property {} truncated" "to 16 chars {}").format(value, shortvalue),
+                ("locus property {} truncated" "to 16 chars {}").format(
+                    value, shortvalue
+                ),
                 _PydnaWarning,
                 stacklevel=2,
             )
@@ -239,7 +243,9 @@ class SeqRecord(_SeqRecord):
             f.qualifiers["ApEinfo_fwdcolor"] = [cols[i % len(cols)]]
             f.qualifiers["ApEinfo_revcolor"] = [cols[::-1][i % len(cols)]]
 
-    def add_feature(self, x=None, y=None, seq=None, type_="misc", strand=1, *args, **kwargs):
+    def add_feature(
+        self, x=None, y=None, seq=None, type_="misc", strand=1, *args, **kwargs
+    ):
         """Add a feature of type misc to the feature list of the sequence.
 
         Parameters
@@ -327,7 +333,9 @@ class SeqRecord(_SeqRecord):
         |   0 | L:ft2         | --> | 2   | 4   |   2 | misc |  no  |
         +-----+---------------+-----+-----+-----+-----+------+------+
         """
-        x = _PrettyTable(["Ft#", "Label or Note", "Dir", "Sta", "End", "Len", "type", "orf?"])
+        x = _PrettyTable(
+            ["Ft#", "Label or Note", "Dir", "Sta", "End", "Len", "type", "orf?"]
+        )
         x.align["Ft#"] = "r"  # Left align
         x.align["Label or Note"] = "l"  # Left align
         x.align["Len"] = "r"
@@ -357,7 +365,8 @@ class SeqRecord(_SeqRecord):
                     len(sf),
                     sf.type,
                     {True: "yes", False: "no"}[
-                        self.extract_feature(i).isorf() or self.extract_feature(i).reverse_complement().isorf()
+                        self.extract_feature(i).isorf()
+                        or self.extract_feature(i).reverse_complement().isorf()
                     ],
                 ]
             )
@@ -480,7 +489,9 @@ class SeqRecord(_SeqRecord):
                 f"Stamp change.\nNew: {chksum}\nOld: {oldstamp[0]}",
                 _PydnaWarning,
             )
-        self.annotations["comment"] = (f"{oldcomment}\n" f"{tool} {chksum} {now()} {comment}").strip()
+        self.annotations["comment"] = (
+            f"{oldcomment}\n" f"{tool} {chksum} {now()} {comment}"
+        ).strip()
         return _pretty_str(chksum)
 
     def lcs(self, other, *args, limit=25, **kwargs):
