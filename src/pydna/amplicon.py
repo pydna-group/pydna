@@ -44,7 +44,15 @@ class Amplicon(_Dseqrecord):
 
     """
 
-    def __init__(self, record, *args, template=None, forward_primer=None, reverse_primer=None, **kwargs):
+    def __init__(
+        self,
+        record,
+        *args,
+        template=None,
+        forward_primer=None,
+        reverse_primer=None,
+        **kwargs,
+    ):
         super().__init__(record, *args)
         self.template = template
         self.forward_primer = forward_primer
@@ -84,7 +92,10 @@ class Amplicon(_Dseqrecord):
         r.template = self.template.rc()
         r.forward_primer = _copy.copy(self.reverse_primer)
         r.reverse_primer = _copy.copy(self.forward_primer)
-        r.forward_primer.position, r.reverse_primer.position = r.reverse_primer.position, r.forward_primer.position
+        r.forward_primer.position, r.reverse_primer.position = (
+            r.reverse_primer.position,
+            r.forward_primer.position,
+        )
         return r
 
     rc = reverse_complement
@@ -135,10 +146,14 @@ class Amplicon(_Dseqrecord):
         return _pretty_str(_textwrap.dedent(f).strip("\n"))
 
     def set_forward_primer_footprint(self, length):
-        self.forward_primer = _Primer(self.forward_primer.tail + self.seq[:length], footprint=length)
+        self.forward_primer = _Primer(
+            self.forward_primer.tail + self.seq[:length], footprint=length
+        )
 
     def set_reverse_primer_footprint(self, length):
-        self.reverse_primer = _Primer(self.reverse_primer.tail + self.seq[:length], footprint=length)
+        self.reverse_primer = _Primer(
+            self.reverse_primer.tail + self.seq[:length], footprint=length
+        )
 
     def program(self):
         return _program(self)

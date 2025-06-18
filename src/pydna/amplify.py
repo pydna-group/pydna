@@ -114,7 +114,9 @@ def _annealing_positions(primer, template, limit):
         results = []
         for match_start in positions:
             tm = template[match_start + limit : match_start + limit + length].lower()
-            footprint = len(list(_itertools.takewhile(lambda x: x[0] == x[1], zip(tail, tm))))
+            footprint = len(
+                list(_itertools.takewhile(lambda x: x[0] == x[1], zip(tail, tm)))
+            )
             results.append((match_start, footprint + limit))
         return results
     return []
@@ -345,11 +347,19 @@ class Anneal(object):  # ), metaclass=_Memoize):
             for rp in self.reverse_primers:
                 if self.template.circular:
                     shift = fp.position - fp._fp
-                    tpl = self.template.shifted(shift)  # shift template so that it starts where the fp starts anneling
-                    fp.position = fp._fp  # New position of fp becomes the footprint length
-                    rp.position = (rp.position - shift) % len(self.template)  # Shift the rp position as well
+                    tpl = self.template.shifted(
+                        shift
+                    )  # shift template so that it starts where the fp starts anneling
+                    fp.position = (
+                        fp._fp
+                    )  # New position of fp becomes the footprint length
+                    rp.position = (rp.position - shift) % len(
+                        self.template
+                    )  # Shift the rp position as well
                     feats = tpl[: rp.position + rp._fp].features
-                elif fp.position <= rp.position:  # pcr products only formed if fp anneals forward of rp
+                elif (
+                    fp.position <= rp.position
+                ):  # pcr products only formed if fp anneals forward of rp
                     feats = self.template[
                         fp.position - fp._fp : rp.position + rp._fp
                     ].features  # Save features covered by primers
@@ -363,10 +373,16 @@ class Anneal(object):  # ), metaclass=_Memoize):
                 if tpl.circular and fp.position == rp.position:
                     prd = _Dseqrecord(fp) + _Dseqrecord(rp).reverse_complement()
                 else:
-                    prd = _Dseqrecord(fp) + tpl[fp.position : rp.position] + _Dseqrecord(rp).reverse_complement()
+                    prd = (
+                        _Dseqrecord(fp)
+                        + tpl[fp.position : rp.position]
+                        + _Dseqrecord(rp).reverse_complement()
+                    )
                 prd.features = feats
                 full_tmpl_features = [
-                    f for f in self.template.features if f.location.start == 0 and f.location.end == len(self.template)
+                    f
+                    for f in self.template.features
+                    if f.location.start == 0 and f.location.end == len(self.template)
                 ]
                 new_identifier = ""
                 if full_tmpl_features:
@@ -385,10 +401,14 @@ class Anneal(object):  # ), metaclass=_Memoize):
                     or self.kwargs.get("name")
                     or f"{len(prd)}bp_PCR_prod"[:16]
                 )
-                prd.id = _identifier_from_string(new_identifier)[:16] or self.kwargs.get("id") or f"{len(prd)}bp"[:16]
-                prd.description = self.kwargs.get("description") or "pcr_product_{}_{}".format(
-                    fp.description, rp.description
+                prd.id = (
+                    _identifier_from_string(new_identifier)[:16]
+                    or self.kwargs.get("id")
+                    or f"{len(prd)}bp"[:16]
                 )
+                prd.description = self.kwargs.get(
+                    "description"
+                ) or "pcr_product_{}_{}".format(fp.description, rp.description)
 
                 amplicon = _Amplicon(
                     prd,
@@ -407,7 +427,9 @@ class Anneal(object):  # ), metaclass=_Memoize):
 
     def __repr__(self):
         """returns a short string representation"""
-        return "Reaction(products = {})".format(len(self.forward_primers * len(self.reverse_primers)))
+        return "Reaction(products = {})".format(
+            len(self.forward_primers * len(self.reverse_primers))
+        )
 
     def __str__(self):
         """returns a short report describing if or where primer
@@ -421,13 +443,17 @@ class Anneal(object):  # ), metaclass=_Memoize):
         )
         if self.forward_primers:
             for p in self.forward_primers:
-                mystring += "{name} anneals forward (--->) at {pos}\n".format(name=p.name, pos=p.position)
+                mystring += "{name} anneals forward (--->) at {pos}\n".format(
+                    name=p.name, pos=p.position
+                )
         else:
             mystring += "No forward primers anneal...\n"
         # mystring +="\n"
         if self.reverse_primers:
             for p in self.reverse_primers:
-                mystring += "{name} anneals reverse (<---) at {pos}\n".format(name=p.name, pos=p.position)
+                mystring += "{name} anneals reverse (<---) at {pos}\n".format(
+                    name=p.name, pos=p.position
+                )
         else:
             mystring += "No reverse primers anneal...\n"
         return _pretty_str(mystring.strip())
@@ -510,7 +536,8 @@ tatcgactgtatcatctgatagcac")
             pass
         else:
             raise TypeError(
-                "arguments need to be a string, Bio.Seq, SeqRecord" ", Primer, Dseqrecord or Amplicon object"
+                "arguments need to be a string, Bio.Seq, SeqRecord"
+                ", Primer, Dseqrecord or Amplicon object"
             )
         new.append(s)
 

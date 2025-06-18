@@ -73,7 +73,9 @@ def three_frame_orfs(
                 pass
             else:
                 if stopindex - startindex >= limit:
-                    orfs.append((frame, startindex * 3 + frame, (stopindex + 1) * 3 + frame))
+                    orfs.append(
+                        (frame, startindex * 3 + frame, (stopindex + 1) * 3 + frame)
+                    )
                 # print(stopindex, startindex, limit)
     return orfs
 
@@ -84,13 +86,17 @@ def shift_location(original_location, shift, lim):
     strand = original_location.strand
     if lim is None:
         if min(original_location) + shift < 0:
-            raise ValueError("Shift moves location below zero, use a `lim` to loop around if sequence is circular.")
+            raise ValueError(
+                "Shift moves location below zero, use a `lim` to loop around if sequence is circular."
+            )
         lim = _sys.maxsize
 
     for part in original_location.parts:
         new_start = (part.start + shift) % lim
         new_end = (part.end + shift) % lim or lim
-        old_start, old_end = (newparts[-1].start, newparts[-1].end) if len(newparts) else (None, None)
+        old_start, old_end = (
+            (newparts[-1].start, newparts[-1].end) if len(newparts) else (None, None)
+        )
 
         # The "join with old" cases are for features with multiple parts
         # in which consecutive parts do not have any bases between them.
@@ -507,7 +513,11 @@ def randomORF(length, maxlength=None):
     starts = ("ATG",)
     stops = ("TAA", "TAG", "TGA")
 
-    return random.choice(starts) + "".join([random.choice(cdns) for x in range(length)]) + random.choice(stops)
+    return (
+        random.choice(starts)
+        + "".join([random.choice(cdns) for x in range(length)])
+        + random.choice(stops)
+    )
 
 
 def randomprot(length, maxlength=None):
@@ -616,7 +626,9 @@ def eq(*args, **kwargs):
         if kwargs["circular"] is False:
             topology = "linear"
     else:
-        topology = set([arg.circular if hasattr(arg, "circular") else None for arg in args])
+        topology = set(
+            [arg.circular if hasattr(arg, "circular") else None for arg in args]
+        )
 
         if len(topology) != 1:
             raise ValueError("sequences have different topologies")
@@ -627,7 +639,10 @@ def eq(*args, **kwargs):
             topology = "circular"
 
     args = [arg.seq if hasattr(arg, "seq") else arg for arg in args]
-    args_string_list = [arg.watson.lower() if hasattr(arg, "watson") else str(arg).lower() for arg in args]
+    args_string_list = [
+        arg.watson.lower() if hasattr(arg, "watson") else str(arg).lower()
+        for arg in args
+    ]
 
     length = set((len(s) for s in args_string_list))
 

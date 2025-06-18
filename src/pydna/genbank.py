@@ -54,7 +54,9 @@ class Genbank:
         *,
         tool: str = "pydna",
     ) -> None:
-        if not _re.match(r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}", users_email, _re.IGNORECASE):
+        if not _re.match(
+            r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}", users_email, _re.IGNORECASE
+        ):
             raise ValueError("email address {} is not valid.".format(users_email))
 
         # _module_logger.info("#### Genbank ititiation ####")
@@ -62,7 +64,9 @@ class Genbank:
         # _module_logger.info("Genbank initiated with tool : %s", tool)
 
         if users_email == "someone@example.com":
-            raise ValueError("you have to set your email address in order to download from Genbank")
+            raise ValueError(
+                "you have to set your email address in order to download from Genbank"
+            )
         self.email = users_email
         self.tool = tool
 
@@ -128,7 +132,9 @@ class Genbank:
             (1, _re.search(r"(REGION:\s(?P<start>\d+)\.\.(?P<stop>\d+))", item)),
             (
                 2,
-                _re.search(r"(REGION: complement\((?P<start>\d+)\.\.(?P<stop>\d+)\))", item),
+                _re.search(
+                    r"(REGION: complement\((?P<start>\d+)\.\.(?P<stop>\d+)\))", item
+                ),
             ),
             (1, _re.search(r"(:|\s)(?P<start>\d+)-(?P<stop>\d+)", item)),
             (2, _re.search(r"(:|\s)c(?P<start>\d+)-(?P<stop>\d+)", item)),
@@ -144,7 +150,9 @@ class Genbank:
 
         if strand not in [1, 2]:
             try:
-                strand = {"c": 2, "crick": 2, "antisense": 2, "2": 2, "-": 2, "-1": 2}[strand.lower()]
+                strand = {"c": 2, "crick": 2, "antisense": 2, "2": 2, "-": 2, "-1": 2}[
+                    strand.lower()
+                ]
             except (KeyError, AttributeError):
                 strand = 1
 
@@ -171,7 +179,9 @@ class Genbank:
 
         # _module_logger.info("text[:160]  %s", text[:160])
 
-        return _GenbankRecord(_read(text), item=item, start=seq_start, stop=seq_stop, strand=strand)
+        return _GenbankRecord(
+            _read(text), item=item, start=seq_start, stop=seq_stop, strand=strand
+        )
 
 
 def genbank(accession: str = "CS570233.1", *args, **kwargs) -> _GenbankRecord:

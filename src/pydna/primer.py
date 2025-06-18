@@ -14,7 +14,9 @@ from pydna.seqrecord import SeqRecord as _SeqRecord
 class Primer(_SeqRecord):
     """Primer and its position on a template, footprint and tail."""
 
-    def __init__(self, record, *args, amplicon=None, position=None, footprint=0, **kwargs):
+    def __init__(
+        self, record, *args, amplicon=None, position=None, footprint=0, **kwargs
+    ):
         if hasattr(record, "features"):  # Seqrecord
             self.__dict__.update(record.__dict__)
             self.__dict__.update(kwargs)

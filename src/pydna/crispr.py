@@ -111,10 +111,16 @@ def protospacer(guide_construct, cas=cas9):
     """docstring."""
     in_watson = [
         mobj.group("ps")
-        for mobj in re.finditer(f"(?P<ps>.{{{cas.size}}})(?:{cas.scaffold})", str(guide_construct.seq).upper())
+        for mobj in re.finditer(
+            f"(?P<ps>.{{{cas.size}}})(?:{cas.scaffold})",
+            str(guide_construct.seq).upper(),
+        )
     ]
     in_crick = [
         rc(mobj.group("ps"))
-        for mobj in re.finditer(f"(?:{rc(cas.scaffold)})(?P<ps>.{{{cas.size}}})", str(guide_construct.seq).upper())
+        for mobj in re.finditer(
+            f"(?:{rc(cas.scaffold)})(?P<ps>.{{{cas.size}}})",
+            str(guide_construct.seq).upper(),
+        )
     ]
     return in_watson + in_crick

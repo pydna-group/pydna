@@ -33,7 +33,11 @@ from typing import Tuple
 
 
 def _design_primer(
-    target_tm: float, template: _Dseqrecord, limit: int, tm_func, starting_length: int = 0
+    target_tm: float,
+    template: _Dseqrecord,
+    limit: int,
+    tm_func,
+    starting_length: int = 0,
 ) -> Tuple[float, str]:
     """returns a tuple (temp, primer)"""
 
@@ -73,7 +77,14 @@ def _design_primer(
 
 
 def primer_design(
-    template, fp=None, rp=None, limit=13, target_tm=55.0, tm_func=_tm_default, estimate_function=None, **kwargs
+    template,
+    fp=None,
+    rp=None,
+    limit=13,
+    target_tm=55.0,
+    tm_func=_tm_default,
+    estimate_function=None,
+    **kwargs,
 ):
     """This function designs a forward primer and a reverse primer for PCR amplification
     of a given template sequence.
@@ -233,7 +244,9 @@ def primer_design(
         import warnings as _warnings
         from pydna import _PydnaWarning
 
-        _warnings.warn("designed primers do not yield a unique PCR product", _PydnaWarning)
+        _warnings.warn(
+            "designed primers do not yield a unique PCR product", _PydnaWarning
+        )
 
     return prod
 
@@ -628,16 +641,25 @@ def assembly_fragments(f, overlap=35, maxlink=40, circular=False):
 
     # Recursive call for circular assemblies
     if circular:
-        fragments = assembly_fragments(f + f[0:1], overlap=overlap, maxlink=maxlink, circular=False)
+        fragments = assembly_fragments(
+            f + f[0:1], overlap=overlap, maxlink=maxlink, circular=False
+        )
 
         if hasattr(fragments[0], "template"):
-            fragments[0] = _pcr((fragments[-1].forward_primer, fragments[0].reverse_primer), fragments[0].template)
+            fragments[0] = _pcr(
+                (fragments[-1].forward_primer, fragments[0].reverse_primer),
+                fragments[0].template,
+            )
         return fragments[:-1]
 
     # sanity check for arguments
     nf = [item for item in f if len(item) > maxlink]
-    if not all(hasattr(i[0], "template") or hasattr(i[1], "template") for i in zip(nf, nf[1:])):
-        raise ValueError("Every second fragment larger than maxlink has to be an Amplicon object")
+    if not all(
+        hasattr(i[0], "template") or hasattr(i[1], "template") for i in zip(nf, nf[1:])
+    ):
+        raise ValueError(
+            "Every second fragment larger than maxlink has to be an Amplicon object"
+        )
 
     # _module_logger.debug("### assembly fragments ###")
     # _module_logger.debug("overlap     = %s", overlap)
@@ -657,7 +679,9 @@ def assembly_fragments(f, overlap=35, maxlink=40, circular=False):
     # _module_logger.debug("first fragment stays since len(f[0]) = %s", first_fragment_length)
 
     if last_fragment_length <= maxlink:
-        f[-2].reverse_primer = f[-1].seq.reverse_complement()._data.decode("ASCII") + f[-2].reverse_primer
+        f[-2].reverse_primer = (
+            f[-1].seq.reverse_complement()._data.decode("ASCII") + f[-2].reverse_primer
+        )
         f = f[:-1]
     # _module_logger.debug("last fragment removed since len(f[%s]) = %s", len(f), last_fragment_length)
     # else:
@@ -689,29 +713,43 @@ def assembly_fragments(f, overlap=35, maxlink=40, circular=False):
                 # )
 
                 first.reverse_primer = (
-                    secnd.seq.reverse_complement()._data.decode("ASCII")[secnd_len // 2 :] + first.reverse_primer
+                    secnd.seq.reverse_complement()._data.decode("ASCII")[
+                        secnd_len // 2 :
+                    ]
+                    + first.reverse_primer
                 )
-                third.forward_primer = secnd.seq._data.decode("ASCII")[secnd_len // 2 :] + third.forward_primer
+                third.forward_primer = (
+                    secnd.seq._data.decode("ASCII")[secnd_len // 2 :]
+                    + third.forward_primer
+                )
 
                 lnk = (
                     third.seq.reverse_complement()._data.decode("ASCII")
-                    + secnd.reverse_complement().seq._data.decode("ASCII")[: secnd_len // 2]
+                    + secnd.reverse_complement().seq._data.decode("ASCII")[
+                        : secnd_len // 2
+                    ]
                 )[-tail_length:]
                 # _module_logger.debug("1 %s", lnk)
                 first.reverse_primer = lnk + first.reverse_primer
 
-                lnk = (first.seq._data.decode("ASCII") + secnd.seq._data.decode("ASCII")[: secnd_len // 2])[
-                    -tail_length:
-                ]
+                lnk = (
+                    first.seq._data.decode("ASCII")
+                    + secnd.seq._data.decode("ASCII")[: secnd_len // 2]
+                )[-tail_length:]
                 # _module_logger.debug("2 %s", lnk)
                 third.forward_primer = lnk + third.forward_primer
 
             elif hasattr(first, "template"):
-                first.reverse_primer = secnd.seq.reverse_complement()._data.decode("ASCII") + first.reverse_primer
+                first.reverse_primer = (
+                    secnd.seq.reverse_complement()._data.decode("ASCII")
+                    + first.reverse_primer
+                )
                 lnk = str(third.seq[:overlap].reverse_complement())
                 first.reverse_primer = lnk + first.reverse_primer
             elif hasattr(third, "template"):
-                third.forward_primer = secnd.seq._data.decode("ASCII") + third.forward_primer
+                third.forward_primer = (
+                    secnd.seq._data.decode("ASCII") + third.forward_primer
+                )
                 lnk = str(first.seq[-overlap:])
                 third.forward_primer = lnk + third.forward_primer
             secnd = empty

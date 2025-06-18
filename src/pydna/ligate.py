@@ -52,7 +52,11 @@ def ligate(fragments: list):
 
     cpaths = [p for p in sorted(_nx.simple_cycles(G), key=len) if len(p) > 1]
     csequences = [reduce(add, x).looped() for x in cpaths]
-    lpaths = [p for p in sorted(_nx.all_simple_paths(G, "begin", "end"), key=len) if len(p) > 3]
+    lpaths = [
+        p
+        for p in sorted(_nx.all_simple_paths(G, "begin", "end"), key=len)
+        if len(p) > 3
+    ]
     lsequences = [reduce(add, lp[1:-1]) for lp in lpaths]
 
     return csequences, lsequences
