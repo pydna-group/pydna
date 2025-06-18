@@ -10,7 +10,7 @@ import regex
 import copy
 from typing import Callable
 
-from .utils import (
+from pydna.utils import (
     shift_location as _shift_location,
     flatten,
     location_boundaries as _location_boundaries,
@@ -19,13 +19,13 @@ from .utils import (
     limit_iterator,
     create_location,
 )
-from ._pretty import pretty_str as _pretty_str
-from .common_sub_strings import common_sub_strings as common_sub_strings_str
-from .dseqrecord import Dseqrecord as _Dseqrecord
-from .dseq import Dseq as _Dseq
-from .primer import Primer as _Primer
-from .seqrecord import SeqRecord as _SeqRecord
-from .types import CutSiteType
+from pydna._pretty import pretty_str as _pretty_str
+from pydna.common_sub_strings import common_sub_strings as common_sub_strings_str
+from pydna.dseqrecord import Dseqrecord as _Dseqrecord
+from pydna.dseq import Dseq as _Dseq
+from pydna.primer import Primer as _Primer
+from pydna.seqrecord import SeqRecord as _SeqRecord
+from pydna.types import CutSiteType
 
 # Type alias that describes overlap between two sequences x and y
 # the two first numbers are the positions where the overlap starts on x and y
@@ -75,11 +75,12 @@ def ends_from_cutsite(cutsite: CutSiteType, seq: _Dseq) -> tuple[tuple[str, str]
         tuple[tuple[str, str], tuple[str, str]]: A tuple of two tuples, each containing the type of end ('5\'', '3\'', or 'blunt')
         and the sequence of the overhang. The first tuple is for the left end, second for the right end.
 
-    >>> x = Dseq("ctcgGCGGCCGCcagcggccg")
+    >>> from Bio.Restriction import NotI
+    >>> x = _Dseq("ctcgGCGGCCGCcagcggccg")
     >>> x.get_cutsites(NotI)
     [((6, -4), NotI)]
     >>> ends_from_cutsite(x.get_cutsites(NotI)[0], x)
-    (('5\'', 'ggcc'), ('5\'', 'ggcc'))
+    (("5'", 'ggcc'), ("5'", 'ggcc'))
     """
 
     if cutsite is None:
@@ -212,6 +213,7 @@ def blunt_overlap(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=None) -> list[Sequ
         list[SequenceOverlap]: A list of overlaps between the two sequences
 
     >>> from pydna.assembly2 import blunt_overlap
+    >>> from pydna.dseqrecord import Dseqrecord
     >>> x = Dseqrecord("AAAAAA")
     >>> y = Dseqrecord("TTTTTT")
     >>> blunt_overlap(x, y)
@@ -227,6 +229,7 @@ def common_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=25) -> list[S
     Assembly algorithm to find common substrings of length == limit. see the docs of
     the function common_sub_strings_str for more details. It is case insensitive.
 
+    >>> from pydna.dseqrecord import Dseqrecord
     >>> x = Dseqrecord("TAAAAAAT")
     >>> y = Dseqrecord("CCaAaAaACC")
     >>> common_sub_strings(x, y, limit=5)
@@ -360,6 +363,7 @@ def sticky_end_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=0):
     Ligation of fully overlapping sticky ends, note how the order matters
 
     >>> from pydna.dseq import Dseq
+    >>> from pydna.dseqrecord import Dseqrecord
     >>> from pydna.assembly2 import sticky_end_sub_strings
     >>> x = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAAAA", 0, 3))
     >>> y = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAAAA", 3, 0))
@@ -376,6 +380,7 @@ def sticky_end_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=0):
     []
     >>> sticky_end_sub_strings(x, y, limit=True)
     [(4, 0, 2)]
+
     """
     overlap = sum_is_sticky(seqx.seq.three_prime_end(), seqy.seq.five_prime_end(), limit)
     if overlap:
@@ -401,7 +406,7 @@ def zip_match_leftwards(seqx: _SeqRecord, seqy: _SeqRecord, match: SequenceOverl
     >>> primer = _Dseqrecord('ACGTCCCGT')
     >>> match = (6, 9, 0)
     >>> zip_match_leftwards(seq, primer, match)
-    >>> (10, 0, 9)
+    (10, 0, 9)
 
     """
 
