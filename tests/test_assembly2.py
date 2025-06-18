@@ -15,7 +15,12 @@ from Bio.Seq import reverse_complement
 from pydna.primer import Primer
 import os
 
-test_files = os.path.join(os.path.dirname(__file__), "test_files")
+test_files = os.path.join(os.path.dirname(__file__))
+
+
+def dseqrecord_list_to_dseq_list(dseqrecord_list):
+    """Utility function for tests, to convert records to sequences and check equality."""
+    return [i.seq for i in dseqrecord_list]
 
 
 example_fragments = (
@@ -1146,7 +1151,9 @@ def test_restriction_ligation_assembly():
 
         f = assembly.Assembly([a, b], algorithm=algo, use_fragment_order=False)
 
-        assert sorted(products) == sorted(f.assemble_linear(only_adjacent_edges=True))
+        assert sorted(dseqrecord_list_to_dseq_list(products)) == sorted(
+            dseqrecord_list_to_dseq_list(f.assemble_linear(only_adjacent_edges=True))
+        )
 
     # Insertion in a vector
     f1 = Dseqrecord("GAATTCaaaGAATTC")
@@ -1535,14 +1542,14 @@ def test_assemble_function():
     assembly_plan = [
         (1, 2, loc_end, loc_start),
     ]
-    assert fragments[0] + fragments[1] == assembly.assemble(fragments, assembly_plan)
+    assert (fragments[0] + fragments[1]).seq == assembly.assemble(fragments, assembly_plan).seq
 
     # A circular assembly
     assembly_plan = [
         (1, 2, loc_end, loc_start),
         (2, 1, loc_end, loc_start),
     ]
-    assert (fragments[0] + fragments[1]).looped() == assembly.assemble(fragments, assembly_plan)
+    assert (fragments[0] + fragments[1]).looped().seq == assembly.assemble(fragments, assembly_plan).seq
 
 
 def test_assembly_is_valid():
@@ -1774,8 +1781,8 @@ def test_ligation_assembly():
         use_all_fragments=True,
         use_fragment_order=False,
     )
-    assert sorted(asm.assemble_circular(), key=lambda x: str(x.seq)) == sorted(
-        expected_result, key=lambda x: str(x.seq)
+    assert sorted(dseqrecord_list_to_dseq_list(asm.assemble_circular())) == sorted(
+        dseqrecord_list_to_dseq_list(expected_result)
     )
 
     # Partial ligation
@@ -1821,7 +1828,7 @@ def test_blunt_assembly():
 
     asm = assembly.Assembly([a, b], algorithm=assembly.blunt_overlap, use_all_fragments=True, use_fragment_order=False)
 
-    assert asm.assemble_linear() == [b + a]
+    assert dseqrecord_list_to_dseq_list(asm.assemble_linear()) == [(b + a).seq]
     assert asm.assemble_circular() == []
 
     # Circular assembly
@@ -1830,8 +1837,12 @@ def test_blunt_assembly():
 
     asm = assembly.Assembly([a, b], algorithm=assembly.blunt_overlap, use_all_fragments=True, use_fragment_order=False)
 
-    assert asm.assemble_linear() == [a + b, a + b.reverse_complement(), b + a, a.reverse_complement() + b]
-    assert asm.assemble_circular() == [(a + b).looped(), (a + b.reverse_complement()).looped()]
+    assert dseqrecord_list_to_dseq_list(asm.assemble_linear()) == dseqrecord_list_to_dseq_list(
+        [a + b, a + b.reverse_complement(), b + a, a.reverse_complement() + b]
+    )
+    assert dseqrecord_list_to_dseq_list(asm.assemble_circular()) == dseqrecord_list_to_dseq_list(
+        [(a + b).looped(), (a + b.reverse_complement()).looped()]
+    )
 
     # Circularisation
     asm = assembly.SingleFragmentAssembly([Dseqrecord("AATT")], algorithm=assembly.blunt_overlap)
