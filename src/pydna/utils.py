@@ -31,6 +31,7 @@ from pydna.codon import rare_codons as _rare_codons
 
 from Bio.SeqFeature import SimpleLocation as _sl
 from Bio.SeqFeature import CompoundLocation as _cl
+from Bio.SeqFeature import Location as _Location
 
 from typing import Union as _Union, TypeVar as _TypeVar, List as _List
 
@@ -771,6 +772,64 @@ def limit_iterator(iterator, limit):
         if i >= limit:
             raise ValueError(f"Too many possible paths (more than {limit})")
         yield x
+
+
+def create_location(start: int, end: int, lim: int, strand: int | None = None) -> _Location:
+    """
+    Create a location object from a start and end position.
+    If the end position is less than the start position, the location is circular. It handles negative positions.
+
+    Parameters
+    ----------
+    start : int
+        The start position of the location.
+    end : int
+        The end position of the location.
+    lim : int
+        The length of the sequence.
+    strand : int, optional
+        The strand of the location. None, 1 or -1.
+
+    Returns
+    -------
+    location : Location
+        The location object. Can be a SimpleLocation or a CompoundLocation if the feature spans the origin of
+        a circular sequence.
+
+    Examples
+    --------
+    >>> from pydna.utils import create_location
+    >>> str(create_location(0, 5, 10,-1))
+    '[0:5](-)'
+    >>> str(create_location(0, 5, 10,+1))
+    '[0:5](+)'
+    >>> str(create_location(0, 5, 10))
+    '[0:5]'
+    >>> str(create_location(8, 2, 10))
+    'join{[8:10], [0:2]}'
+    >>> str(create_location(8, 2, 10,-1))
+    'join{[0:2](-), [8:10](-)}'
+    >>> str(create_location(-2, 2, 10))
+    'join{[8:10], [0:2]}'
+
+    Note this special case, 0 is the same as len(seq)
+    >>> str(create_location(5, 0, 10))
+    '[5:10]'
+
+    Note the special case where if start and end are the same,
+    the location spans the entire sequence (it's not empty).
+    >>> str(create_location(5, 5, 10))
+    'join{[5:10], [0:5]}'
+
+    """
+    while start < 0:
+        start += lim
+    while end < 0:
+        end += lim
+    if end > start:
+        return _sl(start, end, strand)
+    else:
+        return shift_location(_sl(start, end + lim, strand), 0, lim)
 
 
 if __name__ == "__main__":

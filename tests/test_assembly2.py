@@ -2059,3 +2059,36 @@ def test_single_fragment_assembly_error():
 
     assert len(f.assemble_insertion()) == 0
     assert len(f.assemble_circular()) == 1
+
+
+def test_insertion_edge_case():
+    a = Dseqrecord("cccgaggggaatcgaa")
+    b = Dseqrecord("Acccgagggggaatc")
+
+    asm = assembly.Assembly([a, b], limit=5, use_all_fragments=True, use_fragment_order=False)
+
+    product_seqs = set(str(prod.seq) for prod in asm.assemble_insertion())
+    expected_seqs = {"cccgagggggaatcgaa", "Acccgaggggaatc"}
+    assert product_seqs == expected_seqs
+
+    b_circ = b.looped()
+
+    for shift in range(len(b_circ)):
+        b_shifted = b_circ.shifted(shift)
+        asm = assembly.Assembly([a, b_shifted], limit=5, use_all_fragments=True, use_fragment_order=False)
+
+        product_seqs = [str(prod.seq) for prod in asm.assemble_insertion()]
+        assert len(product_seqs) == 4
+        assert "cccgagggggaatcgaa" in product_seqs
+
+
+def test_common_sub_strings():
+
+    a = Dseqrecord("012345", circular=True)
+    for shift_1 in range(len(a)):
+        a_shifted = a.shifted(shift_1)
+        for shift_2 in range(len(a)):
+            a_shifted_2 = a.shifted(shift_2)
+            result = assembly.common_sub_strings(a_shifted, a_shifted_2, 3)
+            assert len(result) == 1
+            assert result[0][2] == 6

@@ -17,6 +17,7 @@ from .utils import (
     locations_overlap as _locations_overlap,
     sum_is_sticky,
     limit_iterator,
+    create_location,
 )
 from ._pretty import pretty_str as _pretty_str
 from .common_sub_strings import common_sub_strings as common_sub_strings_str
@@ -231,7 +232,55 @@ def common_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=25) -> list[S
     >>> common_sub_strings(x, y, limit=5)
     [(1, 2, 6), (1, 3, 5), (2, 2, 5)]
     """
-    return common_sub_strings_str(str(seqx.seq).upper(), str(seqy.seq).upper(), limit)
+    query_seqx = str(seqx.seq).upper()
+    query_seqy = str(seqy.seq).upper()
+    if seqx.circular:
+        query_seqx = query_seqx * 2
+    if seqy.circular:
+        query_seqy = query_seqy * 2
+    results = common_sub_strings_str(query_seqx, query_seqy, limit)
+
+    if not seqx.circular and not seqy.circular:
+        return results
+
+    # Remove matches that start on the second copy of the sequence
+    if seqx.circular:
+        results = [r for r in results if r[0] < len(seqx)]
+    if seqy.circular:
+        results = [r for r in results if r[1] < len(seqy)]
+
+    # Trim lengths that span more than the sequence
+    if seqx.circular or seqy.circular:
+        max_match_length = min(len(seqx), len(seqy))
+        results = [(r[0], r[1], min(r[2], max_match_length)) for r in results]
+
+    # Edge case where the sequences are identical
+    if len(seqx.seq) == len(seqy.seq):
+        full_match = next((r for r in results if r[2] == len(seqx.seq)), None)
+        if full_match is not None:
+            return [full_match]
+
+    # Remove duplicate matches, see example below
+    # Let's imagine the following two sequences, where either seqy or both are circular
+    # seqx: 01234
+    # seqy: 123450, circular
+    #
+    # common_sub_strings would return [(0, 5, 5), (1, 0, 4)]
+    # Actually, (1, 0, 4) is a subset of (0, 5, 5), the part
+    # that does not span the origin. To remove matches like this,
+    # We find matches where the origin is spanned in one of the sequences
+    # only, and then remove the subset of that match that does not span the origin.
+    shifted_matches = set()
+    for x, y, length in results:
+        x_span_origin = seqx.circular and x + length > len(seqx)
+        y_span_origin = seqy.circular and y + length > len(seqy)
+        if x_span_origin and not y_span_origin:
+            shift = len(seqx) - x
+            shifted_matches.add((0, y + shift, length - shift))
+        elif not x_span_origin and y_span_origin:
+            shift = len(seqy) - y
+            shifted_matches.add((x + shift, 0, length - shift))
+    return [r for r in results if r not in shifted_matches]
 
 
 def gibson_overlap(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=25):
@@ -1211,16 +1260,25 @@ class Assembly:
         edge_pair_index = list()
 
         # Pair edges with one another
-        for i, ((_u1, v1, _, start_location), (_u2, _v2, end_location, _)) in enumerate(
+        for i, ((_u1, v1, _, end_location), (_u2, _v2, start_location, _)) in enumerate(
             zip(assembly, assembly[1:] + assembly[:1])
         ):
             fragment = self.fragments[abs(v1) - 1]
             # Find the pair of edges that should be last and first  ((3, 1, [8:10], [9:11)]), (1, 2, [4:6], [0:2]) in
             # the example above. Only one of the pairs of edges should satisfy this condition for the topology to make sense.
-            right_of_insertion = _location_boundaries(start_location)[0]
-            left_of_insertion = _location_boundaries(end_location)[0]
+            left_of_insertion = _location_boundaries(start_location)[0]
+            right_of_insertion = _location_boundaries(end_location)[0]
             if not fragment.circular and (
-                right_of_insertion > left_of_insertion
+                right_of_insertion >= left_of_insertion
+                # The below condition is for single-site integration.
+                # The reason to use locations_overlap instead of equality is because the location might extend
+                # left of right. For example, let's take ACCGGTTT as homology arm for an integration:
+                #
+                # insert aaACCGGTTTccACCGGTTTtt
+                # genome aaACCGGTTTtt
+                #
+                # The locations of homology on the genome are [0:10] and [2:12], so not identical
+                # but they overlap.
                 or _locations_overlap(start_location, end_location, len(fragment))
             ):
                 edge_pair_index.append(i)
@@ -1230,6 +1288,68 @@ class Assembly:
 
         shift_by = (edge_pair_index[0] + 1) % len(assembly)
         return assembly[shift_by:] + assembly[:shift_by]
+
+    def format_insertion_assembly_edge_case(self, assembly):
+        """
+        Edge case from https://github.com/manulera/OpenCloning_backend/issues/329
+        """
+        same_assembly = assembly[:]
+
+        if len(assembly) != 2:
+            return same_assembly
+        ((f1, f2, loc_f1_1, loc_f2_1), (_f2, _f1, loc_f2_2, loc_f1_2)) = assembly
+
+        if f1 != _f1 or _f2 != f2:
+            return same_assembly
+
+        if loc_f2_1 == loc_f2_2 or loc_f1_2 == loc_f1_1:
+            return same_assembly
+
+        fragment1 = self.fragments[abs(f1) - 1]
+        fragment2 = self.fragments[abs(f2) - 1]
+
+        if not _locations_overlap(loc_f1_1, loc_f1_2, len(fragment1)) or not _locations_overlap(
+            loc_f2_2, loc_f2_1, len(fragment2)
+        ):
+            return same_assembly
+
+        # Sort to make compatible with insertion assembly
+        if _location_boundaries(loc_f1_1)[0] > _location_boundaries(loc_f1_2)[0]:
+            new_assembly = same_assembly[::-1]
+        else:
+            new_assembly = same_assembly[:]
+
+        ((f1, f2, loc_f1_1, loc_f2_1), (_f2, _f1, loc_f2_2, loc_f1_2)) = new_assembly
+
+        fragment1 = self.fragments[abs(f1) - 1]
+        if fragment1.circular:
+            return same_assembly
+        fragment2 = self.fragments[abs(f2) - 1]
+
+        # Extract boundaries
+        f2_1_start, _ = _location_boundaries(loc_f2_1)
+        f2_2_start, f2_2_end = _location_boundaries(loc_f2_2)
+        f1_1_start, _ = _location_boundaries(loc_f1_1)
+        f1_2_start, f1_2_end = _location_boundaries(loc_f1_2)
+
+        overlap_diff = len(fragment1[f1_1_start:f1_2_end]) - len(fragment2[f2_1_start:f2_2_end])
+
+        if overlap_diff == 0:
+            assert False, "Overlap is 0"
+
+        if overlap_diff > 0:
+            new_loc_f1_1 = create_location(f1_1_start, f1_2_start - overlap_diff, len(fragment1))
+            new_loc_f2_1 = create_location(f2_1_start, f2_2_start, len(fragment2))
+        else:
+            new_loc_f2_1 = create_location(f2_1_start, f2_2_start + overlap_diff, len(fragment2))
+            new_loc_f1_1 = create_location(f1_1_start, f1_2_start, len(fragment1))
+
+        new_assembly = [
+            (f1, f2, new_loc_f1_1, new_loc_f2_1),
+            new_assembly[1],
+        ]
+
+        return new_assembly
 
     def get_insertion_assemblies(self, only_adjacent_edges: bool = False, max_assemblies: int = 50):
         """Assemblies that represent the insertion of a fragment or series of fragment inside a linear construct. For instance,
@@ -1256,8 +1376,9 @@ class Assembly:
 
         # We find cycles first
         iterator = limit_iterator(_nx.cycles.simple_cycles(self.G), 10000)
-
         assemblies = sum(map(lambda x: self.node_path2assembly_list(x, True), iterator), [])
+        # We format the edge case
+        assemblies = [self.format_insertion_assembly_edge_case(a) for a in assemblies]
         # We select those that contain exactly only one suitable edge
         assemblies = [b for a in assemblies if (b := self.format_insertion_assembly(a)) is not None]
         # First fragment should be in the + orientation
