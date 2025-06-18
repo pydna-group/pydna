@@ -27,7 +27,6 @@ repos:
   hooks:
     - id: black
       files: ^src/
-      args: ["--line-length=88"]
 
 # Further linting (e.g. module imported but not used)
 - repo: https://github.com/PyCQA/flake8
