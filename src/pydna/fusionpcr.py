@@ -17,7 +17,9 @@ def fuse_by_pcr(fragments, limit=15):
         new = None
         for a, b in [(x, y), (x, y.rc()), (x.rc(), y)]:
             try:
-                ((s1, s2, ln), *r) = terminal_overlap(a.seq.watson.lower(), rc(b.seq.crick.lower()), limit=limit)
+                ((s1, s2, ln), *r) = terminal_overlap(
+                    a.seq.watson.lower(), rc(b.seq.crick.lower()), limit=limit
+                )
             except ValueError as err:
                 if "not enough values to unpack" not in str(err):
                     raise err

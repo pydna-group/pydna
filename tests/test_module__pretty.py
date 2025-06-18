@@ -45,11 +45,11 @@ def test_PrettyTable():
     ]
 
     assert x.get_string() == x.__repr__()
-    from prettytable import MARKDOWN as _md
+    from prettytable import TableStyle
     from copy import copy
 
     c = copy(x)
-    c.set_style(_md)
+    c.set_style(TableStyle.MARKDOWN)
     assert x._repr_markdown_() == pretty_str(c.get_string())
 
 

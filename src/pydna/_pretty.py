@@ -7,8 +7,7 @@ for for nicer string output in the IPython shell and Jupyter notebook.
 """
 
 from prettytable import PrettyTable as _Pt
-from prettytable import MARKDOWN as _md
-
+from prettytable import TableStyle as _TableStyle
 from copy import copy as _copy
 from typing import List as _List
 
@@ -33,16 +32,5 @@ class PrettyTable(_Pt):
 
     def _repr_markdown_(self) -> pretty_str:
         c = _copy(self)
-        c.set_style(_md)
+        c.set_style(_TableStyle.MARKDOWN)
         return pretty_str(c.get_string())
-
-
-if __name__ == "__main__":
-    import os as _os
-
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached

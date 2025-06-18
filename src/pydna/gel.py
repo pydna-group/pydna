@@ -27,7 +27,9 @@ def interpolator(mwstd):
     return interpolator
 
 
-def gel(samples=None, gel_length=600, margin=50, interpolator=interpolator(mwstd=_mwstd)):
+def gel(
+    samples=None, gel_length=600, margin=50, interpolator=interpolator(mwstd=_mwstd)
+):
     import numpy as np
     from PIL import Image as Image
     from PIL import ImageDraw as ImageDraw
@@ -65,7 +67,11 @@ def gel(samples=None, gel_length=600, margin=50, interpolator=interpolator(mwstd
                 y1 = peak_centre - i
                 y2 = peak_centre + i
                 intensity = (
-                    height * _math.exp(-float(((y1 - peak_centre) ** 2)) / (2 * (band_spread**2))) * max_intensity
+                    height
+                    * _math.exp(
+                        -float(((y1 - peak_centre) ** 2)) / (2 * (band_spread**2))
+                    )
+                    * max_intensity
                 )
                 for y in range(int(y1), int(y2)):
                     try:
@@ -95,14 +101,3 @@ def gel(samples=None, gel_length=600, margin=50, interpolator=interpolator(mwstd
 # from PIL import ImageOps
 # im_invert = ImageOps.invert(im)
 # im.rotate(90, expand=1)
-
-
-if __name__ == "__main__":
-    import os as _os
-
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached

@@ -7,7 +7,7 @@
 
 """Provides two functions, parse and parse_primers"""
 
-import os as _os
+# import os as _os
 import re as _re
 import io as _io
 import textwrap as _textwrap
@@ -40,7 +40,9 @@ except ImportError:
 
 # gb_fasta_embl_regex = r"(?:>.+\n^(?:^[^>]+?)(?=\n\n|>|LOCUS|ID))|(?:(?:LOCUS|ID)(?:(?:.|\n)+?)^//)"
 
-gb_fasta_embl_regex = r"(?:^>.+\n^(?:^[^>]+?)(?=\n\n|>|^LOCUS|^ID))|(?:(?:^LOCUS|^ID)(?:(?:.|\n)+?)^//)"
+gb_fasta_embl_regex = (
+    r"(?:^>.+\n^(?:^[^>]+?)(?=\n\n|>|^LOCUS|^ID))|(?:(?:^LOCUS|^ID)(?:(?:.|\n)+?)^//)"
+)
 
 # The gb_fasta_embl_regex is meant to be able to extract sequences from
 # text where sequences are mixed with other contents as well
@@ -95,7 +97,7 @@ def embl_gb_fasta(text):
             except ValueError:
                 handle.seek(0)
                 try:
-                    parsed = _SeqIO.read(handle, "fasta")
+                    parsed = _SeqIO.read(handle, "fasta-blast")
                 except ValueError:
                     handle.close()
                     continue
@@ -206,12 +208,3 @@ def parse(data, ds=True):
 def parse_primers(data):
     """docstring."""
     return [_Primer(x) for x in parse(data, ds=False)]
-
-
-if __name__ == "__main__":
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached

@@ -33,7 +33,9 @@ GoodLocus = (
     + _pp.Word(_pp.nums).setResultsName("size")
     + _pp.Suppress(_pp.CaselessLiteral("bp"))
     + _pp.Word(_pp.alphas + "-").setResultsName("seqtype")
-    + (_pp.CaselessLiteral("linear") | _pp.CaselessLiteral("circular")).setResultsName("topology")
+    + (_pp.CaselessLiteral("linear") | _pp.CaselessLiteral("circular")).setResultsName(
+        "topology"
+    )
     + _pp.Optional(_pp.Word(_pp.alphas), default="   ").setResultsName("divcode")
     + _pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").setResultsName("date")
 )
@@ -44,7 +46,9 @@ BrokenLocus1 = (
     + _pp.Word(_pp.nums).setResultsName("size")
     + _pp.Suppress(_pp.CaselessLiteral("bp"))
     + _pp.Word(_pp.alphas + "-").setResultsName("seqtype")
-    + (_pp.CaselessLiteral("linear") | _pp.CaselessLiteral("circular")).setResultsName("topology")
+    + (_pp.CaselessLiteral("linear") | _pp.CaselessLiteral("circular")).setResultsName(
+        "topology"
+    )
     + _pp.Optional(_pp.Word(_pp.alphas), default="   ").setResultsName("divcode")
     + _pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").setResultsName("date")
 )
@@ -97,7 +101,8 @@ CapWord = _pp.Word("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 SpacedLine = _pp.White(min=1) + _pp.CharsNotIn("\n") + _pp.LineEnd()
 # HeaderLine = CapWord + CharsNotIn("\n") + LineEnd()
 GenericEntry = _pp.Group(
-    CapWord + _pp.Combine(_pp.CharsNotIn("\n") + _pp.LineEnd() + _pp.ZeroOrMore(SpacedLine))
+    CapWord
+    + _pp.Combine(_pp.CharsNotIn("\n") + _pp.LineEnd() + _pp.ZeroOrMore(SpacedLine))
 ).setResultsName("generics", listAllMatches=True)
 
 
@@ -135,7 +140,9 @@ RPAREN = _pp.Suppress(")")
 SEP = _pp.Suppress(_pp.Literal(".."))
 
 # recognize numbers w. < & > uncertainty specs, then strip the <> chars to make it fixed
-gbIndex = _pp.Word(_pp.nums + "<>").setParseAction(lambda s, l_, t: int(t[0].replace("<", "").replace(">", "")))
+gbIndex = _pp.Word(_pp.nums + "<>").setParseAction(
+    lambda s, l_, t: int(t[0].replace("<", "").replace(">", ""))
+)
 SimpleSlice = _pp.Group(gbIndex + SEP + gbIndex) | _pp.Group(gbIndex).setParseAction(
     lambda s, l_, t: [[t[0][0], t[0][0]]]
 )
@@ -194,12 +201,19 @@ QuoteFeaturekeyval = _pp.Group(
 
 # UnQuoted KeyVal: /key=value  (I'm assuming it doesn't do multilines this way? wrong! ApE does store long labels this way! sigh.)
 # NoQuoteFeaturekeyval = Group(Suppress('/') + Word(alphas+nums+"_-") + Suppress('=') + OneOrMore(CharsNotIn("\n")) )
-keyvalspacedline = _pp.White(exact=21) + _pp.CharsNotIn("/") + _pp.OneOrMore(_pp.CharsNotIn("\n")) + _pp.LineEnd()
+keyvalspacedline = (
+    _pp.White(exact=21)
+    + _pp.CharsNotIn("/")
+    + _pp.OneOrMore(_pp.CharsNotIn("\n"))
+    + _pp.LineEnd()
+)
 NoQuoteFeaturekeyval = _pp.Group(
     _pp.Suppress("/")
     + _pp.Word(_pp.alphas + _pp.nums + "_-")
     + _pp.Suppress("=")
-    + _pp.Combine(_pp.CharsNotIn("\n") + _pp.LineEnd() + _pp.ZeroOrMore(keyvalspacedline))
+    + _pp.Combine(
+        _pp.CharsNotIn("\n") + _pp.LineEnd() + _pp.ZeroOrMore(keyvalspacedline)
+    )
 )
 
 # Special Case for Numerical Vals:  /bases=12  OR  /bases="12"
@@ -213,14 +227,18 @@ NumFeaturekeyval = _pp.Group(
 
 # Key Only KeyVal: /pseudo
 # post-parse convert it into a pair to resemble the structure of the first three cases i.e. [pseudo, True]
-FlagFeaturekeyval = _pp.Group(_pp.Suppress("/") + _pp.Word(_pp.alphas + _pp.nums + "_-")).setParseAction(
-    lambda s, l_, t: [[t[0][0], True]]
-)
+FlagFeaturekeyval = _pp.Group(
+    _pp.Suppress("/") + _pp.Word(_pp.alphas + _pp.nums + "_-")
+).setParseAction(lambda s, l_, t: [[t[0][0], True]])
 
 Feature = _pp.Group(
-    _pp.Word(_pp.alphas + _pp.nums + "_-").setParseAction(lambda s, l_, t: [["type", t[0]]])
+    _pp.Word(_pp.alphas + _pp.nums + "_-").setParseAction(
+        lambda s, l_, t: [["type", t[0]]]
+    )
     + featLocation.setResultsName("location")
-    + _pp.OneOrMore(NumFeaturekeyval | QuoteFeaturekeyval | NoQuoteFeaturekeyval | FlagFeaturekeyval)
+    + _pp.OneOrMore(
+        NumFeaturekeyval | QuoteFeaturekeyval | NoQuoteFeaturekeyval | FlagFeaturekeyval
+    )
 )
 
 FeaturesEntry = (
@@ -234,7 +252,9 @@ FeaturesEntry = (
 
 # sequence is just a column-spaced big table of dna nucleotides
 # should it recognize full IUPAC alphabet?  NCBI uses n for unknown region
-Sequence = _pp.OneOrMore(_pp.Suppress(_pp.Word(_pp.nums)) + _pp.OneOrMore(_pp.Word("ACGTacgtNn")))
+Sequence = _pp.OneOrMore(
+    _pp.Suppress(_pp.Word(_pp.nums)) + _pp.OneOrMore(_pp.Word("ACGTacgtNn"))
+)
 
 # Group(  ) hides the setResultsName names def'd inside, such that one needs to first access this group and then access the dict of contents inside
 SequenceEntry = _pp.Suppress(_pp.Literal("ORIGIN")) + Sequence.setParseAction(
@@ -352,7 +372,9 @@ def wrapstring(str_, rowstart, rowend, padfirst=True):
         if linenum == 0 and not padfirst:
             wrappedstr += str_[linenum * rowlen : (linenum + 1) * rowlen] + "\n"
         else:
-            wrappedstr += " " * leftpad + str_[linenum * rowlen : (linenum + 1) * rowlen] + "\n"
+            wrappedstr += (
+                " " * leftpad + str_[linenum * rowlen : (linenum + 1) * rowlen] + "\n"
+            )
     #    if str_.startswith("/translation="):
     #        print(str_)
     #        print(wrappedstr)
@@ -480,7 +502,9 @@ def toGB(jseq):
                         fstr += wrapstring("/" + str(k) + "=" + str(feat[k]), 21, 80)
                     # standard: wrap val in quotes
                     else:
-                        fstr += wrapstring("/" + str(k) + "=" + '"' + str(feat[k]) + '"', 21, 80)
+                        fstr += wrapstring(
+                            "/" + str(k) + "=" + '"' + str(feat[k]) + '"', 21, 80
+                        )
             featuresstr += fstr
 
     # the spaced, numbered sequence
@@ -570,14 +594,3 @@ def gbtext_clean(gbtext):
     Result = _namedtuple("Result", "gbtext jseq")
     result = Result(_pretty_str(toGB(jseq).strip()), jseq)
     return result
-
-
-if __name__ == "__main__":
-    import os as _os
-
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached

@@ -18,10 +18,11 @@ from pydna.dseqrecord import Dseqrecord as _Dseqrecord
 from pydna.seqrecord import SeqRecord as _SeqRecord
 import textwrap as _textwrap
 import copy as _copy
-import logging as _logging
+
+# import logging as _logging
 
 
-_module_logger = _logging.getLogger("pydna." + __name__)
+# _module_logger = _logging.getLogger("pydna." + __name__)
 
 
 class Amplicon(_Dseqrecord):
@@ -43,7 +44,15 @@ class Amplicon(_Dseqrecord):
 
     """
 
-    def __init__(self, record, *args, template=None, forward_primer=None, reverse_primer=None, **kwargs):
+    def __init__(
+        self,
+        record,
+        *args,
+        template=None,
+        forward_primer=None,
+        reverse_primer=None,
+        **kwargs,
+    ):
         super().__init__(record, *args)
         self.template = template
         self.forward_primer = forward_primer
@@ -83,7 +92,10 @@ class Amplicon(_Dseqrecord):
         r.template = self.template.rc()
         r.forward_primer = _copy.copy(self.reverse_primer)
         r.reverse_primer = _copy.copy(self.forward_primer)
-        r.forward_primer.position, r.reverse_primer.position = r.reverse_primer.position, r.forward_primer.position
+        r.forward_primer.position, r.reverse_primer.position = (
+            r.reverse_primer.position,
+            r.forward_primer.position,
+        )
         return r
 
     rc = reverse_complement
@@ -123,21 +135,25 @@ class Amplicon(_Dseqrecord):
         fzc = tp.seq.crick[::-1][fp.position - fp._fp : fp.position]
         rzc = tp.seq.crick[::-1][rp.position : rp.position + rp._fp]
         f = f"""
-            {" " *ft}5{faz}...{raz}3
+            {" " * ft}5{faz}...{raz}3
              {sp3}{"|" * rp._fp}
             {sp3}3{rp.seq[::-1]}5
             5{fp.seq}3
-             {"|" *fp._fp:>{len(fp)}}
-            {" " *ft}3{fzc}...{rzc}5
+             {"|" * fp._fp:>{len(fp)}}
+            {" " * ft}3{fzc}...{rzc}5
             """
         # breakpoint()
         return _pretty_str(_textwrap.dedent(f).strip("\n"))
 
     def set_forward_primer_footprint(self, length):
-        self.forward_primer = _Primer(self.forward_primer.tail + self.seq[:length], footprint=length)
+        self.forward_primer = _Primer(
+            self.forward_primer.tail + self.seq[:length], footprint=length
+        )
 
     def set_reverse_primer_footprint(self, length):
-        self.reverse_primer = _Primer(self.reverse_primer.tail + self.seq[:length], footprint=length)
+        self.reverse_primer = _Primer(
+            self.reverse_primer.tail + self.seq[:length], footprint=length
+        )
 
     def program(self):
         return _program(self)
@@ -147,14 +163,3 @@ class Amplicon(_Dseqrecord):
 
     def primers(self):
         return self.forward_primer, self.reverse_primer
-
-
-if __name__ == "__main__":
-    import os as _os
-
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached

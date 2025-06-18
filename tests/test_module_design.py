@@ -280,7 +280,7 @@ def test_primer_Design_multiple_products():
 
 def test_circular_assembly_fragments():
     x = [primer_design(f) for f in frags]
-    y = circular_assembly_fragments(x, 20)
+    y = assembly_fragments(x, 20, circular=True)
     z = Assembly(y, limit=20)
     result = z.assemble_circular()[0]
     assert (
@@ -291,7 +291,7 @@ def test_circular_assembly_fragments():
 
 def test_circular_assembly_fragments2():
     x = [primer_design(f) for f in frags]
-    y = circular_assembly_fragments((frags[0], x[1], x[2]), 20)
+    y = assembly_fragments((frags[0], x[1], x[2]), 20, circular=True)
     z = Assembly(y, limit=20)
     result = z.assemble_circular()[0]
     assert (
