@@ -8,7 +8,6 @@ from Bio.Seq import reverse_complement
 from Bio.Restriction.Restriction import RestrictionBatch
 import regex
 import copy
-from typing import Callable
 
 from pydna.utils import (
     shift_location as _shift_location,
@@ -25,12 +24,14 @@ from pydna.dseqrecord import Dseqrecord as _Dseqrecord
 from pydna.dseq import Dseq as _Dseq
 from pydna.primer import Primer as _Primer
 from pydna.seqrecord import SeqRecord as _SeqRecord
-from pydna.types import CutSiteType, EdgeRepresentationAssembly
-
-# Type alias that describes overlap between two sequences x and y
-# the two first numbers are the positions where the overlap starts on x and y
-# the third number is the length of the overlap
-SequenceOverlap = tuple[int, int, int]
+from pydna.types import (
+    CutSiteType,
+    EdgeRepresentationAssembly,
+    SubFragmentRepresentationAssembly,
+    AssemblyAlgorithmType,
+    SequenceOverlap,
+    AssemblyEdgeType,
+)
 
 
 def gather_overlapping_locations(locs: list[Location], fragment_length: int) -> list[tuple[Location, ...]]:
@@ -181,7 +182,7 @@ def restriction_ligation_overlap(
     return matches
 
 
-def combine_algorithms(*algorithms) -> Callable[[_Dseqrecord, _Dseqrecord, int], list[SequenceOverlap]]:
+def combine_algorithms(*algorithms: AssemblyAlgorithmType) -> AssemblyAlgorithmType:
     """
     Combine assembly algorithms, if any of them returns a match, the match is returned.
 
@@ -662,6 +663,7 @@ def assembly2str_tuple(assembly: EdgeRepresentationAssembly) -> str:
 
 
 def assembly_has_mismatches(fragments: list[_Dseqrecord], assembly: EdgeRepresentationAssembly) -> bool:
+    """Check if an assembly has mismatches. This should never happen and if so it returns an error."""
     for u, v, loc_u, loc_v in assembly:
         seq_u = fragments[u - 1] if u > 0 else fragments[-u - 1].reverse_complement()
         seq_v = fragments[v - 1] if v > 0 else fragments[-v - 1].reverse_complement()
@@ -673,7 +675,8 @@ def assembly_has_mismatches(fragments: list[_Dseqrecord], assembly: EdgeRepresen
 
 def assembly_is_circular(assembly: EdgeRepresentationAssembly, fragments: list[_Dseqrecord]) -> bool:
     """
-    Note: This does not work for insertion assemblies, that's why assemble takes the optional argument is_insertion.
+    Based on the topology of the locations of an assembly, determine if it is circular.
+    This does not work for insertion assemblies, that's why assemble takes the optional argument is_insertion.
     """
     if assembly[0][0] != assembly[-1][1]:
         return False
@@ -686,7 +689,7 @@ def assembly_is_circular(assembly: EdgeRepresentationAssembly, fragments: list[_
 def assemble(
     fragments: list[_Dseqrecord], assembly: EdgeRepresentationAssembly, is_insertion: bool = False
 ) -> _Dseqrecord:
-    """Execute an assembly, from the representation returned by get_linear_assemblies or get_circular_assemblies."""
+    """Generate a Dseqrecord from an assembly and a list of fragments."""
 
     if is_insertion:
         is_circular = False
@@ -765,7 +768,9 @@ def annotate_primer_binding_sites(input_dseqr: _Dseqrecord, fragments: list[_Dse
     return output_dseqr
 
 
-def edge_representation2subfragment_representation(assembly, is_circular):
+def edge_representation2subfragment_representation(
+    assembly: EdgeRepresentationAssembly, is_circular: bool
+) -> SubFragmentRepresentationAssembly:
     """
     Turn this kind of edge representation fragment 1, fragment 2, right edge on 1, left edge on 2
     a = [(1, 2, 'loc1a', 'loc2a'), (2, 3, 'loc2b', 'loc3b'), (3, 1, 'loc3c', 'loc1c')]
@@ -785,7 +790,9 @@ def edge_representation2subfragment_representation(assembly, is_circular):
     return tuple(subfragment_representation)
 
 
-def subfragment_representation2edge_representation(assembly, is_circular):
+def subfragment_representation2edge_representation(
+    assembly: SubFragmentRepresentationAssembly, is_circular: bool
+) -> EdgeRepresentationAssembly:
     """
     Turn this kind of subfragment representation fragment 1, left edge on 1, right edge on 1
     a = [(1, 'loc1c', 'loc1a'), (2, 'loc2a', 'loc2b'), (3, 'loc3b', 'loc3c')]
@@ -811,7 +818,9 @@ def subfragment_representation2edge_representation(assembly, is_circular):
     return tuple(edge_representation)
 
 
-def get_assembly_subfragments(fragments: list[_Dseqrecord], subfragment_representation):
+def get_assembly_subfragments(
+    fragments: list[_Dseqrecord], subfragment_representation: SubFragmentRepresentationAssembly
+) -> list[_Dseqrecord]:
     """From the fragment representation returned by edge_representation2subfragment_representation, get the subfragments that are joined together.
 
     Subfragments are the slices of the fragments that are joined together
@@ -848,8 +857,8 @@ def get_assembly_subfragments(fragments: list[_Dseqrecord], subfragment_represen
     return subfragments
 
 
-def extract_subfragment(seq: _Dseqrecord, start_location: Location, end_location: Location):
-    """Extract a subfragment from a sequence, given the start and end locations of the subfragment."""
+def extract_subfragment(seq: _Dseqrecord, start_location: Location, end_location: Location) -> _Dseqrecord:
+    """Extract a subfragment from a sequence for an assembly, given the start and end locations of the subfragment."""
     start = 0 if start_location is None else _location_boundaries(start_location)[0]
     end = None if end_location is None else _location_boundaries(end_location)[1]
 
@@ -874,8 +883,8 @@ def extract_subfragment(seq: _Dseqrecord, start_location: Location, end_location
     return seq[start:end]
 
 
-def is_sublist(sublist, my_list, my_list_is_cyclic=False):
-    """Returns True if sublist is a sublist of my_list (can be treated as cyclic), False otherwise.
+def is_sublist(sublist: list, my_list: list, my_list_is_cyclic: bool = False) -> bool:
+    """Returns True if argument sublist is a sublist of argument my_list (can be treated as cyclic), False otherwise.
 
     Examples
     --------
@@ -900,7 +909,7 @@ def is_sublist(sublist, my_list, my_list_is_cyclic=False):
     return False
 
 
-def circular_permutation_min_abs(lst):
+def circular_permutation_min_abs(lst: list) -> list:
     """Returns the circular permutation of lst with the smallest absolute value first.
 
     Examples
@@ -915,9 +924,8 @@ def circular_permutation_min_abs(lst):
 
 
 class Assembly:
-    """Assembly of a list of linear DNA fragments into linear or circular
-    constructs. The Assembly is meant to replace the Assembly method as it
-    is easier to use. Accepts a list of Dseqrecords (source fragments) to
+    """Assembly of a list of DNA fragments into linear or circular constructs.
+    Accepts a list of Dseqrecords (source fragments) to
     initiate an Assembly object. Several methods are available for analysis
     of overlapping sequences, graph construction and assembly.
 
@@ -957,17 +965,21 @@ class Assembly:
 
     Parameters
     ----------
-
-    fragments : list
-        a list of Dseqrecord objects.
+    frags : list
+        A list of Dseqrecord objects.
     limit : int, optional
-        The shortest shared homology to be considered
+        The shortest shared homology to be considered, this is passed as the third argument to the `algorithm` function.
+        For certain algorithms, this might be ignored.
     algorithm : function, optional
-        The algorithm used to determine the shared sequences.
+        The algorithm used to determine the shared sequences. It's a function that takes two Dseqrecord objects as inputs,
+        and will get passed the third argument (limit), that may or may not be used. It must return a list of overlaps
+        (see common_sub_strings for an example).
     use_fragment_order : bool, optional
-        Legacy pydna behaviour: only assemblies that start with the first fragment and end with the last are considered.
+        It's set to True by default to reproduce legacy pydna behaviour: only assemblies that start with the first fragment and end with the last are considered.
+        You should set it to False.
     use_all_fragments : bool, optional
         Constrain the assembly to use all fragments.
+
 
     Examples
     --------
@@ -1005,10 +1017,10 @@ class Assembly:
     def __init__(
         self,
         frags: list[_Dseqrecord],
-        limit=25,
-        algorithm=common_sub_strings,
-        use_fragment_order=True,
-        use_all_fragments=False,
+        limit: int = 25,
+        algorithm: AssemblyAlgorithmType = common_sub_strings,
+        use_fragment_order: bool = True,
+        use_all_fragments: bool = False,
     ):
         # TODO: allow for the same fragment to be included more than once?
         self.G = _nx.MultiDiGraph()
@@ -1037,9 +1049,16 @@ class Assembly:
 
     @classmethod
     def assembly_is_valid(
-        cls, fragments: list[_Dseqrecord | _Primer], assembly, is_circular, use_all_fragments, is_insertion=False
-    ):
-        """Function used to filter paths returned from the graph, see conditions tested below."""
+        cls,
+        fragments: list[_Dseqrecord | _Primer],
+        assembly: EdgeRepresentationAssembly,
+        is_circular: bool,
+        use_all_fragments: bool,
+        is_insertion: bool = False,
+    ) -> bool:
+        """
+        Returns True if the assembly is valid, False otherwise. See function comments for conditions tested.
+        """
         if is_circular is None:
             return False
 
@@ -1095,8 +1114,8 @@ class Assembly:
 
         return True
 
-    def add_edges_from_match(self, match, u: int, v: int, first: _Dseqrecord, secnd: _Dseqrecord):
-        """Add edges to the graph from a match returned by an `algorithm` function (see pydna.common_substrings). For
+    def add_edges_from_match(self, match: SequenceOverlap, u: int, v: int, first: _Dseqrecord, secnd: _Dseqrecord):
+        """Add edges to the graph from a match returned by the `algorithm` function (see pydna.common_substrings). For
         format of edges (see documentation of the Assembly class).
 
         Matches are directional, because not all `algorithm` functions return the same match for (u,v) and (v,u). For example,
@@ -1116,6 +1135,7 @@ class Assembly:
                 _shift_location(SimpleLocation(y_start, y_start + length), 0, len(secnd)),
             ]
 
+        # Flip the locations to get the reverse complement
         rc_locs = [locs[0]._flip(len(first)), locs[1]._flip(len(secnd))]
 
         # Unique id that identifies the edge in either orientation
@@ -1129,13 +1149,15 @@ class Assembly:
         for u, v, l in combinations:
             self.G.add_edge(u, v, f"{u}{l[0]}:{v}{l[1]}", locations=l, uid=uid)
 
-    def format_assembly_edge(self, assembly_edge):
+    def format_assembly_edge(self, graph_edge: tuple[int, int, str]) -> AssemblyEdgeType:
         """Go from the (u, v, key) to the (u, v, locu, locv) format."""
-        u, v, key = assembly_edge
+        u, v, key = graph_edge
         locu, locv = self.G.get_edge_data(u, v, key)["locations"]
         return u, v, locu, locv
 
-    def get_linear_assemblies(self, only_adjacent_edges: bool = False, max_assemblies: int = 50):
+    def get_linear_assemblies(
+        self, only_adjacent_edges: bool = False, max_assemblies: int = 50
+    ) -> list[EdgeRepresentationAssembly]:
         """Get linear assemblies, applying the constrains described in __init__, ensuring that paths represent
         real assemblies (see assembly_is_valid). Subassemblies are removed (see remove_subassemblies)."""
 
@@ -1166,7 +1188,7 @@ class Assembly:
             out = [a for a in out if self.assembly_uses_only_adjacent_edges(a, False)]
         return remove_subassemblies(out)
 
-    def node_path2assembly_list(self, cycle, circular: bool):
+    def node_path2assembly_list(self, cycle: list[int], circular: bool) -> list[EdgeRepresentationAssembly]:
         """Convert a node path in the format [1, 2, 3] (as returned by _nx.cycles.simple_cycles) to a list of all
           possible assemblies.
 
@@ -1179,7 +1201,8 @@ class Assembly:
             combine.append([(u, v, key) for key in self.G[u][v]])
         return [tuple(map(self.format_assembly_edge, x)) for x in _itertools.product(*combine)]
 
-    def get_unique_linear_paths(self, G_with_begin_end: _nx.MultiDiGraph, max_paths):
+    def get_unique_linear_paths(self, G_with_begin_end: _nx.MultiDiGraph, max_paths=10000) -> list[list[int]]:
+        """Get unique linear paths from the graph, removing those that contain the same node twice."""
         # We remove the begin and end nodes, and get all paths without edges
         # e.g. we will get [1, 2, 3] only once, even if multiple edges connect
         # 1 and 2 or 2 and 3, by converting to DiGraph.
@@ -1189,7 +1212,7 @@ class Assembly:
             x[1:-1]
             for x in limit_iterator(
                 _nx.all_simple_paths(_nx.DiGraph(G_with_begin_end), "begin", "end", cutoff=(len(self.fragments) + 1)),
-                10000,
+                max_paths,
             )
         ]
 
@@ -1208,7 +1231,12 @@ class Assembly:
 
         return unique_node_paths
 
-    def get_possible_assembly_number(self, paths):
+    def get_possible_assembly_number(self, paths: list[list[int]]) -> int:
+        """
+        Get the number of possible assemblies from a list of node paths. Basically, for each path
+        passed as a list of integers / nodes, we calculate the number of paths possible connecting
+        the nodes in that order, given the graph (all the edges connecting them).
+        """
         possibilities = 0
         for path in paths:
             this_path = 1
@@ -1218,7 +1246,9 @@ class Assembly:
             possibilities += this_path
         return possibilities
 
-    def get_circular_assemblies(self, only_adjacent_edges: bool = False, max_assemblies: int = 50):
+    def get_circular_assemblies(
+        self, only_adjacent_edges: bool = False, max_assemblies: int = 50
+    ) -> list[EdgeRepresentationAssembly]:
         """Get circular assemblies, applying the constrains described in __init__, ensuring that paths represent
         real assemblies (see assembly_is_valid)."""
         # The constrain of circular sequence is that the first node is the fragment with the smallest index in its initial orientation,
@@ -1247,7 +1277,7 @@ class Assembly:
             out = [a for a in out if self.assembly_uses_only_adjacent_edges(a, True)]
         return out
 
-    def format_insertion_assembly(self, assembly):
+    def format_insertion_assembly(self, assembly: EdgeRepresentationAssembly) -> EdgeRepresentationAssembly | None:
         """Sorts the fragment representing a cycle so that they represent an insertion assembly if possible,
         else returns None.
 
@@ -1298,7 +1328,7 @@ class Assembly:
         shift_by = (edge_pair_index[0] + 1) % len(assembly)
         return assembly[shift_by:] + assembly[:shift_by]
 
-    def format_insertion_assembly_edge_case(self, assembly):
+    def format_insertion_assembly_edge_case(self, assembly: EdgeRepresentationAssembly) -> EdgeRepresentationAssembly:
         """
         Edge case from https://github.com/manulera/OpenCloning_backend/issues/329
         """
@@ -1360,7 +1390,9 @@ class Assembly:
 
         return new_assembly
 
-    def get_insertion_assemblies(self, only_adjacent_edges: bool = False, max_assemblies: int = 50):
+    def get_insertion_assemblies(
+        self, only_adjacent_edges: bool = False, max_assemblies: int = 50
+    ) -> list[EdgeRepresentationAssembly]:
         """Assemblies that represent the insertion of a fragment or series of fragment inside a linear construct. For instance,
         digesting CCCCGAATTCCCCGAATTC with EcoRI and inserting the fragment with two overhangs into the EcoRI site of AAAGAATTCAAA.
         This is not so much meant for the use-case of linear fragments that represent actual linear fragments, but for linear
@@ -1398,17 +1430,17 @@ class Assembly:
             if self.assembly_is_valid(self.fragments, a, False, self.use_all_fragments, is_insertion=True)
         ]
 
-    def assemble_linear(self, only_adjacent_edges: bool = False, max_assemblies: int = 50):
+    def assemble_linear(self, only_adjacent_edges: bool = False, max_assemblies: int = 50) -> list[_Dseqrecord]:
         """Assemble linear constructs, from assemblies returned by self.get_linear_assemblies."""
         assemblies = self.get_linear_assemblies(only_adjacent_edges, max_assemblies)
         return [assemble(self.fragments, a) for a in assemblies]
 
-    def assemble_circular(self, only_adjacent_edges: bool = False, max_assemblies: int = 50):
+    def assemble_circular(self, only_adjacent_edges: bool = False, max_assemblies: int = 50) -> list[_Dseqrecord]:
         """Assemble circular constructs, from assemblies returned by self.get_circular_assemblies."""
         assemblies = self.get_circular_assemblies(only_adjacent_edges, max_assemblies)
         return [assemble(self.fragments, a) for a in assemblies]
 
-    def assemble_insertion(self, only_adjacent_edges: bool = False):
+    def assemble_insertion(self, only_adjacent_edges: bool = False) -> list[_Dseqrecord]:
         """Assemble insertion constructs, from assemblies returned by self.get_insertion_assemblies."""
         assemblies = self.get_insertion_assemblies(only_adjacent_edges)
         return [assemble(self.fragments, a, is_insertion=True) for a in assemblies]
@@ -1457,14 +1489,16 @@ class Assembly:
     def assembly_uses_only_adjacent_edges(self, assembly, is_circular: bool) -> bool:
         """
         Check whether only adjacent edges within each fragment are used in the assembly. This is useful to check if a cut and ligate assembly is valid,
-          and prevent including partially digested fragments. For example, imagine the following fragment being an input for a digestion
-          and ligation assembly, where the enzyme cuts at the sites indicated by the vertical lines:
+        and prevent including partially digested fragments. For example, imagine the following fragment being an input for a digestion
+        and ligation assembly, where the enzyme cuts at the sites indicated by the vertical lines:
 
+        ```
                  x       y       z
           -------|-------|-------|---------
+        ```
 
-          We would only want assemblies that contain subfragments start-x, x-y, y-z, z-end, and not start-x, y-end, for instance.
-          The latter would indicate that the fragment was partially digested.
+        We would only want assemblies that contain subfragments start-x, x-y, y-z, z-end, and not start-x, y-end, for instance.
+        The latter would indicate that the fragment was partially digested.
         """
 
         locations_on_fragments = self.get_locations_on_fragments()
@@ -1516,6 +1550,12 @@ class Assembly:
 
 
 class PCRAssembly(Assembly):
+    """
+    An assembly that represents a PCR, where `fragments` is a list of primer, template, primer (in that order).
+    It always uses the `primer_template_overlap` algorithm and accepts the `mismatches` argument to indicate
+    the number of mismatches allowed in the overlap. Only supports substitution mismatches, not indels.
+    """
+
     def __init__(self, frags: list[_Dseqrecord | _Primer], limit=25, mismatches=0):
 
         value_error = ValueError(
@@ -1565,7 +1605,9 @@ class PCRAssembly(Assembly):
 
         return
 
-    def get_linear_assemblies(self, only_adjacent_edges: bool = False, max_assemblies: int = 50):
+    def get_linear_assemblies(
+        self, only_adjacent_edges: bool = False, max_assemblies: int = 50
+    ) -> list[EdgeRepresentationAssembly]:
         if only_adjacent_edges:
             raise NotImplementedError("only_adjacent_edges not implemented for PCR assemblies")
 
@@ -1610,14 +1652,18 @@ class SingleFragmentAssembly(Assembly):
 
         return
 
-    def get_circular_assemblies(self, only_adjacent_edges: bool = False, max_assemblies: int = 50):
+    def get_circular_assemblies(
+        self, only_adjacent_edges: bool = False, max_assemblies: int = 50
+    ) -> list[EdgeRepresentationAssembly]:
         # We don't want the same location twice
         assemblies = filter(
             lambda x: x[0][2] != x[0][3], super().get_circular_assemblies(only_adjacent_edges, max_assemblies)
         )
         return [a for a in assemblies if self.assembly_is_valid(self.fragments, a, True, self.use_all_fragments)]
 
-    def get_insertion_assemblies(self, only_adjacent_edges: bool = False, max_assemblies: int = 50):
+    def get_insertion_assemblies(
+        self, only_adjacent_edges: bool = False, max_assemblies: int = 50
+    ) -> list[EdgeRepresentationAssembly]:
         """This could be renamed splicing assembly, but the essence is similar"""
 
         if only_adjacent_edges:
