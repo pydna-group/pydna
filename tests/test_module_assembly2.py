@@ -1012,11 +1012,33 @@ def test_annotate_primer_binding_sites():
 
     asm = assembly.PCRAssembly([primer1, seq, primer2], limit=8)
 
-    a = asm.get_linear_assemblies()[0]
     prods = asm.assemble_linear()
 
     assert len(prods) == 1
-    annotated = assembly.annotate_primer_binding_sites(prods[0], [primer1, seq, primer2], a)
+    annotated = assembly.annotate_primer_binding_sites(prods[0], [primer1, seq, primer2])
+    assert annotated.features[0].type == "primer_bind"
+    assert annotated.features[0].qualifiers["label"] == [primer1.name]
+    assert annotated.features[0].qualifiers["note"] == ["sequence: " + str(primer1.seq)]
+    assert annotated.features[0].location.start == 0
+    assert annotated.features[0].location.end == len(primer1)
+    assert annotated.features[1].type == "primer_bind"
+    assert annotated.features[1].qualifiers["label"] == [primer2.name]
+    assert annotated.features[1].qualifiers["note"] == ["sequence: " + str(primer2.seq)]
+    assert annotated.features[1].location.start == len(prods[0]) - len(primer2)
+    assert annotated.features[1].location.end == len(prods[0])
+
+    # With tails
+    primer1 = Primer("aaACGTACGT", name="primer1")
+    primer2 = Primer(reverse_complement("aaGCGCGCGC"), name="primer2")
+
+    seq = Dseqrecord("ccccACGTACGTAAAAAAGCGCGCGCcccc")
+
+    asm = assembly.PCRAssembly([primer1, seq, primer2], limit=8)
+
+    prods = asm.assemble_linear()
+
+    assert len(prods) == 1
+    annotated = assembly.annotate_primer_binding_sites(prods[0], [primer1, seq, primer2])
     assert annotated.features[0].type == "primer_bind"
     assert annotated.features[0].qualifiers["label"] == [primer1.name]
     assert annotated.features[0].qualifiers["note"] == ["sequence: " + str(primer1.seq)]

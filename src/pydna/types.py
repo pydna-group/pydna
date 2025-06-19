@@ -15,9 +15,12 @@ if TYPE_CHECKING:
     from Bio.Restriction import AbstractCut as _AbstractCut
     from Bio.Restriction import RestrictionBatch as _RestrictionBatch
     from pydna.dseq import Dseq
+    from Bio.SeqFeature import Location as _Location
 
 
 # To represent any subclass of Dseq
 DseqType = _TypeVar("DseqType", bound="Dseq")
 EnzymesType = _TypeVar("EnzymesType", "_RestrictionBatch", _Iterable["_AbstractCut"], "_AbstractCut")
 CutSiteType = _Tuple[_Tuple[int, int], _Union["_AbstractCut", None]]
+AssemblyEdgeType = _Tuple[int, int, "_Location | None", "_Location | None"]
+EdgeRepresentationAssembly = list[AssemblyEdgeType]

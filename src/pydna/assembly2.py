@@ -25,7 +25,7 @@ from pydna.dseqrecord import Dseqrecord as _Dseqrecord
 from pydna.dseq import Dseq as _Dseq
 from pydna.primer import Primer as _Primer
 from pydna.seqrecord import SeqRecord as _SeqRecord
-from pydna.types import CutSiteType
+from pydna.types import CutSiteType, EdgeRepresentationAssembly
 
 # Type alias that describes overlap between two sequences x and y
 # the two first numbers are the positions where the overlap starts on x and y
@@ -593,8 +593,8 @@ def fill_dseq(seq: _Dseq) -> _Dseq:
 
 
 def reverse_complement_assembly(
-    assembly: list[tuple[int, int, Location, Location]], fragments: list[_Dseqrecord]
-) -> list[tuple[int, int, Location, Location]]:
+    assembly: EdgeRepresentationAssembly, fragments: list[_Dseqrecord]
+) -> EdgeRepresentationAssembly:
     """Complement an assembly, i.e. reverse the order of the fragments and the orientation of the overlaps."""
     new_assembly = list()
     for u, v, locu, locv in assembly:
@@ -604,7 +604,11 @@ def reverse_complement_assembly(
     return new_assembly[::-1]
 
 
-def filter_linear_subassemblies(linear_assemblies, circular_assemblies, fragments):
+def filter_linear_subassemblies(
+    linear_assemblies: list[EdgeRepresentationAssembly],
+    circular_assemblies: list[EdgeRepresentationAssembly],
+    fragments: list[_Dseqrecord],
+) -> list[EdgeRepresentationAssembly]:
     """Remove linear assemblies which are sub-assemblies of circular assemblies"""
     all_circular_assemblies = circular_assemblies + [
         reverse_complement_assembly(c, fragments) for c in circular_assemblies
@@ -617,7 +621,7 @@ def filter_linear_subassemblies(linear_assemblies, circular_assemblies, fragment
     return filtered_assemblies
 
 
-def remove_subassemblies(assemblies):
+def remove_subassemblies(assemblies: list[EdgeRepresentationAssembly]) -> list[EdgeRepresentationAssembly]:
     """Filter out subassemblies, i.e. assemblies that are contained within another assembly.
 
     For example:
@@ -638,7 +642,7 @@ def remove_subassemblies(assemblies):
     return filtered_assemblies
 
 
-def assembly2str(assembly):
+def assembly2str(assembly: EdgeRepresentationAssembly) -> str:
     """Convert an assembly to a string representation, for example:
     ((1, 2, [8:14], [1:7]),(2, 3, [10:17], [1:8]))
     becomes:
@@ -650,14 +654,14 @@ def assembly2str(assembly):
     return str(tuple(f"{u}{lu}:{v}{lv}" for u, v, lu, lv in assembly))
 
 
-def assembly2str_tuple(assembly):
+def assembly2str_tuple(assembly: EdgeRepresentationAssembly) -> str:
     """Convert an assembly to a string representation, like
     ((1, 2, [8:14], [1:7]),(2, 3, [10:17], [1:8]))
     """
     return str(tuple((u, v, str(lu), str(lv)) for u, v, lu, lv in assembly))
 
 
-def assembly_has_mismatches(fragments, assembly):
+def assembly_has_mismatches(fragments: list[_Dseqrecord], assembly: EdgeRepresentationAssembly) -> bool:
     for u, v, loc_u, loc_v in assembly:
         seq_u = fragments[u - 1] if u > 0 else fragments[-u - 1].reverse_complement()
         seq_v = fragments[v - 1] if v > 0 else fragments[-v - 1].reverse_complement()
@@ -667,7 +671,7 @@ def assembly_has_mismatches(fragments, assembly):
     return False
 
 
-def assembly_is_circular(assembly, fragments):
+def assembly_is_circular(assembly: EdgeRepresentationAssembly, fragments: list[_Dseqrecord]) -> bool:
     """
     Note: This does not work for insertion assemblies, that's why assemble takes the optional argument is_insertion.
     """
@@ -679,7 +683,9 @@ def assembly_is_circular(assembly, fragments):
         return _location_boundaries(assembly[0][2])[0] > _location_boundaries(assembly[-1][3])[0]
 
 
-def assemble(fragments, assembly, is_insertion=False):
+def assemble(
+    fragments: list[_Dseqrecord], assembly: EdgeRepresentationAssembly, is_insertion: bool = False
+) -> _Dseqrecord:
     """Execute an assembly, from the representation returned by get_linear_assemblies or get_circular_assemblies."""
 
     if is_insertion:
@@ -739,9 +745,7 @@ def assemble(fragments, assembly, is_insertion=False):
     return out_dseqrecord
 
 
-def annotate_primer_binding_sites(
-    input_dseqr: _Dseqrecord, fragments: list[_Dseqrecord], assembly: list[tuple[int, int, Location, Location]]
-) -> _Dseqrecord:
+def annotate_primer_binding_sites(input_dseqr: _Dseqrecord, fragments: list[_Dseqrecord]) -> _Dseqrecord:
     """Annotate the primer binding sites in a Dseqrecord."""
     fwd, _, rvs = fragments
     start_rvs = len(input_dseqr) - len(rvs)
