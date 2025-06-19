@@ -1176,7 +1176,7 @@ class Assembly:
                 G.add_edge("begin", node)
                 G.add_edge(node, "end")
 
-        unique_linear_paths = self.get_unique_linear_paths(G, max_assemblies)
+        unique_linear_paths = self.get_unique_linear_paths(G)
         possible_assemblies = self.get_possible_assembly_number(unique_linear_paths)
         if possible_assemblies > max_assemblies:
             raise ValueError(f"Too many assemblies ({possible_assemblies} pre-validation) to assemble")
