@@ -535,5 +535,27 @@ def test_locations_overlap():
             assert not locations_overlap(main_shifted, loc_shifted, 20)
 
 
+def test_create_location():
+    from pydna.utils import create_location
+
+    # Basic location creation with different strands
+    assert str(create_location(0, 5, 10, -1)) == "[0:5](-)"
+    assert str(create_location(0, 5, 10, +1)) == "[0:5](+)"
+    assert str(create_location(0, 5, 10)) == "[0:5]"
+
+    # Circular location (end < start)
+    assert str(create_location(8, 2, 10)) == "join{[8:10], [0:2]}"
+    assert str(create_location(8, 2, 10, -1)) == "join{[0:2](-), [8:10](-)}"
+
+    # Negative positions (should be normalized)
+    assert str(create_location(-2, 2, 10)) == "join{[8:10], [0:2]}"
+
+    # Special case: 0 is the same as len(seq)
+    assert str(create_location(5, 0, 10)) == "[5:10]"
+
+    # Special case: start and end are the same, spans entire sequence
+    assert str(create_location(5, 5, 10)) == "join{[5:10], [0:5]}"
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-vv", "-s"])
