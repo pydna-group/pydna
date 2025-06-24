@@ -36,25 +36,10 @@ from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
 from Bio.Restriction import RestrictionBatch as _RestrictionBatch
 from Bio.Restriction import CommOnly
 
-from typing import (
-    TYPE_CHECKING,
-    List as _List,
-    Tuple as _Tuple,
-    Union as _Union,
-    TypeVar as _TypeVar,
-    Iterable as _Iterable,
-)
 
-if TYPE_CHECKING:
-    from Bio.Restriction import AbstractCut as _AbstractCut
+from .types import DseqType, EnzymesType, CutSiteType
 
-
-# To represent any subclass of Dseq
-DseqType = _TypeVar("DseqType", bound="Dseq")
-EnzymesType = _TypeVar(
-    "EnzymesType", _RestrictionBatch, _Iterable["_AbstractCut"], "_AbstractCut"
-)
-CutSiteType = _Tuple[_Tuple[int, int], _Union["_AbstractCut", None]]
+from typing import List as _List, Tuple as _Tuple, Union as _Union
 
 
 class Dseq(_Seq):

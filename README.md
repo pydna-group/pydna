@@ -476,6 +476,19 @@ pre-commit install
    > **TIP:** The hooks are a series of checks that will be run before you commit your code. If any of the checks fail, the commit will not be allowed. Some of them auto-fix the code (e.g., `black` formatting), so you can simply do `git add .` and commit again. Others like `flake8` will prevent the commit to happen until the code is compliant.  For instance, if you import a module in a file and not use it, `flake8` will complain. For a full list of checks, see `.pre-commit-config.yaml`.
 5. Push the changes to your fork
 
+> **TIP:** The continuous integration pipeline also runs doctests. These are tests that validate that the docstring examples are correct. For example, the docstring of the function `pydna.utils.smallest_rotation` looks like this:
+> ```python
+> >>> from pydna.utils import smallest_rotation
+> >>> smallest_rotation("taaa")
+> 'aaat'
+> ```
+> doctest will fail if `smallest_rotation("taaa")` does not return `'aaat'`. If you make changes to some function, you may break the doctests, and this can be a bit hard to understand. If this happens, the CI tests will fail, with a message similar to this:
+> ```
+> =================================== FAILURES ===================================
+> ___________________ [doctest] pydna.assembly2.blunt_overlap ____________________
+> ```
+> This means that the doctest of the function `blunt_overlap` failed. You can run the same test locally with `python -m doctest src/pydna/assembly2.py` (use the appropriate path to the module file). That will give you information of what's failing. Fix, and re-run until it passes!
+
 ### Creating a PR 🔗
 
  * From your fork, make a PR towards the branch `dev_bjorn` in the original repository.
