@@ -108,10 +108,12 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_copy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_operator</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_logging</span>
 
-<span class="n">_module_logger</span> <span class="o">=</span> <span class="n">_logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pydna.&quot;</span> <span class="o">+</span> <span class="vm">__name__</span><span class="p">)</span>
+<span class="c1"># import os as _os</span>
+
+<span class="c1"># import logging as _logging</span>
+
+<span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
 
 <span class="n">_table</span> <span class="o">=</span> <span class="p">{</span>  <span class="c1"># IUPAC Ambiguity Codes for Nucleotide Degeneracy and U for Uracile</span>
     <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>
@@ -190,7 +192,9 @@
         <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">match_start</span> <span class="ow">in</span> <span class="n">positions</span><span class="p">:</span>
             <span class="n">tm</span> <span class="o">=</span> <span class="n">template</span><span class="p">[</span><span class="n">match_start</span> <span class="o">+</span> <span class="n">limit</span> <span class="p">:</span> <span class="n">match_start</span> <span class="o">+</span> <span class="n">limit</span> <span class="o">+</span> <span class="n">length</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-            <span class="n">footprint</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">_itertools</span><span class="o">.</span><span class="n">takewhile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">zip</span><span class="p">(</span><span class="n">tail</span><span class="p">,</span> <span class="n">tm</span><span class="p">))))</span>
+            <span class="n">footprint</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="nb">list</span><span class="p">(</span><span class="n">_itertools</span><span class="o">.</span><span class="n">takewhile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">zip</span><span class="p">(</span><span class="n">tail</span><span class="p">,</span> <span class="n">tm</span><span class="p">)))</span>
+            <span class="p">)</span>
             <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">match_start</span><span class="p">,</span> <span class="n">footprint</span> <span class="o">+</span> <span class="n">limit</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">results</span>
     <span class="k">return</span> <span class="p">[]</span>
@@ -423,11 +427,19 @@
             <span class="k">for</span> <span class="n">rp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_primers</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
                     <span class="n">shift</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">fp</span><span class="o">.</span><span class="n">_fp</span>
-                    <span class="n">tpl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">shifted</span><span class="p">(</span><span class="n">shift</span><span class="p">)</span>  <span class="c1"># shift template so that it starts where the fp starts anneling</span>
-                    <span class="n">fp</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">_fp</span>  <span class="c1"># New position of fp becomes the footprint length</span>
-                    <span class="n">rp</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">(</span><span class="n">rp</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">shift</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">)</span>  <span class="c1"># Shift the rp position as well</span>
+                    <span class="n">tpl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">shifted</span><span class="p">(</span>
+                        <span class="n">shift</span>
+                    <span class="p">)</span>  <span class="c1"># shift template so that it starts where the fp starts anneling</span>
+                    <span class="n">fp</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">fp</span><span class="o">.</span><span class="n">_fp</span>
+                    <span class="p">)</span>  <span class="c1"># New position of fp becomes the footprint length</span>
+                    <span class="n">rp</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">(</span><span class="n">rp</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">shift</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">template</span>
+                    <span class="p">)</span>  <span class="c1"># Shift the rp position as well</span>
                     <span class="n">feats</span> <span class="o">=</span> <span class="n">tpl</span><span class="p">[:</span> <span class="n">rp</span><span class="o">.</span><span class="n">position</span> <span class="o">+</span> <span class="n">rp</span><span class="o">.</span><span class="n">_fp</span><span class="p">]</span><span class="o">.</span><span class="n">features</span>
-                <span class="k">elif</span> <span class="n">fp</span><span class="o">.</span><span class="n">position</span> <span class="o">&lt;=</span> <span class="n">rp</span><span class="o">.</span><span class="n">position</span><span class="p">:</span>  <span class="c1"># pcr products only formed if fp anneals forward of rp</span>
+                <span class="k">elif</span> <span class="p">(</span>
+                    <span class="n">fp</span><span class="o">.</span><span class="n">position</span> <span class="o">&lt;=</span> <span class="n">rp</span><span class="o">.</span><span class="n">position</span>
+                <span class="p">):</span>  <span class="c1"># pcr products only formed if fp anneals forward of rp</span>
                     <span class="n">feats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">[</span>
                         <span class="n">fp</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">fp</span><span class="o">.</span><span class="n">_fp</span> <span class="p">:</span> <span class="n">rp</span><span class="o">.</span><span class="n">position</span> <span class="o">+</span> <span class="n">rp</span><span class="o">.</span><span class="n">_fp</span>
                     <span class="p">]</span><span class="o">.</span><span class="n">features</span>  <span class="c1"># Save features covered by primers</span>
@@ -441,10 +453,16 @@
                 <span class="k">if</span> <span class="n">tpl</span><span class="o">.</span><span class="n">circular</span> <span class="ow">and</span> <span class="n">fp</span><span class="o">.</span><span class="n">position</span> <span class="o">==</span> <span class="n">rp</span><span class="o">.</span><span class="n">position</span><span class="p">:</span>
                     <span class="n">prd</span> <span class="o">=</span> <span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span> <span class="o">+</span> <span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">rp</span><span class="p">)</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">prd</span> <span class="o">=</span> <span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span> <span class="o">+</span> <span class="n">tpl</span><span class="p">[</span><span class="n">fp</span><span class="o">.</span><span class="n">position</span> <span class="p">:</span> <span class="n">rp</span><span class="o">.</span><span class="n">position</span><span class="p">]</span> <span class="o">+</span> <span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">rp</span><span class="p">)</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+                    <span class="n">prd</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+                        <span class="o">+</span> <span class="n">tpl</span><span class="p">[</span><span class="n">fp</span><span class="o">.</span><span class="n">position</span> <span class="p">:</span> <span class="n">rp</span><span class="o">.</span><span class="n">position</span><span class="p">]</span>
+                        <span class="o">+</span> <span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">rp</span><span class="p">)</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+                    <span class="p">)</span>
                 <span class="n">prd</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">feats</span>
                 <span class="n">full_tmpl_features</span> <span class="o">=</span> <span class="p">[</span>
-                    <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">)</span>
+                    <span class="n">f</span>
+                    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">features</span>
+                    <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">)</span>
                 <span class="p">]</span>
                 <span class="n">new_identifier</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
                 <span class="k">if</span> <span class="n">full_tmpl_features</span><span class="p">:</span>
@@ -463,10 +481,14 @@
                     <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
                     <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">prd</span><span class="p">)</span><span class="si">}</span><span class="s2">bp_PCR_prod&quot;</span><span class="p">[:</span><span class="mi">16</span><span class="p">]</span>
                 <span class="p">)</span>
-                <span class="n">prd</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">_identifier_from_string</span><span class="p">(</span><span class="n">new_identifier</span><span class="p">)[:</span><span class="mi">16</span><span class="p">]</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">prd</span><span class="p">)</span><span class="si">}</span><span class="s2">bp&quot;</span><span class="p">[:</span><span class="mi">16</span><span class="p">]</span>
-                <span class="n">prd</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;pcr_product_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">fp</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="n">rp</span><span class="o">.</span><span class="n">description</span>
+                <span class="n">prd</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">_identifier_from_string</span><span class="p">(</span><span class="n">new_identifier</span><span class="p">)[:</span><span class="mi">16</span><span class="p">]</span>
+                    <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
+                    <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">prd</span><span class="p">)</span><span class="si">}</span><span class="s2">bp&quot;</span><span class="p">[:</span><span class="mi">16</span><span class="p">]</span>
                 <span class="p">)</span>
+                <span class="n">prd</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s2">&quot;description&quot;</span>
+                <span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;pcr_product_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fp</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="n">rp</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
 
                 <span class="n">amplicon</span> <span class="o">=</span> <span class="n">_Amplicon</span><span class="p">(</span>
                     <span class="n">prd</span><span class="p">,</span>
@@ -485,7 +507,9 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;returns a short string representation&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;Reaction(products = </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">forward_primers</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse_primers</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="s2">&quot;Reaction(products = </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">forward_primers</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse_primers</span><span class="p">))</span>
+        <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;returns a short report describing if or where primer</span>
@@ -499,13 +523,17 @@
         <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_primers</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_primers</span><span class="p">:</span>
-                <span class="n">mystring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{name}</span><span class="s2"> anneals forward (---&gt;) at </span><span class="si">{pos}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+                <span class="n">mystring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{name}</span><span class="s2"> anneals forward (---&gt;) at </span><span class="si">{pos}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">position</span>
+                <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mystring</span> <span class="o">+=</span> <span class="s2">&quot;No forward primers anneal...</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="c1"># mystring +=&quot;\n&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_primers</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_primers</span><span class="p">:</span>
-                <span class="n">mystring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{name}</span><span class="s2"> anneals reverse (&lt;---) at </span><span class="si">{pos}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+                <span class="n">mystring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{name}</span><span class="s2"> anneals reverse (&lt;---) at </span><span class="si">{pos}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">position</span>
+                <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mystring</span> <span class="o">+=</span> <span class="s2">&quot;No reverse primers anneal...</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">mystring</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
@@ -591,7 +619,8 @@
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="s2">&quot;arguments need to be a string, Bio.Seq, SeqRecord&quot;</span> <span class="s2">&quot;, Primer, Dseqrecord or Amplicon object&quot;</span>
+                <span class="s2">&quot;arguments need to be a string, Bio.Seq, SeqRecord&quot;</span>
+                <span class="s2">&quot;, Primer, Dseqrecord or Amplicon object&quot;</span>
             <span class="p">)</span>
         <span class="n">new</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 
@@ -610,15 +639,6 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No PCR product! </span><span class="si">{</span><span class="n">anneal_primers</span><span class="o">.</span><span class="n">report</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PCR not specific! </span><span class="si">{</span><span class="nb">format</span><span class="p">(</span><span class="n">anneal_primers</span><span class="o">.</span><span class="n">report</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
-
-    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>
 </pre></div>
 
            </div>

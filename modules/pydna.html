@@ -58,10 +58,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#examples-of-pydna-in-use">Examples of pydna in use</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#pydna.open_current_folder"><code class="docutils literal notranslate"><span class="pre">open_current_folder()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydna.open_cache_folder"><code class="docutils literal notranslate"><span class="pre">open_cache_folder()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydna.open_config_folder"><code class="docutils literal notranslate"><span class="pre">open_config_folder()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydna.open_log_folder"><code class="docutils literal notranslate"><span class="pre">open_log_folder()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydna.get_env"><code class="docutils literal notranslate"><span class="pre">get_env()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydna.logo"><code class="docutils literal notranslate"><span class="pre">logo()</span></code></a></li>
 </ul>
@@ -81,7 +77,6 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_download.html">pydna.download</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_dseq.html">pydna.dseq</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_dseqrecord.html">pydna.dseqrecord</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pydna_editor.html">pydna.editor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_fakeseq.html">pydna.fakeseq</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_fusionpcr.html">pydna.fusionpcr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_gateway.html">pydna.gateway</a></li>
@@ -93,8 +88,6 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_goldengate.html">pydna.goldengate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_ladders.html">pydna.ladders</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_ligate.html">pydna.ligate</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pydna_myenzymes.html">pydna.myenzymes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pydna_myprimers.html">pydna.myprimers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_parsers.html">pydna.parsers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_primer.html">pydna.primer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_readers.html">pydna.readers</a></li>
@@ -261,65 +254,6 @@ in pydna itself, open an issue at the
 </dl>
 </section>
 </section>
-<dl class="py function">
-<dt class="sig sig-object py" id="pydna.open_current_folder">
-<span class="sig-prename descclassname"><span class="pre">pydna.</span></span><span class="sig-name descname"><span class="pre">open_current_folder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna.html#open_current_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.open_current_folder" title="Link to this definition"></a></dt>
-<dd><p>Open the current working directory.</p>
-<p>Opens in the default file manager. The location for this folder is
-given by the <a class="reference external" href="https://docs.python.org/3.8/library/os.html#os.getcwd" title="(in Python v3.8)"><code class="xref py py-func docutils literal notranslate"><span class="pre">os.getcwd()</span></code></a> function</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pydna.open_cache_folder">
-<span class="sig-prename descclassname"><span class="pre">pydna.</span></span><span class="sig-name descname"><span class="pre">open_cache_folder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna.html#open_cache_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.open_cache_folder" title="Link to this definition"></a></dt>
-<dd><p>Open the pydna cache folder.</p>
-<p>Opens in the default file manager. The location for this folder is stored
-in the <em>pydna_data_dir</em> environmental variable.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pydna.open_config_folder">
-<span class="sig-prename descclassname"><span class="pre">pydna.</span></span><span class="sig-name descname"><span class="pre">open_config_folder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna.html#open_config_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.open_config_folder" title="Link to this definition"></a></dt>
-<dd><p>Open the pydna configuration folder.</p>
-<p>Opens in the default file manager. The location for this folder is stored
-in the <em>pydna_config_dir</em> environmental variable.</p>
-<p>The <cite>pydna.ini</cite> file can be edited to make pydna quicker to use.
-See the documentation of the :class:configparser.ConfigParser´ class.</p>
-<p>Below is the content of a typical <cite>pydna.ini</cite> file on a Linux
-system.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">main</span><span class="p">]</span>
-<span class="n">loglevel</span><span class="o">=</span><span class="mi">30</span>
-<span class="n">email</span><span class="o">=</span><span class="n">myemail</span><span class="nd">@example</span><span class="o">.</span><span class="n">org</span>
-<span class="n">data_dir</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">bjorn</span><span class="o">/.</span><span class="n">local</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">pydna</span>
-<span class="n">log_dir</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">bjorn</span><span class="o">/.</span><span class="n">cache</span><span class="o">/</span><span class="n">pydna</span><span class="o">/</span><span class="n">log</span>
-<span class="n">ape</span><span class="o">=</span><span class="n">tclsh</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">bjorn</span><span class="o">/.</span><span class="n">ApE</span><span class="o">/</span><span class="n">AppMain</span><span class="o">.</span><span class="n">tcl</span>
-<span class="n">cached_funcs</span><span class="o">=</span><span class="n">Genbank_nucleotide</span>
-<span class="n">primers</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">bjorn</span><span class="o">/</span><span class="n">Dropbox</span><span class="o">/</span><span class="n">wikidata</span><span class="o">/</span><span class="n">PRIMERS</span><span class="o">.</span><span class="n">txt</span>
-<span class="n">enzymes</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">bjorn</span><span class="o">/</span><span class="n">Dropbox</span><span class="o">/</span><span class="n">wikidata</span><span class="o">/</span><span class="n">RestrictionEnzymes</span><span class="o">.</span><span class="n">txt</span>
-</pre></div>
-</div>
-<p>The email address is set to <a class="reference external" href="mailto:someone&#37;&#52;&#48;example&#46;com">someone<span>&#64;</span>example<span>&#46;</span>com</a> by default. If you change
-this to you own address, the <a class="reference internal" href="pydna_genbank.html#pydna.genbank.genbank" title="pydna.genbank.genbank"><code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.genbank.genbank()</span></code></a> function can be
-used to download sequences from Genbank directly without having to
-explicitly add the email address.</p>
-<p>Pydna can cache results from the following functions or methods:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="pydna_genbank.html#pydna.genbank.Genbank.nucleotide" title="pydna.genbank.Genbank.nucleotide"><code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.genbank.Genbank.nucleotide()</span></code></a>   Genbank_nucleotide</p></li>
-<li><p><a class="reference internal" href="pydna_amplify.html#pydna.amplify.Anneal" title="pydna.amplify.Anneal"><code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.amplify.Anneal()</span></code></a>               amplify_Anneal</p></li>
-<li><p><a class="reference internal" href="pydna_assembly.html#pydna.assembly.Assembly" title="pydna.assembly.Assembly"><code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.assembly.Assembly()</span></code></a>            assembly_Assembly</p></li>
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.download.download_text()</span></code>       download.download_text</p></li>
-<li><p><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord.synced" title="pydna.dseqrecord.Dseqrecord.synced"><code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.dseqrecord.Dseqrecord.synced()</span></code></a> Dseqrecord_synced</p></li>
-</ul>
-<p>These can be added separated by a comma to the cached_funcs entry
-in <strong>pydna.ini</strong> file or the pydna_cached_funcs environment variable.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pydna.open_log_folder">
-<span class="sig-prename descclassname"><span class="pre">pydna.</span></span><span class="sig-name descname"><span class="pre">open_log_folder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna.html#open_log_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.open_log_folder" title="Link to this definition"></a></dt>
-<dd><p>docstring.</p>
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.get_env">
 <span class="sig-prename descclassname"><span class="pre">pydna.</span></span><span class="sig-name descname"><span class="pre">get_env</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna.html#get_env"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.get_env" title="Link to this definition"></a></dt>

@@ -96,10 +96,11 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span> <span class="k">as</span> <span class="n">_SeqRecord</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_textwrap</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_copy</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_logging</span>
+
+<span class="c1"># import logging as _logging</span>
 
 
-<span class="n">_module_logger</span> <span class="o">=</span> <span class="n">_logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pydna.&quot;</span> <span class="o">+</span> <span class="vm">__name__</span><span class="p">)</span>
+<span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
 
 
 <div class="viewcode-block" id="Amplicon">
@@ -123,7 +124,15 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">forward_primer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reverse_primer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">record</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">forward_primer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">reverse_primer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">template</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">forward_primer</span> <span class="o">=</span> <span class="n">forward_primer</span>
@@ -168,7 +177,10 @@
         <span class="n">r</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">rc</span><span class="p">()</span>
         <span class="n">r</span><span class="o">.</span><span class="n">forward_primer</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse_primer</span><span class="p">)</span>
         <span class="n">r</span><span class="o">.</span><span class="n">reverse_primer</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">forward_primer</span><span class="p">)</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">position</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">r</span></div>
 
 
@@ -211,12 +223,12 @@
         <span class="n">fzc</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">crick</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">fp</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">fp</span><span class="o">.</span><span class="n">_fp</span> <span class="p">:</span> <span class="n">fp</span><span class="o">.</span><span class="n">position</span><span class="p">]</span>
         <span class="n">rzc</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">crick</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">rp</span><span class="o">.</span><span class="n">position</span> <span class="p">:</span> <span class="n">rp</span><span class="o">.</span><span class="n">position</span> <span class="o">+</span> <span class="n">rp</span><span class="o">.</span><span class="n">_fp</span><span class="p">]</span>
         <span class="n">f</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">            </span><span class="si">{</span><span class="s2">&quot; &quot;</span><span class="w"> </span><span class="o">*</span><span class="n">ft</span><span class="si">}</span><span class="s2">5</span><span class="si">{</span><span class="n">faz</span><span class="si">}</span><span class="s2">...</span><span class="si">{</span><span class="n">raz</span><span class="si">}</span><span class="s2">3</span>
+<span class="s2">            </span><span class="si">{</span><span class="s2">&quot; &quot;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">ft</span><span class="si">}</span><span class="s2">5</span><span class="si">{</span><span class="n">faz</span><span class="si">}</span><span class="s2">...</span><span class="si">{</span><span class="n">raz</span><span class="si">}</span><span class="s2">3</span>
 <span class="s2">             </span><span class="si">{</span><span class="n">sp3</span><span class="si">}{</span><span class="s2">&quot;|&quot;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">rp</span><span class="o">.</span><span class="n">_fp</span><span class="si">}</span>
 <span class="s2">            </span><span class="si">{</span><span class="n">sp3</span><span class="si">}</span><span class="s2">3</span><span class="si">{</span><span class="n">rp</span><span class="o">.</span><span class="n">seq</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">5</span>
 <span class="s2">            5</span><span class="si">{</span><span class="n">fp</span><span class="o">.</span><span class="n">seq</span><span class="si">}</span><span class="s2">3</span>
-<span class="s2">             </span><span class="si">{</span><span class="s2">&quot;|&quot;</span><span class="w"> </span><span class="o">*</span><span class="n">fp</span><span class="o">.</span><span class="n">_fp</span><span class="si">:</span><span class="s2">&gt;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span><span class="si">}}</span>
-<span class="s2">            </span><span class="si">{</span><span class="s2">&quot; &quot;</span><span class="w"> </span><span class="o">*</span><span class="n">ft</span><span class="si">}</span><span class="s2">3</span><span class="si">{</span><span class="n">fzc</span><span class="si">}</span><span class="s2">...</span><span class="si">{</span><span class="n">rzc</span><span class="si">}</span><span class="s2">5</span>
+<span class="s2">             </span><span class="si">{</span><span class="s2">&quot;|&quot;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">fp</span><span class="o">.</span><span class="n">_fp</span><span class="si">:</span><span class="s2">&gt;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span><span class="si">}}</span>
+<span class="s2">            </span><span class="si">{</span><span class="s2">&quot; &quot;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">ft</span><span class="si">}</span><span class="s2">3</span><span class="si">{</span><span class="n">fzc</span><span class="si">}</span><span class="s2">...</span><span class="si">{</span><span class="n">rzc</span><span class="si">}</span><span class="s2">5</span>
 <span class="s2">            &quot;&quot;&quot;</span>
         <span class="c1"># breakpoint()</span>
         <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">_textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span></div>
@@ -225,13 +237,17 @@
 <div class="viewcode-block" id="Amplicon.set_forward_primer_footprint">
 <a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.set_forward_primer_footprint">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_forward_primer_footprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">forward_primer</span> <span class="o">=</span> <span class="n">_Primer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">tail</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span><span class="n">length</span><span class="p">],</span> <span class="n">footprint</span><span class="o">=</span><span class="n">length</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forward_primer</span> <span class="o">=</span> <span class="n">_Primer</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">tail</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span><span class="n">length</span><span class="p">],</span> <span class="n">footprint</span><span class="o">=</span><span class="n">length</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Amplicon.set_reverse_primer_footprint">
 <a class="viewcode-back" href="../../modules/pydna_amplicon.html#pydna.amplicon.Amplicon.set_reverse_primer_footprint">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_reverse_primer_footprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_primer</span> <span class="o">=</span> <span class="n">_Primer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">tail</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span><span class="n">length</span><span class="p">],</span> <span class="n">footprint</span><span class="o">=</span><span class="n">length</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_primer</span> <span class="o">=</span> <span class="n">_Primer</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">tail</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span><span class="n">length</span><span class="p">],</span> <span class="n">footprint</span><span class="o">=</span><span class="n">length</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Amplicon.program">
@@ -252,17 +268,6 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_primer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_primer</span></div>
 </div>
 
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
-
-    <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
-
-    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>
 </pre></div>
 
            </div>

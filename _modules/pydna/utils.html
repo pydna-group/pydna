@@ -86,13 +86,15 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Data.IUPACData</span><span class="w"> </span><span class="kn">import</span> <span class="n">ambiguous_dna_complement</span> <span class="k">as</span> <span class="n">_ambiguous_dna_complement</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">_maketrans</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">shelve</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_shelve</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
+
+<span class="c1"># import shelve as _shelve</span>
+<span class="c1"># import os as _os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_re</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_base64</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_pickle</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_hashlib</span>
+
+<span class="c1"># import logging as _logging</span>
+<span class="c1"># import base64 as _base64</span>
+<span class="c1"># import pickle as _pickle</span>
+<span class="c1"># import hashlib as _hashlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">keyword</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_keyword</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_collections</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_itertools</span>
@@ -115,7 +117,7 @@
 <span class="c1"># For functions that take str or bytes as input and return str or bytes as output, matching the input type</span>
 <span class="n">StrOrBytes</span> <span class="o">=</span> <span class="n">_TypeVar</span><span class="p">(</span><span class="s2">&quot;StrOrBytes&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span>
 
-<span class="n">_module_logger</span> <span class="o">=</span> <span class="n">_logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pydna.&quot;</span> <span class="o">+</span> <span class="vm">__name__</span><span class="p">)</span>
+<span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
 <span class="n">_ambiguous_dna_complement</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;U&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">})</span>
 <span class="n">_complement_table</span> <span class="o">=</span> <span class="n">_maketrans</span><span class="p">(</span><span class="n">_ambiguous_dna_complement</span><span class="p">)</span>
 
@@ -151,7 +153,9 @@
                 <span class="k">pass</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">stopindex</span> <span class="o">-</span> <span class="n">startindex</span> <span class="o">&gt;=</span> <span class="n">limit</span><span class="p">:</span>
-                    <span class="n">orfs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">frame</span><span class="p">,</span> <span class="n">startindex</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">frame</span><span class="p">,</span> <span class="p">(</span><span class="n">stopindex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">frame</span><span class="p">))</span>
+                    <span class="n">orfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">startindex</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">frame</span><span class="p">,</span> <span class="p">(</span><span class="n">stopindex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">frame</span><span class="p">)</span>
+                    <span class="p">)</span>
                 <span class="c1"># print(stopindex, startindex, limit)</span>
     <span class="k">return</span> <span class="n">orfs</span></div>
 
@@ -165,13 +169,17 @@
     <span class="n">strand</span> <span class="o">=</span> <span class="n">original_location</span><span class="o">.</span><span class="n">strand</span>
     <span class="k">if</span> <span class="n">lim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">original_location</span><span class="p">)</span> <span class="o">+</span> <span class="n">shift</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Shift moves location below zero, use a `lim` to loop around if sequence is circular.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Shift moves location below zero, use a `lim` to loop around if sequence is circular.&quot;</span>
+            <span class="p">)</span>
         <span class="n">lim</span> <span class="o">=</span> <span class="n">_sys</span><span class="o">.</span><span class="n">maxsize</span>
 
     <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">original_location</span><span class="o">.</span><span class="n">parts</span><span class="p">:</span>
         <span class="n">new_start</span> <span class="o">=</span> <span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">start</span> <span class="o">+</span> <span class="n">shift</span><span class="p">)</span> <span class="o">%</span> <span class="n">lim</span>
         <span class="n">new_end</span> <span class="o">=</span> <span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">end</span> <span class="o">+</span> <span class="n">shift</span><span class="p">)</span> <span class="o">%</span> <span class="n">lim</span> <span class="ow">or</span> <span class="n">lim</span>
-        <span class="n">old_start</span><span class="p">,</span> <span class="n">old_end</span> <span class="o">=</span> <span class="p">(</span><span class="n">newparts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">newparts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">newparts</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">old_start</span><span class="p">,</span> <span class="n">old_end</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="n">newparts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">newparts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">end</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">newparts</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="p">)</span>
 
         <span class="c1"># The &quot;join with old&quot; cases are for features with multiple parts</span>
         <span class="c1"># in which consecutive parts do not have any bases between them.</span>
@@ -386,52 +394,49 @@
 
 
 
-<div class="viewcode-block" id="memorize">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.memorize">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">memorize</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cache functions and classes.</span>
+<span class="c1"># def memorize(filename):</span>
+<span class="c1">#     &quot;&quot;&quot;Cache functions and classes.</span>
 
-<span class="sd">    see pydna.download</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="c1">#     see pydna.download</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">wrappee</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="n">_module_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;#### memorizer ####&quot;</span><span class="p">)</span>
-            <span class="n">_module_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;cache filename                   = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-            <span class="n">_module_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="s2">&quot;os.environ[&#39;pydna_cached_funcs&#39;] = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
-            <span class="p">)</span>
-            <span class="k">if</span> <span class="n">filename</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
-                <span class="n">_module_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;cache filename not among cached functions, made it new!&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-            <span class="n">key</span> <span class="o">=</span> <span class="n">_base64</span><span class="o">.</span><span class="n">urlsafe_b64encode</span><span class="p">(</span><span class="n">_hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">_pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">((</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)))</span><span class="o">.</span><span class="n">digest</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
-            <span class="n">_module_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;key = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-            <span class="n">cache</span> <span class="o">=</span> <span class="n">_shelve</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
-                <span class="n">_os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_data_dir&quot;</span><span class="p">],</span> <span class="n">identifier_from_string</span><span class="p">(</span><span class="n">filename</span><span class="p">)),</span>
-                <span class="n">writeback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="n">cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                <span class="n">_module_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="s2">&quot;no result for key </span><span class="si">%s</span><span class="s2"> in shelve </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                    <span class="n">key</span><span class="p">,</span>
-                    <span class="n">identifier_from_string</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
-                <span class="p">)</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-                <span class="n">_module_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;made it new!&quot;</span><span class="p">)</span>
-                <span class="n">cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
-                <span class="n">_module_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;saved result under key </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">_module_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;found </span><span class="si">%s</span><span class="s2"> in cache&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-            <span class="n">cache</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">result</span>
+<span class="c1">#     def decorator(f):</span>
+<span class="c1">#         def wrappee(*args, **kwargs):</span>
+<span class="c1">#             _module_logger.info(&quot;#### memorizer ####&quot;)</span>
+<span class="c1">#             _module_logger.info(&quot;cache filename                   = %s&quot;, filename)</span>
+<span class="c1">#             _module_logger.info(</span>
+<span class="c1">#                 &quot;os.environ[&#39;pydna_cached_funcs&#39;] = %s&quot;,</span>
+<span class="c1">#                 _os.getenv(&quot;pydna_cached_funcs&quot;, &quot;&quot;),</span>
+<span class="c1">#             )</span>
+<span class="c1">#             if filename not in _os.getenv(&quot;pydna_cached_funcs&quot;, &quot;&quot;):</span>
+<span class="c1">#                 _module_logger.info(&quot;cache filename not among cached functions, made it new!&quot;)</span>
+<span class="c1">#                 return f(*args, **kwargs)</span>
+<span class="c1">#             key = _base64.urlsafe_b64encode(_hashlib.sha1(_pickle.dumps((args, kwargs))).digest()).decode(&quot;ascii&quot;)</span>
+<span class="c1">#             _module_logger.info(&quot;key = %s&quot;, key)</span>
+<span class="c1">#             cache = _shelve.open(</span>
+<span class="c1">#                 _os.path.join(_os.environ[&quot;pydna_data_dir&quot;], identifier_from_string(filename)),</span>
+<span class="c1">#                 writeback=False,</span>
+<span class="c1">#             )</span>
+<span class="c1">#             try:</span>
+<span class="c1">#                 result = cache[key]</span>
+<span class="c1">#             except KeyError:</span>
+<span class="c1">#                 _module_logger.info(</span>
+<span class="c1">#                     &quot;no result for key %s in shelve %s&quot;,</span>
+<span class="c1">#                     key,</span>
+<span class="c1">#                     identifier_from_string(filename),</span>
+<span class="c1">#                 )</span>
+<span class="c1">#                 result = f(*args, **kwargs)</span>
+<span class="c1">#                 _module_logger.info(&quot;made it new!&quot;)</span>
+<span class="c1">#                 cache[key] = result</span>
+<span class="c1">#                 _module_logger.info(&quot;saved result under key %s&quot;, key)</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 _module_logger.info(&quot;found %s in cache&quot;, key)</span>
+<span class="c1">#             cache.close()</span>
+<span class="c1">#             return result</span>
 
-        <span class="k">return</span> <span class="n">wrappee</span>
+<span class="c1">#         return wrappee</span>
 
-    <span class="k">return</span> <span class="n">decorator</span></div>
-
+<span class="c1">#     return decorator</span>
 
 
 <div class="viewcode-block" id="identifier_from_string">
@@ -633,7 +638,11 @@
     <span class="n">starts</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;ATG&quot;</span><span class="p">,)</span>
     <span class="n">stops</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;TAA&quot;</span><span class="p">,</span> <span class="s2">&quot;TAG&quot;</span><span class="p">,</span> <span class="s2">&quot;TGA&quot;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">starts</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">cdns</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">)])</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">stops</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">starts</span><span class="p">)</span>
+        <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">cdns</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">)])</span>
+        <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">stops</span><span class="p">)</span>
+    <span class="p">)</span></div>
 
 
 
@@ -748,7 +757,9 @@
         <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;circular&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="n">topology</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">topology</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">arg</span><span class="o">.</span><span class="n">circular</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s2">&quot;circular&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">])</span>
+        <span class="n">topology</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">circular</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s2">&quot;circular&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+        <span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">topology</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;sequences have different topologies&quot;</span><span class="p">)</span>
@@ -759,7 +770,10 @@
             <span class="n">topology</span> <span class="o">=</span> <span class="s2">&quot;circular&quot;</span>
 
     <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">seq</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s2">&quot;seq&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
-    <span class="n">args_string_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">watson</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s2">&quot;watson&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+    <span class="n">args_string_list</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">arg</span><span class="o">.</span><span class="n">watson</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s2">&quot;watson&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span>
+    <span class="p">]</span>
 
     <span class="n">length</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">args_string_list</span><span class="p">))</span>
 
@@ -877,15 +891,6 @@
 
     <span class="k">return</span> <span class="kc">False</span></div>
 
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
-
-    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>
 </pre></div>
 
            </div>

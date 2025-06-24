@@ -165,20 +165,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#pydna.all.read_primer"><code class="docutils literal notranslate"><span class="pre">read_primer()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydna.all.parse"><code class="docutils literal notranslate"><span class="pre">parse()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydna.all.parse_primers"><code class="docutils literal notranslate"><span class="pre">parse_primers()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydna.all.ape"><code class="docutils literal notranslate"><span class="pre">ape()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydna.all.primer_design"><code class="docutils literal notranslate"><span class="pre">primer_design()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydna.all.assembly_fragments"><code class="docutils literal notranslate"><span class="pre">assembly_fragments()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydna.all.circular_assembly_fragments"><code class="docutils literal notranslate"><span class="pre">circular_assembly_fragments()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydna.all.eq"><code class="docutils literal notranslate"><span class="pre">eq()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydna.all.gbtext_clean"><code class="docutils literal notranslate"><span class="pre">gbtext_clean()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydna.all.PrimerList"><code class="docutils literal notranslate"><span class="pre">PrimerList</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#pydna.all.PrimerList.accessed"><code class="docutils literal notranslate"><span class="pre">PrimerList.accessed</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pydna.all.PrimerList.assign_numbers"><code class="docutils literal notranslate"><span class="pre">PrimerList.assign_numbers()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pydna.all.PrimerList.pydna_code_from_list"><code class="docutils literal notranslate"><span class="pre">PrimerList.pydna_code_from_list()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pydna.all.PrimerList.open_folder"><code class="docutils literal notranslate"><span class="pre">PrimerList.open_folder()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pydna.all.PrimerList.code"><code class="docutils literal notranslate"><span class="pre">PrimerList.code()</span></code></a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_amplicon.html">pydna.amplicon</a></li>
@@ -193,7 +183,6 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_download.html">pydna.download</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_dseq.html">pydna.dseq</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_dseqrecord.html">pydna.dseqrecord</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pydna_editor.html">pydna.editor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_fakeseq.html">pydna.fakeseq</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_fusionpcr.html">pydna.fusionpcr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_gateway.html">pydna.gateway</a></li>
@@ -205,8 +194,6 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_goldengate.html">pydna.goldengate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_ladders.html">pydna.ladders</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_ligate.html">pydna.ligate</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pydna_myenzymes.html">pydna.myenzymes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pydna_myprimers.html">pydna.myprimers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_parsers.html">pydna.parsers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_primer.html">pydna.primer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_readers.html">pydna.readers</a></li>
@@ -261,7 +248,8 @@
 <span class="go">Dseqrecord(-3)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.all</span><span class="w"> </span><span class="kn">import</span> <span class="n">__all__</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">__all__</span>
-<span class="go">[&#39;Anneal&#39;, &#39;pcr&#39;, &#39;Assembly&#39;, &#39;genbank&#39;, &#39;Genbank&#39;, &#39;download_text&#39;, &#39;Dseqrecord&#39;, &#39;Dseq&#39;, &#39;read&#39;, &#39;read_primer&#39;, &#39;parse&#39;, &#39;parse_primers&#39;, &#39;ape&#39;, &#39;primer_design&#39;, &#39;assembly_fragments&#39;, &#39;circular_assembly_fragments&#39;, &#39;eq&#39;, &#39;gbtext_clean&#39;, &#39;PrimerList&#39;]</span>
+<span class="go">[&#39;Anneal&#39;, &#39;pcr&#39;, &#39;Assembly&#39;, &#39;genbank&#39;, &#39;Genbank&#39;, &#39;download_text&#39;, &#39;Dseqrecord&#39;,</span>
+<span class="go">&#39;Dseq&#39;, &#39;read&#39;, &#39;read_primer&#39;, &#39;parse&#39;, &#39;parse_primers&#39;, &#39;primer_design&#39;, &#39;assembly_fragments&#39;, &#39;eq&#39;, &#39;gbtext_clean&#39;]</span>
 <span class="gp">&gt;&gt;&gt;</span>
 </pre></div>
 </div>
@@ -446,14 +434,14 @@ manage sequences with a high number of shared sub sequences.</p></li>
 :func:pydna.genbank.Genbank.nucleotide method. The email address stored
 in the <cite>pydna_email</cite> environment variable is used. The easiest way set
 this permanantly is to edit the <cite>pydna.ini</cite> file.
-See the documentation of <a class="reference internal" href="pydna.html#pydna.open_config_folder" title="pydna.open_config_folder"><code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.open_config_folder()</span></code></a></p>
+See the documentation of <code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.open_config_folder()</span></code></p>
 <p>if no accession is given, a <a class="reference external" href="https://www.ncbi.nlm.nih.gov/nuccore/CS570233.1">very short Genbank
 entry</a>
 is used as an example (see below). This can be useful for testing the
 connection to Genbank.</p>
 <p>Please note that this result is also cached by default by settings in
 the pydna.ini file.
-See the documentation of <a class="reference internal" href="pydna.html#pydna.open_config_folder" title="pydna.open_config_folder"><code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.open_config_folder()</span></code></a></p>
+See the documentation of <code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.open_config_folder()</span></code></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">LOCUS</span>       <span class="n">CS570233</span>                  <span class="mi">14</span> <span class="n">bp</span>    <span class="n">DNA</span>     <span class="n">linear</span>   <span class="n">PAT</span> <span class="mi">18</span><span class="o">-</span><span class="n">MAY</span><span class="o">-</span><span class="mi">2007</span>
 <span class="n">DEFINITION</span>  <span class="n">Sequence</span> <span class="mi">6</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Patent</span> <span class="n">WO2007025016</span><span class="o">.</span>
 <span class="n">ACCESSION</span>   <span class="n">CS570233</span>
@@ -502,21 +490,68 @@ Genbanks who you are, so that they can contact you.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="pydna.all.Genbank.nucleotide">
-<span class="sig-name descname"><span class="pre">nucleotide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pydna.all.Genbank.nucleotide" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">nucleotide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_stop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strand</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Literal" title="(in Python v3.8)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">2</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pydna_genbankrecord.html#pydna.genbankrecord.GenbankRecord" title="pydna.genbankrecord.GenbankRecord"><span class="pre">GenbankRecord</span></a></span></span><a class="reference internal" href="../_modules/pydna/genbank.html#Genbank.nucleotide"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.Genbank.nucleotide" title="Link to this definition"></a></dt>
+<dd><p>This method downloads a genbank nuclotide record from genbank. This method is
+cached by default. This can be controlled by editing the <strong>pydna_cached_funcs</strong> environment
+variable. The best way to do this permanently is to edit the edit the
+<cite>pydna.ini</cite> file. See the documentation of <code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.open_config_folder()</span></code></p>
+<p>Item is a string containing one genbank accession number
+for a nucleotide file. Genbank nucleotide accession numbers have this format:</p>
+<div class="line-block">
+<div class="line">A12345   = 1 letter  + 5 numerals</div>
+<div class="line">AB123456 = 2 letters + 6 numerals</div>
+</div>
+<p>The accession number is sometimes followed by a point and version number</p>
+<div class="line-block">
+<div class="line">BK006936.2</div>
+</div>
+<p>Item can also contain optional interval information in the following formats:</p>
+<div class="line-block">
+<div class="line">BK006936.2 REGION: complement(613900..615202)</div>
+<div class="line">NM_005546 REGION: 1..100</div>
+<div class="line">NM_005546 REGION: complement(1..100)</div>
+<div class="line">21614549:1-100</div>
+<div class="line">21614549:c100-1</div>
+<div class="line">21614549 1-100</div>
+<div class="line">21614549 c100-1</div>
+</div>
+<p>It is useful to set an interval for large genbank records to limit the download time.
+The items above containing interval information and can be obtained directly by
+looking up an entry in Genbank and setting the <cite>Change region shown</cite> on the
+upper right side of the page. The <cite>ACCESSION</cite> line of the displayed Genbank
+file will have the formatting shown.</p>
+<p>Alternatively, seq_start and seq_stop can be set explicitly to the sequence intervals to be
+downloaded.</p>
+<p>If strand is 2. “c”, “C”, “crick”, “Crick”, “antisense”,”Antisense”,
+“2”, 2, “-” or “-1”, the antisense (Crick) strand is returned, otherwise
+the sense (Watson) strand is returned.</p>
+<p>Result is returned as a <a class="reference internal" href="pydna_genbankrecord.html#pydna.genbankrecord.GenbankRecord" title="pydna.genbankrecord.GenbankRecord"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydna.genbankrecord.GenbankRecord</span></code></a> object.</p>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="http://www.dsimb.inserm.fr/~fuchs/M2BI/AnalSeq/Annexes/Sequences/Accession_Numbers.htm">http://www.dsimb.inserm.fr/~fuchs/M2BI/AnalSeq/Annexes/Sequences/Accession_Numbers.htm</a></p>
+</aside>
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="http://www.ncbi.nlm.nih.gov/books/NBK25499/#chapter4.EFetch">http://www.ncbi.nlm.nih.gov/books/NBK25499/#chapter4.EFetch</a></p>
+</aside>
+</aside>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.all.download_text">
-<span class="sig-prename descclassname"><span class="pre">pydna.all.</span></span><span class="sig-name descname"><span class="pre">download_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pydna.all.download_text" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">pydna.all.</span></span><span class="sig-name descname"><span class="pre">download_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/download.html#download_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.download_text" title="Link to this definition"></a></dt>
+<dd><p>docstring.</p>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pydna.all.Dseqrecord">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydna.all.</span></span><span class="sig-name descname"><span class="pre">Dseqrecord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circular</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5e-14</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/dseqrecord.html#Dseqrecord"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.Dseqrecord" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="pydna_seqrecord.html#pydna.seqrecord.SeqRecord" title="pydna.seqrecord.SeqRecord"><code class="xref py py-class docutils literal notranslate"><span class="pre">SeqRecord</span></code></a></p>
-<p>Dseqrecord is a double stranded version of the Biopython SeqRecord <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> class.
+<p>Dseqrecord is a double stranded version of the Biopython SeqRecord <a class="footnote-reference brackets" href="#id1" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> class.
 The Dseqrecord object holds a Dseq object describing the sequence.
 Additionally, Dseqrecord hold meta information about the sequence in the
 from of a list of SeqFeatures, in the same way as the SeqRecord does.</p>
@@ -574,8 +609,8 @@ than each strand alone if they are staggered as in the example below.</p>
 </div>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id2" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id4" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">3</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://biopython.org/wiki/SeqRecord">http://biopython.org/wiki/SeqRecord</a></p>
 </aside>
 </aside>
@@ -721,7 +756,7 @@ underlying Dseq object has to be circular.</p>
 <dt class="sig sig-object py" id="pydna.all.Dseqrecord.format">
 <span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gb'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/dseqrecord.html#Dseqrecord.format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.Dseqrecord.format" title="Link to this definition"></a></dt>
 <dd><p>Returns the sequence as a string using a format supported by Biopython
-SeqIO <a class="footnote-reference brackets" href="#id4" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Default is “gb” which is short for Genbank.</p>
+SeqIO <a class="footnote-reference brackets" href="#id2" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Default is “gb” which is short for Genbank.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">=</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span><span class="p">)</span>
@@ -745,8 +780,8 @@ SeqIO <a class="footnote-reference brackets" href="#id4" id="id3" role="doc-note
 </div>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id4" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id6" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">4</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://biopython.org/wiki/SeqIO">http://biopython.org/wiki/SeqIO</a></p>
 </aside>
 </aside>
@@ -756,7 +791,7 @@ SeqIO <a class="footnote-reference brackets" href="#id4" id="id3" role="doc-note
 <dt class="sig sig-object py" id="pydna.all.Dseqrecord.write">
 <span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gb'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/dseqrecord.html#Dseqrecord.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.Dseqrecord.write" title="Link to this definition"></a></dt>
 <dd><p>Writes the Dseqrecord to a file using the format f, which must
-be a format supported by Biopython SeqIO for writing <a class="footnote-reference brackets" href="#id6" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. Default
+be a format supported by Biopython SeqIO for writing <a class="footnote-reference brackets" href="#id4" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. Default
 is “gb” which is short for Genbank. Note that Biopython SeqIO reads
 more formats than it writes.</p>
 <p>Filename is the path to the file where the sequece is to be
@@ -770,8 +805,8 @@ used so that the old file is not lost:</p>
 <p><code class="docutils literal notranslate"><span class="pre">&lt;obj.locus&gt;_NEW.&lt;f&gt;</span></code></p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id6" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">3</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id8" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">5</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://biopython.org/wiki/SeqIO">http://biopython.org/wiki/SeqIO</a></p>
 </aside>
 </aside>
@@ -1777,7 +1812,7 @@ the DNA fragment</p>
 <dt class="sig sig-object py" id="pydna.all.Dseq.fill_in">
 <span class="sig-name descname"><span class="pre">fill_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nucleotides</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pydna_dseq.html#pydna.dseq.Dseq" title="pydna.dseq.Dseq"><span class="pre">Dseq</span></a></span></span><a class="reference internal" href="../_modules/pydna/dseq.html#Dseq.fill_in"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.Dseq.fill_in" title="Link to this definition"></a></dt>
 <dd><p>Fill in of five prime protruding end with a DNA polymerase
-that has only DNA polymerase activity (such as exo-klenow <a class="footnote-reference brackets" href="#id8" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>)
+that has only DNA polymerase activity (such as exo-klenow <a class="footnote-reference brackets" href="#id6" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>)
 and any combination of A, G, C or T. Default are all four
 nucleotides together.</p>
 <dl class="field-list simple">
@@ -1827,8 +1862,8 @@ nucleotides together.</p>
 </div>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id8" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">4</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id10" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">6</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://en.wikipedia.org/wiki/Klenow_fragment#The_exo-_Klenow_fragment">http://en.wikipedia.org/wiki/Klenow_fragment#The_exo-_Klenow_fragment</a></p>
 </aside>
 </aside>
@@ -1892,7 +1927,7 @@ biologically plausible rational.</p>
 <dt class="sig sig-object py" id="pydna.all.Dseq.mung">
 <span class="sig-name descname"><span class="pre">mung</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pydna_dseq.html#pydna.dseq.Dseq" title="pydna.dseq.Dseq"><span class="pre">Dseq</span></a></span></span><a class="reference internal" href="../_modules/pydna/dseq.html#Dseq.mung"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.Dseq.mung" title="Link to this definition"></a></dt>
 <dd><p>Simulates treatment a nuclease with 5’-3’ and 3’-5’ single
-strand specific exonuclease activity (such as mung bean nuclease <a class="footnote-reference brackets" href="#id10" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>)</p>
+strand specific exonuclease activity (such as mung bean nuclease <a class="footnote-reference brackets" href="#id8" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>)</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">ggatcc</span>    <span class="o">-&gt;</span>     <span class="n">gatcc</span>
      <span class="n">ctaggg</span>          <span class="n">ctagg</span>
 
@@ -1922,8 +1957,8 @@ strand specific exonuclease activity (such as mung bean nuclease <a class="footn
 </div>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id10" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">5</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id12" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://en.wikipedia.org/wiki/Mung_bean_nuclease">http://en.wikipedia.org/wiki/Mung_bean_nuclease</a></p>
 </aside>
 </aside>
@@ -2434,7 +2469,7 @@ are allowed.</p></li>
 </ol>
 </p></li>
 <li><p><strong>ds</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True double stranded <a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dseqrecord</span></code></a> objects are returned.
-If False single stranded <code class="xref py py-class docutils literal notranslate"><span class="pre">Bio.SeqRecord</span></code> <a class="footnote-reference brackets" href="#id12" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a> objects are
+If False single stranded <code class="xref py py-class docutils literal notranslate"><span class="pre">Bio.SeqRecord</span></code> <a class="footnote-reference brackets" href="#id10" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a> objects are
 returned.</p></li>
 </ul>
 </dd>
@@ -2447,8 +2482,8 @@ returned.</p></li>
 </dl>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id12" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">6</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id14" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://biopython.org/wiki/SeqRecord">http://biopython.org/wiki/SeqRecord</a></p>
 </aside>
 </aside>
@@ -2461,12 +2496,6 @@ returned.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.all.parse_primers">
 <span class="sig-prename descclassname"><span class="pre">pydna.all.</span></span><span class="sig-name descname"><span class="pre">parse_primers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/parsers.html#parse_primers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.parse_primers" title="Link to this definition"></a></dt>
-<dd><p>docstring.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pydna.all.ape">
-<span class="sig-prename descclassname"><span class="pre">pydna.all.</span></span><span class="sig-name descname"><span class="pre">ape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/editor.html#ape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.ape" title="Link to this definition"></a></dt>
 <dd><p>docstring.</p>
 </dd></dl>
 
@@ -2893,13 +2922,6 @@ Amplicon1         Amplicon3
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pydna.all.circular_assembly_fragments">
-<span class="sig-prename descclassname"><span class="pre">pydna.all.</span></span><span class="sig-name descname"><span class="pre">circular_assembly_fragments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overlap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">35</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlink</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/design.html#circular_assembly_fragments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.circular_assembly_fragments" title="Link to this definition"></a></dt>
-<dd><p>Equivalent to <cite>assembly_fragments</cite> with <cite>circular=True</cite>.</p>
-<p>Deprecated, kept for backward compatibility. Use <cite>assembly_fragments</cite> with <cite>circular=True</cite> instead.</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="pydna.all.eq">
 <span class="sig-prename descclassname"><span class="pre">pydna.all.</span></span><span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/utils.html#eq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.eq" title="Link to this definition"></a></dt>
 <dd><p>Compare two or more DNA sequences for equality.</p>
@@ -3055,55 +3077,6 @@ jseq which contains the JSON intermediate.</p>
 <span class="go">//</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="pydna.all.PrimerList">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydna.all.</span></span><span class="sig-name descname"><span class="pre">PrimerList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initlist:</span> <span class="pre">~typing.Iterable</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path:</span> <span class="pre">(&lt;class</span> <span class="pre">'str'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'pathlib.Path'&gt;)</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&quot;p&quot;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/myprimers.html#PrimerList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.PrimerList" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.8/library/collections.html#collections.UserList" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserList</span></code></a></p>
-<p>Read a text file with primers.</p>
-<p>The primers can be of any format readable by the parse_primers
-function. Lines beginning with # are ignored. Path defaults to
-the path given by the pydna_primers environment variable.</p>
-<p>The primer list does not accept new primers. Use the
-assign_numbers_to_new_primers method and paste the new
-primers at the top of the list.</p>
-<p>The primer list remembers the numbers of accessed primers.
-The indices of accessed primers are stored in the .accessed
-property.</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="pydna.all.PrimerList.accessed">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accessed</span></span><a class="headerlink" href="#pydna.all.PrimerList.accessed" title="Link to this definition"></a></dt>
-<dd><p>docstring.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pydna.all.PrimerList.assign_numbers">
-<span class="sig-name descname"><span class="pre">assign_numbers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/myprimers.html#PrimerList.assign_numbers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.PrimerList.assign_numbers" title="Link to this definition"></a></dt>
-<dd><p>Find new primers in lst.</p>
-<p>Returns a string containing new primers with their assigned
-numbers. This string can be copied and pasted to the primer
-text file.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pydna.all.PrimerList.pydna_code_from_list">
-<span class="sig-name descname"><span class="pre">pydna_code_from_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/myprimers.html#PrimerList.pydna_code_from_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.PrimerList.pydna_code_from_list" title="Link to this definition"></a></dt>
-<dd><p>Pydna code for a list of primer objects.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pydna.all.PrimerList.open_folder">
-<span class="sig-name descname"><span class="pre">open_folder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/myprimers.html#PrimerList.open_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.PrimerList.open_folder" title="Link to this definition"></a></dt>
-<dd><p>Open folder where primer file is located.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pydna.all.PrimerList.code">
-<span class="sig-name descname"><span class="pre">code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pydna.all.PrimerList.code" title="Link to this definition"></a></dt>
-<dd><p>Pydna code for a list of primer objects.</p>
-</dd></dl>
-
 </dd></dl>
 
 </section>

@@ -144,13 +144,14 @@
     <span class="n">TypedDict</span> <span class="k">as</span> <span class="n">_TypedDict</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_itertools</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_logging</span>
+
+<span class="c1"># import logging as _logging</span>
 
 <span class="c1"># from func_timeout import func_set_timeout</span>
 <span class="c1"># from wrapt_timeout_decorator import timeout</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.threading_timer_decorator_exit</span><span class="w"> </span><span class="kn">import</span> <span class="n">exit_after</span>
 
-<span class="n">_module_logger</span> <span class="o">=</span> <span class="n">_logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pydna.&quot;</span> <span class="o">+</span> <span class="vm">__name__</span><span class="p">)</span>
+<span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
 
 
 <div class="viewcode-block" id="Assembly">
@@ -319,7 +320,9 @@
             <span class="n">before</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">order</span><span class="p">()</span>
             <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span>
                 <span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="n">order</span> <span class="o">+</span> <span class="n">od</span><span class="p">,</span> <span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="n">length</span><span class="p">})</span>
-                <span class="k">for</span> <span class="n">od</span><span class="p">,</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">n</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">G</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">od</span><span class="p">,</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+                    <span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">n</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">G</span>
+                <span class="p">)</span>
             <span class="p">)</span>
             <span class="n">order</span> <span class="o">+=</span> <span class="n">G</span><span class="o">.</span><span class="n">order</span><span class="p">()</span> <span class="o">-</span> <span class="n">before</span>
 
@@ -331,7 +334,8 @@
                 <span class="n">feats</span> <span class="o">=</span> <span class="p">[</span>
                     <span class="n">ft</span>
                     <span class="k">for</span> <span class="n">ft</span> <span class="ow">in</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="n">start1</span> <span class="o">&lt;=</span> <span class="n">ft</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">start2</span> <span class="o">+</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node2</span><span class="p">][</span><span class="s2">&quot;length&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">ft</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span>
+                    <span class="k">if</span> <span class="n">start1</span> <span class="o">&lt;=</span> <span class="n">ft</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span>
+                    <span class="ow">and</span> <span class="n">start2</span> <span class="o">+</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node2</span><span class="p">][</span><span class="s2">&quot;length&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">ft</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span>
                 <span class="p">]</span>
 
                 <span class="c1"># for feat in feats:</span>
@@ -347,7 +351,11 @@
                 <span class="p">)</span>  <span class="c1"># string</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">_nx</span><span class="o">.</span><span class="n">create_empty_copy</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;seq&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span>
+            <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;seq&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodemap</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">nodemap</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">nodemap</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nodemap</span><span class="p">}}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">limit</span> <span class="o">=</span> <span class="n">limit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span> <span class="o">=</span> <span class="n">fragments</span>
@@ -368,7 +376,11 @@
                 <span class="s2">&quot;begin&quot;</span><span class="p">,</span>
                 <span class="n">node</span><span class="p">,</span>
                 <span class="n">piece</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">start</span><span class="p">),</span>
-                <span class="n">features</span><span class="o">=</span><span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">firstfragment</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">start</span> <span class="o">+</span> <span class="n">length</span> <span class="o">&gt;=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span><span class="p">],</span>
+                <span class="n">features</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">f</span>
+                    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">firstfragment</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">start</span> <span class="o">+</span> <span class="n">length</span> <span class="o">&gt;=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span>
+                <span class="p">],</span>
                 <span class="n">seq</span><span class="o">=</span><span class="n">firstfragment</span><span class="p">[</span><span class="s2">&quot;mixed&quot;</span><span class="p">],</span>
                 <span class="n">name</span><span class="o">=</span><span class="n">firstfragment</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
             <span class="p">)</span>
@@ -381,7 +393,11 @@
                 <span class="s2">&quot;begin_rc&quot;</span><span class="p">,</span>
                 <span class="n">node</span><span class="p">,</span>
                 <span class="n">piece</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">start</span><span class="p">),</span>
-                <span class="n">features</span><span class="o">=</span><span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">firstfragmentrc</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">start</span> <span class="o">+</span> <span class="n">length</span> <span class="o">&gt;=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span><span class="p">],</span>
+                <span class="n">features</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">f</span>
+                    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">firstfragmentrc</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">start</span> <span class="o">+</span> <span class="n">length</span> <span class="o">&gt;=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span>
+                <span class="p">],</span>
                 <span class="n">seq</span><span class="o">=</span><span class="n">firstfragmentrc</span><span class="p">[</span><span class="s2">&quot;mixed&quot;</span><span class="p">],</span>
                 <span class="n">name</span><span class="o">=</span><span class="n">firstfragmentrc</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
             <span class="p">)</span>
@@ -393,7 +409,9 @@
                 <span class="n">node</span><span class="p">,</span>
                 <span class="s2">&quot;end&quot;</span><span class="p">,</span>
                 <span class="n">piece</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lastfragment</span><span class="p">[</span><span class="s2">&quot;mixed&quot;</span><span class="p">])),</span>
-                <span class="n">features</span><span class="o">=</span><span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">lastfragment</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">],</span>
+                <span class="n">features</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">lastfragment</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span>
+                <span class="p">],</span>
                 <span class="n">seq</span><span class="o">=</span><span class="n">lastfragment</span><span class="p">[</span><span class="s2">&quot;mixed&quot;</span><span class="p">],</span>
                 <span class="n">name</span><span class="o">=</span><span class="n">lastfragment</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
             <span class="p">)</span>
@@ -406,7 +424,9 @@
                 <span class="n">node</span><span class="p">,</span>
                 <span class="s2">&quot;end_rc&quot;</span><span class="p">,</span>
                 <span class="n">piece</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lastfragmentrc</span><span class="p">[</span><span class="s2">&quot;mixed&quot;</span><span class="p">])),</span>
-                <span class="n">features</span><span class="o">=</span><span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">lastfragmentrc</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">],</span>
+                <span class="n">features</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">lastfragmentrc</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span>
+                <span class="p">],</span>
                 <span class="n">seq</span><span class="o">=</span><span class="n">lastfragmentrc</span><span class="p">[</span><span class="s2">&quot;mixed&quot;</span><span class="p">],</span>
                 <span class="n">name</span><span class="o">=</span><span class="n">lastfragmentrc</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
             <span class="p">)</span>
@@ -416,9 +436,15 @@
         <span class="n">linearpaths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
             <span class="n">_itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span>
                 <span class="n">_nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="n">_nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">&quot;begin&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">max_nodes</span><span class="p">),</span>
-                <span class="n">_nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="n">_nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">&quot;begin&quot;</span><span class="p">,</span> <span class="s2">&quot;end_rc&quot;</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">max_nodes</span><span class="p">),</span>
-                <span class="n">_nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="n">_nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">&quot;begin_rc&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">max_nodes</span><span class="p">),</span>
-                <span class="n">_nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="n">_nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">&quot;begin_rc&quot;</span><span class="p">,</span> <span class="s2">&quot;end_rc&quot;</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">max_nodes</span><span class="p">),</span>
+                <span class="n">_nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span>
+                    <span class="n">_nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">&quot;begin&quot;</span><span class="p">,</span> <span class="s2">&quot;end_rc&quot;</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">max_nodes</span>
+                <span class="p">),</span>
+                <span class="n">_nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span>
+                    <span class="n">_nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">&quot;begin_rc&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">max_nodes</span>
+                <span class="p">),</span>
+                <span class="n">_nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span>
+                    <span class="n">_nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">&quot;begin_rc&quot;</span><span class="p">,</span> <span class="s2">&quot;end_rc&quot;</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">max_nodes</span>
+                <span class="p">),</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
@@ -492,7 +518,9 @@
         <span class="k">for</span> <span class="p">(</span>
             <span class="n">_</span><span class="p">,</span>
             <span class="n">cp</span><span class="p">,</span>
-        <span class="p">)</span> <span class="ow">in</span> <span class="n">cpaths_sorted</span><span class="p">:</span>  <span class="c1"># cpaths is a list of nodes representing a circular assembly</span>
+        <span class="p">)</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="n">cpaths_sorted</span>
+        <span class="p">):</span>  <span class="c1"># cpaths is a list of nodes representing a circular assembly</span>
             <span class="n">edgelol</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># edgelol is a list of lists of all edges along cp</span>
             <span class="n">cp</span> <span class="o">+=</span> <span class="n">cp</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cp</span><span class="p">,</span> <span class="n">cp</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
@@ -532,8 +560,12 @@
                         <span class="k">elif</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">):</span>
                             <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">_CompoundLocation</span><span class="p">(</span>
                                 <span class="p">(</span>
-                                    <span class="n">_SimpleLocation</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">_ExactPosition</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">))),</span>
-                                    <span class="n">_SimpleLocation</span><span class="p">(</span><span class="n">_ExactPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">)),</span>
+                                    <span class="n">_SimpleLocation</span><span class="p">(</span>
+                                        <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">_ExactPosition</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">))</span>
+                                    <span class="p">),</span>
+                                    <span class="n">_SimpleLocation</span><span class="p">(</span>
+                                        <span class="n">_ExactPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
+                                    <span class="p">),</span>
                                 <span class="p">)</span>
                             <span class="p">)</span>
 
@@ -569,7 +601,9 @@
             <span class="s2">&quot;limit(bp)..: </span><span class="si">{limit}</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="s2">&quot;G.nodes....: </span><span class="si">{nodes}</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="s2">&quot;algorithm..: </span><span class="si">{al}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">sequences</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">bp&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;mixed&quot;</span><span class="p">]))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">),</span>
+                <span class="n">sequences</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">bp&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;mixed&quot;</span><span class="p">]))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span>
+                <span class="p">),</span>
                 <span class="n">limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">limit</span><span class="p">,</span>
                 <span class="n">nodes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">order</span><span class="p">(),</span>
                 <span class="n">al</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
@@ -610,17 +644,6 @@
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">features</span><span class="p">:</span> <span class="n">_List</span><span class="p">[</span><span class="n">_SeqFeature</span><span class="p">]</span>
     <span class="n">nodes</span><span class="p">:</span> <span class="n">_List</span><span class="p">[</span><span class="n">_NodeTuple</span><span class="p">]</span>
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
-
-    <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
-
-    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>
 </pre></div>
 
            </div>

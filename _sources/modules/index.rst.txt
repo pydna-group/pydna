@@ -21,7 +21,6 @@ Modules
    pydna_download
    pydna_dseq
    pydna_dseqrecord
-   pydna_editor
    pydna_fakeseq
    pydna_fusionpcr
    pydna_gateway
@@ -33,8 +32,6 @@ Modules
    pydna_goldengate
    pydna_ladders
    pydna_ligate
-   pydna_myenzymes
-   pydna_myprimers
    pydna_parsers
    pydna_primer
    pydna_readers

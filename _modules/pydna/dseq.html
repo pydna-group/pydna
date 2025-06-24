@@ -129,7 +129,9 @@
 
 <span class="c1"># To represent any subclass of Dseq</span>
 <span class="n">DseqType</span> <span class="o">=</span> <span class="n">_TypeVar</span><span class="p">(</span><span class="s2">&quot;DseqType&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s2">&quot;Dseq&quot;</span><span class="p">)</span>
-<span class="n">EnzymesType</span> <span class="o">=</span> <span class="n">_TypeVar</span><span class="p">(</span><span class="s2">&quot;EnzymesType&quot;</span><span class="p">,</span> <span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="n">_Iterable</span><span class="p">[</span><span class="s2">&quot;_AbstractCut&quot;</span><span class="p">],</span> <span class="s2">&quot;_AbstractCut&quot;</span><span class="p">)</span>
+<span class="n">EnzymesType</span> <span class="o">=</span> <span class="n">_TypeVar</span><span class="p">(</span>
+    <span class="s2">&quot;EnzymesType&quot;</span><span class="p">,</span> <span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="n">_Iterable</span><span class="p">[</span><span class="s2">&quot;_AbstractCut&quot;</span><span class="p">],</span> <span class="s2">&quot;_AbstractCut&quot;</span>
+<span class="p">)</span>
 <span class="n">CutSiteType</span> <span class="o">=</span> <span class="n">_Tuple</span><span class="p">[</span><span class="n">_Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">_Union</span><span class="p">[</span><span class="s2">&quot;_AbstractCut&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]</span>
 
 
@@ -418,7 +420,9 @@
                     <span class="nb">int</span><span class="p">(</span><span class="n">_math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">watson</span><span class="p">))</span> <span class="o">/</span> <span class="n">_math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">4</span><span class="p">)),</span>
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">olaps</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not anneal the two strands.&quot;</span> <span class="s2">&quot; Please provide ovhg value&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;Could not anneal the two strands.&quot;</span> <span class="s2">&quot; Please provide ovhg value&quot;</span>
+                    <span class="p">)</span>
 
                 <span class="c1"># We extract the positions and length of the first (longest) overlap, since</span>
                 <span class="c1"># common_sub_strings sorts the overlaps by length.</span>
@@ -426,7 +430,10 @@
 
                 <span class="c1"># We see if there is another overlap of the same length</span>
                 <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">olap</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">longest_olap_length</span> <span class="k">for</span> <span class="n">olap</span> <span class="ow">in</span> <span class="n">olaps</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;More than one way of annealing the&quot;</span> <span class="s2">&quot; strands. Please provide ovhg value&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;More than one way of annealing the&quot;</span>
+                        <span class="s2">&quot; strands. Please provide ovhg value&quot;</span>
+                    <span class="p">)</span>
 
                 <span class="n">ovhg</span> <span class="o">=</span> <span class="n">pos_crick</span> <span class="o">-</span> <span class="n">pos_watson</span>
 
@@ -434,7 +441,12 @@
                 <span class="n">asn</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">ovhg</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">_rc</span><span class="p">(</span><span class="n">crick</span><span class="p">))</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span>
-                    <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="n">b</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">_itertools</span><span class="o">.</span><span class="n">zip_longest</span><span class="p">(</span><span class="n">sns</span><span class="p">,</span> <span class="n">asn</span><span class="p">,</span> <span class="n">fillvalue</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)]),</span>
+                    <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">a</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="n">b</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                            <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">_itertools</span><span class="o">.</span><span class="n">zip_longest</span><span class="p">(</span><span class="n">sns</span><span class="p">,</span> <span class="n">asn</span><span class="p">,</span> <span class="n">fillvalue</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                        <span class="p">]</span>
+                    <span class="p">),</span>
                     <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ASCII&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
 
@@ -449,10 +461,14 @@
                         <span class="p">)</span>
                 <span class="k">elif</span> <span class="n">ovhg</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">ovhg</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">watson</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">crick</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">_rc</span><span class="p">(</span><span class="n">crick</span><span class="p">[</span><span class="o">-</span><span class="n">ovhg</span><span class="p">:])</span> <span class="o">+</span> <span class="n">watson</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span>
+                            <span class="n">_rc</span><span class="p">(</span><span class="n">crick</span><span class="p">[</span><span class="o">-</span><span class="n">ovhg</span><span class="p">:])</span> <span class="o">+</span> <span class="n">watson</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ASCII&quot;</span>
+                        <span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span>
-                            <span class="n">_rc</span><span class="p">(</span><span class="n">crick</span><span class="p">[</span><span class="o">-</span><span class="n">ovhg</span><span class="p">:])</span> <span class="o">+</span> <span class="n">watson</span> <span class="o">+</span> <span class="n">_rc</span><span class="p">(</span><span class="n">crick</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">crick</span><span class="p">)</span> <span class="o">-</span> <span class="n">ovhg</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">watson</span><span class="p">)]),</span>
+                            <span class="n">_rc</span><span class="p">(</span><span class="n">crick</span><span class="p">[</span><span class="o">-</span><span class="n">ovhg</span><span class="p">:])</span>
+                            <span class="o">+</span> <span class="n">watson</span>
+                            <span class="o">+</span> <span class="n">_rc</span><span class="p">(</span><span class="n">crick</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">crick</span><span class="p">)</span> <span class="o">-</span> <span class="n">ovhg</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">watson</span><span class="p">)]),</span>
                             <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ASCII&quot;</span><span class="p">,</span>
                         <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>  <span class="c1"># ovhg &lt; 0</span>
@@ -491,7 +507,11 @@
         <span class="n">obj</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span>
         <span class="n">wb</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">watson</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
         <span class="n">cb</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">crick</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">_rc</span><span class="p">(</span><span class="n">cb</span><span class="p">[</span><span class="o">-</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ovhg</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span> <span class="p">:])</span> <span class="o">+</span> <span class="n">wb</span> <span class="o">+</span> <span class="n">_rc</span><span class="p">(</span><span class="n">cb</span><span class="p">[:</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span> <span class="o">-</span> <span class="n">ovhg</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">wb</span><span class="p">))])</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">_rc</span><span class="p">(</span><span class="n">cb</span><span class="p">[</span><span class="o">-</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ovhg</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span> <span class="p">:])</span>
+            <span class="o">+</span> <span class="n">wb</span>
+            <span class="o">+</span> <span class="n">_rc</span><span class="p">(</span><span class="n">cb</span><span class="p">[:</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span> <span class="o">-</span> <span class="n">ovhg</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">wb</span><span class="p">))])</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
 
@@ -533,14 +553,20 @@
         <span class="n">obj</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">wb</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">watson</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
         <span class="n">cb</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">crick</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">_rc</span><span class="p">(</span><span class="n">cb</span><span class="p">[</span><span class="o">-</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ovhg</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span> <span class="p">:])</span> <span class="o">+</span> <span class="n">wb</span> <span class="o">+</span> <span class="n">_rc</span><span class="p">(</span><span class="n">cb</span><span class="p">[:</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span> <span class="o">-</span> <span class="n">ovhg</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">wb</span><span class="p">))])</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">_rc</span><span class="p">(</span><span class="n">cb</span><span class="p">[</span><span class="o">-</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ovhg</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span> <span class="p">:])</span>
+            <span class="o">+</span> <span class="n">wb</span>
+            <span class="o">+</span> <span class="n">_rc</span><span class="p">(</span><span class="n">cb</span><span class="p">[:</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span> <span class="o">-</span> <span class="n">ovhg</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">wb</span><span class="p">))])</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
 
 <div class="viewcode-block" id="Dseq.from_full_sequence_and_overhangs">
 <a class="viewcode-back" href="../../modules/pydna_dseq.html#pydna.all.Dseq.from_full_sequence_and_overhangs">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_full_sequence_and_overhangs</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">full_sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">crick_ovhg</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">watson_ovhg</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_full_sequence_and_overhangs</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">full_sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">crick_ovhg</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">watson_ovhg</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a linear Dseq object from a full sequence and the 3&#39; overhangs of each strand.</span>
 
 <span class="sd">        The order of the parameters is like this because the 3&#39; overhang of the crick strand is the one</span>
@@ -717,7 +743,9 @@
 
 <div class="viewcode-block" id="Dseq.find">
 <a class="viewcode-back" href="../../modules/pydna_dseq.html#pydna.all.Dseq.find">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_SeqAbstractBaseClass</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">_sys</span><span class="o">.</span><span class="n">maxsize</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">sub</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_SeqAbstractBaseClass</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">_sys</span><span class="o">.</span><span class="n">maxsize</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;This method behaves like the python string method of the same name.</span>
 
 <span class="sd">        Returns an integer, the index of the first occurrence of substring</span>
@@ -771,7 +799,9 @@
             <span class="n">sns</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">watson</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="n">sl</span><span class="p">]</span>
             <span class="n">asn</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="o">-</span><span class="n">x</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="n">sl</span><span class="p">]</span>
 
-            <span class="n">ovhg</span> <span class="o">=</span> <span class="nb">max</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">sns</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()),</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">asn</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">asn</span><span class="o">.</span><span class="n">lstrip</span><span class="p">())),</span> <span class="n">key</span><span class="o">=</span><span class="nb">abs</span><span class="p">)</span>
+            <span class="n">ovhg</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+                <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sns</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()),</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">asn</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">asn</span><span class="o">.</span><span class="n">lstrip</span><span class="p">())),</span> <span class="n">key</span><span class="o">=</span><span class="nb">abs</span>
+            <span class="p">)</span>
 
             <span class="k">return</span> <span class="n">Dseq</span><span class="p">(</span>
                 <span class="n">sns</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
@@ -798,8 +828,14 @@
                 <span class="n">start</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">start</span>
                 <span class="n">stop</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">stop</span>
 
-                <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="p">[(</span><span class="n">start</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="p">::</span> <span class="n">stp</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="p">[:</span> <span class="p">(</span><span class="n">stop</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="p">:</span> <span class="n">stp</span><span class="p">]</span>
-                <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-</span> <span class="n">stop</span> <span class="p">::</span> <span class="n">stp</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-</span> <span class="n">start</span> <span class="p">:</span> <span class="n">stp</span><span class="p">]</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="p">[(</span><span class="n">start</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span> <span class="p">::</span> <span class="n">stp</span><span class="p">]</span>
+                    <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="p">[:</span> <span class="p">(</span><span class="n">stop</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="p">:</span> <span class="n">stp</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-</span> <span class="n">stop</span> <span class="p">::</span> <span class="n">stp</span><span class="p">]</span>
+                    <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-</span> <span class="n">start</span> <span class="p">:</span> <span class="n">stp</span><span class="p">]</span>
+                <span class="p">)</span>
 
                 <span class="k">return</span> <span class="n">Dseq</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># , linear=True)</span>
 
@@ -876,7 +912,9 @@
                 <span class="n">b</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">..</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">b</span><span class="p">[:</span><span class="mi">4</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:])</span>
                 <span class="n">e</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">..</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">[:</span><span class="mi">4</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:])</span>
 
-            <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{klass}</span><span class="s2">(</span><span class="si">{top}{size}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="si">{a}{b}{c}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="si">{d}{e}{f}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{klass}</span><span class="s2">(</span><span class="si">{top}{size}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="si">{a}{b}{c}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="si">{d}{e}{f}</span><span class="s2">&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">klass</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                 <span class="n">top</span><span class="o">=</span><span class="p">{</span><span class="kc">False</span><span class="p">:</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">:</span> <span class="s2">&quot;o&quot;</span><span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">],</span>
                 <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
@@ -1002,7 +1040,9 @@
             <span class="c1"># assert len(nseq.crick) == len(nseq.watson)</span>
             <span class="k">return</span> <span class="n">nseq</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;DNA cannot be circularized.</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="s2">&quot;5&#39; and 3&#39; sticky ends not compatible!&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;DNA cannot be circularized.</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="s2">&quot;5&#39; and 3&#39; sticky ends not compatible!&quot;</span>
+            <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseq.tolinear">
@@ -1034,7 +1074,9 @@
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna</span><span class="w"> </span><span class="kn">import</span> <span class="n">_PydnaDeprecationWarning</span>
 
         <span class="n">_warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;tolinear method is obsolete; &quot;</span> <span class="s2">&quot;please use obj[:] &quot;</span> <span class="s2">&quot;instead of obj.tolinear().&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tolinear method is obsolete; &quot;</span>
+            <span class="s2">&quot;please use obj[:] &quot;</span>
+            <span class="s2">&quot;instead of obj.tolinear().&quot;</span><span class="p">,</span>
             <span class="n">_PydnaDeprecationWarning</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
@@ -1185,7 +1227,9 @@
         <span class="n">other_type</span><span class="p">,</span> <span class="n">other_tail</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">five_prime_end</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">self_type</span> <span class="o">==</span> <span class="n">other_type</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">self_tail</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">_rc</span><span class="p">(</span><span class="n">other_tail</span><span class="p">)):</span>
-            <span class="n">answer</span> <span class="o">=</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">watson</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">watson</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">crick</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span><span class="p">)</span>
+            <span class="n">answer</span> <span class="o">=</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">watson</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">watson</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">crick</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span>
+            <span class="p">)</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="p">:</span>
             <span class="n">answer</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">other</span><span class="p">:</span>
@@ -1196,7 +1240,11 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">DseqType</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DseqType</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;TypeError: can&#39;t multiply Dseq by non-int of type </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">number</span><span class="p">)))</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;TypeError: can&#39;t multiply Dseq by non-int of type </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="nb">type</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="n">new</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -1302,8 +1350,12 @@
 
 <div class="viewcode-block" id="Dseq.translate">
 <a class="viewcode-back" href="../../modules/pydna_dseq.html#pydna.all.Dseq.translate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">translate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="s2">&quot;Standard&quot;</span><span class="p">,</span> <span class="n">stop_symbol</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">to_stop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cds</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Seq</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_Seq</span><span class="p">(</span><span class="n">_translate_str</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">table</span><span class="p">,</span> <span class="n">stop_symbol</span><span class="p">,</span> <span class="n">to_stop</span><span class="p">,</span> <span class="n">cds</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="n">gap</span><span class="p">))</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">translate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="s2">&quot;Standard&quot;</span><span class="p">,</span> <span class="n">stop_symbol</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">to_stop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cds</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="s2">&quot;-&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Seq</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_Seq</span><span class="p">(</span>
+            <span class="n">_translate_str</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">table</span><span class="p">,</span> <span class="n">stop_symbol</span><span class="p">,</span> <span class="n">to_stop</span><span class="p">,</span> <span class="n">cds</span><span class="p">,</span> <span class="n">gap</span><span class="o">=</span><span class="n">gap</span><span class="p">)</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseq.mung">
@@ -1349,7 +1401,11 @@
 
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Dseq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span><span class="p">)</span> <span class="p">:</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span><span class="p">)])</span></div>
+        <span class="k">return</span> <span class="n">Dseq</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="p">[</span>
+                <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span><span class="p">)</span> <span class="p">:</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseq.T4">
@@ -1457,7 +1513,9 @@
 
 <div class="viewcode-block" id="Dseq.no_cutters">
 <a class="viewcode-back" href="../../modules/pydna_dseq.html#pydna.all.Dseq.no_cutters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">no_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionBatch</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">no_cutters</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionBatch</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Enzymes in a RestrictionBatch not cutting sequence.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">batch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">batch</span> <span class="o">=</span> <span class="n">CommOnly</span>
@@ -1468,7 +1526,9 @@
 
 <div class="viewcode-block" id="Dseq.unique_cutters">
 <a class="viewcode-back" href="../../modules/pydna_dseq.html#pydna.all.Dseq.unique_cutters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">unique_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionBatch</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unique_cutters</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionBatch</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Enzymes in a RestrictionBatch cutting sequence once.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">batch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">batch</span> <span class="o">=</span> <span class="n">CommOnly</span>
@@ -1479,7 +1539,9 @@
 
 <div class="viewcode-block" id="Dseq.twice_cutters">
 <a class="viewcode-back" href="../../modules/pydna_dseq.html#pydna.all.Dseq.twice_cutters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">twice_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionBatch</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">twice_cutters</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionBatch</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Enzymes in a RestrictionBatch cutting sequence twice.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">batch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">batch</span> <span class="o">=</span> <span class="n">CommOnly</span>
@@ -1488,7 +1550,9 @@
 
 <div class="viewcode-block" id="Dseq.n_cutters">
 <a class="viewcode-back" href="../../modules/pydna_dseq.html#pydna.all.Dseq.n_cutters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">n_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionBatch</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_cutters</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionBatch</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Enzymes in a RestrictionBatch cutting n times.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">batch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">batch</span> <span class="o">=</span> <span class="n">CommOnly</span>
@@ -1499,7 +1563,9 @@
 
 <div class="viewcode-block" id="Dseq.cutters">
 <a class="viewcode-back" href="../../modules/pydna_dseq.html#pydna.all.Dseq.cutters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionBatch</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cutters</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionBatch</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Enzymes in a RestrictionBatch cutting sequence at least once.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">batch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">batch</span> <span class="o">=</span> <span class="n">CommOnly</span>
@@ -1513,7 +1579,9 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">seguid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;SEGUID checksum for the sequence.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
-            <span class="n">cs</span> <span class="o">=</span> <span class="n">_cdseguid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">alphabet</span><span class="o">=</span><span class="s2">&quot;{DNA-extended}&quot;</span><span class="p">)</span>
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">_cdseguid</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">alphabet</span><span class="o">=</span><span class="s2">&quot;{DNA-extended}&quot;</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
             <span class="n">w</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="si">}{</span><span class="s1">&#39;-&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
@@ -1562,7 +1630,9 @@
 <span class="sd">        &gt;&gt;&gt; a.isblunt()</span>
 <span class="sd">        False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseq.cas9">
@@ -1670,7 +1740,11 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
             <span class="n">end_of_recognition_site</span> <span class="o">%=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">recognition_site</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">start_of_recognition_site</span><span class="p">:</span><span class="n">end_of_recognition_site</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">recognition_site</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">recognition_site</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">recognition_site</span><span class="o">.</span><span class="n">watson_ovhg</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">recognition_site</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="ow">or</span> <span class="n">recognition_site</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="ow">or</span> <span class="n">recognition_site</span><span class="o">.</span><span class="n">watson_ovhg</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="p">):</span>
             <span class="k">if</span> <span class="n">enz</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">enz</span><span class="o">.</span><span class="n">scd5</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
             <span class="k">else</span><span class="p">:</span>
@@ -1681,9 +1755,15 @@
                 <span class="n">end_of_recognition_site</span> <span class="o">=</span> <span class="n">start_of_recognition_site</span> <span class="o">+</span> <span class="n">enz</span><span class="o">.</span><span class="n">size</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
                     <span class="n">end_of_recognition_site</span> <span class="o">%=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-                <span class="n">recognition_site</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">start_of_recognition_site</span><span class="p">:</span><span class="n">end_of_recognition_site</span><span class="p">]</span>
+                <span class="n">recognition_site</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span>
+                    <span class="n">start_of_recognition_site</span><span class="p">:</span><span class="n">end_of_recognition_site</span>
+                <span class="p">]</span>
 
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">recognition_site</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">recognition_site</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">recognition_site</span><span class="o">.</span><span class="n">watson_ovhg</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">recognition_site</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+                    <span class="ow">or</span> <span class="n">recognition_site</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">!=</span> <span class="mi">0</span>
+                    <span class="ow">or</span> <span class="n">recognition_site</span><span class="o">.</span><span class="n">watson_ovhg</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span>
+                <span class="p">):</span>
                     <span class="k">return</span> <span class="kc">False</span>
 
         <span class="k">return</span> <span class="kc">True</span></div>
@@ -1801,7 +1881,9 @@
 
 <div class="viewcode-block" id="Dseq.get_cut_parameters">
 <a class="viewcode-back" href="../../modules/pydna_dseq.html#pydna.all.Dseq.get_cut_parameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_cut_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cut</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">CutSiteType</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">is_left</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_cut_parameters</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">cut</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">CutSiteType</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">is_left</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;For a given cut expressed as ((cut_watson, ovhg), enz), returns</span>
 <span class="sd">        a tuple (cut_watson, cut_crick, ovhg).</span>
 
@@ -1894,7 +1976,11 @@
         <span class="k">return</span> <span class="n">Dseq</span><span class="p">(</span>
             <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">left_watson</span><span class="p">:</span><span class="n">right_watson</span><span class="p">]),</span>
             <span class="c1"># The line below could be easier to understand as _rc(str(self[left_crick:right_crick])), but it does not preserve the case</span>
-            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-</span> <span class="n">right_crick</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-</span> <span class="n">left_crick</span><span class="p">]),</span>
+            <span class="nb">str</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()[</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-</span> <span class="n">right_crick</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-</span> <span class="n">left_crick</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
             <span class="n">ovhg</span><span class="o">=</span><span class="n">ovhg_left</span><span class="p">,</span>
         <span class="p">)</span></div>
 
@@ -1955,17 +2041,6 @@
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cutsites</span><span class="p">,</span> <span class="n">cutsites</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span></div>
 </div>
 
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
-
-    <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
-
-    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>
 </pre></div>
 
            </div>

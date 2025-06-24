@@ -65,7 +65,6 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_download.html">pydna.download</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_dseq.html">pydna.dseq</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_dseqrecord.html">pydna.dseqrecord</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pydna_editor.html">pydna.editor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_fakeseq.html">pydna.fakeseq</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_fusionpcr.html">pydna.fusionpcr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_gateway.html">pydna.gateway</a></li>
@@ -84,8 +83,6 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_goldengate.html">pydna.goldengate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_ladders.html">pydna.ladders</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_ligate.html">pydna.ligate</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pydna_myenzymes.html">pydna.myenzymes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pydna_myprimers.html">pydna.myprimers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_parsers.html">pydna.parsers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_primer.html">pydna.primer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_readers.html">pydna.readers</a></li>
@@ -133,7 +130,7 @@
 called Genbank and an function that does the same thing called genbank.</p>
 <p>The function can be used if the environmental variable <strong>pydna_email</strong> has
 been set to a valid email address. The easiest way to do this permanantly is to edit the
-<cite>pydna.ini</cite> file. See the documentation of <a class="reference internal" href="pydna.html#pydna.open_config_folder" title="pydna.open_config_folder"><code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.open_config_folder()</span></code></a></p>
+<cite>pydna.ini</cite> file. See the documentation of <code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.open_config_folder()</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pydna.genbank.Genbank">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydna.genbank.</span></span><span class="sig-name descname"><span class="pre">Genbank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">users_email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pydna'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/genbank.html#Genbank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbank.Genbank" title="Link to this definition"></a></dt>
@@ -156,8 +153,54 @@ Genbanks who you are, so that they can contact you.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="pydna.genbank.Genbank.nucleotide">
-<span class="sig-name descname"><span class="pre">nucleotide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pydna.genbank.Genbank.nucleotide" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">nucleotide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_stop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strand</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Literal" title="(in Python v3.8)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">2</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pydna_genbankrecord.html#pydna.genbankrecord.GenbankRecord" title="pydna.genbankrecord.GenbankRecord"><span class="pre">GenbankRecord</span></a></span></span><a class="reference internal" href="../_modules/pydna/genbank.html#Genbank.nucleotide"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.genbank.Genbank.nucleotide" title="Link to this definition"></a></dt>
+<dd><p>This method downloads a genbank nuclotide record from genbank. This method is
+cached by default. This can be controlled by editing the <strong>pydna_cached_funcs</strong> environment
+variable. The best way to do this permanently is to edit the edit the
+<cite>pydna.ini</cite> file. See the documentation of <code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.open_config_folder()</span></code></p>
+<p>Item is a string containing one genbank accession number
+for a nucleotide file. Genbank nucleotide accession numbers have this format:</p>
+<div class="line-block">
+<div class="line">A12345   = 1 letter  + 5 numerals</div>
+<div class="line">AB123456 = 2 letters + 6 numerals</div>
+</div>
+<p>The accession number is sometimes followed by a point and version number</p>
+<div class="line-block">
+<div class="line">BK006936.2</div>
+</div>
+<p>Item can also contain optional interval information in the following formats:</p>
+<div class="line-block">
+<div class="line">BK006936.2 REGION: complement(613900..615202)</div>
+<div class="line">NM_005546 REGION: 1..100</div>
+<div class="line">NM_005546 REGION: complement(1..100)</div>
+<div class="line">21614549:1-100</div>
+<div class="line">21614549:c100-1</div>
+<div class="line">21614549 1-100</div>
+<div class="line">21614549 c100-1</div>
+</div>
+<p>It is useful to set an interval for large genbank records to limit the download time.
+The items above containing interval information and can be obtained directly by
+looking up an entry in Genbank and setting the <cite>Change region shown</cite> on the
+upper right side of the page. The <cite>ACCESSION</cite> line of the displayed Genbank
+file will have the formatting shown.</p>
+<p>Alternatively, seq_start and seq_stop can be set explicitly to the sequence intervals to be
+downloaded.</p>
+<p>If strand is 2. “c”, “C”, “crick”, “Crick”, “antisense”,”Antisense”,
+“2”, 2, “-” or “-1”, the antisense (Crick) strand is returned, otherwise
+the sense (Watson) strand is returned.</p>
+<p>Result is returned as a <a class="reference internal" href="pydna_genbankrecord.html#pydna.genbankrecord.GenbankRecord" title="pydna.genbankrecord.GenbankRecord"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydna.genbankrecord.GenbankRecord</span></code></a> object.</p>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="http://www.dsimb.inserm.fr/~fuchs/M2BI/AnalSeq/Annexes/Sequences/Accession_Numbers.htm">http://www.dsimb.inserm.fr/~fuchs/M2BI/AnalSeq/Annexes/Sequences/Accession_Numbers.htm</a></p>
+</aside>
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="http://www.ncbi.nlm.nih.gov/books/NBK25499/#chapter4.EFetch">http://www.ncbi.nlm.nih.gov/books/NBK25499/#chapter4.EFetch</a></p>
+</aside>
+</aside>
+</dd></dl>
 
 </dd></dl>
 
@@ -169,14 +212,14 @@ Genbanks who you are, so that they can contact you.</p>
 :func:pydna.genbank.Genbank.nucleotide method. The email address stored
 in the <cite>pydna_email</cite> environment variable is used. The easiest way set
 this permanantly is to edit the <cite>pydna.ini</cite> file.
-See the documentation of <a class="reference internal" href="pydna.html#pydna.open_config_folder" title="pydna.open_config_folder"><code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.open_config_folder()</span></code></a></p>
+See the documentation of <code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.open_config_folder()</span></code></p>
 <p>if no accession is given, a <a class="reference external" href="https://www.ncbi.nlm.nih.gov/nuccore/CS570233.1">very short Genbank
 entry</a>
 is used as an example (see below). This can be useful for testing the
 connection to Genbank.</p>
 <p>Please note that this result is also cached by default by settings in
 the pydna.ini file.
-See the documentation of <a class="reference internal" href="pydna.html#pydna.open_config_folder" title="pydna.open_config_folder"><code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.open_config_folder()</span></code></a></p>
+See the documentation of <code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.open_config_folder()</span></code></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">LOCUS</span>       <span class="n">CS570233</span>                  <span class="mi">14</span> <span class="n">bp</span>    <span class="n">DNA</span>     <span class="n">linear</span>   <span class="n">PAT</span> <span class="mi">18</span><span class="o">-</span><span class="n">MAY</span><span class="o">-</span><span class="mi">2007</span>
 <span class="n">DEFINITION</span>  <span class="n">Sequence</span> <span class="mi">6</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Patent</span> <span class="n">WO2007025016</span><span class="o">.</span>
 <span class="n">ACCESSION</span>   <span class="n">CS570233</span>

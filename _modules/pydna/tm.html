@@ -311,7 +311,9 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">PfuSso7d_extension_rate</span> <span class="o">=</span> <span class="mi">15</span>  <span class="c1"># seconds/kB PCR product</span>
-    <span class="n">extension_time_PfuSso7d</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">PfuSso7d_extension_rate</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">amplicon</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">))</span>  <span class="c1"># seconds</span>
+    <span class="n">extension_time_PfuSso7d</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+        <span class="mi">10</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">PfuSso7d_extension_rate</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">amplicon</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
+    <span class="p">)</span>  <span class="c1"># seconds</span>
 
     <span class="c1"># The program returned is eaither a two step or three step progrem</span>
     <span class="c1"># This depends on the tm and length of the primers in the</span>
@@ -428,7 +430,10 @@
         <span class="n">dH</span> <span class="o">+=</span> <span class="n">_thermodynamic_data</span><span class="o">.</span><span class="n">dHBr</span><span class="p">[</span><span class="n">n1</span> <span class="o">-</span> <span class="mi">97</span><span class="p">][</span><span class="n">n2</span> <span class="o">-</span> <span class="mi">97</span><span class="p">]</span>
         <span class="n">dS</span> <span class="o">+=</span> <span class="n">_thermodynamic_data</span><span class="o">.</span><span class="n">dSBr</span><span class="p">[</span><span class="n">n1</span> <span class="o">-</span> <span class="mi">97</span><span class="p">][</span><span class="n">n2</span> <span class="o">-</span> <span class="mi">97</span><span class="p">]</span>
 
-    <span class="n">tm</span> <span class="o">=</span> <span class="p">(</span><span class="n">dH</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.9872</span> <span class="o">*</span> <span class="n">_math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pri</span> <span class="o">/</span> <span class="mi">1600</span><span class="p">)</span> <span class="o">+</span> <span class="n">dS</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">16.6</span> <span class="o">*</span> <span class="n">_math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">saltc</span><span class="p">))</span> <span class="o">/</span> <span class="n">_math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">-</span> <span class="mf">273.15</span>
+    <span class="n">tm</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">dH</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.9872</span> <span class="o">*</span> <span class="n">_math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pri</span> <span class="o">/</span> <span class="mi">1600</span><span class="p">)</span> <span class="o">+</span> <span class="n">dS</span><span class="p">)</span>
+        <span class="o">+</span> <span class="p">(</span><span class="mf">16.6</span> <span class="o">*</span> <span class="n">_math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">saltc</span><span class="p">))</span> <span class="o">/</span> <span class="n">_math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="p">)</span> <span class="o">-</span> <span class="mf">273.15</span>
 
     <span class="k">return</span> <span class="n">tm</span></div>
 
@@ -472,29 +477,22 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">(</span><span class="s2">&quot;Could not connect to NEB API.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+        <span class="k">raise</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">(</span>
+            <span class="s2">&quot;Could not connect to NEB API.&quot;</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
     <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;error&quot;</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">():</span>
             <span class="k">raise</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;error&quot;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
+            <span class="k">raise</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">(</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span>
+            <span class="p">)</span>  <span class="c1"># pragma: no cover</span>
     <span class="n">r</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;success&quot;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;tm1&quot;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">])</span></div>
 
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
-
-    <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
-
-    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>
 </pre></div>
 
            </div>

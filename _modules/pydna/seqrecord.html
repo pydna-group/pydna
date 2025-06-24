@@ -113,10 +113,10 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna</span><span class="w"> </span><span class="kn">import</span> <span class="n">_PydnaWarning</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">warn</span> <span class="k">as</span> <span class="n">_warn</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_logging</span>
+<span class="c1"># import logging as _logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 
-<span class="n">_module_logger</span> <span class="o">=</span> <span class="n">_logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pydna.&quot;</span> <span class="o">+</span> <span class="vm">__name__</span><span class="p">)</span>
+<span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
 
 
 <div class="viewcode-block" id="SeqRecord">
@@ -167,7 +167,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">_Seq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>  <span class="c1"># remove whitespaces</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span> <span class="o">=</span> <span class="p">{</span><span class="n">_pretty_str</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">_pretty_str</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
 
 <div class="viewcode-block" id="SeqRecord.from_Bio_SeqRecord">
 <a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.from_Bio_SeqRecord">[docs]</a>
@@ -192,7 +194,9 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">16</span><span class="p">:</span>
             <span class="n">shortvalue</span> <span class="o">=</span> <span class="n">value</span><span class="p">[:</span><span class="mi">16</span><span class="p">]</span>
             <span class="n">_warn</span><span class="p">(</span>
-                <span class="p">(</span><span class="s2">&quot;locus property </span><span class="si">{}</span><span class="s2"> truncated&quot;</span> <span class="s2">&quot;to 16 chars </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">shortvalue</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">&quot;locus property </span><span class="si">{}</span><span class="s2"> truncated&quot;</span> <span class="s2">&quot;to 16 chars </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">value</span><span class="p">,</span> <span class="n">shortvalue</span>
+                <span class="p">),</span>
                 <span class="n">_PydnaWarning</span><span class="p">,</span>
                 <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="p">)</span>
@@ -336,7 +340,9 @@
 
 <div class="viewcode-block" id="SeqRecord.add_feature">
 <a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.add_feature">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">type_</span><span class="o">=</span><span class="s2">&quot;misc&quot;</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_feature</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">type_</span><span class="o">=</span><span class="s2">&quot;misc&quot;</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a feature of type misc to the feature list of the sequence.</span>
 
 <span class="sd">        Parameters</span>
@@ -427,7 +433,9 @@
 <span class="sd">        |   0 | L:ft2         | --&gt; | 2   | 4   |   2 | misc |  no  |</span>
 <span class="sd">        +-----+---------------+-----+-----+-----+-----+------+------+</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">_PrettyTable</span><span class="p">([</span><span class="s2">&quot;Ft#&quot;</span><span class="p">,</span> <span class="s2">&quot;Label or Note&quot;</span><span class="p">,</span> <span class="s2">&quot;Dir&quot;</span><span class="p">,</span> <span class="s2">&quot;Sta&quot;</span><span class="p">,</span> <span class="s2">&quot;End&quot;</span><span class="p">,</span> <span class="s2">&quot;Len&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;orf?&quot;</span><span class="p">])</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">_PrettyTable</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;Ft#&quot;</span><span class="p">,</span> <span class="s2">&quot;Label or Note&quot;</span><span class="p">,</span> <span class="s2">&quot;Dir&quot;</span><span class="p">,</span> <span class="s2">&quot;Sta&quot;</span><span class="p">,</span> <span class="s2">&quot;End&quot;</span><span class="p">,</span> <span class="s2">&quot;Len&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;orf?&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s2">&quot;Ft#&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;r&quot;</span>  <span class="c1"># Left align</span>
         <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s2">&quot;Label or Note&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;l&quot;</span>  <span class="c1"># Left align</span>
         <span class="n">x</span><span class="o">.</span><span class="n">align</span><span class="p">[</span><span class="s2">&quot;Len&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;r&quot;</span>
@@ -457,7 +465,8 @@
                     <span class="nb">len</span><span class="p">(</span><span class="n">sf</span><span class="p">),</span>
                     <span class="n">sf</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
                     <span class="p">{</span><span class="kc">True</span><span class="p">:</span> <span class="s2">&quot;yes&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">:</span> <span class="s2">&quot;no&quot;</span><span class="p">}[</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">extract_feature</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">isorf</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_feature</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span><span class="o">.</span><span class="n">isorf</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">extract_feature</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">isorf</span><span class="p">()</span>
+                        <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_feature</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span><span class="o">.</span><span class="n">isorf</span><span class="p">()</span>
                     <span class="p">],</span>
                 <span class="p">]</span>
             <span class="p">)</span>
@@ -598,7 +607,9 @@
                 <span class="sa">f</span><span class="s2">&quot;Stamp change.</span><span class="se">\n</span><span class="s2">New: </span><span class="si">{</span><span class="n">chksum</span><span class="si">}</span><span class="se">\n</span><span class="s2">Old: </span><span class="si">{</span><span class="n">oldstamp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                 <span class="n">_PydnaWarning</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;comment&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">oldcomment</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tool</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">chksum</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">comment</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;comment&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">oldcomment</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tool</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">chksum</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">comment</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">chksum</span><span class="p">)</span></div>
 
 
@@ -903,17 +914,6 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">_SeqRecord</span><span class="o">.</span><span class="fm">__format__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">format</span><span class="p">))</span></div>
 
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
-
-    <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
-
-    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="p">(</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span> <span class="o">|</span> <span class="n">doctest</span><span class="o">.</span><span class="n">NORMALIZE_WHITESPACE</span><span class="p">))</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>
 </pre></div>
 
            </div>

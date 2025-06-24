@@ -209,19 +209,20 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">open_folder</span> <span class="k">as</span> <span class="n">_open_folder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span> <span class="k">as</span> <span class="n">_Path</span>
+<span class="c1"># from pydna.utils import open_folder as _open_folder</span>
+<span class="c1"># from pathlib import Path as _Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging.handlers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_handlers</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">appdirs</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_appdirs</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_configparser</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_tempfile</span>
+
+<span class="c1"># import logging as _logging</span>
+<span class="c1"># import logging.handlers as _handlers</span>
+<span class="c1"># import appdirs as _appdirs</span>
+<span class="c1"># import configparser as _configparser</span>
+<span class="c1"># import tempfile as _tempfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">PrettyTable</span> <span class="k">as</span> <span class="n">_PrettyTable</span>
 
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Björn Johansson&quot;</span>
-<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2013 - 2021 Björn Johansson&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2013 - 2023 Björn Johansson&quot;</span>
 <span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Björn Johansson&quot;</span><span class="p">,</span> <span class="s2">&quot;Mark Budde&quot;</span><span class="p">]</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;BSD&quot;</span>
 <span class="n">__maintainer__</span> <span class="o">=</span> <span class="s2">&quot;Björn Johansson&quot;</span>
@@ -230,90 +231,82 @@
 <span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.0.0&quot;</span>
 
 
-<span class="c1"># create config directory</span>
-<span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_config_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_config_dir&quot;</span><span class="p">,</span> <span class="n">_appdirs</span><span class="o">.</span><span class="n">user_config_dir</span><span class="p">(</span><span class="s2">&quot;pydna&quot;</span><span class="p">))</span>
-<span class="n">config_dir</span> <span class="o">=</span> <span class="n">_Path</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_config_dir&quot;</span><span class="p">])</span>
-<span class="n">config_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># obtain config directory from env or appdirs</span>
+<span class="c1"># _os.environ[&quot;pydna_config_dir&quot;] = _os.getenv(&quot;pydna_config_dir&quot;, _appdirs.user_config_dir(&quot;pydna&quot;))</span>
+<span class="c1"># config_dir = _Path(_os.environ[&quot;pydna_config_dir&quot;])</span>
+<span class="c1"># config_dir.mkdir(parents=True, exist_ok=True)</span>
 
 <span class="c1"># set path for the pydna.ini file</span>
-<span class="n">_ini_path</span> <span class="o">=</span> <span class="n">config_dir</span> <span class="o">/</span> <span class="s2">&quot;pydna.ini&quot;</span>
+<span class="c1"># _ini_path = config_dir / &quot;pydna.ini&quot;</span>
 
 <span class="c1"># define user_data_dir</span>
-<span class="n">user_data_dir</span> <span class="o">=</span> <span class="n">_Path</span><span class="p">(</span><span class="n">_appdirs</span><span class="o">.</span><span class="n">user_data_dir</span><span class="p">(</span><span class="s2">&quot;pydna&quot;</span><span class="p">))</span>
+<span class="c1"># user_data_dir = _Path(_appdirs.user_data_dir(&quot;pydna&quot;))</span>
 
-<span class="n">default_ini</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;ape&quot;</span><span class="p">:</span> <span class="s2">&quot;put/path/to/ape/here&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;cached_funcs&quot;</span><span class="p">:</span> <span class="s2">&quot;pydna.genbank.genbank.nucleotide&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;data_dir&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">user_data_dir</span><span class="p">),</span>
-    <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;someone@example.com&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;enzymes&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">user_data_dir</span> <span class="o">/</span> <span class="s2">&quot;enzymes.md&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;log_dir&quot;</span><span class="p">:</span> <span class="n">_appdirs</span><span class="o">.</span><span class="n">user_log_dir</span><span class="p">(</span><span class="s2">&quot;pydna&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;loglevel&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">_logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">),</span>
-    <span class="s2">&quot;primers&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">user_data_dir</span> <span class="o">/</span> <span class="s2">&quot;primers.md&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;assembly_limit&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
-<span class="p">}</span>
+<span class="c1"># default_ini = {</span>
+<span class="c1">#     &quot;ape&quot;: &quot;put/path/to/ape/here&quot;,</span>
+<span class="c1">#     &quot;cached_funcs&quot;: &quot;pydna.genbank.genbank.nucleotide&quot;,</span>
+<span class="c1">#     &quot;data_dir&quot;: str(user_data_dir),</span>
+<span class="c1">#     &quot;email&quot;: &quot;someone@example.com&quot;,</span>
+<span class="c1">#     &quot;enzymes&quot;: str(user_data_dir / &quot;enzymes.md&quot;),</span>
+<span class="c1">#     &quot;log_dir&quot;: _appdirs.user_log_dir(&quot;pydna&quot;),</span>
+<span class="c1">#     &quot;loglevel&quot;: str(_logging.WARNING),</span>
+<span class="c1">#     &quot;primers&quot;: str(user_data_dir / &quot;primers.md&quot;),</span>
+<span class="c1">#     &quot;assembly_limit&quot;: str(10),</span>
+<span class="c1"># }</span>
+
+<span class="c1"># ini = default_ini.copy()</span>
 
 <span class="c1"># initiate a config parser instance</span>
-<span class="n">_parser</span> <span class="o">=</span> <span class="n">_configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+<span class="c1"># _parser = _configparser.ConfigParser()</span>
 
 <span class="c1"># if a pydna.ini exists, it is read</span>
-<span class="k">if</span> <span class="n">_ini_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-    <span class="n">_parser</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">_ini_path</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>  <span class="c1"># otherwise it is created with default settings</span>
-    <span class="n">_parser</span><span class="p">[</span><span class="s2">&quot;main&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_ini</span>
-    <span class="n">_temp_ini_file</span> <span class="o">=</span> <span class="n">_tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">_ini_path</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">_temp_ini_path</span> <span class="o">=</span> <span class="n">_Path</span><span class="p">(</span><span class="n">_temp_ini_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">_temp_ini_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="k">with</span> <span class="n">_temp_ini_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>  <span class="c1"># TODO needs encoding?</span>
-            <span class="n">_parser</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="n">_temp_ini_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">_ini_path</span><span class="p">)</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="n">_temp_ini_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
+<span class="c1"># if _ini_path.exists():</span>
+<span class="c1">#     _parser.read(_ini_path)</span>
 <span class="c1"># pydna related environmental variables are set</span>
 <span class="c1"># from pydna.ini if they are not set already</span>
-<span class="n">_main</span> <span class="o">=</span> <span class="n">_parser</span><span class="p">[</span><span class="s2">&quot;main&quot;</span><span class="p">]</span>
+<span class="c1"># _main = _parser[&quot;main&quot;]</span>
+<span class="c1"># ini.update(_main)</span>
 
-<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">default_ini</span><span class="p">:</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;pydna_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pydna_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_main</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default_ini</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
 
-<span class="n">logdir</span> <span class="o">=</span> <span class="n">_Path</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_log_dir&quot;</span><span class="p">])</span>
+<span class="c1"># for key, value in ini.items():</span>
+<span class="c1">#     _os.environ[f&quot;pydna_{key}&quot;] = _os.getenv(f&quot;pydna_{key}&quot;, value)</span>
+
+<span class="c1"># logdir = _Path(_os.environ[&quot;pydna_log_dir&quot;])</span>
 
 <span class="c1"># create log directory if not present</span>
-<span class="n">logdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">_logmsg</span> <span class="o">=</span> <span class="s2">&quot;Log directory </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logdir</span><span class="p">)</span>
+<span class="c1"># logdir.mkdir(parents=True, exist_ok=True)</span>
+<span class="c1"># _logmsg = &quot;Log directory {}&quot;.format(logdir)</span>
 
 <span class="c1"># create logger</span>
-<span class="n">_logger</span> <span class="o">=</span> <span class="n">_logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pydna&quot;</span><span class="p">)</span>
-<span class="n">_logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_loglevel&quot;</span><span class="p">]))</span>
-<span class="n">_hdlr</span> <span class="o">=</span> <span class="n">_handlers</span><span class="o">.</span><span class="n">RotatingFileHandler</span><span class="p">(</span>
-    <span class="n">logdir</span> <span class="o">/</span> <span class="s2">&quot;pydna.log&quot;</span><span class="p">,</span>
-    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span>
-    <span class="n">maxBytes</span><span class="o">=</span><span class="mi">10</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span>
-    <span class="n">backupCount</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="c1"># _logger = _logging.getLogger(&quot;pydna&quot;)</span>
+<span class="c1"># _logger.setLevel(int(_os.environ[&quot;pydna_loglevel&quot;]))</span>
+<span class="c1"># _hdlr = _handlers.RotatingFileHandler(</span>
+<span class="c1">#     logdir / &quot;pydna.log&quot;,</span>
+<span class="c1">#     mode=&quot;a&quot;,</span>
+<span class="c1">#     maxBytes=10 * 1024 * 1024,</span>
+<span class="c1">#     backupCount=10,</span>
+<span class="c1">#     encoding=&quot;utf-8&quot;,</span>
+<span class="c1"># )</span>
 
-<span class="n">_formatter</span> <span class="o">=</span> <span class="n">_logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">((</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2">&quot;</span> <span class="s2">&quot; </span><span class="si">%(funcName)s</span><span class="s2"> </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">))</span>
-<span class="n">_hdlr</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">_formatter</span><span class="p">)</span>
-<span class="n">_logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">_hdlr</span><span class="p">)</span>
-<span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">_logmsg</span><span class="p">)</span>
-<span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Environmental variable pydna_ape          = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_ape&quot;</span><span class="p">])</span>
-<span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Environmental variable pydna_cached_funcs = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">])</span>
-<span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Environmental variable pydna_data_dir     = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_data_dir&quot;</span><span class="p">])</span>
-<span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Environmental variable pydna_email        = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_email&quot;</span><span class="p">])</span>
-<span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Environmental variable pydna_log_dir      = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_log_dir&quot;</span><span class="p">])</span>
-<span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Environmental variable pydna_loglevel     = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_loglevel&quot;</span><span class="p">])</span>
-<span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Environmental variable pydna_primers      = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_primers&quot;</span><span class="p">])</span>
-<span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-    <span class="s2">&quot;Environmental variable pydna_assembly_limit = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_assembly_limit&quot;</span><span class="p">],</span>
-<span class="p">)</span>
+<span class="c1"># _formatter = _logging.Formatter((&quot;%(asctime)s %(levelname)s&quot; &quot; %(funcName)s %(message)s&quot;))</span>
+<span class="c1"># _hdlr.setFormatter(_formatter)</span>
+<span class="c1"># _logger.addHandler(_hdlr)</span>
+<span class="c1"># _logger.info(_logmsg)</span>
+<span class="c1"># _logger.info(&quot;Environmental variable pydna_ape          = %s&quot;, _os.environ[&quot;pydna_ape&quot;])</span>
+<span class="c1"># _logger.info(&quot;Environmental variable pydna_cached_funcs = %s&quot;, _os.environ[&quot;pydna_cached_funcs&quot;])</span>
+<span class="c1"># _logger.info(&quot;Environmental variable pydna_data_dir     = %s&quot;, _os.environ[&quot;pydna_data_dir&quot;])</span>
+<span class="c1"># _logger.info(&quot;Environmental variable pydna_email        = %s&quot;, _os.environ[&quot;pydna_email&quot;])</span>
+<span class="c1"># _logger.info(&quot;Environmental variable pydna_log_dir      = %s&quot;, _os.environ[&quot;pydna_log_dir&quot;])</span>
+<span class="c1"># _logger.info(&quot;Environmental variable pydna_loglevel     = %s&quot;, _os.environ[&quot;pydna_loglevel&quot;])</span>
+<span class="c1"># _logger.info(&quot;Environmental variable pydna_primers      = %s&quot;, _os.environ[&quot;pydna_primers&quot;])</span>
+<span class="c1"># _logger.info(</span>
+<span class="c1">#     &quot;Environmental variable pydna_assembly_limit = %s&quot;,</span>
+<span class="c1">#     _os.environ[&quot;pydna_assembly_limit&quot;],</span>
+<span class="c1"># )</span>
 
 <span class="c1"># create cache directory if not present</span>
 
-<span class="n">_Path</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_data_dir&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># _Path(_os.environ[&quot;pydna_data_dir&quot;]).mkdir(parents=True, exist_ok=True)</span>
 
 <span class="c1"># find out if optional dependecies for gel module are in place</span>
 <span class="c1">#</span>
@@ -341,7 +334,7 @@
 <span class="c1">#    _logger.info(&quot;gel simulation is available,&quot; &quot; optional dependencies were found.&quot;)</span>
 <span class="c1">#</span>
 
-<span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;__version__ = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">__version__</span><span class="p">)</span>
+<span class="c1"># _logger.info(&quot;__version__ = %s&quot;, __version__)</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">_PydnaWarning</span><span class="p">(</span><span class="ne">Warning</span><span class="p">):</span>
@@ -381,86 +374,74 @@
     <span class="k">pass</span>
 
 
-<div class="viewcode-block" id="open_current_folder">
-<a class="viewcode-back" href="../modules/pydna.html#pydna.open_current_folder">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">open_current_folder</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Open the current working directory.</span>
+<span class="c1"># def open_current_folder():</span>
+<span class="c1">#     &quot;&quot;&quot;Open the current working directory.</span>
 
-<span class="sd">    Opens in the default file manager. The location for this folder is</span>
-<span class="sd">    given by the :func:`os.getcwd` function</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_open_folder</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span></div>
+<span class="c1">#     Opens in the default file manager. The location for this folder is</span>
+<span class="c1">#     given by the :func:`os.getcwd` function</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     return _open_folder(_os.getcwd())</span>
 
 
-
-<span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Current working directory = os.getcwd() = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
-
-
-<div class="viewcode-block" id="open_cache_folder">
-<a class="viewcode-back" href="../modules/pydna.html#pydna.open_cache_folder">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">open_cache_folder</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Open the pydna cache folder.</span>
-
-<span class="sd">    Opens in the default file manager. The location for this folder is stored</span>
-<span class="sd">    in the *pydna_data_dir* environmental variable.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_open_folder</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_data_dir&quot;</span><span class="p">])</span></div>
+<span class="c1"># _logger.info(&quot;Current working directory = os.getcwd() = %s&quot;, _os.getcwd())</span>
 
 
+<span class="c1"># def open_cache_folder():</span>
+<span class="c1">#     &quot;&quot;&quot;Open the pydna cache folder.</span>
 
-<div class="viewcode-block" id="open_config_folder">
-<a class="viewcode-back" href="../modules/pydna.html#pydna.open_config_folder">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">open_config_folder</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Open the pydna configuration folder.</span>
-
-<span class="sd">    Opens in the default file manager. The location for this folder is stored</span>
-<span class="sd">    in the *pydna_config_dir* environmental variable.</span>
-
-<span class="sd">    The `pydna.ini` file can be edited to make pydna quicker to use.</span>
-<span class="sd">    See the documentation of the :class:configparser.ConfigParser´ class.</span>
-
-<span class="sd">    Below is the content of a typical `pydna.ini` file on a Linux</span>
-<span class="sd">    system.</span>
-
-<span class="sd">    ::</span>
-
-<span class="sd">        [main]</span>
-<span class="sd">        loglevel=30</span>
-<span class="sd">        email=myemail@example.org</span>
-<span class="sd">        data_dir=/home/bjorn/.local/share/pydna</span>
-<span class="sd">        log_dir=/home/bjorn/.cache/pydna/log</span>
-<span class="sd">        ape=tclsh /home/bjorn/.ApE/AppMain.tcl</span>
-<span class="sd">        cached_funcs=Genbank_nucleotide</span>
-<span class="sd">        primers=/home/bjorn/Dropbox/wikidata/PRIMERS.txt</span>
-<span class="sd">        enzymes=/home/bjorn/Dropbox/wikidata/RestrictionEnzymes.txt</span>
-
-<span class="sd">    The email address is set to someone@example.com by default. If you change</span>
-<span class="sd">    this to you own address, the :func:`pydna.genbank.genbank` function can be</span>
-<span class="sd">    used to download sequences from Genbank directly without having to</span>
-<span class="sd">    explicitly add the email address.</span>
-
-<span class="sd">    Pydna can cache results from the following functions or methods:</span>
-
-<span class="sd">    - :func:`pydna.genbank.Genbank.nucleotide`   Genbank_nucleotide</span>
-<span class="sd">    - :func:`pydna.amplify.Anneal`               amplify_Anneal</span>
-<span class="sd">    - :func:`pydna.assembly.Assembly`            assembly_Assembly</span>
-<span class="sd">    - :func:`pydna.download.download_text`       download.download_text</span>
-<span class="sd">    - :func:`pydna.dseqrecord.Dseqrecord.synced` Dseqrecord_synced</span>
-
-<span class="sd">    These can be added separated by a comma to the cached_funcs entry</span>
-<span class="sd">    in **pydna.ini** file or the pydna_cached_funcs environment variable.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_open_folder</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_config_dir&quot;</span><span class="p">])</span></div>
+<span class="c1">#     Opens in the default file manager. The location for this folder is stored</span>
+<span class="c1">#     in the *pydna_data_dir* environmental variable.</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     return _open_folder(_os.environ[&quot;pydna_data_dir&quot;])</span>
 
 
+<span class="c1"># def open_config_folder():</span>
+<span class="c1">#     &quot;&quot;&quot;Open the pydna configuration folder.</span>
 
-<div class="viewcode-block" id="open_log_folder">
-<a class="viewcode-back" href="../modules/pydna.html#pydna.open_log_folder">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">open_log_folder</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_open_folder</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_log_dir&quot;</span><span class="p">])</span></div>
+<span class="c1">#     Opens in the default file manager. The location for this folder is stored</span>
+<span class="c1">#     in the *pydna_config_dir* environmental variable.</span>
 
+<span class="c1">#     The `pydna.ini` file can be edited to make pydna quicker to use.</span>
+<span class="c1">#     See the documentation of the :class:configparser.ConfigParser´ class.</span>
+
+<span class="c1">#     Below is the content of a typical `pydna.ini` file on a Linux</span>
+<span class="c1">#     system.</span>
+
+<span class="c1">#     ::</span>
+
+<span class="c1">#         [main]</span>
+<span class="c1">#         loglevel=30</span>
+<span class="c1">#         email=myemail@example.org</span>
+<span class="c1">#         data_dir=/home/bjorn/.local/share/pydna</span>
+<span class="c1">#         log_dir=/home/bjorn/.cache/pydna/log</span>
+<span class="c1">#         ape=tclsh /home/bjorn/.ApE/AppMain.tcl</span>
+<span class="c1">#         cached_funcs=Genbank_nucleotide</span>
+<span class="c1">#         primers=/home/bjorn/Dropbox/wikidata/PRIMERS.txt</span>
+<span class="c1">#         enzymes=/home/bjorn/Dropbox/wikidata/RestrictionEnzymes.txt</span>
+
+<span class="c1">#     The email address is set to someone@example.com by default. If you change</span>
+<span class="c1">#     this to you own address, the :func:`pydna.genbank.genbank` function can be</span>
+<span class="c1">#     used to download sequences from Genbank directly without having to</span>
+<span class="c1">#     explicitly add the email address.</span>
+
+<span class="c1">#     Pydna can cache results from the following functions or methods:</span>
+
+<span class="c1">#     - :func:`pydna.genbank.Genbank.nucleotide`   Genbank_nucleotide</span>
+<span class="c1">#     - :func:`pydna.amplify.Anneal`               amplify_Anneal</span>
+<span class="c1">#     - :func:`pydna.assembly.Assembly`            assembly_Assembly</span>
+<span class="c1">#     - :func:`pydna.download.download_text`       download.download_text</span>
+<span class="c1">#     - :func:`pydna.dseqrecord.Dseqrecord.synced` Dseqrecord_synced</span>
+
+<span class="c1">#     These can be added separated by a comma to the cached_funcs entry</span>
+<span class="c1">#     in **pydna.ini** file or the pydna_cached_funcs environment variable.</span>
+
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     return _open_folder(_os.environ[&quot;pydna_config_dir&quot;])</span>
+
+
+<span class="c1"># def open_log_folder():</span>
+<span class="c1">#     &quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
+<span class="c1">#     return _open_folder(_os.environ[&quot;pydna_log_dir&quot;])</span>
 
 
 <div class="viewcode-block" id="get_env">
@@ -498,17 +479,6 @@
         <span class="n">message</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">renderText</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
-
-    <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
-
-    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>
 </pre></div>
 
            </div>

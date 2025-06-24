@@ -197,25 +197,20 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="n">in_watson</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">mobj</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;ps&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">mobj</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(?P&lt;ps&gt;.</span><span class="se">{{</span><span class="si">{</span><span class="n">cas</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="se">}}</span><span class="s2">)(?:</span><span class="si">{</span><span class="n">cas</span><span class="o">.</span><span class="n">scaffold</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">guide_construct</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">mobj</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;(?P&lt;ps&gt;.</span><span class="se">{{</span><span class="si">{</span><span class="n">cas</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="se">}}</span><span class="s2">)(?:</span><span class="si">{</span><span class="n">cas</span><span class="o">.</span><span class="n">scaffold</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">guide_construct</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+        <span class="p">)</span>
     <span class="p">]</span>
     <span class="n">in_crick</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">rc</span><span class="p">(</span><span class="n">mobj</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;ps&quot;</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">mobj</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(?:</span><span class="si">{</span><span class="n">rc</span><span class="p">(</span><span class="n">cas</span><span class="o">.</span><span class="n">scaffold</span><span class="p">)</span><span class="si">}</span><span class="s2">)(?P&lt;ps&gt;.</span><span class="se">{{</span><span class="si">{</span><span class="n">cas</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="se">}}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">guide_construct</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">mobj</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;(?:</span><span class="si">{</span><span class="n">rc</span><span class="p">(</span><span class="n">cas</span><span class="o">.</span><span class="n">scaffold</span><span class="p">)</span><span class="si">}</span><span class="s2">)(?P&lt;ps&gt;.</span><span class="se">{{</span><span class="si">{</span><span class="n">cas</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="se">}}</span><span class="s2">)&quot;</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">guide_construct</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+        <span class="p">)</span>
     <span class="p">]</span>
     <span class="k">return</span> <span class="n">in_watson</span> <span class="o">+</span> <span class="n">in_crick</span></div>
 
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
-
-    <span class="n">cached</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
-
-    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
-    <span class="n">_os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;pydna_cached_funcs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached</span>
 </pre></div>
 
            </div>
