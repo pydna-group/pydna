@@ -28,9 +28,9 @@ graph.
 # import networkx as _nx
 # from copy import deepcopy as _deepcopy
 # import itertools as _itertools
-import logging as _logging
+# import logging as _logging
 
-_module_logger = _logging.getLogger("pydna." + __name__)
+# _module_logger = _logging.getLogger("pydna." + __name__)
 
 ambiguous_dna_regex = {
     "A": "T",
