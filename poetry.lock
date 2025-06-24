@@ -3650,5 +3650,4 @@ gel = ["matplotlib", "pillow", "scipy", "scipy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<4.0"
-content-hash = "78c822216365139c8d2a6d0645bfddd6668c85db34b88c855ee8bf95de1b5b77"
-
+content-hash = "d624d3138309950985150a8da5e04ecfa161d2ea3f7f0256f38dee8759a1283b"
