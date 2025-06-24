@@ -12,6 +12,7 @@ Modules
    pydna_amplicon
    pydna_amplify
    pydna_assembly
+   pydna_assembly2
    pydna_codon
    pydna_common_sub_strings
    pydna_conftest
@@ -40,5 +41,6 @@ Modules
    pydna_sequence_picker
    pydna_threading_timer_decorator_exit
    pydna_tm
+   pydna_types
    pydna_user_cloning
    pydna_utils

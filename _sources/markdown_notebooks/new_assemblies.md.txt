@@ -1,0 +1,506 @@
+# New assembly model
+
+Most of the sequence manipulations performed in pydna could be considered either:
+
+* A cut (getting a subfragment of a sequence)
+* An assembly (combining subfragments of existing sequences into a new sequence)
+
+## Almost anything can be considered an assembly
+
+The concept of assembly can be extended to operations that may not appear as assemblies:
+* PCR: if we consider primers to be sequences, producing the final sequence algorithmically it's like a gibson assembly or any other type of homology cloning.
+* Cut + ligation: if we think of the regions of parent sequences that will form overhangs after cutting, we can treat them as homology to produce the final product.
+
+## How to represent this
+
+Let's consider the below example, a circular gibson assembly of 3 fragments. The homologous regions between them are labelled in light blue.
+
+
+<img src="images/assembly.png" width="250">
+
+
+We can represent the assembly of this fragments, as a list of "joins" between fragments. Each join represents the overlap between the two fragments involved:
+
+```python
+assembly = [
+    [1, 2, '18..21', '1..4']
+    [2, 3, '9..12', '1..4']
+    [3, 1, '10..13', '1..4'] # Note how the last fragment is the same as the first one in a circular assembly
+]
+```
+
+- The first and second integers represent the index of the fragment in the
+input list of fragments. The sign of the integer represents the orientation
+of the fragment, positive for forward orientation, negative for reverse orientation.
+- The strings represent the location of the overlap in the first and second fragment.
+- We should also indicate whether the assembly is circular or not separately, since it would be possible that a linear assembly is formed where the fragment 1 is used as first and last.
+
+Now let's see this in action with a first example (A Gibson assembly).
+
+
+## With a Gibson Assembly
+
+
+```python
+from pydna.dseqrecord import Dseqrecord
+from pydna.dseq import Dseq
+import pydna.assembly2 as assembly
+#Input fragments, overlaps between them are in caps
+fragments = [
+            Dseqrecord('TTTTacgatAAtgctccCCCC', circular=False),
+            Dseqrecord('CCCCtcatGGGG', circular=False),
+            Dseqrecord('GGGGatataTTTT', circular=False)
+        ]
+
+# gibson_overlap is an `algorithm` function that finds overlaps between the 3' end of the first
+# fragment and the 5' end of the second fragment.
+asm = assembly.Assembly(fragments, limit=4, algorithm=assembly.gibson_overlap, use_all_fragments=True, use_fragment_order=False)
+
+# Let's get the possible circular assemblies
+for i, a in enumerate(asm.get_circular_assemblies()):
+    print(f'Assembly {i+1} represented as above:')
+    print(assembly.assembly2str_tuple(a))
+    print(f'Assembly {i+1} represented as a simpler tuple of strings:')
+    print(assembly.assembly2str(a))
+    print()
+
+
+```
+
+    Assembly 1 represented as above:
+    ((1, 2, '[17:21]', '[0:4]'), (2, 3, '[8:12]', '[0:4]'), (3, 1, '[9:13]', '[0:4]'))
+    Assembly 1 represented as a simpler tuple of strings:
+    ('1[17:21]:2[0:4]', '2[8:12]:3[0:4]', '3[9:13]:1[0:4]')
+    
+    Assembly 2 represented as above:
+    ((1, -2, '[17:21]', '[0:4]'), (-2, 3, '[8:12]', '[0:4]'), (3, 1, '[9:13]', '[0:4]'))
+    Assembly 2 represented as a simpler tuple of strings:
+    ('1[17:21]:-2[0:4]', '-2[8:12]:3[0:4]', '3[9:13]:1[0:4]')
+    
+
+
+As you can see, there are two possible circular assemblies, one with all fragments oriented as they were passed to the class constructor, and one with the second fragment inverted (see -2).
+
+### Using graphs: fragments as nodes and joins between them as edges
+
+How are these assemblies found? The `Assembly` class contains a directed graph, where nodes represent fragments and
+edges represent overlaps between fragments:
+- The node keys are integers, representing the index of the fragment in the input list of fragments. The sign of the node key represents the orientation of the fragment, positive for forward orientation, negative for reverse orientation.
+- The edges contain the locations of the overlaps in the fragments. For an edge `(u, v, key)`:
+    - `u` and `v` are the nodes connected by the edge.
+    - key is a string that represents the location of the overlap. In the format introduced above:
+    `u[start:end](strand):v[start:end](strand)`.
+    - Edges have a `locations` attribute, which is a list of two `Location` objects, representing the location of the overlap in the `u` and `v` fragment.
+    - You can think of an edge as a representation of the join of two fragments.
+
+Let's look at how the edges of the previous graph look
+
+
+```python
+print(*asm.G.edges, sep='\n')
+```
+
+    (1, 2, '1[17:21]:2[0:4]')
+    (1, -2, '1[17:21]:-2[0:4]')
+    (2, -1, '2[8:12]:-1[0:4]')
+    (2, 3, '2[8:12]:3[0:4]')
+    (3, 1, '3[9:13]:1[0:4]')
+    (-1, -3, '-1[17:21]:-3[0:4]')
+    (-2, -1, '-2[8:12]:-1[0:4]')
+    (-2, 3, '-2[8:12]:3[0:4]')
+    (-3, -2, '-3[9:13]:-2[0:4]')
+    (-3, 2, '-3[9:13]:2[0:4]')
+
+
+Note that multiple edges can exist between two nodes. For instance, if a subsequence in node `x` is homologous to two subsequences in node `y`.
+
+
+```python
+fragments = [
+            Dseqrecord('TTTTCCCCG', circular=False),
+            Dseqrecord('GCCCCaCCCCa', circular=False),
+        ]
+
+asm = assembly.Assembly(fragments, limit=4, algorithm=assembly.common_sub_strings, use_all_fragments=True, use_fragment_order=False)
+print(*asm.G.edges, sep='\n')
+```
+
+    (1, 2, '1[4:8]:2[1:5]')
+    (1, 2, '1[4:8]:2[6:10]')
+    (2, 1, '2[6:10]:1[4:8]')
+    (2, 1, '2[1:5]:1[4:8]')
+    (-1, -2, '-1[1:5]:-2[1:5]')
+    (-1, -2, '-1[1:5]:-2[6:10]')
+    (-2, -1, '-2[6:10]:-1[1:5]')
+    (-2, -1, '-2[1:5]:-1[1:5]')
+
+
+### Finding assemblies with the graph and constrains applied
+
+The function `Assembly.get_circular_assemblies` finds circular paths along these edges. Constrains have been applied so that all fragments are used (`use_all_fragments=True`), and not to reproduce the legacy pydna behaviour in which the first and last fragments must appear first and last (`use_fragment_order=False`).
+
+To avoid returning the same assembly twice, we apply the following constrains:
+- **Circular assemblies**: the first subfragment is not reversed, and has the smallest index in the input fragment list.
+    use_fragment_order is ignored.
+- **Linear assemblies**: Using `uid` of edges (see add_edges_from_match) to identify unique edges.
+
+
+
+
+## With a restriction + ligation
+
+
+```python
+from Bio.Restriction import EcoRI
+
+fragments = [
+    Dseqrecord('AAAGAATTCAAA'), Dseqrecord('CCCCGAATTCCCC')
+]
+
+# Let's print how we would do it with classic pydna
+f0_a, f0_b = fragments[0].cut(EcoRI)
+f1_a, f1_b = fragments[1].cut(EcoRI)
+
+print('# Using classic pydna')
+print('Expected products:')
+print((f0_a + f1_b).seq)
+print((f0_a + f1_a.reverse_complement()).seq)
+print((f1_a + f0_a.reverse_complement()).seq)
+print((f1_a + f0_b).seq.reverse_complement())
+print()
+
+
+print('# Using new assembly')
+# Here we define the function in line, because `algorithm` functions are expected
+# to take three inputs (x, y, l): Dseqrecord, Dseqrecord and an integer for the overlap,
+# and it would not make sense to add an extra field in case of restriction enzymes.
+algo = lambda x, y, l : assembly.restriction_ligation_overlap(x, y, [EcoRI])
+asm = assembly.Assembly(fragments, algorithm=algo, use_fragment_order=False)
+
+for a in asm.get_linear_assemblies():
+    print('assembly:',assembly.assembly2str(a))
+    print('sequence:',assembly.assemble(fragments, a, False).seq)
+    print()
+
+
+```
+
+    # Using classic pydna
+    Expected products:
+    AAAGAATTCCCC
+    AAAGAATTCGGGG
+    CCCCGAATTCTTT
+    TTTGAATTCGGGG
+    
+    # Using new assembly
+    assembly: ('1[4:8]:2[5:9]',)
+    sequence: AAAGAATTCCCC
+    
+    assembly: ('1[4:8]:-2[4:8]',)
+    sequence: AAAGAATTCGGGG
+    
+    assembly: ('2[5:9]:1[4:8]',)
+    sequence: CCCCGAATTCAAA
+    
+    assembly: ('-1[4:8]:2[5:9]',)
+    sequence: TTTGAATTCCCC
+    
+
+
+## With Golden Gate
+
+This is actually ligation - restriction again. For a longer example, see `test_golden_gate` in the file `test_assembly.py`.
+
+
+```python
+from Bio.Restriction import BsaI
+
+fragments = [Dseqrecord('GGTCTCAattaAAAAAttaaAGAGACC'), Dseqrecord('GGTCTCAttaaCCCCCatatAGAGACC')]
+
+algo = lambda x, y, l : assembly.restriction_ligation_overlap(x, y, [BsaI])
+asm = assembly.Assembly(fragments, use_fragment_order=False, limit=10, algorithm=algo)
+
+for a in asm.get_linear_assemblies():
+    print('assembly:',assembly.assembly2str(a))
+    print('sequence:',assembly.assemble(fragments, a, False).seq)
+
+```
+
+    assembly: ('1[16:20]:2[7:11]',)
+    sequence: GGTCTCAattaAAAAAttaaCCCCCatatAGAGACC
+    assembly: ('1[16:20]:-2[16:20]',)
+    sequence: GGTCTCAattaAAAAAttaaTGAGACC
+    assembly: ('2[7:11]:1[16:20]',)
+    sequence: GGTCTCAttaaAGAGACC
+    assembly: ('-1[7:11]:2[7:11]',)
+    sequence: GGTCTCTttaaCCCCCatatAGAGACC
+
+
+# With ligation only
+
+You can also feed digested fragments as inputs, and get all possible ligations. In the case below a circular molecule is digested twice with EcoRI, and the assembly class returns two outputs: the original input after re-ligation, and a circular sequence where one of the fragments is inverted.
+
+
+
+```python
+fragments = Dseqrecord('AAGAATTCTTGAATTCCC', circular=True).cut(EcoRI)
+expected_result = [(fragments[0] + fragments[1]).looped(), (fragments[0] + fragments[1].reverse_complement()).looped()]
+asm = assembly.Assembly(fragments, algorithm=assembly.sticky_end_sub_strings, limit=False, use_all_fragments=True, use_fragment_order=False)
+for a in asm.get_circular_assemblies():
+    print('assembly:',assembly.assembly2str(a))
+    print('sequence:',assembly.assemble(fragments, a, True).seq)
+    print()
+
+
+
+# Partial ligation is also supported (when the overhangs are compatible, but not identical). For now this is
+# expressed with limit=True, but in the future it should be done better.
+a = Dseqrecord(Dseq.from_full_sequence_and_overhangs('AAAGAA', 0, 3))
+b = Dseqrecord(Dseq.from_full_sequence_and_overhangs('AAAGAA', 3, 0))
+
+print('Partial ligation inputs:')
+print(a.seq.__repr__())
+print(b.seq.__repr__())
+
+# Only when limit == True -> TODO: change this to not be an assembly parameter, but
+# functional instead.
+fragments = [a, b]
+asm = assembly.Assembly(fragments, algorithm=assembly.sticky_end_sub_strings, limit=True, use_all_fragments=True, use_fragment_order=False)
+for assembly_plan in asm.get_linear_assemblies():
+    print('assembly:',assembly.assembly2str(assembly_plan))
+    print('sequence:',assembly.assemble(fragments, assembly_plan, False).seq.__repr__())
+    print()
+
+
+```
+
+    assembly: ('1[8:12]:2[0:4]', '2[10:14]:1[0:4]')
+    sequence: AATTCTTGAATTCCCAAGAATTCTTGAATT
+    
+    assembly: ('1[8:12]:-2[0:4]', '-2[10:14]:1[0:4]')
+    sequence: AATTCTTGAATTCTTGGGAATTCTTGAATT
+    
+    Partial ligation inputs:
+    Dseq(-6)
+    AAAGAA
+    TTT
+    Dseq(-6)
+       GAA
+    TTTCTT
+    assembly: ('1[4:6]:2[0:2]',)
+    sequence: Dseq(-10)
+    AAAGAAAGAA
+    TTTCTTTCTT
+    
+
+
+# With PCR
+
+
+```python
+from pydna.primer import Primer
+
+primer1 = Primer('ACGAACGT')
+primer2 = Primer('GCGCGCGC').reverse_complement()
+
+seq = Dseqrecord('TTTTACGAACGTAAAAAAGCGCGCGCTTTTT')
+
+fragments = [primer1, seq, primer2]
+
+# PCR assembly is a special type of assembly, the order of the fragments should be
+# as above
+asm = assembly.PCRAssembly(fragments, limit=8)
+
+for a in asm.get_linear_assemblies():
+    print('assembly:',assembly.assembly2str(a))
+    print('sequence:',assembly.assemble(fragments, a, False).seq)
+
+print()
+print('Invert fragment:')
+
+# See that it also works with inverted fragment:
+fragments = [primer1, seq.reverse_complement(), primer2]
+
+# PCR assembly is a special type of assembly, the order of the fragments should be
+# as above
+asm = assembly.PCRAssembly(fragments, limit=8)
+
+for a in asm.get_linear_assemblies():
+    print('assembly:',assembly.assembly2str(a))
+    print('sequence:',assembly.assemble(fragments, a, False).seq)
+
+# As expected, it does not work with inverted primers
+
+print()
+print('Invert primer:')
+
+fragments = [primer1.reverse_complement(), seq, primer2]
+
+asm = assembly.PCRAssembly(fragments, limit=8)
+
+print('No assemblies found, as expected:', len(asm.get_linear_assemblies()))
+
+
+```
+
+    assembly: ('1[0:8]:2[4:12]', '2[18:26]:-3[0:8]')
+    sequence: ACGAACGTAAAAAAGCGCGCGC
+    
+    Invert fragment:
+    assembly: ('1[0:8]:-2[4:12]', '-2[18:26]:-3[0:8]')
+    sequence: ACGAACGTAAAAAAGCGCGCGC
+    
+    Invert primer:
+    No assemblies found, as expected: 0
+
+
+## With homologous recombination
+
+If you would be simulating homologous recombination of non-genome sequences this is not needed, just selecting the common_substring algorithm. However, sometimes we would want to simulate the recombination into a genome region, for instance we could download the sequence of a locus where we want to clone something. In that case, the first and last element in the assembly should be identical, but it should be a linear assembly. See the example below
+
+
+```python
+
+# Let's imagine the first sequence is the genomic sequence,
+# and we want to replace tata with gcgcgcgc using homologous
+# recombination
+fragments = [
+    Dseqrecord('aaaACGTACGTtataGCATGCATttt', circular=False),
+    Dseqrecord('ACGTACGTgcgcgcgcGCATGCAT', circular=False),
+]
+
+# Here there is no need to specify the algorithm, as it is the default
+asm = assembly.Assembly(fragments, use_fragment_order=False, limit=8)
+
+# There are two possibilities, inserting the first sequence in the second
+# or the second in the first. You would have to filter based on the prior
+# knowledge that the first sequence is the genomic sequence.
+
+for i, a in enumerate(asm.get_insertion_assemblies()):
+    print('assembly:',assembly.assembly2str(a))
+    print('sequence:',assembly.assemble(fragments, a, False).seq)
+    print()
+
+```
+
+    assembly: ('1[3:11]:2[0:8]', '2[16:24]:1[15:23]')
+    sequence: aaaACGTACGTgcgcgcgcGCATGCATttt
+    
+    assembly: ('2[0:8]:1[3:11]', '1[15:23]:2[16:24]')
+    sequence: ACGTACGTtataGCATGCAT
+    
+
+
+## Special topologies
+
+There is (I think) only one special case that we need to handle differently, when a single site in a circular molecule is recombined into the genome as in the previous section, or a circular molecule is cloned through restriction-ligation into a single cutsite. Below is a figure of the homologous recombination case, but it would be the same topology if it was a restriction site instead of a homologous region.
+
+<img src="https://www.researchgate.net/profile/Paolo-Magni/publication/236689350/figure/fig1/AS:213940668768269@1428018838750/Main-plasmid-based-methodologies-for-chromosomal-integration-of-parts-in-E-coli-A.png" width="500px">
+
+
+```python
+# First fragment is the genome, second is the plasmid
+
+fragments = [
+    Dseqrecord('aaaaACGAACGTtttt', circular=False),
+    Dseqrecord('tatatataACGAACGT', circular=True),
+]
+
+# Here there is no need to specify the algorithm, as it is the default
+asm = assembly.Assembly(fragments,  use_fragment_order=False, limit=8)
+
+print('>> Homologous recombination')
+for i, a in enumerate(asm.get_insertion_assemblies()):
+    print('assembly:',assembly.assembly2str(a))
+    print('sequence:',assembly.assemble(fragments, a, False).seq)
+    print()
+
+# Here we cut two plasmids open which both contain a single EcoRI site, and ligate them
+
+fragments = [
+    Dseqrecord('aaaaGAATTCaaaa', circular=True), Dseqrecord('ccccGAATTCcccc', circular=True)
+]
+
+algo = lambda x, y, l : assembly.restriction_ligation_overlap(x, y, [EcoRI])
+asm = assembly.Assembly(fragments, algorithm=algo, use_fragment_order=False)
+
+
+print('>> Restriction:')
+for a in asm.get_circular_assemblies():
+    print('assembly:',assembly.assembly2str(a))
+    print('sequence:',assembly.assemble(fragments, a, True).seq)
+    print()
+
+
+```
+
+    >> Homologous recombination
+    assembly: ('1[3:13]:2join{[7:16], [0:1]}', '2join{[7:16], [0:1]}:1[3:13]')
+    sequence: aaaaACGAACGTtatatataACGAACGTtttt
+    
+    >> Restriction:
+    assembly: ('1[5:9]:2[5:9]', '2[5:9]:1[5:9]')
+    sequence: aaaaGAATTCccccccccGAATTCaaaa
+    
+    assembly: ('1[5:9]:-2[5:9]', '-2[5:9]:1[5:9]')
+    sequence: aaaaGAATTCggggggggGAATTCaaaa
+    
+
+
+## A weird edge-case
+
+There is a special case that we may not want to include: if a linear insert has two homology regions at its edges, and the template (circular plasmid or genome) has a single insertion site.
+
+<img src="images/weird_assembly.png" width="350">
+
+This makes sense if the blue regions represent cutsites. I think it also makes sense for homologous recombination, but the meaning of the parameter `limit` in the assembly would have a slightly different meaning. For instance, if the length of the blue homologue regions from the image would be 8 bp, and we would set `limit` to 8, the assembly yielding the result would be returned. However, neither of the homologous regions would overlap 8, but instead they would overlap `x` and `8-x`. See example below.
+
+
+
+```python
+# First fragment is the insert, second is the genome
+
+fragments = [
+    Dseqrecord('ACGAACGTttatACGAACGT', circular=False),
+    Dseqrecord('tatataACGAACGTcgcgc', circular=False),
+]
+
+asm = assembly.Assembly(fragments,  use_fragment_order=False, limit=8)
+
+print('>> Homologous recombination')
+for i, a in enumerate(asm.get_insertion_assemblies()):
+    print('assembly:',assembly.assembly2str(a))
+    print('sequence:',assembly.assemble(fragments, a, False).seq)
+    print()
+
+# Now with restriction / ligation (this one is for sure correct)
+
+fragments = [
+    Dseqrecord('GAATTCttatGAATTC', circular=False), Dseqrecord('CCCCGAATTCCCC', circular=True)
+]
+
+algo = lambda x, y, l : assembly.restriction_ligation_overlap(x, y, [EcoRI])
+asm = assembly.Assembly(fragments, algorithm=algo, use_fragment_order=False)
+
+
+print('>> Restriction:')
+for a in asm.get_circular_assemblies():
+    print('assembly:',assembly.assembly2str(a))
+    print('sequence:',assembly.assemble(fragments, a, True).seq)
+    print()
+
+
+```
+
+    >> Homologous recombination
+    assembly: ('2[6:14]:1[0:8]', '1[12:20]:2[6:14]')
+    sequence: tatataACGAACGTttatACGAACGTcgcgc
+    
+    >> Restriction:
+    assembly: ('1[11:15]:2[5:9]', '2[5:9]:1[1:5]')
+    sequence: GAATTCttatGAATTCCCCCCCCGAATTCttatGAATTC
+    
+    assembly: ('1[11:15]:-2[4:8]', '-2[4:8]:1[1:5]')
+    sequence: GAATTCttatGAATTCGGGGGGGGAATTCttatGAATTC
+    
+

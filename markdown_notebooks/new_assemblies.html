@@ -1,0 +1,583 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New assembly model &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pydna
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Pydna</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example_gallery.html">Example gallery</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pydna</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">New assembly model</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/markdown_notebooks/new_assemblies.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="new-assembly-model">
+<h1>New assembly model<a class="headerlink" href="#new-assembly-model" title="Link to this heading"></a></h1>
+<p>Most of the sequence manipulations performed in pydna could be considered either:</p>
+<ul class="simple">
+<li><p>A cut (getting a subfragment of a sequence)</p></li>
+<li><p>An assembly (combining subfragments of existing sequences into a new sequence)</p></li>
+</ul>
+<section id="almost-anything-can-be-considered-an-assembly">
+<h2>Almost anything can be considered an assembly<a class="headerlink" href="#almost-anything-can-be-considered-an-assembly" title="Link to this heading"></a></h2>
+<p>The concept of assembly can be extended to operations that may not appear as assemblies:</p>
+<ul class="simple">
+<li><p>PCR: if we consider primers to be sequences, producing the final sequence algorithmically it’s like a gibson assembly or any other type of homology cloning.</p></li>
+<li><p>Cut + ligation: if we think of the regions of parent sequences that will form overhangs after cutting, we can treat them as homology to produce the final product.</p></li>
+</ul>
+</section>
+<section id="how-to-represent-this">
+<h2>How to represent this<a class="headerlink" href="#how-to-represent-this" title="Link to this heading"></a></h2>
+<p>Let’s consider the below example, a circular gibson assembly of 3 fragments. The homologous regions between them are labelled in light blue.</p>
+<img src="images/assembly.png" width="250">
+<p>We can represent the assembly of this fragments, as a list of “joins” between fragments. Each join represents the overlap between the two fragments involved:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">assembly</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;18..21&#39;</span><span class="p">,</span> <span class="s1">&#39;1..4&#39;</span><span class="p">]</span>
+    <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;9..12&#39;</span><span class="p">,</span> <span class="s1">&#39;1..4&#39;</span><span class="p">]</span>
+    <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;10..13&#39;</span><span class="p">,</span> <span class="s1">&#39;1..4&#39;</span><span class="p">]</span> <span class="c1"># Note how the last fragment is the same as the first one in a circular assembly</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The first and second integers represent the index of the fragment in the
+input list of fragments. The sign of the integer represents the orientation
+of the fragment, positive for forward orientation, negative for reverse orientation.</p></li>
+<li><p>The strings represent the location of the overlap in the first and second fragment.</p></li>
+<li><p>We should also indicate whether the assembly is circular or not separately, since it would be possible that a linear assembly is formed where the fragment 1 is used as first and last.</p></li>
+</ul>
+<p>Now let’s see this in action with a first example (A Gibson assembly).</p>
+</section>
+<section id="with-a-gibson-assembly">
+<h2>With a Gibson Assembly<a class="headerlink" href="#with-a-gibson-assembly" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">assembly</span>
+<span class="c1">#Input fragments, overlaps between them are in caps</span>
+<span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;TTTTacgatAAtgctccCCCC&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;CCCCtcatGGGG&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;GGGGatataTTTT&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">]</span>
+
+<span class="c1"># gibson_overlap is an `algorithm` function that finds overlaps between the 3&#39; end of the first</span>
+<span class="c1"># fragment and the 5&#39; end of the second fragment.</span>
+<span class="n">asm</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">Assembly</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">assembly</span><span class="o">.</span><span class="n">gibson_overlap</span><span class="p">,</span> <span class="n">use_all_fragments</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_fragment_order</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Let&#39;s get the possible circular assemblies</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">asm</span><span class="o">.</span><span class="n">get_circular_assemblies</span><span class="p">()):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Assembly </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1"> represented as above:&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">assembly</span><span class="o">.</span><span class="n">assembly2str_tuple</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Assembly </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1"> represented as a simpler tuple of strings:&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">assembly</span><span class="o">.</span><span class="n">assembly2str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Assembly 1 represented as above:
+((1, 2, &#39;[17:21]&#39;, &#39;[0:4]&#39;), (2, 3, &#39;[8:12]&#39;, &#39;[0:4]&#39;), (3, 1, &#39;[9:13]&#39;, &#39;[0:4]&#39;))
+Assembly 1 represented as a simpler tuple of strings:
+(&#39;1[17:21]:2[0:4]&#39;, &#39;2[8:12]:3[0:4]&#39;, &#39;3[9:13]:1[0:4]&#39;)
+
+Assembly 2 represented as above:
+((1, -2, &#39;[17:21]&#39;, &#39;[0:4]&#39;), (-2, 3, &#39;[8:12]&#39;, &#39;[0:4]&#39;), (3, 1, &#39;[9:13]&#39;, &#39;[0:4]&#39;))
+Assembly 2 represented as a simpler tuple of strings:
+(&#39;1[17:21]:-2[0:4]&#39;, &#39;-2[8:12]:3[0:4]&#39;, &#39;3[9:13]:1[0:4]&#39;)
+</pre></div>
+</div>
+<p>As you can see, there are two possible circular assemblies, one with all fragments oriented as they were passed to the class constructor, and one with the second fragment inverted (see -2).</p>
+<section id="using-graphs-fragments-as-nodes-and-joins-between-them-as-edges">
+<h3>Using graphs: fragments as nodes and joins between them as edges<a class="headerlink" href="#using-graphs-fragments-as-nodes-and-joins-between-them-as-edges" title="Link to this heading"></a></h3>
+<p>How are these assemblies found? The <code class="docutils literal notranslate"><span class="pre">Assembly</span></code> class contains a directed graph, where nodes represent fragments and
+edges represent overlaps between fragments:</p>
+<ul class="simple">
+<li><p>The node keys are integers, representing the index of the fragment in the input list of fragments. The sign of the node key represents the orientation of the fragment, positive for forward orientation, negative for reverse orientation.</p></li>
+<li><p>The edges contain the locations of the overlaps in the fragments. For an edge <code class="docutils literal notranslate"><span class="pre">(u,</span> <span class="pre">v,</span> <span class="pre">key)</span></code>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">u</span></code> and <code class="docutils literal notranslate"><span class="pre">v</span></code> are the nodes connected by the edge.</p></li>
+<li><p>key is a string that represents the location of the overlap. In the format introduced above:
+<code class="docutils literal notranslate"><span class="pre">u[start:end](strand):v[start:end](strand)</span></code>.</p></li>
+<li><p>Edges have a <code class="docutils literal notranslate"><span class="pre">locations</span></code> attribute, which is a list of two <code class="docutils literal notranslate"><span class="pre">Location</span></code> objects, representing the location of the overlap in the <code class="docutils literal notranslate"><span class="pre">u</span></code> and <code class="docutils literal notranslate"><span class="pre">v</span></code> fragment.</p></li>
+<li><p>You can think of an edge as a representation of the join of two fragments.</p></li>
+</ul>
+</li>
+</ul>
+<p>Let’s look at how the edges of the previous graph look</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">asm</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(1, 2, &#39;1[17:21]:2[0:4]&#39;)
+(1, -2, &#39;1[17:21]:-2[0:4]&#39;)
+(2, -1, &#39;2[8:12]:-1[0:4]&#39;)
+(2, 3, &#39;2[8:12]:3[0:4]&#39;)
+(3, 1, &#39;3[9:13]:1[0:4]&#39;)
+(-1, -3, &#39;-1[17:21]:-3[0:4]&#39;)
+(-2, -1, &#39;-2[8:12]:-1[0:4]&#39;)
+(-2, 3, &#39;-2[8:12]:3[0:4]&#39;)
+(-3, -2, &#39;-3[9:13]:-2[0:4]&#39;)
+(-3, 2, &#39;-3[9:13]:2[0:4]&#39;)
+</pre></div>
+</div>
+<p>Note that multiple edges can exist between two nodes. For instance, if a subsequence in node <code class="docutils literal notranslate"><span class="pre">x</span></code> is homologous to two subsequences in node <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;TTTTCCCCG&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;GCCCCaCCCCa&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="p">]</span>
+
+<span class="n">asm</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">Assembly</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">assembly</span><span class="o">.</span><span class="n">common_sub_strings</span><span class="p">,</span> <span class="n">use_all_fragments</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_fragment_order</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">asm</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(1, 2, &#39;1[4:8]:2[1:5]&#39;)
+(1, 2, &#39;1[4:8]:2[6:10]&#39;)
+(2, 1, &#39;2[6:10]:1[4:8]&#39;)
+(2, 1, &#39;2[1:5]:1[4:8]&#39;)
+(-1, -2, &#39;-1[1:5]:-2[1:5]&#39;)
+(-1, -2, &#39;-1[1:5]:-2[6:10]&#39;)
+(-2, -1, &#39;-2[6:10]:-1[1:5]&#39;)
+(-2, -1, &#39;-2[1:5]:-1[1:5]&#39;)
+</pre></div>
+</div>
+</section>
+<section id="finding-assemblies-with-the-graph-and-constrains-applied">
+<h3>Finding assemblies with the graph and constrains applied<a class="headerlink" href="#finding-assemblies-with-the-graph-and-constrains-applied" title="Link to this heading"></a></h3>
+<p>The function <code class="docutils literal notranslate"><span class="pre">Assembly.get_circular_assemblies</span></code> finds circular paths along these edges. Constrains have been applied so that all fragments are used (<code class="docutils literal notranslate"><span class="pre">use_all_fragments=True</span></code>), and not to reproduce the legacy pydna behaviour in which the first and last fragments must appear first and last (<code class="docutils literal notranslate"><span class="pre">use_fragment_order=False</span></code>).</p>
+<p>To avoid returning the same assembly twice, we apply the following constrains:</p>
+<ul class="simple">
+<li><p><strong>Circular assemblies</strong>: the first subfragment is not reversed, and has the smallest index in the input fragment list.
+use_fragment_order is ignored.</p></li>
+<li><p><strong>Linear assemblies</strong>: Using <code class="docutils literal notranslate"><span class="pre">uid</span></code> of edges (see add_edges_from_match) to identify unique edges.</p></li>
+</ul>
+</section>
+</section>
+<section id="with-a-restriction-ligation">
+<h2>With a restriction + ligation<a class="headerlink" href="#with-a-restriction-ligation" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">EcoRI</span>
+
+<span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;AAAGAATTCAAA&#39;</span><span class="p">),</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;CCCCGAATTCCCC&#39;</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="c1"># Let&#39;s print how we would do it with classic pydna</span>
+<span class="n">f0_a</span><span class="p">,</span> <span class="n">f0_b</span> <span class="o">=</span> <span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">EcoRI</span><span class="p">)</span>
+<span class="n">f1_a</span><span class="p">,</span> <span class="n">f1_b</span> <span class="o">=</span> <span class="n">fragments</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">EcoRI</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;# Using classic pydna&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Expected products:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">((</span><span class="n">f0_a</span> <span class="o">+</span> <span class="n">f1_b</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">((</span><span class="n">f0_a</span> <span class="o">+</span> <span class="n">f1_a</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">())</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">((</span><span class="n">f1_a</span> <span class="o">+</span> <span class="n">f0_a</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">())</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">((</span><span class="n">f1_a</span> <span class="o">+</span> <span class="n">f0_b</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">()</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;# Using new assembly&#39;</span><span class="p">)</span>
+<span class="c1"># Here we define the function in line, because `algorithm` functions are expected</span>
+<span class="c1"># to take three inputs (x, y, l): Dseqrecord, Dseqrecord and an integer for the overlap,</span>
+<span class="c1"># and it would not make sense to add an extra field in case of restriction enzymes.</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">l</span> <span class="p">:</span> <span class="n">assembly</span><span class="o">.</span><span class="n">restriction_ligation_overlap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="n">EcoRI</span><span class="p">])</span>
+<span class="n">asm</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">Assembly</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">algo</span><span class="p">,</span> <span class="n">use_fragment_order</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_linear_assemblies</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;assembly:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assembly2str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sequence:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Using classic pydna
+Expected products:
+AAAGAATTCCCC
+AAAGAATTCGGGG
+CCCCGAATTCTTT
+TTTGAATTCGGGG
+
+# Using new assembly
+assembly: (&#39;1[4:8]:2[5:9]&#39;,)
+sequence: AAAGAATTCCCC
+
+assembly: (&#39;1[4:8]:-2[4:8]&#39;,)
+sequence: AAAGAATTCGGGG
+
+assembly: (&#39;2[5:9]:1[4:8]&#39;,)
+sequence: CCCCGAATTCAAA
+
+assembly: (&#39;-1[4:8]:2[5:9]&#39;,)
+sequence: TTTGAATTCCCC
+</pre></div>
+</div>
+</section>
+<section id="with-golden-gate">
+<h2>With Golden Gate<a class="headerlink" href="#with-golden-gate" title="Link to this heading"></a></h2>
+<p>This is actually ligation - restriction again. For a longer example, see <code class="docutils literal notranslate"><span class="pre">test_golden_gate</span></code> in the file <code class="docutils literal notranslate"><span class="pre">test_assembly.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">BsaI</span>
+
+<span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;GGTCTCAattaAAAAAttaaAGAGACC&#39;</span><span class="p">),</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;GGTCTCAttaaCCCCCatatAGAGACC&#39;</span><span class="p">)]</span>
+
+<span class="n">algo</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">l</span> <span class="p">:</span> <span class="n">assembly</span><span class="o">.</span><span class="n">restriction_ligation_overlap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="n">BsaI</span><span class="p">])</span>
+<span class="n">asm</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">Assembly</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">use_fragment_order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">algo</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_linear_assemblies</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;assembly:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assembly2str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sequence:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>assembly: (&#39;1[16:20]:2[7:11]&#39;,)
+sequence: GGTCTCAattaAAAAAttaaCCCCCatatAGAGACC
+assembly: (&#39;1[16:20]:-2[16:20]&#39;,)
+sequence: GGTCTCAattaAAAAAttaaTGAGACC
+assembly: (&#39;2[7:11]:1[16:20]&#39;,)
+sequence: GGTCTCAttaaAGAGACC
+assembly: (&#39;-1[7:11]:2[7:11]&#39;,)
+sequence: GGTCTCTttaaCCCCCatatAGAGACC
+</pre></div>
+</div>
+</section>
+</section>
+<section id="with-ligation-only">
+<h1>With ligation only<a class="headerlink" href="#with-ligation-only" title="Link to this heading"></a></h1>
+<p>You can also feed digested fragments as inputs, and get all possible ligations. In the case below a circular molecule is digested twice with EcoRI, and the assembly class returns two outputs: the original input after re-ligation, and a circular sequence where one of the fragments is inverted.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fragments</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;AAGAATTCTTGAATTCCC&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">EcoRI</span><span class="p">)</span>
+<span class="n">expected_result</span> <span class="o">=</span> <span class="p">[(</span><span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">fragments</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">looped</span><span class="p">(),</span> <span class="p">(</span><span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">fragments</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">())</span><span class="o">.</span><span class="n">looped</span><span class="p">()]</span>
+<span class="n">asm</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">Assembly</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">assembly</span><span class="o">.</span><span class="n">sticky_end_sub_strings</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_all_fragments</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_fragment_order</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_circular_assemblies</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;assembly:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assembly2str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sequence:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+
+
+<span class="c1"># Partial ligation is also supported (when the overhangs are compatible, but not identical). For now this is</span>
+<span class="c1"># expressed with limit=True, but in the future it should be done better.</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">Dseq</span><span class="o">.</span><span class="n">from_full_sequence_and_overhangs</span><span class="p">(</span><span class="s1">&#39;AAAGAA&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">Dseq</span><span class="o">.</span><span class="n">from_full_sequence_and_overhangs</span><span class="p">(</span><span class="s1">&#39;AAAGAA&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Partial ligation inputs:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">())</span>
+
+<span class="c1"># Only when limit == True -&gt; TODO: change this to not be an assembly parameter, but</span>
+<span class="c1"># functional instead.</span>
+<span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span>
+<span class="n">asm</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">Assembly</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">assembly</span><span class="o">.</span><span class="n">sticky_end_sub_strings</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_all_fragments</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_fragment_order</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">assembly_plan</span> <span class="ow">in</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_linear_assemblies</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;assembly:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assembly2str</span><span class="p">(</span><span class="n">assembly_plan</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sequence:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">assembly_plan</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>assembly: (&#39;1[8:12]:2[0:4]&#39;, &#39;2[10:14]:1[0:4]&#39;)
+sequence: AATTCTTGAATTCCCAAGAATTCTTGAATT
+
+assembly: (&#39;1[8:12]:-2[0:4]&#39;, &#39;-2[10:14]:1[0:4]&#39;)
+sequence: AATTCTTGAATTCTTGGGAATTCTTGAATT
+
+Partial ligation inputs:
+Dseq(-6)
+AAAGAA
+TTT
+Dseq(-6)
+   GAA
+TTTCTT
+assembly: (&#39;1[4:6]:2[0:2]&#39;,)
+sequence: Dseq(-10)
+AAAGAAAGAA
+TTTCTTTCTT
+</pre></div>
+</div>
+</section>
+<section id="with-pcr">
+<h1>With PCR<a class="headerlink" href="#with-pcr" title="Link to this heading"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span>
+
+<span class="n">primer1</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="s1">&#39;ACGAACGT&#39;</span><span class="p">)</span>
+<span class="n">primer2</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="s1">&#39;GCGCGCGC&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+
+<span class="n">seq</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;TTTTACGAACGTAAAAAAGCGCGCGCTTTTT&#39;</span><span class="p">)</span>
+
+<span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span><span class="n">primer1</span><span class="p">,</span> <span class="n">seq</span><span class="p">,</span> <span class="n">primer2</span><span class="p">]</span>
+
+<span class="c1"># PCR assembly is a special type of assembly, the order of the fragments should be</span>
+<span class="c1"># as above</span>
+<span class="n">asm</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">PCRAssembly</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_linear_assemblies</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;assembly:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assembly2str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sequence:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Invert fragment:&#39;</span><span class="p">)</span>
+
+<span class="c1"># See that it also works with inverted fragment:</span>
+<span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span><span class="n">primer1</span><span class="p">,</span> <span class="n">seq</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">(),</span> <span class="n">primer2</span><span class="p">]</span>
+
+<span class="c1"># PCR assembly is a special type of assembly, the order of the fragments should be</span>
+<span class="c1"># as above</span>
+<span class="n">asm</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">PCRAssembly</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_linear_assemblies</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;assembly:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assembly2str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sequence:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+
+<span class="c1"># As expected, it does not work with inverted primers</span>
+
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Invert primer:&#39;</span><span class="p">)</span>
+
+<span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span><span class="n">primer1</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">(),</span> <span class="n">seq</span><span class="p">,</span> <span class="n">primer2</span><span class="p">]</span>
+
+<span class="n">asm</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">PCRAssembly</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No assemblies found, as expected:&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">asm</span><span class="o">.</span><span class="n">get_linear_assemblies</span><span class="p">()))</span>
+
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>assembly: (&#39;1[0:8]:2[4:12]&#39;, &#39;2[18:26]:-3[0:8]&#39;)
+sequence: ACGAACGTAAAAAAGCGCGCGC
+
+Invert fragment:
+assembly: (&#39;1[0:8]:-2[4:12]&#39;, &#39;-2[18:26]:-3[0:8]&#39;)
+sequence: ACGAACGTAAAAAAGCGCGCGC
+
+Invert primer:
+No assemblies found, as expected: 0
+</pre></div>
+</div>
+<section id="with-homologous-recombination">
+<h2>With homologous recombination<a class="headerlink" href="#with-homologous-recombination" title="Link to this heading"></a></h2>
+<p>If you would be simulating homologous recombination of non-genome sequences this is not needed, just selecting the common_substring algorithm. However, sometimes we would want to simulate the recombination into a genome region, for instance we could download the sequence of a locus where we want to clone something. In that case, the first and last element in the assembly should be identical, but it should be a linear assembly. See the example below</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="c1"># Let&#39;s imagine the first sequence is the genomic sequence,</span>
+<span class="c1"># and we want to replace tata with gcgcgcgc using homologous</span>
+<span class="c1"># recombination</span>
+<span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;aaaACGTACGTtataGCATGCATttt&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;ACGTACGTgcgcgcgcGCATGCAT&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="c1"># Here there is no need to specify the algorithm, as it is the default</span>
+<span class="n">asm</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">Assembly</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">use_fragment_order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="c1"># There are two possibilities, inserting the first sequence in the second</span>
+<span class="c1"># or the second in the first. You would have to filter based on the prior</span>
+<span class="c1"># knowledge that the first sequence is the genomic sequence.</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">asm</span><span class="o">.</span><span class="n">get_insertion_assemblies</span><span class="p">()):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;assembly:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assembly2str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sequence:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>assembly: (&#39;1[3:11]:2[0:8]&#39;, &#39;2[16:24]:1[15:23]&#39;)
+sequence: aaaACGTACGTgcgcgcgcGCATGCATttt
+
+assembly: (&#39;2[0:8]:1[3:11]&#39;, &#39;1[15:23]:2[16:24]&#39;)
+sequence: ACGTACGTtataGCATGCAT
+</pre></div>
+</div>
+</section>
+<section id="special-topologies">
+<h2>Special topologies<a class="headerlink" href="#special-topologies" title="Link to this heading"></a></h2>
+<p>There is (I think) only one special case that we need to handle differently, when a single site in a circular molecule is recombined into the genome as in the previous section, or a circular molecule is cloned through restriction-ligation into a single cutsite. Below is a figure of the homologous recombination case, but it would be the same topology if it was a restriction site instead of a homologous region.</p>
+<img src="https://www.researchgate.net/profile/Paolo-Magni/publication/236689350/figure/fig1/AS:213940668768269@1428018838750/Main-plasmid-based-methodologies-for-chromosomal-integration-of-parts-in-E-coli-A.png" width="500px">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># First fragment is the genome, second is the plasmid</span>
+
+<span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;aaaaACGAACGTtttt&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;tatatataACGAACGT&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="c1"># Here there is no need to specify the algorithm, as it is the default</span>
+<span class="n">asm</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">Assembly</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span>  <span class="n">use_fragment_order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt;&gt; Homologous recombination&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">asm</span><span class="o">.</span><span class="n">get_insertion_assemblies</span><span class="p">()):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;assembly:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assembly2str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sequence:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+<span class="c1"># Here we cut two plasmids open which both contain a single EcoRI site, and ligate them</span>
+
+<span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;aaaaGAATTCaaaa&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;ccccGAATTCcccc&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">algo</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">l</span> <span class="p">:</span> <span class="n">assembly</span><span class="o">.</span><span class="n">restriction_ligation_overlap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="n">EcoRI</span><span class="p">])</span>
+<span class="n">asm</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">Assembly</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">algo</span><span class="p">,</span> <span class="n">use_fragment_order</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt;&gt; Restriction:&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_circular_assemblies</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;assembly:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assembly2str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sequence:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt; Homologous recombination
+assembly: (&#39;1[3:13]:2join{[7:16], [0:1]}&#39;, &#39;2join{[7:16], [0:1]}:1[3:13]&#39;)
+sequence: aaaaACGAACGTtatatataACGAACGTtttt
+
+&gt;&gt; Restriction:
+assembly: (&#39;1[5:9]:2[5:9]&#39;, &#39;2[5:9]:1[5:9]&#39;)
+sequence: aaaaGAATTCccccccccGAATTCaaaa
+
+assembly: (&#39;1[5:9]:-2[5:9]&#39;, &#39;-2[5:9]:1[5:9]&#39;)
+sequence: aaaaGAATTCggggggggGAATTCaaaa
+</pre></div>
+</div>
+</section>
+<section id="a-weird-edge-case">
+<h2>A weird edge-case<a class="headerlink" href="#a-weird-edge-case" title="Link to this heading"></a></h2>
+<p>There is a special case that we may not want to include: if a linear insert has two homology regions at its edges, and the template (circular plasmid or genome) has a single insertion site.</p>
+<img src="images/weird_assembly.png" width="350">
+<p>This makes sense if the blue regions represent cutsites. I think it also makes sense for homologous recombination, but the meaning of the parameter <code class="docutils literal notranslate"><span class="pre">limit</span></code> in the assembly would have a slightly different meaning. For instance, if the length of the blue homologue regions from the image would be 8 bp, and we would set <code class="docutils literal notranslate"><span class="pre">limit</span></code> to 8, the assembly yielding the result would be returned. However, neither of the homologous regions would overlap 8, but instead they would overlap <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">8-x</span></code>. See example below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># First fragment is the insert, second is the genome</span>
+
+<span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;ACGAACGTttatACGAACGT&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;tatataACGAACGTcgcgc&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">asm</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">Assembly</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span>  <span class="n">use_fragment_order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt;&gt; Homologous recombination&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">asm</span><span class="o">.</span><span class="n">get_insertion_assemblies</span><span class="p">()):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;assembly:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assembly2str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sequence:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+<span class="c1"># Now with restriction / ligation (this one is for sure correct)</span>
+
+<span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;GAATTCttatGAATTC&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;CCCCGAATTCCCC&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">algo</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">l</span> <span class="p">:</span> <span class="n">assembly</span><span class="o">.</span><span class="n">restriction_ligation_overlap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="n">EcoRI</span><span class="p">])</span>
+<span class="n">asm</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">Assembly</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">algo</span><span class="p">,</span> <span class="n">use_fragment_order</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt;&gt; Restriction:&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_circular_assemblies</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;assembly:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assembly2str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sequence:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt;&gt; Homologous recombination
+assembly: (&#39;2[6:14]:1[0:8]&#39;, &#39;1[12:20]:2[6:14]&#39;)
+sequence: tatataACGAACGTttatACGAACGTcgcgc
+
+&gt;&gt; Restriction:
+assembly: (&#39;1[11:15]:2[5:9]&#39;, &#39;2[5:9]:1[1:5]&#39;)
+sequence: GAATTCttatGAATTCCCCCCCCGAATTCttatGAATTC
+
+assembly: (&#39;1[11:15]:-2[4:8]&#39;, &#39;-2[4:8]:1[1:5]&#39;)
+sequence: GAATTCttatGAATTCGGGGGGGGAATTCttatGAATTC
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Björn F. Johansson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

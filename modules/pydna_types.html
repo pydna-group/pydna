@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydna.gel &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  <title>pydna.types &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pydna.genbank" href="pydna_genbank.html" />
-    <link rel="prev" title="pydna.gateway" href="pydna_gateway.html" /> 
+    <link rel="next" title="pydna.user_cloning" href="pydna_user_cloning.html" />
+    <link rel="prev" title="pydna.tm" href="pydna_tm.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -69,11 +69,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_fakeseq.html">pydna.fakeseq</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_fusionpcr.html">pydna.fusionpcr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_gateway.html">pydna.gateway</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">pydna.gel</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pydna.gel.interpolator"><code class="docutils literal notranslate"><span class="pre">interpolator()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pydna.gel.gel"><code class="docutils literal notranslate"><span class="pre">gel()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna_gel.html">pydna.gel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_genbank.html">pydna.genbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_genbankfile.html">pydna.genbankfile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_genbankfixer.html">pydna.genbankfixer</a></li>
@@ -89,7 +85,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_sequence_picker.html">pydna.sequence_picker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_threading_timer_decorator_exit.html">pydna.threading_timer_decorator_exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_tm.html">pydna.tm</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pydna_types.html">pydna.types</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pydna.types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_user_cloning.html">pydna.user_cloning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_utils.html">pydna.utils</a></li>
 </ul>
@@ -113,9 +109,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Modules</a></li>
-      <li class="breadcrumb-item active">pydna.gel</li>
+      <li class="breadcrumb-item active">pydna.types</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/modules/pydna_gel.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/modules/pydna_types.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -123,28 +119,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-pydna.gel">
-<span id="pydna-gel"></span><h1>pydna.gel<a class="headerlink" href="#module-pydna.gel" title="Link to this heading"></a></h1>
-<p>docstring.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="pydna.gel.interpolator">
-<span class="sig-prename descclassname"><span class="pre">pydna.gel.</span></span><span class="sig-name descname"><span class="pre">interpolator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mwstd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/gel.html#interpolator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.gel.interpolator" title="Link to this definition"></a></dt>
-<dd><p>docstring.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pydna.gel.gel">
-<span class="sig-prename descclassname"><span class="pre">pydna.gel.</span></span><span class="sig-name descname"><span class="pre">gel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gel_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">600</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpolator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">interpolator(mwstd=_mwstd)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/gel.html#gel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.gel.gel" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
+  <section id="pydna-types">
+<h1>pydna.types<a class="headerlink" href="#pydna-types" title="Link to this heading"></a></h1>
+<p id="module-pydna.types">Types used in the pydna package.</p>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="pydna_gateway.html" class="btn btn-neutral float-left" title="pydna.gateway" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="pydna_genbank.html" class="btn btn-neutral float-right" title="pydna.genbank" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pydna_tm.html" class="btn btn-neutral float-left" title="pydna.tm" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pydna_user_cloning.html" class="btn btn-neutral float-right" title="pydna.user_cloning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

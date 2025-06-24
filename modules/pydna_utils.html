@@ -56,6 +56,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_amplicon.html">pydna.amplicon</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_amplify.html">pydna.amplify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_assembly.html">pydna.assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna_assembly2.html">pydna.assembly2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_codon.html">pydna.codon</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_common_sub_strings.html">pydna.common_sub_strings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_conftest.html">pydna.conftest</a></li>
@@ -84,6 +85,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_sequence_picker.html">pydna.sequence_picker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_threading_timer_decorator_exit.html">pydna.threading_timer_decorator_exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_tm.html">pydna.tm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna_types.html">pydna.types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_user_cloning.html">pydna.user_cloning</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">pydna.utils</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#pydna.utils.three_frame_orfs"><code class="docutils literal notranslate"><span class="pre">three_frame_orfs()</span></code></a></li>
@@ -107,6 +109,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#pydna.utils.cuts_overlap"><code class="docutils literal notranslate"><span class="pre">cuts_overlap()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydna.utils.location_boundaries"><code class="docutils literal notranslate"><span class="pre">location_boundaries()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydna.utils.locations_overlap"><code class="docutils literal notranslate"><span class="pre">locations_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.utils.sum_is_sticky"><code class="docutils literal notranslate"><span class="pre">sum_is_sticky()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.utils.limit_iterator"><code class="docutils literal notranslate"><span class="pre">limit_iterator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.utils.create_location"><code class="docutils literal notranslate"><span class="pre">create_location()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -376,6 +381,66 @@ each sequence for sequences that have a linear or circular attribute
 <dt class="sig sig-object py" id="pydna.utils.locations_overlap">
 <span class="sig-prename descclassname"><span class="pre">pydna.utils.</span></span><span class="sig-name descname"><span class="pre">locations_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loc1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SimpleLocation</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">CompoundLocation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loc2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SimpleLocation</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">CompoundLocation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_len</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/utils.html#locations_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.utils.locations_overlap" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.utils.sum_is_sticky">
+<span class="sig-prename descclassname"><span class="pre">pydna.utils.</span></span><span class="sig-name descname"><span class="pre">sum_is_sticky</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">three_prime_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">five_prime_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../_modules/pydna/utils.html#sum_is_sticky"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.utils.sum_is_sticky" title="Link to this definition"></a></dt>
+<dd><p>Return the overlap length if the 3’ end of seq1 and 5’ end of seq2 ends are sticky and compatible for ligation.
+Return 0 if they are not compatible.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.utils.limit_iterator">
+<span class="sig-prename descclassname"><span class="pre">pydna.utils.</span></span><span class="sig-name descname"><span class="pre">limit_iterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/utils.html#limit_iterator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.utils.limit_iterator" title="Link to this definition"></a></dt>
+<dd><p>Call the function with an iterator to raise an error if the number of items is greater than the limit.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.utils.create_location">
+<span class="sig-prename descclassname"><span class="pre">pydna.utils.</span></span><span class="sig-name descname"><span class="pre">create_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">strand</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Location</span></span></span><a class="reference internal" href="../_modules/pydna/utils.html#create_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.utils.create_location" title="Link to this definition"></a></dt>
+<dd><p>Create a location object from a start and end position.
+If the end position is less than the start position, the location is circular. It handles negative positions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The start position of the location.</p></li>
+<li><p><strong>end</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The end position of the location.</p></li>
+<li><p><strong>lim</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The length of the sequence.</p></li>
+<li><p><strong>strand</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – The strand of the location. None, 1 or -1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>location</strong> – The location object. Can be a SimpleLocation or a CompoundLocation if the feature spans the origin of
+a circular sequence.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Location</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_location</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">create_location</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="go">&#39;[0:5](-)&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">create_location</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+<span class="go">&#39;[0:5](+)&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">create_location</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="go">&#39;[0:5]&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">create_location</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="go">&#39;join{[8:10], [0:2]}&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">create_location</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="go">&#39;join{[0:2](-), [8:10](-)}&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">create_location</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="go">&#39;join{[8:10], [0:2]}&#39;</span>
+</pre></div>
+</div>
+<p>Note this special case, 0 is the same as len(seq)
+&gt;&gt;&gt; str(create_location(5, 0, 10))
+‘[5:10]’</p>
+<p>Note the special case where if start and end are the same,
+the location spans the entire sequence (it’s not empty).
+&gt;&gt;&gt; str(create_location(5, 5, 10))
+‘join{[5:10], [0:5]}’</p>
+</dd></dl>
 
 </section>
 

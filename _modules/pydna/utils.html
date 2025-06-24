@@ -111,6 +111,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span> <span class="k">as</span> <span class="n">_sl</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompoundLocation</span> <span class="k">as</span> <span class="n">_cl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">Location</span> <span class="k">as</span> <span class="n">_Location</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span> <span class="k">as</span> <span class="n">_Union</span><span class="p">,</span> <span class="n">TypeVar</span> <span class="k">as</span> <span class="n">_TypeVar</span><span class="p">,</span> <span class="n">List</span> <span class="k">as</span> <span class="n">_List</span>
 
@@ -890,6 +891,111 @@
             <span class="k">return</span> <span class="kc">True</span>
 
     <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="sum_is_sticky">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.sum_is_sticky">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sum_is_sticky</span><span class="p">(</span><span class="n">three_prime_end</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">five_prime_end</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">partial</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the overlap length if the 3&#39; end of seq1 and 5&#39; end of seq2 ends are sticky and compatible for ligation.</span>
+<span class="sd">    Return 0 if they are not compatible.&quot;&quot;&quot;</span>
+    <span class="n">type_seq1</span><span class="p">,</span> <span class="n">sticky_seq1</span> <span class="o">=</span> <span class="n">three_prime_end</span>
+    <span class="n">type_seq2</span><span class="p">,</span> <span class="n">sticky_seq2</span> <span class="o">=</span> <span class="n">five_prime_end</span>
+
+    <span class="k">if</span> <span class="s2">&quot;blunt&quot;</span> <span class="o">!=</span> <span class="n">type_seq2</span> <span class="ow">and</span> <span class="n">type_seq2</span> <span class="o">==</span> <span class="n">type_seq1</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">sticky_seq2</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">rc</span><span class="p">(</span><span class="n">sticky_seq1</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">sticky_seq1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">partial</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">type_seq1</span> <span class="o">!=</span> <span class="n">type_seq2</span> <span class="ow">or</span> <span class="n">type_seq2</span> <span class="o">==</span> <span class="s2">&quot;blunt&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">elif</span> <span class="n">type_seq2</span> <span class="o">==</span> <span class="s2">&quot;5&#39;&quot;</span><span class="p">:</span>
+        <span class="n">sticky_seq1</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">rc</span><span class="p">(</span><span class="n">sticky_seq1</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">type_seq2</span> <span class="o">==</span> <span class="s2">&quot;3&#39;&quot;</span><span class="p">:</span>
+        <span class="n">sticky_seq2</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">rc</span><span class="p">(</span><span class="n">sticky_seq2</span><span class="p">))</span>
+
+    <span class="n">ovhg_len</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sticky_seq1</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">sticky_seq2</span><span class="p">))</span>
+    <span class="c1"># [::-1] to try the longest overhangs first</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ovhg_len</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">sticky_seq1</span><span class="p">[</span><span class="o">-</span><span class="n">i</span><span class="p">:]</span> <span class="o">==</span> <span class="n">sticky_seq2</span><span class="p">[:</span><span class="n">i</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">i</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="limit_iterator">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.limit_iterator">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">limit_iterator</span><span class="p">(</span><span class="n">iterator</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Call the function with an iterator to raise an error if the number of items is greater than the limit.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">iterator</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">limit</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Too many possible paths (more than </span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">x</span></div>
+
+
+
+<div class="viewcode-block" id="create_location">
+<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.create_location">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_location</span><span class="p">(</span><span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">strand</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Location</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a location object from a start and end position.</span>
+<span class="sd">    If the end position is less than the start position, the location is circular. It handles negative positions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    start : int</span>
+<span class="sd">        The start position of the location.</span>
+<span class="sd">    end : int</span>
+<span class="sd">        The end position of the location.</span>
+<span class="sd">    lim : int</span>
+<span class="sd">        The length of the sequence.</span>
+<span class="sd">    strand : int, optional</span>
+<span class="sd">        The strand of the location. None, 1 or -1.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    location : Location</span>
+<span class="sd">        The location object. Can be a SimpleLocation or a CompoundLocation if the feature spans the origin of</span>
+<span class="sd">        a circular sequence.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.utils import create_location</span>
+<span class="sd">    &gt;&gt;&gt; str(create_location(0, 5, 10,-1))</span>
+<span class="sd">    &#39;[0:5](-)&#39;</span>
+<span class="sd">    &gt;&gt;&gt; str(create_location(0, 5, 10,+1))</span>
+<span class="sd">    &#39;[0:5](+)&#39;</span>
+<span class="sd">    &gt;&gt;&gt; str(create_location(0, 5, 10))</span>
+<span class="sd">    &#39;[0:5]&#39;</span>
+<span class="sd">    &gt;&gt;&gt; str(create_location(8, 2, 10))</span>
+<span class="sd">    &#39;join{[8:10], [0:2]}&#39;</span>
+<span class="sd">    &gt;&gt;&gt; str(create_location(8, 2, 10,-1))</span>
+<span class="sd">    &#39;join{[0:2](-), [8:10](-)}&#39;</span>
+<span class="sd">    &gt;&gt;&gt; str(create_location(-2, 2, 10))</span>
+<span class="sd">    &#39;join{[8:10], [0:2]}&#39;</span>
+
+<span class="sd">    Note this special case, 0 is the same as len(seq)</span>
+<span class="sd">    &gt;&gt;&gt; str(create_location(5, 0, 10))</span>
+<span class="sd">    &#39;[5:10]&#39;</span>
+
+<span class="sd">    Note the special case where if start and end are the same,</span>
+<span class="sd">    the location spans the entire sequence (it&#39;s not empty).</span>
+<span class="sd">    &gt;&gt;&gt; str(create_location(5, 5, 10))</span>
+<span class="sd">    &#39;join{[5:10], [0:5]}&#39;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">+=</span> <span class="n">lim</span>
+    <span class="k">while</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">end</span> <span class="o">+=</span> <span class="n">lim</span>
+    <span class="k">if</span> <span class="n">end</span> <span class="o">&gt;</span> <span class="n">start</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_sl</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">shift_location</span><span class="p">(</span><span class="n">_sl</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="n">lim</span><span class="p">,</span> <span class="n">strand</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lim</span><span class="p">)</span></div>
 
 </pre></div>
 
