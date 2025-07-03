@@ -24,6 +24,8 @@ jobs:
           - os: ubuntu-latest
             python-version: "3.12"
             hooks: true
+            # Don't run hooks check on master, otherwise no-commit-to-branch hook will fail
+            if: github.ref != 'refs/heads/master'
           - os: ubuntu-latest
             python-version: "3.13"
           # This mimics what would happen installing using pip install pydna (removes the
