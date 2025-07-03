@@ -16,11 +16,14 @@ jobs:
         include:
           - os: ubuntu-latest
             python-version: "3.10"
-            codecov: true
           - os: ubuntu-latest
             python-version: "3.11"
           - os: ubuntu-latest
             python-version: "3.12"
+            codecov: true
+          - os: ubuntu-latest
+            python-version: "3.12"
+            hooks: true
           - os: ubuntu-latest
             python-version: "3.13"
           # This mimics what would happen installing using pip install pydna (removes the
@@ -61,29 +64,31 @@ jobs:
         run: poetry install --all-extras
 
       - name: 🔎 poetry run python run_test.py
+        # Don't run tests if we're just checking hooks
+        if: (!matrix.hooks)
         run: poetry run python run_test.py
 
       # Enforce pre-commit hooks ===========================
       - name: Get changed files
-        if: (matrix.codecov)
+        if: (matrix.hooks)
         id: changed-files
         uses: tj-actions/changed-files@v45
         with:
           since_last_remote_commit: true
 
       - uses: actions/cache@v4
-        if: (matrix.codecov)
+        if: (matrix.hooks)
         id: cache-precommit
         with:
           path: ~/.cache/pre-commit
           key: ${{ runner.os }}-precommit-hooks-v2-${{ hashFiles('**/.pre-commit-config.yaml') }}
 
       - name: Installing pre-commit hooks (cached)
-        if: (matrix.codecov) && (steps.cache-precommit.outputs.cache-hit != 'true')
+        if: (matrix.hooks) && (steps.cache-precommit.outputs.cache-hit != 'true')
         run: poetry run pre-commit install --install-hooks
 
       - name: Run style checking via pre-commit
-        if: (matrix.codecov && steps.changed-files.outputs.all_changed_files)
+        if: (matrix.hooks && steps.changed-files.outputs.all_changed_files)
         run: |
           echo "Changed files:"
           echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n'
