@@ -335,12 +335,12 @@ class _PydnaDeprecationWarning(_PydnaWarning):
 #         [main]
 #         loglevel=30
 #         email=myemail@example.org
-#         data_dir=/home/bjorn/.local/share/pydna
-#         log_dir=/home/bjorn/.cache/pydna/log
-#         ape=tclsh /home/bjorn/.ApE/AppMain.tcl
+#         data_dir=/home/user/.local/share/pydna
+#         log_dir=/home/user/.cache/pydna/log
+#         ape=tclsh /path/to/ape/AppMain.tcl
 #         cached_funcs=Genbank_nucleotide
-#         primers=/home/bjorn/Dropbox/wikidata/PRIMERS.txt
-#         enzymes=/home/bjorn/Dropbox/wikidata/RestrictionEnzymes.txt
+#         primers=/path/to/primers/PRIMERS.txt
+#         enzymes=/path/to/enzymes/RestrictionEnzymes.txt
 
 #     The email address is set to someone@example.com by default. If you change
 #     this to you own address, the :func:`pydna.genbank.genbank` function can be
