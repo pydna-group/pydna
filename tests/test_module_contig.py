@@ -1,24 +1,57 @@
 # -*- coding: utf-8 -*-
 import pytest
+from pydna.dseqrecord import Dseqrecord
+
+a = Dseqrecord("acgatgctatactgCCCCCtgtgctgtgctcta", name="one")
+b = Dseqrecord("tgtgctgtgctctaTTTTTtattctggctgtatc", name="two")
+c = Dseqrecord("tattctggctgtatcGGGGGtacgatgctatactg", name="three")
 
 
-def test_contig(monkeypatch):
+@pytest.mark.mpl_image_compare
+def test_contig_linear(monkeypatch):
     monkeypatch.setenv("pydna_cached_funcs", "")
+
+    from pydna.assembly import Assembly
+
+    asm = Assembly((a, b, c), limit=14)
+
+    cont = asm.assemble_linear()[0]
+
+    fig = (
+        "one|14\n" "    \\/\n" "    /\\\n" "    14|two|15\n" "           \\/\n" "           /\\\n" "           15|three"
+    )
+
+    assert fig == cont.figure()
+
+    assert repr(cont) == "Contig(-73)"
+
+    assert cont._repr_html_() == f"<pre>{fig}</pre>"
+
+    assert cont.detailed_figure() == (
+        "acgatgctatactgCCCCCtgtgctgtgctcta\n"
+        "                   TGTGCTGTGCTCTA\n"
+        "                   tgtgctgtgctctaTTTTTtattctggctgtatc\n"
+        "                                      TATTCTGGCTGTATC\n"
+        "                                      tattctggctgtatcGGGGGtacgatgctatactg\n"
+    )
+
+    return cont.figure_mpl()
+
+
+@pytest.mark.mpl_image_compare
+def test_contig_circular(monkeypatch):
 
     from pydna import contig
     from pydna.assembly import Assembly
     from pydna.dseqrecord import Dseqrecord
 
-    a = Dseqrecord("acgatgctatactgCCCCCtgtgctgtgctcta", name="one")
-    b = Dseqrecord("tgtgctgtgctctaTTTTTtattctggctgtatc", name="two")
-    c = Dseqrecord("tattctggctgtatcGGGGGtacgatgctatactg", name="three")
     asm = Assembly((a, b, c), limit=14)
 
-    cnt = asm.assemble_circular()[0]
+    cont = asm.assemble_circular()[0]
 
-    assert repr(cnt) == "Contig(o59)"
+    assert repr(cont) == "Contig(o59)"
 
-    assert cnt.detailed_figure() == str(
+    assert cont.detailed_figure() == (
         "||||||||||||||\n"
         "acgatgctatactgCCCCCtgtgctgtgctcta\n"
         "                   TGTGCTGTGCTCTA\n"
@@ -28,45 +61,32 @@ def test_contig(monkeypatch):
         "                                                           ACGATGCTATACTG\n"
     )
 
-    from textwrap import indent
-
-    fig = """ -|one|14
-|      \\/
-|      /\\
-|      14|two|15
-|             \\/
-|             /\\
-|             15|three|14
-|                      \\/
-|                      /\\
-|                      14-
-|                         |
- -------------------------"""
-
-    cnt2 = asm.assemble_linear()[0]
-
     fig = (
-        "one|14\n" "    \\/\n" "    /\\\n" "    14|two|15\n" "           \\/\n" "           /\\\n" "           15|three"
+        " -|one|14\n"
+        "|      \\/\n"
+        "|      /\\\n"
+        "|      14|two|15\n"
+        "|             \\/\n"
+        "|             /\\\n"
+        "|             15|three|14\n"
+        "|                      \\/\n"
+        "|                      /\\\n"
+        "|                      14-\n"
+        "|                         |\n"
+        " -------------------------"
     )
 
-    assert fig == cnt2.figure()
+    assert fig == cont.figure()
 
-    assert repr(cnt2) == "Contig(-73)"
-
-    # print(repr(cnt2._repr_html_()))
-
-    assert (
-        cnt2._repr_html_()
-        == "<pre>one|14\n    \\/\n    /\\\n    14|two|15\n           \\/\n           /\\\n           15|three</pre>"
-    )
+    return cont.figure_mpl()
 
     from unittest.mock import MagicMock
 
     pp = MagicMock()
 
-    cnt2._repr_pretty_(pp, None)
+    cont._repr_pretty_(pp, None)
 
-    pp.text.assert_called_with("Contig(-73)")
+    pp.text.assert_called_with("Contig(o59)")
 
     from Bio.Seq import Seq
 
@@ -185,12 +205,46 @@ def test_linear(monkeypatch):
     assert x.detailed_figure()
 
 
-def test_rich(monkeypatch):
+@pytest.mark.mpl_image_compare
+def test_mpl1(monkeypatch):
 
+    from pydna.assembly import Assembly
+    from pydna.dseqrecord import Dseqrecord
+
+    a = Dseqrecord("GCCGATTCTCATCCGGGCCT" "CACTATAGGACCATTCCGTT" "GCCCTGCGCTGCGCTGTATA", name="1")
+
+    b = Dseqrecord("GCCCTGCGCTGCGCTGTATA" "TCCCCAGGAACAGACTTCCT" "GCCGATTCTCATCCGGGCCT", name="2")
+
+    asm = Assembly((a, b), limit=20)
+    cps = asm.assemble_circular()
+    cp = cps[0]
+    return cp.figure_mpl()
+
+
+@pytest.mark.mpl_image_compare
+def test_mpl2(monkeypatch):
+
+    from pydna.assembly import Assembly
+    from pydna.dseqrecord import Dseqrecord
+
+    x = Dseqrecord("CTAAGATATTCTTACGTGTA" "CACTATAGGACCATTCCGTT" "GCCCTGCGCTGCGCTGTATA", name="x")
+
+    y = Dseqrecord("GCCCTGCGCTGCGCTGTATA" "TCCCCAGGAACAGACTTCCT" "GCCGATTCTCATCCGGGCCT", name="y")
+
+    z = Dseqrecord("GCCGATTCTCATCCGGGCCT" "GGATGCAATGCGATCCTCCG" "CTAAGATATTCTTACGTGTA", name="z")
+
+    asm2 = Assembly((x, y, z), limit=20)
+    cps2 = asm2.assemble_circular()
+    cp2 = cps2[0]
+    return cp2.figure_mpl()
+
+
+@pytest.mark.mpl_image_compare
+def test_mpl3(monkeypatch):
     from pydna.readers import read
     from pydna.amplify import pcr
     from pydna.parsers import parse_primers
-    from pydna.myprimers import PrimerList
+    from pydna.assembly import Assembly
 
     p = {}
 
@@ -249,17 +303,13 @@ def test_rich(monkeypatch):
         fragment.name = target.strip()
         fragments.append(fragment)
 
-    from pydna.assembly import Assembly
-
     asm = Assembly(fragments)
 
     cps = asm.assemble_circular()
 
     cp = cps[0]
 
-    result = cp.graphic_figure()
-    # TODO: test for graph content
-    # cp.graphic_figure_plotly()
+    return cp.figure_mpl()
 
 
 if __name__ == "__main__":
