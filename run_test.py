@@ -40,6 +40,7 @@ def main():
         "--doctest-modules",
         "--profile",
         "-vvv",
+        "--mpl",
     ]
 
     return_value = pytest.main(args)
