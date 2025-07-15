@@ -753,13 +753,21 @@ def locations_overlap(loc1: _Union[_sl, _cl], loc2: _Union[_sl, _cl], seq_len):
     return False
 
 
-def sum_is_sticky(three_prime_end: tuple[str, str], five_prime_end: tuple[str, str], partial: bool = False) -> int:
+def sum_is_sticky(
+    three_prime_end: tuple[str, str],
+    five_prime_end: tuple[str, str],
+    partial: bool = False,
+) -> int:
     """Return the overlap length if the 3' end of seq1 and 5' end of seq2 ends are sticky and compatible for ligation.
     Return 0 if they are not compatible."""
     type_seq1, sticky_seq1 = three_prime_end
     type_seq2, sticky_seq2 = five_prime_end
 
-    if "blunt" != type_seq2 and type_seq2 == type_seq1 and str(sticky_seq2) == str(rc(sticky_seq1)):
+    if (
+        "blunt" != type_seq2
+        and type_seq2 == type_seq1
+        and str(sticky_seq2) == str(rc(sticky_seq1))
+    ):
         return len(sticky_seq1)
 
     if not partial:
@@ -791,7 +799,9 @@ def limit_iterator(iterator, limit):
         yield x
 
 
-def create_location(start: int, end: int, lim: int, strand: int | None = None) -> _Location:
+def create_location(
+    start: int, end: int, lim: int, strand: int | None = None
+) -> _Location:
     """
     Create a location object from a start and end position.
     If the end position is less than the start position, the location is circular. It handles negative positions.
