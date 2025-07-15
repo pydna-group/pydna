@@ -19,7 +19,10 @@ a gel image. Exampel can be found in scripts/molecular_weight_standards.ods.
 from pydna.fakeseq import FakeSeq as _FakeSeq
 
 
-PennStateLadder = [_FakeSeq(int(n)) for n in (10000, 7750, 5000, 4000, 3000, 2000, 1500, 1000, 750, 500)]
+PennStateLadder = [
+    _FakeSeq(int(n))
+    for n in (10000, 7750, 5000, 4000, 3000, 2000, 1500, 1000, 750, 500)
+]
 
 
 GeneRuler_1kb = [
@@ -131,13 +134,3 @@ FakeGel = [
     ],
     PennStateLadder,
 ]
-
-if __name__ == "__main__":
-    import os as _os
-
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached

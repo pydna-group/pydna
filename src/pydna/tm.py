@@ -213,7 +213,9 @@ def dbd_program(amplicon, tm=tm_dbd, ta=ta_dbd):
 
     """
     PfuSso7d_extension_rate = 15  # seconds/kB PCR product
-    extension_time_PfuSso7d = max(10, int(PfuSso7d_extension_rate * len(amplicon) / 1000))  # seconds
+    extension_time_PfuSso7d = max(
+        10, int(PfuSso7d_extension_rate * len(amplicon) / 1000)
+    )  # seconds
 
     # The program returned is eaither a two step or three step progrem
     # This depends on the tm and length of the primers in the
@@ -324,7 +326,10 @@ def tmbresluc(primer: str, *args, primerc=500.0, saltc=50, **kwargs):
         dH += _thermodynamic_data.dHBr[n1 - 97][n2 - 97]
         dS += _thermodynamic_data.dSBr[n1 - 97][n2 - 97]
 
-    tm = (dH / (1.9872 * _math.log(pri / 1600) + dS) + (16.6 * _math.log(saltc)) / _math.log(10)) - 273.15
+    tm = (
+        dH / (1.9872 * _math.log(pri / 1600) + dS)
+        + (16.6 * _math.log(saltc)) / _math.log(10)
+    ) - 273.15
 
     return tm
 
@@ -365,25 +370,18 @@ def tm_neb(primer, conc=0.5, prodcode="q5-0"):
     try:
         res = requests.get(url, params=params, headers=headers)
     except requests.exceptions.ConnectionError as e:
-        raise requests.exceptions.ConnectionError("Could not connect to NEB API.") from e
+        raise requests.exceptions.ConnectionError(
+            "Could not connect to NEB API."
+        ) from e
     if res.status_code != 200:
         if "error" in res.json():
             raise requests.exceptions.HTTPError(res.status_code, res.json()["error"])
         else:
-            raise requests.exceptions.HTTPError(res.status_code, res.text)  # pragma: no cover
+            raise requests.exceptions.HTTPError(
+                res.status_code, res.text
+            )  # pragma: no cover
     r = res.json()
     if r["success"]:
         return r["data"]["tm1"]
     else:
         raise requests.exceptions.HTTPError(r["error"])
-
-
-if __name__ == "__main__":
-    import os as _os
-
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached

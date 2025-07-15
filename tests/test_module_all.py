@@ -22,13 +22,13 @@ def test_repr():
         "read_primer",
         "parse",
         "parse_primers",
-        "ape",
+        # "ape",
         "primer_design",
         "assembly_fragments",
-        "circular_assembly_fragments",
+        # "circular_assembly_fragments",
         "eq",
         "gbtext_clean",
-        "PrimerList",
+        # "PrimerList",
     ]
 
 

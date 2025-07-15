@@ -8,13 +8,15 @@
 
 from Bio.Data.IUPACData import ambiguous_dna_complement as _ambiguous_dna_complement
 from Bio.Seq import _maketrans
-import shelve as _shelve
-import os as _os
+
+# import shelve as _shelve
+# import os as _os
 import re as _re
-import logging as _logging
-import base64 as _base64
-import pickle as _pickle
-import hashlib as _hashlib
+
+# import logging as _logging
+# import base64 as _base64
+# import pickle as _pickle
+# import hashlib as _hashlib
 import keyword as _keyword
 import collections as _collections
 import itertools as _itertools
@@ -31,13 +33,14 @@ from pydna.codon import rare_codons as _rare_codons
 
 from Bio.SeqFeature import SimpleLocation as _sl
 from Bio.SeqFeature import CompoundLocation as _cl
+from Bio.SeqFeature import Location as _Location
 
 from typing import Union as _Union, TypeVar as _TypeVar, List as _List
 
 # For functions that take str or bytes as input and return str or bytes as output, matching the input type
 StrOrBytes = _TypeVar("StrOrBytes", str, bytes)
 
-_module_logger = _logging.getLogger("pydna." + __name__)
+# _module_logger = _logging.getLogger("pydna." + __name__)
 _ambiguous_dna_complement.update({"U": "A"})
 _complement_table = _maketrans(_ambiguous_dna_complement)
 
@@ -71,7 +74,9 @@ def three_frame_orfs(
                 pass
             else:
                 if stopindex - startindex >= limit:
-                    orfs.append((frame, startindex * 3 + frame, (stopindex + 1) * 3 + frame))
+                    orfs.append(
+                        (frame, startindex * 3 + frame, (stopindex + 1) * 3 + frame)
+                    )
                 # print(stopindex, startindex, limit)
     return orfs
 
@@ -82,13 +87,17 @@ def shift_location(original_location, shift, lim):
     strand = original_location.strand
     if lim is None:
         if min(original_location) + shift < 0:
-            raise ValueError("Shift moves location below zero, use a `lim` to loop around if sequence is circular.")
+            raise ValueError(
+                "Shift moves location below zero, use a `lim` to loop around if sequence is circular."
+            )
         lim = _sys.maxsize
 
     for part in original_location.parts:
         new_start = (part.start + shift) % lim
         new_end = (part.end + shift) % lim or lim
-        old_start, old_end = (newparts[-1].start, newparts[-1].end) if len(newparts) else (None, None)
+        old_start, old_end = (
+            (newparts[-1].start, newparts[-1].end) if len(newparts) else (None, None)
+        )
 
         # The "join with old" cases are for features with multiple parts
         # in which consecutive parts do not have any bases between them.
@@ -278,49 +287,49 @@ def complement(sequence: str):
     return sequence.translate(_complement_table)
 
 
-def memorize(filename):
-    """Cache functions and classes.
+# def memorize(filename):
+#     """Cache functions and classes.
 
-    see pydna.download
-    """
+#     see pydna.download
+#     """
 
-    def decorator(f):
-        def wrappee(*args, **kwargs):
-            _module_logger.info("#### memorizer ####")
-            _module_logger.info("cache filename                   = %s", filename)
-            _module_logger.info(
-                "os.environ['pydna_cached_funcs'] = %s",
-                _os.getenv("pydna_cached_funcs", ""),
-            )
-            if filename not in _os.getenv("pydna_cached_funcs", ""):
-                _module_logger.info("cache filename not among cached functions, made it new!")
-                return f(*args, **kwargs)
-            key = _base64.urlsafe_b64encode(_hashlib.sha1(_pickle.dumps((args, kwargs))).digest()).decode("ascii")
-            _module_logger.info("key = %s", key)
-            cache = _shelve.open(
-                _os.path.join(_os.environ["pydna_data_dir"], identifier_from_string(filename)),
-                writeback=False,
-            )
-            try:
-                result = cache[key]
-            except KeyError:
-                _module_logger.info(
-                    "no result for key %s in shelve %s",
-                    key,
-                    identifier_from_string(filename),
-                )
-                result = f(*args, **kwargs)
-                _module_logger.info("made it new!")
-                cache[key] = result
-                _module_logger.info("saved result under key %s", key)
-            else:
-                _module_logger.info("found %s in cache", key)
-            cache.close()
-            return result
+#     def decorator(f):
+#         def wrappee(*args, **kwargs):
+#             _module_logger.info("#### memorizer ####")
+#             _module_logger.info("cache filename                   = %s", filename)
+#             _module_logger.info(
+#                 "os.environ['pydna_cached_funcs'] = %s",
+#                 _os.getenv("pydna_cached_funcs", ""),
+#             )
+#             if filename not in _os.getenv("pydna_cached_funcs", ""):
+#                 _module_logger.info("cache filename not among cached functions, made it new!")
+#                 return f(*args, **kwargs)
+#             key = _base64.urlsafe_b64encode(_hashlib.sha1(_pickle.dumps((args, kwargs))).digest()).decode("ascii")
+#             _module_logger.info("key = %s", key)
+#             cache = _shelve.open(
+#                 _os.path.join(_os.environ["pydna_data_dir"], identifier_from_string(filename)),
+#                 writeback=False,
+#             )
+#             try:
+#                 result = cache[key]
+#             except KeyError:
+#                 _module_logger.info(
+#                     "no result for key %s in shelve %s",
+#                     key,
+#                     identifier_from_string(filename),
+#                 )
+#                 result = f(*args, **kwargs)
+#                 _module_logger.info("made it new!")
+#                 cache[key] = result
+#                 _module_logger.info("saved result under key %s", key)
+#             else:
+#                 _module_logger.info("found %s in cache", key)
+#             cache.close()
+#             return result
 
-        return wrappee
+#         return wrappee
 
-    return decorator
+#     return decorator
 
 
 def identifier_from_string(s: str) -> str:
@@ -505,7 +514,11 @@ def randomORF(length, maxlength=None):
     starts = ("ATG",)
     stops = ("TAA", "TAG", "TGA")
 
-    return random.choice(starts) + "".join([random.choice(cdns) for x in range(length)]) + random.choice(stops)
+    return (
+        random.choice(starts)
+        + "".join([random.choice(cdns) for x in range(length)])
+        + random.choice(stops)
+    )
 
 
 def randomprot(length, maxlength=None):
@@ -614,7 +627,9 @@ def eq(*args, **kwargs):
         if kwargs["circular"] is False:
             topology = "linear"
     else:
-        topology = set([arg.circular if hasattr(arg, "circular") else None for arg in args])
+        topology = set(
+            [arg.circular if hasattr(arg, "circular") else None for arg in args]
+        )
 
         if len(topology) != 1:
             raise ValueError("sequences have different topologies")
@@ -625,7 +640,10 @@ def eq(*args, **kwargs):
             topology = "circular"
 
     args = [arg.seq if hasattr(arg, "seq") else arg for arg in args]
-    args_string_list = [arg.watson.lower() if hasattr(arg, "watson") else str(arg).lower() for arg in args]
+    args_string_list = [
+        arg.watson.lower() if hasattr(arg, "watson") else str(arg).lower()
+        for arg in args
+    ]
 
     length = set((len(s) for s in args_string_list))
 
@@ -735,10 +753,97 @@ def locations_overlap(loc1: _Union[_sl, _cl], loc2: _Union[_sl, _cl], seq_len):
     return False
 
 
-if __name__ == "__main__":
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
-    import doctest
+def sum_is_sticky(three_prime_end: tuple[str, str], five_prime_end: tuple[str, str], partial: bool = False) -> int:
+    """Return the overlap length if the 3' end of seq1 and 5' end of seq2 ends are sticky and compatible for ligation.
+    Return 0 if they are not compatible."""
+    type_seq1, sticky_seq1 = three_prime_end
+    type_seq2, sticky_seq2 = five_prime_end
 
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached
+    if "blunt" != type_seq2 and type_seq2 == type_seq1 and str(sticky_seq2) == str(rc(sticky_seq1)):
+        return len(sticky_seq1)
+
+    if not partial:
+        return 0
+
+    if type_seq1 != type_seq2 or type_seq2 == "blunt":
+        return 0
+    elif type_seq2 == "5'":
+        sticky_seq1 = str(rc(sticky_seq1))
+    elif type_seq2 == "3'":
+        sticky_seq2 = str(rc(sticky_seq2))
+
+    ovhg_len = min(len(sticky_seq1), len(sticky_seq2))
+    # [::-1] to try the longest overhangs first
+    for i in range(1, ovhg_len + 1)[::-1]:
+        if sticky_seq1[-i:] == sticky_seq2[:i]:
+            return i
+    else:
+        return 0
+
+
+def limit_iterator(iterator, limit):
+    """
+    Call the function with an iterator to raise an error if the number of items is greater than the limit.
+    """
+    for i, x in enumerate(iterator):
+        if i >= limit:
+            raise ValueError(f"Too many possible paths (more than {limit})")
+        yield x
+
+
+def create_location(start: int, end: int, lim: int, strand: int | None = None) -> _Location:
+    """
+    Create a location object from a start and end position.
+    If the end position is less than the start position, the location is circular. It handles negative positions.
+
+    Parameters
+    ----------
+    start : int
+        The start position of the location.
+    end : int
+        The end position of the location.
+    lim : int
+        The length of the sequence.
+    strand : int, optional
+        The strand of the location. None, 1 or -1.
+
+    Returns
+    -------
+    location : Location
+        The location object. Can be a SimpleLocation or a CompoundLocation if the feature spans the origin of
+        a circular sequence.
+
+    Examples
+    --------
+    >>> from pydna.utils import create_location
+    >>> str(create_location(0, 5, 10,-1))
+    '[0:5](-)'
+    >>> str(create_location(0, 5, 10,+1))
+    '[0:5](+)'
+    >>> str(create_location(0, 5, 10))
+    '[0:5]'
+    >>> str(create_location(8, 2, 10))
+    'join{[8:10], [0:2]}'
+    >>> str(create_location(8, 2, 10,-1))
+    'join{[0:2](-), [8:10](-)}'
+    >>> str(create_location(-2, 2, 10))
+    'join{[8:10], [0:2]}'
+
+    Note this special case, 0 is the same as len(seq)
+    >>> str(create_location(5, 0, 10))
+    '[5:10]'
+
+    Note the special case where if start and end are the same,
+    the location spans the entire sequence (it's not empty).
+    >>> str(create_location(5, 5, 10))
+    'join{[5:10], [0:5]}'
+
+    """
+    while start < 0:
+        start += lim
+    while end < 0:
+        end += lim
+    if end > start:
+        return _sl(start, end, strand)
+    else:
+        return shift_location(_sl(start, end + lim, strand), 0, lim)

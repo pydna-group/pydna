@@ -27,9 +27,9 @@ from Bio.Restriction import BsaI, BsmBI, BbsI, FokI
 from pydna.dseqrecord import Dseqrecord as _Dseqrecord
 
 # from copy import deepcopy as _deepcopy
-import logging as _logging
+# import logging as _logging
 
-_module_logger = _logging.getLogger("pydna." + __name__)
+# _module_logger = _logging.getLogger("pydna." + __name__)
 
 BsaI, BsmBI, BbsI, FokI
 

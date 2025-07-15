@@ -54,14 +54,3 @@ def read_primer(data):
     The usage is similar to the :func:`parse_primer` function."""
 
     return _Primer(read(data, ds=False))
-
-
-if __name__ == "__main__":
-    import os as _os
-
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
-    import doctest
-
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached
