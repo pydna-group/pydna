@@ -535,11 +535,11 @@ def gbtext_clean(gbtext):
     ... //'''
     >>> from pydna.readers import read
     >>> read(s)  # doctest: +SKIP
-    /home/bjorn/anaconda3/envs/bjorn36/lib/python3.6/site-packages/Bio/GenBank/Scanner.py:1388: BiopythonParserWarning: Malformed LOCUS line found - is this correct?
+    ... /site-packages/Bio/GenBank/Scanner.py:1388: BiopythonParserWarning: Malformed LOCUS line found - is this correct?
     :'LOCUS       New_DNA      3 bp    DNA   CIRCULAR SYN        19-JUN-2013\\n'
       "correct?\\n:%r" % line, BiopythonParserWarning)
     Traceback (most recent call last):
-      File "/home/bjorn/python_packages/pydna/pydna/readers.py", line 48, in read
+      File "... /pydna/readers.py", line 48, in read
         results = results.pop()
     IndexError: pop from empty list
     <BLANKLINE>
@@ -547,7 +547,7 @@ def gbtext_clean(gbtext):
     <BLANKLINE>
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
-      File "/home/bjorn/python_packages/pydna/pydna/readers.py", line 50, in read
+      File "... /pydna/readers.py", line 50, in read
         raise ValueError("No sequences found in data:\\n({})".format(data[:79]))
     ValueError: No sequences found in data:
     (LOCUS       New_DNA      3 bp    DNA   CIRCULAR SYN        19-JUN-2013
