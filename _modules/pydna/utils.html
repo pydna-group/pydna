@@ -896,13 +896,21 @@
 
 <div class="viewcode-block" id="sum_is_sticky">
 <a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.sum_is_sticky">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">sum_is_sticky</span><span class="p">(</span><span class="n">three_prime_end</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">five_prime_end</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">partial</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sum_is_sticky</span><span class="p">(</span>
+    <span class="n">three_prime_end</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">five_prime_end</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">partial</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the overlap length if the 3&#39; end of seq1 and 5&#39; end of seq2 ends are sticky and compatible for ligation.</span>
 <span class="sd">    Return 0 if they are not compatible.&quot;&quot;&quot;</span>
     <span class="n">type_seq1</span><span class="p">,</span> <span class="n">sticky_seq1</span> <span class="o">=</span> <span class="n">three_prime_end</span>
     <span class="n">type_seq2</span><span class="p">,</span> <span class="n">sticky_seq2</span> <span class="o">=</span> <span class="n">five_prime_end</span>
 
-    <span class="k">if</span> <span class="s2">&quot;blunt&quot;</span> <span class="o">!=</span> <span class="n">type_seq2</span> <span class="ow">and</span> <span class="n">type_seq2</span> <span class="o">==</span> <span class="n">type_seq1</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">sticky_seq2</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">rc</span><span class="p">(</span><span class="n">sticky_seq1</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="s2">&quot;blunt&quot;</span> <span class="o">!=</span> <span class="n">type_seq2</span>
+        <span class="ow">and</span> <span class="n">type_seq2</span> <span class="o">==</span> <span class="n">type_seq1</span>
+        <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">sticky_seq2</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">rc</span><span class="p">(</span><span class="n">sticky_seq1</span><span class="p">))</span>
+    <span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">sticky_seq1</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">partial</span><span class="p">:</span>
@@ -940,7 +948,9 @@
 
 <div class="viewcode-block" id="create_location">
 <a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.create_location">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_location</span><span class="p">(</span><span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">strand</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Location</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_location</span><span class="p">(</span>
+    <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">strand</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Location</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a location object from a start and end position.</span>
 <span class="sd">    If the end position is less than the start position, the location is circular. It handles negative positions.</span>
