@@ -3014,69 +3014,69 @@ in Genbank format and returns a named tuple containing two fields,
 the gbtext containing a string with the corrected genbank sequence and
 jseq which contains the JSON intermediate.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;LOCUS       New_DNA      3 bp    DNA   CIRCULAR SYN        19-JUN-2013</span>
-<span class="gp">... </span><span class="s1">DEFINITION  .</span>
-<span class="gp">... </span><span class="s1">ACCESSION</span>
-<span class="gp">... </span><span class="s1">VERSION</span>
-<span class="gp">... </span><span class="s1">SOURCE      .</span>
-<span class="gp">... </span><span class="s1">  ORGANISM  .</span>
-<span class="gp">... </span><span class="s1">COMMENT</span>
-<span class="gp">... </span><span class="s1">COMMENT     ApEinfo:methylated:1</span>
-<span class="gp">... </span><span class="s1">ORIGIN</span>
-<span class="gp">... </span><span class="s1">        1 aaa</span>
-<span class="gp">... </span><span class="s1">//&#39;&#39;&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.readers</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">read</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  
-<span class="go">/home/bjorn/anaconda3/envs/bjorn36/lib/python3.6/site-packages/Bio/GenBank/Scanner.py:1388: BiopythonParserWarning: Malformed LOCUS line found - is this correct?</span>
-<span class="go">:&#39;LOCUS       New_DNA      3 bp    DNA   CIRCULAR SYN        19-JUN-2013\n&#39;</span>
-<span class="go">  &quot;correct?\n:%r&quot; % line, BiopythonParserWarning)</span>
-<span class="gt">Traceback (most recent call last):</span>
-  File <span class="nb">&quot;/home/bjorn/python_packages/pydna/pydna/readers.py&quot;</span>, line <span class="m">48</span>, in <span class="n">read</span>
-<span class="w">    </span><span class="n">results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-<span class="gr">IndexError</span>: <span class="n">pop from empty list</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; s = &#39;&#39;&#39;LOCUS       New_DNA      3 bp    DNA   CIRCULAR SYN        19-JUN-2013
+... DEFINITION  .
+... ACCESSION
+... VERSION
+... SOURCE      .
+...   ORGANISM  .
+... COMMENT
+... COMMENT     ApEinfo:methylated:1
+... ORIGIN
+...         1 aaa
+... //&#39;&#39;&#39;
+&gt;&gt;&gt; from pydna.readers import read
+&gt;&gt;&gt; read(s)  
+... /site-packages/Bio/GenBank/Scanner.py:1388: BiopythonParserWarning: Malformed LOCUS line found - is this correct?
+:&#39;LOCUS       New_DNA      3 bp    DNA   CIRCULAR SYN        19-JUN-2013\n&#39;
+  &quot;correct?\n:%r&quot; % line, BiopythonParserWarning)
+Traceback (most recent call last):
+  File &quot;... /pydna/readers.py&quot;, line 48, in read
+    results = results.pop()
+IndexError: pop from empty list
 
-<span class="gt">During handling of the above exception, another exception occurred:</span>
+During handling of the above exception, another exception occurred:
 
-<span class="gt">Traceback (most recent call last):</span>
-  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
-  File <span class="nb">&quot;/home/bjorn/python_packages/pydna/pydna/readers.py&quot;</span>, line <span class="m">50</span>, in <span class="n">read</span>
-<span class="w">    </span><span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No sequences found in data:</span><span class="se">\n</span><span class="s2">(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[:</span><span class="mi">79</span><span class="p">]))</span>
-<span class="gr">ValueError</span>: <span class="n">No sequences found in data:</span>
-<span class="x">(LOCUS       New_DNA      3 bp    DNA   CIRCULAR SYN        19-JUN-2013</span>
-<span class="x">DEFINITI)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.genbankfixer</span><span class="w"> </span><span class="kn">import</span> <span class="n">gbtext_clean</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s2</span><span class="p">,</span> <span class="n">j2</span> <span class="o">=</span> <span class="n">gbtext_clean</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
-<span class="go">LOCUS       New_DNA                    3 bp ds-DNA     circular SYN 19-JUN-2013</span>
-<span class="go">DEFINITION  .</span>
-<span class="go">ACCESSION</span>
-<span class="go">VERSION</span>
-<span class="go">SOURCE      .</span>
-<span class="go">ORGANISM  .</span>
-<span class="go">COMMENT</span>
-<span class="go">COMMENT     ApEinfo:methylated:1</span>
-<span class="go">FEATURES             Location/Qualifiers</span>
-<span class="go">ORIGIN</span>
-<span class="go">        1 aaa</span>
-<span class="go">//</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s3</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s3</span>
-<span class="go">Dseqrecord(o3)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">s3</span><span class="o">.</span><span class="n">format</span><span class="p">())</span>
-<span class="go">LOCUS       New_DNA                    3 bp    DNA     circular SYN 19-JUN-2013</span>
-<span class="go">DEFINITION  .</span>
-<span class="go">ACCESSION   New_DNA</span>
-<span class="go">VERSION     New_DNA</span>
-<span class="go">KEYWORDS    .</span>
-<span class="go">SOURCE</span>
-<span class="go">  ORGANISM  .</span>
-<span class="go">            .</span>
-<span class="go">COMMENT</span>
-<span class="go">            ApEinfo:methylated:1</span>
-<span class="go">FEATURES             Location/Qualifiers</span>
-<span class="go">ORIGIN</span>
-<span class="go">        1 aaa</span>
-<span class="go">//</span>
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  File &quot;... /pydna/readers.py&quot;, line 50, in read
+    raise ValueError(&quot;No sequences found in data:\n({})&quot;.format(data[:79]))
+ValueError: No sequences found in data:
+(LOCUS       New_DNA      3 bp    DNA   CIRCULAR SYN        19-JUN-2013
+DEFINITI)
+&gt;&gt;&gt; from pydna.genbankfixer import gbtext_clean
+&gt;&gt;&gt; s2, j2 = gbtext_clean(s)
+&gt;&gt;&gt; print(s2)
+LOCUS       New_DNA                    3 bp ds-DNA     circular SYN 19-JUN-2013
+DEFINITION  .
+ACCESSION
+VERSION
+SOURCE      .
+ORGANISM  .
+COMMENT
+COMMENT     ApEinfo:methylated:1
+FEATURES             Location/Qualifiers
+ORIGIN
+        1 aaa
+//
+&gt;&gt;&gt; s3 = read(s2)
+&gt;&gt;&gt; s3
+Dseqrecord(o3)
+&gt;&gt;&gt; print(s3.format())
+LOCUS       New_DNA                    3 bp    DNA     circular SYN 19-JUN-2013
+DEFINITION  .
+ACCESSION   New_DNA
+VERSION     New_DNA
+KEYWORDS    .
+SOURCE
+  ORGANISM  .
+            .
+COMMENT
+            ApEinfo:methylated:1
+FEATURES             Location/Qualifiers
+ORIGIN
+        1 aaa
+//
 </pre></div>
 </div>
 </dd></dl>

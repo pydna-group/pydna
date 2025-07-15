@@ -645,11 +645,11 @@
 <span class="sd">    ... //&#39;&#39;&#39;</span>
 <span class="sd">    &gt;&gt;&gt; from pydna.readers import read</span>
 <span class="sd">    &gt;&gt;&gt; read(s)  # doctest: +SKIP</span>
-<span class="sd">    /home/bjorn/anaconda3/envs/bjorn36/lib/python3.6/site-packages/Bio/GenBank/Scanner.py:1388: BiopythonParserWarning: Malformed LOCUS line found - is this correct?</span>
+<span class="sd">    ... /site-packages/Bio/GenBank/Scanner.py:1388: BiopythonParserWarning: Malformed LOCUS line found - is this correct?</span>
 <span class="sd">    :&#39;LOCUS       New_DNA      3 bp    DNA   CIRCULAR SYN        19-JUN-2013\\n&#39;</span>
 <span class="sd">      &quot;correct?\\n:%r&quot; % line, BiopythonParserWarning)</span>
 <span class="sd">    Traceback (most recent call last):</span>
-<span class="sd">      File &quot;/home/bjorn/python_packages/pydna/pydna/readers.py&quot;, line 48, in read</span>
+<span class="sd">      File &quot;... /pydna/readers.py&quot;, line 48, in read</span>
 <span class="sd">        results = results.pop()</span>
 <span class="sd">    IndexError: pop from empty list</span>
 <span class="sd">    &lt;BLANKLINE&gt;</span>
@@ -657,7 +657,7 @@
 <span class="sd">    &lt;BLANKLINE&gt;</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">      File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;</span>
-<span class="sd">      File &quot;/home/bjorn/python_packages/pydna/pydna/readers.py&quot;, line 50, in read</span>
+<span class="sd">      File &quot;... /pydna/readers.py&quot;, line 50, in read</span>
 <span class="sd">        raise ValueError(&quot;No sequences found in data:\\n({})&quot;.format(data[:79]))</span>
 <span class="sd">    ValueError: No sequences found in data:</span>
 <span class="sd">    (LOCUS       New_DNA      3 bp    DNA   CIRCULAR SYN        19-JUN-2013</span>
