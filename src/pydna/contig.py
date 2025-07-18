@@ -12,10 +12,10 @@ class Contig(_Dseqrecord):
 
     """
 
-    def __init__(self, record, *args, graph=None, nodemap=None, **kwargs):
+    def __init__(self, record, *args, graph=_nx.DiGraph(), nodemap=None, **kwargs):
         super().__init__(record, *args, **kwargs)
         self.graph = graph
-        self.nodemap = nodemap
+        self.nodemap = nodemap or {}
 
     @classmethod
     def from_string(cls, record: str = "", *args, graph=None, nodemap=None, **kwargs):

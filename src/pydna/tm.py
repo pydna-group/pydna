@@ -12,7 +12,7 @@ import math as _math
 from Bio.SeqUtils import MeltingTemp as _mt
 from Bio.SeqUtils import gc_fraction as _GC
 
-import textwrap as _textwrap
+from textwrap import dedent as _dedent
 from pydna._pretty import pretty_str as _pretty_str
 
 # See the documentation for Bio.SeqUtils.MeltingTemp for more details
@@ -160,12 +160,12 @@ def program(amplicon, tm=tm_default, ta=ta_default):
     extension_time_taq = max(30, int(taq_extension_rate * len(amplicon) / 1000))
     # seconds
 
-    f = _textwrap.dedent(
-        r"""
+    f = _dedent(
+        """\
         |95°C|95°C               |    |tmf:{tmf:.1f}
         |____|_____          72°C|72°C|tmr:{tmr:.1f}
-        |3min|30s  \ {ta:.1f}°C _____|____|{rate}s/kb
-        |    |      \______/{0:2}:{1:0>2}|5min|GC {GC}%
+        |3min|30s  \\ {ta:.1f}°C _____|____|{rate}s/kb
+        |    |      \\______/{0:2}:{1:0>2}|5min|GC {GC}%
         |    |       30s         |    |{size}bp
         """.format(
             rate=taq_extension_rate,
@@ -228,14 +228,14 @@ def dbd_program(amplicon, tm=tm_dbd, ta=ta_dbd):
     tmr = tm(amplicon.reverse_primer.footprint)
 
     if tmf >= 69.0 and tmr >= 69.0:
-        f = _textwrap.dedent(
-            r"""
-                              |98°C|98°C      |    |tmf:{tmf:.1f}
-                              |____|____      |    |tmr:{tmr:.1f}
-                              |30s |10s \ 72°C|72°C|{rate}s/kb
-                              |    |     \____|____|GC {GC_prod}%
-                              |    |     {0:2}:{1:0>2}|5min|{size}bp
-                              """.format(
+        f = _dedent(
+            """\
+                    |98°C|98°C      |    |tmf:{tmf:.1f}
+                    |____|____      |    |tmr:{tmr:.1f}
+                    |30s |10s \\ 72°C|72°C|{rate}s/kb
+                    |    |     \\____|____|GC {GC_prod}%
+                    |    |     {0:2}:{1:0>2}|5min|{size}bp
+                    """.format(
                 rate=PfuSso7d_extension_rate,
                 tmf=tmf,
                 tmr=tmr,
@@ -245,12 +245,12 @@ def dbd_program(amplicon, tm=tm_dbd, ta=ta_dbd):
             )
         ).strip()
     else:
-        f = _textwrap.dedent(
-            r"""
+        f = _dedent(
+            """\
              |98°C|98°C               |    |tmf:{tmf:.1f}
              |____|_____          72°C|72°C|tmr:{tmr:.1f}
-             |30s |10s  \ {ta:.1f}°C _____|____|{rate}s/kb
-             |    |      \______/{0:2}:{1:0>2}|5min|GC {GC}%
+             |30s |10s  \\ {ta:.1f}°C _____|____|{rate}s/kb
+             |    |      \\______/{0:2}:{1:0>2}|5min|GC {GC}%
              |    |       10s         |    |{size}bp
              """.format(
                 rate=PfuSso7d_extension_rate,

@@ -1,0 +1,5 @@
+<div id="content" ng-controller="MyController">
+    <h1>{{greeting}},{{name}}</h1>
+    <input type="text" ng-model="greeting" name="name">
+    <input type="text" ng-model="name" name="name">
+</div>

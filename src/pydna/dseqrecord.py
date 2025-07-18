@@ -16,16 +16,22 @@ from Bio.Restriction import CommOnly
 from pydna.dseq import Dseq as _Dseq
 from pydna._pretty import pretty_str as _pretty_str
 from pydna.utils import flatten as _flatten, location_boundaries as _location_boundaries
+from pydna.utils import unfold_feature as _unfold_feature
 
-# from pydna.utils import memorize as _memorize
-from pydna.utils import rc as _rc
+# from pydna.utils import rc as _rc
+from pydna.utils import get_cutsite_pairs as _get_cutsite_pairs
 from pydna.utils import shift_location as _shift_location
 from pydna.utils import shift_feature as _shift_feature
+from pydna.utils import to_watson_table
+from pydna.utils import to_crick_table
+from pydna.seq import Seq as _Seq
 from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
-from Bio.SeqFeature import SeqFeature as _SeqFeature
 from Bio import SeqIO
+from Bio.SeqFeature import SeqFeature as _SeqFeature
 from Bio.SeqFeature import CompoundLocation as _CompoundLocation
 from Bio.SeqFeature import SimpleLocation as _SimpleLocation
+
+# from Bio.SeqFeature import ExactPosition as _ExactPosition
 from pydna.seqrecord import SeqRecord as _SeqRecord
 from Bio.Seq import translate as _translate
 from pydna.utils import identifier_from_string as _identifier_from_string
@@ -37,9 +43,9 @@ import time as _time
 import datetime as _datetime
 
 
-# import logging as _logging
+import logging as _logging
 
-# _module_logger = _logging.getLogger("pydna." + __name__)
+_module_logger = _logging.getLogger("pydna." + __name__)
 
 
 try:
@@ -127,8 +133,6 @@ class Dseqrecord(_SeqRecord):
 
     """
 
-    seq: _Dseq
-
     def __init__(
         self,
         record,
@@ -137,14 +141,14 @@ class Dseqrecord(_SeqRecord):
         n=5e-14,  # mol ( = 0.05 pmol)
         **kwargs,
     ):
-        #        _module_logger.info("### Dseqrecord initialized ###")
-        #        _module_logger.info("argument circular = %s", circular)
-        #        _module_logger.info("circular = %s", circular)
+        _module_logger.info("### Dseqrecord initialized ###")
+        _module_logger.info("argument circular = %s", circular)
+        _module_logger.info("circular = %s", circular)
 
         if isinstance(record, str):
-            #           _module_logger.info("record is a string")
+            _module_logger.info("record is a string")
             super().__init__(
-                _Dseq.from_string(
+                _Dseq(
                     record,
                     # linear=linear,
                     circular=bool(circular),
@@ -159,12 +163,12 @@ class Dseqrecord(_SeqRecord):
                 record = record[:]
             elif circular is True:
                 record = record.looped()
-            #           _module_logger.info("record is a Dseq object")
+            _module_logger.info("record is a Dseq object")
             super().__init__(record, *args, **kwargs)
 
         # record is a Bio.Seq object ?
         elif hasattr(record, "transcribe"):
-            #           _module_logger.info("record is a Seq object")
+            _module_logger.info("record is a Seq object")
             super().__init__(
                 _Dseq(
                     str(record),
@@ -177,7 +181,7 @@ class Dseqrecord(_SeqRecord):
 
         # record is a Bio.SeqRecord or Dseqrecord object ?
         elif hasattr(record, "features"):
-            #           _module_logger.info("record is a Bio.SeqRecord or Dseqrecord object")
+            _module_logger.info("record is a Bio.SeqRecord or Dseqrecord object")
             for key, value in list(record.__dict__.items()):
                 setattr(self, key, value)
             self.letter_annotations = {}
@@ -208,7 +212,6 @@ class Dseqrecord(_SeqRecord):
         cls,
         record: str = "",
         *args,
-        # linear=True,
         circular=False,
         n=5e-14,
         **kwargs,
@@ -218,13 +221,7 @@ class Dseqrecord(_SeqRecord):
         # linear=True, circular=False, n = 5E-14, **kwargs):
         obj = cls.__new__(cls)  # Does not call __init__
         obj._per_letter_annotations = {}
-        obj.seq = _Dseq.quick(
-            record,
-            _rc(record),
-            ovhg=0,
-            # linear=linear,
-            circular=circular,
-        )
+        obj.seq = _Dseq.quick(record.encode("ascii"), circular=circular)
         obj.id = _pretty_str("id")
         obj.name = _pretty_str("name")
         obj.description = _pretty_str("description")
@@ -258,9 +255,7 @@ class Dseqrecord(_SeqRecord):
         obj.n = n
         if circular is None:
             circular = record.annotations.get("topology") == "circular"
-        obj.seq = _Dseq.quick(
-            str(record.seq), _rc(str(record.seq)), ovhg=0, circular=circular
-        )
+        obj.seq = _Dseq.quick(record.seq._data, circular=circular)
         return obj
 
     @property
@@ -332,7 +327,7 @@ class Dseqrecord(_SeqRecord):
 
         location = _CompoundLocation(
             (
-                _SimpleLocation(x, self.seq.length, strand=strand),
+                _SimpleLocation(x, len(self.seq), strand=strand),
                 _SimpleLocation(0, y, strand=strand),
             )
         )
@@ -390,12 +385,12 @@ class Dseqrecord(_SeqRecord):
         # for key, value in list(self.__dict__.items()):
         #     setattr(new, key, value)
         new._seq = self.seq.looped()
-        five_prime = self.seq.five_prime_end()
+        five_prime, _ = self.seq.five_prime_end()
         for fn, fo in zip(new.features, self.features):
-            if five_prime[0] == "5'":
+            if five_prime == "5'":
                 pass
                 # fn.location = fn.location + self.seq.ovhg
-            elif five_prime[0] == "3'":
+            elif five_prime == "3'":
                 fn.location = fn.location + (-self.seq.ovhg)
             if fn.location.start < 0:
                 loc1 = _SimpleLocation(
@@ -528,31 +523,33 @@ class Dseqrecord(_SeqRecord):
         .. [#] http://biopython.org/wiki/SeqIO
 
         """
-        msg = ""
+
+        newobj = None
         if not filename:
             filename = "{name}.{type}".format(name=self.locus, type=f)
-            # generate a name if no name was given
-        # if not isinstance(filename, str):  # is filename a string???
-        #     raise ValueError("filename has to be a string, got", type(filename))
         name, ext = _os.path.splitext(filename)
         msg = f"<font face=monospace><a href='{filename}' target='_blank'>{filename}</a></font><br>"
-        if not _os.path.isfile(filename):
-            with open(filename, "w", encoding="utf8") as fp:
-                fp.write(self.format(f))
-        else:
+        if _os.path.isfile(filename):
+            # The filename alread exists in current directory
+            # We assume it contains a sequence
             from pydna.readers import read
 
-            old_file = read(filename)
+            old = read(filename)
+            if self == old:
+                # The sequence object to be saved is identical to the on disk.
+                # Nothing needs to be saved.
+                return _display_html(msg, raw=False)
+            elif self.seq.lower() != old.seq.lower():
+                # If new sequence is different from the old.
+                # old file is renamed with "_OLD_timestamp" suffix.
+                # new file is saved.
 
-            if self.seq != old_file.seq:
-                # If new sequence is different, the old file is
-                # renamed with "_OLD_" suffix:
                 oldmtime = _datetime.datetime.fromtimestamp(
                     _os.path.getmtime(filename)
                 ).isoformat()
                 tstmp = int(_time.time() * 1_000_000)
-                old_filename = f"{name}_OLD_{tstmp}{ext}"
-                _os.rename(filename, old_filename)
+                new_filename_for_old = f"{name}_OLD_{tstmp}{ext}"
+                _os.rename(filename, new_filename_for_old)
                 with open(filename, "w", encoding="utf8") as fp:
                     fp.write(self.format(f))
                 newmtime = _datetime.datetime.fromtimestamp(
@@ -579,7 +576,7 @@ class Dseqrecord(_SeqRecord):
                   <tr style="color:#0000FF;border: 1px solid;text-align:left;">
                     <td>Filename</td>
                     <td style="color:#fe0000;border: 1px solid;text-align:left;"><a href='{filename}' target='_blank'>{filename}</a></td>
-                    <td style="color:#32cb00;border: 1px solid;text-align:left;"><a href='{old_filename}' target='_blank'>{old_filename}</a></td>
+                    <td style="color:#32cb00;border: 1px solid;text-align:left;"><a href='{new_filename_for_old}' target='_blank'>{new_filename_for_old}</a></td>
                   </tr>
                   <tr style="color:#0000FF;border: 1px solid;text-align:left;">
                     <td >Saved</td>
@@ -589,38 +586,60 @@ class Dseqrecord(_SeqRecord):
                   <tr style="color:#0000FF;border: 1px solid;text-align:left;">
                     <td>Length</td>
                     <td style="color:#fe0000;border: 1px solid;text-align:left;">{len(self)}</td>
-                    <td style="color:#32cb00;border: 1px solid;text-align:left;">{len(old_file)}</td>
+                    <td style="color:#32cb00;border: 1px solid;text-align:left;">{len(old)}</td>
                   </tr>
                   <tr style="color:#0000FF;border: 1px solid;text-align:left;">
                     <td>SEGUID</td>
                     <td style="color:#fe0000;border: 1px solid;text-align:left;">{self.seguid()}</td>
-                    <td style="color:#32cb00;border: 1px solid;text-align:left;">{old_file.seguid()}</td>
+                    <td style="color:#32cb00;border: 1px solid;text-align:left;">{old.seguid()}</td>
                   </tr>
                 </tbody>
                 </table>
                 """
-            elif "seguid" in old_file.annotations.get("comment", ""):
-                pattern = r"(ldseguid|cdseguid)-(\S{27})(_[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{6}){0,1}"
-                # seguid=NNNNNNNNNNNNNNNNNNNNNNNNNNN_2020-10-10T11:11:11.111111
-                oldstamp = _re.search(pattern, old_file.description)
-                newstamp = _re.search(pattern, self.description)
-                newdescription = self.description
-                if oldstamp and newstamp:
-                    if oldstamp.group(0)[:35] == newstamp.group(0)[:35]:
-                        newdescription = newdescription.replace(
-                            newstamp.group(0), oldstamp.group(0)
-                        )
-                elif oldstamp:
-                    newdescription += " " + oldstamp.group(0)
-                newobj = _copy.copy(self)
-                newobj.description = newdescription
-
-                with open(filename, "w", encoding="utf8") as fp:
-                    fp.write(newobj.format(f))
             else:
-                with open(filename, "w", encoding="utf8") as fp:
-                    fp.write(self.format(f))
-        return _display_html(msg, raw=True)
+                # The sequence to be saved is the same as the one already in the saved file.
+                # Other parts of the object, such as annotations are different.
+                # Here we want to recover old file stamps in the saved file.
+                re_tool = r"(pydna |ApEinfo:)?"
+                re_seguid = r"((?:ld|cd|ls|cs)seguid=\S{27})"
+                re_datest = r"( \d{4}-\d{2}-\d{2}.\d{2}\:\d{2}\:\d{2}Z?)?"
+                pattern = "(" + re_tool + re_seguid + re_datest + ")"
+
+                oldcomments = old.annotations.get("comment", "")
+                newcomments = self.annotations.get("comment", "")
+
+                if isinstance(newcomments, list):
+                    newcomments = "\n".join(newcomments)
+
+                oldstamps = {
+                    m[2]: m[0] for m in _re.findall(pattern, oldcomments)
+                }  # Get all stamps from oldfile.
+                newstamps = {
+                    m[2]: m[0] for m in _re.findall(pattern, newcomments)
+                }  # Get all stamps from current.
+
+                newstamps.update(oldstamps)
+
+                stamplist = []
+
+                for stamp, stamp_w_date in newstamps.items():
+                    newcomments = _re.sub(
+                        re_tool + re_seguid + " .{19}", stamp_w_date, newcomments
+                    )
+                    if stamp not in newcomments:
+                        stamplist.append(stamp_w_date)
+
+                stamplist.reverse()
+
+                newobj = _copy.deepcopy(self)
+                newobj.annotations["comment"] = (
+                    newcomments.lstrip() + "\n" + "\n".join(stamplist)
+                )
+
+        with open(filename, "w", encoding="utf8") as fp:
+            fp.write((newobj or self).format(f))
+
+        return _display_html(msg, raw=False)
 
     def find(self, other):
         # TODO allow strings, seqs, seqrecords or Dseqrecords
@@ -658,13 +677,13 @@ class Dseqrecord(_SeqRecord):
         >>> from pydna.dseqrecord import Dseqrecord
         >>> s=Dseqrecord("atgtacgatcgtatgctggttatattttag")
         >>> s.seq.translate()
-        Seq('MYDRMLVIF*')
+        ProteinSeq('MYDRMLVIF*')
         >>> "RML" in s
         True
         >>> "MMM" in s
         False
         >>> s.seq.rc().translate()
-        Seq('LKYNQHTIVH')
+        ProteinSeq('LKYNQHTIVH')
         >>> "QHT" in s.rc()
         True
         >>> "QHT" in s
@@ -680,7 +699,7 @@ class Dseqrecord(_SeqRecord):
         cgtatgctg
         gcatacgac
         >>> code.translate()
-        Seq('RML')
+        ProteinSeq('RML')
         """
         other = str(other).lower()
         assert self.seq.watson == "".join(self.seq.watson.split())
@@ -818,10 +837,9 @@ class Dseqrecord(_SeqRecord):
         if self.circular:
             raise TypeError("TypeError: can't multiply circular Dseqrecord.")
         if number > 0:
-            new = _copy.deepcopy(self)
+            new = _copy.copy(self)
             for i in range(1, number):
                 new += self
-            new._per_letter_annotations = self._per_letter_annotations
             return new
         else:
             return self.__class__("")
@@ -837,7 +855,7 @@ class Dseqrecord(_SeqRecord):
 
         if not self.circular or sl_start < sl_stop:
             # TODO: special case for sl_end == 0 in circular sequences
-            # related to https://github.com/pydna-group/pydna/issues/161
+            # related to https://github.com/BjornFJohansson/pydna/issues/161
             if self.circular and sl.stop == 0:
                 sl = slice(sl.start, len(self.seq), sl.step)
             answer.features = super().__getitem__(sl).features
@@ -850,15 +868,15 @@ class Dseqrecord(_SeqRecord):
                 f
                 for f in answer.features
                 if (
-                    _location_boundaries(f.location)[1] <= answer.seq.length
+                    _location_boundaries(f.location)[1] <= len(answer.seq)
                     and _location_boundaries(f.location)[0]
                     < _location_boundaries(f.location)[1]
                 )
             ]
 
         elif self.circular and sl_start == sl_stop:
-            cut = ((sl_start, 0), None)
-            return self.apply_cut(cut, cut)
+            lin = self[:]
+            return lin[sl_start:] + lin[:sl_start]
         else:
             answer = Dseqrecord("")
         identifier = "part_{id}".format(id=self.id)
@@ -945,6 +963,22 @@ class Dseqrecord(_SeqRecord):
             result.append(fragments)
         return result
 
+    def user(self):
+        """
+        USER Enzyme is a mixture of Uracil DNA glycosylase (UDG) and the
+        DNA glycosylase-lyase Endonuclease VIII. UDG catalyses the excision
+        of an uracil base, forming an abasic (apyrimidinic) site while leaving
+        the phosphodiester backbone intact (2,3).
+
+        Returns
+        -------
+        None.
+
+        """
+        new = _copy.deepcopy(self)
+        new.seq = new.seq.user()
+        return new
+
     def reverse_complement(self):
         """Reverse complement.
 
@@ -975,6 +1009,7 @@ class Dseqrecord(_SeqRecord):
         answer.id = self.id + "_rc"
         answer.seq.circular = self.seq.circular
         # answer.seq._linear = self.seq.linear
+
         return answer
 
     rc = reverse_complement
@@ -1063,74 +1098,67 @@ class Dseqrecord(_SeqRecord):
             result = newseq
         else:
             result = newseq.shifted(start)
-        #       _module_logger.info("synced")
+        _module_logger.info("synced")
         return result
 
-    def upper(self):
-        """Returns an uppercase copy.
-        >>> from pydna.dseqrecord import Dseqrecord
-        >>> my_seq = Dseqrecord("aAa")
-        >>> my_seq.seq
-        Dseq(-3)
-        aAa
-        tTt
-        >>> upper = my_seq.upper()
-        >>> upper.seq
-        Dseq(-3)
-        AAA
-        TTT
-        >>>
+    # def upper(self):
+    #     """Returns an uppercase copy.
+    #     >>> from pydna.dseqrecord import Dseqrecord
+    #     >>> my_seq = Dseqrecord("aAa")
+    #     >>> my_seq.seq
+    #     Dseq(-3)
+    #     aAa
+    #     tTt
+    #     >>> upper = my_seq.upper()
+    #     >>> upper.seq
+    #     Dseq(-3)
+    #     AAA
+    #     TTT
+    #     >>>
 
+    #     Returns
+    #     -------
+    #     Dseqrecord
+    #         Dseqrecord object in uppercase
 
-        Returns
-        -------
-        Dseqrecord
-            Dseqrecord object in uppercase
+    #     See also
+    #     --------
+    #     pydna.dseqrecord.Dseqrecord.lower"""
 
+    #     upper = _copy.deepcopy(self)
+    #     upper.seq = upper.seq.upper()
+    #     return upper
 
-        See also
-        --------
-        pydna.dseqrecord.Dseqrecord.lower"""
+    # def lower(self):
+    #     """>>> from pydna.dseqrecord import Dseqrecord
+    #     >>> my_seq = Dseqrecord("aAa")
+    #     >>> my_seq.seq
+    #     Dseq(-3)
+    #     aAa
+    #     tTt
+    #     >>> upper = my_seq.upper()
+    #     >>> upper.seq
+    #     Dseq(-3)
+    #     AAA
+    #     TTT
+    #     >>> lower = my_seq.lower()
+    #     >>> lower
+    #     Dseqrecord(-3)
+    #     >>>
 
-        upper = _copy.deepcopy(self)
-        # This is because the @seq.setter methods otherwise sets the _per_letter_annotations to an empty dict
-        prev_per_letter_annotation = upper._per_letter_annotations
-        upper.seq = upper.seq.upper()
-        upper._per_letter_annotations = prev_per_letter_annotation
-        return upper
+    #     Returns
+    #     -------
+    #     Dseqrecord
+    #         Dseqrecord object in lowercase
 
-    def lower(self):
-        """>>> from pydna.dseqrecord import Dseqrecord
-        >>> my_seq = Dseqrecord("aAa")
-        >>> my_seq.seq
-        Dseq(-3)
-        aAa
-        tTt
-        >>> upper = my_seq.upper()
-        >>> upper.seq
-        Dseq(-3)
-        AAA
-        TTT
-        >>> lower = my_seq.lower()
-        >>> lower
-        Dseqrecord(-3)
-        >>>
+    #     See also
+    #     --------
+    #     pydna.dseqrecord.Dseqrecord.upper
 
-        Returns
-        -------
-        Dseqrecord
-            Dseqrecord object in lowercase
-
-        See also
-        --------
-        pydna.dseqrecord.Dseqrecord.upper
-
-        """
-        lower = _copy.deepcopy(self)
-        prev_per_letter_annotation = lower._per_letter_annotations
-        lower.seq = lower.seq.lower()
-        lower._per_letter_annotations = prev_per_letter_annotation
-        return lower
+    #     """
+    #     lower = _copy.deepcopy(self)
+    #     lower.seq = lower.seq.lower()
+    #     return lower
 
     def orfs(self, minsize=300):
         """docstring."""
@@ -1323,100 +1351,128 @@ class Dseqrecord(_SeqRecord):
         """
 
         cutsites = self.seq.get_cutsites(*enzymes)
-        cutsite_pairs = self.seq.get_cutsite_pairs(cutsites)
-        return tuple(self.apply_cut(*cs) for cs in cutsite_pairs)
 
-    def apply_cut(self, left_cut, right_cut):
-        dseq = self.seq.apply_cut(left_cut, right_cut)
-        # TODO: maybe remove depending on https://github.com/pydna-group/pydna/issues/161
+        if not cutsites:
+            return tuple()
 
-        if left_cut == right_cut:
-            # Not really a cut, but to handle the general case
-            if left_cut is None:
-                features = _copy.deepcopy(self.features)
-            else:
-                # The features that span the origin if shifting with left_cut, but that do not cross
-                # the cut site should be included, and if there is a feature within the cut site, it should
-                # be duplicated. See https://github.com/pydna-group/pydna/issues/180 for a practical example.
-                #
-                # Let's say we are going to open a circular plasmid like below (| inidicate cuts, numbers indicate
-                # features)
-                #
-                #    3333|3
-                #    1111
-                #     000
-                # XXXXatg|YYY
-                # XXX|tacYYYY
-                #     000
-                #     2222
-                #
-                left_watson, left_crick, left_ovhg = self.seq.get_cut_parameters(
-                    left_cut, True
-                )
-                initial_shift = left_watson if left_ovhg < 0 else left_crick
-                features = self.shifted(initial_shift).features
-                # for f in features:
-                #     print(f.id, f.location, _location_boundaries(f.location))
-                # Here, we have done what's shown below (* indicates the origin).
-                # The features 0 and 2 have the right location for the final product:
-                #
-                #    3*3333
-                #    1*111
-                # XXXX*atgYYY
-                # XXXX*tacYYY
-                #      000
-                #      2222
+        cutsite_pairs, shift, stuffer = _get_cutsite_pairs(
+            cutsites, self.seq.circular, len(self)
+        )
 
-                features_need_transfer = [
-                    f
-                    for f in features
-                    if (_location_boundaries(f.location)[1] <= abs(left_ovhg))
-                ]
-                features_need_transfer = [
-                    _shift_feature(f, -abs(left_ovhg), len(self))
-                    for f in features_need_transfer
-                ]
+        frags = tuple(
+            self.seq.apply_cut(*cutsite_pair, shift, stuffer)
+            for cutsite_pair in cutsite_pairs
+        )
 
-                #                                           ^                ^^^^^^^^^
-                # Now we have shifted the features that end before the cut (0 and 1, but not 3), as if
-                # they referred to the below sequence (* indicates the origin):
-                #
-                #    1111
-                #     000
-                # XXXXatg*YYY
-                # XXXXtac*YYY
-                #
-                # The features 0 and 1 would have the right location if the final sequence had the same length
-                # as the original one. However, the final product is longer because of the overhang.
+        # frags, cutsitepairs, shift, ln = self.seq._cut_w_params(*enzymes)
 
-                features += [
-                    _shift_feature(f, abs(left_ovhg), len(dseq))
-                    for f in features_need_transfer
-                ]
-                #                             ^                ^^^^^^^^^
-                # So we shift back by the same amount in the opposite direction, but this time we pass the
-                # length of the final product.
-                # print(*features, sep='\n')
-                # Features like 3 are removed here
-                features = [
-                    f
-                    for f in features
-                    if (
-                        _location_boundaries(f.location)[1] <= len(dseq)
-                        and _location_boundaries(f.location)[0]
-                        <= _location_boundaries(f.location)[1]
-                    )
-                ]
-        else:
-            left_watson, left_crick, left_ovhg = self.seq.get_cut_parameters(
-                left_cut, True
-            )
-            right_watson, right_crick, right_ovhg = self.seq.get_cut_parameters(
-                right_cut, False
-            )
+        # frags: a list of Dsq objects resulting from digestion with the specified restriction enzymes
+        # cutsites: a sorted list of tuples, where each tuple is (cutsite on watson strand, overhang), enzyme)
+        # shift: The shift is the distance from the sequence origin and the first cut.
+        #        This is zero for linear sequences
+        # stuffer: How much longer a circular sequence is after the first cut as the linear sequence may have
+        #          sticky ends
 
-            left_edge = left_crick if left_ovhg > 0 else left_watson
-            right_edge = right_watson if right_ovhg > 0 else right_crick
-            features = self[left_edge:right_edge].features
+        new_features = [_shift_feature(f, -shift, len(self)) for f in self.features]
+        new_features = [_unfold_feature(f, len(self)) for f in new_features]
 
-        return Dseqrecord(dseq, features=features)
+        newrecords = []
+
+        for frag, (left_cut, right_cut) in zip(frags, cutsite_pairs):
+
+            (left_watson_cut, left_overhang), left_meta = left_cut
+            (right_watson_cut, right_overhang), right_meta = right_cut
+
+            left_border = min((left_watson_cut, left_watson_cut - left_overhang))
+            right_border = max((right_watson_cut, right_watson_cut - right_overhang))
+
+            features = _copy.deepcopy(new_features)
+            filtered_features = []
+
+            for feature in features:
+                if (
+                    left_border <= feature.location.start
+                    and right_border >= feature.location.end
+                ):
+                    filtered_features.append(feature)
+            for feature in filtered_features:
+                feature.location -= left_border
+
+            nr = Dseqrecord(frag, features=filtered_features)
+
+            newrecords.append(nr)
+
+        if not newrecords:
+            filtered_features = [
+                f for f in new_features if f.location.start >= 0 and f.location.end <= 6
+            ]
+            newrecords = (Dseqrecord(frags[0], features=filtered_features),)
+
+        return tuple(newrecords)
+
+    def melt(self, length):
+
+        from pydna.utils import feature_in_span
+
+        if not length or length < 1:
+            return tuple()
+
+        new, strands = self.shed_ss_dna(length)
+
+        cutsites = new.seq.get_ds_meltsites(length)
+
+        cutsite_pairs, shift, stuffer = _get_cutsite_pairs(
+            cutsites, self.circular, len(self)
+        )
+
+        new_features = [_shift_feature(f, -shift, len(self)) for f in self.features]
+        new_features = [_unfold_feature(f, len(self)) for f in new_features]
+
+        fragments = []
+
+        for pair in cutsite_pairs:
+            ((x1, y1), meta1), ((x2, y2), meta2) = pair
+            start = min(x1 - y1, x1)
+            end = max(x2 - y2, x2)
+            features = [feature_in_span(f, start, end) for f in new_features]
+            features = [_shift_feature(f, -start, len(new)) for f in features if f]
+            sequence = new.seq.apply_cut(*pair, shift, stuffer)
+            fragment = Dseqrecord(sequence, features=features)
+            fragments.append(fragment)
+
+        result = fragments
+
+        result = tuple([new]) if strands and not result else result
+
+        return strands + result
+
+    def shed_ss_dna(self, length):
+
+        features = _copy.deepcopy(self.features)
+
+        new, strands, intervals = self.seq._shed_ss_dna(length)
+
+        srs = []
+
+        for strand, (x, y) in zip(strands, intervals):
+            fs = [
+                f._shift(-x)
+                for f in features
+                if x in f.location and (y - 1) in f.location
+            ]
+            ss = strand._data.translate(to_watson_table).strip()
+            if not ss:
+                ss = strand._data.translate(to_crick_table)[::-1].strip()
+
+            srs.append(_SeqRecord(_Seq(ss), features=fs))  # FIXME: direction of feature
+
+        return Dseqrecord(new, features=_copy.copy(self.features)), srs
+
+
+if __name__ == "__main__":
+    cached = _os.getenv("pydna_cached_funcs", "")
+    _os.environ["pydna_cached_funcs"] = ""
+    import doctest
+
+    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
+    _os.environ["pydna_cached_funcs"] = cached

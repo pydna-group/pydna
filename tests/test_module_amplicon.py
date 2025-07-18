@@ -6,6 +6,7 @@ def test_amplicon():
     from pydna.amplify import Anneal
     from pydna.dseqrecord import Dseqrecord
     from pydna.primer import Primer
+    import textwrap
 
     template = Dseqrecord("AAAtacactcaccgtctatcattatctactatcgactgtatcatctgatagcacTTT")
 
@@ -15,6 +16,13 @@ def test_amplicon():
     ann = Anneal((p1, p2), template)
 
     prod = ann.products[0]
+
+    assert str(prod.seq) == str(("CCC" + template[3:-3] + "CCC").seq)
+
+    assert prod.forward_primer.seq == p1.seq
+    assert prod.reverse_primer.seq == p2.seq
+
+    prod.forward_primer.__dict__
 
     assert repr(prod) == "Amplicon(57)"
 
@@ -26,7 +34,7 @@ def test_amplicon():
 
     prod._repr_pretty_(pp, None)
 
-    # assert pp.text.assert_called_with('Amplicon(57)')
+    pp.text.assert_called_with("Amplicon(57)")
 
     fig = """\
        5tacactcaccgtctatcattatc...cgactgtatcatctgatagcac3
@@ -36,15 +44,15 @@ def test_amplicon():
         |||||||||||||||||||||||
        3atgtgagtggcagatagtaatag...gctgacatagtagactatcgtg5"""
 
+    assert prod.figure() == textwrap.dedent(fig)
+
     ctemplate = template.looped()
     cann = Anneal((p1, p2), ctemplate)
 
     cprod = cann.products[0]
     assert repr(cprod) == "Amplicon(57)"
 
-    import textwrap
-
-    assert prod.figure() == cprod.figure() == textwrap.dedent(fig)
+    assert cprod.figure() == textwrap.dedent(fig)
 
     # assert prod.program() == prod.taq_program()
 
@@ -78,25 +86,27 @@ def test_amplicon_dbd():
 
     assert repr(prod) == "Amplicon(1505)"
 
-    fig = r"""
-    |95°C|95°C               |    |tmf:77.1
-    |____|_____          72°C|72°C|tmr:80.9
-    |3min|30s  \ 64.6°C _____|____|45s/kb
-    |    |      \______/ 1:07|5min|GC 51%
-    |    |       30s         |    |1505bp
-    """
-    fig = dedent(fig).strip()
-    assert str(prod.program()) == fig
+    fig = dedent(
+        """\
+                 |95°C|95°C               |    |tmf:77.1
+                 |____|_____          72°C|72°C|tmr:80.9
+                 |3min|30s  \\ 64.6°C _____|____|45s/kb
+                 |    |      \\______/ 1:07|5min|GC 51%
+                 |    |       30s         |    |1505bp"""
+    )
 
-    fig = r"""
-    |98°C|98°C      |    |tmf:71.6
-    |____|____      |    |tmr:75.3
-    |30s |10s \ 72°C|72°C|15s/kb
-    |    |     \____|____|GC 51%
-    |    |      0:22|5min|1505bp
-    """
-    fig = dedent(fig).strip()
-    assert str(prod.dbd_program()) == fig
+    assert str(prod.program()) == fig.strip()
+
+    fig = dedent(
+        """\
+                 |98°C|98°C      |    |tmf:71.6
+                 |____|____      |    |tmr:75.3
+                 |30s |10s \\ 72°C|72°C|15s/kb
+                 |    |     \\____|____|GC 51%
+                 |    |      0:22|5min|1505bp"""
+    )
+
+    assert str(prod.dbd_program()) == fig.strip()
 
 
 def test_amplicon_dbd_low_gc():

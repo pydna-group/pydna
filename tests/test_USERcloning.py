@@ -2,72 +2,66 @@
 # -*- coding: utf-8 -*-
 
 import pytest
-from pydna.parsers import parse, parse_primers
-from pydna.amplify import pcr
 
 
 def test_USER_cloning():
 
-    primers = """
-    >3CYC1clon
-    CGAUGTCGACTTAGATCTCACAGGCTTTTTTCAAG
+    from pydna.parsers import parse, parse_primers
+    from pydna.amplify import pcr
+    from textwrap import dedent
 
-    >5CYC1clone
-    GAUCGGCCGGATCCAAATGACTGAATTCAAGGCC
+    # >a
+    # GUGGATT
+
+    primers = """
+    >a
+    GUGGATT
+
+    >b
+    cUCGCCG
     """
     template = """
-    >templ
-    CgATGTCGACTTAGATCTCACAGGCTTTTTTCAAGaCGGCCTTGAATTCAGTCATTTGGATCCGGCCGAtC
+    >temp
+    gtGGATTaaaCGGCGag
     """
     fp, rp = parse_primers(primers)
     te, *rest = parse(template)
     te.add_feature()
-    p = pcr((fp, rp, te))
+    p = pcr((fp, rp, te), limit=5)
+    assert p.seq._data == b"GUGGATTaaaCGGCGOg"
 
     figure = p.figure()
 
-    correct_figure = """\
-5CgATGTCGACTTAGATCTCACAGGCTTTTTTCAAG...GGCCTTGAATTCAGTCATTTGGATCCGGCCGAtC3
-                                       ||||||||||||||||||||||||||||||||||
-                                      3CCGGAACTTAAGTCAGTAAACCTAGGCCGGCUAG5
-5CGAUGTCGACTTAGATCTCACAGGCTTTTTTCAAG3
- |||||||||||||||||||||||||||||||||||
-3GcTACAGCTGAATCTAGAGTGTCCGAAAAAAGTTC...CCGGAACTTAAGTCAGTAAACCTAGGCCGGCTaG5"""
-
+    correct_figure = dedent(
+        """\
+                               5gtGGATT...CGGCGag3
+                                          |||||||
+                                         3GCCGCUc5
+                               5GUGGATT3
+                                |||||||
+                               3caCCTAA...GCCGCtc5"""
+    )
     assert figure == correct_figure
 
-    assert p.seq.watson == "CGAUGTCGACTTAGATCTCACAGGCTTTTTTCAAGaCGGCCTTGAATTCAGTCATTTGGATCCGGCCGATC"
-    assert p.seq.crick == "GAUCGGCCGGATCCAAATGACTGAATTCAAGGCCGtCTTGAAAAAAGCCTGTGAGATCTAAGTCGACATCG"
+    assert p.seq.watson == "GUGGATTaaaCGGCGAg"
+    assert p.seq.crick == "CACCTAAtttGCCGCUc"[::-1]
 
+    assert te.features[0] == p.features[0]
 
-# hej = p.seq
+    USERprocessed = p.seq.user()
 
-# from Bio.SeqFeature import SeqFeature
-# import re
+    USERprocessed.melt(1) == USERprocessed.melt(12)
 
-# wpos = [0] + [m.start() for m in re.finditer('U', hej.watson)] + [len(hej.watson)]
-# cpos = [0] + [m.start() for m in re.finditer('U', hej.crick)] + [len(hej.crick)]
+    stuffer, insert, stuffer = USERprocessed.melt(1)
 
-# from itertools import tee
+    from pydna.dseq import Dseq
 
+    plasmid = Dseq("FqaaaPE")
 
-# def pairwise(iterable):
-#     "s -> (s0,s1), (s1,s2), (s2, s3), ..."
-#     a, b = tee(iterable)
-#     next(b, None)
-#     return list(slice(x, y, 1) for x, y in zip(a, b))
+    plasmid_insert = (plasmid + insert).looped()
 
+    assert plasmid_insert == Dseq("AgaaaGAGGATTaaaCGGCG", circular=True)
 
-# wslices = pairwise(wpos)
-# cslices = pairwise(cpos)
-
-# ln = len(hej)
-# for ws in wslices:
-#     for cs in cslices:
-#         if ws.stop >= ln - cs.stop:
-#             pass
-#             # print(ws, cs)
-#         print(ws, cs)
 
 if __name__ == "__main__":
     pytest.main([__file__, "-vv", "-s"])

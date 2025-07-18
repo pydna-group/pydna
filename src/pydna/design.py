@@ -67,7 +67,7 @@ def _design_primer(
             break
         # Never go below the limit
         if length < limit:
-            return template.seq[:limit]
+            return str(template.seq[:limit])
 
     # _module_logger.debug(((p, tmp), (prev_primer, prev_temp)))
     if abs(target_tm - tmp) < abs(target_tm - prev_temp):
@@ -235,6 +235,9 @@ def primer_design(
 
     fp.description = fp.id + " " + template.accession
     rp.description = rp.id + " " + template.accession
+
+    assert type(fp) is _Primer
+    assert type(rp) is _Primer
 
     ampl = _Anneal((fp, rp), template, limit=limit)
 
