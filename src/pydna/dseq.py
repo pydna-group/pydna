@@ -32,7 +32,6 @@ from pydna._pretty import pretty_str as _pretty_str
 # from pydna.utils import shift_location as _sl
 from pydna.utils import rc as _rc
 from pydna.utils import flatten as _flatten
-from pydna.types import TYPE_CHECKING
 from pydna.types import DseqType
 from pydna.types import CutSiteType
 from pydna.types import EnzymesType
@@ -53,6 +52,14 @@ from pydna.common_sub_strings import terminal_overlap as _terminal_overlap
 from Bio.Restriction import RestrictionBatch as _RestrictionBatch
 from Bio.Restriction import CommOnly
 
+from typing import (
+    TYPE_CHECKING,
+    List as _List,
+    Tuple as _Tuple,
+    Union as _Union,
+    # TypeVar as _TypeVar,
+    # Iterable as _Iterable,
+)
 
 try:
     from itertools import pairwise as _pairwise
@@ -75,7 +82,7 @@ if TYPE_CHECKING:
 
     _AbstractCut
 
-from typing import List as _List, Tuple as _Tuple, Union as _Union
+# from typing import List as _List, Tuple as _Tuple, Union as _Union
 
 
 class Dseq(_Seq):
@@ -1080,7 +1087,7 @@ class Dseq(_Seq):
             new += self
         return new
 
-    def _fill_in_three_prime(self: DseqType, nucleotides: str) -> str:
+    def _fill_in_five_prime(self: DseqType, nucleotides: str) -> str:
         """
         PEXINNNN
 
@@ -1108,11 +1115,12 @@ class Dseq(_Seq):
         def repl(m):
             return m.group(1).translate(to_watson_table)
 
+        # Not using f-strings below to avoid bytes/string conversion
         return self.__class__(
             _re.sub(b"([%b]+)(?=[GATCgatc])" % s, repl, self._data), circular=False
         )
 
-    def _fill_in_five_prime(self: DseqType, nucleotides: str) -> str:
+    def _fill_in_three_prime(self: DseqType, nucleotides: str) -> str:
         """
         NNNNQFZJ
 
@@ -1137,6 +1145,7 @@ class Dseq(_Seq):
         def repl(m):
             return m.group(1).translate(to_full_sequence)
 
+        # Not using f-strings below to avoid bytes/string conversion
         return self.__class__(
             _re.sub(b"(?<=[GATCgatc])([%b]+)" % s, repl, self._data), circular=False
         )
@@ -1841,6 +1850,68 @@ class Dseq(_Seq):
 
         return cuts
 
+    def cast_to_ds_right(self):
+        """
+        NNNNQFZJ
+
+        NNNN----
+        NNNNCTAG
+
+        NNNNGATC
+        NNNNCTAG
+
+
+
+        NNNNPEXI
+
+        NNNNGATC
+        NNNN----
+
+        NNNNGATC
+        NNNNCTAG
+
+        """
+
+        def replace(m):
+            return m.group(1).translate(to_full_sequence)
+
+        # Not using f-strings below to avoid bytes/string conversion
+        return self.__class__(
+            _re.sub(b"(?<=[GATCgatc])([PEXIpexiQFZJqfzj]+)$", replace, self._data),
+            circular=False,
+        )
+
+    def cast_to_ds_left(self):
+        """
+        PEXINNNN
+
+        GATCNNNN
+            NNNN
+
+        GATCNNNN
+        CTAGNNNN
+
+
+
+        QFZJNNNN
+
+            NNNN
+        CTAGNNNN
+
+        GATCNNNN
+        CTAGNNNN
+
+        """
+
+        def replace(m):
+            return m.group(1).translate(to_full_sequence)
+
+        # Not using f-strings below to avoid bytes/string conversion
+        return self.__class__(
+            _re.sub(b"^([PEXIpexiQFZJqfzj]+)(?=[GATCgatc])", replace, self._data),
+            circular=False,
+        )
+
     # def cutsite_is_valid(self, cutsite: CutSiteType) -> bool:
     #     """Returns False if:
     #     - Cut positions fall outside the sequence (could be moved to Biopython)
@@ -1974,9 +2045,9 @@ def pair(watson: [str, bytes], crick: [str, bytes], ovhg: int = None):
     return "".join(bp_dict_str[pair] for pair in zip(watson, crick)).encode("ascii")
 
 
-def helper(dseqs):
-    print(
-        "assert XXX == ("
-        + ", ".join(f'Dseq("{d._data.decode()}")' for d in dseqs)
-        + ")"
-    )
+# def helper(dseqs):
+#     print(
+#         "assert XXX == ("
+#         + ", ".join(f'Dseq("{d._data.decode()}")' for d in dseqs)
+#         + ")"
+#     )
