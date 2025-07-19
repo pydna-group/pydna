@@ -886,13 +886,6 @@ def test_Dseq___getitem__():
     assert s[9:1] == Dseq("")
     assert t[9:1] == Dseq("")
 
-
-    # Indexing of full circular molecule (https://github.com/pydna-group/pydna/issues/161)
-    s = Dseq("GGATCC", circular=True)
-    str_seq = str(s)
-    for shift in range(len(s)):
-        assert str(s[shift:shift]) == str_seq[shift:] + str_seq[:shift]
-
     # Indexing of full circular molecule (https://github.com/BjornFJohansson/pydna/issues/161)
     # s = Dseq("GGATCC", circular=True) # TODO: discuss this
     # str_seq = str(s)
