@@ -4,7 +4,8 @@
 import networkx as _nx
 import itertools as _itertools
 from Bio.SeqFeature import SimpleLocation, Location
-from Bio.Seq import reverse_complement
+
+# from Bio.Seq import reverse_complement
 from Bio.Restriction.Restriction import RestrictionBatch
 import regex
 import copy
@@ -595,34 +596,36 @@ def primer_template_overlap(
 
 def fill_left(seq: _Dseq) -> _Dseq:
     """Fill the left overhang of a sequence with the complementary sequence."""
-    new_watson = seq.watson
-    new_crick = seq.crick
+    # new_watson = seq.watson
+    # new_crick = seq.crick
 
-    # Watson 5' overhang
-    if seq.ovhg < 0:
-        new_crick = new_crick + reverse_complement(seq.watson[: -seq.ovhg])
-    # Crick 5' overhang
-    elif seq.ovhg > 0:
-        new_watson = reverse_complement(seq.crick[-seq.ovhg :]) + new_watson
+    # # Watson 5' overhang
+    # if seq.ovhg < 0:
+    #     new_crick = new_crick + reverse_complement(seq.watson[: -seq.ovhg])
+    # # Crick 5' overhang
+    # elif seq.ovhg > 0:
+    #     new_watson = reverse_complement(seq.crick[-seq.ovhg :]) + new_watson
 
-    return _Dseq(new_watson, new_crick, 0)
+    # return _Dseq(new_watson, new_crick, 0)
+    return seq.cast_to_ds_left()
 
 
 def fill_right(seq: _Dseq) -> _Dseq:
     """Fill the right overhang of a sequence with the complementary sequence."""
-    new_watson = seq.watson
-    new_crick = seq.crick
+    # new_watson = seq.watson
+    # new_crick = seq.crick
 
-    # Watson 3' overhang
-    watson_ovhg = seq.watson_ovhg()
-    if watson_ovhg < 0:
-        new_watson = new_watson + reverse_complement(seq.crick[:-watson_ovhg])
+    # # Watson 3' overhang
+    # watson_ovhg = seq.watson_ovhg()
+    # if watson_ovhg < 0:
+    #     new_watson = new_watson + reverse_complement(seq.crick[:-watson_ovhg])
 
-    # Crick 3' overhang
-    elif watson_ovhg > 0:
-        new_crick = reverse_complement(seq.watson[-watson_ovhg:]) + new_crick
+    # # Crick 3' overhang
+    # elif watson_ovhg > 0:
+    #     new_crick = reverse_complement(seq.watson[-watson_ovhg:]) + new_crick
 
-    return _Dseq(new_watson, new_crick, seq.ovhg)
+    # return _Dseq(new_watson, new_crick, seq.ovhg)
+    return seq.cast_to_ds_right()
 
 
 def fill_dseq(seq: _Dseq) -> _Dseq:
