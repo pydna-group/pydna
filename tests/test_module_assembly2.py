@@ -656,9 +656,11 @@ def test_pYPK7_TDH3_GAL2_PGI1():
 
     pYPKp7_AatII = pYPKp7.linearize(AatII)
 
-    z = assembly.Assembly((pYPKp7_AatII, pMEC1142), limit=300)
+    asm = assembly.Assembly((pYPKp7_AatII, pMEC1142), limit=300)
 
-    assert "cdseguid=DeflrptvvS6m532WogvxQSgVKpk" in map(lambda x: x.seguid(), z.assemble_circular())
+    result, = asm.assemble_circular()
+
+    assert result.seguid() == "cdseguid=DeflrptvvS6m532WogvxQSgVKpk"
 
 
 def test_marker_replacement_on_plasmid():
