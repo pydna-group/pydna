@@ -882,7 +882,8 @@ def test_Dseq___getitem__():
     assert s[1:5] == Dseq("GATC", circular=False)
     assert s[5:1:-1] == Dseq("CCTA")
 
-    assert t[5:1] == Dseq("")  # TODO: discuss this
+    assert t[5:1] == Dseq("CG")  # TODO: back to cut around slicing.
+    assert t[:][5:1] == Dseq("")
     assert s[9:1] == Dseq("")
     assert t[9:1] == Dseq("")
 
