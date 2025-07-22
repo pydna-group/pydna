@@ -721,8 +721,10 @@ class Dseq(_Seq):
     def __getitem__(self, sl: slice) -> "Dseq":
         """Returns a subsequence. This method is used by the slice notation."""
         if isinstance(sl, slice):
-            sl = slice(sl.start or 0, sl.stop or len(self), sl.step)
             if self.circular:
+                sl = slice(sl.start or 0, sl.stop or len(self), sl.step)
+                if sl.start > len(self) or sl.stop > len(self):
+                    return Dseq("")
                 # The empty slice [:] of a circular sequence returns a linear copy.
                 if sl.start is None and sl.stop is None:
                     return self.__class__(self._data[sl])
