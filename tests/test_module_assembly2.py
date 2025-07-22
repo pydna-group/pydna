@@ -660,7 +660,11 @@ def test_pYPK7_TDH3_GAL2_PGI1():
 
     result, = asm.assemble_circular()
 
-    assert result.seguid() == "cdseguid=DeflrptvvS6m532WogvxQSgVKpk"
+    pYPK7_TDH3_GAL2_PGI1 = read(f"{test_files}/pYPK7_TDH3_GAL2_PGI1.gb")
+
+    assert result.seguid() == pYPK7_TDH3_GAL2_PGI1.seguid() == "cdseguid=DeflrptvvS6m532WogvxQSgVKpk"
+
+    assert len(result) == len(pYPK7_TDH3_GAL2_PGI1) == 9780
 
 
 def test_marker_replacement_on_plasmid():
