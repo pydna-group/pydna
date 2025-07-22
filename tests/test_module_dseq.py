@@ -553,7 +553,7 @@ def test_dseq():
 
     assert obj[1:2]._data == b"atg"[1:2]
 
-    assert obj[2:1]._data == b""  # TODO: change this?
+    assert obj[2:1]._data == b"ga"  # TODO: cut around slicing
 
     # obj = Dseq("G")
     # assert obj.five_prime_end() == ("5'", "g")
@@ -1526,27 +1526,49 @@ def test_new():
 
     s = Dseq("PEXIAAAQFZJ")
 
-    assert s._fill_in_three_prime("gatc")._data == b"GATCAAAQFZJ"
-    assert s._fill_in_three_prime("gat")._data == b"PATCAAAQFZJ"
-    assert s._fill_in_three_prime("ga")._data == b"PETCAAAQFZJ"
-    assert s._fill_in_three_prime("g")._data == b"PEXCAAAQFZJ"
-    assert s._fill_in_three_prime("")._data == s._data
+    # assert s._fill_in_three_prime("gatc")._data == b"GATCAAAQFZJ"
+    # assert s._fill_in_three_prime("gat")._data == b"PATCAAAQFZJ"
+    # assert s._fill_in_three_prime("ga")._data == b"PETCAAAQFZJ"
+    # assert s._fill_in_three_prime("g")._data == b"PEXCAAAQFZJ"
+    # assert s._fill_in_three_prime("")._data == s._data
 
-    assert s._fill_in_three_prime("atc")._data == s._data
-    assert s._fill_in_three_prime("at")._data == s._data
-    assert s._fill_in_three_prime("a")._data == s._data
-    assert s._fill_in_three_prime("")._data == s._data
+    # assert s._fill_in_three_prime("atc")._data == s._data
+    # assert s._fill_in_three_prime("at")._data == s._data
+    # assert s._fill_in_three_prime("a")._data == s._data
+    # assert s._fill_in_three_prime("")._data == s._data
 
-    assert s._fill_in_five_prime("gatc")._data == b"PEXIAAAGATC"
-    assert s._fill_in_five_prime("gat")._data == b"PEXIAAAGATJ"
-    assert s._fill_in_five_prime("ga")._data == b"PEXIAAAGAZJ"
-    assert s._fill_in_five_prime("g")._data == b"PEXIAAAGFZJ"
+    # assert s._fill_in_five_prime("gatc")._data == b"PEXIAAAGATC"
+    # assert s._fill_in_five_prime("gat")._data == b"PEXIAAAGATJ"
+    # assert s._fill_in_five_prime("ga")._data == b"PEXIAAAGAZJ"
+    # assert s._fill_in_five_prime("g")._data == b"PEXIAAAGFZJ"
+    # assert s._fill_in_five_prime("")._data == s._data
+
+    # assert s._fill_in_five_prime("atc")._data == s._data
+    # assert s._fill_in_five_prime("at")._data == s._data
+    # assert s._fill_in_five_prime("a")._data == s._data
+    # assert s._fill_in_five_prime("")._data == s._data
+
+    assert s._fill_in_five_prime("gatc")._data == b"GATCAAAQFZJ"
+    assert s._fill_in_five_prime("gat")._data == b"PATCAAAQFZJ"
+    assert s._fill_in_five_prime("ga")._data == b"PETCAAAQFZJ"
+    assert s._fill_in_five_prime("g")._data == b"PEXCAAAQFZJ"
     assert s._fill_in_five_prime("")._data == s._data
 
     assert s._fill_in_five_prime("atc")._data == s._data
     assert s._fill_in_five_prime("at")._data == s._data
     assert s._fill_in_five_prime("a")._data == s._data
     assert s._fill_in_five_prime("")._data == s._data
+
+    assert s._fill_in_three_prime("gatc")._data == b"PEXIAAAGATC"
+    assert s._fill_in_three_prime("gat")._data == b"PEXIAAAGATJ"
+    assert s._fill_in_three_prime("ga")._data == b"PEXIAAAGAZJ"
+    assert s._fill_in_three_prime("g")._data == b"PEXIAAAGFZJ"
+    assert s._fill_in_three_prime("")._data == s._data
+
+    assert s._fill_in_three_prime("atc")._data == s._data
+    assert s._fill_in_three_prime("at")._data == s._data
+    assert s._fill_in_three_prime("a")._data == s._data
+    assert s._fill_in_three_prime("")._data == s._data
 
     assert s.fill_in("gatc")._data == b"GATCAAAGATC"
     assert s.fill_in("gat")._data == b"PATCAAAGATJ"
