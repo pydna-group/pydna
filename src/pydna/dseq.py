@@ -1922,6 +1922,36 @@ class Dseq(_Seq):
             circular=False,
         )
 
+    def get_cut_parameters(
+        self, cut: _Union[CutSiteType, None], is_left: bool
+    ) -> _Tuple[int, int, int]:
+        """For a given cut expressed as ((cut_watson, ovhg), enz), returns
+        a tuple (cut_watson, cut_crick, ovhg).
+
+        - cut_watson: see get_cutsites docs
+        - cut_crick: equivalent of cut_watson in the crick strand
+        - ovhg: see get_cutsites docs
+
+        The cut can be None if it represents the left or right end of the sequence.
+        Then it will return the position of the watson and crick ends with respect
+        to the "full sequence". The `is_left` parameter is only used in this case.
+
+        """
+
+        if cut is not None:
+            watson, ovhg = cut[0]
+            crick = watson - ovhg
+            if self.circular:
+                crick %= len(self)
+            return watson, crick, ovhg
+
+        assert not self.circular, "Circular sequences should not have None cuts"
+
+        if is_left:
+            return *self.left_end_position(), self.ovhg
+        # In the right end, the overhang does not matter
+        return *self.right_end_position(), self.watson_ovhg()
+
     # def cutsite_is_valid(self, cutsite: CutSiteType) -> bool:
     #     """Returns False if:
     #     - Cut positions fall outside the sequence (could be moved to Biopython)
