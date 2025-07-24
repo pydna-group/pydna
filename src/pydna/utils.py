@@ -1640,11 +1640,11 @@ def sum_is_sticky(
     Return 0 if they are not compatible."""
     type_seq1, sticky_seq1 = three_prime_end
     type_seq2, sticky_seq2 = five_prime_end
-
+    # breakpoint()
     if (
         "blunt" != type_seq2
         and type_seq2 == type_seq1
-        and str(sticky_seq2) == str(rc(sticky_seq1))
+        and sticky_seq2 == rc(sticky_seq1)
     ):
         return len(sticky_seq1)
 
@@ -1654,9 +1654,9 @@ def sum_is_sticky(
     if type_seq1 != type_seq2 or type_seq2 == "blunt":
         return 0
     elif type_seq2 == "5'":
-        sticky_seq1 = str(rc(sticky_seq1))
+        sticky_seq1 = rc(sticky_seq1)
     elif type_seq2 == "3'":
-        sticky_seq2 = str(rc(sticky_seq2))
+        sticky_seq2 = rc(sticky_seq2)
 
     ovhg_len = min(len(sticky_seq1), len(sticky_seq2))
     # [::-1] to try the longest overhangs first
