@@ -1468,11 +1468,97 @@ class Dseqrecord(_SeqRecord):
 
         return Dseqrecord(new, features=_copy.copy(self.features)), srs
 
+    def apply_cut(self, left_cut, right_cut):
+        dseq = self.seq.apply_cut(left_cut, right_cut, 0, 0)
+        # TODO: maybe remove depending on https://github.com/pydna-group/pydna/issues/161
 
-if __name__ == "__main__":
-    cached = _os.getenv("pydna_cached_funcs", "")
-    _os.environ["pydna_cached_funcs"] = ""
-    import doctest
+        if left_cut == right_cut:
+            # Not really a cut, but to handle the general case
+            if left_cut is None:
+                features = _copy.deepcopy(self.features)
+            else:
+                # The features that span the origin if shifting with left_cut, but that do not cross
+                # the cut site should be included, and if there is a feature within the cut site, it should
+                # be duplicated. See https://github.com/pydna-group/pydna/issues/180 for a practical example.
+                #
+                # Let's say we are going to open a circular plasmid like below (| inidicate cuts, numbers indicate
+                # features)
+                #
+                #    3333|3
+                #    1111
+                #     000
+                # XXXXatg|YYY
+                # XXX|tacYYYY
+                #     000
+                #     2222
+                #
+                left_watson, left_crick, left_ovhg = self.seq.get_cut_parameters(
+                    left_cut, True
+                )
+                initial_shift = left_watson if left_ovhg < 0 else left_crick
+                features = self.shifted(initial_shift).features
+                # for f in features:
+                #     print(f.id, f.location, _location_boundaries(f.location))
+                # Here, we have done what's shown below (* indicates the origin).
+                # The features 0 and 2 have the right location for the final product:
+                #
+                #    3*3333
+                #    1*111
+                # XXXX*atgYYY
+                # XXXX*tacYYY
+                #      000
+                #      2222
 
-    doctest.testmod(verbose=True, optionflags=doctest.ELLIPSIS)
-    _os.environ["pydna_cached_funcs"] = cached
+                features_need_transfer = [
+                    f
+                    for f in features
+                    if (_location_boundaries(f.location)[1] <= abs(left_ovhg))
+                ]
+                features_need_transfer = [
+                    _shift_feature(f, -abs(left_ovhg), len(self))
+                    for f in features_need_transfer
+                ]
+
+                #                                           ^                ^^^^^^^^^
+                # Now we have shifted the features that end before the cut (0 and 1, but not 3), as if
+                # they referred to the below sequence (* indicates the origin):
+                #
+                #    1111
+                #     000
+                # XXXXatg*YYY
+                # XXXXtac*YYY
+                #
+                # The features 0 and 1 would have the right location if the final sequence had the same length
+                # as the original one. However, the final product is longer because of the overhang.
+
+                features += [
+                    _shift_feature(f, abs(left_ovhg), len(dseq))
+                    for f in features_need_transfer
+                ]
+                #                             ^                ^^^^^^^^^
+                # So we shift back by the same amount in the opposite direction, but this time we pass the
+                # length of the final product.
+                # print(*features, sep='\n')
+                # Features like 3 are removed here
+                features = [
+                    f
+                    for f in features
+                    if (
+                        _location_boundaries(f.location)[1] <= len(dseq)
+                        and _location_boundaries(f.location)[0]
+                        <= _location_boundaries(f.location)[1]
+                    )
+                ]
+        else:
+            left_watson, left_crick, left_ovhg = self.seq.get_cut_parameters(
+                left_cut, True
+            )
+            right_watson, right_crick, right_ovhg = self.seq.get_cut_parameters(
+                right_cut, False
+            )
+
+            left_edge = left_crick if left_ovhg > 0 else left_watson
+            right_edge = right_watson if right_ovhg > 0 else right_crick
+            features = self[left_edge:right_edge].features
+
+        return Dseqrecord(dseq, features=features)
