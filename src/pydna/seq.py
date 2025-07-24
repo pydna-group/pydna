@@ -34,6 +34,7 @@ from typing import List as _List, Optional as _Optional, Tuple as _Tuple
 class Seq(_Seq):
     """docstring."""
 
+    @property
     def full_sequence(self):
         return self
 
