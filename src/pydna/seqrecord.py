@@ -197,7 +197,7 @@ class SeqRecord(_SeqRecord):
     def translate(self):
         """docstring."""
         p = super().translate()
-        return ProteinSeqRecord(_ProteinSeq(p.seq[:-1]))
+        return ProteinSeqRecord(_ProteinSeq(p.seq))
 
     def add_colors_to_features_for_ape(self):
         """Assign colors to features.
