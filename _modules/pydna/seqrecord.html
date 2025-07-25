@@ -288,7 +288,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">translate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="n">p</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">translate</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">ProteinSeqRecord</span><span class="p">(</span><span class="n">_ProteinSeq</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span></div>
+        <span class="k">return</span> <span class="n">ProteinSeqRecord</span><span class="p">(</span><span class="n">_ProteinSeq</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="SeqRecord.add_colors_to_features_for_ape">
