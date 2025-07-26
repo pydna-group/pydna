@@ -5,9 +5,6 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:
-      # Prevent committing to the master branch
-      - id: no-commit-to-branch
-        args: [--branch, master]
       # Format yaml files
       - id: check-yaml
         # Ignore conda build meta.yaml files
