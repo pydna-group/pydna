@@ -1,6 +1,6 @@
 # ![icon](https://github.com/pydna-group/pydna/blob/master/docs/_static/banner.png?raw=true)
 
-| [![Tests & Coverage](https://github.com/pydna-group/pydna/actions/workflows/pydna_test_and_coverage_workflow.yml/badge.svg?branch=dev_bjorn)](https://github.com/pydna-group/pydna/actions/workflows/pydna_test_and_coverage_workflow.yml) | [![codecov](https://codecov.io/gh/BjornFJohansson/pydna/branch/master/graph/badge.svg)](https://codecov.io/gh/BjornFJohansson/pydna/branch/master) | [![PyPI version](https://badge.fury.io/py/pydna.svg)](https://badge.fury.io/py/pydna)                                                  | [![Google group : pydna](https://img.shields.io/badge/Google%20Group-pydna-blue.svg)](https://groups.google.com/g/pydna)          |
+| [![Tests & Coverage](https://github.com/pydna-group/pydna/actions/workflows/pydna_test_and_coverage_workflow.yml/badge.svg?branch=master)](https://github.com/pydna-group/pydna/actions/workflows/pydna_test_and_coverage_workflow.yml) | [![codecov](https://codecov.io/gh/BjornFJohansson/pydna/branch/master/graph/badge.svg)](https://codecov.io/gh/BjornFJohansson/pydna/branch/master) | [![PyPI version](https://badge.fury.io/py/pydna.svg)](https://badge.fury.io/py/pydna)                                                  | [![Google group : pydna](https://img.shields.io/badge/Google%20Group-pydna-blue.svg)](https://groups.google.com/g/pydna)          |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | [![Documentation Status](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml/badge.svg)](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml)                                                      | [![GitHub issues](https://img.shields.io/github/issues/BjornFJohansson/pydna.svg)](https://github.com/pydna-group/pydna/issues)                    |  [![GitHub stars](https://img.shields.io/github/stars/BjornFJohansson/pydna.svg)](https://github.com/pydna-group/pydna/stargazers) | |
 
@@ -389,15 +389,11 @@ Feedback & suggestions are very welcome! Please create an issue with your questi
 
 If you don't have a github account, you can get in touch through the [google group](https://groups.google.com/d/forum/pydna) for pydna.
 
-Below are the instructions for developers who want to contribute to pydna. Please direct pull requests towards the `dev_bjorn` branch.
+Below are the instructions for developers who want to contribute to pydna. Please direct pull requests towards the `master` branch.
 
 ### Fork the repository and set up a dev branch 🍴
 
-Fork the entire repository (not just the `master` branch by unticking the "Copy the `master` branch only" box)
-
-![Fork](https://github.com/pydna-group/pydna/blob/master/docs/_static/create-fork.png?raw=true)
-
-Create your branch starting from `dev_bjorn`, and if your changes are related to an issue, call the branch `issue_<number>`.
+Fork the repository. Create your branch starting from `master`, and if your changes are related to an issue, call the branch `issue_<number>`.
 
 ```bash
 # Clone the repository
@@ -405,12 +401,6 @@ git clone https://github.com/<your-username>/pydna.git
 
 # Change to the repository directory
 cd pydna
-
-# Go to the dev_bjorn branch
-git checkout -b dev_bjorn
-
-# Pull the current version of dev_bjorn
-git pull origin dev_bjorn
 
 # Create your own branch
 git checkout -b issue_<number>
@@ -491,7 +481,7 @@ pre-commit install
 
 ### Creating a PR 🔗
 
- * From your fork, make a PR towards the branch `dev_bjorn` in the original repository.
+ * From your fork, make a PR towards the branch `master` in the original repository.
  * Mention the issue number in the PR description (e.g., `Closes #123`).
  * Remember to click the "Allow edits from maintainers" checkbox so that we can make some changes to the PR if necessary.
 
