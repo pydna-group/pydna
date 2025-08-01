@@ -1,0 +1,9 @@
+## gff-version 3
+AO090038000444	SignalP-6.0	signal_peptide	1	18	0.9994235	.	.	.
+AO090012000917	SignalP-6.0	signal_peptide	1	19	0.99983215	.	.	.
+AO090005001553	SignalP-6.0	signal_peptide	1	27	0.999823	.	.	.
+AO090011000715	SignalP-6.0	signal_peptide	1	27	0.9998376	.	.	.
+AO090011000757	SignalP-6.0	signal_peptide	1	18	0.9998413	.	.	.
+AO090003000990	SignalP-6.0	signal_peptide	1	22	0.9998205	.	.	.
+AO090012000006	SignalP-6.0	signal_peptide	1	26	0.99984413	.	.	.
+AO090003001590	SignalP-6.0	signal_peptide	1	18	0.99982584	.	.	.
