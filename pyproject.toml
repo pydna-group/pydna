@@ -119,3 +119,6 @@ extend-exclude = '''
   | ^tests/        # exclude all files in the tests/ directory
 )
 '''
+
+[tool.poetry.requires-plugins]
+poetry-plugin-export = ">=1.9"
