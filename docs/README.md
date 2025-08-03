@@ -10,6 +10,9 @@ Below the commands to run a local sphinx server that auto-updated when files are
 # Install docs dependency group
 poetry install --with docs
 
+# Generate the example gallery and the API reference
+bash autogen_docs.sh
+
 # Start the sphinx server to see docs live by default at http://127.0.0.1:8000/
 sphinx-autobuild --watch src/ docs docs/_build/html
 ```
