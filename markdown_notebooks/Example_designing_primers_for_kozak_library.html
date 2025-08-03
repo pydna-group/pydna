@@ -1,0 +1,1314 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Designing Primers for a Kozak sequence library &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pydna
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Pydna</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example_gallery.html">Example gallery</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pydna</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Designing Primers for a Kozak sequence library</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/markdown_notebooks/Example_designing_primers_for_kozak_library.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="designing-primers-for-a-kozak-sequence-library">
+<h1>Designing Primers for a Kozak sequence library<a class="headerlink" href="#designing-primers-for-a-kozak-sequence-library" title="Link to this heading"></a></h1>
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Example_generate_designing_primers_for_kozak_library.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
+<span class="c1"># Install pydna (only when running on Colab)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span> <span class="n">teemi</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>⚠️ This notebook uses the extra dependency <code class="docutils literal notranslate"><span class="pre">teemi</span></code>. Run it in google Colab, or in an environment where you install <code class="docutils literal notranslate"><span class="pre">teemi</span></code> as well as <code class="docutils literal notranslate"><span class="pre">pydna</span></code>.</p>
+</div></blockquote>
+<p>In this notebook we explore the combinatorial space of the most abundant kozak sequences and make repair-primers for the experiments.  We will use pydna to simulate and the CRIPSR experiment and the homology directed repair with the oligoes we make.</p>
+<section id="about-kozak-sequences">
+<h2>About Kozak sequences<a class="headerlink" href="#about-kozak-sequences" title="Link to this heading"></a></h2>
+<p>Kozak sequences are short 5′-end hexamer motifs (often GCC(A/G)CC) flanking the start codon in eukaryotic mRNAs that enhance translation initiation. They are interesting because they help determine how efficiently a gene is translated into protein—strong Kozak motifs boost translation, while weak ones can limit it. This makes them important for gene regulation in biotechnology. In this case imagine we are using K. phaffi or your favourite protein production host. Happy bioengineering</p>
+</section>
+<section id="combinatorial-space">
+<h2>Combinatorial space<a class="headerlink" href="#combinatorial-space" title="Link to this heading"></a></h2>
+<p>Now, we want to limit our search space therefore we restrict the compinatorial space to the following combinations which were the most abundant nucleotides in the PWM analysis</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">position1</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">]</span>
+<span class="n">position2</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">]</span>
+<span class="n">position3</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">]</span>
+<span class="n">position4</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">]</span>
+<span class="n">position5</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">]</span>
+<span class="n">position6</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;C&quot;</span><span class="p">]</span>
+
+<span class="n">nucleotide_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">position1</span><span class="p">,</span> <span class="n">position2</span><span class="p">,</span> <span class="n">position3</span><span class="p">,</span> <span class="n">position4</span><span class="p">,</span> <span class="n">position5</span><span class="p">,</span> <span class="n">position6</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">teemi.design.combinatorial_design</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_combinatorial_list</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># make all combinations</span>
+<span class="n">kozak</span> <span class="o">=</span> <span class="n">get_combinatorial_list</span><span class="p">(</span><span class="n">nucleotide_list</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">kozak</span><span class="p">)</span><span class="si">}</span><span class="s1"> combinations generated&#39;</span><span class="p">)</span>
+<span class="n">kozak</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>108 combinations generated
+
+
+
+
+
+[(&#39;C&#39;, &#39;C&#39;, &#39;A&#39;, &#39;C&#39;, &#39;C&#39;, &#39;C&#39;),
+ (&#39;C&#39;, &#39;C&#39;, &#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;C&#39;),
+ (&#39;C&#39;, &#39;C&#39;, &#39;A&#39;, &#39;T&#39;, &#39;C&#39;, &#39;C&#39;),
+ (&#39;C&#39;, &#39;C&#39;, &#39;A&#39;, &#39;T&#39;, &#39;G&#39;, &#39;C&#39;),
+ (&#39;C&#39;, &#39;C&#39;, &#39;A&#39;, &#39;A&#39;, &#39;C&#39;, &#39;C&#39;)]
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make them into strings</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_to_string</span><span class="p">(</span><span class="n">list_of_list</span><span class="p">):</span>
+    <span class="n">all_combinations_as_str</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">nuc_seq</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">sp</span> <span class="ow">in</span> <span class="n">list_of_list</span><span class="p">:</span> 
+        <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">sp</span><span class="p">:</span> 
+            <span class="n">nuc_seq</span> <span class="o">+=</span> <span class="n">seq</span>
+        
+        <span class="n">all_combinations_as_str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nuc_seq</span><span class="p">)</span>
+        <span class="n">nuc_seq</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">return</span> <span class="n">all_combinations_as_str</span>
+
+
+<span class="n">all_combinations_as_str</span> <span class="o">=</span> <span class="n">make_to_string</span><span class="p">(</span><span class="n">kozak</span><span class="p">)</span>
+<span class="n">all_combinations_as_str</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;CCACCC&#39;, &#39;CCACGC&#39;, &#39;CCATCC&#39;, &#39;CCATGC&#39;, &#39;CCAACC&#39;]
+</pre></div>
+</div>
+</section>
+</section>
+<section id="making-primers-for-homology-directed-repair-with-oligoes">
+<h1>Making primers for homology directed repair with oligoes<a class="headerlink" href="#making-primers-for-homology-directed-repair-with-oligoes" title="Link to this heading"></a></h1>
+<p>This is a dummy example where we wanna test kozak sequences for GFP gene that have been integrated into K. phaffi</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.crispr</span><span class="w"> </span><span class="kn">import</span> <span class="n">cas9</span><span class="p">,</span> <span class="n">protospacer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.genbank</span><span class="w"> </span><span class="kn">import</span> <span class="n">Genbank</span>
+
+<span class="c1"># initalize your favourite gene</span>
+<span class="n">gb</span> <span class="o">=</span> <span class="n">Genbank</span><span class="p">(</span><span class="s2">&quot;myself@email.com&quot;</span><span class="p">)</span> <span class="c1"># Tell Genbank who you are!</span>
+<span class="n">gene</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">nucleotide</span><span class="p">(</span><span class="s2">&quot;LN515608.1&quot;</span><span class="p">)</span> <span class="c1"># Synthetic construct for Aequorea victoria partial gfp gene for GFP</span>
+<span class="n">target_dseq</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">gene</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">target_dseq</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Dseqrecord
+circular: False
+size: 735
+ID: LN515608.1
+Name: LN515608
+Description: Synthetic construct for Aequorea victoria partial gfp gene for GFP
+Number of features: 4
+/molecule_type=DNA
+/topology=linear
+/data_file_division=SYN
+/date=03-MAR-2015
+/accessions=[&#39;LN515608&#39;]
+/sequence_version=1
+/keywords=[&#39;&#39;]
+/source=synthetic construct
+/organism=synthetic construct
+/taxonomy=[&#39;other sequences&#39;, &#39;artificial sequences&#39;]
+/references=[Reference(title=&#39;XerC-mediated DNA inversion at the inverted repeats of the UU172-phase-variable element of Ureaplasma parvum serovar 3&#39;, ...), Reference(title=&#39;Direct Submission&#39;, ...)]
+Dseq(-735)
+AGTA..CTAG
+TCAT..GATC
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">promoter_region</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;GACGCACCAATCTAGCACAGGCACAGTGTTAACTAGATCTCAACCCTTACCCAAGTCAGAGCCGCAGAGATTGGCAACAAACTCTAGAAACCCGGGGCACGAGGACAATATGAGCTGTGCAGGCTGGTCGAGACTCGTCTAGTTGGTATTACGGTACTAGACGTCGTTGTATCCTTAGGGGACTAGAGTCAGGTAGGTAATAGGGGGTTCCCCTATCTATTATATTTAACTAGTGATACCTTCTCGAACTGTGTGAGCTGCTGCCTCAGCGAATTTCGTTCTGGACCggTACGTGTGT&#39;</span><span class="p">)</span>
+<span class="n">full_seq</span> <span class="o">=</span> <span class="n">promoter_region</span> <span class="o">+</span> <span class="n">target_dseq</span>
+<span class="n">full_seq</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Dseqrecord(-1033)
+</pre></div>
+</div>
+<p>this sgRNA we know works super well from previous experiments</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sgRNA</span> <span class="o">=</span> <span class="s1">&#39;AGCGAATTTCGTTCTGGAC&#39;</span>
+</pre></div>
+</div>
+<p>Let’s simulate how it cuts our construct.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Choose guides</span>
+<span class="n">guide</span> <span class="o">=</span>  <span class="p">[</span><span class="s2">&quot;AGCGAATTTCGTTCTGGAC&quot;</span><span class="p">]</span>
+
+<span class="c1"># Create an enzyme object with the protospacer</span>
+<span class="n">enzyme</span> <span class="o">=</span> <span class="n">cas9</span><span class="p">(</span><span class="n">guide</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Simulate the cut with enzyme1</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;cutting with guide:&#39;</span><span class="p">,</span> <span class="n">full_seq</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">enzyme</span><span class="p">))</span>
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cutting with guide: (Dseqrecord(-284), Dseqrecord(-749))
+</pre></div>
+</div>
+<p>Let’s desing the 5 prime and 3 primer end of the repair oligoes.</p>
+<p>We want to keep them at around ~ 60 to make it more affordable to synthesize.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is 6 bases directly upstream of the gene</span>
+<span class="n">five_prime</span> <span class="o">=</span> <span class="n">promoter_region</span><span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">:</span><span class="o">-</span><span class="mi">20</span><span class="p">]</span>
+
+<span class="c1"># This is directly downstream of the gene </span>
+<span class="n">three_prime</span> <span class="o">=</span> <span class="n">target_dseq</span><span class="p">[:</span><span class="mi">30</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Five prime end of the repair oligos is </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">five_prime</span><span class="p">)</span><span class="si">}</span><span class="s1"> bases&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Three prime end of the repair oligos is </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">three_prime</span><span class="p">)</span><span class="si">}</span><span class="s1"> bases&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Five prime end of the repair oligos is 30 bases
+Three prime end of the repair oligos is 30 bases
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Making these into a list</span>
+<span class="n">five_prime_list</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">str</span><span class="p">(</span><span class="n">five_prime</span><span class="o">.</span><span class="n">seq</span><span class="p">)]]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_combinations_as_str</span><span class="p">)</span>
+<span class="n">three_prime_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">three_prime</span><span class="o">.</span><span class="n">seq</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_combinations_as_str</span><span class="p">)</span>
+
+<span class="c1"># to string</span>
+<span class="n">five_prime_list</span> <span class="o">=</span> <span class="n">make_to_string</span><span class="p">(</span><span class="n">five_prime_list</span><span class="p">)</span>
+<span class="n">three_prime_list</span> <span class="o">=</span> <span class="n">make_to_string</span><span class="p">(</span><span class="n">three_prime_list</span><span class="p">)</span> 
+
+<span class="c1"># making a dataframe</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="n">my_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;five&#39;</span><span class="p">:</span><span class="n">five_prime_list</span><span class="p">,</span> <span class="s2">&quot;kozak&quot;</span><span class="p">:</span><span class="n">all_combinations_as_str</span><span class="p">,</span> <span class="s2">&quot;three&quot;</span><span class="p">:</span><span class="n">three_prime_list</span><span class="p">}</span>
+<span class="n">kozak_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">my_dict</span><span class="p">)</span> 
+<span class="n">kozak_df</span><span class="p">[</span><span class="s1">&#39;primer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kozak_df</span><span class="p">[</span><span class="s1">&#39;five&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">kozak_df</span><span class="p">[</span><span class="s1">&#39;kozak&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">kozak_df</span><span class="p">[</span><span class="s1">&#39;three&#39;</span><span class="p">]</span>
+<span class="n">kozak_df</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+</pre></div>
+</div>
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>five</th>
+      <th>kozak</th>
+      <th>three</th>
+      <th>primer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCG</td>
+      <td>CCACCC</td>
+      <td>AGTAAAGGAGAAGAACTTTTCACTGGAGTT</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGCCACCCAGTAAAGGAG...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCG</td>
+      <td>CCACGC</td>
+      <td>AGTAAAGGAGAAGAACTTTTCACTGGAGTT</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGCCACGCAGTAAAGGAG...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCG</td>
+      <td>CCATCC</td>
+      <td>AGTAAAGGAGAAGAACTTTTCACTGGAGTT</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGCCATCCAGTAAAGGAG...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCG</td>
+      <td>CCATGC</td>
+      <td>AGTAAAGGAGAAGAACTTTTCACTGGAGTT</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGCCATGCAGTAAAGGAG...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCG</td>
+      <td>CCAACC</td>
+      <td>AGTAAAGGAGAAGAACTTTTCACTGGAGTT</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGCCAACCAGTAAAGGAG...</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>103</th>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCG</td>
+      <td>AGGCGC</td>
+      <td>AGTAAAGGAGAAGAACTTTTCACTGGAGTT</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGAGGCGCAGTAAAGGAG...</td>
+    </tr>
+    <tr>
+      <th>104</th>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCG</td>
+      <td>AGGTCC</td>
+      <td>AGTAAAGGAGAAGAACTTTTCACTGGAGTT</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGAGGTCCAGTAAAGGAG...</td>
+    </tr>
+    <tr>
+      <th>105</th>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCG</td>
+      <td>AGGTGC</td>
+      <td>AGTAAAGGAGAAGAACTTTTCACTGGAGTT</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGAGGTGCAGTAAAGGAG...</td>
+    </tr>
+    <tr>
+      <th>106</th>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCG</td>
+      <td>AGGACC</td>
+      <td>AGTAAAGGAGAAGAACTTTTCACTGGAGTT</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGAGGACCAGTAAAGGAG...</td>
+    </tr>
+    <tr>
+      <th>107</th>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCG</td>
+      <td>AGGAGC</td>
+      <td>AGTAAAGGAGAAGAACTTTTCACTGGAGTT</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGAGGAGCAGTAAAGGAG...</td>
+    </tr>
+  </tbody>
+</table>
+<p>108 rows × 4 columns</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq</span>
+<span class="c1"># making them into pydna Dseqrecord</span>
+<span class="n">oligos</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">kozak_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">repair_oligo</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span>
+        <span class="n">Seq</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;primer&#39;</span><span class="p">]),</span>
+        <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;kozak_repair_oligo_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Repair oligo </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> for kozak experiment&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Designed repair oligo from DataFrame&quot;</span>
+    <span class="p">)</span>
+    <span class="n">oligos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">repair_oligo</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">oligos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">repair_oligo</span><span class="o">.</span><span class="n">seq</span><span class="si">}</span><span class="s1"> &#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">oligos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> length : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">repair_oligo</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="si">}</span><span class="s1"> &#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Repair oligo 1 for kozak experiment : CTGTGTGAGCTGCTGCCTCAGCGAATTTCGAGGAGCAGTAAAGGAGAAGAACTTTTCACTGGAGTT 
+Repair oligo 1 for kozak experiment length : 66 
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly</span><span class="w"> </span><span class="kn">import</span> <span class="n">Assembly</span>
+
+<span class="c1"># Example: Loop through all repair oligos and assemble each with full_sequence</span>
+<span class="n">assembled_KOs</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">repair_oligo</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">oligos</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">KO_assembly</span> <span class="o">=</span> <span class="n">Assembly</span><span class="p">((</span><span class="n">full_seq</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">enzyme</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">repair_oligo</span><span class="p">,</span> <span class="n">full_seq</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">enzyme</span><span class="p">)[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">limit</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+    <span class="n">my_assembly_KO</span><span class="p">,</span> <span class="o">*</span><span class="n">rest</span> <span class="o">=</span> <span class="n">KO_assembly</span><span class="o">.</span><span class="n">assemble_linear</span><span class="p">()</span>
+    <span class="n">assembled_KOs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">my_assembly_KO</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">my_assembly_KO</span><span class="o">.</span><span class="n">figure</span><span class="p">())</span>
+
+<span class="c1"># Now assembled_KOs contains all your assemblies</span>
+<span class="n">my_assembly_KO</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>name|30
+     \/
+     /\
+     30|Repair oligo 1 for kozak experiment|30
+                                            \/
+                                            /\
+                                            30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 2 for kozak experiment|30
+                                            \/
+                                            /\
+                                            30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 3 for kozak experiment|30
+                                            \/
+                                            /\
+                                            30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 4 for kozak experiment|30
+                                            \/
+                                            /\
+                                            30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 5 for kozak experiment|30
+                                            \/
+                                            /\
+                                            30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 6 for kozak experiment|30
+                                            \/
+                                            /\
+                                            30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 7 for kozak experiment|30
+                                            \/
+                                            /\
+                                            30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 8 for kozak experiment|30
+                                            \/
+                                            /\
+                                            30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 9 for kozak experiment|30
+                                            \/
+                                            /\
+                                            30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 10 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 11 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 12 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 13 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 14 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 15 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 16 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 17 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 18 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 19 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 20 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 21 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 22 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 23 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 24 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 25 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 26 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 27 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 28 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 29 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 30 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 31 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 32 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 33 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 34 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 35 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 36 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 37 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 38 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 39 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 40 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 41 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 42 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 43 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 44 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 45 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 46 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 47 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 48 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 49 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 50 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 51 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 52 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 53 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 54 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 55 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 56 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 57 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 58 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 59 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 60 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 61 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 62 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 63 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 64 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 65 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 66 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 67 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 68 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 69 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 70 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 71 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|31
+     \/
+     /\
+     31|Repair oligo 72 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 73 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 74 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 75 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 76 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 77 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 78 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 79 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 80 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 81 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 82 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 83 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 84 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 85 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 86 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 87 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 88 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 89 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 90 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 91 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 92 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 93 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 94 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 95 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 96 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 97 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 98 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 99 for kozak experiment|30
+                                             \/
+                                             /\
+                                             30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 100 for kozak experiment|30
+                                              \/
+                                              /\
+                                              30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 101 for kozak experiment|30
+                                              \/
+                                              /\
+                                              30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 102 for kozak experiment|30
+                                              \/
+                                              /\
+                                              30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 103 for kozak experiment|30
+                                              \/
+                                              /\
+                                              30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 104 for kozak experiment|30
+                                              \/
+                                              /\
+                                              30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 105 for kozak experiment|30
+                                              \/
+                                              /\
+                                              30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 106 for kozak experiment|30
+                                              \/
+                                              /\
+                                              30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 107 for kozak experiment|30
+                                              \/
+                                              /\
+                                              30|name
+name|30
+     \/
+     /\
+     30|Repair oligo 108 for kozak experiment|30
+                                              \/
+                                              /\
+                                              30|name
+</pre></div>
+</div>
+<pre>name|30
+     \/
+     /\
+     30|Repair oligo 108 for kozak experiment|30
+                                              \/
+                                              /\
+                                              30|name</pre>
+</section>
+<section id="they-seem-to-repair-as-expected-so-lets-buy-them-from-idt">
+<h1>They seem to repair as expected - so lets buy them from IDT<a class="headerlink" href="#they-seem-to-repair-as-expected-so-lets-buy-them-from-idt" title="Link to this heading"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">oligo_data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">oligo</span> <span class="ow">in</span> <span class="n">oligos</span><span class="p">:</span>
+    <span class="n">oligo_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">&quot;Oligo Name&quot;</span><span class="p">:</span> <span class="n">oligo</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+        <span class="s2">&quot;Sequence&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">oligo</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span>
+        <span class="c1"># Optional IDT columns (set your preferred defaults)</span>
+        <span class="s2">&quot;Scale&quot;</span><span class="p">:</span> <span class="s2">&quot;25nm&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Purification&quot;</span><span class="p">:</span> <span class="s2">&quot;STD&quot;</span>
+    <span class="p">})</span>
+
+<span class="n">idt_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">oligo_data</span><span class="p">)</span>
+<span class="n">idt_df</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+</pre></div>
+</div>
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Oligo Name</th>
+      <th>Sequence</th>
+      <th>Scale</th>
+      <th>Purification</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>kozak_repair_oligo_1</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGCCACCCAGTAAAGGAG...</td>
+      <td>25nm</td>
+      <td>STD</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>kozak_repair_oligo_2</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGCCACGCAGTAAAGGAG...</td>
+      <td>25nm</td>
+      <td>STD</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>kozak_repair_oligo_3</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGCCATCCAGTAAAGGAG...</td>
+      <td>25nm</td>
+      <td>STD</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>kozak_repair_oligo_4</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGCCATGCAGTAAAGGAG...</td>
+      <td>25nm</td>
+      <td>STD</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>kozak_repair_oligo_5</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGCCAACCAGTAAAGGAG...</td>
+      <td>25nm</td>
+      <td>STD</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>103</th>
+      <td>kozak_repair_oligo_104</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGAGGCGCAGTAAAGGAG...</td>
+      <td>25nm</td>
+      <td>STD</td>
+    </tr>
+    <tr>
+      <th>104</th>
+      <td>kozak_repair_oligo_105</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGAGGTCCAGTAAAGGAG...</td>
+      <td>25nm</td>
+      <td>STD</td>
+    </tr>
+    <tr>
+      <th>105</th>
+      <td>kozak_repair_oligo_106</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGAGGTGCAGTAAAGGAG...</td>
+      <td>25nm</td>
+      <td>STD</td>
+    </tr>
+    <tr>
+      <th>106</th>
+      <td>kozak_repair_oligo_107</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGAGGACCAGTAAAGGAG...</td>
+      <td>25nm</td>
+      <td>STD</td>
+    </tr>
+    <tr>
+      <th>107</th>
+      <td>kozak_repair_oligo_108</td>
+      <td>CTGTGTGAGCTGCTGCCTCAGCGAATTTCGAGGAGCAGTAAAGGAG...</td>
+      <td>25nm</td>
+      <td>STD</td>
+    </tr>
+  </tbody>
+</table>
+<p>108 rows × 4 columns</p>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Björn F. Johansson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

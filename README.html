@@ -16,7 +16,7 @@
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=d848064a"></script>
-      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -83,6 +83,9 @@ The <a class="reference internal" href="#www.numpy.org"><span class="xref myst">
 <p>Below the commands to run a local sphinx server that auto-updated when files are changed.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install docs dependency group</span>
 poetry<span class="w"> </span>install<span class="w"> </span>--with<span class="w"> </span>docs
+
+<span class="c1"># Generate the example gallery and the API reference</span>
+bash<span class="w"> </span>autogen_docs.sh
 
 <span class="c1"># Start the sphinx server to see docs live by default at http://127.0.0.1:8000/</span>
 sphinx-autobuild<span class="w"> </span>--watch<span class="w"> </span>src/<span class="w"> </span>docs<span class="w"> </span>docs/_build/html

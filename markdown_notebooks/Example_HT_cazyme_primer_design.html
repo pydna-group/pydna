@@ -1,0 +1,970 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Primer design for HT expression of CAZymes &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pydna
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Pydna</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../example_gallery.html">Example gallery</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pydna</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Primer design for HT expression of CAZymes</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/markdown_notebooks/Example_HT_cazyme_primer_design.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="primer-design-for-ht-expression-of-cazymes">
+<h1>Primer design for HT expression of CAZymes<a class="headerlink" href="#primer-design-for-ht-expression-of-cazymes" title="Link to this heading"></a></h1>
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Example_HT_cazyme_primer_design.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">capture</span>
+<span class="c1"># Install pydna (only when running on Colab)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span> <span class="n">teemi</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>⚠️ This notebook uses the extra dependency <code class="docutils literal notranslate"><span class="pre">teemi</span></code>. Run it in google Colab, or in an environment where you install <code class="docutils literal notranslate"><span class="pre">teemi</span></code> as well as <code class="docutils literal notranslate"><span class="pre">pydna</span></code>.</p>
+</div></blockquote>
+<p>Shamelessly adapeted from: https://github.com/hiyama341/cazyme_primer_design/blob/main/notebooks/00-cazyme_primer_design.ipynb</p>
+<p>In this notebook, we design a high-throughput CAZyme library by automating key steps in the primer design workflow. Specifically, we:</p>
+<ol class="arabic simple">
+<li><p>Read nucleotide sequences from a text file</p></li>
+<li><p>Translate sequences to protein</p></li>
+<li><p>Import SignalP output to identify signal peptides</p></li>
+<li><p>Remove signal peptides from the native sequences</p></li>
+<li><p>Generate primers for downstream applications</p></li>
+</ol>
+<p>This approach enables efficient processing of large sequence datasets and systematic design of primers for CAZymes without Signal peptides. In this example we have 11 targets but in principle there is not a limit. Happy bioengineering.</p>
+<p>Functions for the notebook</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqRecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">teemi.design.combinatorial_design</span><span class="w"> </span><span class="kn">import</span> <span class="n">simple_amplicon_maker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.design</span><span class="w"> </span><span class="kn">import</span> <span class="n">primer_design</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">open_gff3_files</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Opens and reads a GFF3 file and returns its contents as a list of lists.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    path: str</span>
+<span class="sd">        The path to the GFF3 file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    List[List[str]]</span>
+<span class="sd">        A list of lists containing the contents of the GFF3 file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+        <span class="n">LINES</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">infile</span><span class="p">:</span>
+            <span class="n">LINES</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">[:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">))</span>
+        <span class="n">LINES</span> <span class="o">=</span> <span class="n">LINES</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="k">return</span> <span class="n">LINES</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">tidy_up_gff</span><span class="p">(</span><span class="n">lst_of_gff</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function takes a list of GFF lines and returns a list of dictionaries,</span>
+<span class="sd">    with each dictionary containing information on the signal peptides in the GFF file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    lst_of_gff (list): A list of GFF lines.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    list_of_peptides (list): A list of dictionaries, with each dictionary containing information on the signal peptides in the GFF file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">signal_peptides</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">list_of_peptides</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">peptide</span> <span class="ow">in</span> <span class="n">lst_of_gff</span><span class="p">:</span>
+        <span class="n">signal_peptides</span><span class="p">[</span><span class="s2">&quot;gene&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">peptide</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">19</span><span class="p">]</span>
+        <span class="n">signal_peptides</span><span class="p">[</span><span class="s2">&quot;start_pos&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">peptide</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">signal_peptides</span><span class="p">[</span><span class="s2">&quot;end_pos&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">peptide</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">signal_peptides</span><span class="p">[</span><span class="s2">&quot;signal_peptide_likelyhood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">peptide</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="n">list_of_peptides</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">signal_peptides</span><span class="p">)</span>
+        <span class="n">signal_peptides</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;gene&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;start_pos&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;end_pos&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;signal_peptide_likelyhood&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">list_of_peptides</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">dict_of_signal_peptides</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a path to a GFF3 file, returns a list of dictionaries with information on signal peptides.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): Path to the GFF3 file. Default is an empty string.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list of dictionaries where each dictionary contains the following keys:</span>
+<span class="sd">            - &#39;gene&#39; (str): Gene name of the signal peptide.</span>
+<span class="sd">            - &#39;start_pos&#39; (int): Start position of the signal peptide in the protein sequence.</span>
+<span class="sd">            - &#39;end_pos&#39; (int): End position of the signal peptide in the protein sequence.</span>
+<span class="sd">            - &#39;signal_peptide_likelyhood&#39; (str): The likelihood of the sequence being a signal peptide.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gff</span> <span class="o">=</span> <span class="n">open_gff3_files</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">dict_of_signal_peptides</span> <span class="o">=</span> <span class="n">tidy_up_gff</span><span class="p">(</span><span class="n">gff</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dict_of_signal_peptides</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read_gff_to_pd</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads a GFF3 file and returns a pandas DataFrame with columns &#39;gene&#39;, &#39;start_pos&#39;, &#39;end_pos&#39;,</span>
+<span class="sd">    and &#39;signal_peptide_likelyhood&#39;.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    path : str</span>
+<span class="sd">        The path to the GFF3 file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">        A DataFrame with columns &#39;gene&#39;, &#39;start_pos&#39;, &#39;end_pos&#39;, and &#39;signal_peptide_likelyhood&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">gff</span> <span class="o">=</span> <span class="n">open_gff3_files</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">dict_of_signal_peptides</span> <span class="o">=</span> <span class="n">tidy_up_gff</span><span class="p">(</span><span class="n">gff</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">dict_of_signal_peptides</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">primer_ta_neb</span><span class="p">(</span><span class="n">primer1</span><span class="p">,</span> <span class="n">primer2</span><span class="p">,</span> <span class="n">conc</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">prodcode</span><span class="o">=</span><span class="s2">&quot;phusion-0&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates primer pair melting temp TA,  from NEB.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    primer1 : str</span>
+<span class="sd">        first primer to be used for finding the optimal ta</span>
+<span class="sd">    primer2 : str</span>
+<span class="sd">        second primer to be used for finding the optimal ta</span>
+<span class="sd">    conc : float</span>
+<span class="sd">    prodcode : str</span>
+<span class="sd">        find product codes on nebswebsite: https://tmapi.neb.com/docs/productcodes</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ta : int</span>
+<span class="sd">        primer pair annealing temp</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://tmapi.neb.com/tm/batch&quot;</span>
+    <span class="n">seqpairs</span> <span class="o">=</span> <span class="p">[[</span><span class="n">primer1</span><span class="p">,</span> <span class="n">primer2</span><span class="p">]]</span>
+
+    <span class="nb">input</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;seqpairs&quot;</span><span class="p">:</span> <span class="n">seqpairs</span><span class="p">,</span> <span class="s2">&quot;conc&quot;</span><span class="p">:</span> <span class="n">conc</span><span class="p">,</span> <span class="s2">&quot;prodcode&quot;</span><span class="p">:</span> <span class="n">prodcode</span><span class="p">}</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;content-type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">}</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">input</span><span class="p">),</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;success&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;request failed&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">primer_tm_neb1</span><span class="p">(</span><span class="n">primer</span><span class="p">,</span> <span class="n">conc</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">prodcode</span><span class="o">=</span><span class="s2">&quot;phusion-0&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates a single primers melting temp from NEB.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    primer1 : str</span>
+<span class="sd">    conc : float</span>
+<span class="sd">    prodcode : str</span>
+<span class="sd">        find product codes on nebswebsite: https://tmapi.neb.com/docs/productcodes</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tm : int</span>
+<span class="sd">        primer melting temperature</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://tmapi.neb.com/tm/batch&quot;</span>
+    <span class="n">seqpairs</span> <span class="o">=</span> <span class="p">[[</span><span class="n">primer</span><span class="p">]]</span>
+
+    <span class="nb">input</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;seqpairs&quot;</span><span class="p">:</span> <span class="n">seqpairs</span><span class="p">,</span> <span class="s2">&quot;conc&quot;</span><span class="p">:</span> <span class="n">conc</span><span class="p">,</span> <span class="s2">&quot;prodcode&quot;</span><span class="p">:</span> <span class="n">prodcode</span><span class="p">}</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;content-type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">}</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">input</span><span class="p">),</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;success&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;tm1&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;request failed&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        
+        
+<span class="k">def</span><span class="w"> </span><span class="nf">make_amplicons</span><span class="p">(</span>
+    <span class="n">list_of_amplicons</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">target_tm</span><span class="o">=</span><span class="mi">58</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">tm_function</span><span class="o">=</span><span class="n">primer_tm_neb1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generates pydna.amplicons which contains primers with a target temperature.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    list_of_amplicons : list</span>
+<span class="sd">        list of pydna.Dseqrecords</span>
+<span class="sd">    target_tm : int</span>
+<span class="sd">        representing the target melting temperature for the primers (default=55)</span>
+<span class="sd">    limit: int</span>
+<span class="sd">        representing the minimum primer size (default=5)</span>
+<span class="sd">    tm_function : function</span>
+<span class="sd">        for calculating primer melting temperature (default=primer_tm_neb)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    amplicons: list</span>
+<span class="sd">        list of amplicon objects with designed primer sequences</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">amplicons</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_of_amplicons</span><span class="p">)):</span>
+        <span class="n">amplicon</span> <span class="o">=</span> <span class="n">primer_design</span><span class="p">(</span>
+            <span class="n">list_of_amplicons</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="n">target_tm</span><span class="o">=</span><span class="n">target_tm</span><span class="p">,</span>
+            <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
+            <span class="n">tm_function</span><span class="o">=</span><span class="n">tm_function</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">amplicons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">amplicon</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">amplicons</span>
+
+</pre></div>
+</div>
+</section>
+<section id="steps">
+<h1>Steps<a class="headerlink" href="#steps" title="Link to this heading"></a></h1>
+<p>I would like:</p>
+<ol class="arabic simple">
+<li><p>Read sequences from a text file</p></li>
+<li><p>Translate sequences</p></li>
+<li><p>Read in SignalP output</p></li>
+<li><p>Remove signal peptides from native sequences</p></li>
+<li><p>Generate primers</p></li>
+</ol>
+</section>
+<section id="read-sequences">
+<h1>1 - Read sequences<a class="headerlink" href="#read-sequences" title="Link to this heading"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqIO</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sequences</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">sequence</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s1">&#39;GeneByLocusTag_CAZymes.fasta&#39;</span><span class="p">,</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;fasta&#39;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+    <span class="n">sequences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ID: AO090005001389
+Name: AO090005001389
+Description: AO090005001389
+Number of features: 0
+Seq(&#39;ATGGGAGCTCCCCGGCTTCGGATCAAAGGCGCAACCTTCAAAGACCCAAATAAT...TAG&#39;)
+ID: AO090038000444
+Name: AO090038000444
+Description: AO090038000444
+Number of features: 0
+Seq(&#39;ATGCGTTCCTTGTCGTCTATCGCACTCCTGTCTGTGGTGGGAGCTGCGTCTGCC...TAA&#39;)
+ID: AO090012000917
+Name: AO090012000917
+Description: AO090012000917
+Number of features: 0
+Seq(&#39;ATGCGGGCGTCACTACCGTTTCTTACTGCCTTGGGATGTATTCCAGCCGCTTTG...TGA&#39;)
+ID: AO090005001553
+Name: AO090005001553
+Description: AO090005001553
+Number of features: 0
+Seq(&#39;ATGAAATTCCGTAACCTTTTCTTTGCTGCCGTAGCTGGCTCTGCGGTTGCTGCT...TAG&#39;)
+ID: AO090011000715
+Name: AO090011000715
+Description: AO090011000715
+Number of features: 0
+Seq(&#39;ATGAGAATCGGCAACTTGATCGTGGCTGCAAGTGCTGCAAGCCTGGTGCATGCG...TAA&#39;)
+ID: AO090011000757
+Name: AO090011000757
+Description: AO090011000757
+Number of features: 0
+Seq(&#39;ATGAAAGTCACCAGGCTAGCGGTTCTGAATACCCTGGCAACCCTAACTGTTGCC...TAG&#39;)
+ID: AO090003000990
+Name: AO090003000990
+Description: AO090003000990
+Number of features: 0
+Seq(&#39;ATGTTTATTAAACTTTTAAACAAAGCGCTTCTAGTGCTTGGTCTGCTGTCAGCT...TAA&#39;)
+ID: AO090009000373
+Name: AO090009000373
+Description: AO090009000373
+Number of features: 0
+Seq(&#39;ATGACTGACCCAAACTATACACCACCAACCGTGGAGGATATATTTCGCTACCGA...TGA&#39;)
+ID: AO090012000006
+Name: AO090012000006
+Description: AO090012000006
+Number of features: 0
+Seq(&#39;ATGGCAATGCTGTTCACTCCCATTGCGGCTGCATCACTGCTAGCGGTGGTGGGC...TAA&#39;)
+ID: AO090001000604
+Name: AO090001000604
+Description: AO090001000604
+Number of features: 0
+Seq(&#39;ATGCCGAGTCACTCGCGCAGTCGGGACCGCTATCGCAGCGAGCGGGATCCGAGC...TAA&#39;)
+ID: AO090010000122
+Name: AO090010000122
+Description: AO090010000122
+Number of features: 0
+Seq(&#39;ATGGAGCTCTCTTCTGGATCAAGAGCGGAGCATCGCCCGATCCACGCGTGGGCC...TGA&#39;)
+ID: AO090003001590
+Name: AO090003001590
+Description: AO090003001590
+Number of features: 0
+Seq(&#39;ATGCAACCATTACGGCTTTTGGCTCTCACAGCCATTCTTAAGGGCGCCTGGGCC...TGA&#39;)
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">sequences</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ID: AO090005001389
+Name: AO090005001389
+Description: AO090005001389
+Number of features: 0
+Seq(&#39;ATGGGAGCTCCCCGGCTTCGGATCAAAGGCGCAACCTTCAAAGACCCAAATAAT...TAG&#39;)
+</pre></div>
+</div>
+</section>
+<section id="translate-sequences">
+<h1>2 - Translate sequences<a class="headerlink" href="#translate-sequences" title="Link to this heading"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">proteins</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">sequence</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s1">&#39;GeneByLocusTag_prot_CAZymes.fasta&#39;</span><span class="p">,</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;fasta&#39;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+    <span class="n">proteins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ID: AO090005001389
+Name: AO090005001389
+Description: AO090005001389
+Number of features: 0
+Seq(&#39;MGAPRLRIKGATFKDPNNREITLRGINVAGESKYPKSPDTPSYVPDKFFETDDV...TIM&#39;)
+ID: AO090038000444
+Name: AO090038000444
+Description: AO090038000444
+Number of features: 0
+Seq(&#39;MRSLSSIALLSVVGAASAQAGPWAQCGGKSFSGSSECASGWKCQELNEWFSQCV...NKN&#39;)
+ID: AO090012000917
+Name: AO090012000917
+Description: AO090012000917
+Number of features: 0
+Seq(&#39;MRASLPFLTALGCIPAALAAPHPRVQSPEYVNWTTFKANGVNLGGWLVQESTID...DTK&#39;)
+ID: AO090005001553
+Name: AO090005001553
+Description: AO090005001553
+Number of features: 0
+Seq(&#39;MKFRNLFFAAVAGSAVAAPLAKEQKKRDSVFQWIGANESGAEFGENNLPGVWGT...YLG&#39;)
+ID: AO090011000715
+Name: AO090011000715
+Description: AO090011000715
+Number of features: 0
+Seq(&#39;MRIGNLIVAASAASLVHAYPTRDIKKRGSGFTWVGVSESGAEFGSSIPGTLGTD...QCL&#39;)
+ID: AO090011000757
+Name: AO090011000757
+Description: AO090011000757
+Number of features: 0
+Seq(&#39;MKVTRLAVLNTLATLTVAWLPTTDKTITSSNGTDLFKASHGKIRGVNLGSQFVF...RSS&#39;)
+ID: AO090003000990
+Name: AO090003000990
+Description: AO090003000990
+Number of features: 0
+Seq(&#39;MFIKLLNKALLVLGLLSAGTQAATIRLDPRASSFDYNGEKVRGVNLGGWLVLEP...KQC&#39;)
+ID: AO090009000373
+Name: AO090009000373
+Description: AO090009000373
+Number of features: 0
+Seq(&#39;MTDPNYTPPTVEDIFRYRYQHGTNLGSMFVHGPWLSDGASSSDSGGSRELEEVK...SVH&#39;)
+ID: AO090012000006
+Name: AO090012000006
+Description: AO090012000006
+Number of features: 0
+Seq(&#39;MAMLFTPIAAASLLAVVGTQPTGVFAQDAEGWYKAHPGMSRIKDVNQDTHQIVD...TRK&#39;)
+ID: AO090001000604
+Name: AO090001000604
+Description: AO090001000604
+Number of features: 0
+Seq(&#39;MPSHSRSRDRYRSERDPSRRYREVYDDDDDDDFDYHPRERRRYRRDDYQHDIRS...EYY&#39;)
+ID: AO090010000122
+Name: AO090010000122
+Description: AO090010000122
+Number of features: 0
+Seq(&#39;MELSSGSRAEHRPIHAWAQNVYQGRISPESRFYKNSRILKSELSFRNRQRTANN...SRK&#39;)
+ID: AO090003001590
+Name: AO090003001590
+Description: AO090003001590
+Number of features: 0
+Seq(&#39;MQPLRLLALTAILKGAWALSANCTGSFDAISASDFVANINPGWNLGNSLDATPN...LTV&#39;)
+</pre></div>
+</div>
+</section>
+<section id="read-in-signalp-output">
+<h1>3 - Read in SignalP output<a class="headerlink" href="#read-in-signalp-output" title="Link to this heading"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">signal_pep</span> <span class="o">=</span> <span class="n">read_gff_to_pd</span><span class="p">(</span><span class="s1">&#39;SignalP_output_CAZymes.gff3&#39;</span><span class="p">)</span>
+<span class="n">signal_pep</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+</pre></div>
+</div>
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gene</th>
+      <th>start_pos</th>
+      <th>end_pos</th>
+      <th>signal_peptide_likelyhood</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>AO090038000444</td>
+      <td>0</td>
+      <td>19</td>
+      <td>0.9994235</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>AO090012000917</td>
+      <td>0</td>
+      <td>20</td>
+      <td>0.99983215</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>AO090005001553</td>
+      <td>0</td>
+      <td>28</td>
+      <td>0.999823</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>AO090011000715</td>
+      <td>0</td>
+      <td>28</td>
+      <td>0.9998376</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>AO090011000757</td>
+      <td>0</td>
+      <td>19</td>
+      <td>0.9998413</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>AO090003000990</td>
+      <td>0</td>
+      <td>23</td>
+      <td>0.9998205</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>AO090012000006</td>
+      <td>0</td>
+      <td>27</td>
+      <td>0.99984413</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>AO090003001590</td>
+      <td>0</td>
+      <td>19</td>
+      <td>0.99982584</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">N_pos</span> <span class="o">=</span> <span class="n">signal_pep</span><span class="p">[</span><span class="s1">&#39;end_pos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+<span class="n">genes_with_signal_peptides</span> <span class="o">=</span> <span class="n">signal_pep</span><span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+<span class="n">my_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="n">genes_with_signal_peptides</span><span class="p">,</span> <span class="s1">&#39;n_pos&#39;</span><span class="p">:</span><span class="n">N_pos</span> <span class="p">}</span>
+<span class="n">my_dict</span>
+
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;name&#39;: [&#39;AO090038000444&#39;,
+  &#39;AO090012000917&#39;,
+  &#39;AO090005001553&#39;,
+  &#39;AO090011000715&#39;,
+  &#39;AO090011000757&#39;,
+  &#39;AO090003000990&#39;,
+  &#39;AO090012000006&#39;,
+  &#39;AO090003001590&#39;],
+ &#39;n_pos&#39;: [19, 20, 28, 28, 19, 23, 27, 19]}
+</pre></div>
+</div>
+</section>
+<section id="remove-signal-peptides">
+<h1>4 - Remove signal peptides<a class="headerlink" href="#remove-signal-peptides" title="Link to this heading"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="n">clean_seq</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">genes_with_signal_peptides</span><span class="p">)):</span>
+    <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">:</span> 
+        <span class="k">if</span> <span class="n">genes_with_signal_peptides</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">seq</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+            <span class="n">clean_seq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="n">N_pos</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+            
+<span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">seq</span><span class="o">.</span><span class="n">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">genes_with_signal_peptides</span><span class="p">:</span>
+        <span class="n">clean_seq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+            
+<span class="nb">len</span><span class="p">(</span><span class="n">clean_seq</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>12
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">clean_seq</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[SeqRecord(seq=Seq(&#39;GCTGGTCCTTGGGCTCAGTGTGGAGGCAAGTCCTTCTCCGGCTCATCCGAGTGT...AAC&#39;), id=&#39;AO090038000444&#39;, name=&#39;AO090038000444&#39;, description=&#39;AO090038000444&#39;, dbxrefs=[]),
+ SeqRecord(seq=Seq(&#39;CCCCATCCCCGAGTGCAGAGTCCGGAGTATGTCAACTGGACAACTTTCAAAGCC...AAG&#39;), id=&#39;AO090012000917&#39;, name=&#39;AO090012000917&#39;, description=&#39;AO090012000917&#39;, dbxrefs=[]),
+ SeqRecord(seq=Seq(&#39;TCAGTTTTCCAATGTTAGTCTGCCCTTCTTCTTCTTCTTCTTCTTCTTCTTTCT...GGG&#39;), id=&#39;AO090005001553&#39;, name=&#39;AO090005001553&#39;, description=&#39;AO090005001553&#39;, dbxrefs=[]),
+ SeqRecord(seq=Seq(&#39;TCGGGATTCACCTGTACGTCAAGTATTGGCTCTGAAGTTACTGGATCTAACGAA...CTG&#39;), id=&#39;AO090011000715&#39;, name=&#39;AO090011000715&#39;, description=&#39;AO090011000715&#39;, dbxrefs=[]),
+ SeqRecord(seq=Seq(&#39;CTTCCAACAACCGACAAGACAATCACCTCTAGTAATGGAACCGATCTCTTCAAA...AGC&#39;), id=&#39;AO090011000757&#39;, name=&#39;AO090011000757&#39;, description=&#39;AO090011000757&#39;, dbxrefs=[]),
+ SeqRecord(seq=Seq(&#39;ACTATGTCAGTATAACCGTGATGTTACCCCTTTTGCTCTGCATAGTCCCTTACT...TGC&#39;), id=&#39;AO090003000990&#39;, name=&#39;AO090003000990&#39;, description=&#39;AO090003000990&#39;, dbxrefs=[]),
+ SeqRecord(seq=Seq(&#39;GATGCCGAGGGTTGGTACAAGGCTCATCCCGGAATGTCGCGCATCAAGGATGTG...AAA&#39;), id=&#39;AO090012000006&#39;, name=&#39;AO090012000006&#39;, description=&#39;AO090012000006&#39;, dbxrefs=[]),
+ SeqRecord(seq=Seq(&#39;AGTGCCAATTGTACAGGGTCCTTTGACGCCATCTCGGCCTCTGATTTCGTCGCA...GTT&#39;), id=&#39;AO090003001590&#39;, name=&#39;AO090003001590&#39;, description=&#39;AO090003001590&#39;, dbxrefs=[]),
+ SeqRecord(seq=Seq(&#39;GGAGCTCCCCGGCTTCGGATCAAAGGCGCAACCTTCAAAGACCCAAATAATCGA...ATG&#39;), id=&#39;AO090005001389&#39;, name=&#39;AO090005001389&#39;, description=&#39;AO090005001389&#39;, dbxrefs=[]),
+ SeqRecord(seq=Seq(&#39;ACTGACCCAAACTATACACCACCAACCGTGGAGGATATATTTCGCTACCGATAT...CAT&#39;), id=&#39;AO090009000373&#39;, name=&#39;AO090009000373&#39;, description=&#39;AO090009000373&#39;, dbxrefs=[]),
+ SeqRecord(seq=Seq(&#39;CCGAGTCACTCGCGCAGTCGGGACCGCTATCGCAGCGAGCGGGATCCGAGCAGA...TAT&#39;), id=&#39;AO090001000604&#39;, name=&#39;AO090001000604&#39;, description=&#39;AO090001000604&#39;, dbxrefs=[]),
+ SeqRecord(seq=Seq(&#39;GAGCTCTCTTCTGGATCAAGAGCGGAGCATCGCCCGATCCACGCGTGGGCCCAG...AAG&#39;), id=&#39;AO090010000122&#39;, name=&#39;AO090010000122&#39;, description=&#39;AO090010000122&#39;, dbxrefs=[])]
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">clean_seq</span> <span class="o">=</span> <span class="p">[</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">clean_seq</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">clean_seq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Dseq(-1510)
+GCTG..GAAC
+CGAC..CTTG
+</pre></div>
+</div>
+</section>
+<section id="generate-primers">
+<h1>5 - Generate primers<a class="headerlink" href="#generate-primers" title="Link to this heading"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">amplicons</span> <span class="o">=</span> <span class="n">make_amplicons</span><span class="p">(</span><span class="n">clean_seq</span><span class="p">,</span>
+                           <span class="n">target_tm</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="c1"># target melting temperature</span>
+                           <span class="n">limit</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>  <span class="c1"># minimum primer length</span>
+                           <span class="n">tm_function</span> <span class="o">=</span> <span class="n">primer_tm_neb1</span> <span class="c1">#calculating melting temperature </span>
+                           <span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">amplicons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">seq</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Seq(&#39;GCTGGTCCTTGGGCT&#39;)
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">forward_primer</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">amplicons</span><span class="p">]</span>
+<span class="n">r_primer</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">amplicons</span><span class="p">]</span>
+<span class="n">name</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">amplicons</span><span class="p">]</span>
+<span class="n">gene</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">clean_seq</span><span class="p">]</span>
+<span class="n">aneal_f</span> <span class="o">=</span> <span class="p">[</span><span class="n">primer_tm_neb1</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">forward_primer</span><span class="p">]</span>
+<span class="n">aneal_r</span> <span class="o">=</span> <span class="p">[</span><span class="n">primer_tm_neb1</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">r_primer</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ta</span><span class="o">=</span> <span class="p">[</span><span class="n">primer_ta_neb</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span>  <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">amplicons</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ta</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[61, 61, 62, 61, 61, 63, 61, 62, 63, 63, 62, 62]
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;gene_name (locus_tag)&#39;</span><span class="p">:</span> <span class="n">gene</span><span class="p">,</span> 
+                   <span class="s1">&#39;f_seq&#39;</span><span class="p">:</span><span class="n">forward_primer</span><span class="p">,</span> 
+                   <span class="s1">&#39;r_seq&#39;</span><span class="p">:</span><span class="n">r_primer</span><span class="p">,</span>
+                    <span class="s1">&#39;f_tm&#39;</span><span class="p">:</span> <span class="n">aneal_f</span><span class="p">,</span> 
+                    <span class="s1">&#39;r_tm&#39;</span><span class="p">:</span> <span class="n">aneal_r</span><span class="p">,</span> 
+                    <span class="s1">&#39;ta&#39;</span><span class="p">:</span><span class="n">ta</span><span class="p">})</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span>
+</pre></div>
+</div>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+</pre></div>
+</div>
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gene_name (locus_tag)</th>
+      <th>f_seq</th>
+      <th>r_seq</th>
+      <th>f_tm</th>
+      <th>r_tm</th>
+      <th>ta</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>AO090038000444</td>
+      <td>GCTGGTCCTTGGGCT</td>
+      <td>GTTCTTGTTGACATTTTCCATATGGT</td>
+      <td>57</td>
+      <td>60</td>
+      <td>61</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>AO090012000917</td>
+      <td>CCCCATCCCCGAGTG</td>
+      <td>CTTCGTATCATGGAATCTCGTAAG</td>
+      <td>57</td>
+      <td>58</td>
+      <td>61</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>AO090005001553</td>
+      <td>TCAGTTTTCCAATGTTAGTCTGC</td>
+      <td>CCCCAGGTATGCCTGC</td>
+      <td>59</td>
+      <td>58</td>
+      <td>62</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>AO090011000715</td>
+      <td>TCGGGATTCACCTGTACG</td>
+      <td>CAGGCACTGGCTGTAGT</td>
+      <td>58</td>
+      <td>58</td>
+      <td>61</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>AO090011000757</td>
+      <td>CTTCCAACAACCGACAAGAC</td>
+      <td>GCTGCTTCGACCTTTACAG</td>
+      <td>58</td>
+      <td>58</td>
+      <td>61</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>AO090003000990</td>
+      <td>ACTATGTCAGTATAACCGTGATGTTAC</td>
+      <td>GCACTGCTTAGGGAACTCC</td>
+      <td>60</td>
+      <td>59</td>
+      <td>63</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>AO090012000006</td>
+      <td>GATGCCGAGGGTTGGT</td>
+      <td>TTTACGAGTGATTGTGATAGTGATGT</td>
+      <td>58</td>
+      <td>60</td>
+      <td>61</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>AO090003001590</td>
+      <td>AGTGCCAATTGTACAGGGT</td>
+      <td>AACAGTCAAAGTAAAGTTGACCG</td>
+      <td>58</td>
+      <td>59</td>
+      <td>62</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>AO090005001389</td>
+      <td>GGAGCTCCCCGGCTT</td>
+      <td>CATGATAGTACAGGCTCCACGTT</td>
+      <td>60</td>
+      <td>61</td>
+      <td>63</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>AO090009000373</td>
+      <td>ACTGACCCAAACTATACACCAC</td>
+      <td>ATGAACACTGTAAGTGTTGATACTAACC</td>
+      <td>59</td>
+      <td>61</td>
+      <td>63</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>AO090001000604</td>
+      <td>CCGAGTCACTCGCGC</td>
+      <td>ATAATATTCCGGTAAATCCCCGAAAC</td>
+      <td>59</td>
+      <td>61</td>
+      <td>62</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>AO090010000122</td>
+      <td>GAGCTCTCTTCTGGATCAAGAG</td>
+      <td>CTTACGACTGTTGATGGCCG</td>
+      <td>59</td>
+      <td>60</td>
+      <td>62</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">amplicon_names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;#</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">name</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;gene_name (locus_tag)&#39;</span><span class="p">])[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">))]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">amplicon_names</span><span class="p">)):</span>
+    <span class="n">amplicons</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">amplicon_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">amplicon</span> <span class="ow">in</span> <span class="n">amplicons</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">figure</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>#0_1510bp_PCR_prod_AO090038000444
+5GCTGGTCCTTGGGCT...ACCATATGGAAAATGTCAACAAGAAC3
+                   ||||||||||||||||||||||||||
+                  3TGGTATACCTTTTACAGTTGTTCTTG5
+5GCTGGTCCTTGGGCT3
+ |||||||||||||||
+3CGACCAGGAACCCGA...TGGTATACCTTTTACAGTTGTTCTTG5
+
+#1_1116bp_PCR_prod_AO090012000917
+5CCCCATCCCCGAGTG...CTTACGAGATTCCATGATACGAAG3
+                   ||||||||||||||||||||||||
+                  3GAATGCTCTAAGGTACTATGCTTC5
+5CCCCATCCCCGAGTG3
+ |||||||||||||||
+3GGGGTAGGGGCTCAC...GAATGCTCTAAGGTACTATGCTTC5
+
+#2_1279bp_PCR_prod_AO090005001553
+5TCAGTTTTCCAATGTTAGTCTGC...GCAGGCATACCTGGGG3
+                           ||||||||||||||||
+                          3CGTCCGTATGGACCCC5
+5TCAGTTTTCCAATGTTAGTCTGC3
+ |||||||||||||||||||||||
+3AGTCAAAAGGTTACAATCAGACG...CGTCCGTATGGACCCC5
+
+#3_1600bp_PCR_prod_AO090011000715
+5TCGGGATTCACCTGTACG...ACTACAGCCAGTGCCTG3
+                      |||||||||||||||||
+                     3TGATGTCGGTCACGGAC5
+5TCGGGATTCACCTGTACG3
+ ||||||||||||||||||
+3AGCCCTAAGTGGACATGC...TGATGTCGGTCACGGAC5
+
+#4_1266bp_PCR_prod_AO090011000757
+5CTTCCAACAACCGACAAGAC...CTGTAAAGGTCGAAGCAGC3
+                        |||||||||||||||||||
+                       3GACATTTCCAGCTTCGTCG5
+5CTTCCAACAACCGACAAGAC3
+ ||||||||||||||||||||
+3GAAGGTTGTTGGCTGTTCTG...GACATTTCCAGCTTCGTCG5
+
+#5_1299bp_PCR_prod_AO090003000990
+5ACTATGTCAGTATAACCGTGATGTTAC...GGAGTTCCCTAAGCAGTGC3
+                               |||||||||||||||||||
+                              3CCTCAAGGGATTCGTCACG5
+5ACTATGTCAGTATAACCGTGATGTTAC3
+ |||||||||||||||||||||||||||
+3TGATACAGTCATATTGGCACTACAATG...CCTCAAGGGATTCGTCACG5
+
+#6_1481bp_PCR_prod_AO090012000006
+5GATGCCGAGGGTTGGT...ACATCACTATCACAATCACTCGTAAA3
+                    ||||||||||||||||||||||||||
+                   3TGTAGTGATAGTGTTAGTGAGCATTT5
+5GATGCCGAGGGTTGGT3
+ ||||||||||||||||
+3CTACGGCTCCCAACCA...TGTAGTGATAGTGTTAGTGAGCATTT5
+
+#7_1950bp_PCR_prod_AO090003001590
+5AGTGCCAATTGTACAGGGT...CGGTCAACTTTACTTTGACTGTT3
+                       |||||||||||||||||||||||
+                      3GCCAGTTGAAATGAAACTGACAA5
+5AGTGCCAATTGTACAGGGT3
+ |||||||||||||||||||
+3TCACGGTTAACATGTCCCA...GCCAGTTGAAATGAAACTGACAA5
+
+#8_2465bp_PCR_prod_AO090005001389
+5GGAGCTCCCCGGCTT...AACGTGGAGCCTGTACTATCATG3
+                   |||||||||||||||||||||||
+                  3TTGCACCTCGGACATGATAGTAC5
+5GGAGCTCCCCGGCTT3
+ |||||||||||||||
+3CCTCGAGGGGCCGAA...TTGCACCTCGGACATGATAGTAC5
+
+#9_1584bp_PCR_prod_AO090009000373
+5ACTGACCCAAACTATACACCAC...GGTTAGTATCAACACTTACAGTGTTCAT3
+                          ||||||||||||||||||||||||||||
+                         3CCAATCATAGTTGTGAATGTCACAAGTA5
+5ACTGACCCAAACTATACACCAC3
+ ||||||||||||||||||||||
+3TGACTGGGTTTGATATGTGGTG...CCAATCATAGTTGTGAATGTCACAAGTA5
+
+#10_2616bp_PCR_prod_AO090001000604
+5CCGAGTCACTCGCGC...GTTTCGGGGATTTACCGGAATATTAT3
+                   ||||||||||||||||||||||||||
+                  3CAAAGCCCCTAAATGGCCTTATAATA5
+5CCGAGTCACTCGCGC3
+ |||||||||||||||
+3GGCTCAGTGAGCGCG...CAAAGCCCCTAAATGGCCTTATAATA5
+
+#11_1442bp_PCR_prod_AO090010000122
+5GAGCTCTCTTCTGGATCAAGAG...CGGCCATCAACAGTCGTAAG3
+                          ||||||||||||||||||||
+                         3GCCGGTAGTTGTCAGCATTC5
+5GAGCTCTCTTCTGGATCAAGAG3
+ ||||||||||||||||||||||
+3CTCGAGAGAAGACCTAGTTCTC...GCCGGTAGTTGTCAGCATTC5
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Björn F. Johansson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
