@@ -50,7 +50,7 @@ numpy = [
 pillow = { version = ">=8.4.0", optional = true }
 prettytable = ">=3.5.0"
 pydivsufsort = ">=0.0.14"
-pyfiglet = "0.8.post1"
+pyfiglet = "1.0.3"
 pyparsing = { version = ">=2.4.7", optional = true }
 pyperclip = { version = ">=1.8.2", optional = true }
 python = ">=3.9,<4.0"
