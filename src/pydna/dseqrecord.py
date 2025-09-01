@@ -1473,6 +1473,7 @@ class Dseqrecord(_SeqRecord):
         # TODO: maybe remove depending on https://github.com/pydna-group/pydna/issues/161
 
         if left_cut == right_cut:
+
             # Not really a cut, but to handle the general case
             if left_cut is None:
                 features = _copy.deepcopy(self.features)

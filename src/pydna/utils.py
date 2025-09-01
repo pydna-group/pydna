@@ -1592,7 +1592,62 @@ def cuts_overlap(left_cut, right_cut, seq_len, circular):
 
 
 def get_cutsite_pairs(cutsites, circular, length):
+    """
+    Cutsite pairs from a sequence.
 
+    Given a list of cutsites ((position, overhang), Enzyme)
+    returns information needed to extract fragments from a dsDNA sequence.
+
+    This information consists of cutsite pairs, which are pairs of cutsites of the same type as above.
+
+    Two more variables are necessary for a circular sequence, shift and stuffer.
+
+    The shift indicates the shift needed to put the position of the first cut at the origin.
+    The stuffer variable indicates how much longer the linear sequence is than the circular one.
+    This typically happens due to the exposed sticky ends of the linear sequence.
+
+
+    cutsites = (cut position, overhang), Enzyme)
+    Ex
+    cutsites = ((3, -4), EcoRI)
+
+           3
+           |
+        aaG*AATTCaa
+        ttC-TTAAGaa
+
+
+
+
+           3
+           |
+      --aaG*AATTCaa--
+     | -ttC-TTAAGaa- |
+     ||             ||
+     | ------------- |
+      ---------------
+
+
+    Parameters
+    ----------
+    cutsites : list CutSiteType
+        DESCRIPTION.
+    circular : bool
+        DESCRIPTION.
+    length : int
+        DESCRIPTION.
+
+    Returns
+    -------
+    TYPE
+        DESCRIPTION.
+    TYPE
+        DESCRIPTION.
+    TYPE
+        DESCRIPTION.
+
+    """
+    # If cutsites is empty, return a tuple with an empty list and two nones.
     if len(cutsites) == 0:
         return [], None, None
 
@@ -1605,11 +1660,8 @@ def get_cutsite_pairs(cutsites, circular, length):
         # Add the first cutsite at the end, for circular cuts
 
         (firstcut, offset), *rest = cutsites[0]
-
         cutsites.append(((firstcut + length, offset), *rest))
-
         shift = min(firstcut, firstcut - offset)
-
         stuffer = abs(offset)
 
         cutsites = [

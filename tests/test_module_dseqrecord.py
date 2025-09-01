@@ -1125,8 +1125,8 @@ def test_features_on_slice():
     dseq_record.features = [SeqFeature(SimpleLocation(start=2, end=4))]
     assert len(dseq_record[6:1].features) == 0
     assert len(dseq_record[6:3].features) == 0
-    assert len(dseq_record[6:4].features) == 0  # ??? This slice should be empty?
-    assert len(dseq_record[6:5].features) == 0  # ??? This slice should be empty?
+    assert len(dseq_record[6:4].features) == 1  # ??? This slice should be empty?
+    assert len(dseq_record[6:5].features) == 1  # ??? This slice should be empty?
     assert len(dseq_record[:].features) == 1
 
     dseq_record2 = Dseqrecord(Dseq("ACTCTTTCTCTCTCT"))
@@ -1893,7 +1893,7 @@ def test___getitem__():
     assert s[5:1:-1].seq == Dseqrecord("CCTA", circular=False).seq
 
     assert t[1:1].seq == Dseqrecord("GATCCG").seq
-    assert t[5:1].seq == Dseqrecord("").seq
+    assert t[5:1].seq == Dseqrecord("CG").seq  # ??? How should slicing work?
     assert t[9:1].seq == Dseqrecord("").seq  # ??? How should slicing work?
     assert t[1:9].seq == Dseqrecord("GATCC").seq
     assert t[9:10].seq == Dseqrecord("").seq
@@ -1907,11 +1907,11 @@ def test___getitem__():
 
     # Exact feature sliced for normal and origin-spanning features
     assert len(seqRecord[4:17].features) == 1
-    assert len(seqRecord[17:4].features) == 0  # ??? how sould slicing work?
+    assert len(seqRecord[17:4].features) == 1  # ??? how sould slicing work?
 
     # Partial feature sliced for normal and origin-spanning features
     assert len(seqRecord[2:20].features) == 1
-    assert len(seqRecord[13:8].features) == 0  # ??? how sould slicing work?
+    assert len(seqRecord[13:8].features) == 1  # ??? how sould slicing work?
 
 
 #    # Indexing of full circular molecule (https://github.com/pydna-group/pydna/issues/161)

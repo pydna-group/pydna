@@ -793,7 +793,7 @@ def assemble(
             fill_right(out_dseqrecord.seq) + fill_left(fragment.seq)[overlap:],
             features=out_dseqrecord.features + new_features,
         )
-
+        breakpoint()
     # For circular assemblies, close the loop and wrap origin-spanning features
     if is_circular:
         overlap = fragment_overlaps[-1]
@@ -815,7 +815,6 @@ def assemble(
                 feature.location = _shift_location(
                     feature.location, 0, len(out_dseqrecord)
                 )
-
     return out_dseqrecord
 
 
@@ -948,8 +947,13 @@ def extract_subfragment(
     seq: _Dseqrecord, start_location: Location, end_location: Location
 ) -> _Dseqrecord:
     """Extract a subfragment from a sequence for an assembly, given the start and end locations of the subfragment."""
-    start = 0 if start_location is None else _location_boundaries(start_location)[0]
-    end = None if end_location is None else _location_boundaries(end_location)[1]
+    start = (
+        0 if start_location is None else int(_location_boundaries(start_location)[0])
+    )
+    end = None if end_location is None else int(_location_boundaries(end_location)[1])
+
+    # if seq.circular:
+    #     breakpoint()
 
     # Special case, some of it could be handled by better Dseqrecord slicing in the future
     if (

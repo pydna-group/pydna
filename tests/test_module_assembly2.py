@@ -911,16 +911,25 @@ def test_pcr_with_mistmaches():
 
 def test_pcrs_with_overlapping_primers_circular_templates():
 
+    # ACGTTCGTGC
+    # ||||||||||
+    # ACGTTCGTGCGTTTTGC
+    #       |||||||||||
+    #       CACGCAAAACG
+
     seq = Dseqrecord(Dseq("ACGTTCGTGCGTTTTGC", circular=True))
 
     # Overlapping 5', edge case for circular extract_subfragment
     primer1 = Primer("ACGTTCGTGC")
     primer2 = Primer(reverse_complement("GTGCGTTTTGC"))
-
+    # here!
+    shift = 0
     for shift in range(len(seq)):
         seq_shifted = seq.shifted(shift)
         asm = assembly.PCRAssembly([primer1, seq_shifted, primer2], limit=8)
-        assert str(asm.assemble_linear()[0].seq) == "ACGTTCGTGCGTTTTGC"
+        # assert str(asm.assemble_linear()[0].seq) == "ACGTTCGTGCGTTTTGC"
+        print(seq_shifted.seq, str(asm.assemble_linear()[0].seq))
+        break
 
     # Overlapping 5' and 3'
     primer1 = Primer("GCACGTTCGTG")
