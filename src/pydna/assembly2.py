@@ -26,12 +26,19 @@ from pydna.primer import Primer as _Primer
 from pydna.seqrecord import SeqRecord as _SeqRecord
 from pydna.types import (
     CutSiteType,
+    # TODO: allow user to enforce multi-site
     EdgeRepresentationAssembly,
     SubFragmentRepresentationAssembly,
     AssemblyAlgorithmType,
     SequenceOverlap,
     AssemblyEdgeType,
 )
+from pydna.gateway import gateway_overlap
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from Bio.Restriction import AbstractCut as _AbstractCut
 
 
 def gather_overlapping_locations(
@@ -366,7 +373,7 @@ def gibson_overlap(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=25):
     return [tuple(m) for m in matches]
 
 
-def sticky_end_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=0):
+def sticky_end_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit: bool = False):
     """
     Assembly algorithm for ligation of sticky ends.
 
@@ -376,7 +383,7 @@ def sticky_end_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=0):
     Args:
         seqx (_Dseqrecord): The first sequence
         seqy (_Dseqrecord): The second sequence
-        limit (int): Minimum length of the overlap
+        limit (bool): Whether to allow partial overlaps
 
     Returns:
         list[SequenceOverlap]: A list of overlaps between the two sequences
@@ -389,16 +396,16 @@ def sticky_end_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=0):
     >>> from pydna.assembly2 import sticky_end_sub_strings
     >>> x = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAAAA", 0, 3))
     >>> y = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAAAA", 3, 0))
-    >>> sticky_end_sub_strings(x, y, limit=0)
+    >>> sticky_end_sub_strings(x, y, limit=False)
     [(3, 0, 3)]
-    >>> sticky_end_sub_strings(y, x, limit=0)
+    >>> sticky_end_sub_strings(y, x, limit=False)
     []
 
     Ligation of partially overlapping sticky ends, specified with limit=True
 
     >>> x = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAAAA", 0, 2))
     >>> y = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAAAA", 3, 0))
-    >>> sticky_end_sub_strings(x, y, limit=0)
+    >>> sticky_end_sub_strings(x, y, limit=False)
     []
     >>> sticky_end_sub_strings(x, y, limit=True)
     [(4, 0, 2)]
@@ -1900,3 +1907,199 @@ class SingleFragmentAssembly(Assembly):
 
     def get_linear_assemblies(self):
         raise NotImplementedError("Linear assembly does not make sense")
+
+
+def gibson_assembly(frags: list[_Dseqrecord], limit: int = 25) -> Assembly:
+    """
+    Returns an Assembly object for Gibson assembly.
+
+    Args:
+        frags: list of Dseqrecord objects
+        limit: minimum length of the overlap
+
+    Returns:
+        Assembly object
+    """
+
+    if len(frags) == 1:
+        return SingleFragmentAssembly(frags, limit, gibson_overlap)
+    else:
+        return Assembly(
+            frags,
+            limit,
+            gibson_overlap,
+            use_fragment_order=False,
+            use_all_fragments=True,
+        )
+
+
+def in_fusion_assembly(frags: list[_Dseqrecord], limit: int = 25) -> Assembly:
+    """
+    Returns an Assembly object for in-fusion assembly. This is the same as Gibson assembly, but with a different name.
+
+    Args:
+        frags: list of Dseqrecord objects
+        limit: minimum length of the overlap
+
+    Returns:
+        Assembly object
+    """
+
+    return gibson_assembly(frags, limit)
+
+
+def fusion_pcr_assembly(frags: list[_Dseqrecord], limit: int = 25) -> Assembly:
+    """
+    Returns an Assembly object for fusion PCR assembly. This is the same as Gibson assembly, but with a different name.
+
+    Args:
+        frags: list of Dseqrecord objects
+        limit: minimum length of the overlap
+
+    Returns:
+        Assembly object
+    """
+
+    return gibson_assembly(frags, limit)
+
+
+def in_vivo_assembly(frags: list[_Dseqrecord], limit: int = 25) -> Assembly:
+    """
+    Returns an Assembly object for in vivo assembly (relies on homologous recombination).
+
+    Args:
+        frags: list of Dseqrecord objects
+        limit: minimum length of the overlap
+
+    Returns:
+        Assembly object
+    """
+
+    if len(frags) == 1:
+        return SingleFragmentAssembly(frags, limit, common_sub_strings)
+    else:
+        return Assembly(
+            frags,
+            limit,
+            common_sub_strings,
+            use_fragment_order=False,
+            use_all_fragments=True,
+        )
+
+
+def restriction_ligation_assembly(
+    frags: list[_Dseqrecord],
+    enzymes: list["_AbstractCut"],
+    allow_partial_overlap: bool = False,
+    allow_blunt: bool = True,
+) -> Assembly:
+    """
+    Returns an Assembly object for restriction ligation assembly.
+
+    Args:
+        frags: list of Dseqrecord objects
+        enzymes: list of restriction enzymes
+
+    Returns:
+        Assembly object
+    """
+
+    def algo(x, y, _l):
+        # By default, we allow blunt ends
+        return restriction_ligation_overlap(
+            x, y, enzymes, allow_partial_overlap, allow_blunt
+        )
+
+    if len(frags) == 1:
+        return SingleFragmentAssembly(frags, None, algo)
+    else:
+        return Assembly(
+            frags, None, algo, use_fragment_order=False, use_all_fragments=True
+        )
+
+
+def golden_gate_assembly(
+    frags: list[_Dseqrecord],
+    enzymes: list["_AbstractCut"],
+    allow_partial_overlap: bool = False,
+    allow_blunt: bool = True,
+) -> Assembly:
+    """
+    Returns an Assembly object for Golden Gate assembly. It is the same as restriction ligation assembly, but with a different name.
+
+    Args:
+        frags: list of Dseqrecord objects
+        enzymes: list of restriction enzymes
+        allow_partial_overlap: whether to allow partial overlaps
+        allow_blunt: whether to allow blunt ends
+
+    Returns:
+        Assembly object
+    """
+
+    return restriction_ligation_assembly(
+        frags, enzymes, allow_partial_overlap, allow_blunt
+    )
+
+
+def ligation_assembly(
+    frags: list[_Dseqrecord],
+    allow_blunt: bool = False,
+    allow_partial_overlap: bool = False,
+) -> Assembly:
+    """
+    Returns an Assembly object for ligation assembly.
+
+    Args:
+        frags: list of Dseqrecord objects
+        allow_blunt: whether to allow blunt ends
+        allow_partial_overlap: whether to allow partial overlaps
+
+    Returns:
+        Assembly object
+    """
+
+    def sticky_end_algorithm(x, y, _l):
+        return sticky_end_sub_strings(x, y, allow_partial_overlap)
+
+    algo = (
+        sticky_end_algorithm
+        if not allow_blunt
+        else combine_algorithms(sticky_end_algorithm, blunt_overlap)
+    )
+
+    if len(frags) == 1:
+        return SingleFragmentAssembly(frags, None, algo)
+    else:
+        return Assembly(
+            frags, None, algo, use_fragment_order=False, use_all_fragments=True
+        )
+
+
+def gateway_assembly(
+    frags: list[_Dseqrecord], reaction_type: str, greedy: bool = False
+) -> Assembly:
+    """
+    Returns an Assembly object for Gateway assembly.
+
+    Args:
+        frags: list of Dseqrecord objects
+        greedy: whether to use greedy gateway consensus sites (see function gateway_overlap)
+    """
+
+    # TODO: allow user to enforce multi-site
+
+    if reaction_type not in ["BP", "LR"]:
+        raise ValueError(
+            f"Invalid reaction type: {reaction_type}, can only be BP or LR"
+        )
+
+    def algo(x, y, _l):
+        return gateway_overlap(x, y, reaction_type, greedy)
+
+    if len(frags) == 1:
+        return SingleFragmentAssembly(frags, None, algo)
+    else:
+        return Assembly(
+            frags, None, algo, use_fragment_order=False, use_all_fragments=True
+        )
