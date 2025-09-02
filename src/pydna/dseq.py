@@ -1694,9 +1694,10 @@ class Dseq(_Seq):
         cutfrom = (cutfrom + cutfrom[:stuffer])._data
 
         left_sticky_end = cutfrom[left_stck_begin:left_stck_end].translate(table1)
-        ds_middle_part = cutfrom[left_stck_end:right_stck_begin]
+        # ds_middle_part = cutfrom[left_stck_end:right_stck_begin]
+        ds_middle_part =  cutfrom if left_watson_cut == right_watson_cut and self.circular else cutfrom[left_stck_end:right_stck_begin]
         right_sticky_end = cutfrom[right_stck_begin:right_stck_end].translate(table2)
-
+        # breakpoint()
         return Dseq(left_sticky_end + ds_middle_part + right_sticky_end)
 
     def get_cutsites(self: DseqType, *enzymes: EnzymesType) -> _List[CutSiteType]:

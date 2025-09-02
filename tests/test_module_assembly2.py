@@ -917,7 +917,7 @@ def test_pcrs_with_overlapping_primers_circular_templates():
     #       |||||||||||
     #       CACGCAAAACG
 
-    seq = Dseqrecord(Dseq("ACGTTCGTGCGTTTTGC", circular=True))
+    seq = Dseqrecord(Dseq("CGTTCGTGCGTTTTGCA", circular=True))
 
     # Overlapping 5', edge case for circular extract_subfragment
     primer1 = Primer("ACGTTCGTGC")
@@ -930,7 +930,6 @@ def test_pcrs_with_overlapping_primers_circular_templates():
         # assert str(asm.assemble_linear()[0].seq) == "ACGTTCGTGCGTTTTGC"
         print(seq_shifted.seq, str(asm.assemble_linear()[0].seq))
         break
-
     # Overlapping 5' and 3'
     primer1 = Primer("GCACGTTCGTG")
     for shift in range(len(seq)):
