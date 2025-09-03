@@ -12,7 +12,7 @@ This notebook contains the example shown in the README file.
 # Install pydna (only when running on Colab)
 import sys
 if 'google.colab' in sys.modules:
-    %pip install pydna
+    %pip install pydna[clipboard,download,express,gel]
 
 ```
 

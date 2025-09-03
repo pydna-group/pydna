@@ -10,7 +10,9 @@
 # Install pydna (only when running on Colab)
 import sys
 if 'google.colab' in sys.modules:
-    %pip install pydna teemi
+    %pip install pydna[clipboard,download,express,gel] teemi
+    !curl -LO "https://github.com/pydna-group/pydna/raw/master/docs/notebooks/GeneByLocusTag_CAZymes.fasta"
+    !curl -LO "https://github.com/pydna-group/pydna/raw/master/docs/notebooks/GeneByLocusTag_prot_CAZymes.fasta"
 ```
 
 > ⚠️ This notebook uses the extra dependency `teemi`. Run it in google Colab, or in an environment where you install `teemi` as well as `pydna`.

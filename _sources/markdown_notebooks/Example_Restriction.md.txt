@@ -19,7 +19,9 @@ Source files can be found alongside this notebook, if you would like to follow a
 # Install pydna (only when running on Colab)
 import sys
 if 'google.colab' in sys.modules:
-    %pip install pydna
+    %pip install pydna[clipboard,download,express,gel]
+    !curl -LO "https://github.com/pydna-group/pydna/raw/master/docs/notebooks/pFA6a-kanMX6.gb"
+    !curl -LO "https://github.com/pydna-group/pydna/raw/master/docs/notebooks/CU329670.gb"
 
 ```
 

@@ -17,7 +17,7 @@ Restriction enzymes recognise specific DNA sequences and cut them, leaving stick
 # Install pydna (only when running on Colab)
 import sys
 if 'google.colab' in sys.modules:
-    %pip install pydna
+    %pip install pydna[clipboard,download,express,gel]
 
 ```
 
