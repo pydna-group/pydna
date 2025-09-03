@@ -21,6 +21,7 @@ The following example uses a 300+ bp custom sample circular DNA, containing an e
 import sys
 if 'google.colab' in sys.modules:
     %pip install pydna[clipboard,download,express,gel]
+    !curl -LO "https://github.com/pydna-group/pydna/raw/master/docs/notebooks/sample_seq.gb"
 
 ```
 
