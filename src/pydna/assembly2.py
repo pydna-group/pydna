@@ -34,6 +34,7 @@ from pydna.types import (
     AssemblyEdgeType,
 )
 from pydna.gateway import gateway_overlap
+from pydna.cre_lox import cre_loxP_overlap
 
 from typing import TYPE_CHECKING
 
@@ -1909,33 +1910,47 @@ class SingleFragmentAssembly(Assembly):
         raise NotImplementedError("Linear assembly does not make sense")
 
 
-def gibson_assembly(frags: list[_Dseqrecord], limit: int = 25) -> Assembly:
+def common_function_assembly_products(frags, limit, algorithm, circular_only):
     """
-    Returns an Assembly object for Gibson assembly.
+    Common function to avoid code duplication. Could be simplified further
+    once SingleFragmentAssembly and Assembly are merged.
+    """
+    if len(frags) == 1:
+        asm = SingleFragmentAssembly(frags, limit, algorithm)
+    else:
+        asm = Assembly(
+            frags, limit, algorithm, use_fragment_order=False, use_all_fragments=True
+        )
+    output_assemblies = asm.get_circular_assemblies()
+    if not circular_only:
+        output_assemblies += filter_linear_subassemblies(
+            asm.get_linear_assemblies(), output_assemblies, frags
+        )
+    return [assemble(frags, a) for a in output_assemblies]
+
+
+def gibson_assembly(
+    frags: list[_Dseqrecord], limit: int = 25, circular_only: bool = False
+) -> list[_Dseqrecord]:
+    """
+    Returns the products for Gibson assembly.
 
     Args:
         frags: list of Dseqrecord objects
         limit: minimum length of the overlap
 
     Returns:
-        Assembly object
+        list of Dseqrecord objects
     """
 
-    if len(frags) == 1:
-        return SingleFragmentAssembly(frags, limit, gibson_overlap)
-    else:
-        return Assembly(
-            frags,
-            limit,
-            gibson_overlap,
-            use_fragment_order=False,
-            use_all_fragments=True,
-        )
+    return common_function_assembly_products(
+        frags, limit, gibson_overlap, circular_only
+    )
 
 
-def in_fusion_assembly(frags: list[_Dseqrecord], limit: int = 25) -> Assembly:
+def in_fusion_assembly(frags: list[_Dseqrecord], limit: int = 25) -> list[_Dseqrecord]:
     """
-    Returns an Assembly object for in-fusion assembly. This is the same as Gibson assembly, but with a different name.
+    Returns the products for in-fusion assembly. This is the same as Gibson assembly, but with a different name.
 
     Args:
         frags: list of Dseqrecord objects
@@ -1948,9 +1963,9 @@ def in_fusion_assembly(frags: list[_Dseqrecord], limit: int = 25) -> Assembly:
     return gibson_assembly(frags, limit)
 
 
-def fusion_pcr_assembly(frags: list[_Dseqrecord], limit: int = 25) -> Assembly:
+def fusion_pcr_assembly(frags: list[_Dseqrecord], limit: int = 25) -> list[_Dseqrecord]:
     """
-    Returns an Assembly object for fusion PCR assembly. This is the same as Gibson assembly, but with a different name.
+    Returns the products for fusion PCR assembly. This is the same as Gibson assembly, but with a different name.
 
     Args:
         frags: list of Dseqrecord objects
@@ -1963,9 +1978,11 @@ def fusion_pcr_assembly(frags: list[_Dseqrecord], limit: int = 25) -> Assembly:
     return gibson_assembly(frags, limit)
 
 
-def in_vivo_assembly(frags: list[_Dseqrecord], limit: int = 25) -> Assembly:
+def in_vivo_assembly(
+    frags: list[_Dseqrecord], limit: int = 25, circular_only: bool = False
+) -> list[_Dseqrecord]:
     """
-    Returns an Assembly object for in vivo assembly (relies on homologous recombination).
+    Returns the products for in vivo assembly (relies on homologous recombination).
 
     Args:
         frags: list of Dseqrecord objects
@@ -1975,16 +1992,9 @@ def in_vivo_assembly(frags: list[_Dseqrecord], limit: int = 25) -> Assembly:
         Assembly object
     """
 
-    if len(frags) == 1:
-        return SingleFragmentAssembly(frags, limit, common_sub_strings)
-    else:
-        return Assembly(
-            frags,
-            limit,
-            common_sub_strings,
-            use_fragment_order=False,
-            use_all_fragments=True,
-        )
+    return common_function_assembly_products(
+        frags, limit, common_sub_strings, circular_only
+    )
 
 
 def restriction_ligation_assembly(
@@ -1992,9 +2002,10 @@ def restriction_ligation_assembly(
     enzymes: list["_AbstractCut"],
     allow_partial_overlap: bool = False,
     allow_blunt: bool = True,
-) -> Assembly:
+    circular_only: bool = False,
+) -> list[_Dseqrecord]:
     """
-    Returns an Assembly object for restriction ligation assembly.
+    Returns the products for restriction ligation assembly.
 
     Args:
         frags: list of Dseqrecord objects
@@ -2010,12 +2021,7 @@ def restriction_ligation_assembly(
             x, y, enzymes, allow_partial_overlap, allow_blunt
         )
 
-    if len(frags) == 1:
-        return SingleFragmentAssembly(frags, None, algo)
-    else:
-        return Assembly(
-            frags, None, algo, use_fragment_order=False, use_all_fragments=True
-        )
+    return common_function_assembly_products(frags, None, algo, circular_only)
 
 
 def golden_gate_assembly(
@@ -2023,9 +2029,9 @@ def golden_gate_assembly(
     enzymes: list["_AbstractCut"],
     allow_partial_overlap: bool = False,
     allow_blunt: bool = True,
-) -> Assembly:
+) -> list[_Dseqrecord]:
     """
-    Returns an Assembly object for Golden Gate assembly. It is the same as restriction ligation assembly, but with a different name.
+    Returns the products for Golden Gate assembly. It is the same as restriction ligation assembly, but with a different name.
 
     Args:
         frags: list of Dseqrecord objects
@@ -2046,9 +2052,10 @@ def ligation_assembly(
     frags: list[_Dseqrecord],
     allow_blunt: bool = False,
     allow_partial_overlap: bool = False,
-) -> Assembly:
+    circular_only: bool = False,
+) -> list[_Dseqrecord]:
     """
-    Returns an Assembly object for ligation assembly.
+    Returns the products for ligation assembly.
 
     Args:
         frags: list of Dseqrecord objects
@@ -2068,19 +2075,17 @@ def ligation_assembly(
         else combine_algorithms(sticky_end_algorithm, blunt_overlap)
     )
 
-    if len(frags) == 1:
-        return SingleFragmentAssembly(frags, None, algo)
-    else:
-        return Assembly(
-            frags, None, algo, use_fragment_order=False, use_all_fragments=True
-        )
+    return common_function_assembly_products(frags, None, algo, circular_only)
 
 
 def gateway_assembly(
-    frags: list[_Dseqrecord], reaction_type: str, greedy: bool = False
-) -> Assembly:
+    frags: list[_Dseqrecord],
+    reaction_type: str,
+    greedy: bool = False,
+    circular_only: bool = False,
+) -> list[_Dseqrecord]:
     """
-    Returns an Assembly object for Gateway assembly.
+    Returns the products for Gateway assembly.
 
     Args:
         frags: list of Dseqrecord objects
@@ -2097,9 +2102,83 @@ def gateway_assembly(
     def algo(x, y, _l):
         return gateway_overlap(x, y, reaction_type, greedy)
 
+    return common_function_assembly_products(frags, None, algo, circular_only)
+
+
+def common_function_integration_products(frags, limit, algorithm):
+    """
+    Common function to avoid code duplication. Could be simplified further
+    once SingleFragmentAssembly and Assembly are merged.
+    """
     if len(frags) == 1:
-        return SingleFragmentAssembly(frags, None, algo)
+        asm = SingleFragmentAssembly(frags, limit, algorithm)
     else:
-        return Assembly(
-            frags, None, algo, use_fragment_order=False, use_all_fragments=True
+        asm = Assembly(
+            frags, limit, algorithm, use_fragment_order=False, use_all_fragments=True
         )
+
+    if frags[0].circular:
+        raise ValueError(
+            "Genome must be linear for integration assembly, use in vivo assembly instead"
+        )
+
+    # We only want insertions in the genome (first fragment)
+    output_assemblies = [a for a in asm.get_insertion_assemblies() if a[0][0] == 1]
+    return [assemble(frags, a, True) for a in output_assemblies]
+
+
+def common_handle_insertion_fragments(
+    genome: _Dseqrecord, inserts: list[_Dseqrecord]
+) -> list[_Dseqrecord]:
+
+    if not isinstance(genome, _Dseqrecord):
+        raise ValueError("Genome must be a Dseqrecord object")
+    if isinstance(inserts, _Dseqrecord):
+        inserts = [inserts]
+    if not isinstance(inserts, list) or not all(
+        isinstance(f, _Dseqrecord) for f in inserts
+    ):
+        raise ValueError("Inserts must be a list of Dseqrecord objects")
+
+    return [genome] + inserts
+
+
+def homologous_recombination_integration(
+    genome: _Dseqrecord,
+    inserts: list[_Dseqrecord] | _Dseqrecord,
+    minimal_homology: int = 40,
+) -> list[_Dseqrecord]:
+    """
+    Returns the products for homologous recombination assembly.
+
+    Args:
+        genome: Dseqrecord object
+        inserts: list of Dseqrecord objects
+        minimal_homology: minimum homology length
+
+    Returns:
+        Assembly object
+    """
+
+    fragments = common_handle_insertion_fragments(genome, inserts)
+
+    return common_function_integration_products(
+        fragments, minimal_homology, common_sub_strings
+    )
+
+
+def cre_lox_integration(
+    genome: _Dseqrecord, inserts: list[_Dseqrecord] | _Dseqrecord
+) -> list[_Dseqrecord]:
+    """
+    Returns the products for CRE-lox integration.
+
+    Args:
+        genome: Dseqrecord object
+        inserts: list of Dseqrecord objects
+
+    Returns:
+        Assembly object
+    """
+    fragments = common_handle_insertion_fragments(genome, inserts)
+    return common_function_integration_products(fragments, None, cre_loxP_overlap)
