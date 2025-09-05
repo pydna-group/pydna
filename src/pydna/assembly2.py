@@ -1947,6 +1947,8 @@ def common_function_assembly_products(
         output_assemblies += filter_linear_subassemblies(
             asm.get_linear_assemblies(), output_assemblies, frags
         )
+    if not circular_only and len(frags) == 1:
+        output_assemblies += asm.get_insertion_assemblies()
 
     if filter_results_function:
         output_assemblies = [a for a in output_assemblies if filter_results_function(a)]
@@ -2128,7 +2130,8 @@ def golden_gate_assembly(
     circular_only: bool = False,
 ) -> list[_Dseqrecord]:
     """Returns the products for Golden Gate assembly. This is the same as
-    restriction ligation assembly, but with a different name.
+    restriction ligation assembly, but with a different name. Check the documentation
+    for `restriction_ligation_assembly` for more details.
 
     Parameters
     ----------
