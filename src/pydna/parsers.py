@@ -208,3 +208,26 @@ def parse(data, ds=True):
 def parse_primers(data):
     """docstring."""
     return [_Primer(x) for x in parse(data, ds=False)]
+
+
+def parse_snapgene(file_path: str) -> _Dseqrecord:
+    """Parse a SnapGene file and return a Dseqrecord object.
+
+    Parameters
+    ----------
+    file_path : str
+        The path to the SnapGene file to parse.
+
+    Returns
+    -------
+    Dseqrecord
+        The parsed SnapGene file as a Dseqrecord object.
+
+    """
+    with open(file_path, "rb") as f:
+        parsed_seq = next(_SeqIO.parse(f, "snapgene"))
+        circular = (
+            "topology" in parsed_seq.annotations.keys()
+            and parsed_seq.annotations["topology"] == "circular"
+        )
+        return _Dseqrecord(parsed_seq, circular=circular)
