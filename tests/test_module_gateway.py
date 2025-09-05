@@ -33,13 +33,13 @@ def test_gateway_manual_cloning():
 
             backbone = parse_snapgene(
                 os.path.join(test_files, "gateway_manual_cloning/" + backbone)
-            )
+            )[0]
             pcr_product = parse_snapgene(
                 os.path.join(test_files, "gateway_manual_cloning/" + pcr_product)
-            )
+            )[0]
             entry_vector = parse_snapgene(
                 os.path.join(test_files, "gateway_manual_cloning/" + entry_vector)
-            )
+            )[0]
 
             # Works with the right reaction
             asm = assembly.Assembly([backbone, pcr_product], algorithm=algoBP)
@@ -57,10 +57,10 @@ def test_gateway_manual_cloning():
                     os.path.join(
                         test_files, "gateway_manual_cloning/" + backbone_expression
                     )
-                )
+                )[0]
                 expression = parse_snapgene(
                     os.path.join(test_files, "gateway_manual_cloning/" + expression)
-                )
+                )[0]
 
                 # Works with the right reaction
                 asm = assembly.Assembly(
@@ -84,7 +84,7 @@ def test_gateway_manual_cloning():
     )
     inputs = list()
     for file in example_valerie:
-        seq = parse_snapgene(file)
+        seq = parse_snapgene(file)[0]
         seq.name = file.split("/")[-1]
         inputs.append(seq)
 

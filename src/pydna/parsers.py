@@ -210,7 +210,7 @@ def parse_primers(data):
     return [_Primer(x) for x in parse(data, ds=False)]
 
 
-def parse_snapgene(file_path: str) -> _Dseqrecord:
+def parse_snapgene(file_path: str) -> list[_Dseqrecord]:
     """Parse a SnapGene file and return a Dseqrecord object.
 
     Parameters
@@ -230,4 +230,4 @@ def parse_snapgene(file_path: str) -> _Dseqrecord:
             "topology" in parsed_seq.annotations.keys()
             and parsed_seq.annotations["topology"] == "circular"
         )
-        return _Dseqrecord(parsed_seq, circular=circular)
+        return [_Dseqrecord(parsed_seq, circular=circular)]
