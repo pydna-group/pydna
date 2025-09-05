@@ -5,6 +5,9 @@ test parse
 """
 
 import pytest
+import os
+
+test_files = os.path.join(os.path.dirname(__file__))
 
 
 def test_extract_from_text():
@@ -43,8 +46,21 @@ def test_extract_from_text():
     comment 4
     """
     seqs, gaps = extract_from_text(text)
-    assert seqs == ("LOCUS a\n//", "LOCUS b\n//", ">c\nccccc", ">ddd\ndddddd\n", "ID e\n//")
-    assert tuple(g.strip() for g in gaps) == ("comment 0", "comment 1", "comment 2", "comment 3", "", "comment 4")
+    assert seqs == (
+        "LOCUS a\n//",
+        "LOCUS b\n//",
+        ">c\nccccc",
+        ">ddd\ndddddd\n",
+        "ID e\n//",
+    )
+    assert tuple(g.strip() for g in gaps) == (
+        "comment 0",
+        "comment 1",
+        "comment 2",
+        "comment 3",
+        "",
+        "comment 4",
+    )
 
     from pydna.parsers import embl_gb_fasta
 
@@ -88,7 +104,12 @@ def test_extract_from_text():
 
     a, c, t, g = embl_gb_fasta(text)
 
-    assert [x.annotations.get("topology") for x in (a, c, g, t)] == ["linear", "linear", "linear", "linear"]
+    assert [x.annotations.get("topology") for x in (a, c, g, t)] == [
+        "linear",
+        "linear",
+        "linear",
+        "linear",
+    ]
 
     text = """\
             >a circular
@@ -103,7 +124,12 @@ def test_extract_from_text():
 
     a, c, t, g = embl_gb_fasta(text)
 
-    assert [x.annotations.get("topology") for x in (a, c, g, t)] == ["circular", "circular", "circular", "circular"]
+    assert [x.annotations.get("topology") for x in (a, c, g, t)] == [
+        "circular",
+        "circular",
+        "circular",
+        "circular",
+    ]
 
 
 def test_parse1():
@@ -275,7 +301,12 @@ def test_parse_list():
 
     data = str(">1\n" "aaaa\n" ">2\n" "cccc\n")
 
-    assert [str(x.seq) for x in parse_primers([data, data])] == ["aaaa", "cccc", "aaaa", "cccc"]
+    assert [str(x.seq) for x in parse_primers([data, data])] == [
+        "aaaa",
+        "cccc",
+        "aaaa",
+        "cccc",
+    ]
 
 
 def test_misc_parse():
@@ -305,8 +336,12 @@ def test_misc_parse():
     assert x.format()[3268:3278] == "2micron 2µ"
     assert x.features[13].qualifiers["label"][0] == "2micron 2µ"
 
-    assert "".join(a.format("gb").splitlines()[1:]) == "".join(x.format("gb").splitlines()[1:])
-    assert "".join(b.format("gb").strip().splitlines()[4:]) == "".join(y.format("gb").splitlines()[4:])
+    assert "".join(a.format("gb").splitlines()[1:]) == "".join(
+        x.format("gb").splitlines()[1:]
+    )
+    assert "".join(b.format("gb").strip().splitlines()[4:]) == "".join(
+        y.format("gb").splitlines()[4:]
+    )
 
 
 def test_dna2949():
@@ -368,6 +403,26 @@ def proteins():
 
     assert fa.annotations["topology"] == "linear"
     assert gb.annotations["topology"] == "linear"
+
+
+def test_parse_snapgene():
+    from pydna.parsers import parse_snapgene
+
+    # Parse circular snapgene file
+    seq = parse_snapgene(
+        os.path.join(test_files, "gateway_manual_cloning/pDONRtm201.dna")
+    )
+    assert seq.circular
+    assert len(seq) == 4470
+
+    # Parse linear snapgene file
+    seq = parse_snapgene(
+        os.path.join(
+            test_files, "gateway_manual_cloning/pcr_product-attP1_1-attP2_1.dna"
+        )
+    )
+    assert not seq.circular
+    assert len(seq) == 2304
 
 
 if __name__ == "__main__":
