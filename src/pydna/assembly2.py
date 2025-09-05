@@ -26,12 +26,20 @@ from pydna.primer import Primer as _Primer
 from pydna.seqrecord import SeqRecord as _SeqRecord
 from pydna.types import (
     CutSiteType,
+    # TODO: allow user to enforce multi-site
     EdgeRepresentationAssembly,
     SubFragmentRepresentationAssembly,
     AssemblyAlgorithmType,
     SequenceOverlap,
     AssemblyEdgeType,
 )
+from pydna.gateway import gateway_overlap
+from pydna.cre_lox import cre_loxP_overlap
+
+from typing import TYPE_CHECKING, Callable
+
+if TYPE_CHECKING:
+    from Bio.Restriction import AbstractCut as _AbstractCut
 
 
 def gather_overlapping_locations(
@@ -366,7 +374,7 @@ def gibson_overlap(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=25):
     return [tuple(m) for m in matches]
 
 
-def sticky_end_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=0):
+def sticky_end_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit: bool = False):
     """
     Assembly algorithm for ligation of sticky ends.
 
@@ -376,7 +384,7 @@ def sticky_end_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=0):
     Args:
         seqx (_Dseqrecord): The first sequence
         seqy (_Dseqrecord): The second sequence
-        limit (int): Minimum length of the overlap
+        limit (bool): Whether to allow partial overlaps
 
     Returns:
         list[SequenceOverlap]: A list of overlaps between the two sequences
@@ -389,16 +397,16 @@ def sticky_end_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=0):
     >>> from pydna.assembly2 import sticky_end_sub_strings
     >>> x = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAAAA", 0, 3))
     >>> y = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAAAA", 3, 0))
-    >>> sticky_end_sub_strings(x, y, limit=0)
+    >>> sticky_end_sub_strings(x, y, limit=False)
     [(3, 0, 3)]
-    >>> sticky_end_sub_strings(y, x, limit=0)
+    >>> sticky_end_sub_strings(y, x, limit=False)
     []
 
     Ligation of partially overlapping sticky ends, specified with limit=True
 
     >>> x = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAAAA", 0, 2))
     >>> y = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAAAA", 3, 0))
-    >>> sticky_end_sub_strings(x, y, limit=0)
+    >>> sticky_end_sub_strings(x, y, limit=False)
     []
     >>> sticky_end_sub_strings(x, y, limit=True)
     [(4, 0, 2)]
@@ -1900,3 +1908,703 @@ class SingleFragmentAssembly(Assembly):
 
     def get_linear_assemblies(self):
         raise NotImplementedError("Linear assembly does not make sense")
+
+
+def common_function_assembly_products(
+    frags: list[_Dseqrecord],
+    limit: int | None,
+    algorithm: Callable,
+    circular_only: bool,
+    filter_results_function: Callable | None = None,
+) -> list[_Dseqrecord]:
+    """Common function to avoid code duplication. Could be simplified further
+    once SingleFragmentAssembly and Assembly are merged.
+
+    Parameters
+    ----------
+    frags : list[_Dseqrecord]
+        List of DNA fragments to assemble
+    limit : int or None
+        Minimum overlap length required, or None if not applicable
+    algorithm : Callable
+        Function that determines valid overlaps between fragments
+    circular_only : bool
+        If True, only return circular assemblies
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of assembled DNA molecules
+    """
+    if len(frags) == 1:
+        asm = SingleFragmentAssembly(frags, limit, algorithm)
+    else:
+        asm = Assembly(
+            frags, limit, algorithm, use_fragment_order=False, use_all_fragments=True
+        )
+    output_assemblies = asm.get_circular_assemblies()
+    if not circular_only and len(frags) > 1:
+        output_assemblies += filter_linear_subassemblies(
+            asm.get_linear_assemblies(), output_assemblies, frags
+        )
+    if not circular_only and len(frags) == 1:
+        output_assemblies += asm.get_insertion_assemblies()
+
+    if filter_results_function:
+        output_assemblies = [a for a in output_assemblies if filter_results_function(a)]
+
+    return [assemble(frags, a) for a in output_assemblies]
+
+
+def gibson_assembly(
+    frags: list[_Dseqrecord], limit: int = 25, circular_only: bool = False
+) -> list[_Dseqrecord]:
+    """Returns the products for Gibson assembly.
+
+    Parameters
+    ----------
+    frags : list[_Dseqrecord]
+        List of DNA fragments to assemble
+    limit : int, optional
+        Minimum overlap length required, by default 25
+    circular_only : bool, optional
+        If True, only return circular assemblies, by default False
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of assembled DNA molecules
+    """
+    return common_function_assembly_products(
+        frags, limit, gibson_overlap, circular_only
+    )
+
+
+def in_fusion_assembly(
+    frags: list[_Dseqrecord], limit: int = 25, circular_only: bool = False
+) -> list[_Dseqrecord]:
+    """Returns the products for in-fusion assembly. This is the same as Gibson
+    assembly, but with a different name.
+
+    Parameters
+    ----------
+    frags : list[_Dseqrecord]
+        List of DNA fragments to assemble
+    limit : int, optional
+        Minimum overlap length required, by default 25
+    circular_only : bool, optional
+        If True, only return circular assemblies, by default False
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of assembled DNA molecules
+    """
+    return gibson_assembly(frags, limit)
+
+
+def fusion_pcr_assembly(
+    frags: list[_Dseqrecord], limit: int = 25, circular_only: bool = False
+) -> list[_Dseqrecord]:
+    """Returns the products for fusion PCR assembly. This is the same as Gibson
+    assembly, but with a different name.
+
+    Parameters
+    ----------
+    frags : list[_Dseqrecord]
+        List of DNA fragments to assemble
+    limit : int, optional
+        Minimum overlap length required, by default 25
+    circular_only : bool, optional
+        If True, only return circular assemblies, by default False
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of assembled DNA molecules
+    """
+    return gibson_assembly(frags, limit)
+
+
+def in_vivo_assembly(
+    frags: list[_Dseqrecord], limit: int = 25, circular_only: bool = False
+) -> list[_Dseqrecord]:
+    """Returns the products for in vivo assembly (IVA), which relies on homologous recombination between the fragments.
+
+    Parameters
+    ----------
+    frags : list[_Dseqrecord]
+        List of DNA fragments to assemble
+    limit : int, optional
+        Minimum overlap length required, by default 25
+    circular_only : bool, optional
+        If True, only return circular assemblies, by default False
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of assembled DNA molecules
+    """
+    return common_function_assembly_products(
+        frags, limit, common_sub_strings, circular_only
+    )
+
+
+def restriction_ligation_assembly(
+    frags: list[_Dseqrecord],
+    enzymes: list["_AbstractCut"],
+    allow_blunt: bool = True,
+    circular_only: bool = False,
+) -> list[_Dseqrecord]:
+    """Returns the products for restriction ligation assembly:
+    * Finds cutsites in the fragments
+    * Finds all products that could be assembled by ligating the fragments based on those cutsites
+    * Will NOT return products that combine an existing end with an end generated by the same enzyme (see example below)
+
+    Parameters
+    ----------
+    frags : list[_Dseqrecord]
+        List of DNA fragments to assemble
+    enzymes : list[_AbstractCut]
+        List of restriction enzymes to use
+    allow_blunt : bool, optional
+        If True, allow blunt end ligations, by default True
+    circular_only : bool, optional
+        If True, only return circular assemblies, by default False
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of assembled DNA molecules
+
+    Examples
+    --------
+    In the example below, we plan to assemble a plasmid from a backbone and an insert, using the EcoRI and SalI enzymes.
+    Note how 2 circular products are returned, one contains the insert (`acgt`)
+    and the desired part of the backbone (`cccccc`), the other contains the
+    reversed insert (`tgga`) and the cut-out part of the backbone (`aaa`).
+
+    >>> from pydna.assembly2 import restriction_ligation_assembly
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from Bio.Restriction import EcoRI, SalI
+    >>> backbone = Dseqrecord("cccGAATTCaaaGTCGACccc", circular=True)
+    >>> insert = Dseqrecord("ggGAATTCaggtGTCGACgg")
+    >>> products = restriction_ligation_assembly([backbone, insert], [EcoRI, SalI], circular_only=True)
+    >>> products[0].seq
+    Dseq(o22)
+    TCGACccccccGAATTCaggtG
+    AGCTGggggggCTTAAGtccaC
+    >>> products[1].seq
+    Dseq(o19)
+    AATTCaaaGTCGACacctG
+    TTAAGtttCAGCTGtggaC
+
+    Note that passing a pre-cut fragment will not work.
+
+    >>> restriction_products = insert.cut([EcoRI, SalI])
+    >>> cut_insert = restriction_products[1]
+    >>> restriction_ligation_assembly([backbone, cut_insert], [EcoRI, SalI], circular_only=True)
+    []
+
+    It also works with a single fragment, for circularization:
+
+    >>> seq = Dseqrecord("GAATTCaaaGAATTC")
+    >>> products =restriction_ligation_assembly([seq], [EcoRI])
+    >>> products[0].seq
+    Dseq(o9)
+    AATTCaaaG
+    TTAAGtttC
+    """
+
+    def algo(x, y, _l):
+        # By default, we allow blunt ends
+        return restriction_ligation_overlap(x, y, enzymes, False, allow_blunt)
+
+    return common_function_assembly_products(frags, None, algo, circular_only)
+
+
+def golden_gate_assembly(
+    frags: list[_Dseqrecord],
+    enzymes: list["_AbstractCut"],
+    allow_blunt: bool = True,
+    circular_only: bool = False,
+) -> list[_Dseqrecord]:
+    """Returns the products for Golden Gate assembly. This is the same as
+    restriction ligation assembly, but with a different name. Check the documentation
+    for `restriction_ligation_assembly` for more details.
+
+    Parameters
+    ----------
+    frags : list[_Dseqrecord]
+        List of DNA fragments to assemble
+    enzymes : list[_AbstractCut]
+        List of restriction enzymes to use
+    allow_blunt : bool, optional
+        If True, allow blunt end ligations, by default True
+    circular_only : bool, optional
+        If True, only return circular assemblies, by default False
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of assembled DNA molecules
+
+    Examples
+    --------
+    See the example for `restriction_ligation_assembly`.
+    """
+    return restriction_ligation_assembly(frags, enzymes, allow_blunt, circular_only)
+
+
+def ligation_assembly(
+    frags: list[_Dseqrecord],
+    allow_blunt: bool = False,
+    allow_partial_overlap: bool = False,
+    circular_only: bool = False,
+) -> list[_Dseqrecord]:
+    """Returns the products for ligation assembly, as inputs pass the fragments (digested if needed) that
+    will be ligated.
+
+    For most cases, you probably should use `restriction_ligation_assembly` instead.
+
+    Parameters
+    ----------
+    frags : list[_Dseqrecord]
+        List of DNA fragments to assemble
+    allow_blunt : bool, optional
+        If True, allow blunt end ligations, by default False
+    allow_partial_overlap : bool, optional
+        If True, allow partial overlaps between sticky ends, by default False
+    circular_only : bool, optional
+        If True, only return circular assemblies, by default False
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of assembled DNA molecules
+
+
+    Examples
+    --------
+    In the example below, we plan to assemble a plasmid from a backbone and an insert,
+    using the EcoRI enzyme. The insert and insertion site in the backbone are flanked by
+    EcoRI sites, so there are two possible products depending on the orientation of the insert.
+
+    >>> from pydna.assembly2 import ligation_assembly
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from Bio.Restriction import EcoRI
+    >>> backbone = Dseqrecord("cccGAATTCaaaGAATTCccc", circular=True)
+    >>> backbone_cut = backbone.cut(EcoRI)[1]
+    >>> insert = Dseqrecord("ggGAATTCaggtGAATTCgg")
+    >>> insert_cut = insert.cut(EcoRI)[1]
+    >>> products = ligation_assembly([backbone_cut, insert_cut])
+    >>> products[0].seq
+    Dseq(o22)
+    AATTCccccccGAATTCaggtG
+    TTAAGggggggCTTAAGtccaC
+    >>> products[1].seq
+    Dseq(o22)
+    AATTCccccccGAATTCacctG
+    TTAAGggggggCTTAAGtggaC
+    """
+
+    def sticky_end_algorithm(x, y, _l):
+        return sticky_end_sub_strings(x, y, allow_partial_overlap)
+
+    algo = (
+        sticky_end_algorithm
+        if not allow_blunt
+        else combine_algorithms(sticky_end_algorithm, blunt_overlap)
+    )
+
+    return common_function_assembly_products(frags, None, algo, circular_only)
+
+
+def assembly_is_multi_site(asm: list[EdgeRepresentationAssembly]) -> bool:
+    """Returns True if the assembly is a multi-site assembly, False otherwise."""
+
+    if len(asm) < 2:
+        return False
+
+    is_cycle = asm[0][1] == asm[-1][0]
+    asm2 = edge_representation2subfragment_representation(asm, is_cycle)
+
+    return all(f[1] != f[2] for f in asm2)
+
+
+def gateway_assembly(
+    frags: list[_Dseqrecord],
+    reaction_type: str,
+    greedy: bool = False,
+    circular_only: bool = False,
+    multi_site_only: bool = False,
+) -> list[_Dseqrecord]:
+    """Returns the products for Gateway assembly / Gateway cloning.
+
+    Parameters
+    ----------
+    frags : list[_Dseqrecord]
+        List of DNA fragments to assemble
+    reaction_type : str
+        Type of Gateway reaction, either 'BP' or 'LR'
+    greedy : bool, optional
+        If True, use greedy gateway consensus sites, by default False
+    circular_only : bool, optional
+        If True, only return circular assemblies, by default False
+    multi_site_only : bool, optional
+        If True, only return products that where 2 sites recombined. Even if input sequences
+        contain multiple att sites (typically 2), a product could be generated where only one
+        site recombines. That's typically not what you want, so you can set this to True to
+        only return products where both att sites recombined.
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of assembled DNA molecules
+
+
+    Examples
+    --------
+
+    Below an example with dummy Gateway sequences, composed with minimal sequences and the consensus
+    att sites.
+
+    >>> from pydna.assembly2 import gateway_assembly
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> attB1 = "ACAACTTTGTACAAAAAAGCAGAAG"
+    >>> attP1 = "AAAATAATGATTTTATTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCTGAACGAGAAGCGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATCCAGTCACTATGAATCAACTACTTAGATGGTATTAGTGACCTGTA"
+    >>> attR1 = "ACAACTTTGTACAAAAAAGCTGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATGCAGTCACTATG"
+    >>> attL1 = "CAAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATAAGCAATGCTTTCTTATAATGCCAACTTTGTACAAAAAAGCAGGCT"
+    >>> seq1 = Dseqrecord("aaa" + attB1 + "ccc")
+    >>> seq2 = Dseqrecord("aaa" + attP1 + "ccc")
+    >>> seq3 = Dseqrecord("aaa" + attR1 + "ccc")
+    >>> seq4 = Dseqrecord("aaa" + attL1 + "ccc")
+    >>> products_BP = gateway_assembly([seq1, seq2], "BP")
+    >>> products_LR = gateway_assembly([seq3, seq4], "LR")
+    >>> len(products_BP)
+    2
+    >>> len(products_LR)
+    2
+
+    Now let's understand the `multi_site_only` parameter. Let's consider a case where we are swapping fragments
+    between two plasmids using an LR reaction. Experimentally, we expect to obtain two plasmids, resulting from the
+    swapping between the two att sites. That's what we get if we set `multi_site_only` to True.
+
+    >>> attL2 = 'aaataatgattttattttgactgatagtgacctgttcgttgcaacaaattgataagcaatgctttcttataatgccaactttgtacaagaaagctg'
+    >>> attR2 = 'accactttgtacaagaaagctgaacgagaaacgtaaaatgatataaatatcaatatattaaattagattttgcataaaaaacagactacataatactgtaaaacacaacatatccagtcactatg'
+    >>> insert = Dseqrecord("cccccc" + attL1 + "ccc" + attL2 + "cccccc", circular=True)
+    >>> backbone = Dseqrecord("ttttt" + attR1 + "aaa" + attR2, circular=True)
+    >>> products = gateway_assembly([insert, backbone], "LR", multi_site_only=True)
+    >>> len(products)
+    2
+
+    However, if we set `multi_site_only` to False, we get 4 products, which also include the intermediate products
+    where the two plasmids are combined into a single one through recombination of a single att site. This is an
+    intermediate of the reaction, and typically we don't want it:
+
+    >>> products = gateway_assembly([insert, backbone], "LR", multi_site_only=False)
+    >>> print([len(p) for p in products])
+    [469, 237, 232, 469]
+
+
+    """
+
+    if reaction_type not in ["BP", "LR"]:
+        raise ValueError(
+            f"Invalid reaction type: {reaction_type}, can only be BP or LR"
+        )
+
+    def algo(x, y, _l):
+        return gateway_overlap(x, y, reaction_type, greedy)
+
+    filter_results_function = None if not multi_site_only else assembly_is_multi_site
+
+    return common_function_assembly_products(
+        frags, None, algo, circular_only, filter_results_function
+    )
+
+
+def common_function_integration_products(
+    frags: list[_Dseqrecord], limit: int | None, algorithm: Callable
+) -> list[_Dseqrecord]:
+    """Common function to avoid code duplication for integration products.
+
+    Parameters
+    ----------
+    frags : list[_Dseqrecord]
+        List of DNA fragments to integrate
+    limit : int or None
+        Minimum overlap length required, or None if not applicable
+    algorithm : Callable
+        Function that determines valid overlaps between fragments
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of integrated DNA molecules
+    """
+    if len(frags) == 1:
+        asm = SingleFragmentAssembly(frags, limit, algorithm)
+    else:
+        asm = Assembly(
+            frags, limit, algorithm, use_fragment_order=False, use_all_fragments=True
+        )
+
+    if frags[0].circular:
+        raise ValueError(
+            "Genome must be linear for integration assembly, use in vivo assembly instead"
+        )
+
+    # We only want insertions in the genome (first fragment)
+    output_assemblies = [a for a in asm.get_insertion_assemblies() if a[0][0] == 1]
+    return [assemble(frags, a, True) for a in output_assemblies]
+
+
+def common_handle_insertion_fragments(
+    genome: _Dseqrecord, inserts: list[_Dseqrecord] | _Dseqrecord
+) -> list[_Dseqrecord]:
+    """Common function to handle / validate insertion fragments.
+
+    Parameters
+    ----------
+    genome : _Dseqrecord
+        Target genome sequence
+    inserts : list[_Dseqrecord] or _Dseqrecord
+        DNA fragment(s) to insert
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List containing genome and insert fragments
+    """
+    if not isinstance(genome, _Dseqrecord):
+        raise ValueError("Genome must be a Dseqrecord object")
+    if isinstance(inserts, _Dseqrecord):
+        inserts = [inserts]
+    if not isinstance(inserts, list) or not all(
+        isinstance(f, _Dseqrecord) for f in inserts
+    ):
+        raise ValueError("Inserts must be a list of Dseqrecord objects")
+
+    return [genome] + inserts
+
+
+def common_function_excision_products(
+    genome: _Dseqrecord, limit: int | None, algorithm: Callable
+) -> list[_Dseqrecord]:
+    """Common function to avoid code duplication for excision products.
+
+    Parameters
+    ----------
+    genome : _Dseqrecord
+        Target genome sequence
+    limit : int or None
+        Minimum overlap length required, or None if not applicable
+    algorithm : Callable
+        Function that determines valid overlaps between fragments
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of excised DNA molecules
+    """
+    asm = SingleFragmentAssembly([genome], limit, algorithm)
+    return asm.assemble_circular() + asm.assemble_insertion()
+
+
+def homologous_recombination_integration(
+    genome: _Dseqrecord,
+    inserts: list[_Dseqrecord] | _Dseqrecord,
+    minimal_homology: int = 40,
+) -> list[_Dseqrecord]:
+    """Returns the products resulting from the integration of an insert (or inserts joined
+    through in vivo recombination) into the genome through homologous recombination.
+
+    Parameters
+    ----------
+    genome : _Dseqrecord
+        Target genome sequence
+    inserts : list[_Dseqrecord] or _Dseqrecord
+        DNA fragment(s) to insert
+    minimal_homology : int, optional
+        Minimum homology length required, by default 40
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of integrated DNA molecules
+
+
+    Examples
+    --------
+
+    Below an example with a single insert.
+
+    >>> from pydna.assembly2 import homologous_recombination_integration
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> homology = "AAGTCCGTTCGTTTTACCTG"
+    >>> genome = Dseqrecord(f"aaaaaa{homology}ccccc{homology}aaaaaa")
+    >>> insert = Dseqrecord(f"{homology}gggg{homology}")
+    >>> products = homologous_recombination_integration(genome, [insert], 20)
+    >>> str(products[0].seq)
+    'aaaaaaAAGTCCGTTCGTTTTACCTGggggAAGTCCGTTCGTTTTACCTGaaaaaa'
+
+    Below an example with two inserts joined through homology.
+
+    >>> homology2 = "ATTACAGCATGGGAAGAAAGA"
+    >>> insert_1 = Dseqrecord(f"{homology}gggg{homology2}")
+    >>> insert_2 = Dseqrecord(f"{homology2}cccc{homology}")
+    >>> products = homologous_recombination_integration(genome, [insert_1, insert_2], 20)
+    >>> str(products[0].seq)
+    'aaaaaaAAGTCCGTTCGTTTTACCTGggggATTACAGCATGGGAAGAAAGAccccAAGTCCGTTCGTTTTACCTGaaaaaa'
+    """
+    fragments = common_handle_insertion_fragments(genome, inserts)
+
+    return common_function_integration_products(
+        fragments, minimal_homology, common_sub_strings
+    )
+
+
+def homologous_recombination_excision(
+    genome: _Dseqrecord, limit: int = 40
+) -> list[_Dseqrecord]:
+    """Returns the products resulting from the excision of a fragment from the genome through
+    homologous recombination.
+
+    Parameters
+    ----------
+    genome : _Dseqrecord
+        Target genome sequence
+    limit : int, optional
+        Minimum homology length required, by default 40
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List containing excised plasmid and remaining genome sequence
+
+    Examples
+    --------
+
+    Example of a homologous recombination event, where a plasmid is excised from the
+    genome (circular sequence of 25 bp), and that part is removed from the genome,
+    leaving a shorter linear sequence (32 bp).
+
+    >>> from pydna.assembly2 import homologous_recombination_excision
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> homology = "AAGTCCGTTCGTTTTACCTG"
+    >>> genome = Dseqrecord(f"aaaaaa{homology}ccccc{homology}aaaaaa")
+    >>> products = homologous_recombination_excision(genome, 20)
+    >>> products
+    [Dseqrecord(o25), Dseqrecord(-32)]
+    """
+    return common_function_excision_products(genome, limit, common_sub_strings)
+
+
+def cre_lox_integration(
+    genome: _Dseqrecord, inserts: list[_Dseqrecord] | _Dseqrecord
+) -> list[_Dseqrecord]:
+    """Returns the products resulting from the integration of an insert (or inserts joined
+    through cre-lox recombination among them) into the genome through cre-lox integration.
+
+    Also works with lox66 and lox71 (see `pydna.cre_lox` for more details).
+
+    Parameters
+    ----------
+    genome : _Dseqrecord
+        Target genome sequence
+    inserts : list[_Dseqrecord] or _Dseqrecord
+        DNA fragment(s) to insert
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of integrated DNA molecules
+
+    Examples
+    --------
+
+    Below an example of reversible integration and excision.
+
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.assembly2 import cre_lox_integration, cre_lox_excision
+    >>> from pydna.cre_lox import LOXP_SEQUENCE
+    >>> a = Dseqrecord(f"cccccc{LOXP_SEQUENCE}aaaaa")
+    >>> b = Dseqrecord(f"{LOXP_SEQUENCE}bbbbb", circular=True)
+    >>> [a, b]
+    [Dseqrecord(-45), Dseqrecord(o39)]
+    >>> res = cre_lox_integration(a, b)
+    >>> res
+    [Dseqrecord(-84)]
+    >>> res2 = cre_lox_excision(res[0])
+    >>> res2
+    [Dseqrecord(o39), Dseqrecord(-45)]
+
+    Below an example with lox66 and lox71 (irreversible integration).
+    Here, the result of excision is still returned because there is a low
+    probability of it happening, but it's considered a rare event.
+
+    >>> lox66 = 'ATAACTTCGTATAGCATACATTATACGAACGGTA'
+    >>> lox71 = 'TACCGTTCGTATAGCATACATTATACGAAGTTAT'
+    >>> a = Dseqrecord(f"cccccc{lox66}aaaaa")
+    >>> b = Dseqrecord(f"{lox71}bbbbb", circular=True)
+    >>> res = cre_lox_integration(a, b)
+    >>> res
+    [Dseqrecord(-84)]
+    >>> res2 = cre_lox_excision(res[0])
+    >>> res2
+    [Dseqrecord(o39), Dseqrecord(-45)]
+
+    """
+    fragments = common_handle_insertion_fragments(genome, inserts)
+    return common_function_integration_products(fragments, None, cre_loxP_overlap)
+
+
+def cre_lox_excision(genome: _Dseqrecord) -> list[_Dseqrecord]:
+    """Returns the products for CRE-lox excision.
+
+    Parameters
+    ----------
+    genome : _Dseqrecord
+        Target genome sequence
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List containing excised plasmid and remaining genome sequence
+
+    Examples
+    --------
+
+    Below an example of reversible integration and excision.
+
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.assembly2 import cre_lox_integration, cre_lox_excision
+    >>> from pydna.cre_lox import LOXP_SEQUENCE
+    >>> a = Dseqrecord(f"cccccc{LOXP_SEQUENCE}aaaaa")
+    >>> b = Dseqrecord(f"{LOXP_SEQUENCE}bbbbb", circular=True)
+    >>> [a, b]
+    [Dseqrecord(-45), Dseqrecord(o39)]
+    >>> res = cre_lox_integration(a, b)
+    >>> res
+    [Dseqrecord(-84)]
+    >>> res2 = cre_lox_excision(res[0])
+    >>> res2
+    [Dseqrecord(o39), Dseqrecord(-45)]
+
+    Below an example with lox66 and lox71 (irreversible integration).
+    Here, the result of excision is still returned because there is a low
+    probability of it happening, but it's considered a rare event.
+
+    >>> lox66 = 'ATAACTTCGTATAGCATACATTATACGAACGGTA'
+    >>> lox71 = 'TACCGTTCGTATAGCATACATTATACGAAGTTAT'
+    >>> a = Dseqrecord(f"cccccc{lox66}aaaaa")
+    >>> b = Dseqrecord(f"{lox71}bbbbb", circular=True)
+    >>> res = cre_lox_integration(a, b)
+    >>> res
+    [Dseqrecord(-84)]
+    >>> res2 = cre_lox_excision(res[0])
+    >>> res2
+    [Dseqrecord(o39), Dseqrecord(-45)]
+    """
+    return common_function_excision_products(genome, None, cre_loxP_overlap)
