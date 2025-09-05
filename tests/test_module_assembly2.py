@@ -1392,15 +1392,10 @@ def test_restriction_ligation_assembly():
             a2.reverse_complement() + b2,
         ]
 
-        def algo(x, y, _l):
-            return assembly.restriction_ligation_overlap(
-                x, y, [enz], allow_blunt=enz is EcoRV
-            )  # noqa: B023
-
-        f = assembly.Assembly([a, b], algorithm=algo, use_fragment_order=False)
+        products2 = assembly.restriction_ligation_assembly([a, b], [enz])
 
         assert sorted(dseqrecord_list_to_dseq_list(products)) == sorted(
-            dseqrecord_list_to_dseq_list(f.assemble_linear(only_adjacent_edges=True))
+            dseqrecord_list_to_dseq_list(products2)
         )
 
     # Insertion in a vector
@@ -1416,17 +1411,12 @@ def test_restriction_ligation_assembly():
         ]
     )
 
-    def algo(x, y, _l):
-        return assembly.restriction_ligation_overlap(x, y, [EcoRI])
-
     # We shift
     for shift in range(len(f2)):
         f2_shifted = f2.shifted(shift)
-        f = assembly.Assembly(
-            [f1, f2_shifted], algorithm=algo, use_fragment_order=False
-        )
+        products2 = assembly.restriction_ligation_assembly([f1, f2_shifted], [EcoRI], circular_only=True)
         observed_seguids = sorted(
-            x.seguid() for x in f.assemble_circular(only_adjacent_edges=True)
+            x.seguid() for x in products2
         )
         assert len(result_seguids) == len(observed_seguids)
         assert result_seguids == observed_seguids
@@ -1445,20 +1435,12 @@ def test_restriction_ligation_assembly():
         ]
     )
 
-    def algo(x, y, _l):
-        return assembly.restriction_ligation_overlap(x, y, [EcoRI, SalI])
-
     # We shift
     for shift in range(len(f1)):
         f1_shifted = f1.shifted(shift)
-        f = assembly.Assembly(
-            [f1_shifted, f2],
-            algorithm=algo,
-            use_fragment_order=False,
-            use_all_fragments=True,
-        )
+        products2 = assembly.restriction_ligation_assembly([f1_shifted, f2], [EcoRI, SalI], circular_only=True)
         observed_seguids = sorted(
-            x.seguid() for x in f.assemble_circular(only_adjacent_edges=True)
+            x.seguid() for x in products2
         )
         assert len(result_seguids) == len(observed_seguids)
         assert result_seguids == observed_seguids
@@ -1468,6 +1450,7 @@ def test_restriction_ligation_assembly():
     # Partial overlaps -> enzyme with negative overhang
     fragments = [Dseqrecord("GGTCTCCCCAATT"), Dseqrecord("GGTCTCCAACCAA")]
 
+    # TODO: Needs fixing, related to https://github.com/pydna-group/pydna/issues/426
     # Not allowing partial overlaps
     def algo(x, y, _l):
         return assembly.restriction_ligation_overlap(x, y, [BsaI], False)
@@ -1505,12 +1488,7 @@ def test_restriction_ligation_assembly():
     # Partial overlaps -> enzyme with positive overhang
     fragments = [Dseqrecord("GACACCAGAGTC"), Dseqrecord("GACTAACGGGTC")]
 
-    # Not allowing partial overlaps
-    def algo(x, y, _l):
-        return assembly.restriction_ligation_overlap(x, y, [DrdI], False)
-
-    f = assembly.Assembly(fragments, algorithm=algo, use_fragment_order=False)
-    assert len(f.get_linear_assemblies()) == 0
+    assert len(assembly.restriction_ligation_assembly(fragments, [DrdI])) == 0
 
     # Allowing partial overlaps
     def algo(x, y, _l):
@@ -1522,39 +1500,22 @@ def test_restriction_ligation_assembly():
     assert str(products[1].seq) == "GACTAACAGAGTC"
 
     # Single fragment assemblies
-    def algo(x, y, _l):
-        return assembly.restriction_ligation_overlap(x, y, [EcoRI], False)
 
     f1 = Dseqrecord("aaGAATTCtttGAATTCaa", circular=True)
-    f = assembly.SingleFragmentAssembly([f1], algorithm=algo)
-    products = f.assemble_circular()
+    products = assembly.restriction_ligation_assembly([f1], [EcoRI], circular_only=True)
     assert len(products) == 2
     assert str(products[0].seq) == "AATTCaaaaG"
     assert str(products[1].seq) == "AATTCtttG"
 
     f1 = Dseqrecord("aaGAATTCtttGAATTCaa", circular=False)
-    f = assembly.SingleFragmentAssembly([f1], algorithm=algo)
-    products = f.assemble_circular()
-    assert len(products) == 1
+    products = assembly.restriction_ligation_assembly([f1], [EcoRI], circular_only=False)
+    assert len(products) == 2
+    assert str(products[1].seq) == "aaGAATTCaa"
     assert str(products[0].seq) == "AATTCtttG"
 
-    f1 = Dseqrecord("aaGAATTCtttGAATTCaa", circular=False)
-    f = assembly.SingleFragmentAssembly([f1], algorithm=algo)
-    products = f.assemble_insertion()
-    assert len(products) == 1
-    assert str(products[0].seq) == "aaGAATTCaa"
-
     # Mixing blunt and normal overhangs
-
     fragments = [Dseqrecord("aaaGATATCccGAATTCaa"), Dseqrecord("cgcGATATCataGAATTCtta")]
-
-    def algo(x, y, _l):
-        return assembly.restriction_ligation_overlap(
-            x, y, [EcoRI, EcoRV], allow_blunt=True
-        )
-
-    f = assembly.Assembly(fragments, use_fragment_order=False, algorithm=algo)
-    products = f.assemble_circular()
+    products = assembly.restriction_ligation_assembly(fragments, [EcoRI, EcoRV], circular_only=True)
     assert len(products) == 1
     assert str(products[0].seq) == "ATCccGAATTCtatGAT"
 
@@ -1587,14 +1548,8 @@ def test_golden_gate():
     i3_pre, i3, i3_post = insert3.cut(BsaI)
     _, v = vector.cut(BsaI)
 
-    def algo(x, y, _l):
-        return assembly.restriction_ligation_overlap(x, y, [BsaI])
+    assembly_output = assembly.golden_gate_assembly([insert1, insert2, insert3, vector], [BsaI], circular_only=True)
 
-    asm = assembly.Assembly(
-        [insert1, insert2, insert3, vector], use_fragment_order=False, algorithm=algo
-    )
-
-    assembly_output = asm.assemble_circular(only_adjacent_edges=True)
     assert len(assembly_output) == 1
     assert assembly_output[0].seguid() == (i1 + i2 + i3 + v).looped().seguid()
 
@@ -1606,40 +1561,30 @@ def test_gibson_assembly():
         (["GTCGACTaaaAGAGACC", "AGAGACCcgcGTCGACT"], ["GTCGACTaaaAGAGACCcgc"]),
     ]
 
-    for fragments_str, expected_outputs in test_cases:
-        for mode in range(3):
-            if mode == 0:
-                # No overhangs
-                fragments = [Dseqrecord(f) for f in fragments_str]
-            elif mode == 1:
-                # 3' overhangs (should give the same results as no overhangs)
-                fragments = [
-                    Dseqrecord(Dseq.from_full_sequence_and_overhangs(f, 3, 3))
-                    for f in fragments_str
-                ]
-            else:
-                # Add 5' overhangs that will be removed in Gibson, so should give same results as no overhangs
-                fragments = [
-                    Dseqrecord(
-                        Dseq.from_full_sequence_and_overhangs("aaa" + f + "aaa", -3, -3)
-                    )
-                    for f in fragments_str
-                ]
-            if len(fragments) == 1:
-                asm = assembly.SingleFragmentAssembly(
-                    fragments, limit=7, algorithm=assembly.gibson_overlap
-                )
-            else:
-                asm = assembly.Assembly(
-                    fragments,
-                    limit=7,
-                    algorithm=assembly.gibson_overlap,
-                    use_fragment_order=False,
-                )
-
-            products = asm.assemble_circular()
-            products_str = [str(p.seq) for p in products]
-            assert products_str == expected_outputs
+    # Should return the same thing for gibson and equivalent functions:
+    for gibson_like_function in [assembly.gibson_assembly, assembly.in_fusion_assembly, assembly.fusion_pcr_assembly]:
+        for fragments_str, expected_outputs in test_cases:
+            for mode in range(3):
+                if mode == 0:
+                    # No overhangs
+                    fragments = [Dseqrecord(f) for f in fragments_str]
+                elif mode == 1:
+                    # 3' overhangs (should give the same results as no overhangs)
+                    fragments = [
+                        Dseqrecord(Dseq.from_full_sequence_and_overhangs(f, 3, 3))
+                        for f in fragments_str
+                    ]
+                else:
+                    # Add 5' overhangs that will be removed in Gibson, so should give same results as no overhangs
+                    fragments = [
+                        Dseqrecord(
+                            Dseq.from_full_sequence_and_overhangs("aaa" + f + "aaa", -3, -3)
+                        )
+                        for f in fragments_str
+                    ]
+                products = gibson_like_function(fragments, 7, circular_only=True)
+                products_str = [str(p.seq) for p in products]
+                assert products_str == expected_outputs
 
 
 def test_insertion_assembly():
@@ -2125,24 +2070,10 @@ def test_blunt_overlap():
 def test_ligation_assembly():
 
     fragments = Dseqrecord("AAAGAATTCAAA").cut(EcoRI)
-    asm = assembly.Assembly(
-        fragments,
-        algorithm=assembly.sticky_end_sub_strings,
-        limit=False,
-        use_all_fragments=True,
-        use_fragment_order=False,
-    )
-    assert asm.assemble_linear() == [Dseqrecord("AAAGAATTCAAA")]
+    assert assembly.ligation_assembly(fragments) == [Dseqrecord("AAAGAATTCAAA")]
 
     fragments = Dseqrecord("TTGCGATCGCTT").cut(RgaI)
-    asm = assembly.Assembly(
-        fragments,
-        algorithm=assembly.sticky_end_sub_strings,
-        limit=False,
-        use_all_fragments=True,
-        use_fragment_order=False,
-    )
-    assert asm.assemble_linear() == [Dseqrecord("TTGCGATCGCTT")]
+    assert assembly.ligation_assembly(fragments) == [Dseqrecord("TTGCGATCGCTT")]
 
     # Circular ligation
     fragments = Dseqrecord("AAGAATTCTTGAATTCCC", circular=True).cut(EcoRI)
@@ -2150,51 +2081,20 @@ def test_ligation_assembly():
         (fragments[0] + fragments[1]).looped(),
         (fragments[0] + fragments[1].reverse_complement()).looped(),
     ]
-    asm = assembly.Assembly(
-        fragments,
-        algorithm=assembly.sticky_end_sub_strings,
-        limit=False,
-        use_all_fragments=True,
-        use_fragment_order=False,
-    )
-    assert sorted(dseqrecord_list_to_dseq_list(asm.assemble_circular())) == sorted(
+    products = assembly.ligation_assembly(fragments, circular_only=True)
+    assert sorted(dseqrecord_list_to_dseq_list(products)) == sorted(
         dseqrecord_list_to_dseq_list(expected_result)
     )
 
     # Partial ligation
     a = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAGAA", 0, 3))
     b = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAGAA", 3, 0))
-    assert (
-        assembly.Assembly(
-            [a, b],
-            algorithm=assembly.sticky_end_sub_strings,
-            limit=False,
-            use_all_fragments=True,
-            use_fragment_order=False,
-        ).assemble_linear()
-        == []
-    )
-    # Only when limit == True -> TODO: change this to not be an assembly parameter, but
-    # functional instead.
-    assert (
-        len(
-            assembly.Assembly(
-                [a, b],
-                algorithm=assembly.sticky_end_sub_strings,
-                limit=True,
-                use_all_fragments=True,
-                use_fragment_order=False,
-            ).assemble_linear()
-        )
-        == 1
-    )
+    assert assembly.ligation_assembly([a, b]) == []
+    assert str(assembly.ligation_assembly([a, b], allow_partial_overlap=True)[0].seq) == "AAAGAAAGAA"
 
     # Single fragment assemblies
     fragments = Dseqrecord("AAGAATTCTTGAATTCCC").cut(EcoRI)
-    asm = assembly.SingleFragmentAssembly(
-        [fragments[1]], algorithm=assembly.sticky_end_sub_strings, limit=False
-    )
-    result = asm.assemble_circular()
+    result = assembly.ligation_assembly([fragments[1]])
     assert len(result) == 1
     assert result[0].seq == fragments[1].looped().seq
 
