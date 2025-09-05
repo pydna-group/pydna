@@ -411,7 +411,7 @@ def test_parse_snapgene():
     # Parse circular snapgene file
     seq = parse_snapgene(
         os.path.join(test_files, "gateway_manual_cloning/pDONRtm201.dna")
-    )
+    )[0]
     assert seq.circular
     assert len(seq) == 4470
 
@@ -420,7 +420,7 @@ def test_parse_snapgene():
         os.path.join(
             test_files, "gateway_manual_cloning/pcr_product-attP1_1-attP2_1.dna"
         )
-    )
+    )[0]
     assert not seq.circular
     assert len(seq) == 2304
 
