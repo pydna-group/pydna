@@ -1469,7 +1469,7 @@ class Dseqrecord(_SeqRecord):
         return Dseqrecord(new, features=_copy.copy(self.features)), srs
 
     def apply_cut(self, left_cut, right_cut):
-        dseq = self.seq.apply_cut(left_cut, right_cut, 0, 0)
+        dseq = self.seq.apply_cut(left_cut, right_cut)
         # TODO: maybe remove depending on https://github.com/pydna-group/pydna/issues/161
 
         if left_cut == right_cut:
