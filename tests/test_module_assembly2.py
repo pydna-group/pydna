@@ -1,7 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from Bio.Restriction import AatII, AjiI, AgeI, EcoRV, ZraI, SalI, EcoRI, RgaI, BsaI, BsrI, DrdI, HindIII, FauI, NotI
+from Bio.Restriction import (
+    AatII,
+    AjiI,
+    AgeI,
+    EcoRV,
+    ZraI,
+    SalI,
+    EcoRI,
+    RgaI,
+    BsaI,
+    BsrI,
+    DrdI,
+    HindIII,
+    FauI,
+    NotI,
+)
 from pydna.amplify import pcr
 from pydna.dseq import Dseq
 from pydna.readers import read
@@ -36,7 +51,9 @@ linear_results = (
     Dseqrecord("AacgatG", name="ac"),
 )
 
-circular_results = (Dseqrecord("acgatCAtgctccTAAattctgcGAGG", name="abc", circular=True),)
+circular_results = (
+    Dseqrecord("acgatCAtgctccTAAattctgcGAGG", name="abc", circular=True),
+)
 
 
 def test_built():
@@ -45,7 +62,9 @@ def test_built():
     lin = sorted(asm.assemble_linear(), key=len)
     crc = asm.assemble_circular()
 
-    assert [dseqr.seq for dseqr in lin] == [dseqr.seq for dseqr in sorted(linear_results, key=len)]
+    assert [dseqr.seq for dseqr in lin] == [
+        dseqr.seq for dseqr in sorted(linear_results, key=len)
+    ]
     assert [c.seq.seguid() for c in crc] == [c.seq.seguid() for c in circular_results]
 
 
@@ -67,36 +86,75 @@ def test_new_assembly():
     # ACTACGGCCTTCTCTCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGTacgatgctatactgg
 
     a.features = [
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(34), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(1), ExactPosition(33), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(1), ExactPosition(20), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(20), ExactPosition(33), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(21), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(19), ExactPosition(34), strand=1), type="misc"),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(34), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(1), ExactPosition(33), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(1), ExactPosition(20), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(20), ExactPosition(33), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(21), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(19), ExactPosition(34), strand=1), type="misc"
+        ),
     ]
 
     b.features = [
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(35), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(1), ExactPosition(34), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(19), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(19), ExactPosition(35), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(18), ExactPosition(35), strand=1), type="misc"),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(35), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(1), ExactPosition(34), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(19), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(19), ExactPosition(35), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(18), ExactPosition(35), strand=1), type="misc"
+        ),
     ]
 
     c.features = [
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(37), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(1), ExactPosition(36), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(16), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(16), ExactPosition(37), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(17), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(15), ExactPosition(37), strand=1), type="misc"),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(37), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(1), ExactPosition(36), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(16), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(16), ExactPosition(37), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(17), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(15), ExactPosition(37), strand=1), type="misc"
+        ),
     ]
 
     ln0 = assembly.Assembly((a, b, c), limit=14)
     dseqr = ln0.assemble_linear()[0]
 
-    assert str(dseqr.seq) == "ACTACGGCCTTCTCTCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGTacgatgctatactgg"
+    assert (
+        str(dseqr.seq)
+        == "ACTACGGCCTTCTCTCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGTacgatgctatactgg"
+    )
 
     feature_seqs = (
         [f.extract(a).seq for f in a.features]
@@ -140,8 +198,14 @@ def test_new_assembly():
     c.add_feature(1, 36, label="third")
     ln2 = assembly.Assembly((a, b2, b3, c), limit=14)
     linprods = ln2.assemble_linear()
-    assert str(linprods[0].seq) == "ACTACGGCCTTCTCTCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGTacgatgctatactgg"
-    assert str(linprods[1].seq) == "ACTACGGCCTTCTCTCCCCCtgtgctgtgctctaCCtattctggctgtatctGGGGGTacgatgctatactgg"
+    assert (
+        str(linprods[0].seq)
+        == "ACTACGGCCTTCTCTCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGTacgatgctatactgg"
+    )
+    assert (
+        str(linprods[1].seq)
+        == "ACTACGGCCTTCTCTCCCCCtgtgctgtgctctaCCtattctggctgtatctGGGGGTacgatgctatactgg"
+    )
 
     # acgatgctatactgg 15
     a = Dseqrecord("acgatgctatactggCCCCCtgtgctgtgctctaGG", name="one36")
@@ -151,35 +215,74 @@ def test_new_assembly():
     c = Dseqrecord("tattctggctgtatctGGGGGTacgatgctatactgg", name="three37")
     # acgatgctatactgg 15
     a.features = [
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(34), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(1), ExactPosition(33), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(20), ExactPosition(34), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(21), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(19), ExactPosition(34), strand=1), type="misc"),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(34), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(1), ExactPosition(33), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(20), ExactPosition(34), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(21), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(19), ExactPosition(34), strand=1), type="misc"
+        ),
     ]
 
     b.features = [
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(35), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(1), ExactPosition(34), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(19), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(19), ExactPosition(35), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(18), ExactPosition(35), strand=1), type="misc"),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(35), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(1), ExactPosition(34), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(19), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(19), ExactPosition(35), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(18), ExactPosition(35), strand=1), type="misc"
+        ),
     ]
 
     c.features = [
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(37), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(1), ExactPosition(36), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(16), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(16), ExactPosition(37), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(17), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(15), ExactPosition(37), strand=1), type="misc"),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(37), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(1), ExactPosition(36), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(16), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(16), ExactPosition(37), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(17), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(15), ExactPosition(37), strand=1), type="misc"
+        ),
     ]
     c1 = assembly.Assembly((a, b, c), limit=14)
     result = c1.assemble_circular()[0]
     assert result.seguid() == "cdseguid=CRIbOfddcwCZbvVOOOU4uJYP-So"
-    assert str(result.seq) == "acgatgctatactggCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGT"
+    assert (
+        str(result.seq)
+        == "acgatgctatactggCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGT"
+    )
     # acgatgctatactggCCCCCtgtgctgtgctctaGG
     feature_seqs = (
         [f.extract(a).seq for f in a.features]
@@ -214,8 +317,14 @@ def test_new_assembly():
     # assert circprods[1].seguid() == "cdseguid=CRIbOfddcwCZbvVOOOU4uJYP-So"
     assert circprods[1].seguid() == "cdseguid=zFIq5LWXL_YSxrSF2Q5hbzO0BPw"
     # assert circprods[1].seguid() == "cdseguid=zFIq5LWXL_YSxrSF2Q5hbzO0BPw"
-    assert str(circprods[0].seq) == "acgatgctatactggCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGT"
-    assert str(circprods[1].seq) == "acgatgctatactggCCCCCtgtgctgtgctctaCCtattctggctgtatctGGGGGT"
+    assert (
+        str(circprods[0].seq)
+        == "acgatgctatactggCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGT"
+    )
+    assert (
+        str(circprods[1].seq)
+        == "acgatgctatactggCCCCCtgtgctgtgctctaCCtattctggctgtatctGGGGGT"
+    )
 
     # VJtsIfDO2DkKXbW-sLF3nJ-AEe4
     # acgatgctatactgg 15
@@ -232,7 +341,10 @@ def test_new_assembly():
     # acgatgctatactgg 15
 
     c3 = assembly.Assembly((a, b, c), limit=14)
-    assert str(c3.assemble_circular()[0].seq) == "acgatgctatactggCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGT"
+    assert (
+        str(c3.assemble_circular()[0].seq)
+        == "acgatgctatactggCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGT"
+    )
 
     text1 = """
     >A_AgTEFp_b_631 NP+geg/4Ykv2pIwEqiLylYKPYOE
@@ -417,7 +529,11 @@ algorithm..: common_sub_strings"""
     correct = "tcgcgcgtttcggtgatgacggtgaaaacctctgacacatgcagctcccggagacggtcacagcttgtctgtaagcggatgccgggagcagacaagcccgtcagggcgcgtcagcgggtgttggcgggtgtcggggctggcttaactatgcggcatcagagcagattgtactgagagtgcaccatagatcctgaggatcggggtgataaatcagtctgcgccacatcgggggaaacaaaatggcgcgagatctaaaaaaaaaggctccaaaaggagcctttcgcgctaccaggtaacgcgccactccgacgggattaacgagtgccgtaaacgacgatggttttaccgtgtgcggagatcaggttctgatcctcgagcatcttaagaattcgtcccacggtttgtctagagcagccgacaatctggccaatttcctgacgggtaattttgatttgcatgccgtccgggtgagtcatagcgtctggttgttttgccagattcagcagagtctgtgcaatgcggccgctgaccacatacgatttaggtgacactatagaacgcggccgccagctgaagcttcgtacgctgcaggtcgacggatccccgggttaattaaggcgcgccagatctgtttagcttgccttgtccccgccgggtcacccggccagcgacatggaggcccagaataccctccttgacagtcttgacgtgcgcagctcaggggcatgatgtgactgtcgcccgtacatttagcccatacatccccatgtataatcatttgcatccatacattttgatggccgcacggcgcgaagcaaaaattacggctcctcgctgcagacctgcgagcagggaaacgctcccctcacagacgcgttgaattgtccccacgccgcgcccctgtagagaaatataaaaggttaggatttgccactgaggttcttctttcatatacttccttttaaaatcttgctaggatacagttctcacatcacatccgaacataaacaaccgtcgaggaacgccaggttgcccactttctcactagtgacctgcagccgacccaatcacatcacatccgaacataaacaaccatgggtaaaaagcctgaactcaccgcgacgtctgtcgagaagtttctgatcgaaaagttcgacagcgtctccgacctgatgcagctctcggagggcgaagaatctcgtgctttcagcttcgatgtaggagggcgtggatatgtcctgcgggtaaatagctgcgccgatggtttctacaaagatcgttatgtttatcggcactttgcatcggccgcgctcccgattccggaagtgcttgacattggggaattcagcgagagcctgacctattgcatctcccgccgtgcacagggtgtcacgttgcaagacctgcctgaaaccgaactgcccgctgttctgcagccggtcgcggaggccatggatgcgatcgctgcggccgatcttagccagacgagcgggttcggcccattcggaccgcaaggaatcggtcaatacactacatggcgtgatttcatatgcgcgattgctgatccccatgtgtatcactggcaaactgtgatggacgacaccgtcagtgcgtccgtcgcgcaggctctcgatgagctgatgctttgggccgaggactgccccgaagtccggcacctcgtgcacgcggatttcggctccaacaatgtcctgacggacaatggccgcataacagcggtcattgactggagcgaggcgatgttcggggattcccaatacgaggtcgccaacatcttcttctggaggccgtggttggcttgtatggagcagcagacgcgctacttcgagcggaggcatccggagcttgcaggatcgccgcggctccgggcgtatatgctccgcattggtcttgaccaactctatcagagcttggttgacggcaatttcgatgatgcagcttgggcgcagggtcgatgcgacgcaatcgtccgatccggagccgggactgtcgggcgtacacaaatcgcccgcagaagcgcggccgtctggaccgatggctgtgtagaagtactcgccgatagtggaaaccgacgccccagcactcgtccgagggcaaaggaataatcagtactgacaataaaaagattcttgtagggataacagggtaatcggagtgccatctgtgcagacaaacgcatcaggatagagtcttttgtaacgaccccgtctccaccaacttggtatgcttgaaatctcaaggccattacacattcagttatgtgaacgaaaggtctttatttaacgtagcataaactaaataatacaggttccggttagcctgcaatgtgttaaatctaaaggagcatacccaaaatgaactgaagacaaggaaatttgcttgtccagatgtgattgagcatttgaacgttaataacataacatttttatacttaactatagaaagacttgtataaaaactggcaaacgagatattctgaatattggtgcatatttcaggtagaaaagcttacaaaacaatctaatcataatattgagatgaagagaaagataaaagaaaaaacgataagtcagatgagattatgattgtactttgaaatcgaggaacaaagtatatacggtagtagttccccgagttataacgggagatcatgtaaattgagaaaccagataaagatttggtatgcactctagcaagaaaataaaatgatgaatctatgatatagatcacttttgttccagcgtcgaggaacgccaggttgcccactttctcactagtgacctgcagccgacgatcagatctttcaggaaagtttcggaggagatagtgttcggcagtttgtacatcatctgcgggatcaggtacggtttgatcaggttgtagaagatcaggtaagacatagaatcgatgtagatgatcggtttgtttttgttgatttttacgtaacagttcagttggaatttgttacgcagacccttaaccaggtattctacttcttcgaaagtgaaagactgggtgttcagtacgatcgatttgttggtagagtttttgttgtaatcccatttaccaccatcatccatgaaccagtatgccagagacatcggggtcaggtagttttcaaccaggttgttcgggatggtttttttgttgttaacgatgaacaggttagccagtttgttgaaagcttggtgtttgaaagtctgggcgccccaggtgattaccaggttacccaggtggttaacacgttcttttttgtgcggcggggacagtacccactgatcgtacagcagacatacgtggtccatgtatgctttgtttttccactcgaactgcatacagtaggttttaccttcatcacgagaacggatgtaagcatcacccaggatcagaccgatacctgcttcgaactgttcgatgttcagttcgatcagctgggatttgtattctttcagcagtttagagttcggacccaggttcattacctggttttttttgatgtttttcatatgcatggatccggggttttttctccttgacgttaaagtatagaggtatattaacaattttttgttgatacttttattacatttgaataagaagtaatacaaaccgaaaatgttgaaagtattagttaaagtggttatgcagtttttgcatttatatatctgttaatagatcaaaaatcatcgcttcgctgattaattaccccagaaataaggctaaaaaactaatcgcattatcatcctatggttgttaatttgattcgttcatttgaaggtttgtggggccaggttactgccaatttttcctcttcataaccataaaagctagtattgtagaatctttattgttcggagcagtgcggcgcgaggcacatctgcgtttcaggaacgcgaccggtgaagacgaggacgcacggaggagagtcttccttcggagggctgtcacccgctcggcggcttctaatccgtacttcaatatagcaatgagcagttaagcgtattactgaaagttccaaagagaaggtttttttaggctaagataatggggctctttacatttccacaacatataagtaagattagatatggatatgtatatggatatgtatatggtggtaatgccatgtaatatgattattaaacttctttgcgtccatccaacgagatctggcgcgccttaattaacccaacctgcattaatgaatcggccaacgcgcggattaccctgttatccctacatattgttgtgccatctgtgcagacaaacgcatcaggattcagtactgacaataaaaagattcttgttttcaagaacttgtcatttgtatagtttttttatattgtagttgttctattttaatcaaatgttagcgtgatttatattttttttcgcctcgacatcatctgcccagatgcgaagttaagtgcgcagaaagtaatatcatgcgtcaatcgtatgtgaatgctggtcgctatactgctgtcgattcgatactaacgccgccatccagtgtcgaaaacgagctcgaattcatcgatgatatcagatccactagtggcctatgcggccgcggatctgccggtctccctatagtgagtcgatccggatttacctgaatcaattggcgaaattttttgtacgaaatttcagccacttcacaggcggttttcgcacgtacccatgcgctacgttcctggccctcttcaaacaggcccagttcgccaataaaatcaccctgattcagataggagaggatcatttctttaccctcttcgtctttgatcagcactgccacagagcctttaacgatgtagtacagcgtttccgctttttcaccctggtgaataagcgtgctcttggatgggtacttatgaatgtggcaatgagacaagaaccattcgagagtaggatccgtttgaggtttaccaagtaccataagatccttaaatttttattatctagctagatgataatattatatcaagaattgtacctgaaagcaaataaattttttatctggcttaactatgcggcatcagagcagattgtactgagagtgcaccatatgcggtgtgaaataccgcacagatgcgtaaggagaaaataccgcatcaggcgctcttccgcttcctcgctcactgactcgctgcgctcggtcgttcggctgcggcgagcggtatcagctcactcaaaggcggtaatacggttatccacagaatcaggggataacgcaggaaagaacatgtgagcaaaaggccagcaaaagcccaggaaccgtaaaaaggccgcgttgctggcgtttttccataggctccgcccccctgacgagcatcacaaaaatcgacgctcaagtcagaggtggcgaaacccgacaggactataaagataccaggcgtttccccctggaagctccctcgtgcgctctcctgttccgaccctgccgcttaccggatacctgtccgcctttctcccttcgggaagcgtggcgctttctcatagctcacgctgtaggtatctcagttcggtgtaggtcgttcgctccaagctgggctgtgtgcacgaaccccccgttcagcccgaccgctgcgccttatccggtaactatcgtcttgagtccaacccggtaagacacgacttatcgccactggcagcagccactggtaacaggattagcagagcgaggtatgtaggcggtgctacagagttcttgaagtggtggcctaactacggctacactagaaggacagtatttggtatctgcgctctgctgaagccagttaccttcggaaaaagagttggtagctcttgatccggcaaacaaaccaccgctggtagcggtggtttttttgtttgcaagcagcagattacgcgcagaaaaaaaggatctcaagaagatcctttgatcttttctacggggtctgacgctcagtggaacgaaaactcacgttaagggattttggtcatgaggggtaataactgatataattaaattgaagctctaatttgtgagtttagtatacatgcatttacttataatacagttttttagttttgctggccgcatcttctcaaatatgcttcccagcctgcttttctgtaacgttcaccctctaccttagcatcccttccctttgcaaatagtcctcttccaacaataataatgtcagatcctgtagagaccacatcatccacggttctatactgttgacccaatgcgtctcccttgtcatctaaacccacaccgggtgtcataatcaaccaatcgtaaccttcatctcttccacccatgtctctttgagcaataaagccgataacaaaatctttgtcgctcttcgcaatgtcaacagtacccttagtatattctccagtagatagggagcccttgcatgacaattctgctaacatcaaaaggcctctaggttcctttgttacttcttctgccgcctgcttcaaaccgctaacaatacctgggcccaccacaccgtgtgcattcgtaatgtctgcccattctgctattctgtatacacccgcagagtactgcaatttgactgtattaccaatgtcagcaaattttctgtcttcgaagagtaaaaaattgtacttggcggataatgcctttagcggcttaactgtgccctccatggaaaaatcagtcaaaatatccacatgtgtttttagtaaacaaattttgggacctaatgcttcaactaactccagtaattccttggtggtacgaacatccaatgaagcacacaagtttgtttgcttttcgtgcatgatattaaatagcttggcagcaacaggactaggatgagtagcagcacgttccttatatgtagctttcgacatgatttatcttcgtttcctgcaggtttttgttctgtgcagttgggttaagaatactgggcaatttcatgtttcttcaacactacatatgcgtatatataccaatctaagtctgtgctccttccttcgttcttccttctgttcggagattaccgaatcaaaaaaatttcaaagaaaccgaaatcaaaaaaaagaataaaaaaaaaatgatgaattgaattgaaaagctagcttatcgatgataagctgtcaaagatgagaattaattccacggactatagactatactagatactccgtctactgtacgatacacttccgctcaggtccttgtcctttaacgaggccttaccactcttttgttactctattgatccagctcagcaaaggcagtgtgatctaagattctatcttcgcgatgtagtaaaactagctagaccgagaaagagactagaaatgcaaaaggcacttctacaatggctgccatcattattatccgatgtgacgctgcagcttctcaatgatattcgaatacgctttgaggagatacagcctaatatccgacaaactgttttacagatttacgatcgtacttgttacccatcattgaattttgaacatccgaacctgggagttttccctgaaacagatagtatatttgaacctgtataataatatatagtctagcgctttacggaagacaatgtatgtatttcggttcctggagaaactattgcatctattgcataggtaatcttgcacgtcgcatccccggttcattttctgcgtttccatcttgcacttcaatagcatatctttgttaacgaagcatctgtgcttcattttgtagaacaaaaatgcaacgcgagagcgctaatttttcaaacaaagaatctgagctgcatttttacagaacagaaatgcaacgcgaaagcgctattttaccaacgaagaatctgtgcttcatttttgtaaaacaaaaatgcaacgcgacgagagcgctaatttttcaaacaaagaatctgagctgcatttttacagaacagaaatgcaacgcgagagcgctattttaccaacaaagaatctatacttcttttttgttctacaaaaatgcatcccgagagcgctatttttctaacaaagcatcttagattactttttttctcctttgtgcgctctataatgcagtctcttgataactttttgcactgtaggtccgttaaggttagaagaaggctactttggtgtctattttctcttccataaaaaaagcctgactccacttcccgcgtttactgattactagcgaagctgcgggtgcattttttcaagataaaggcatccccgattatattctataccgatgtggattgcgcatactttgtgaacagaaagtgatagcgttgatgattcttcattggtcagaaaattatgaacggtttcttctattttgtctctatatactacgtataggaaatgtttacattttcgtattgttttcgattcactctatgaatagttcttactacaatttttttgtctaaagagtaatactagagataaacataaaaaatgtagaggtcgagtttagatgcaagttcaaggagcgaaaggtggatgggtaggttatatagggatatagcacagagatatatagcaaagagatacttttgagcaatgtttgtggaagcggtattcgcaatgggaagctccaccccggttgataatcagaaaagccccaaaaacaggaagattattatcaaaaaggatcttcacctagatccttttaaattaaaaatgaagttttaaatcaatctaaagtatatatgagtaaacttggtctgacagttaccaatgcttaatcagtgaggcacctatctcagcgatctgtctatttcgttcatccatagttgcctgactccccgtcgtgtagataactacgatacgggagcgcttaccatctggccccagtgctgcaatgataccgcgagacccacgctcaccggctccagatttatcagcaataaaccagccagccggaagggccgagcgcagaagtggtcctgcaactttatccgcctccatccagtctattaattgttgccgggaagctagagtaagtagttcgccagttaatagtttgcgcaacgttgttggcattgctacaggcatcgtggtgtcactctcgtcgtttggtatggcttcattcagctccggttcccaacgatcaaggcgagttacatgatcccccatgttgtgcaaaaaagcggttagctccttcggtcctccgatcgttgtcagaagtaagttggccgcagtgttatcactcatggttatggcagcactgcataattctcttactgtcatgccatccgtaagatgcttttctgtgactggtgagtactcaaccaagtcattctgagaatagtgtatgcggcgaccgagttgctcttgcccggcgtcaatacgggataatagtgtatcacatagcagaactttaaaagtgctcatcattggaaaacgttcttcggggcgaaaactctcaaggatcttaccgctgttgagatccagttcgatgtaacccactcgtgcacccaactgatcttcagcatcttttactttcaccagcgtttctgggtgagcaaaaacaggaaggcaaaatgccgcaaaaaagggaataagggcgacacggaaatgttgaatactcatactcttcctttttcaatattattgaagcatttatcagggttattgtctcatgagcggatacatatttgaatgtatttagaaaaataaacaaataggggttccgcgcacatttccccgaaaagtgccacctgctaagaaaccattattatcatgacattaacctataaaaataggcgtatcacgaggccctttcgtc"
 
     assert len(correct) == 9772
-    assert eq(Dseqrecord(correct, circular=True).seguid(), candidate.seq.seguid(), circular=True)
+    assert eq(
+        Dseqrecord(correct, circular=True).seguid(),
+        candidate.seq.seguid(),
+        circular=True,
+    )
 
     # text6
 
@@ -436,7 +552,11 @@ algorithm..: common_sub_strings"""
 
     correct = "aattggccagattgtcggctgctctagacaaaccgtgggacgaattcttaagatgctcgaggatcagaacctgatctccgcacacggtaaaaccatcgtcgtttacggcactcgttaatcccgtcggagtggcgcgttacctggtagcgcgaaaggctccttttggagcctttttttttagatctcgcgccattttgtttcccccgatgtggcgcagactgatttatcaccccgatcctcaggatctatggtgcactctcagtacaatctgctctgatgccgcatagttaagccagccccgacacccgccaacacccgctgacgcgccctgacgggcttgtctgctcccggcatccgcttacagacaagctgtgaccgtctccgggagctgcatgtgtcagaggttttcaccgtcatcaccgaaacgcgcgagacgaaagggcctcgtgatacgcctatttttataggttaatgtcatgataataatggtttcttagcaggtggcacttttcggggaaatgtgcgcggaacccctatttgtttatttttctaaatacattcaaatatgtatccgctcatgagacaataaccctgataaatgcttcaataatattgaaaaaggaagagtatgagtattcaacatttccgtgtcgcccttattcccttttttgcggcattttgccttcctgtttttgctcacccagaaacgctggtgaaagtaaaagatgctgaagatcagttgggtgcacgagtgggttacatcgaactggatctcaacagcggtaagatccttgagagttttcgccccgaagaacgttttccaatgatgagcacttttaaagttctgctatgtgatacactattatcccgtattgacgccgggcaagagcaactcggtcgccgcatacactattctcagaatgacttggttgagtactcaccagtcacagaaaagcatcttacggatggcatgacagtaagagaattatgcagtgctgccataaccatgagtgataacactgcggccaacttacttctgacaacgatcggaggaccgaaggagctaaccgcttttttgcacaacatgggggatcatgtaactcgccttgatcgttgggaaccggagctgaatgaagccataccaaacgacgagagtgacaccacgatgcctgtagcaatgccaacaacgttgcgcaaactattaactggcgaactacttactctagcttcccggcaacaattaatagactggatggaggcggataaagttgcaggaccacttctgcgctcggcccttccggctggctggtttattgctgataaatctggagccggtgagcgtgggtctcgcggtatcattgcagcactggggccagatggtaagcgctcccgtatcgtagttatctacacgacggggagtcaggcaactatggatgaacgaaatagacagatcgctgagataggtgcctcactgattaagcattggtaactgtcagaccaagtttactcatatatactttagattgatttaaaacttcatttttaatttaaaaggatctaggtgaagatcctttttgataataatcttcctgtttttggggcttttctgattatcaaccggggtggagcttcccattgcgaataccgcttccacaaacattgctcaaaagtatctctttgctatatatctctgtgctatatccctatataacctacccatccacctttcgctccttgaacttgcatctaaactcgacctctacattttttatgtttatctctagtattactctttagacaaaaaaattgtagtaagaactattcatagagtgaatcgaaaacaatacgaaaatgtaaacatttcctatacgtagtatatagagacaaaatagaagaaaccgttcataattttctgaccaatgaagaatcatcaacgctatcactttctgttcacaaagtatgcgcaatccacatcggtatagaatataatcggggatgcctttatcttgaaaaaatgcacccgcagcttcgctagtaatcagtaaacgcgggaagtggagtcaggctttttttatggaagagaaaatagacaccaaagtagccttcttctaaccttaacggacctacagtgcaaaaagttatcaagagactgcattatagagcgcacaaaggagaaaaaaagtaatctaagatgctttgttagaaaaatagcgctctcgggatgcatttttgtagaacaaaaaagaagtatagattctttgttggtaaaatagcgctctcgcgttgcatttctgttctgtaaaaatgcagctcagattctttgtttgaaaaattagcgctctcgtcgcgttgcatttttgttttacaaaaatgaagcacagattcttcgttggtaaaatagcgctttcgcgttgcatttctgttctgtaaaaatgcagctcagattctttgtttgaaaaattagcgctctcgcgttgcatttttgttctacaaaatgaagcacagatgcttcgttaacaaagatatgctattgaagtgcaagatggaaacgcagaaaatgaaccggggatgcgacgtgcaagattacctatgcaatagatgcaatagtttctccaggaaccgaaatacatacattgtcttccgtaaagcgctagactatatattattatacaggttcaaatatactatctgtttcagggaaaactcccaggttcggatgttcaaaattcaatgatgggtaacaagtacgatcgtaaatctgtaaaacagtttgtcggatattaggctgtatctcctcaaagcgtattcgaatatcattgagaagctgcagcgtcacatcggataataatgatggcagccattgtagaagtgccttttgcatttctagtctctttctcggtctagctagttttactacatcgcgaagatagaatcttagatcacactgcctttgctgagctggatcaatagagtaacaaaagagtggtaaggcctcgttaaaggacaaggacctgagcggaagtgtatcgtacagtagacggagtatctagtatagtctatagtccgtggaattaattctcatctttgacagcttatcatcgataagctagcttttcaattcaattcatcattttttttttattcttttttttgatttcggtttctttgaaatttttttgattcggtaatctccgaacagaaggaagaacgaaggaaggagcacagacttagattggtatatatacgcatatgtagtgttgaagaaacatgaaattgcccagtattcttaacccaactgcacagaacaaaaacctgcaggaaacgaagataaatcatgtcgaaagctacatataaggaacgtgctgctactcatcctagtcctgttgctgccaagctatttaatatcatgcacgaaaagcaaacaaacttgtgtgcttcattggatgttcgtaccaccaaggaattactggagttagttgaagcattaggtcccaaaatttgtttactaaaaacacatgtggatattttgactgatttttccatggagggcacagttaagccgctaaaggcattatccgccaagtacaattttttactcttcgaagacagaaaatttgctgacattggtaatacagtcaaattgcagtactctgcgggtgtatacagaatagcagaatgggcagacattacgaatgcacacggtgtggtgggcccaggtattgttagcggtttgaagcaggcggcagaagaagtaacaaaggaacctagaggccttttgatgttagcagaattgtcatgcaagggctccctatctactggagaatatactaagggtactgttgacattgcgaagagcgacaaagattttgttatcggctttattgctcaaagagacatgggtggaagagatgaaggttacgattggttgattatgacacccggtgtgggtttagatgacaagggagacgcattgggtcaacagtatagaaccgtggatgatgtggtctctacaggatctgacattattattgttggaagaggactatttgcaaagggaagggatgctaaggtagagggtgaacgttacagaaaagcaggctgggaagcatatttgagaagatgcggccagcaaaactaaaaaactgtattataagtaaatgcatgtatactaaactcacaaattagagcttcaatttaattatatcagttattacccctcatgaccaaaatcccttaacgtgagttttcgttccactgagcgtcagaccccgtagaaaagatcaaaggatcttcttgagatcctttttttctgcgcgtaatctgctgcttgcaaacaaaaaaaccaccgctaccagcggtggtttgtttgccggatcaagagctaccaactctttttccgaaggtaactggcttcagcagagcgcagataccaaatactgtccttctagtgtagccgtagttaggccaccacttcaagaactctgtagcaccgcctacatacctcgctctgctaatcctgttaccagtggctgctgccagtggcgataagtcgtgtcttaccgggttggactcaagacgatagttaccggataaggcgcagcggtcgggctgaacggggggttcgtgcacacagcccagcttggagcgaacgacctacaccgaactgagatacctacagcgtgagctatgagaaagcgccacgcttcccgaagggagaaaggcggacaggtatccggtaagcggcagggtcggaacaggagagcgcacgagggagcttccagggggaaacgcctggtatctttatagtcctgtcgggtttcgccacctctgacttgagcgtcgatttttgtgatgctcgtcaggggggcggagcctatggaaaaacgccagcaacgcggcctttttacggttcctggccttttgctggccttttgctcacatgttctttcctgcgttatcccctgattctgtggataaccgtattaccgcctttgagtgagctgataccgctcgccgcagccgaacgaccgagcgcagcgagtcagtgagcgaggaagcggaagagcgcctgatgcggtattttctccttacgcatctgtgcggtatttcacaccgcatatggtgcactctcagtacaatctgctctgatgccgcatagttaagccagataaaaaatttatttgctttcaggtacaattcttgatataatattatcatctagctagataataaaaatttaaggatcttatggtacttggtaaacctcaaacggatcctactctcgaatggttcttgtctcattgccacattcataagtacccatccaagagcacgcttattcaccagggtgaaaaagcggaaacgctgtactacatcgttaaaggctctgtggcagtgctgatcaaagacgaagagggtaaagaaatgatcctctcctatctgaatcagggtgattttattggcgaactgggcctgtttgaagagggccaggaacgtagcgcatgggtacgtgcgaaaaccgcctgtgaagtggctgaaatttcgtacaaaaaatttcgccaattgattcaggtaaatccggatgctggaacaaaagtgatctatatcatagattcatcattttattttcttgctagagtgcataccaaatctttatctggtttctcaatttacatgatctcccgttataactcggggaactactaccgtatatactttgttcctcgatttcaaagtacaatcataatctcatctgacttatcgttttttcttttatctttctcttcatctcaatattatgattagattgttttgtaagcttttctacctgaaatatgcaccaatattcagaatatctcgtttgccagtttttatacaagtctttctatagttaagtataaaaatgttatgttattaacgttcaaatgctcaatcacatctggacaagcaaatttccttgtcttcagttcattttgggtatgctcctttagatttaacacattgcaggctaaccggaacctgtattatttagtttatgctacgttaaataaagacctttcgttcacataactgaatgtgtaatggccttgagatttcaagcataccaagttggtggagacggggtcgttacaaaagactctatcctgatgcgtttgtctgcacagatggcgcgtccgattaccctgttatccctacaagaatctttttattgtcagtactgattattcctttgccctcggacgagtgctggggcgtcggtttccactatcggcgagtacttctacacagccatcggtccagacggccgcgcttctgcgggcgatttgtgtacgcccgacagtcccggctccggatcggacgattgcgtcgcatcgaccctgcgcccaagctgcatcatcgaaattgccgtcaaccaagctctgatagagttggtcaagaccaatgcggagcatatacgcccggagccgcggcgatcctgcaagctccggatgcctccgctcgaagtagcgcgtctgctgctccatacaagccaaccacggcctccagaagaagatgttggcgacctcgtattgggaatccccgaacatcgcctcgctccagtcaatgaccgctgttatgcggccattgtccgtcaggacattgttggagccgaaatccgcgtgcacgaggtgccggacttcggggcagtcctcggcccaaagcatcagctcatcgagagcctgcgcgacggacgcactgacggtgtcgtccatcacagtttgccagtgatacacatggggatcagcaatcgcgcatatgaaatcacgccatgtagtgtattgaccgattccttgcggtccgaatgggccgaacccgctcgtctggctaagatcggccgcagcgatcgcatccatggcctccgcgaccggctgcagaacagcgggcagttcggtttcaggcaggtcttgcaacgtgacaccctgtgcacggcgggagatgcaataggtcaggctctcgctgaattccccaatgtcaagcacttccggaatcgggagcgcggccgatgcaaagtgccgataaacataacgatctttgtagaaaccatcggcgcagctatttacccgcaggacatatccacgccctcctacatcgaagctgaaagcacgagattcttcgccctccgagagctgcatcaggtcggagacgctgtcgaacttttcgatcagaaacttctcgacagacgtcgcggtgagttcaggctttttacccatggttgtttatgttcggatgtgatgtgattggccggctgcaggtcactagtgagaaagtgggcaacctggcgttcctcgacatctaggtgaagatcctttttgataatctcatgaccaaaatcccttaacgtgagttttcgttccactgagcgtcagaccccgtagaaaagatcaaaggatcttcttgagatcctttttttctgcgcgtaatctgctgcttgcaaacaaaaaaaccaccgctaccagcggtggtttgtttgccggatcaagagctaccaactctttttccgaaggtaactggcttcagcagagcgcagataccaaatactgtccttctagtgtagccgtagttaggccaccacttcaagaactctgtagcaccgcctacatacctcgctctgctaatcctgttaccagtggctgctgccagtggcgataagtcgtgtcttaccgggttggactcaagacgatagttaccggataaggcgcagcggtcgggctgaacggggggttcgtgcacacagcccagcttggagcgaacgacctacaccgaactgagatacgtcagcggccgcattgcacagactctgctgaatctggcaaaacaaccagacgctatgactcacccggacggcatgcaaatcaaaattacccgtcagga"
     assert len(correct) == 7911
-    assert eq(Dseqrecord(correct, circular=True).seguid(), candidate.seq.seguid(), circular=True)
+    assert eq(
+        Dseqrecord(correct, circular=True).seguid(),
+        candidate.seq.seguid(),
+        circular=True,
+    )
 
     # Contig not implemented
     # assert repr(candidate) == "Contig(o7911)"
@@ -540,7 +660,9 @@ def test_MXblaster1():
     B_gal1_ISceI_c = pcr([primer[467], primer[468]], pCAPs_PCR_prod_gal1_ISceI_2)
     C_AgTEFt_d = pcr([primer[568], primer[166]], pCAPs_EcoRV_AgTEFt)
 
-    a = assembly.Assembly((pCAPs_pSU0_E_Z, A_KlLEU2tt_b, B_gal1_ISceI_c, C_AgTEFt_d), limit=25)
+    a = assembly.Assembly(
+        (pCAPs_pSU0_E_Z, A_KlLEU2tt_b, B_gal1_ISceI_c, C_AgTEFt_d), limit=25
+    )
     candidate = a.assemble_circular()[0]
     assert candidate.seguid() == "cdseguid=GGV2uIPTRD0lcV7RJPbVTItXNII"
     assert len(candidate) == 8099
@@ -557,9 +679,13 @@ def test_MXblaster1():
         for f in x.features:
             oldfeats[f.qualifiers["label"][0]] = f.extract(x).seq
 
-    KlLEU2tt_gal1_ISceI_AgTEFt_2 = pcr(primer[166], primer[167], YPK0_KlLEU2tt_gal1_ISceI_AgTEFt)
+    KlLEU2tt_gal1_ISceI_AgTEFt_2 = pcr(
+        primer[166], primer[167], YPK0_KlLEU2tt_gal1_ISceI_AgTEFt
+    )
 
-    a = assembly.Assembly((AgTEFp_hph_KlLEU2tt_2, KlLEU2tt_gal1_ISceI_AgTEFt_2, pCAPs_pSU0_E_Z), limit=61)
+    a = assembly.Assembly(
+        (AgTEFp_hph_KlLEU2tt_2, KlLEU2tt_gal1_ISceI_AgTEFt_2, pCAPs_pSU0_E_Z), limit=61
+    )
     candidate = a.assemble_circular()[0]
     assert len(candidate) == 9772
     assert candidate.seguid() == "cdseguid=bUl04KTp5LpAulZX3UHdejwnuIQ"
@@ -571,7 +697,9 @@ def test_MXblaster1():
 
     AX023560 = read(f"{test_files}/AX023560.gb")
 
-    GAL10prom_slice = slice(AX023560.features[1].location.start, AX023560.features[1].location.end)
+    GAL10prom_slice = slice(
+        AX023560.features[1].location.start, AX023560.features[1].location.end
+    )
 
     GAL10prom = AX023560[GAL10prom_slice]
 
@@ -593,7 +721,9 @@ def test_MXblaster1():
 
     assert GAL_GIN2.seguid() == "ldseguid=VMbnoWQyowa92XOf2wbKlsM26f8"
 
-    assert pCAPs_MX4blaster1.seguid() == "cdseguid=bUl04KTp5LpAulZX3UHdejwnuIQ"  # 9772bp__a
+    assert (
+        pCAPs_MX4blaster1.seguid() == "cdseguid=bUl04KTp5LpAulZX3UHdejwnuIQ"
+    )  # 9772bp__a
 
     pCAPs_MX4blaster1_AgeI = pCAPs_MX4blaster1.cut(AgeI)[0]
 
@@ -658,11 +788,15 @@ def test_pYPK7_TDH3_GAL2_PGI1():
 
     asm = assembly.Assembly((pYPKp7_AatII, pMEC1142), limit=300)
 
-    result, = asm.assemble_circular()
+    (result,) = asm.assemble_circular()
 
     pYPK7_TDH3_GAL2_PGI1 = read(f"{test_files}/pYPK7_TDH3_GAL2_PGI1.gb")
 
-    assert result.seguid() == pYPK7_TDH3_GAL2_PGI1.seguid() == "cdseguid=DeflrptvvS6m532WogvxQSgVKpk"
+    assert (
+        result.seguid()
+        == pYPK7_TDH3_GAL2_PGI1.seguid()
+        == "cdseguid=DeflrptvvS6m532WogvxQSgVKpk"
+    )
 
     assert len(result) == len(pYPK7_TDH3_GAL2_PGI1) == 9780
 
@@ -695,7 +829,10 @@ def test_marker_replacement_on_plasmid():
     candidate = asm_hyg.assemble_linear()[0]
 
     # AmpR feature
-    assert pMEC1135.features[-1].extract(pMEC1135).seq == candidate.features[-1].extract(candidate).seq
+    assert (
+        pMEC1135.features[-1].extract(pMEC1135).seq
+        == candidate.features[-1].extract(candidate).seq
+    )
 
 
 @pytest.mark.xfail(reason="contig not implemented")
@@ -716,7 +853,11 @@ def test_linear_with_annotations2():
     c.add_feature(0, 10, label="c_feat")
     c_feat_seq = c.features[0].extract(c)
 
-    feature_sequences = {"a_feat": a_feat_seq, "b_feat": b_feat_seq, "c_feat": c_feat_seq}
+    feature_sequences = {
+        "a_feat": a_feat_seq,
+        "b_feat": b_feat_seq,
+        "c_feat": c_feat_seq,
+    }
 
     a.name = "aaa"  # 1234567890123456
     b.name = "bbb"
@@ -730,9 +871,13 @@ def test_linear_with_annotations2():
     assert x.detailed_figure()
     for feat in x.features:
         try:
-            assert feat.extract(x).seq == feature_sequences[feat.qualifiers["label"]].seq
+            assert (
+                feat.extract(x).seq == feature_sequences[feat.qualifiers["label"]].seq
+            )
         except AssertionError:
-            assert feat.extract(x).seq == feature_sequences[feat.qualifiers["label"]].seq
+            assert (
+                feat.extract(x).seq == feature_sequences[feat.qualifiers["label"]].seq
+            )
 
 
 def test_sticky_ligation_algorithm_and_assembly():
@@ -744,7 +889,9 @@ def test_sticky_ligation_algorithm_and_assembly():
     # AAAGAT   AAA
     # TTT   CTATTT
     assert assembly.sticky_end_sub_strings(seqrA, seqrB, 0) == [(3, 0, 3)]
-    asm = assembly.Assembly([seqrA, seqrB], limit=False, algorithm=assembly.sticky_end_sub_strings)
+    asm = assembly.Assembly(
+        [seqrA, seqrB], limit=False, algorithm=assembly.sticky_end_sub_strings
+    )
     assert str(asm.assemble_linear()[0].seq) == "AAAGATAAA"
 
     # Test partial overlap
@@ -754,9 +901,13 @@ def test_sticky_ligation_algorithm_and_assembly():
     assert assembly.sticky_end_sub_strings(seqrA, seqrB, 1) == [(4, 0, 2)]
 
     # We test partial overlap settings here
-    asm = assembly.Assembly([seqrA, seqrB], limit=False, algorithm=assembly.sticky_end_sub_strings)
+    asm = assembly.Assembly(
+        [seqrA, seqrB], limit=False, algorithm=assembly.sticky_end_sub_strings
+    )
     assert asm.assemble_linear() == []
-    asm = assembly.Assembly([seqrA, seqrB], limit=True, algorithm=assembly.sticky_end_sub_strings)
+    asm = assembly.Assembly(
+        [seqrA, seqrB], limit=True, algorithm=assembly.sticky_end_sub_strings
+    )
     assert str(asm.assemble_linear()[0].seq) == "AAAGATAAA"
 
     # Test no overlap
@@ -769,14 +920,20 @@ def test_sticky_ligation_algorithm_and_assembly():
     seqrA = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAGAT", 0, -3))
     seqrB = Dseqrecord(Dseq.from_full_sequence_and_overhangs("GATAAA", -3, 0))
     assert assembly.sticky_end_sub_strings(seqrA, seqrB, 0) == [(3, 0, 3)]
-    asm = assembly.Assembly([seqrA, seqrB], limit=False, algorithm=assembly.sticky_end_sub_strings)
+    asm = assembly.Assembly(
+        [seqrA, seqrB], limit=False, algorithm=assembly.sticky_end_sub_strings
+    )
     assert str(asm.assemble_linear()[0].seq) == "AAAGATAAA"
 
     seqrB = Dseqrecord(Dseq.from_full_sequence_and_overhangs("ATAAA", -2, 0))
     assert assembly.sticky_end_sub_strings(seqrA, seqrB, 1) == [(4, 0, 2)]
-    asm = assembly.Assembly([seqrA, seqrB], limit=False, algorithm=assembly.sticky_end_sub_strings)
+    asm = assembly.Assembly(
+        [seqrA, seqrB], limit=False, algorithm=assembly.sticky_end_sub_strings
+    )
     assert asm.assemble_linear() == []
-    asm = assembly.Assembly([seqrA, seqrB], limit=True, algorithm=assembly.sticky_end_sub_strings)
+    asm = assembly.Assembly(
+        [seqrA, seqrB], limit=True, algorithm=assembly.sticky_end_sub_strings
+    )
     assert str(asm.assemble_linear()[0].seq) == "AAAGATAAA"
 
     seqrB = Dseqrecord(Dseq.from_full_sequence_and_overhangs("CCCCC", -2, 0))
@@ -788,32 +945,57 @@ def test_restriction_ligation_algorithm():
     # Full overlap, negative ovhg
     seqrA = Dseqrecord("AAAGAATTCAAA")
     seqrB = Dseqrecord("CCCCGAATTCCCCGAATTC")
-    assert assembly.restriction_ligation_overlap(seqrA, seqrB, [EcoRI], False) == [(4, 5, 4), (4, 14, 4)]
-    assert assembly.restriction_ligation_overlap(seqrB, seqrA, [EcoRI], False) == [(5, 4, 4), (14, 4, 4)]
+    assert assembly.restriction_ligation_overlap(seqrA, seqrB, [EcoRI], False) == [
+        (4, 5, 4),
+        (4, 14, 4),
+    ]
+    assert assembly.restriction_ligation_overlap(seqrB, seqrA, [EcoRI], False) == [
+        (5, 4, 4),
+        (14, 4, 4),
+    ]
 
     # Full overlap, positive ovhg
     seqrA = Dseqrecord("TTGCGATCGCTT")
     seqrB = Dseqrecord("AAGCGATCGCAAGCGATCGCAA")
-    assert assembly.restriction_ligation_overlap(seqrA, seqrB, [RgaI], False) == [(5, 5, 2), (5, 15, 2)]
-    assert assembly.restriction_ligation_overlap(seqrB, seqrA, [RgaI], False) == [(5, 5, 2), (15, 5, 2)]
+    assert assembly.restriction_ligation_overlap(seqrA, seqrB, [RgaI], False) == [
+        (5, 5, 2),
+        (5, 15, 2),
+    ]
+    assert assembly.restriction_ligation_overlap(seqrB, seqrA, [RgaI], False) == [
+        (5, 5, 2),
+        (15, 5, 2),
+    ]
 
     # Full overlap, using two different enzymes
     seqrA = Dseqrecord("GACTAATGGGTC")
     seqrB = Dseqrecord("AAGCGATCGCAAGCGATCGCAA")
-    assert assembly.restriction_ligation_overlap(seqrA, seqrB, [RgaI, DrdI], False) == [(5, 5, 2), (5, 15, 2)]
-    assert assembly.restriction_ligation_overlap(seqrB, seqrA, [RgaI, DrdI], False) == [(5, 5, 2), (15, 5, 2)]
+    assert assembly.restriction_ligation_overlap(seqrA, seqrB, [RgaI, DrdI], False) == [
+        (5, 5, 2),
+        (5, 15, 2),
+    ]
+    assert assembly.restriction_ligation_overlap(seqrB, seqrA, [RgaI, DrdI], False) == [
+        (5, 5, 2),
+        (15, 5, 2),
+    ]
 
     # Partial overlap, positive ovhg
     seqrA = Dseqrecord("GACTAAAGGGTC")
     seqrB = Dseqrecord("AAGCGATCGCAAGCGATCGCAA")
-    assert assembly.restriction_ligation_overlap(seqrA, seqrB, [RgaI, DrdI], True) == [(6, 5, 1), (6, 15, 1)]
+    assert assembly.restriction_ligation_overlap(seqrA, seqrB, [RgaI, DrdI], True) == [
+        (6, 5, 1),
+        (6, 15, 1),
+    ]
     assert assembly.restriction_ligation_overlap(seqrB, seqrA, [RgaI, DrdI], True) == []
 
     # Partial overlap, negative ovhg
     seqrA = Dseqrecord("CCCGCAAAAAAAAA")
     seqrB = Dseqrecord("AAGCTT")
-    assert assembly.restriction_ligation_overlap(seqrA, seqrB, [HindIII, FauI], True) == [(10, 1, 1)]
-    assert assembly.restriction_ligation_overlap(seqrB, seqrA, [HindIII, FauI], True) == []
+    assert assembly.restriction_ligation_overlap(
+        seqrA, seqrB, [HindIII, FauI], True
+    ) == [(10, 1, 1)]
+    assert (
+        assembly.restriction_ligation_overlap(seqrB, seqrA, [HindIII, FauI], True) == []
+    )
 
     # Circular molecule
     seqrA = Dseqrecord("GAATTCaaa")
@@ -822,9 +1004,9 @@ def test_restriction_ligation_algorithm():
         index_in_circular = 5 - shift
         if index_in_circular < 0:
             index_in_circular = len(seqrB) + index_in_circular
-        assert assembly.restriction_ligation_overlap(seqrA, seqrB.shifted(shift), [EcoRI], False) == [
-            (1, index_in_circular, 4)
-        ]
+        assert assembly.restriction_ligation_overlap(
+            seqrA, seqrB.shifted(shift), [EcoRI], False
+        ) == [(1, index_in_circular, 4)]
 
 
 def test_fill_dseq():
@@ -861,7 +1043,9 @@ def test_pcr_assembly_normal():
     assert str(prods[0].seq) == "ACGTACGTAAAAAAGCGCGCGC"
 
     # When the product exactly matches the template
-    asm = assembly.PCRAssembly([primer1, Dseqrecord(Dseq("ACGTACGTAAAAAAGCGCGCGC")), primer2], limit=8)
+    asm = assembly.PCRAssembly(
+        [primer1, Dseqrecord(Dseq("ACGTACGTAAAAAAGCGCGCGC")), primer2], limit=8
+    )
     prods = asm.assemble_linear()
 
     assert len(prods) == 1
@@ -908,7 +1092,10 @@ def test_pcr_with_mistmaches():
         prods = asm.assemble_linear()
 
         assert len(prods) == 1
-        assert str(prods[0].seq) == "atcttGagacgtgtatttcacaagccagaagtgcatttggatccaagtgcctccGtttta"
+        assert (
+            str(prods[0].seq)
+            == "atcttGagacgtgtatttcacaagccagaagtgcatttggatccaagtgcctccGtttta"
+        )
 
     asm = assembly.PCRAssembly([primer1, seq, primer2], limit=14, mismatches=0)
     prods = asm.assemble_linear()
@@ -1021,7 +1208,9 @@ def test_annotate_primer_binding_sites():
     prods = asm.assemble_linear()
 
     assert len(prods) == 1
-    annotated = assembly.annotate_primer_binding_sites(prods[0], [primer1, seq, primer2])
+    annotated = assembly.annotate_primer_binding_sites(
+        prods[0], [primer1, seq, primer2]
+    )
     assert annotated.features[0].type == "primer_bind"
     assert annotated.features[0].qualifiers["label"] == [primer1.name]
     assert annotated.features[0].qualifiers["note"] == ["sequence: " + str(primer1.seq)]
@@ -1044,7 +1233,9 @@ def test_annotate_primer_binding_sites():
     prods = asm.assemble_linear()
 
     assert len(prods) == 1
-    annotated = assembly.annotate_primer_binding_sites(prods[0], [primer1, seq, primer2])
+    annotated = assembly.annotate_primer_binding_sites(
+        prods[0], [primer1, seq, primer2]
+    )
     assert annotated.features[0].type == "primer_bind"
     assert annotated.features[0].qualifiers["label"] == [primer1.name]
     assert annotated.features[0].qualifiers["note"] == ["sequence: " + str(primer1.seq)]
@@ -1066,14 +1257,24 @@ def test_fragments_only_once():
     ]
 
     asm = assembly.Assembly(
-        fragments, limit=4, algorithm=assembly.gibson_overlap, use_all_fragments=True, use_fragment_order=False
+        fragments,
+        limit=4,
+        algorithm=assembly.gibson_overlap,
+        use_all_fragments=True,
+        use_fragment_order=False,
     )
     for a in asm.get_linear_assemblies():
-        nodes_used = [f[0] for f in assembly.edge_representation2subfragment_representation(a, False)]
+        nodes_used = [
+            f[0]
+            for f in assembly.edge_representation2subfragment_representation(a, False)
+        ]
         assert len(nodes_used) == len(set(nodes_used))
 
     for a in asm.get_circular_assemblies():
-        nodes_used = [f[0] for f in assembly.edge_representation2subfragment_representation(a, True)]
+        nodes_used = [
+            f[0]
+            for f in assembly.edge_representation2subfragment_representation(a, True)
+        ]
         assert len(nodes_used) == len(set(nodes_used))
 
 
@@ -1084,7 +1285,9 @@ def test_both_representations():
         (2, 3, "loc_2_r", "loc_3_l"),
     )
 
-    subf = assembly.edge_representation2subfragment_representation(assembly_linear, False)
+    subf = assembly.edge_representation2subfragment_representation(
+        assembly_linear, False
+    )
     assert subf == (
         (1, None, "loc_1_r"),
         (2, "loc_2_l", "loc_2_r"),
@@ -1099,7 +1302,9 @@ def test_both_representations():
         (-2, -3, "loc_2_r", "loc_3_l"),
     )
 
-    subf = assembly.edge_representation2subfragment_representation(assembly_linear, False)
+    subf = assembly.edge_representation2subfragment_representation(
+        assembly_linear, False
+    )
     assert subf == (
         (1, None, "loc_1_r"),
         (-2, "loc_2_l", "loc_2_r"),
@@ -1117,7 +1322,9 @@ def test_both_representations():
         (3, 1, "loc_3_r", "loc_1_l"),
     )
 
-    subf = assembly.edge_representation2subfragment_representation(assembly_circular, True)
+    subf = assembly.edge_representation2subfragment_representation(
+        assembly_circular, True
+    )
     assert subf == (
         (1, "loc_1_l", "loc_1_r"),
         (2, "loc_2_l", "loc_2_r"),
@@ -1148,13 +1355,19 @@ def test_ends_from_cutsite():
 
     cut = a.get_cutsites([BsaI])[0]
     a1, a2 = a.cut([BsaI])
-    assert assembly.ends_from_cutsite(cut, a) == (a1.three_prime_end(), a2.five_prime_end())
+    assert assembly.ends_from_cutsite(cut, a) == (
+        a1.three_prime_end(),
+        a2.five_prime_end(),
+    )
 
     a = Dseq("ACcTGatacACTGGATactA", circular=False)
 
     cut = a.get_cutsites([BsrI])[0]
     a1, a2 = a.cut([BsrI])
-    assert assembly.ends_from_cutsite(cut, a) == (a1.three_prime_end(), a2.five_prime_end())
+    assert assembly.ends_from_cutsite(cut, a) == (
+        a1.three_prime_end(),
+        a2.five_prime_end(),
+    )
 
     with pytest.raises(ValueError):
         assembly.ends_from_cutsite(None, Dseq("ATCG"))
@@ -1172,10 +1385,17 @@ def test_restriction_ligation_assembly():
         a1, a2 = a.cut([enz])
         b1, b2 = b.cut([enz])
 
-        products = [a1 + b2, a1 + b1.reverse_complement(), b1 + a2, a2.reverse_complement() + b2]
+        products = [
+            a1 + b2,
+            a1 + b1.reverse_complement(),
+            b1 + a2,
+            a2.reverse_complement() + b2,
+        ]
 
         def algo(x, y, _l):
-            return assembly.restriction_ligation_overlap(x, y, [enz], allow_blunt=enz is EcoRV)  # noqa: B023
+            return assembly.restriction_ligation_overlap(
+                x, y, [enz], allow_blunt=enz is EcoRV
+            )  # noqa: B023
 
         f = assembly.Assembly([a, b], algorithm=algo, use_fragment_order=False)
 
@@ -1202,8 +1422,12 @@ def test_restriction_ligation_assembly():
     # We shift
     for shift in range(len(f2)):
         f2_shifted = f2.shifted(shift)
-        f = assembly.Assembly([f1, f2_shifted], algorithm=algo, use_fragment_order=False)
-        observed_seguids = sorted(x.seguid() for x in f.assemble_circular(only_adjacent_edges=True))
+        f = assembly.Assembly(
+            [f1, f2_shifted], algorithm=algo, use_fragment_order=False
+        )
+        observed_seguids = sorted(
+            x.seguid() for x in f.assemble_circular(only_adjacent_edges=True)
+        )
         assert len(result_seguids) == len(observed_seguids)
         assert result_seguids == observed_seguids
 
@@ -1227,8 +1451,15 @@ def test_restriction_ligation_assembly():
     # We shift
     for shift in range(len(f1)):
         f1_shifted = f1.shifted(shift)
-        f = assembly.Assembly([f1_shifted, f2], algorithm=algo, use_fragment_order=False, use_all_fragments=True)
-        observed_seguids = sorted(x.seguid() for x in f.assemble_circular(only_adjacent_edges=True))
+        f = assembly.Assembly(
+            [f1_shifted, f2],
+            algorithm=algo,
+            use_fragment_order=False,
+            use_all_fragments=True,
+        )
+        observed_seguids = sorted(
+            x.seguid() for x in f.assemble_circular(only_adjacent_edges=True)
+        )
         assert len(result_seguids) == len(observed_seguids)
         assert result_seguids == observed_seguids
 
@@ -1256,12 +1487,20 @@ def test_restriction_ligation_assembly():
 
     # Combining both partial and normal overlaps, to ensure that only_adjacent_edges keeps both.
     # In this case use_all_fragments=2, it should return 2 assemblies for 1 + 2, and
-    fragments = [Dseqrecord("GGTCTCCCCAATT"), Dseqrecord("GGTCTCCAACCAA"), Dseqrecord("GGTCTCCCCAATT")]
-    f = assembly.Assembly(fragments, algorithm=algo, use_fragment_order=False, use_all_fragments=False)
+    fragments = [
+        Dseqrecord("GGTCTCCCCAATT"),
+        Dseqrecord("GGTCTCCAACCAA"),
+        Dseqrecord("GGTCTCCCCAATT"),
+    ]
+    f = assembly.Assembly(
+        fragments, algorithm=algo, use_fragment_order=False, use_all_fragments=False
+    )
     products = f.assemble_linear(only_adjacent_edges=True)
     assert len(products) == 6
     products_seguid = set(p.seq.seguid() for p in products)
-    assert products_seguid == set([p1.seq.seguid(), p2.seq.seguid(), Dseqrecord("GGTCTCCCCAATT").seguid()])
+    assert products_seguid == set(
+        [p1.seq.seguid(), p2.seq.seguid(), Dseqrecord("GGTCTCCCCAATT").seguid()]
+    )
 
     # Partial overlaps -> enzyme with positive overhang
     fragments = [Dseqrecord("GACACCAGAGTC"), Dseqrecord("GACTAACGGGTC")]
@@ -1310,7 +1549,9 @@ def test_restriction_ligation_assembly():
     fragments = [Dseqrecord("aaaGATATCccGAATTCaa"), Dseqrecord("cgcGATATCataGAATTCtta")]
 
     def algo(x, y, _l):
-        return assembly.restriction_ligation_overlap(x, y, [EcoRI, EcoRV], allow_blunt=True)
+        return assembly.restriction_ligation_overlap(
+            x, y, [EcoRI, EcoRV], allow_blunt=True
+        )
 
     f = assembly.Assembly(fragments, use_fragment_order=False, algorithm=algo)
     products = f.assemble_circular()
@@ -1349,7 +1590,9 @@ def test_golden_gate():
     def algo(x, y, _l):
         return assembly.restriction_ligation_overlap(x, y, [BsaI])
 
-    asm = assembly.Assembly([insert1, insert2, insert3, vector], use_fragment_order=False, algorithm=algo)
+    asm = assembly.Assembly(
+        [insert1, insert2, insert3, vector], use_fragment_order=False, algorithm=algo
+    )
 
     assembly_output = asm.assemble_circular(only_adjacent_edges=True)
     assert len(assembly_output) == 1
@@ -1370,17 +1613,28 @@ def test_gibson_assembly():
                 fragments = [Dseqrecord(f) for f in fragments_str]
             elif mode == 1:
                 # 3' overhangs (should give the same results as no overhangs)
-                fragments = [Dseqrecord(Dseq.from_full_sequence_and_overhangs(f, 3, 3)) for f in fragments_str]
+                fragments = [
+                    Dseqrecord(Dseq.from_full_sequence_and_overhangs(f, 3, 3))
+                    for f in fragments_str
+                ]
             else:
                 # Add 5' overhangs that will be removed in Gibson, so should give same results as no overhangs
                 fragments = [
-                    Dseqrecord(Dseq.from_full_sequence_and_overhangs("aaa" + f + "aaa", -3, -3)) for f in fragments_str
+                    Dseqrecord(
+                        Dseq.from_full_sequence_and_overhangs("aaa" + f + "aaa", -3, -3)
+                    )
+                    for f in fragments_str
                 ]
             if len(fragments) == 1:
-                asm = assembly.SingleFragmentAssembly(fragments, limit=7, algorithm=assembly.gibson_overlap)
+                asm = assembly.SingleFragmentAssembly(
+                    fragments, limit=7, algorithm=assembly.gibson_overlap
+                )
             else:
                 asm = assembly.Assembly(
-                    fragments, limit=7, algorithm=assembly.gibson_overlap, use_fragment_order=False
+                    fragments,
+                    limit=7,
+                    algorithm=assembly.gibson_overlap,
+                    use_fragment_order=False,
                 )
 
             products = asm.assemble_circular()
@@ -1407,7 +1661,10 @@ def test_insertion_assembly():
         "3CGTACGCACAyyyyCGTACGCACAxxxxCGTACGCACAT4",
     ]
 
-    assembly_products = [str(assembly.assemble([a, b], assem).seq) for assem in f.get_insertion_assemblies()]
+    assembly_products = [
+        str(assembly.assemble([a, b], assem).seq)
+        for assem in f.get_insertion_assemblies()
+    ]
     assert sorted(assembly_products) == sorted(results)
 
     # TODO: debatable whether this kind of homologous recombination should happen, or how
@@ -1428,15 +1685,30 @@ def test_insertion_assembly():
     # Does not work for circular molecules
     a = Dseqrecord("1CGTACGCACAxxxxCGTACGCACAC2", circular=True)
     b = Dseqrecord("3CGTACGCACAyyyyCGTACGCACAT4", circular=True)
-    assert assembly.Assembly([a, b], use_fragment_order=False, limit=10).get_insertion_assemblies() == []
+    assert (
+        assembly.Assembly(
+            [a, b], use_fragment_order=False, limit=10
+        ).get_insertion_assemblies()
+        == []
+    )
 
     a = Dseqrecord("1CGTACGCACAxxxxC2", circular=True)
     b = Dseqrecord("3CGTACGCACAyyyyCGTACGCACAT4", circular=True)
-    assert assembly.Assembly([a, b], use_fragment_order=False, limit=10).get_insertion_assemblies() == []
+    assert (
+        assembly.Assembly(
+            [a, b], use_fragment_order=False, limit=10
+        ).get_insertion_assemblies()
+        == []
+    )
 
     a = Dseqrecord("1CGTACGCACAxxxxC2", circular=True)
     b = Dseqrecord("3CGTACGCACAyyyyT4", circular=True)
-    assert assembly.Assembly([a, b], use_fragment_order=False, limit=10).get_insertion_assemblies() == []
+    assert (
+        assembly.Assembly(
+            [a, b], use_fragment_order=False, limit=10
+        ).get_insertion_assemblies()
+        == []
+    )
 
     # Only the right order is returned
     a = Dseqrecord("ttACGTTCGTccccTTAATTAAcc", circular=False)
@@ -1445,7 +1717,10 @@ def test_insertion_assembly():
     fragments = [a, b, c]
     for i in range(3):
         asm = assembly.Assembly(
-            fragments[i:] + fragments[:i], use_fragment_order=False, limit=8, use_all_fragments=True
+            fragments[i:] + fragments[:i],
+            use_fragment_order=False,
+            limit=8,
+            use_all_fragments=True,
         )
         prods = asm.assemble_insertion()
 
@@ -1460,14 +1735,18 @@ def circles_assembly():
     f = assembly.Assembly([a, b], use_fragment_order=False, limit=5)
     circular_assemblies = f.get_circular_assemblies()
     assert len(circular_assemblies) == 1
-    assert str(assembly.assemble([a, b], circular_assemblies[0])) == "ACGTAyyyxxxACGTAbbbb"
+    assert (
+        str(assembly.assemble([a, b], circular_assemblies[0])) == "ACGTAyyyxxxACGTAbbbb"
+    )
 
     # When more than two are provided, sequential homologous recombinations are returned
     a = Dseqrecord("aaACGTAACGTAaa", circular=True)
     b = Dseqrecord("ccACGTAACGTAcc", circular=True)
     c = Dseqrecord("ggACGTAACGTAgg", circular=True)
 
-    f = assembly.Assembly([a, b, c], use_fragment_order=False, limit=10, use_all_fragments=True)
+    f = assembly.Assembly(
+        [a, b, c], use_fragment_order=False, limit=10, use_all_fragments=True
+    )
     # All possibilities, including the single insertions
     results = [
         "ACGTAACGTAaaaaACGTAACGTAccccACGTAACGTAgggg",
@@ -1482,7 +1761,9 @@ def circles_assembly():
 
     f = assembly.Assembly([a, b], use_fragment_order=False, limit=5)
     assert len(circular_assemblies) == 1
-    assert str(assembly.assemble([a, b], circular_assemblies[0])) == "ACGTAyyyxxxACGTAbb"
+    assert (
+        str(assembly.assemble([a, b], circular_assemblies[0])) == "ACGTAyyyxxxACGTAbb"
+    )
 
 
 def test_assemble_function():
@@ -1519,7 +1800,10 @@ def test_assemble_function():
         result = assembly.assemble([f1_shifted, f2], assembly_plan)
         assert str(result.seq) == "ccccTTTctaGGGaaa"
         assert len(result.features) == 4
-        assert set(str(f.location.extract(result.seq)) for f in result.features) == {"TTT", "GGG"}
+        assert set(str(f.location.extract(result.seq)) for f in result.features) == {
+            "TTT",
+            "GGG",
+        }
 
         # Circular assembly 1 - 2 (ccccTTTctaGGGaaa)
         assembly_plan = [
@@ -1530,7 +1814,10 @@ def test_assemble_function():
         result = assembly.assemble([f1_shifted, f2], assembly_plan)
         assert str(result.seq) == "GGGcccaaaTTTatg"
         assert len(result.features) == 4
-        assert set(str(f.location.extract(result.seq)) for f in result.features) == {"TTT", "GGG"}
+        assert set(str(f.location.extract(result.seq)) for f in result.features) == {
+            "TTT",
+            "GGG",
+        }
 
         # TODO: This type of assembly should maybe raise an error, no
         # linear assembly should start or finish with a circular sequence
@@ -1552,14 +1839,29 @@ def test_assemble_function():
             f2_shifted = f2.shifted(shift_2)
             # Linear assembly 2 - 1 - 2 (ccccTTTctaGGGaaa)
             assembly_plan = [
-                (1, 2, f1_shifted.features[0].location, f2_shifted.features[0].location),
-                (2, 1, f2_shifted.features[0].location, f1_shifted.features[0].location),
+                (
+                    1,
+                    2,
+                    f1_shifted.features[0].location,
+                    f2_shifted.features[0].location,
+                ),
+                (
+                    2,
+                    1,
+                    f2_shifted.features[0].location,
+                    f1_shifted.features[0].location,
+                ),
             ]
 
             result = assembly.assemble([f1_shifted, f2_shifted], assembly_plan)
-            assert result.seq.seguid() == Dseq("aaaTTTatgccccTTTcta", circular=True).seguid()
+            assert (
+                result.seq.seguid()
+                == Dseq("aaaTTTatgccccTTTcta", circular=True).seguid()
+            )
             assert len(result.features) == 4
-            assert set(str(f.location.extract(result.seq)) for f in result.features) == {"TTT"}
+            assert set(
+                str(f.location.extract(result.seq)) for f in result.features
+            ) == {"TTT"}
 
     # Blunt assemblies
     fragments = [Dseqrecord("aaaTTTctaGGGccc"), Dseqrecord("ccccTTTatgGGGaa")]
@@ -1570,14 +1872,18 @@ def test_assemble_function():
     assembly_plan = [
         (1, 2, loc_end, loc_start),
     ]
-    assert (fragments[0] + fragments[1]).seq == assembly.assemble(fragments, assembly_plan).seq
+    assert (fragments[0] + fragments[1]).seq == assembly.assemble(
+        fragments, assembly_plan
+    ).seq
 
     # A circular assembly
     assembly_plan = [
         (1, 2, loc_end, loc_start),
         (2, 1, loc_end, loc_start),
     ]
-    assert (fragments[0] + fragments[1]).looped().seq == assembly.assemble(fragments, assembly_plan).seq
+    assert (fragments[0] + fragments[1]).looped().seq == assembly.assemble(
+        fragments, assembly_plan
+    ).seq
 
 
 def test_assembly_is_valid():
@@ -1627,7 +1933,9 @@ def test_assembly_is_valid():
         (2, 3, SimpleLocation(0, 4), SimpleLocation(0, 4)),
     ]
 
-    assert not assembly.Assembly.assembly_is_valid(fragments, assembly_plan, False, True)
+    assert not assembly.Assembly.assembly_is_valid(
+        fragments, assembly_plan, False, True
+    )
 
     # Invalid assembly
     # 1   ------
@@ -1641,7 +1949,9 @@ def test_assembly_is_valid():
         (2, 3, SimpleLocation(0, 2), SimpleLocation(0, 2)),
     ]
 
-    assert not assembly.Assembly.assembly_is_valid(fragments, assembly_plan, False, True)
+    assert not assembly.Assembly.assembly_is_valid(
+        fragments, assembly_plan, False, True
+    )
 
     # Assembly plan including two fragments extracted from circular molecules:
     f1 = Dseqrecord("ccTTTc")
@@ -1649,8 +1959,14 @@ def test_assembly_is_valid():
     f3 = Dseqrecord("AAACCC", circular=True)
     f4 = Dseqrecord("ggCCCg")
     f1.features = [SeqFeature(SimpleLocation(2, 5), id="f1_f2")]
-    f2.features = [SeqFeature(SimpleLocation(0, 3), id="f1_f2"), SeqFeature(SimpleLocation(3, 6), id="f2_f3")]
-    f3.features = [SeqFeature(SimpleLocation(0, 3), id="f2_f3"), SeqFeature(SimpleLocation(3, 6), id="f3_f4")]
+    f2.features = [
+        SeqFeature(SimpleLocation(0, 3), id="f1_f2"),
+        SeqFeature(SimpleLocation(3, 6), id="f2_f3"),
+    ]
+    f3.features = [
+        SeqFeature(SimpleLocation(0, 3), id="f2_f3"),
+        SeqFeature(SimpleLocation(3, 6), id="f3_f4"),
+    ]
     f4.features = [SeqFeature(SimpleLocation(2, 5), id="f3_f4")]
 
     def find_feature_by_id(f: Dseqrecord, id: str) -> SeqFeature:
@@ -1663,18 +1979,32 @@ def test_assembly_is_valid():
             f3_shifted = f3.shifted(shift_3)
             fragments = [f1, f2_shifted, f3_shifted, f4]
             assembly_plan = [
-                (1, 2, f1.features[0].location, find_feature_by_id(f2_shifted, "f1_f2").location),
+                (
+                    1,
+                    2,
+                    f1.features[0].location,
+                    find_feature_by_id(f2_shifted, "f1_f2").location,
+                ),
                 (
                     2,
                     3,
                     find_feature_by_id(f2_shifted, "f2_f3").location,
                     find_feature_by_id(f3_shifted, "f2_f3").location,
                 ),
-                (3, 4, find_feature_by_id(f3_shifted, "f3_f4").location, f4.features[0].location),
+                (
+                    3,
+                    4,
+                    find_feature_by_id(f3_shifted, "f3_f4").location,
+                    f4.features[0].location,
+                ),
             ]
-            assert assembly.Assembly.assembly_is_valid(fragments, assembly_plan, False, True)
+            assert assembly.Assembly.assembly_is_valid(
+                fragments, assembly_plan, False, True
+            )
             # Does not really belong here, but
-            assert str(assembly.assemble(fragments, assembly_plan).seq) == "ccTTTAAACCCg"
+            assert (
+                str(assembly.assemble(fragments, assembly_plan).seq) == "ccTTTAAACCCg"
+            )
 
     # is_circular must be set
     assert not assembly.Assembly.assembly_is_valid(fragments, assembly_plan, None, True)
@@ -1689,7 +2019,10 @@ def test_extract_subfragment():
         return next(f for f in f.features if f.id == id)
 
     f1 = Dseqrecord("aaTTTcccTTTaa", circular=True)
-    f1.features = [SeqFeature(SimpleLocation(2, 5), id="left"), SeqFeature(SimpleLocation(8, 11), id="right")]
+    f1.features = [
+        SeqFeature(SimpleLocation(2, 5), id="left"),
+        SeqFeature(SimpleLocation(8, 11), id="right"),
+    ]
 
     for shift in range(len(f1)):
         f1_shifted = f1.shifted(shift)
@@ -1702,7 +2035,10 @@ def test_extract_subfragment():
     # Old edge case, in circular molecules, if you extract the entire sequence
     # it leads to a [0:0] getitem call, before it gave an empty sequence, see https://github.com/BjornFJohansson/pydna/issues/161
     f1 = Dseqrecord("AAATTT", circular=True)
-    f1.features = [SeqFeature(SimpleLocation(0, 3), id="left"), SeqFeature(SimpleLocation(3, 6), id="right")]
+    f1.features = [
+        SeqFeature(SimpleLocation(0, 3), id="left"),
+        SeqFeature(SimpleLocation(3, 6), id="right"),
+    ]
 
     for shift in range(len(f1)):
         f1_shifted = f1.shifted(shift)
@@ -1740,14 +2076,20 @@ def test_sticky_end_sub_strings():
     # Full overlap, negative ovhg
     a, b = Dseqrecord("AAAGAATTCAAA").cut(EcoRI)
     assert assembly.sticky_end_sub_strings(a, b) == [(4, 0, 4)]
-    assert assembly.sticky_end_sub_strings(a.reverse_complement(), b.reverse_complement()) == []
+    assert (
+        assembly.sticky_end_sub_strings(a.reverse_complement(), b.reverse_complement())
+        == []
+    )
     assert assembly.sticky_end_sub_strings(b, a) == []
 
     # Full overlap, positive ovhg
     a, b = Dseqrecord("TTGCGATCGCTT").cut(RgaI)
     assert assembly.sticky_end_sub_strings(a, b) == [(5, 0, 2)]
     assert assembly.sticky_end_sub_strings(b, a) == []
-    assert assembly.sticky_end_sub_strings(a.reverse_complement(), b.reverse_complement()) == []
+    assert (
+        assembly.sticky_end_sub_strings(a.reverse_complement(), b.reverse_complement())
+        == []
+    )
 
     # Blunt ends do not work either
     assert assembly.sticky_end_sub_strings(Dseqrecord("TT"), Dseqrecord("TT")) == []
@@ -1763,14 +2105,20 @@ def test_sticky_end_sub_strings():
 
 
 def test_blunt_overlap():
-    a = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAAA", crick_ovhg=0, watson_ovhg=1))
-    b = Dseqrecord(Dseq.from_full_sequence_and_overhangs("CCCC", crick_ovhg=1, watson_ovhg=0))
+    a = Dseqrecord(
+        Dseq.from_full_sequence_and_overhangs("AAAAA", crick_ovhg=0, watson_ovhg=1)
+    )
+    b = Dseqrecord(
+        Dseq.from_full_sequence_and_overhangs("CCCC", crick_ovhg=1, watson_ovhg=0)
+    )
 
     assert assembly.blunt_overlap(a, b) == []
     assert assembly.blunt_overlap(a, b.reverse_complement()) == []
     assert assembly.blunt_overlap(a.reverse_complement(), b) == []
     assert assembly.blunt_overlap(b, a) == [(4, 0, 0)]
-    assert assembly.blunt_overlap(a.reverse_complement(), b.reverse_complement()) == [(5, 0, 0)]
+    assert assembly.blunt_overlap(a.reverse_complement(), b.reverse_complement()) == [
+        (5, 0, 0)
+    ]
     assert assembly.blunt_overlap(b.reverse_complement(), a.reverse_complement()) == []
 
 
@@ -1843,7 +2191,9 @@ def test_ligation_assembly():
 
     # Single fragment assemblies
     fragments = Dseqrecord("AAGAATTCTTGAATTCCC").cut(EcoRI)
-    asm = assembly.SingleFragmentAssembly([fragments[1]], algorithm=assembly.sticky_end_sub_strings, limit=False)
+    asm = assembly.SingleFragmentAssembly(
+        [fragments[1]], algorithm=assembly.sticky_end_sub_strings, limit=False
+    )
     result = asm.assemble_circular()
     assert len(result) == 1
     assert result[0].seq == fragments[1].looped().seq
@@ -1851,10 +2201,19 @@ def test_ligation_assembly():
 
 def test_blunt_assembly():
     # Linear assembly
-    a = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAAA", crick_ovhg=0, watson_ovhg=1))
-    b = Dseqrecord(Dseq.from_full_sequence_and_overhangs("CCCC", crick_ovhg=1, watson_ovhg=0))
+    a = Dseqrecord(
+        Dseq.from_full_sequence_and_overhangs("AAAAA", crick_ovhg=0, watson_ovhg=1)
+    )
+    b = Dseqrecord(
+        Dseq.from_full_sequence_and_overhangs("CCCC", crick_ovhg=1, watson_ovhg=0)
+    )
 
-    asm = assembly.Assembly([a, b], algorithm=assembly.blunt_overlap, use_all_fragments=True, use_fragment_order=False)
+    asm = assembly.Assembly(
+        [a, b],
+        algorithm=assembly.blunt_overlap,
+        use_all_fragments=True,
+        use_fragment_order=False,
+    )
 
     assert dseqrecord_list_to_dseq_list(asm.assemble_linear()) == [(b + a).seq]
     assert asm.assemble_circular() == []
@@ -1863,17 +2222,28 @@ def test_blunt_assembly():
     a = Dseqrecord("ATT")
     b = Dseqrecord("CCCC")
 
-    asm = assembly.Assembly([a, b], algorithm=assembly.blunt_overlap, use_all_fragments=True, use_fragment_order=False)
+    asm = assembly.Assembly(
+        [a, b],
+        algorithm=assembly.blunt_overlap,
+        use_all_fragments=True,
+        use_fragment_order=False,
+    )
 
-    assert dseqrecord_list_to_dseq_list(asm.assemble_linear()) == dseqrecord_list_to_dseq_list(
+    assert dseqrecord_list_to_dseq_list(
+        asm.assemble_linear()
+    ) == dseqrecord_list_to_dseq_list(
         [a + b, a + b.reverse_complement(), b + a, a.reverse_complement() + b]
     )
-    assert dseqrecord_list_to_dseq_list(asm.assemble_circular()) == dseqrecord_list_to_dseq_list(
+    assert dseqrecord_list_to_dseq_list(
+        asm.assemble_circular()
+    ) == dseqrecord_list_to_dseq_list(
         [(a + b).looped(), (a + b.reverse_complement()).looped()]
     )
 
     # Circularisation
-    asm = assembly.SingleFragmentAssembly([Dseqrecord("AATT")], algorithm=assembly.blunt_overlap)
+    asm = assembly.SingleFragmentAssembly(
+        [Dseqrecord("AATT")], algorithm=assembly.blunt_overlap
+    )
     result = asm.assemble_circular()
     assert len(result) == 1
     assert result[0].seq == Dseq("AATT", circular=True)
@@ -1901,10 +2271,18 @@ def test_format_insertion_assembly():
     # More fragments
     fragments = [seq1, seq2, seq2]
     assembly_planner = assembly.Assembly(fragments)
-    asm_correct = [(1, 2, loc1_a, loc2_a), (2, 3, loc2_b, loc2_a), (3, 1, loc2_b, loc1_b)]
+    asm_correct = [
+        (1, 2, loc1_a, loc2_a),
+        (2, 3, loc2_b, loc2_a),
+        (3, 1, loc2_b, loc1_b),
+    ]
     assert asm_correct == assembly_planner.format_insertion_assembly(asm_correct)
-    assert asm_correct == assembly_planner.format_insertion_assembly(asm_correct[1:] + asm_correct[:1])
-    assert asm_correct == assembly_planner.format_insertion_assembly(asm_correct[2:] + asm_correct[:2])
+    assert asm_correct == assembly_planner.format_insertion_assembly(
+        asm_correct[1:] + asm_correct[:1]
+    )
+    assert asm_correct == assembly_planner.format_insertion_assembly(
+        asm_correct[2:] + asm_correct[:2]
+    )
 
     asm_wrong = [(1, 2, loc1_b, loc2_a), (2, 3, loc2_b, loc2_a), (3, 1, loc2_b, loc1_a)]
     assert assembly_planner.format_insertion_assembly(asm_wrong) is None
@@ -1943,38 +2321,42 @@ def test_primer_template_overlap():
         template_shifted = template.shifted(-shift)
 
         primer = Primer("TTAGCAGC")
-        assert [(0, (2 + shift) % len(template), 8)] == assembly.primer_template_overlap(
-            primer, template_shifted, 8, 0
-        )
+        assert [
+            (0, (2 + shift) % len(template), 8)
+        ] == assembly.primer_template_overlap(primer, template_shifted, 8, 0)
 
         # The alignment is zipped if more bases align than the arg limit
-        assert [(0, (2 + shift) % len(template), 8)] == assembly.primer_template_overlap(
-            primer, template_shifted, 6, 0
-        )
+        assert [
+            (0, (2 + shift) % len(template), 8)
+        ] == assembly.primer_template_overlap(primer, template_shifted, 6, 0)
 
         # Extra primer on the left
         primer_extra_left = Primer("GGGCTTTAGCAGC")
-        assert [(5, (2 + shift) % len(template), 8)] == assembly.primer_template_overlap(
-            primer_extra_left, template_shifted, 8, 0
-        )
+        assert [
+            (5, (2 + shift) % len(template), 8)
+        ] == assembly.primer_template_overlap(primer_extra_left, template_shifted, 8, 0)
 
         # Extra primer on the right does not work
         primer_extra_right = Primer("TTAGCAGCA")
-        assert [] == assembly.primer_template_overlap(primer_extra_right, template_shifted, 8, 0)
+        assert [] == assembly.primer_template_overlap(
+            primer_extra_right, template_shifted, 8, 0
+        )
 
         # Too short primer does not work either
         primer2short = Primer("TAGCAGC")
-        assert [] == assembly.primer_template_overlap(primer2short, template_shifted, 8, 0)
+        assert [] == assembly.primer_template_overlap(
+            primer2short, template_shifted, 8, 0
+        )
 
         # Mismatch
         primer = Primer("TaAGCAGC")
-        assert [(2, (4 + shift) % len(template), 6)] == assembly.primer_template_overlap(
-            primer, template_shifted, 8, 1
-        )
+        assert [
+            (2, (4 + shift) % len(template), 6)
+        ] == assembly.primer_template_overlap(primer, template_shifted, 8, 1)
         primer = Primer("aaAGCAGC")
-        assert [(2, (4 + shift) % len(template), 6)] == assembly.primer_template_overlap(
-            primer, template_shifted, 8, 2
-        )
+        assert [
+            (2, (4 + shift) % len(template), 6)
+        ] == assembly.primer_template_overlap(primer, template_shifted, 8, 2)
 
         # Too many mismatches for argument
         primer = Primer("AAAGCAGC")
@@ -1982,20 +2364,20 @@ def test_primer_template_overlap():
 
         # Reverse primer
         primer = Primer("GCGATCGA")
-        assert [((8 + shift) % len(template), 0, 8)] == assembly.primer_template_overlap(
-            template_shifted, primer, 8, 0
-        )
+        assert [
+            ((8 + shift) % len(template), 0, 8)
+        ] == assembly.primer_template_overlap(template_shifted, primer, 8, 0)
 
         # The alignment is zipped if more bases align than the arg limit
-        assert [((8 + shift) % len(template), 0, 8)] == assembly.primer_template_overlap(
-            template_shifted, primer, 6, 0
-        )
+        assert [
+            ((8 + shift) % len(template), 0, 8)
+        ] == assembly.primer_template_overlap(template_shifted, primer, 6, 0)
 
         # Reverse primer with 5' extension
         primer = Primer("GCGATCGAAAAA")
-        assert [((8 + shift) % len(template), 0, 8)] == assembly.primer_template_overlap(
-            template_shifted, primer, 8, 0
-        )
+        assert [
+            ((8 + shift) % len(template), 0, 8)
+        ] == assembly.primer_template_overlap(template_shifted, primer, 8, 0)
 
         # Extra bases on the 3' should not work
         primer = Primer("AAGCGATCGA")
@@ -2003,14 +2385,16 @@ def test_primer_template_overlap():
 
         # Mismatches
         primer = Primer("GCGtTCGA")
-        assert [((8 + shift) % len(template), 0, 3)] == assembly.primer_template_overlap(
-            template_shifted, primer, 8, 1
-        )
+        assert [
+            ((8 + shift) % len(template), 0, 3)
+        ] == assembly.primer_template_overlap(template_shifted, primer, 8, 1)
 
     # Multiple matches
     primer = Primer("AATTAGCA")
     template = Dseqrecord("AATTAGCAGCGATCAATTAGCA")
-    assert [(0, 0, 8), (0, 14, 8)] == assembly.primer_template_overlap(primer, template, 8, 1)
+    assert [(0, 0, 8), (0, 14, 8)] == assembly.primer_template_overlap(
+        primer, template, 8, 1
+    )
 
     # Gives the right error when passed sequences are not primer and sequence
     with pytest.raises(ValueError):
@@ -2079,9 +2463,14 @@ def test_assembly_has_mismatches():
 
 
 def test_single_fragment_assembly_error():
-    fragments = [Dseqrecord("AAGAATTCTTGA"), Dseqrecord("TCCCTTGAATTCCC", circular=True)]
+    fragments = [
+        Dseqrecord("AAGAATTCTTGA"),
+        Dseqrecord("TCCCTTGAATTCCC", circular=True),
+    ]
     with pytest.raises(ValueError):
-        assembly.SingleFragmentAssembly(fragments, algorithm=assembly.primer_template_overlap, limit=False)
+        assembly.SingleFragmentAssembly(
+            fragments, algorithm=assembly.primer_template_overlap, limit=False
+        )
 
     def algo(x, y, _l):
         return assembly.restriction_ligation_overlap(x, y, [EcoRI], False)
@@ -2104,7 +2493,9 @@ def test_insertion_edge_case():
     a = Dseqrecord("cccgaggggaatcgaa")
     b = Dseqrecord("Acccgagggggaatc")
 
-    asm = assembly.Assembly([a, b], limit=5, use_all_fragments=True, use_fragment_order=False)
+    asm = assembly.Assembly(
+        [a, b], limit=5, use_all_fragments=True, use_fragment_order=False
+    )
 
     product_seqs = set(str(prod.seq) for prod in asm.assemble_insertion())
     expected_seqs = {"cccgagggggaatcgaa", "Acccgaggggaatc"}
@@ -2114,7 +2505,9 @@ def test_insertion_edge_case():
 
     for shift in range(len(b_circ)):
         b_shifted = b_circ.shifted(shift)
-        asm = assembly.Assembly([a, b_shifted], limit=5, use_all_fragments=True, use_fragment_order=False)
+        asm = assembly.Assembly(
+            [a, b_shifted], limit=5, use_all_fragments=True, use_fragment_order=False
+        )
 
         product_seqs = [str(prod.seq) for prod in asm.assemble_insertion()]
         assert len(product_seqs) == 4
