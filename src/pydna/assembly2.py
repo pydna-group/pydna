@@ -793,7 +793,7 @@ def assemble(
             fill_right(out_dseqrecord.seq) + fill_left(fragment.seq)[overlap:],
             features=out_dseqrecord.features + new_features,
         )
-        breakpoint()
+        # breakpoint() # print(repr(out_dseqrecord.seq))
     # For circular assemblies, close the loop and wrap origin-spanning features
     if is_circular:
         overlap = fragment_overlaps[-1]

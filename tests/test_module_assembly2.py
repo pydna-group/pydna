@@ -914,10 +914,11 @@ def test_pcrs_with_overlapping_primers_circular_templates():
     # ACGTTCGTGC
     # ||||||||||
     # ACGTTCGTGCGTTTTGC
+    # TGCAAGCACGCAAAACG
     #       |||||||||||
     #       CACGCAAAACG
 
-    seq = Dseqrecord(Dseq("CGTTCGTGCGTTTTGCA", circular=True))
+    seq = Dseqrecord(Dseq("CGTTCGTGCGTTTTGCA", circular=True)) # <<<==== !!!
 
     # Overlapping 5', edge case for circular extract_subfragment
     primer1 = Primer("ACGTTCGTGC")
