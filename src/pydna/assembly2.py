@@ -974,6 +974,8 @@ def extract_subfragment(
         from pydna.dseqrecord import Dseqrecord
         open_seq = Dseqrecord("")
         open_seq.seq = seq.seq.apply_cut(dummy_cut, dummy_cut, dummy_cut[0][0]-len(seq), 0)
+        print(repr(seq.seq))
+        print(repr(open_seq.seq))
         breakpoint()
         return _Dseqrecord(fill_dseq(open_seq.seq), features=open_seq.features)
 
