@@ -537,7 +537,7 @@ Wang, Y., Xue, H., Pourcel, C., Du, Y., & Gautheret, D. (2021).
 In Cold Spring Harbor Laboratory (p. 2021.01.17.427048). [DOI](https://doi.org/10.1101/2021.01.17.427048)
 [PubMed](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8180056)
 
-[ShareYourCloning](https://shareyourcloning.org), a web application for designing and documenting DNA cloning strategies.
+[OpenCloning](https://opencloning.org), a web application for designing and documenting DNA cloning strategies.
 
 [An Automated Protein Synthesis Pipeline with Transcriptic and Snakemake](http://blog.booleanbiotech.com/transcriptic_protein_synthesis_pipeline.html)
 
