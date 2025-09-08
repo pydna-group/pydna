@@ -2415,7 +2415,7 @@ def common_function_excision_products(
 def homologous_recombination_integration(
     genome: _Dseqrecord,
     inserts: list[_Dseqrecord] | _Dseqrecord,
-    minimal_homology: int = 40,
+    limit: int = 40,
 ) -> list[_Dseqrecord]:
     """Returns the products resulting from the integration of an insert (or inserts joined
     through in vivo recombination) into the genome through homologous recombination.
@@ -2426,7 +2426,7 @@ def homologous_recombination_integration(
         Target genome sequence
     inserts : list[_Dseqrecord] or _Dseqrecord
         DNA fragment(s) to insert
-    minimal_homology : int, optional
+    limit : int, optional
         Minimum homology length required, by default 40
 
     Returns
@@ -2460,9 +2460,7 @@ def homologous_recombination_integration(
     """
     fragments = common_handle_insertion_fragments(genome, inserts)
 
-    return common_function_integration_products(
-        fragments, minimal_homology, common_sub_strings
-    )
+    return common_function_integration_products(fragments, limit, common_sub_strings)
 
 
 def homologous_recombination_excision(
