@@ -2378,7 +2378,7 @@ def common_function_integration_products(
 
 
 def common_handle_insertion_fragments(
-    genome: _Dseqrecord, inserts: list[_Dseqrecord] | _Dseqrecord
+    genome: _Dseqrecord, inserts: list[_Dseqrecord]
 ) -> list[_Dseqrecord]:
     """Common function to handle / validate insertion fragments.
 
@@ -2433,7 +2433,7 @@ def common_function_excision_products(
 
 def homologous_recombination_integration(
     genome: _Dseqrecord,
-    inserts: list[_Dseqrecord] | _Dseqrecord,
+    inserts: list[_Dseqrecord],
     limit: int = 40,
 ) -> list[_Dseqrecord]:
     """Returns the products resulting from the integration of an insert (or inserts joined
@@ -2443,7 +2443,7 @@ def homologous_recombination_integration(
     ----------
     genome : _Dseqrecord
         Target genome sequence
-    inserts : list[_Dseqrecord] or _Dseqrecord
+    inserts : list[_Dseqrecord]
         DNA fragment(s) to insert
     limit : int, optional
         Minimum homology length required, by default 40
@@ -2519,7 +2519,7 @@ def homologous_recombination_excision(
 
 
 def cre_lox_integration(
-    genome: _Dseqrecord, inserts: list[_Dseqrecord] | _Dseqrecord
+    genome: _Dseqrecord, inserts: list[_Dseqrecord]
 ) -> list[_Dseqrecord]:
     """Returns the products resulting from the integration of an insert (or inserts joined
     through cre-lox recombination among them) into the genome through cre-lox integration.
@@ -2550,7 +2550,7 @@ def cre_lox_integration(
     >>> b = Dseqrecord(f"{LOXP_SEQUENCE}bbbbb", circular=True)
     >>> [a, b]
     [Dseqrecord(-45), Dseqrecord(o39)]
-    >>> res = cre_lox_integration(a, b)
+    >>> res = cre_lox_integration(a, [b])
     >>> res
     [Dseqrecord(-84)]
     >>> res2 = cre_lox_excision(res[0])
@@ -2565,7 +2565,7 @@ def cre_lox_integration(
     >>> lox71 = 'TACCGTTCGTATAGCATACATTATACGAAGTTAT'
     >>> a = Dseqrecord(f"cccccc{lox66}aaaaa")
     >>> b = Dseqrecord(f"{lox71}bbbbb", circular=True)
-    >>> res = cre_lox_integration(a, b)
+    >>> res = cre_lox_integration(a, [b])
     >>> res
     [Dseqrecord(-84)]
     >>> res2 = cre_lox_excision(res[0])
@@ -2602,7 +2602,7 @@ def cre_lox_excision(genome: _Dseqrecord) -> list[_Dseqrecord]:
     >>> b = Dseqrecord(f"{LOXP_SEQUENCE}bbbbb", circular=True)
     >>> [a, b]
     [Dseqrecord(-45), Dseqrecord(o39)]
-    >>> res = cre_lox_integration(a, b)
+    >>> res = cre_lox_integration(a, [b])
     >>> res
     [Dseqrecord(-84)]
     >>> res2 = cre_lox_excision(res[0])
@@ -2617,7 +2617,7 @@ def cre_lox_excision(genome: _Dseqrecord) -> list[_Dseqrecord]:
     >>> lox71 = 'TACCGTTCGTATAGCATACATTATACGAAGTTAT'
     >>> a = Dseqrecord(f"cccccc{lox66}aaaaa")
     >>> b = Dseqrecord(f"{lox71}bbbbb", circular=True)
-    >>> res = cre_lox_integration(a, b)
+    >>> res = cre_lox_integration(a, [b])
     >>> res
     [Dseqrecord(-84)]
     >>> res2 = cre_lox_excision(res[0])
