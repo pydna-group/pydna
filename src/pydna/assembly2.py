@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Slightly different assembly implementation"""
+"""
+Improved implementation of the assembly module. To see a list of issues with the previous implementation,
+see [issues tagged with fixed-with-new-assembly-model](https://github.com/pydna-group/pydna/issues?q=is%3Aissue%20state%3Aopen%20label%3Afixed-with-new-assembly-model)
+"""
 
 import networkx as _nx
 import itertools as _itertools
@@ -33,7 +36,7 @@ from pydna.types import (
     SequenceOverlap,
     AssemblyEdgeType,
 )
-from pydna.gateway import gateway_overlap
+from pydna.gateway import gateway_overlap, find_gateway_sites
 from pydna.cre_lox import cre_loxP_overlap
 
 from typing import TYPE_CHECKING, Callable
@@ -1616,6 +1619,7 @@ class Assembly:
     ) -> list[_Dseqrecord]:
         """Assemble linear constructs, from assemblies returned by self.get_linear_assemblies."""
         assemblies = self.get_linear_assemblies(only_adjacent_edges, max_assemblies)
+        print(len(assemblies))
         return [assemble(self.fragments, a) for a in assemblies]
 
     def assemble_circular(
@@ -2211,11 +2215,10 @@ def ligation_assembly(
     def sticky_end_algorithm(x, y, _l):
         return sticky_end_sub_strings(x, y, allow_partial_overlap)
 
-    algo = (
-        sticky_end_algorithm
-        if not allow_blunt
-        else combine_algorithms(sticky_end_algorithm, blunt_overlap)
-    )
+    if allow_blunt:
+        algo = combine_algorithms(sticky_end_algorithm, blunt_overlap)
+    else:
+        algo = sticky_end_algorithm
 
     return common_function_assembly_products(frags, None, algo, circular_only)
 
@@ -2319,9 +2322,24 @@ def gateway_assembly(
 
     filter_results_function = None if not multi_site_only else assembly_is_multi_site
 
-    return common_function_assembly_products(
+    products = common_function_assembly_products(
         frags, None, algo, circular_only, filter_results_function
     )
+
+    if len(products) == 0:
+        # Build a list of all the sites in the fragments
+        sites_in_fragments = list()
+        for frag in frags:
+            sites_in_fragments.append(list(find_gateway_sites(frag, greedy).keys()))
+        formatted_strings = [
+            f'fragment {i + 1}: {", ".join(sites)}'
+            for i, sites in enumerate(sites_in_fragments)
+        ]
+        raise ValueError(
+            f"Inputs are not compatible for {reaction_type} reaction.\n\n"
+            + "\n".join(formatted_strings),
+        )
+    return products
 
 
 def common_function_integration_products(

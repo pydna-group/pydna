@@ -1684,6 +1684,16 @@ def test_insertion_assembly():
         assert len(prods) == 1
         assert str(prods[0].seq) == "ttACGTTCGTttttCGGGCGCGggggTTAATTAAcc"
 
+    # Insertion / Excision of linear and circular molecules
+    f = Dseqrecord("aaCGGGCGCGggggCGGGCGCGac", circular=False)
+    asm = assembly.SingleFragmentAssembly([f], limit=8)
+    prods = asm.assemble_insertion()
+    assert len(prods) == 1
+    assert str(prods[0].seq) == "aaCGGGCGCGac"
+    prods = asm.assemble_circular()
+    assert len(prods) == 1
+    assert str(prods[0].seq) == "CGGGCGCGgggg"
+
 
 def circles_assembly():
     a = Dseqrecord("xxxACGTAyyy", circular=True)
@@ -2113,6 +2123,13 @@ def test_ligation_assembly():
     assert len(result) == 1
     assert result[0].seq == fragments[1].looped().seq
 
+    # Blunt ligation combined with sticky end
+    fragments = Dseqrecord("AAAGAATTCAAA").cut(EcoRI)
+    result = assembly.ligation_assembly(fragments, allow_blunt=True)
+    result_str = [str(x.seq) for x in result]
+    assert sorted(result_str) == sorted(["AAAGAATTCAAA"])
+    assert result[0].circular
+
 
 def test_blunt_assembly():
     # Linear assembly
@@ -2473,3 +2490,64 @@ def test_in_vivo_assembly():
             products = assembly.in_vivo_assembly(fragments, 7, circular_only=True)
             products_str = [str(p.seq) for p in products]
             assert products_str == expected_outputs
+
+
+def test_gateway_assembly():
+
+    attB1 = "ACAACTTTGTACAAAAAAGCAGAAG"
+    attB2 = "ACAACTTTGTACAAGAAAGCTGGGC"
+    attP1 = "AAAATAATGATTTTATTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCTGAACGAGAAGCGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATCCAGTCACTATGAATCAACTACTTAGATGGTATTAGTGACCTGTA"
+    attP2 = "AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATAAGCAATGCTTTCTTATAATGCCAACTTTGTACAAGAAAGCTGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGACTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATCCAGTCACTATGAATCAACTACTTAGATGGTATTAGTGACCTGTA"
+    attR1 = "ACAACTTTGTACAAAAAAGCTGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATGCAGTCACTATG"
+    attL1 = "CAAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATAAGCAATGCTTTCTTATAATGCCAACTTTGTACAAAAAAGCAGGCT"
+
+    seq1 = Dseqrecord("aaa" + attB1 + "ccc")
+    seq2 = Dseqrecord("aaa" + attP1 + "ccc")
+    product_BP = "aaaACAACTTTGTACAAAAAAGCTGAACGAGAAGCGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATCCAGTCACTATGAATCAACTACTTAGATGGTATTAGTGACCTGTAccc"
+    product_PB = "aaaAAAATAATGATTTTATTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCAGAAGccc"
+
+    products_BP = assembly.gateway_assembly([seq1, seq2], "BP")
+    assert [product_BP, product_PB] == [str(s.seq) for s in products_BP]
+
+    seq3 = Dseqrecord("aaa" + attR1 + "ccc")
+    seq4 = Dseqrecord("aaa" + attL1 + "ccc")
+    product_RL = "aaaACAACTTTGTACAAAAAAGCAGGCTccc"
+    product_LR = "aaaCAAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATAAGCAATGCTTTCTTATAATGCCAACTTTGTACAAAAAAGCTGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATGCAGTCACTATGccc"
+
+    products_LR = assembly.gateway_assembly([seq3, seq4], "LR")
+    assert [product_RL, product_LR] == [str(s.seq) for s in products_LR]
+
+    # Products are not valid inputs for the parent reaction
+    with pytest.raises(ValueError):
+        assembly.gateway_assembly(products_BP, "BP")
+    with pytest.raises(ValueError):
+        assembly.gateway_assembly(products_LR, "LR")
+
+    # Test that greedy is being used (finds)
+    with pytest.raises(ValueError) as e:
+        assembly.gateway_assembly(products_LR, "LR", greedy=True)
+    assert "fragment 2: attB1, attL1, attR1, attP1" in str(e.value)
+
+    # Test multi site only
+    seq1 = Dseqrecord("aaa" + attB1 + "ggg" + attB2 + "ccc", circular=True)
+    seq2 = Dseqrecord("aaa" + attP1 + "ggg" + attP2 + "ccc", circular=True)
+
+    products = assembly.gateway_assembly([seq1, seq2], "BP")
+    assert len(products) == 4
+    products = assembly.gateway_assembly([seq1, seq2], "BP", multi_site_only=True)
+    assert len(products) == 2
+
+    # Test single input
+    seq1 = Dseqrecord("aaa" + attB1 + "ccc" + attP1)
+    products = assembly.gateway_assembly([seq1], "BP")
+    assert len(products) == 2
+    assert (
+        str(products[0].seq)
+        == "GTACAAAAAAGCAGAAGcccAAAATAATGATTTTATTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTT"
+    )
+    assert products[0].circular
+    assert (
+        str(products[1].seq)
+        == "aaaACAACTTTGTACAAAAAAGCTGAACGAGAAGCGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATCCAGTCACTATGAATCAACTACTTAGATGGTATTAGTGACCTGTA"
+    )
+    assert not products[1].circular
