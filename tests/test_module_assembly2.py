@@ -2551,3 +2551,24 @@ def test_gateway_assembly():
         == "aaaACAACTTTGTACAAAAAAGCTGAACGAGAAGCGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATCCAGTCACTATGAATCAACTACTTAGATGGTATTAGTGACCTGTA"
     )
     assert not products[1].circular
+
+
+def test_common_handle_insertion_fragments():
+
+    genome = Dseqrecord("aaa")
+    inserts = [Dseqrecord("bbb")]
+    with pytest.raises(ValueError) as e:
+        assembly.common_handle_insertion_fragments([genome], [])
+    assert "Genome must be a Dseqrecord object" in str(e)
+
+    with pytest.raises(ValueError) as e:
+        assembly.common_handle_insertion_fragments(genome, [])
+    assert "Inserts must be a non-empty list of Dseqrecord objects" in str(e)
+
+    with pytest.raises(ValueError) as e:
+        assembly.common_handle_insertion_fragments(genome, inserts[0])
+    assert "Inserts must be a list of Dseqrecord objects" in str(e)
+
+    assert [genome] + inserts == assembly.common_handle_insertion_fragments(
+        genome, inserts
+    )
