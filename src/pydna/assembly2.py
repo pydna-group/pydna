@@ -1619,7 +1619,6 @@ class Assembly:
     ) -> list[_Dseqrecord]:
         """Assemble linear constructs, from assemblies returned by self.get_linear_assemblies."""
         assemblies = self.get_linear_assemblies(only_adjacent_edges, max_assemblies)
-        print(len(assemblies))
         return [assemble(self.fragments, a) for a in assemblies]
 
     def assemble_circular(
@@ -2397,12 +2396,14 @@ def common_handle_insertion_fragments(
     """
     if not isinstance(genome, _Dseqrecord):
         raise ValueError("Genome must be a Dseqrecord object")
-    if isinstance(inserts, _Dseqrecord):
-        inserts = [inserts]
+
     if not isinstance(inserts, list) or not all(
         isinstance(f, _Dseqrecord) for f in inserts
     ):
         raise ValueError("Inserts must be a list of Dseqrecord objects")
+
+    if len(inserts) == 0:
+        raise ValueError("Inserts must be a non-empty list of Dseqrecord objects")
 
     return [genome] + inserts
 
