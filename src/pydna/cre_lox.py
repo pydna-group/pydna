@@ -92,7 +92,7 @@ def get_regex_dict(original_dict: dict[str, str]) -> dict[str, str]:
 
 
 def find_loxP_sites(seq: Dseqrecord) -> dict[str, list[Location]]:
-    """Find all gateway sites in a sequence and return a dictionary with the name and positions of the sites."""
+    """Find all loxP sites in a sequence and return a dictionary with the name and positions of the sites."""
 
     out = dict()
     regex_dict = get_regex_dict(loxP_dict)
