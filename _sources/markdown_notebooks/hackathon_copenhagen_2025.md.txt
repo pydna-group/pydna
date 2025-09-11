@@ -418,3 +418,271 @@ print("number of utr_features:", len(utr_features))
 More details on how to work with features in the [Dseq_Features notebook](./Dseq_Features.ipynb).
 
 ## Cloning
+
+pydna has multiple functions to simulate cloning, having support for the following methods:
+* Gibson Assembly
+* Restriction and Ligation / Golgen gate
+* Homologous recombination
+* CRISPR-Cas9 (ask the organisers if you plan to use it)
+* Gateway Cloning
+* Cre-Lox recombination
+
+### Restriction and ligation
+
+There are several ways to do restriction and ligation in pydna. You can first do the restriction, pick the fragments for ligation, then do the ligation. You can also do everything in one step. The second method is relatively new, so most examples in the library use the first method.
+
+Let's do an example in which we clone an insert into a backbone plasmid.
+
+
+#### Using the first method (first restriction, then ligation)
+
+
+```python
+## Using the first method
+from Bio.Restriction import EcoRI, SalI
+
+
+# A dummy backbone plasmid, let's assume that we want to replace the
+# cccc by our insert.
+backbone = Dseqrecord('aaaaaaaGAATTCcccGTCGACaa', circular=True)
+
+restriction_products = backbone.cut([EcoRI, SalI])
+# We print the products
+print('The first one is the cutout - we discard it')
+print(repr(restriction_products[0].seq))
+print()
+print('The second one is the digested backbone - we keep it')
+print(repr(restriction_products[1].seq))
+
+digested_backbone = restriction_products[1]
+
+```
+
+    The first one is the cutout - we discard it
+    Dseq(-13)
+    AATTCcccG
+        GgggCAGCT
+    
+    The second one is the digested backbone - we keep it
+    Dseq(-19)
+    TCGACaaaaaaaaaG
+        GtttttttttCTTAA
+
+
+Now we do the same with the insert
+
+
+```python
+insert = Dseqrecord('aaGAATTCaaaccgGTCGACaa')
+restriction_products = insert.cut([EcoRI, SalI])
+
+# The second one is the one we want
+digested_insert = restriction_products[1]
+
+digested_insert.seq
+
+```
+
+
+
+
+    Dseq(-16)
+    AATTCaaaccgG
+        GtttggcCAGCT
+
+
+
+Finally we ligate the products, and then circularize
+
+
+```python
+# They have to be in the right order, and fragments must be complementary
+linear_ligation = digested_insert + digested_backbone
+
+# Then we used the function looped to circularize
+# IMPORTANT: this functions does not act in place, it returns a new sequence.
+
+desired_plasmid = linear_ligation.looped()
+
+desired_plasmid.seq
+```
+
+
+
+
+    Dseq(o27)
+    AATTCaaaccgGTCGACaaaaaaaaaG
+    TTAAGtttggcCAGCTGtttttttttC
+
+
+
+#### Using the second method (restriciton-ligation in one step)
+
+This is particularly useful for restriction-ligation reactions with many inputs, for example for Golden Gate.
+
+
+
+```python
+from pydna.assembly2 import restriction_ligation_assembly
+
+# We indicate that we only want circular products
+products = restriction_ligation_assembly([backbone, insert], [EcoRI, SalI], circular_only=True)
+
+print("The first plasmid is the desired one")
+print(repr(products[0].seq))
+print()
+print("The second one is a circularization of the digested insert and the cutout")
+print(repr(products[1].seq))
+```
+
+    The first plasmid is the desired one
+    Dseq(o27)
+    TCGACaaaaaaaaaGAATTCaaaccgG
+    AGCTGtttttttttCTTAAGtttggcC
+    
+    The second one is a circularization of the digested insert and the cutout
+    Dseq(o21)
+    AATTCcccGTCGACcggtttG
+    TTAAGgggCAGCTGgccaaaC
+
+
+### PCR
+
+Using pydna, you can easily simulate PCR. For details on primer design, visit [the documentation](https://pydna-group.github.io/pydna/markdown_notebooks/PCR.html).
+
+
+```python
+from pydna.amplify import pcr
+from pydna.dseqrecord import Dseqrecord
+from pydna.primer import Primer
+
+#Defining forward and reverse primers
+fwd_primer = Primer("aaaATTCCTGCAGAGTACATC", id="fwd_primer")
+rvs_primer = Primer("cccACCATCCGAAGATATCTT", id="rvs_primer")
+
+template = Dseqrecord("gccATTCCTGCAGAGTACATCaaaccggttAAGATATCTTCGGATGGTatta")
+
+pcr_product = pcr(fwd_primer, rvs_primer, template)
+print(pcr_product.seq)
+print(pcr_product.figure())
+
+```
+
+    aaaATTCCTGCAGAGTACATCaaaccggttAAGATATCTTCGGATGGTggg
+       5ATTCCTGCAGAGTACATC...AAGATATCTTCGGATGGT3
+                             ||||||||||||||||||
+                            3TTCTATAGAAGCCTACCAccc5
+    5aaaATTCCTGCAGAGTACATC3
+        ||||||||||||||||||
+       3TAAGGACGTCTCATGTAG...TTCTATAGAAGCCTACCA5
+
+
+### Gibson Assembly
+
+See below a dummy example of Gibson Assembly. More details on primer design, etc. in [the documentation examples](https://pydna-group.github.io/pydna/markdown_notebooks/Example_Gibson.html).
+
+Equivalent methods, such as in-fusion and fusion-pcr are also available.
+
+In vivo assembly is also available. The difference is that a Gibson Assembly only joins fragments that have terminal overlaps (at the end of the fragments), but the in vivo assembly (which relies on homologous recombination) can join fragments that have non-terminal overlaps.
+
+
+
+```python
+from pydna.assembly2 import gibson_assembly
+
+fragment1 = Dseqrecord("GTCGACTaaaAGAGACC")
+fragment2 = Dseqrecord("AGAGACCcgcGTCGACT")
+
+
+# In the funtion, we specify the fragments and the minimum overlap length,
+# for this example, we want a minimum overlap of 7 bp.
+products = gibson_assembly([fragment1, fragment2], limit=7)
+products[0].seq
+
+```
+
+
+
+
+    Dseq(o20)
+    GTCGACTaaaAGAGACCcgc
+    CAGCTGAtttTCTCTGGgcg
+
+
+
+### Genome integration / excision
+
+Homologous recombination, Cre-Lox recombination and other methods that are normally used on genomes have special arguments
+
+Insertions take a first `Dseqrecord` object with the genome, and a list of `Dseqrecord` objects with the fragments to integrate / excise.
+
+Excisions take a single `Dseqrecord` object with the genome from which to excise a circular DNA molecule.
+
+Let's take an example for homologous recombination. In which we want to integrate a plasmid into the genome via a single homology site:
+
+
+
+```python
+from pydna.assembly2 import homologous_recombination_integration
+
+genome = Dseqrecord('aaaCGTACGCACAaaa')
+plasmid = Dseqrecord('CGTACGCACAcccc', circular=True)
+
+products = homologous_recombination_integration(genome, [plasmid], limit=10)
+
+transformed_genome = products[0]
+transformed_genome.seq
+
+
+```
+
+
+
+
+    Dseq(-30)
+    aaaCGTACGCACAccccCGTACGCACAaaa
+    tttGCATGCGTGTggggGCATGCGTGTttt
+
+
+
+We can also simulate the opposite process, an excission, and recover the original inputs (plasmid and gneome)
+
+
+```python
+from pydna.assembly2 import homologous_recombination_excision
+
+products = homologous_recombination_excision(transformed_genome, limit=10)
+
+print(products[0].seq)
+print(products[1].seq)
+```
+
+    CGTACGCACAcccc
+    aaaCGTACGCACAaaa
+
+
+### Other cloning methods
+
+You can find most other cloning methods at the bottom of the [documentation page of the assemmbly2 module](https://pydna-group.github.io/pydna/modules/pydna_assembly2.html).
+
+## Sequence equality
+
+Sometimes, you may want to check if two double-stranded sequences are equal. Comparing the sequence strings is not great, because they could be reverse-complemented, and for circular molecules, they might be shifted. Pydna comes with a function that produces a unique string for a given sequence, independently of its orientation or rotation (for circular DNA).
+
+
+```python
+my_plasmid = Dseqrecord('AAGGTC', circular=True)
+my_plasmid_rotated = my_plasmid.shifted(3)
+my_plasmid_rotated_rc = my_plasmid_rotated.reverse_complement()
+
+print(my_plasmid.seq, my_plasmid.seguid())
+print(my_plasmid_rotated.seq, my_plasmid_rotated.seguid())
+print(my_plasmid_rotated_rc.seq, my_plasmid_rotated_rc.seguid())
+
+
+```
+
+    AAGGTC cdseguid=J56O6n-fwbT2-SLlxCMBVDjXzKg
+    GTCAAG cdseguid=J56O6n-fwbT2-SLlxCMBVDjXzKg
+    CTTGAC cdseguid=J56O6n-fwbT2-SLlxCMBVDjXzKg
+

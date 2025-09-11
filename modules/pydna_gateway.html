@@ -61,6 +61,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_common_sub_strings.html">pydna.common_sub_strings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_conftest.html">pydna.conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_contig.html">pydna.contig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna_cre_lox.html">pydna.cre_lox</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_crispr.html">pydna.crispr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_design.html">pydna.design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_download.html">pydna.download</a></li>
@@ -69,7 +70,9 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_fakeseq.html">pydna.fakeseq</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_fusionpcr.html">pydna.fusionpcr</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">pydna.gateway</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pydna.gateway.Gateway"><code class="docutils literal notranslate"><span class="pre">Gateway</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.gateway.gateway_overlap"><code class="docutils literal notranslate"><span class="pre">gateway_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.gateway.find_gateway_sites"><code class="docutils literal notranslate"><span class="pre">find_gateway_sites()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.gateway.annotate_gateway_sites"><code class="docutils literal notranslate"><span class="pre">annotate_gateway_sites()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_gel.html">pydna.gel</a></li>
@@ -86,6 +89,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_seq.html">pydna.seq</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_seqrecord.html">pydna.seqrecord</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_sequence_picker.html">pydna.sequence_picker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna_sequence_regex.html">pydna.sequence_regex</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_threading_timer_decorator_exit.html">pydna.threading_timer_decorator_exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_tm.html">pydna.tm</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_types.html">pydna.types</a></li>
@@ -124,28 +128,23 @@
              
   <section id="pydna-gateway">
 <h1>pydna.gateway<a class="headerlink" href="#pydna-gateway" title="Link to this heading"></a></h1>
-<p id="module-pydna.gateway">Assembly of sequences by Gateway recombination.</p>
-<p>Given a list of sequences (Dseqrecords), all sequences are analyzed for
-presence of att(P|B|L|R)N where N is 1,2,3 or 4.</p>
-<p>A graph is constructed where the att sites form a nodes and
-sequences separating att sites form edges.</p>
-<p>The NetworkX package is used to trace linear and circular paths through the
-graph.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="pydna.gateway.Gateway">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydna.gateway.</span></span><span class="sig-name descname"><span class="pre">Gateway</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">molecules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/gateway.html#Gateway"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.gateway.Gateway" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Assembly of linear DNA fragments into linear or circular constructs.</p>
-<p>The Assembly is meant to replace the Assembly method as it
-is easier to use. Accepts a list of Dseqrecords (source fragments) to
-initiate an Assembly object. Several methods are available for analysis
-of overlapping sequences, graph construction and assembly.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fragments</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – a list of Dseqrecord objects.</p>
-</dd>
-</dl>
+<span class="target" id="module-pydna.gateway"></span><dl class="py function">
+<dt class="sig sig-object py" id="pydna.gateway.gateway_overlap">
+<span class="sig-prename descclassname"><span class="pre">pydna.gateway.</span></span><span class="sig-name descname"><span class="pre">gateway_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seqx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seqy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">reaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">greedy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/gateway.html#gateway_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.gateway.gateway_overlap" title="Link to this definition"></a></dt>
+<dd><p>Find gateway overlaps. If greedy is True, it uses a more greedy consensus site to find attP sites,
+which might give false positives</p>
 </dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.gateway.find_gateway_sites">
+<span class="sig-prename descclassname"><span class="pre">pydna.gateway.</span></span><span class="sig-name descname"><span class="pre">find_gateway_sites</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">greedy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">SimpleLocation</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/gateway.html#find_gateway_sites"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.gateway.find_gateway_sites" title="Link to this definition"></a></dt>
+<dd><p>Find all gateway sites in a sequence and return a dictionary with the name and positions of the sites.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.gateway.annotate_gateway_sites">
+<span class="sig-prename descclassname"><span class="pre">pydna.gateway.</span></span><span class="sig-name descname"><span class="pre">annotate_gateway_sites</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">greedy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></span><a class="reference internal" href="../_modules/pydna/gateway.html#annotate_gateway_sites"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.gateway.annotate_gateway_sites" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </section>
 

@@ -61,6 +61,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_common_sub_strings.html">pydna.common_sub_strings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_conftest.html">pydna.conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_contig.html">pydna.contig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna_cre_lox.html">pydna.cre_lox</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_crispr.html">pydna.crispr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_design.html">pydna.design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_download.html">pydna.download</a></li>
@@ -82,6 +83,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#pydna.parsers.embl_gb_fasta"><code class="docutils literal notranslate"><span class="pre">embl_gb_fasta()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydna.parsers.parse"><code class="docutils literal notranslate"><span class="pre">parse()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pydna.parsers.parse_primers"><code class="docutils literal notranslate"><span class="pre">parse_primers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.parsers.parse_snapgene"><code class="docutils literal notranslate"><span class="pre">parse_snapgene()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_primer.html">pydna.primer</a></li>
@@ -89,6 +91,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_seq.html">pydna.seq</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_seqrecord.html">pydna.seqrecord</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_sequence_picker.html">pydna.sequence_picker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna_sequence_regex.html">pydna.sequence_regex</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_threading_timer_decorator_exit.html">pydna.threading_timer_decorator_exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_tm.html">pydna.tm</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_types.html">pydna.types</a></li>
@@ -195,6 +198,23 @@ returned.</p></li>
 <dt class="sig sig-object py" id="pydna.parsers.parse_primers">
 <span class="sig-prename descclassname"><span class="pre">pydna.parsers.</span></span><span class="sig-name descname"><span class="pre">parse_primers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/parsers.html#parse_primers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.parsers.parse_primers" title="Link to this definition"></a></dt>
 <dd><p>docstring.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.parsers.parse_snapgene">
+<span class="sig-prename descclassname"><span class="pre">pydna.parsers.</span></span><span class="sig-name descname"><span class="pre">parse_snapgene</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/parsers.html#parse_snapgene"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.parsers.parse_snapgene" title="Link to this definition"></a></dt>
+<dd><p>Parse a SnapGene file and return a Dseqrecord object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The path to the SnapGene file to parse.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The parsed SnapGene file as a Dseqrecord object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pydna_all.html#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord">Dseqrecord</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

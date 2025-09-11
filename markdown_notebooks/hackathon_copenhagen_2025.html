@@ -452,6 +452,229 @@ number of utr_features: 3
 </section>
 <section id="cloning">
 <h1>Cloning<a class="headerlink" href="#cloning" title="Link to this heading"></a></h1>
+<p>pydna has multiple functions to simulate cloning, having support for the following methods:</p>
+<ul class="simple">
+<li><p>Gibson Assembly</p></li>
+<li><p>Restriction and Ligation / Golgen gate</p></li>
+<li><p>Homologous recombination</p></li>
+<li><p>CRISPR-Cas9 (ask the organisers if you plan to use it)</p></li>
+<li><p>Gateway Cloning</p></li>
+<li><p>Cre-Lox recombination</p></li>
+</ul>
+<section id="restriction-and-ligation">
+<h2>Restriction and ligation<a class="headerlink" href="#restriction-and-ligation" title="Link to this heading"></a></h2>
+<p>There are several ways to do restriction and ligation in pydna. You can first do the restriction, pick the fragments for ligation, then do the ligation. You can also do everything in one step. The second method is relatively new, so most examples in the library use the first method.</p>
+<p>Let’s do an example in which we clone an insert into a backbone plasmid.</p>
+<section id="using-the-first-method-first-restriction-then-ligation">
+<h3>Using the first method (first restriction, then ligation)<a class="headerlink" href="#using-the-first-method-first-restriction-then-ligation" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">## Using the first method</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">EcoRI</span><span class="p">,</span> <span class="n">SalI</span>
+
+
+<span class="c1"># A dummy backbone plasmid, let&#39;s assume that we want to replace the</span>
+<span class="c1"># cccc by our insert.</span>
+<span class="n">backbone</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;aaaaaaaGAATTCcccGTCGACaa&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">restriction_products</span> <span class="o">=</span> <span class="n">backbone</span><span class="o">.</span><span class="n">cut</span><span class="p">([</span><span class="n">EcoRI</span><span class="p">,</span> <span class="n">SalI</span><span class="p">])</span>
+<span class="c1"># We print the products</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The first one is the cutout - we discard it&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">restriction_products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The second one is the digested backbone - we keep it&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">restriction_products</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span>
+
+<span class="n">digested_backbone</span> <span class="o">=</span> <span class="n">restriction_products</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>The first one is the cutout - we discard it
+Dseq(-13)
+AATTCcccG
+    GgggCAGCT
+
+The second one is the digested backbone - we keep it
+Dseq(-19)
+TCGACaaaaaaaaaG
+    GtttttttttCTTAA
+</pre></div>
+</div>
+<p>Now we do the same with the insert</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">insert</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;aaGAATTCaaaccgGTCGACaa&#39;</span><span class="p">)</span>
+<span class="n">restriction_products</span> <span class="o">=</span> <span class="n">insert</span><span class="o">.</span><span class="n">cut</span><span class="p">([</span><span class="n">EcoRI</span><span class="p">,</span> <span class="n">SalI</span><span class="p">])</span>
+
+<span class="c1"># The second one is the one we want</span>
+<span class="n">digested_insert</span> <span class="o">=</span> <span class="n">restriction_products</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">digested_insert</span><span class="o">.</span><span class="n">seq</span>
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Dseq(-16)
+AATTCaaaccgG
+    GtttggcCAGCT
+</pre></div>
+</div>
+<p>Finally we ligate the products, and then circularize</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># They have to be in the right order, and fragments must be complementary</span>
+<span class="n">linear_ligation</span> <span class="o">=</span> <span class="n">digested_insert</span> <span class="o">+</span> <span class="n">digested_backbone</span>
+
+<span class="c1"># Then we used the function looped to circularize</span>
+<span class="c1"># IMPORTANT: this functions does not act in place, it returns a new sequence.</span>
+
+<span class="n">desired_plasmid</span> <span class="o">=</span> <span class="n">linear_ligation</span><span class="o">.</span><span class="n">looped</span><span class="p">()</span>
+
+<span class="n">desired_plasmid</span><span class="o">.</span><span class="n">seq</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Dseq(o27)
+AATTCaaaccgGTCGACaaaaaaaaaG
+TTAAGtttggcCAGCTGtttttttttC
+</pre></div>
+</div>
+</section>
+<section id="using-the-second-method-restriciton-ligation-in-one-step">
+<h3>Using the second method (restriciton-ligation in one step)<a class="headerlink" href="#using-the-second-method-restriciton-ligation-in-one-step" title="Link to this heading"></a></h3>
+<p>This is particularly useful for restriction-ligation reactions with many inputs, for example for Golden Gate.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">restriction_ligation_assembly</span>
+
+<span class="c1"># We indicate that we only want circular products</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">restriction_ligation_assembly</span><span class="p">([</span><span class="n">backbone</span><span class="p">,</span> <span class="n">insert</span><span class="p">],</span> <span class="p">[</span><span class="n">EcoRI</span><span class="p">,</span> <span class="n">SalI</span><span class="p">],</span> <span class="n">circular_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The first plasmid is the desired one&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The second one is a circularization of the digested insert and the cutout&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>The first plasmid is the desired one
+Dseq(o27)
+TCGACaaaaaaaaaGAATTCaaaccgG
+AGCTGtttttttttCTTAAGtttggcC
+
+The second one is a circularization of the digested insert and the cutout
+Dseq(o21)
+AATTCcccGTCGACcggtttG
+TTAAGgggCAGCTGgccaaaC
+</pre></div>
+</div>
+</section>
+</section>
+<section id="pcr">
+<h2>PCR<a class="headerlink" href="#pcr" title="Link to this heading"></a></h2>
+<p>Using pydna, you can easily simulate PCR. For details on primer design, visit <a class="reference external" href="https://pydna-group.github.io/pydna/markdown_notebooks/PCR.html">the documentation</a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplify</span><span class="w"> </span><span class="kn">import</span> <span class="n">pcr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span>
+
+<span class="c1">#Defining forward and reverse primers</span>
+<span class="n">fwd_primer</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="s2">&quot;aaaATTCCTGCAGAGTACATC&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;fwd_primer&quot;</span><span class="p">)</span>
+<span class="n">rvs_primer</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="s2">&quot;cccACCATCCGAAGATATCTT&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;rvs_primer&quot;</span><span class="p">)</span>
+
+<span class="n">template</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;gccATTCCTGCAGAGTACATCaaaccggttAAGATATCTTCGGATGGTatta&quot;</span><span class="p">)</span>
+
+<span class="n">pcr_product</span> <span class="o">=</span> <span class="n">pcr</span><span class="p">(</span><span class="n">fwd_primer</span><span class="p">,</span> <span class="n">rvs_primer</span><span class="p">,</span> <span class="n">template</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pcr_product</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pcr_product</span><span class="o">.</span><span class="n">figure</span><span class="p">())</span>
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>aaaATTCCTGCAGAGTACATCaaaccggttAAGATATCTTCGGATGGTggg
+   5ATTCCTGCAGAGTACATC...AAGATATCTTCGGATGGT3
+                         ||||||||||||||||||
+                        3TTCTATAGAAGCCTACCAccc5
+5aaaATTCCTGCAGAGTACATC3
+    ||||||||||||||||||
+   3TAAGGACGTCTCATGTAG...TTCTATAGAAGCCTACCA5
+</pre></div>
+</div>
+</section>
+<section id="gibson-assembly">
+<h2>Gibson Assembly<a class="headerlink" href="#gibson-assembly" title="Link to this heading"></a></h2>
+<p>See below a dummy example of Gibson Assembly. More details on primer design, etc. in <a class="reference external" href="https://pydna-group.github.io/pydna/markdown_notebooks/Example_Gibson.html">the documentation examples</a>.</p>
+<p>Equivalent methods, such as in-fusion and fusion-pcr are also available.</p>
+<p>In vivo assembly is also available. The difference is that a Gibson Assembly only joins fragments that have terminal overlaps (at the end of the fragments), but the in vivo assembly (which relies on homologous recombination) can join fragments that have non-terminal overlaps.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">gibson_assembly</span>
+
+<span class="n">fragment1</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;GTCGACTaaaAGAGACC&quot;</span><span class="p">)</span>
+<span class="n">fragment2</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;AGAGACCcgcGTCGACT&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># In the funtion, we specify the fragments and the minimum overlap length,</span>
+<span class="c1"># for this example, we want a minimum overlap of 7 bp.</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">([</span><span class="n">fragment1</span><span class="p">,</span> <span class="n">fragment2</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span>
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Dseq(o20)
+GTCGACTaaaAGAGACCcgc
+CAGCTGAtttTCTCTGGgcg
+</pre></div>
+</div>
+</section>
+<section id="genome-integration-excision">
+<h2>Genome integration / excision<a class="headerlink" href="#genome-integration-excision" title="Link to this heading"></a></h2>
+<p>Homologous recombination, Cre-Lox recombination and other methods that are normally used on genomes have special arguments</p>
+<p>Insertions take a first <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object with the genome, and a list of <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> objects with the fragments to integrate / excise.</p>
+<p>Excisions take a single <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object with the genome from which to excise a circular DNA molecule.</p>
+<p>Let’s take an example for homologous recombination. In which we want to integrate a plasmid into the genome via a single homology site:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">homologous_recombination_integration</span>
+
+<span class="n">genome</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;aaaCGTACGCACAaaa&#39;</span><span class="p">)</span>
+<span class="n">plasmid</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;CGTACGCACAcccc&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">products</span> <span class="o">=</span> <span class="n">homologous_recombination_integration</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="p">[</span><span class="n">plasmid</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">transformed_genome</span> <span class="o">=</span> <span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">transformed_genome</span><span class="o">.</span><span class="n">seq</span>
+
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Dseq(-30)
+aaaCGTACGCACAccccCGTACGCACAaaa
+tttGCATGCGTGTggggGCATGCGTGTttt
+</pre></div>
+</div>
+<p>We can also simulate the opposite process, an excission, and recover the original inputs (plasmid and gneome)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">homologous_recombination_excision</span>
+
+<span class="n">products</span> <span class="o">=</span> <span class="n">homologous_recombination_excision</span><span class="p">(</span><span class="n">transformed_genome</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CGTACGCACAcccc
+aaaCGTACGCACAaaa
+</pre></div>
+</div>
+</section>
+<section id="other-cloning-methods">
+<h2>Other cloning methods<a class="headerlink" href="#other-cloning-methods" title="Link to this heading"></a></h2>
+<p>You can find most other cloning methods at the bottom of the <a class="reference external" href="https://pydna-group.github.io/pydna/modules/pydna_assembly2.html">documentation page of the assemmbly2 module</a>.</p>
+</section>
+</section>
+<section id="sequence-equality">
+<h1>Sequence equality<a class="headerlink" href="#sequence-equality" title="Link to this heading"></a></h1>
+<p>Sometimes, you may want to check if two double-stranded sequences are equal. Comparing the sequence strings is not great, because they could be reverse-complemented, and for circular molecules, they might be shifted. Pydna comes with a function that produces a unique string for a given sequence, independently of its orientation or rotation (for circular DNA).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_plasmid</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;AAGGTC&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">my_plasmid_rotated</span> <span class="o">=</span> <span class="n">my_plasmid</span><span class="o">.</span><span class="n">shifted</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">my_plasmid_rotated_rc</span> <span class="o">=</span> <span class="n">my_plasmid_rotated</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">my_plasmid</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">my_plasmid</span><span class="o">.</span><span class="n">seguid</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_plasmid_rotated</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">my_plasmid_rotated</span><span class="o">.</span><span class="n">seguid</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_plasmid_rotated_rc</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">my_plasmid_rotated_rc</span><span class="o">.</span><span class="n">seguid</span><span class="p">())</span>
+
+
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>AAGGTC cdseguid=J56O6n-fwbT2-SLlxCMBVDjXzKg
+GTCAAG cdseguid=J56O6n-fwbT2-SLlxCMBVDjXzKg
+CTTGAC cdseguid=J56O6n-fwbT2-SLlxCMBVDjXzKg
+</pre></div>
+</div>
 </section>
 
 

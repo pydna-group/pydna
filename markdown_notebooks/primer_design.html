@@ -252,30 +252,18 @@ ATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATTCTATTGCTGAAAAAGATAATCACTC
                                                        ATAATCACTCTAATAATGAATCTAACTTTACTTGGAAAGCGTTTCGTGAACAAGTGGAAAAGCAT
 </pre></div>
 </div>
-<p>Once you have the amplicons, you can use <code class="docutils literal notranslate"><span class="pre">Assembly</span></code> to join them together (see the <code class="docutils literal notranslate"><span class="pre">Gibson</span></code> notebook for more details)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly</span><span class="w"> </span><span class="kn">import</span> <span class="n">Assembly</span>
+<p>Once you have the amplicons, you can use <code class="docutils literal notranslate"><span class="pre">gibson_assembly</span></code> to join them together (see the <code class="docutils literal notranslate"><span class="pre">Gibson</span></code> notebook for more details)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">gibson_assembly</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.common_sub_strings</span><span class="w"> </span><span class="kn">import</span> <span class="n">terminal_overlap</span>
 
 
-<span class="n">assembly</span> <span class="o">=</span> <span class="n">Assembly</span><span class="p">([</span><span class="n">amplicon1</span><span class="p">,</span> <span class="n">amplicon2</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">terminal_overlap</span><span class="p">)</span>
-<span class="n">product</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">assemble_linear</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">figure</span><span class="p">())</span>
-
-<span class="nb">print</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="n">product</span><span class="p">)</span><span class="o">.</span><span class="n">figure</span><span class="p">())</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">([</span><span class="n">amplicon1</span><span class="p">,</span> <span class="n">amplicon2</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 
 </pre></div>
 </div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>65bp_PCR_prod|10
-              \/
-              /\
-              10|65bp_PCR_prod
-
-Dseqrecord(-120)
-[48;5;11mATGCAAACAGTAATGATGGATGAC[0mATTCAAAGCACTGATTCTATTGCTGAAAAAGATAATCACTCTAATAATGAATCTAACTTTACTTGGAAAGCGTTTCGTGAACAAGTGGAAAAGCAT
-TACGTTTGTCATTACTACCTACTGTAAGTTTCGTGACTAAGATAACGACTTTTTCTATTAGTGAGATTATTACTTAGATTGAAATGAACCTTTCGCAAAGCACTTGTTCACCTTTTCGTA
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Dseqrecord(-120)
 </pre></div>
 </div>
 </section>
@@ -297,15 +285,10 @@ TACGTTTGTCATTACTACCTACTGTAAGTTTCGTGACTAAGATAACGACTTTTTCTATTAGTGAGATTATTACTTAGATT
 <span class="nb">print</span><span class="p">(</span><span class="n">rvs_2</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
 
-<span class="n">assembly</span> <span class="o">=</span> <span class="n">Assembly</span><span class="p">([</span><span class="n">amplicon1</span><span class="p">,</span> <span class="n">amplicon2</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">terminal_overlap</span><span class="p">)</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">([</span><span class="n">amplicon1</span><span class="p">,</span> <span class="n">amplicon2</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
-<span class="c1"># Here we use assemble_circular!</span>
-<span class="n">product</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">assemble_circular</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">figure</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;products&#39;</span><span class="p">,</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="n">product</span><span class="p">)</span><span class="o">.</span><span class="n">figure</span><span class="p">())</span>
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Primers for fragment 1:
@@ -316,19 +299,7 @@ Primers for fragment 2:
 ATAATCACTCTAATAATGAATCTAACTTTACTTGGAAA
 TGCATATGCTTTTCCACTTGTTCACG
 
- -|70bp_PCR_prod|10
-|                \/
-|                /\
-|                10|70bp_PCR_prod|10
-|                                 \/
-|                                 /\
-|                                 10-
-|                                    |
- ------------------------------------
-
-Dseqrecord(o120)
-AGCAT[48;5;11mATGCAAACAGTAATGATGGATGAC[0mATTCAAAGCACTGATTCTATTGCTGAAAAAGATAATCACTCTAATAATGAATCTAACTTTACTTGGAAAGCGTTTCGTGAACAAGTGGAAA
-TCGTATACGTTTGTCATTACTACCTACTGTAAGTTTCGTGACTAAGATAACGACTTTTTCTATTAGTGAGATTATTACTTAGATTGAAATGAACCTTTCGCAAAGCACTTGTTCACCTTT
+products AGCATATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATTCTATTGCTGAAAAAGATAATCACTCTAATAATGAATCTAACTTTACTTGGAAAGCGTTTCGTGAACAAGTGGAAA
 </pre></div>
 </div>
 </section>
@@ -342,14 +313,11 @@ TCGTATACGTTTGTCATTACTACCTACTGTAAGTTTCGTGACTAAGATAACGACTTTTTCTATTAGTGAGATTATTACTT
 
 <span class="n">amplicon1</span><span class="p">,</span> <span class="n">amplicon2</span> <span class="o">=</span> <span class="n">assembly_fragments</span><span class="p">([</span><span class="n">pre_amplicon1</span><span class="p">,</span> <span class="n">spacer1</span><span class="p">,</span> <span class="n">pre_amplicon2</span><span class="p">,</span> <span class="n">spacer2</span><span class="p">],</span> <span class="n">overlap</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">assembly</span> <span class="o">=</span> <span class="n">Assembly</span><span class="p">([</span><span class="n">amplicon1</span><span class="p">,</span> <span class="n">amplicon2</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">terminal_overlap</span><span class="p">)</span>
-
-<span class="c1"># Here we use assemble_circular!</span>
-<span class="n">product</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">assemble_circular</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">([</span><span class="n">amplicon1</span><span class="p">,</span> <span class="n">amplicon2</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
 <span class="c1"># See the linkers that have been added</span>
 <span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="n">product</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;^^^&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="o">*</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;^^^&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
 

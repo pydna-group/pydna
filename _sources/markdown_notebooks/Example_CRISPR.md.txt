@@ -134,22 +134,15 @@ The final edit gene would look like this in a case of homologous recombination.
 
 
 ```python
-from pydna.assembly import Assembly
+from pydna.assembly2 import in_vivo_assembly
 
-my_KO = Assembly((target_dseq.cut(enzyme)[0],repair_oligo, target_dseq.cut(enzyme2)[-1]), limit = 20 )
-my_assembly_KO, *rest = my_KO.assemble_linear()
-my_assembly_KO
+products = in_vivo_assembly((target_dseq.cut(enzyme)[0],repair_oligo, target_dseq.cut(enzyme2)[-1]), limit = 20 )
+products[0]
 ```
 
 
 
 
-<pre>name|45
-     \/
-     /\
-     45|My repair oligo for this experiment|45
-                                            \/
-                                            /\
-                                            45|name</pre>
+    Dseqrecord(-469)
 
 

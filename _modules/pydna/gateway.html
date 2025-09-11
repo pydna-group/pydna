@@ -76,171 +76,179 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pydna.gateway</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/env python3</span>
-<span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="c1"># Copyright 2013-2023 by Björn Johansson.  All rights reserved.</span>
-<span class="c1"># This code is part of the Python-dna distribution and governed by its</span>
-<span class="c1"># license.  Please see the LICENSE.txt file that should have been included</span>
-<span class="c1"># as part of this package.</span>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse_complement</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_itertools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span><span class="p">,</span> <span class="n">SeqFeature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shift_location</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.sequence_regex</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_regex_site</span><span class="p">,</span> <span class="n">dseqrecord_finditer</span>
 
-<span class="sd">&quot;&quot;&quot;Assembly of sequences by Gateway recombination.</span>
 
-<span class="sd">Given a list of sequences (Dseqrecords), all sequences are analyzed for</span>
-<span class="sd">presence of att(P|B|L|R)N where N is 1,2,3 or 4.</span>
-
-<span class="sd">A graph is constructed where the att sites form a nodes and</span>
-<span class="sd">sequences separating att sites form edges.</span>
-
-<span class="sd">The NetworkX package is used to trace linear and circular paths through the</span>
-<span class="sd">graph.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="c1"># from Bio.SeqFeature import ExactPosition as _ExactPosition</span>
-<span class="c1"># from Bio.SeqFeature import SimpleLocation as _SimpleLocation</span>
-<span class="c1"># from Bio.SeqFeature import CompoundLocation as _CompoundLocation</span>
-<span class="c1"># from pydna.utils import rc as _rc</span>
-
-<span class="c1"># from pydna._pretty import pretty_str as _pretty_str</span>
-<span class="c1"># from pydna.contig import Contig as _Contig</span>
-<span class="c1"># from pydna.common_sub_strings import common_sub_strings</span>
-<span class="c1"># from pydna.dseqrecord import Dseqrecord as _Dseqrecord</span>
-<span class="c1"># import networkx as _nx</span>
-<span class="c1"># from copy import deepcopy as _deepcopy</span>
-<span class="c1"># import itertools as _itertools</span>
-<span class="c1"># import logging as _logging</span>
-
-<span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
-
-<span class="n">ambiguous_dna_regex</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="s2">&quot;[ACM]&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="s2">&quot;[AGR]&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="s2">&quot;[ATW]&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;[CGS]&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="s2">&quot;[CTY]&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="s2">&quot;[GTK]&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="s2">&quot;[ACGVMSR]&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;H&quot;</span><span class="p">:</span> <span class="s2">&quot;[ACTHMYW]&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="s2">&quot;[AGTDRWK]&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="s2">&quot;[CGTBSKY]&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;[ACGTBDHKMNRSVWY]&quot;</span><span class="p">,</span>
+<span class="n">raw_gateway_common</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;attB1&quot;</span><span class="p">:</span> <span class="s2">&quot;CHWVTWTGTACAAAAAANNNG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attB2&quot;</span><span class="p">:</span> <span class="s2">&quot;CHWVTWTGTACAAGAAANNNG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attB3&quot;</span><span class="p">:</span> <span class="s2">&quot;CHWVTWTGTATAATAAANNNG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attB4&quot;</span><span class="p">:</span> <span class="s2">&quot;CHWVTWTGTATAGAAAANNNG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attB5&quot;</span><span class="p">:</span> <span class="s2">&quot;CHWVTWTGTATACAAAANNNG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attL1&quot;</span><span class="p">:</span> <span class="s2">&quot;VAAWWAWKRWTTTWWTTYGACTGATAGTGACCTGTWCGTYGMAACAVATTGATRAGCAATKMTTTYYTATAWTGHCMASTWTGTACAAAAAANNNG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attL2&quot;</span><span class="p">:</span> <span class="s2">&quot;VAAWWAWKRWTTTWWTTYGACTGATAGTGACCTGTWCGTYGMAACAVATTGATRAGCAATKMTTTYYTATAWTGHCMASTWTGTACAAGAAANNNG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attL3&quot;</span><span class="p">:</span> <span class="s2">&quot;VAAWWAWKRWTTTWWTTYGACTGATAGTGACCTGTWCGTYGMAACAVATTGATRAGCAATKMTTTYYTATAWTGHCMASTWTGTATAATAAANNNG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attL4&quot;</span><span class="p">:</span> <span class="s2">&quot;VAAWWAWKRWTTTWWTTYGACTGATAGTGACCTGTWCGTYGMAACAVATTGATRAGCAATKMTTTYYTATAWTGHCMASTWTGTATAGAAAANNNG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attL5&quot;</span><span class="p">:</span> <span class="s2">&quot;VAAWWAWKRWTTTWWTTYGACTGATAGTGACCTGTWCGTYGMAACAVATTGATRAGCAATKMTTTYYTATAWTGHCMASTWTGTATACAAAANNNG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attR1&quot;</span><span class="p">:</span> <span class="s2">&quot;CHWVTWTGTACAAAAAAGYWGARCGAGAARCGTAARRTGATATAAATATCAATATATTAAATTAGAYTTTGCATAAAAAACAGACTACATAATRCTGTAARACACAACATATBCAGTCV&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attR2&quot;</span><span class="p">:</span> <span class="s2">&quot;CHWVTWTGTACAAGAAAGYWGARCGAGAARCGTAARRTGATATAAATATCAATATATTAAATTAGAYTTTGCATAAAAAACAGACTACATAATRCTGTAARACACAACATATBCAGTCV&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attR3&quot;</span><span class="p">:</span> <span class="s2">&quot;CHWVTWTGTATAATAAAGYWGARCGAGAARCGTAARRTGATATAAATATCAATATATTAAATTAGAYTTTGCATAAAAAACAGACTACATAATRCTGTAARACACAACATATBCAGTCV&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attR4&quot;</span><span class="p">:</span> <span class="s2">&quot;CHWVTWTGTATAGAAAAGYWGARCGAGAARCGTAARRTGATATAAATATCAATATATTAAATTAGAYTTTGCATAAAAAACAGACTACATAATRCTGTAARACACAACATATBCAGTCV&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attR5&quot;</span><span class="p">:</span> <span class="s2">&quot;CHWVTWTGTATACAAAAGYWGARCGAGAARCGTAARRTGATATAAATATCAATATATTAAATTAGAYTTTGCATAAAAAACAGACTACATAATRCTGTAARACACAACATATBCAGTCV&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;overlap_1&quot;</span><span class="p">:</span> <span class="s2">&quot;twtGTACAAAaaa&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;overlap_2&quot;</span><span class="p">:</span> <span class="s2">&quot;twtGTACAAGaaa&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;overlap_3&quot;</span><span class="p">:</span> <span class="s2">&quot;twtGTATAATaaa&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;overlap_4&quot;</span><span class="p">:</span> <span class="s2">&quot;twtGTATAGAaaa&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;overlap_5&quot;</span><span class="p">:</span> <span class="s2">&quot;twtGTATACAaaa&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="n">atts</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">attP1 AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT GTACAAA AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG CMASTWT AAAGYWG</span>
-<span class="s2">attP2 AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT GTACAAG AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG CMASTWT AAAGYWG</span>
-<span class="s2">attP3 AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT GTATAAT AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG CMASTWT AAAGYWG</span>
-<span class="s2">attP4 AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT GTATAGA AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG CMASTWT AAAGYWG</span>
-<span class="s2">attP5 AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT GTATACA AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG CMASTWT AAAGYWG</span>
 
-<span class="s2">attB1 CMASTWT GTACAAA AAAGYWG AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG</span>
-<span class="s2">attB2 CMASTWT GTACAAG AAAGYWG AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG</span>
-<span class="s2">attB3 CMASTWT GTATAAT AAAGYWG AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG</span>
-<span class="s2">attB4 CMASTWT GTATAGA AAAGYWG AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG</span>
-<span class="s2">attB5 CMASTWT GTATACA AAAGYWG AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG</span>
+<span class="n">raw_gateway_sites_greedy</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">**</span><span class="n">raw_gateway_common</span><span class="p">,</span>
+    <span class="s2">&quot;attP1&quot;</span><span class="p">:</span> <span class="s2">&quot;VAAWWAWKRWTTTWWTTYGACTGATAGTGACCTGTWCGTYGMAACAVATTGATRAGCAATKMTTTYYTATAWTGHCMASTWTGTACAAAAAAGYWGARCGAGAARCGTAARRTGATATAAATATCAATATATTAAATTAGAYTTTGCATAAAAAACAGACTACATAATRCTGTAARACACAACATATBCAGTCV&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attP2&quot;</span><span class="p">:</span> <span class="s2">&quot;VAAWWAWKRWTTTWWTTYGACTGATAGTGACCTGTWCGTYGMAACAVATTGATRAGCAATKMTTTYYTATAWTGHCMASTWTGTACAAGAAAGYWGARCGAGAARCGTAARRTGATATAAATATCAATATATTAAATTAGAYTTTGCATAAAAAACAGACTACATAATRCTGTAARACACAACATATBCAGTCV&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attP3&quot;</span><span class="p">:</span> <span class="s2">&quot;VAAWWAWKRWTTTWWTTYGACTGATAGTGACCTGTWCGTYGMAACAVATTGATRAGCAATKMTTTYYTATAWTGHCMASTWTGTATAATAAAGYWGARCGAGAARCGTAARRTGATATAAATATCAATATATTAAATTAGAYTTTGCATAAAAAACAGACTACATAATRCTGTAARACACAACATATBCAGTCV&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attP4&quot;</span><span class="p">:</span> <span class="s2">&quot;VAAWWAWKRWTTTWWTTYGACTGATAGTGACCTGTWCGTYGMAACAVATTGATRAGCAATKMTTTYYTATAWTGHCMASTWTGTATAGAAAAGYWGARCGAGAARCGTAARRTGATATAAATATCAATATATTAAATTAGAYTTTGCATAAAAAACAGACTACATAATRCTGTAARACACAACATATBCAGTCV&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attP5&quot;</span><span class="p">:</span> <span class="s2">&quot;VAAWWAWKRWTTTWWTTYGACTGATAGTGACCTGTWCGTYGMAACAVATTGATRAGCAATKMTTTYYTATAWTGHCMASTWTGTATACAAAAGYWGARCGAGAARCGTAARRTGATATAAATATCAATATATTAAATTAGAYTTTGCATAAAAAACAGACTACATAATRCTGTAARACACAACATATBCAGTCV&quot;</span><span class="p">,</span>
+<span class="p">}</span>
 
-<span class="s2">attR1 CMASTWT GTACAAA AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT AAAGYWG</span>
-<span class="s2">attR2 CMASTWT GTACAAG AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT AAAGYWG</span>
-<span class="s2">attR3 CMASTWT GTATAAT AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT AAAGYWG</span>
-<span class="s2">attR4 CMASTWT GTATAGA AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT AAAGYWG</span>
-<span class="s2">attR5 CMASTWT GTATACA AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT AAAGYWG</span>
+<span class="n">raw_gateway_sites_conservative</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">**</span><span class="n">raw_gateway_common</span><span class="p">,</span>
+    <span class="s2">&quot;attP1&quot;</span><span class="p">:</span> <span class="s2">&quot;AAAWWAWKRWTTTWWTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATGCTTTYTTATAATGCCMASTTTGTACAAAAAAGYWGAACGAGAARCGTAAARTGATATAAATATCAATATATTAAATTAGAYTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATSCAGTCACTATGAAYCAACTACTTAGATGGTATTAGTGACCTGTA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attP2&quot;</span><span class="p">:</span> <span class="s2">&quot;AAAWWAWKRWTTTWWTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATGCTTTYTTATAATGCCMASTTTGTACAAGAAAGYWGAACGAGAARCGTAAARTGATATAAATATCAATATATTAAATTAGAYTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATSCAGTCACTATGAAYCAACTACTTAGATGGTATTAGTGACCTGTA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attP3&quot;</span><span class="p">:</span> <span class="s2">&quot;AAAWWAWKRWTTTWWTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATGCTTTYTTATAATGCCMASTTTGTATAATAAAGYWGAACGAGAARCGTAAARTGATATAAATATCAATATATTAAATTAGAYTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATSCAGTCACTATGAAYCAACTACTTAGATGGTATTAGTGACCTGTA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attP4&quot;</span><span class="p">:</span> <span class="s2">&quot;AAAWWAWKRWTTTWWTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATGCTTTYTTATAATGCCMASTTTGTATAGAAAAGYWGAACGAGAARCGTAAARTGATATAAATATCAATATATTAAATTAGAYTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATSCAGTCACTATGAAYCAACTACTTAGATGGTATTAGTGACCTGTA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attP5&quot;</span><span class="p">:</span> <span class="s2">&quot;AAAWWAWKRWTTTWWTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATGCTTTYTTATAATGCCMASTTTGTATACAAAAGYWGAACGAGAARCGTAAARTGATATAAATATCAATATATTAAATTAGAYTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATSCAGTCACTATGAAYCAACTACTTAGATGGTATTAGTGACCTGTA&quot;</span><span class="p">,</span>
+<span class="p">}</span>
 
-<span class="s2">attL1 AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT GTACAAA AAAGYWG CMASTWT AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG</span>
-<span class="s2">attL2 AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT GTACAAG AAAGYWG CMASTWT AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG</span>
-<span class="s2">attL3 AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT GTATAAT AAAGYWG CMASTWT AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG</span>
-<span class="s2">attL4 AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT GTATAGA AAAGYWG CMASTWT AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG</span>
-<span class="s2">attL5 AAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAMATTGATRAGCAATKMTTTYTTATAATGCCMASTTT GTATACA AAAGYWG CMASTWT AAAGYWGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATRCTGTAAAACACAACATATSCAGTCAYWWTG</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">gateway_sites_greedy</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">k</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;forward_regex&quot;</span><span class="p">:</span> <span class="n">compute_regex_site</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+        <span class="s2">&quot;reverse_regex&quot;</span><span class="p">:</span> <span class="n">compute_regex_site</span><span class="p">(</span><span class="n">reverse_complement</span><span class="p">(</span><span class="n">v</span><span class="p">)),</span>
+        <span class="s2">&quot;consensus_sequence&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">raw_gateway_sites_greedy</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="n">gateway_sites_conservative</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">k</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;forward_regex&quot;</span><span class="p">:</span> <span class="n">compute_regex_site</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+        <span class="s2">&quot;reverse_regex&quot;</span><span class="p">:</span> <span class="n">compute_regex_site</span><span class="p">(</span><span class="n">reverse_complement</span><span class="p">(</span><span class="n">v</span><span class="p">)),</span>
+        <span class="s2">&quot;consensus_sequence&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">raw_gateway_sites_conservative</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="c1"># From snapgene - ask Valerie</span>
+<span class="n">primer_design_attB</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;attB1&quot;</span><span class="p">:</span> <span class="s2">&quot;ACAAGTTTGTACAAAAAAGCAGGCT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attB2&quot;</span><span class="p">:</span> <span class="s2">&quot;ACCACTTTGTACAAGAAAGCTGGGT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attB3&quot;</span><span class="p">:</span> <span class="s2">&quot;ACAACTTTGTATAATAAAGTTGTA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attB4&quot;</span><span class="p">:</span> <span class="s2">&quot;ACAACTTTGTATAGAAAAGTTGTA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;attB5&quot;</span><span class="p">:</span> <span class="s2">&quot;ACAACTTTGTATACAAAAGTTGTA&quot;</span><span class="p">,</span>
+<span class="p">}</span>
 
 
-<span class="n">retable</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="n">ambiguous_dna_regex</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="p">(</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">atts</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()):</span>
-    <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
-        <span class="n">part</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">retable</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="Gateway">
-<a class="viewcode-back" href="../../modules/pydna_gateway.html#pydna.gateway.Gateway">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Gateway</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Assembly of linear DNA fragments into linear or circular constructs.</span>
-
-<span class="sd">    The Assembly is meant to replace the Assembly method as it</span>
-<span class="sd">    is easier to use. Accepts a list of Dseqrecords (source fragments) to</span>
-<span class="sd">    initiate an Assembly object. Several methods are available for analysis</span>
-<span class="sd">    of overlapping sequences, graph construction and assembly.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    fragments : list</span>
-<span class="sd">        a list of Dseqrecord objects.</span>
+<div class="viewcode-block" id="gateway_overlap">
+<a class="viewcode-back" href="../../modules/pydna_gateway.html#pydna.gateway.gateway_overlap">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gateway_overlap</span><span class="p">(</span>
+    <span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">reaction</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">greedy</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find gateway overlaps. If greedy is True, it uses a more greedy consensus site to find attP sites,</span>
+<span class="sd">    which might give false positives</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">reaction</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;BP&quot;</span><span class="p">,</span> <span class="s2">&quot;LR&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid overlap type: </span><span class="si">{</span><span class="n">reaction</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">molecules</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">molecules</span> <span class="o">=</span> <span class="n">molecules</span></div>
+    <span class="n">gateway_sites</span> <span class="o">=</span> <span class="n">gateway_sites_greedy</span> <span class="k">if</span> <span class="n">greedy</span> <span class="k">else</span> <span class="n">gateway_sites_conservative</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="c1"># Iterate over the four possible att sites</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+        <span class="c1"># Iterate over the two possible orientations</span>
+        <span class="c1"># The sites have to be in the same orientation (fwd + fwd or rev + rev)</span>
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;forward_regex&quot;</span><span class="p">,</span> <span class="s2">&quot;reverse_regex&quot;</span><span class="p">]:</span>
+            <span class="c1"># The overlap regex is the same for all types</span>
+            <span class="n">overlap_regex</span> <span class="o">=</span> <span class="n">gateway_sites</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;overlap_</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="n">pattern</span><span class="p">]</span>
+
+            <span class="c1"># Iterate over pairs B, P and P, B for BP and L, R and R, L for LR</span>
+            <span class="k">for</span> <span class="n">site_x</span><span class="p">,</span> <span class="n">site_y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">reaction</span><span class="p">,</span> <span class="n">reaction</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">site_x_regex</span> <span class="o">=</span> <span class="n">gateway_sites</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;att</span><span class="si">{</span><span class="n">site_x</span><span class="si">}{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="n">pattern</span><span class="p">]</span>
+                <span class="n">matches_x</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dseqrecord_finditer</span><span class="p">(</span><span class="n">site_x_regex</span><span class="p">,</span> <span class="n">seqx</span><span class="p">))</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches_x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="n">site_y_regex</span> <span class="o">=</span> <span class="n">gateway_sites</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;att</span><span class="si">{</span><span class="n">site_y</span><span class="si">}{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="n">pattern</span><span class="p">]</span>
+                <span class="n">matches_y</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dseqrecord_finditer</span><span class="p">(</span><span class="n">site_y_regex</span><span class="p">,</span> <span class="n">seqy</span><span class="p">))</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches_y</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="k">for</span> <span class="n">match_x</span><span class="p">,</span> <span class="n">match_y</span> <span class="ow">in</span> <span class="n">_itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">matches_x</span><span class="p">,</span> <span class="n">matches_y</span><span class="p">):</span>
+                    <span class="c1"># Find the overlap sequence within each match, and use the</span>
+                    <span class="c1"># core 7 pbs that are constant</span>
+                    <span class="n">overlap_x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">overlap_regex</span><span class="p">,</span> <span class="n">match_x</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
+                    <span class="n">overlap_y</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">overlap_regex</span><span class="p">,</span> <span class="n">match_y</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
+
+                    <span class="c1"># Sanity check</span>
+                    <span class="k">assert</span> <span class="p">(</span>
+                        <span class="n">overlap_x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">overlap_y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="p">),</span> <span class="s2">&quot;Something went wrong, no overlap found within the matches&quot;</span>
+
+                    <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">(</span>
+                            <span class="n">match_x</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">+</span> <span class="n">overlap_x</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span>
+                            <span class="n">match_y</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">+</span> <span class="n">overlap_y</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span>
+                            <span class="mi">7</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">out</span></div>
 
 
 
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Created on Sat Aug 21 15:41:42 2021</span>
+<div class="viewcode-block" id="find_gateway_sites">
+<a class="viewcode-back" href="../../modules/pydna_gateway.html#pydna.gateway.find_gateway_sites">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_gateway_sites</span><span class="p">(</span>
+    <span class="n">seq</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">greedy</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">SimpleLocation</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find all gateway sites in a sequence and return a dictionary with the name and positions of the sites.&quot;&quot;&quot;</span>
+    <span class="n">gateway_sites</span> <span class="o">=</span> <span class="n">gateway_sites_greedy</span> <span class="k">if</span> <span class="n">greedy</span> <span class="k">else</span> <span class="n">gateway_sites_conservative</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">gateway_sites</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;att&quot;</span><span class="p">):</span>
+            <span class="k">continue</span>
 
-<span class="sd">@author: bjorn</span>
-
-
-<span class="sd">https://en.wikipedia.org/wiki/Cre-Lox_recombination</span>
-
-<span class="sd">13bp	      8bp	   13bp</span>
-<span class="sd">ATAACTTCGTATA-NNNTANNN-TATACGAAGTTAT</span>
-
-
-<span class="sd">Name	    13 bp  	        8 bp  	    13 bp</span>
-<span class="sd">            Recognition     Spacer      Recognition</span>
-<span class="sd">            Region          Region      Region</span>
-
-<span class="sd">Wild-Type	ATAACTTCGTATA	ATGTATGC	TATACGAAGTTAT</span>
-<span class="sd">lox 511	    ATAACTTCGTATA	ATGTATaC	TATACGAAGTTAT</span>
-<span class="sd">lox 5171	ATAACTTCGTATA	ATGTgTaC	TATACGAAGTTAT</span>
-<span class="sd">lox 2272	ATAACTTCGTATA	AaGTATcC	TATACGAAGTTAT</span>
-<span class="sd">M2	        ATAACTTCGTATA	AgaaAcca	TATACGAAGTTAT</span>
-<span class="sd">M3	        ATAACTTCGTATA	taaTACCA	TATACGAAGTTAT</span>
-<span class="sd">M7	        ATAACTTCGTATA	AgaTAGAA	TATACGAAGTTAT</span>
-<span class="sd">M11	        ATAACTTCGTATA	cgaTAcca	TATACGAAGTTAT</span>
-<span class="sd">lox 71	    TACCGTTCGTATA	NNNTANNN	TATACGAAGTTAT</span>
-<span class="sd">lox 66	    ATAACTTCGTATA	NNNTANNN	TATACGAACGGTA</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;forward_regex&quot;</span><span class="p">,</span> <span class="s2">&quot;reverse_regex&quot;</span><span class="p">]:</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dseqrecord_finditer</span><span class="p">(</span><span class="n">gateway_sites</span><span class="p">[</span><span class="n">site</span><span class="p">][</span><span class="n">pattern</span><span class="p">],</span> <span class="n">seq</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">site</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+                    <span class="n">out</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">strand</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">pattern</span> <span class="o">==</span> <span class="s2">&quot;forward_regex&quot;</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="n">loc</span> <span class="o">=</span> <span class="n">SimpleLocation</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">(),</span> <span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">strand</span><span class="p">)</span>
+                <span class="n">loc</span> <span class="o">=</span> <span class="n">shift_location</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
 
 
-<span class="sd">&quot;&quot;&quot;</span>
 
-<span class="sd">https://blog.addgene.org/plasmids-101-cre-lox</span>
+<div class="viewcode-block" id="annotate_gateway_sites">
+<a class="viewcode-back" href="../../modules/pydna_gateway.html#pydna.gateway.annotate_gateway_sites">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">annotate_gateway_sites</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">greedy</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseqrecord</span><span class="p">:</span>
+    <span class="n">sites</span> <span class="o">=</span> <span class="n">find_gateway_sites</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">greedy</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sites</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">sites</span><span class="p">[</span><span class="n">site</span><span class="p">]:</span>
+            <span class="n">seq</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">SeqFeature</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;protein_bind&quot;</span><span class="p">,</span> <span class="n">qualifiers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">site</span><span class="p">]})</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">seq</span></div>
 
-<span class="sd">https://en.wikipedia.org/wiki/Cre-Lox_recombination</span>
-
-<span class="sd">13bp	      8bp	   13bp</span>
-<span class="sd">ATAACTTCGTATA-NNNTANNN-TATACGAAGTTAT</span>
-
-
-<span class="sd">Name	    13 bp  	        8 bp  	    13 bp</span>
-<span class="sd">            Recognition     Spacer      Recognition</span>
-<span class="sd">            Region          Region      Region</span>
-
-<span class="sd">Wild-Type	ATAACTTCGTATA	ATGTATGC	TATACGAAGTTAT</span>
-<span class="sd">lox511	    ATAACTTCGTATA	ATGTATaC	TATACGAAGTTAT</span>
-<span class="sd">lox5171	    ATAACTTCGTATA	ATGTgTaC	TATACGAAGTTAT</span>
-<span class="sd">lox2272	    ATAACTTCGTATA	AaGTATcC	TATACGAAGTTAT</span>
-<span class="sd">M2	        ATAACTTCGTATA	AgaaAcca	TATACGAAGTTAT</span>
-<span class="sd">M3	        ATAACTTCGTATA	taaTACCA	TATACGAAGTTAT</span>
-<span class="sd">M7	        ATAACTTCGTATA	AgaTAGAA	TATACGAAGTTAT</span>
-<span class="sd">M11	        ATAACTTCGTATA	cgaTAcca	TATACGAAGTTAT</span>
-<span class="sd">lox71	    TACCGTTCGTATA	NNNTANNN	TATACGAAGTTAT</span>
-<span class="sd">lox66	    ATAACTTCGTATA	NNNTANNN	TATACGAACGGTA</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 
            </div>

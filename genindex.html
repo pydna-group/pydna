@@ -84,6 +84,7 @@
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
@@ -126,6 +127,10 @@
         <li><a href="modules/pydna_amplify.html#pydna.amplify.Anneal">(class in pydna.amplify)</a>
 </li>
       </ul></li>
+      <li><a href="modules/pydna_gateway.html#pydna.gateway.annotate_gateway_sites">annotate_gateway_sites() (in module pydna.gateway)</a>
+</li>
+      <li><a href="modules/pydna_cre_lox.html#pydna.cre_lox.annotate_loxP_sites">annotate_loxP_sites() (in module pydna.cre_lox)</a>
+</li>
       <li><a href="modules/pydna_assembly2.html#pydna.assembly2.annotate_primer_binding_sites">annotate_primer_binding_sites() (in module pydna.assembly2)</a>
 </li>
       <li><a href="modules/pydna_all.html#pydna.all.Dseq.apply_cut">apply_cut() (pydna.all.Dseq method)</a>
@@ -140,6 +145,8 @@
       </ul></li>
       <li><a href="modules/pydna_assembly2.html#pydna.assembly2.assemble">assemble() (in module pydna.assembly2)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/pydna_all.html#pydna.all.Assembly.assemble_circular">assemble_circular() (pydna.all.Assembly method)</a>
 
       <ul>
@@ -148,8 +155,6 @@
         <li><a href="modules/pydna_assembly2.html#pydna.assembly2.Assembly.assemble_circular">(pydna.assembly2.Assembly method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/pydna_assembly2.html#pydna.assembly2.Assembly.assemble_insertion">assemble_insertion() (pydna.assembly2.Assembly method)</a>
 </li>
       <li><a href="modules/pydna_all.html#pydna.all.Assembly.assemble_linear">assemble_linear() (pydna.all.Assembly method)</a>
@@ -181,6 +186,8 @@
       <li><a href="modules/pydna_assembly2.html#pydna.assembly2.assembly_has_mismatches">assembly_has_mismatches() (in module pydna.assembly2)</a>
 </li>
       <li><a href="modules/pydna_assembly2.html#pydna.assembly2.assembly_is_circular">assembly_is_circular() (in module pydna.assembly2)</a>
+</li>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.assembly_is_multi_site">assembly_is_multi_site() (in module pydna.assembly2)</a>
 </li>
       <li><a href="modules/pydna_assembly2.html#pydna.assembly2.Assembly.assembly_is_valid">assembly_is_valid() (pydna.assembly2.Assembly class method)</a>
 </li>
@@ -248,6 +255,14 @@
 </li>
       <li><a href="modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.comment">comment() (pydna.seqrecord.SeqRecord method)</a>
 </li>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.common_function_assembly_products">common_function_assembly_products() (in module pydna.assembly2)</a>
+</li>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.common_function_excision_products">common_function_excision_products() (in module pydna.assembly2)</a>
+</li>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.common_function_integration_products">common_function_integration_products() (in module pydna.assembly2)</a>
+</li>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.common_handle_insertion_fragments">common_handle_insertion_fragments() (in module pydna.assembly2)</a>
+</li>
       <li><a href="modules/pydna_assembly2.html#pydna.assembly2.common_sub_strings">common_sub_strings() (in module pydna.assembly2)</a>
 
       <ul>
@@ -263,6 +278,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/pydna_seq.html#pydna.seq.ProteinSeq.complement_rna">complement_rna() (pydna.seq.ProteinSeq method)</a>
+</li>
+      <li><a href="modules/pydna_sequence_regex.html#pydna.sequence_regex.compute_regex_site">compute_regex_site() (in module pydna.sequence_regex)</a>
 </li>
       <li><a href="modules/pydna_genbankfixer.html#pydna.genbankfixer.concat_dict">concat_dict() (in module pydna.genbankfixer)</a>
 </li>
@@ -283,6 +300,12 @@
 </li>
       </ul></li>
       <li><a href="modules/pydna_threading_timer_decorator_exit.html#pydna.threading_timer_decorator_exit.countdown">countdown() (in module pydna.threading_timer_decorator_exit)</a>
+</li>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.cre_lox_excision">cre_lox_excision() (in module pydna.assembly2)</a>
+</li>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.cre_lox_integration">cre_lox_integration() (in module pydna.assembly2)</a>
+</li>
+      <li><a href="modules/pydna_cre_lox.html#pydna.cre_lox.cre_loxP_overlap">cre_loxP_overlap() (in module pydna.cre_lox)</a>
 </li>
       <li><a href="modules/pydna_utils.html#pydna.utils.create_location">create_location() (in module pydna.utils)</a>
 </li>
@@ -334,14 +357,14 @@
 </li>
       <li><a href="modules/pydna_contig.html#pydna.contig.Contig.detailed_figure">detailed_figure() (pydna.contig.Contig method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/pydna_all.html#pydna.all.download_text">download_text() (in module pydna.all)</a>
 
       <ul>
         <li><a href="modules/pydna_download.html#pydna.download.download_text">(in module pydna.download)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/pydna_all.html#pydna.all.Dseq">Dseq (class in pydna.all)</a>
 
       <ul>
@@ -354,6 +377,8 @@
         <li><a href="modules/pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord">(class in pydna.dseqrecord)</a>
 </li>
       </ul></li>
+      <li><a href="modules/pydna_sequence_regex.html#pydna.sequence_regex.dseqrecord_finditer">dseqrecord_finditer() (in module pydna.sequence_regex)</a>
+</li>
       <li><a href="modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.dump">dump() (pydna.seqrecord.SeqRecord method)</a>
 </li>
   </ul></td>
@@ -466,6 +491,10 @@
         <li><a href="modules/pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord.find_aminoacids">(pydna.dseqrecord.Dseqrecord method)</a>
 </li>
       </ul></li>
+      <li><a href="modules/pydna_gateway.html#pydna.gateway.find_gateway_sites">find_gateway_sites() (in module pydna.gateway)</a>
+</li>
+      <li><a href="modules/pydna_cre_lox.html#pydna.cre_lox.find_loxP_sites">find_loxP_sites() (in module pydna.cre_lox)</a>
+</li>
       <li><a href="modules/pydna_all.html#pydna.all.Dseq.five_prime_end">five_prime_end() (pydna.all.Dseq method)</a>
 
       <ul>
@@ -544,13 +573,17 @@
 </li>
       <li><a href="modules/pydna_fusionpcr.html#pydna.fusionpcr.fuse_by_pcr">fuse_by_pcr() (in module pydna.fusionpcr)</a>
 </li>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.fusion_pcr_assembly">fusion_pcr_assembly() (in module pydna.assembly2)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="modules/pydna_gateway.html#pydna.gateway.Gateway">Gateway (class in pydna.gateway)</a>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.gateway_assembly">gateway_assembly() (in module pydna.assembly2)</a>
+</li>
+      <li><a href="modules/pydna_gateway.html#pydna.gateway.gateway_overlap">gateway_overlap() (in module pydna.gateway)</a>
 </li>
       <li><a href="modules/pydna_assembly2.html#pydna.assembly2.gather_overlapping_locations">gather_overlapping_locations() (in module pydna.assembly2)</a>
 </li>
@@ -640,9 +673,27 @@
 </li>
       <li><a href="modules/pydna_assembly2.html#pydna.assembly2.Assembly.get_possible_assembly_number">get_possible_assembly_number() (pydna.assembly2.Assembly method)</a>
 </li>
+      <li><a href="modules/pydna_cre_lox.html#pydna.cre_lox.get_regex_dict">get_regex_dict() (in module pydna.cre_lox)</a>
+</li>
       <li><a href="modules/pydna_assembly2.html#pydna.assembly2.Assembly.get_unique_linear_paths">get_unique_linear_paths() (pydna.assembly2.Assembly method)</a>
 </li>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.gibson_assembly">gibson_assembly() (in module pydna.assembly2)</a>
+</li>
       <li><a href="modules/pydna_assembly2.html#pydna.assembly2.gibson_overlap">gibson_overlap() (in module pydna.assembly2)</a>
+</li>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.golden_gate_assembly">golden_gate_assembly() (in module pydna.assembly2)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.homologous_recombination_excision">homologous_recombination_excision() (in module pydna.assembly2)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.homologous_recombination_integration">homologous_recombination_integration() (in module pydna.assembly2)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -652,14 +703,18 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/pydna_utils.html#pydna.utils.identifier_from_string">identifier_from_string() (in module pydna.utils)</a>
 </li>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.in_fusion_assembly">in_fusion_assembly() (in module pydna.assembly2)</a>
+</li>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.in_vivo_assembly">in_vivo_assembly() (in module pydna.assembly2)</a>
+</li>
       <li><a href="modules/pydna_seq.html#pydna.seq.ProteinSeq.instability_index">instability_index() (pydna.seq.ProteinSeq method)</a>
 </li>
       <li><a href="modules/pydna_gel.html#pydna.gel.interpolator">interpolator() (in module pydna.gel)</a>
 </li>
-      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.is_sublist">is_sublist() (in module pydna.assembly2)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.is_sublist">is_sublist() (in module pydna.assembly2)</a>
+</li>
       <li><a href="modules/pydna_all.html#pydna.all.Dseq.isblunt">isblunt() (pydna.all.Dseq method)</a>
 
       <ul>
@@ -687,6 +742,8 @@
 </li>
       </ul></li>
       <li><a href="modules/pydna_ligate.html#pydna.ligate.ligate">ligate() (in module pydna.ligate)</a>
+</li>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.ligation_assembly">ligation_assembly() (in module pydna.assembly2)</a>
 </li>
       <li><a href="modules/pydna_all.html#pydna.all.Anneal.limit">limit (pydna.all.Anneal attribute)</a>
 
@@ -792,6 +849,8 @@
 </li>
         <li><a href="modules/pydna_contig.html#module-pydna.contig">pydna.contig</a>
 </li>
+        <li><a href="modules/pydna_cre_lox.html#module-pydna.cre_lox">pydna.cre_lox</a>
+</li>
         <li><a href="modules/pydna_crispr.html#module-pydna.crispr">pydna.crispr</a>
 </li>
         <li><a href="modules/pydna_design.html#module-pydna.design">pydna.design</a>
@@ -835,6 +894,8 @@
         <li><a href="modules/pydna_seqrecord.html#module-pydna.seqrecord">pydna.seqrecord</a>
 </li>
         <li><a href="modules/pydna_sequence_picker.html#module-pydna.sequence_picker">pydna.sequence_picker</a>
+</li>
+        <li><a href="modules/pydna_sequence_regex.html#module-pydna.sequence_regex">pydna.sequence_regex</a>
 </li>
         <li><a href="modules/pydna_threading_timer_decorator_exit.html#module-pydna.threading_timer_decorator_exit">pydna.threading_timer_decorator_exit</a>
 </li>
@@ -965,6 +1026,8 @@
         <li><a href="modules/pydna_parsers.html#pydna.parsers.parse_primers">(in module pydna.parsers)</a>
 </li>
       </ul></li>
+      <li><a href="modules/pydna_parsers.html#pydna.parsers.parse_snapgene">parse_snapgene() (in module pydna.parsers)</a>
+</li>
       <li><a href="modules/pydna_genbankfixer.html#pydna.genbankfixer.parseGBLoc">parseGBLoc() (in module pydna.genbankfixer)</a>
 </li>
       <li><a href="modules/pydna_all.html#pydna.all.pcr">pcr() (in module pydna.all)</a>
@@ -1098,12 +1161,21 @@
 </li>
       </ul></li>
       <li>
+    pydna.cre_lox
+
+      <ul>
+        <li><a href="modules/pydna_cre_lox.html#module-pydna.cre_lox">module</a>
+</li>
+      </ul></li>
+      <li>
     pydna.crispr
 
       <ul>
         <li><a href="modules/pydna_crispr.html#module-pydna.crispr">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     pydna.design
 
@@ -1111,8 +1183,6 @@
         <li><a href="modules/pydna_design.html#module-pydna.design">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     pydna.download
 
@@ -1254,6 +1324,13 @@
 </li>
       </ul></li>
       <li>
+    pydna.sequence_regex
+
+      <ul>
+        <li><a href="modules/pydna_sequence_regex.html#module-pydna.sequence_regex">module</a>
+</li>
+      </ul></li>
+      <li>
     pydna.threading_timer_decorator_exit
 
       <ul>
@@ -1380,6 +1457,8 @@
         <li><a href="modules/pydna_amplify.html#pydna.amplify.Anneal.report">(pydna.amplify.Anneal method)</a>
 </li>
       </ul></li>
+      <li><a href="modules/pydna_assembly2.html#pydna.assembly2.restriction_ligation_assembly">restriction_ligation_assembly() (in module pydna.assembly2)</a>
+</li>
       <li><a href="modules/pydna_assembly2.html#pydna.assembly2.restriction_ligation_overlap">restriction_ligation_overlap() (in module pydna.assembly2)</a>
 </li>
       <li><a href="modules/pydna_all.html#pydna.all.Dseq.reverse_complement">reverse_complement() (pydna.all.Dseq method)</a>

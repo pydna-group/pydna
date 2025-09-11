@@ -83,12 +83,18 @@
 <p>pydna can be used to work with FASTA, Genbank, EMBL, and snapgene files (.fasta, .gb, .embl, .dna). You can read these files into a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> that one can view and work with. You can also instantiate <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> objects with strings.</p>
 <section id="importing-sequence-files">
 <h2>Importing Sequence Files<a class="headerlink" href="#importing-sequence-files" title="Link to this heading"></a></h2>
-<p>To import files into pydna is simple. pydna provides the <code class="docutils literal notranslate"><span class="pre">parse</span></code> method to read all DNA sequences in a file into a list. As an input, <code class="docutils literal notranslate"><span class="pre">parse</span></code> can take:</p>
+<section id="text-based-files">
+<h3>Text-based files<a class="headerlink" href="#text-based-files" title="Link to this heading"></a></h3>
+<p>For pydna text-based files (fasta, genbank, embl, ape), pydna provides the <code class="docutils literal notranslate"><span class="pre">parse</span></code> method to read all DNA sequences in a file into a list. As an input, <code class="docutils literal notranslate"><span class="pre">parse</span></code> can take:</p>
 <ul class="simple">
 <li><p>The path to a file from your computer</p></li>
 <li><p>A python string with the file content.</p></li>
 </ul>
 <p>The following code shows an example of how to use the <code class="docutils literal notranslate"><span class="pre">parse</span></code> function to import a FASTA file.</p>
+</section>
+<section id="snapgene-files">
+<h3>SnapGene files<a class="headerlink" href="#snapgene-files" title="Link to this heading"></a></h3>
+<p>For that, use the <code class="docutils literal notranslate"><span class="pre">parse_snapgene</span></code> function from the same module</p>
 <a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Importing_Seqs.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
@@ -99,6 +105,7 @@
     <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span><span class="p">[</span><span class="n">clipboard</span><span class="p">,</span><span class="n">download</span><span class="p">,</span><span class="n">express</span><span class="p">,</span><span class="n">gel</span><span class="p">]</span>
     <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/U49845.fasta&quot;</span>
     <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/U49845.gb&quot;</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/pDONRtm201.dna&quot;</span>
 
 </pre></div>
 </div>
@@ -297,7 +304,18 @@ ORIGIN
 //
 </pre></div>
 </div>
+<p>Finally, let’s import a SnapGene file</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_snapgene</span>
+
+<span class="n">seq</span> <span class="o">=</span> <span class="n">parse_snapgene</span><span class="p">(</span><span class="s1">&#39;pDONRtm201.dna&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">seq</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Dseqrecord(o4470)
+</pre></div>
+</div>
 <p>Now, you can work with the sequence record using pydna, using the <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> class. <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> provides ways to highlight regions of interest on the sequence, adding new features to the record, removing features, and creating new <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> objects to store and export your changes. Please refer to the <code class="docutils literal notranslate"><span class="pre">Dseq_Features</span></code> notebook for more information.</p>
+</section>
 </section>
 <section id="importing-sequences-from-strings">
 <h2>Importing Sequences from Strings<a class="headerlink" href="#importing-sequences-from-strings" title="Link to this heading"></a></h2>

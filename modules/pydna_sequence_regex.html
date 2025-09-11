@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydna.types &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  <title>pydna.sequence_regex &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a051be83" />
@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pydna.user_cloning" href="pydna_user_cloning.html" />
-    <link rel="prev" title="pydna.tm" href="pydna_tm.html" /> 
+    <link rel="next" title="pydna.threading_timer_decorator_exit" href="pydna_threading_timer_decorator_exit.html" />
+    <link rel="prev" title="pydna.sequence_picker" href="pydna_sequence_picker.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -84,10 +84,14 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_seq.html">pydna.seq</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_seqrecord.html">pydna.seqrecord</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_sequence_picker.html">pydna.sequence_picker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pydna_sequence_regex.html">pydna.sequence_regex</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pydna.sequence_regex</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.sequence_regex.compute_regex_site"><code class="docutils literal notranslate"><span class="pre">compute_regex_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.sequence_regex.dseqrecord_finditer"><code class="docutils literal notranslate"><span class="pre">dseqrecord_finditer()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_threading_timer_decorator_exit.html">pydna.threading_timer_decorator_exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_tm.html">pydna.tm</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">pydna.types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna_types.html">pydna.types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_user_cloning.html">pydna.user_cloning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_utils.html">pydna.utils</a></li>
 </ul>
@@ -111,9 +115,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Modules</a></li>
-      <li class="breadcrumb-item active">pydna.types</li>
+      <li class="breadcrumb-item active">pydna.sequence_regex</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/modules/pydna_types.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/modules/pydna_sequence_regex.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -121,17 +125,47 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="pydna-types">
-<h1>pydna.types<a class="headerlink" href="#pydna-types" title="Link to this heading"></a></h1>
-<p id="module-pydna.types">Types used in the pydna package.</p>
+  <section id="pydna-sequence-regex">
+<h1>pydna.sequence_regex<a class="headerlink" href="#pydna-sequence-regex" title="Link to this heading"></a></h1>
+<span class="target" id="module-pydna.sequence_regex"></span><dl class="py function">
+<dt class="sig sig-object py" id="pydna.sequence_regex.compute_regex_site">
+<span class="sig-prename descclassname"><span class="pre">pydna.sequence_regex.</span></span><span class="sig-name descname"><span class="pre">compute_regex_site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">site</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/pydna/sequence_regex.html#compute_regex_site"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.sequence_regex.compute_regex_site" title="Link to this definition"></a></dt>
+<dd><p>Creates a regex pattern from a string that may contain degenerate bases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>site</strong> – The string to convert to a regex pattern.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The regex pattern.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.sequence_regex.dseqrecord_finditer">
+<span class="sig-prename descclassname"><span class="pre">pydna.sequence_regex.</span></span><span class="sig-name descname"><span class="pre">dseqrecord_finditer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Match</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/sequence_regex.html#dseqrecord_finditer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.sequence_regex.dseqrecord_finditer" title="Link to this definition"></a></dt>
+<dd><p>Finds all matches of a regex pattern in a Dseqrecord.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pattern</strong> – The regex pattern to search for.</p></li>
+<li><p><strong>seq</strong> – The Dseqrecord to search in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of matches.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="pydna_tm.html" class="btn btn-neutral float-left" title="pydna.tm" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="pydna_user_cloning.html" class="btn btn-neutral float-right" title="pydna.user_cloning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pydna_sequence_picker.html" class="btn btn-neutral float-left" title="pydna.sequence_picker" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pydna_threading_timer_decorator_exit.html" class="btn btn-neutral float-right" title="pydna.threading_timer_decorator_exit" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

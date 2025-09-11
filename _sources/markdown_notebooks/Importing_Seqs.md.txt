@@ -5,12 +5,18 @@ pydna can be used to work with FASTA, Genbank, EMBL, and snapgene files (.fasta,
 
 ## Importing Sequence Files
 
-To import files into pydna is simple. pydna provides the `parse` method to read all DNA sequences in a file into a list. As an input, `parse` can take:
+### Text-based files
+
+For pydna text-based files (fasta, genbank, embl, ape), pydna provides the `parse` method to read all DNA sequences in a file into a list. As an input, `parse` can take:
 
 * The path to a file from your computer
 * A python string with the file content.
 
 The following code shows an example of how to use the `parse` function to import a FASTA file.
+
+### SnapGene files
+
+For that, use the `parse_snapgene` function from the same module
 
 <a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Importing_Seqs.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
@@ -25,6 +31,7 @@ if 'google.colab' in sys.modules:
     %pip install pydna[clipboard,download,express,gel]
     !curl -LO "https://github.com/pydna-group/pydna/raw/master/docs/notebooks/U49845.fasta"
     !curl -LO "https://github.com/pydna-group/pydna/raw/master/docs/notebooks/U49845.gb"
+    !curl -LO "https://github.com/pydna-group/pydna/raw/master/docs/notebooks/pDONRtm201.dna"
 
 ```
 
@@ -231,6 +238,23 @@ files[0].format("gb")
          4921 ttttcagtgt tagattgctc taattctttg agctgttctc tcagctcctc atatttttct
          4981 tgccatgact cagattctaa ttttaagcta ttcaatttct ctttgatc
     //
+
+
+
+Finally, let's import a SnapGene file
+
+
+```python
+from pydna.parsers import parse_snapgene
+
+seq = parse_snapgene('pDONRtm201.dna')[0]
+seq
+```
+
+
+
+
+    Dseqrecord(o4470)
 
 
 

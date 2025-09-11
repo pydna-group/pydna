@@ -178,20 +178,15 @@ My repair oligo for this experiment length : 90
 </pre></div>
 </div>
 <p>The final edit gene would look like this in a case of homologous recombination.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly</span><span class="w"> </span><span class="kn">import</span> <span class="n">Assembly</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">in_vivo_assembly</span>
 
-<span class="n">my_KO</span> <span class="o">=</span> <span class="n">Assembly</span><span class="p">((</span><span class="n">target_dseq</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">enzyme</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="n">repair_oligo</span><span class="p">,</span> <span class="n">target_dseq</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">enzyme2</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">limit</span> <span class="o">=</span> <span class="mi">20</span> <span class="p">)</span>
-<span class="n">my_assembly_KO</span><span class="p">,</span> <span class="o">*</span><span class="n">rest</span> <span class="o">=</span> <span class="n">my_KO</span><span class="o">.</span><span class="n">assemble_linear</span><span class="p">()</span>
-<span class="n">my_assembly_KO</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">in_vivo_assembly</span><span class="p">((</span><span class="n">target_dseq</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">enzyme</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="n">repair_oligo</span><span class="p">,</span> <span class="n">target_dseq</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">enzyme2</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">limit</span> <span class="o">=</span> <span class="mi">20</span> <span class="p">)</span>
+<span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
-<pre>name|45
-     \/
-     /\
-     45|My repair oligo for this experiment|45
-                                            \/
-                                            /\
-                                            45|name</pre>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Dseqrecord(-469)
+</pre></div>
+</div>
 </section>
 </section>
 

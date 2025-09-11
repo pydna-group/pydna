@@ -1,0 +1,7 @@
+pydna.sequence_regex
+==========
+
+.. automodule:: pydna.sequence_regex
+    :members:
+    :undoc-members:
+    :show-inheritance:

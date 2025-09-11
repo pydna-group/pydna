@@ -100,7 +100,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.tm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tm_default</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplify</span><span class="w"> </span><span class="kn">import</span> <span class="n">pcr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly</span><span class="w"> </span><span class="kn">import</span> <span class="n">Assembly</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">gibson_assembly</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.genbank</span><span class="w"> </span><span class="kn">import</span> <span class="n">Genbank</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.gel</span><span class="w"> </span><span class="kn">import</span> <span class="n">gel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.ladders</span><span class="w"> </span><span class="kn">import</span> <span class="n">GeneRuler_1kb_plus</span>
@@ -124,6 +124,7 @@
  &#39;source&#39;: &#39;Ruminiclostridium cellulolyticum H10&#39;,
  &#39;organism&#39;: &#39;Ruminiclostridium cellulolyticum H10&#39;,
  &#39;taxonomy&#39;: [&#39;Bacteria&#39;,
+  &#39;Bacillati&#39;,
   &#39;Bacillota&#39;,
   &#39;Clostridia&#39;,
   &#39;Eubacteriales&#39;,
@@ -139,7 +140,17 @@
 <span class="n">vector</span><span class="o">.</span><span class="n">annotations</span>
 </pre></div>
 </div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;molecule_type&#39;: &#39;DNA&#39;,
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/Users/manu/Documents/OpenSource/pydna/.venv/lib/python3.12/site-packages/Bio/GenBank/Scanner.py:1537: BiopythonParserWarning: Attempting to parse malformed locus line:
+&#39;LOCUS       Exported                8139 bp DNA     circular SYN 29-AUG-2024\n&#39;
+Found locus &#39;Exported&#39; size &#39;8139&#39; residue_type &#39;DNA&#39;
+Some fields may be wrong.
+  warnings.warn(
+
+
+
+
+
+{&#39;molecule_type&#39;: &#39;DNA&#39;,
  &#39;topology&#39;: &#39;circular&#39;,
  &#39;data_file_division&#39;: &#39;SYN&#39;,
  &#39;date&#39;: &#39;29-AUG-2024&#39;,
@@ -204,11 +215,10 @@
 <p><img alt="png" src="../_images/Example_Gibson_8_0.png" /></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Performing the Gibson Assembly. Note that the assembly class parameters should be given as a list.</span>
 
-<span class="n">assembled</span> <span class="o">=</span> <span class="n">Assembly</span><span class="p">([</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="n">pcr_product_F1</span><span class="p">),</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">pcr_product_F2</span><span class="p">),</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">pcr_product_F3</span><span class="p">),</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">pcr_product_BAC</span><span class="p">)])</span>
-<span class="n">assembled_circ</span> <span class="o">=</span> <span class="n">assembled</span><span class="o">.</span><span class="n">assemble_circular</span><span class="p">()</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">([</span><span class="n">pcr_product_F1</span><span class="p">,</span><span class="n">pcr_product_F2</span><span class="p">,</span><span class="n">pcr_product_F3</span><span class="p">,</span><span class="n">pcr_product_BAC</span><span class="p">])</span>
 
 <span class="c1"># Printing out the Gibson Assembly product</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">assembled_circ</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Dseqrecord
@@ -217,7 +227,7 @@ size: 23827
 ID: id
 Name: name
 Description: description
-Number of features: 28
+Number of features: 42
 /molecule_type=DNA
 Dseq(o23827)
 GCAG..ccgc

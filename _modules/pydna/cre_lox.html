@@ -1,0 +1,250 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydna.cre_lox &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a051be83" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d848064a"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pydna
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Pydna</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../example_gallery.html">Example gallery</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pydna</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../pydna.html">pydna</a></li>
+      <li class="breadcrumb-item active">pydna.cre_lox</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydna.cre_lox</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Data.IUPACData</span><span class="w"> </span><span class="kn">import</span> <span class="n">ambiguous_dna_values</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse_complement</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.sequence_regex</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_regex_site</span><span class="p">,</span> <span class="n">dseqrecord_finditer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">Location</span><span class="p">,</span> <span class="n">SimpleLocation</span><span class="p">,</span> <span class="n">SeqFeature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shift_location</span>
+
+<span class="c1"># We create a dictionary to map ambiguous bases to their consensus base</span>
+<span class="c1"># For example, ambigous_base_dict[&#39;ACGT&#39;] -&gt; &#39;N&#39;</span>
+<span class="n">ambiguous_base_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">ambiguous</span><span class="p">,</span> <span class="n">bases</span> <span class="ow">in</span> <span class="n">ambiguous_dna_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">ambiguous_base_dict</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">bases</span><span class="p">))]</span> <span class="o">=</span> <span class="n">ambiguous</span>
+
+<span class="c1"># To handle N values</span>
+<span class="n">ambiguous_base_dict</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;N&quot;</span>
+
+<span class="c1"># This is the original loxP sequence, here for reference</span>
+<span class="n">LOXP_SEQUENCE</span> <span class="o">=</span> <span class="s2">&quot;ATAACTTCGTATAGCATACATTATACGAAGTTAT&quot;</span>
+
+<span class="n">loxP_sequences</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1"># https://blog.addgene.org/plasmids-101-cre-lox</span>
+    <span class="c1"># loxP</span>
+    <span class="s2">&quot;ATAACTTCGTATANNNTANNNTATACGAAGTTAT&quot;</span><span class="p">,</span>
+    <span class="c1"># PMID:12202778</span>
+    <span class="c1"># lox66</span>
+    <span class="s2">&quot;ATAACTTCGTATANNNTANNNTATACGAACGGTA&quot;</span><span class="p">,</span>
+    <span class="c1"># lox71</span>
+    <span class="s2">&quot;TACCGTTCGTATANNNTANNNTATACGAAGTTAT&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">loxP_consensus</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+<span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">LOXP_SEQUENCE</span><span class="p">)):</span>
+    <span class="n">all_letters</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">seq</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">loxP_sequences</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">all_letters</span><span class="p">))</span>
+    <span class="n">loxP_consensus</span> <span class="o">+=</span> <span class="n">ambiguous_base_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+<span class="c1"># We compute the regex for the forward and reverse loxP sequences</span>
+<span class="n">loxP_regex</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">compute_regex_site</span><span class="p">(</span><span class="n">loxP_consensus</span><span class="p">),</span>
+    <span class="n">compute_regex_site</span><span class="p">(</span><span class="n">reverse_complement</span><span class="p">(</span><span class="n">loxP_consensus</span><span class="p">)),</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="cre_loxP_overlap">
+<a class="viewcode-back" href="../../modules/pydna_cre_lox.html#pydna.cre_lox.cre_loxP_overlap">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cre_loxP_overlap</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">_l</span><span class="p">:</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find matching loxP sites between two sequences.&quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">loxP_regex</span><span class="p">:</span>
+        <span class="n">matches_x</span> <span class="o">=</span> <span class="n">dseqrecord_finditer</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">matches_y</span> <span class="o">=</span> <span class="n">dseqrecord_finditer</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">match_x</span><span class="p">,</span> <span class="n">match_y</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">matches_x</span><span class="p">,</span> <span class="n">matches_y</span><span class="p">):</span>
+            <span class="n">value_x</span> <span class="o">=</span> <span class="n">match_x</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+            <span class="n">value_y</span> <span class="o">=</span> <span class="n">match_y</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">value_x</span><span class="p">[</span><span class="mi">13</span><span class="p">:</span><span class="mi">21</span><span class="p">]</span> <span class="o">==</span> <span class="n">value_y</span><span class="p">[</span><span class="mi">13</span><span class="p">:</span><span class="mi">21</span><span class="p">]:</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">match_x</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">+</span> <span class="mi">13</span><span class="p">,</span> <span class="n">match_y</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">+</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="c1"># Unique values (keeping the order)</span>
+    <span class="n">unique_out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">unique_out</span><span class="p">:</span>
+            <span class="n">unique_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">unique_out</span></div>
+
+
+
+<span class="n">loxP_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;loxP&quot;</span><span class="p">:</span> <span class="s2">&quot;ATAACTTCGTATANNNTANNNTATACGAAGTTAT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lox66&quot;</span><span class="p">:</span> <span class="s2">&quot;ATAACTTCGTATANNNTANNNTATACGAACGGTA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lox71&quot;</span><span class="p">:</span> <span class="s2">&quot;TACCGTTCGTATANNNTANNNTATACGAAGTTAT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;loxP_mutant&quot;</span><span class="p">:</span> <span class="s2">&quot;TACCGTTCGTATANNNTANNNTATACGAACGGTA&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="get_regex_dict">
+<a class="viewcode-back" href="../../modules/pydna_cre_lox.html#pydna.cre_lox.get_regex_dict">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_regex_dict</span><span class="p">(</span><span class="n">original_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the regex dictionary for the original dictionary.&quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">original_dict</span><span class="p">:</span>
+        <span class="n">consensus_seq</span> <span class="o">=</span> <span class="n">original_dict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span>
+        <span class="n">is_palindromic</span> <span class="o">=</span> <span class="n">consensus_seq</span> <span class="o">==</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">consensus_seq</span><span class="p">)</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;forward_regex&quot;</span><span class="p">:</span> <span class="n">compute_regex_site</span><span class="p">(</span><span class="n">original_dict</span><span class="p">[</span><span class="n">site</span><span class="p">]),</span>
+            <span class="s2">&quot;reverse_regex&quot;</span><span class="p">:</span> <span class="p">(</span>
+                <span class="kc">None</span>
+                <span class="k">if</span> <span class="n">is_palindromic</span>
+                <span class="k">else</span> <span class="n">compute_regex_site</span><span class="p">(</span><span class="n">reverse_complement</span><span class="p">(</span><span class="n">original_dict</span><span class="p">[</span><span class="n">site</span><span class="p">]))</span>
+            <span class="p">),</span>
+        <span class="p">}</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="find_loxP_sites">
+<a class="viewcode-back" href="../../modules/pydna_cre_lox.html#pydna.cre_lox.find_loxP_sites">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_loxP_sites</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Location</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find all loxP sites in a sequence and return a dictionary with the name and positions of the sites.&quot;&quot;&quot;</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">regex_dict</span> <span class="o">=</span> <span class="n">get_regex_dict</span><span class="p">(</span><span class="n">loxP_dict</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">loxP_dict</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;forward_regex&quot;</span><span class="p">,</span> <span class="s2">&quot;reverse_regex&quot;</span><span class="p">]:</span>
+            <span class="c1"># Palindromic sequences have no reverse complement</span>
+            <span class="k">if</span> <span class="n">regex_dict</span><span class="p">[</span><span class="n">site</span><span class="p">][</span><span class="n">pattern</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dseqrecord_finditer</span><span class="p">(</span><span class="n">regex_dict</span><span class="p">[</span><span class="n">site</span><span class="p">][</span><span class="n">pattern</span><span class="p">],</span> <span class="n">seq</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">site</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+                    <span class="n">out</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">strand</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">pattern</span> <span class="o">==</span> <span class="s2">&quot;forward_regex&quot;</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="n">loc</span> <span class="o">=</span> <span class="n">SimpleLocation</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">(),</span> <span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">strand</span><span class="p">)</span>
+                <span class="n">loc</span> <span class="o">=</span> <span class="n">shift_location</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="annotate_loxP_sites">
+<a class="viewcode-back" href="../../modules/pydna_cre_lox.html#pydna.cre_lox.annotate_loxP_sites">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">annotate_loxP_sites</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseqrecord</span><span class="p">:</span>
+    <span class="n">sites</span> <span class="o">=</span> <span class="n">find_loxP_sites</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sites</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">sites</span><span class="p">[</span><span class="n">site</span><span class="p">]:</span>
+            <span class="c1"># Don&#39;t add the same feature twice</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">==</span> <span class="n">loc</span>
+                <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;protein_bind&quot;</span>
+                <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="p">[])</span> <span class="o">==</span> <span class="p">[</span><span class="n">site</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">seq</span><span class="o">.</span><span class="n">features</span>
+            <span class="p">):</span>
+                <span class="n">seq</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">SeqFeature</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;protein_bind&quot;</span><span class="p">,</span> <span class="n">qualifiers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">site</span><span class="p">]})</span>
+                <span class="p">)</span>
+    <span class="k">return</span> <span class="n">seq</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Björn F. Johansson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

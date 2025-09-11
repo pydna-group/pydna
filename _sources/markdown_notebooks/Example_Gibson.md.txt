@@ -29,7 +29,7 @@ from pydna.parsers import parse
 from pydna.tm import tm_default
 from pydna.amplify import pcr
 from pydna.dseqrecord import Dseqrecord
-from pydna.assembly import Assembly
+from pydna.assembly2 import gibson_assembly
 from pydna.genbank import Genbank
 from pydna.gel import gel
 from pydna.ladders import GeneRuler_1kb_plus
@@ -58,6 +58,7 @@ genome.annotations
      'source': 'Ruminiclostridium cellulolyticum H10',
      'organism': 'Ruminiclostridium cellulolyticum H10',
      'taxonomy': ['Bacteria',
+      'Bacillati',
       'Bacillota',
       'Clostridia',
       'Eubacteriales',
@@ -75,6 +76,13 @@ genome.annotations
 vector = parse("./pCC1BAC.gb")[0]
 vector.annotations
 ```
+
+    /Users/manu/Documents/OpenSource/pydna/.venv/lib/python3.12/site-packages/Bio/GenBank/Scanner.py:1537: BiopythonParserWarning: Attempting to parse malformed locus line:
+    'LOCUS       Exported                8139 bp DNA     circular SYN 29-AUG-2024\n'
+    Found locus 'Exported' size '8139' residue_type 'DNA'
+    Some fields may be wrong.
+      warnings.warn(
+
 
 
 
@@ -161,11 +169,10 @@ im.rotate(90, expand=1)
 ```python
 # Performing the Gibson Assembly. Note that the assembly class parameters should be given as a list.
 
-assembled = Assembly([Dseqrecord(pcr_product_F1), Dseqrecord(pcr_product_F2), Dseqrecord(pcr_product_F3), Dseqrecord(pcr_product_BAC)])
-assembled_circ = assembled.assemble_circular()
+products = gibson_assembly([pcr_product_F1,pcr_product_F2,pcr_product_F3,pcr_product_BAC])
 
 # Printing out the Gibson Assembly product
-print(assembled_circ[0])
+print(products[0])
 ```
 
     Dseqrecord
@@ -174,7 +181,7 @@ print(assembled_circ[0])
     ID: id
     Name: name
     Description: description
-    Number of features: 28
+    Number of features: 42
     /molecule_type=DNA
     Dseq(o23827)
     GCAG..ccgc

@@ -118,12 +118,30 @@
 <li class="toctree-l4"><a class="reference internal" href="#pydna.assembly2.SingleFragmentAssembly.get_linear_assemblies"><code class="docutils literal notranslate"><span class="pre">SingleFragmentAssembly.get_linear_assemblies()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.common_function_assembly_products"><code class="docutils literal notranslate"><span class="pre">common_function_assembly_products()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.gibson_assembly"><code class="docutils literal notranslate"><span class="pre">gibson_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.in_fusion_assembly"><code class="docutils literal notranslate"><span class="pre">in_fusion_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.fusion_pcr_assembly"><code class="docutils literal notranslate"><span class="pre">fusion_pcr_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.in_vivo_assembly"><code class="docutils literal notranslate"><span class="pre">in_vivo_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.restriction_ligation_assembly"><code class="docutils literal notranslate"><span class="pre">restriction_ligation_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.golden_gate_assembly"><code class="docutils literal notranslate"><span class="pre">golden_gate_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.ligation_assembly"><code class="docutils literal notranslate"><span class="pre">ligation_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.assembly_is_multi_site"><code class="docutils literal notranslate"><span class="pre">assembly_is_multi_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.gateway_assembly"><code class="docutils literal notranslate"><span class="pre">gateway_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.common_function_integration_products"><code class="docutils literal notranslate"><span class="pre">common_function_integration_products()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.common_handle_insertion_fragments"><code class="docutils literal notranslate"><span class="pre">common_handle_insertion_fragments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.common_function_excision_products"><code class="docutils literal notranslate"><span class="pre">common_function_excision_products()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.homologous_recombination_integration"><code class="docutils literal notranslate"><span class="pre">homologous_recombination_integration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.homologous_recombination_excision"><code class="docutils literal notranslate"><span class="pre">homologous_recombination_excision()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.cre_lox_integration"><code class="docutils literal notranslate"><span class="pre">cre_lox_integration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydna.assembly2.cre_lox_excision"><code class="docutils literal notranslate"><span class="pre">cre_lox_excision()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_codon.html">pydna.codon</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_common_sub_strings.html">pydna.common_sub_strings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_conftest.html">pydna.conftest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_contig.html">pydna.contig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna_cre_lox.html">pydna.cre_lox</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_crispr.html">pydna.crispr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_design.html">pydna.design</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_download.html">pydna.download</a></li>
@@ -146,6 +164,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pydna_seq.html">pydna.seq</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_seqrecord.html">pydna.seqrecord</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_sequence_picker.html">pydna.sequence_picker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna_sequence_regex.html">pydna.sequence_regex</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_threading_timer_decorator_exit.html">pydna.threading_timer_decorator_exit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_tm.html">pydna.tm</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pydna_types.html">pydna.types</a></li>
@@ -184,7 +203,8 @@
              
   <section id="pydna-assembly2">
 <h1>pydna.assembly2<a class="headerlink" href="#pydna-assembly2" title="Link to this heading"></a></h1>
-<p id="module-pydna.assembly2">Slightly different assembly implementation</p>
+<p id="module-pydna.assembly2">Improved implementation of the assembly module. To see a list of issues with the previous implementation,
+see [issues tagged with fixed-with-new-assembly-model](<a class="reference external" href="https://github.com/pydna-group/pydna/issues?q=is%3Aissue%20state%3Aopen%20label%3Afixed-with-new-assembly-model">https://github.com/pydna-group/pydna/issues?q=is%3Aissue%20state%3Aopen%20label%3Afixed-with-new-assembly-model</a>)</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.assembly2.gather_overlapping_locations">
 <span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">gather_overlapping_locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Location</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Location</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#gather_overlapping_locations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.gather_overlapping_locations" title="Link to this definition"></a></dt>
@@ -373,7 +393,7 @@ Product (unwanted): oooo
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.assembly2.sticky_end_sub_strings">
-<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">sticky_end_sub_strings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seqx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seqy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/assembly2.html#sticky_end_sub_strings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.sticky_end_sub_strings" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">sticky_end_sub_strings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seqx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seqy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/assembly2.html#sticky_end_sub_strings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.sticky_end_sub_strings" title="Link to this definition"></a></dt>
 <dd><p>Assembly algorithm for ligation of sticky ends.</p>
 <p>For now, if limit 0 / False (default) only full overlaps are considered.
 Otherwise, partial overlaps are also returned.</p>
@@ -382,7 +402,7 @@ Otherwise, partial overlaps are also returned.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>seqx</strong> (<em>_Dseqrecord</em>) – The first sequence</p></li>
 <li><p><strong>seqy</strong> (<em>_Dseqrecord</em>) – The second sequence</p></li>
-<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Minimum length of the overlap</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to allow partial overlaps</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -398,16 +418,16 @@ Otherwise, partial overlaps are also returned.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">sticky_end_sub_strings</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">Dseq</span><span class="o">.</span><span class="n">from_full_sequence_and_overhangs</span><span class="p">(</span><span class="s2">&quot;AAAAAA&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">Dseq</span><span class="o">.</span><span class="n">from_full_sequence_and_overhangs</span><span class="p">(</span><span class="s2">&quot;AAAAAA&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sticky_end_sub_strings</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sticky_end_sub_strings</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="go">[(3, 0, 3)]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sticky_end_sub_strings</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sticky_end_sub_strings</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="go">[]</span>
 </pre></div>
 </div>
 <p>Ligation of partially overlapping sticky ends, specified with limit=True</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">Dseq</span><span class="o">.</span><span class="n">from_full_sequence_and_overhangs</span><span class="p">(</span><span class="s2">&quot;AAAAAA&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">Dseq</span><span class="o">.</span><span class="n">from_full_sequence_and_overhangs</span><span class="p">(</span><span class="s2">&quot;AAAAAA&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sticky_end_sub_strings</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sticky_end_sub_strings</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="go">[]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sticky_end_sub_strings</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="go">[(4, 0, 2)]</span>
@@ -975,6 +995,564 @@ real assemblies (see assembly_is_valid).</p>
 real assemblies (see assembly_is_valid). Subassemblies are removed (see remove_subassemblies).</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.common_function_assembly_products">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">common_function_assembly_products</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Callable" title="(in Python v3.8)"><span class="pre">Callable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">circular_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_results_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Callable" title="(in Python v3.8)"><span class="pre">Callable</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#common_function_assembly_products"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.common_function_assembly_products" title="Link to this definition"></a></dt>
+<dd><p>Common function to avoid code duplication. Could be simplified further
+once SingleFragmentAssembly and Assembly are merged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frags</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>_Dseqrecord</em><em>]</em>) – List of DNA fragments to assemble</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><em>None</em>) – Minimum overlap length required, or None if not applicable</p></li>
+<li><p><strong>algorithm</strong> (<em>Callable</em>) – Function that determines valid overlaps between fragments</p></li>
+<li><p><strong>circular_only</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True, only return circular assemblies</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of assembled DNA molecules</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.gibson_assembly">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">gibson_assembly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circular_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#gibson_assembly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.gibson_assembly" title="Link to this definition"></a></dt>
+<dd><p>Returns the products for Gibson assembly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frags</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>_Dseqrecord</em><em>]</em>) – List of DNA fragments to assemble</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Minimum overlap length required, by default 25</p></li>
+<li><p><strong>circular_only</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, only return circular assemblies, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of assembled DNA molecules</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.in_fusion_assembly">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">in_fusion_assembly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circular_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#in_fusion_assembly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.in_fusion_assembly" title="Link to this definition"></a></dt>
+<dd><p>Returns the products for in-fusion assembly. This is the same as Gibson
+assembly, but with a different name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frags</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>_Dseqrecord</em><em>]</em>) – List of DNA fragments to assemble</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Minimum overlap length required, by default 25</p></li>
+<li><p><strong>circular_only</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, only return circular assemblies, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of assembled DNA molecules</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.fusion_pcr_assembly">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">fusion_pcr_assembly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circular_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#fusion_pcr_assembly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.fusion_pcr_assembly" title="Link to this definition"></a></dt>
+<dd><p>Returns the products for fusion PCR assembly. This is the same as Gibson
+assembly, but with a different name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frags</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>_Dseqrecord</em><em>]</em>) – List of DNA fragments to assemble</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Minimum overlap length required, by default 25</p></li>
+<li><p><strong>circular_only</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, only return circular assemblies, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of assembled DNA molecules</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.in_vivo_assembly">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">in_vivo_assembly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circular_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#in_vivo_assembly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.in_vivo_assembly" title="Link to this definition"></a></dt>
+<dd><p>Returns the products for in vivo assembly (IVA), which relies on homologous recombination between the fragments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frags</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>_Dseqrecord</em><em>]</em>) – List of DNA fragments to assemble</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Minimum overlap length required, by default 25</p></li>
+<li><p><strong>circular_only</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, only return circular assemblies, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of assembled DNA molecules</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.restriction_ligation_assembly">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">restriction_ligation_assembly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enzymes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">_AbstractCut</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_blunt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circular_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#restriction_ligation_assembly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.restriction_ligation_assembly" title="Link to this definition"></a></dt>
+<dd><p>Returns the products for restriction ligation assembly:
+* Finds cutsites in the fragments
+* Finds all products that could be assembled by ligating the fragments based on those cutsites
+* Will NOT return products that combine an existing end with an end generated by the same enzyme (see example below)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frags</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>_Dseqrecord</em><em>]</em>) – List of DNA fragments to assemble</p></li>
+<li><p><strong>enzymes</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>_AbstractCut</em><em>]</em>) – List of restriction enzymes to use</p></li>
+<li><p><strong>allow_blunt</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, allow blunt end ligations, by default True</p></li>
+<li><p><strong>circular_only</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, only return circular assemblies, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of assembled DNA molecules</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>In the example below, we plan to assemble a plasmid from a backbone and an insert, using the EcoRI and SalI enzymes.
+Note how 2 circular products are returned, one contains the insert (<cite>acgt</cite>)
+and the desired part of the backbone (<cite>cccccc</cite>), the other contains the
+reversed insert (<cite>tgga</cite>) and the cut-out part of the backbone (<cite>aaa</cite>).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">restriction_ligation_assembly</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">EcoRI</span><span class="p">,</span> <span class="n">SalI</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">backbone</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;cccGAATTCaaaGTCGACccc&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">insert</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;ggGAATTCaggtGTCGACgg&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">products</span> <span class="o">=</span> <span class="n">restriction_ligation_assembly</span><span class="p">([</span><span class="n">backbone</span><span class="p">,</span> <span class="n">insert</span><span class="p">],</span> <span class="p">[</span><span class="n">EcoRI</span><span class="p">,</span> <span class="n">SalI</span><span class="p">],</span> <span class="n">circular_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span>
+<span class="go">Dseq(o22)</span>
+<span class="go">TCGACccccccGAATTCaggtG</span>
+<span class="go">AGCTGggggggCTTAAGtccaC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">products</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span>
+<span class="go">Dseq(o19)</span>
+<span class="go">AATTCaaaGTCGACacctG</span>
+<span class="go">TTAAGtttCAGCTGtggaC</span>
+</pre></div>
+</div>
+<p>Note that passing a pre-cut fragment will not work.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">restriction_products</span> <span class="o">=</span> <span class="n">insert</span><span class="o">.</span><span class="n">cut</span><span class="p">([</span><span class="n">EcoRI</span><span class="p">,</span> <span class="n">SalI</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cut_insert</span> <span class="o">=</span> <span class="n">restriction_products</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">restriction_ligation_assembly</span><span class="p">([</span><span class="n">backbone</span><span class="p">,</span> <span class="n">cut_insert</span><span class="p">],</span> <span class="p">[</span><span class="n">EcoRI</span><span class="p">,</span> <span class="n">SalI</span><span class="p">],</span> <span class="n">circular_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">[]</span>
+</pre></div>
+</div>
+<p>It also works with a single fragment, for circularization:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">seq</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;GAATTCaaaGAATTC&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">products</span> <span class="o">=</span><span class="n">restriction_ligation_assembly</span><span class="p">([</span><span class="n">seq</span><span class="p">],</span> <span class="p">[</span><span class="n">EcoRI</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span>
+<span class="go">Dseq(o9)</span>
+<span class="go">AATTCaaaG</span>
+<span class="go">TTAAGtttC</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.golden_gate_assembly">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">golden_gate_assembly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enzymes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">_AbstractCut</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_blunt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circular_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#golden_gate_assembly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.golden_gate_assembly" title="Link to this definition"></a></dt>
+<dd><p>Returns the products for Golden Gate assembly. This is the same as
+restriction ligation assembly, but with a different name. Check the documentation
+for <cite>restriction_ligation_assembly</cite> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frags</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>_Dseqrecord</em><em>]</em>) – List of DNA fragments to assemble</p></li>
+<li><p><strong>enzymes</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>_AbstractCut</em><em>]</em>) – List of restriction enzymes to use</p></li>
+<li><p><strong>allow_blunt</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, allow blunt end ligations, by default True</p></li>
+<li><p><strong>circular_only</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, only return circular assemblies, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of assembled DNA molecules</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>See the example for <cite>restriction_ligation_assembly</cite>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.ligation_assembly">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">ligation_assembly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_blunt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_partial_overlap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circular_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#ligation_assembly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.ligation_assembly" title="Link to this definition"></a></dt>
+<dd><p>Returns the products for ligation assembly, as inputs pass the fragments (digested if needed) that
+will be ligated.</p>
+<p>For most cases, you probably should use <cite>restriction_ligation_assembly</cite> instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frags</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>_Dseqrecord</em><em>]</em>) – List of DNA fragments to assemble</p></li>
+<li><p><strong>allow_blunt</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, allow blunt end ligations, by default False</p></li>
+<li><p><strong>allow_partial_overlap</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, allow partial overlaps between sticky ends, by default False</p></li>
+<li><p><strong>circular_only</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, only return circular assemblies, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of assembled DNA molecules</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>In the example below, we plan to assemble a plasmid from a backbone and an insert,
+using the EcoRI enzyme. The insert and insertion site in the backbone are flanked by
+EcoRI sites, so there are two possible products depending on the orientation of the insert.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">ligation_assembly</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">EcoRI</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">backbone</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;cccGAATTCaaaGAATTCccc&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">backbone_cut</span> <span class="o">=</span> <span class="n">backbone</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">EcoRI</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">insert</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;ggGAATTCaggtGAATTCgg&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">insert_cut</span> <span class="o">=</span> <span class="n">insert</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">EcoRI</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">products</span> <span class="o">=</span> <span class="n">ligation_assembly</span><span class="p">([</span><span class="n">backbone_cut</span><span class="p">,</span> <span class="n">insert_cut</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span>
+<span class="go">Dseq(o22)</span>
+<span class="go">AATTCccccccGAATTCaggtG</span>
+<span class="go">TTAAGggggggCTTAAGtccaC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">products</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span>
+<span class="go">Dseq(o22)</span>
+<span class="go">AATTCccccccGAATTCacctG</span>
+<span class="go">TTAAGggggggCTTAAGtggaC</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.assembly_is_multi_site">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">assembly_is_multi_site</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">asm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">_Location</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">_Location</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#assembly_is_multi_site"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.assembly_is_multi_site" title="Link to this definition"></a></dt>
+<dd><p>Returns True if the assembly is a multi-site assembly, False otherwise.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.gateway_assembly">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">gateway_assembly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reaction_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">greedy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circular_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_site_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#gateway_assembly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.gateway_assembly" title="Link to this definition"></a></dt>
+<dd><p>Returns the products for Gateway assembly / Gateway cloning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frags</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>_Dseqrecord</em><em>]</em>) – List of DNA fragments to assemble</p></li>
+<li><p><strong>reaction_type</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Type of Gateway reaction, either ‘BP’ or ‘LR’</p></li>
+<li><p><strong>greedy</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, use greedy gateway consensus sites, by default False</p></li>
+<li><p><strong>circular_only</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, only return circular assemblies, by default False</p></li>
+<li><p><strong>multi_site_only</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, only return products that where 2 sites recombined. Even if input sequences
+contain multiple att sites (typically 2), a product could be generated where only one
+site recombines. That’s typically not what you want, so you can set this to True to
+only return products where both att sites recombined.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of assembled DNA molecules</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Below an example with dummy Gateway sequences, composed with minimal sequences and the consensus
+att sites.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">gateway_assembly</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attB1</span> <span class="o">=</span> <span class="s2">&quot;ACAACTTTGTACAAAAAAGCAGAAG&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attP1</span> <span class="o">=</span> <span class="s2">&quot;AAAATAATGATTTTATTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCTGAACGAGAAGCGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATCCAGTCACTATGAATCAACTACTTAGATGGTATTAGTGACCTGTA&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attR1</span> <span class="o">=</span> <span class="s2">&quot;ACAACTTTGTACAAAAAAGCTGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATGCAGTCACTATG&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attL1</span> <span class="o">=</span> <span class="s2">&quot;CAAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATAAGCAATGCTTTCTTATAATGCCAACTTTGTACAAAAAAGCAGGCT&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">seq1</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span> <span class="o">+</span> <span class="n">attB1</span> <span class="o">+</span> <span class="s2">&quot;ccc&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">seq2</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span> <span class="o">+</span> <span class="n">attP1</span> <span class="o">+</span> <span class="s2">&quot;ccc&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">seq3</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span> <span class="o">+</span> <span class="n">attR1</span> <span class="o">+</span> <span class="s2">&quot;ccc&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">seq4</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span> <span class="o">+</span> <span class="n">attL1</span> <span class="o">+</span> <span class="s2">&quot;ccc&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">products_BP</span> <span class="o">=</span> <span class="n">gateway_assembly</span><span class="p">([</span><span class="n">seq1</span><span class="p">,</span> <span class="n">seq2</span><span class="p">],</span> <span class="s2">&quot;BP&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">products_LR</span> <span class="o">=</span> <span class="n">gateway_assembly</span><span class="p">([</span><span class="n">seq3</span><span class="p">,</span> <span class="n">seq4</span><span class="p">],</span> <span class="s2">&quot;LR&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">products_BP</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">products_LR</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<p>Now let’s understand the <cite>multi_site_only</cite> parameter. Let’s consider a case where we are swapping fragments
+between two plasmids using an LR reaction. Experimentally, we expect to obtain two plasmids, resulting from the
+swapping between the two att sites. That’s what we get if we set <cite>multi_site_only</cite> to True.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">attL2</span> <span class="o">=</span> <span class="s1">&#39;aaataatgattttattttgactgatagtgacctgttcgttgcaacaaattgataagcaatgctttcttataatgccaactttgtacaagaaagctg&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attR2</span> <span class="o">=</span> <span class="s1">&#39;accactttgtacaagaaagctgaacgagaaacgtaaaatgatataaatatcaatatattaaattagattttgcataaaaaacagactacataatactgtaaaacacaacatatccagtcactatg&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">insert</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;cccccc&quot;</span> <span class="o">+</span> <span class="n">attL1</span> <span class="o">+</span> <span class="s2">&quot;ccc&quot;</span> <span class="o">+</span> <span class="n">attL2</span> <span class="o">+</span> <span class="s2">&quot;cccccc&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">backbone</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;ttttt&quot;</span> <span class="o">+</span> <span class="n">attR1</span> <span class="o">+</span> <span class="s2">&quot;aaa&quot;</span> <span class="o">+</span> <span class="n">attR2</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">products</span> <span class="o">=</span> <span class="n">gateway_assembly</span><span class="p">([</span><span class="n">insert</span><span class="p">,</span> <span class="n">backbone</span><span class="p">],</span> <span class="s2">&quot;LR&quot;</span><span class="p">,</span> <span class="n">multi_site_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">products</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<p>However, if we set <cite>multi_site_only</cite> to False, we get 4 products, which also include the intermediate products
+where the two plasmids are combined into a single one through recombination of a single att site. This is an
+intermediate of the reaction, and typically we don’t want it:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">products</span> <span class="o">=</span> <span class="n">gateway_assembly</span><span class="p">([</span><span class="n">insert</span><span class="p">,</span> <span class="n">backbone</span><span class="p">],</span> <span class="s2">&quot;LR&quot;</span><span class="p">,</span> <span class="n">multi_site_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">products</span><span class="p">])</span>
+<span class="go">[469, 237, 232, 469]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.common_function_integration_products">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">common_function_integration_products</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Callable" title="(in Python v3.8)"><span class="pre">Callable</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#common_function_integration_products"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.common_function_integration_products" title="Link to this definition"></a></dt>
+<dd><p>Common function to avoid code duplication for integration products.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frags</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>_Dseqrecord</em><em>]</em>) – List of DNA fragments to integrate</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><em>None</em>) – Minimum overlap length required, or None if not applicable</p></li>
+<li><p><strong>algorithm</strong> (<em>Callable</em>) – Function that determines valid overlaps between fragments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of integrated DNA molecules</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.common_handle_insertion_fragments">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">common_handle_insertion_fragments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genome</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">inserts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#common_handle_insertion_fragments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.common_handle_insertion_fragments" title="Link to this definition"></a></dt>
+<dd><p>Common function to handle / validate insertion fragments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genome</strong> (<em>_Dseqrecord</em>) – Target genome sequence</p></li>
+<li><p><strong>inserts</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>_Dseqrecord</em><em>] or </em><em>_Dseqrecord</em>) – DNA fragment(s) to insert</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List containing genome and insert fragments</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.common_function_excision_products">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">common_function_excision_products</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genome</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Callable" title="(in Python v3.8)"><span class="pre">Callable</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#common_function_excision_products"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.common_function_excision_products" title="Link to this definition"></a></dt>
+<dd><p>Common function to avoid code duplication for excision products.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genome</strong> (<em>_Dseqrecord</em>) – Target genome sequence</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><em>None</em>) – Minimum overlap length required, or None if not applicable</p></li>
+<li><p><strong>algorithm</strong> (<em>Callable</em>) – Function that determines valid overlaps between fragments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of excised DNA molecules</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.homologous_recombination_integration">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">homologous_recombination_integration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genome</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">inserts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#homologous_recombination_integration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.homologous_recombination_integration" title="Link to this definition"></a></dt>
+<dd><p>Returns the products resulting from the integration of an insert (or inserts joined
+through in vivo recombination) into the genome through homologous recombination.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genome</strong> (<em>_Dseqrecord</em>) – Target genome sequence</p></li>
+<li><p><strong>inserts</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>_Dseqrecord</em><em>]</em>) – DNA fragment(s) to insert</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Minimum homology length required, by default 40</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of integrated DNA molecules</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Below an example with a single insert.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">homologous_recombination_integration</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">homology</span> <span class="o">=</span> <span class="s2">&quot;AAGTCCGTTCGTTTTACCTG&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genome</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aaaaaa</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">ccccc</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">aaaaaa&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">insert</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">gggg</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">products</span> <span class="o">=</span> <span class="n">homologous_recombination_integration</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="p">[</span><span class="n">insert</span><span class="p">],</span> <span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="go">&#39;aaaaaaAAGTCCGTTCGTTTTACCTGggggAAGTCCGTTCGTTTTACCTGaaaaaa&#39;</span>
+</pre></div>
+</div>
+<p>Below an example with two inserts joined through homology.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">homology2</span> <span class="o">=</span> <span class="s2">&quot;ATTACAGCATGGGAAGAAAGA&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">insert_1</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">gggg</span><span class="si">{</span><span class="n">homology2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">insert_2</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">homology2</span><span class="si">}</span><span class="s2">cccc</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">products</span> <span class="o">=</span> <span class="n">homologous_recombination_integration</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="p">[</span><span class="n">insert_1</span><span class="p">,</span> <span class="n">insert_2</span><span class="p">],</span> <span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="go">&#39;aaaaaaAAGTCCGTTCGTTTTACCTGggggATTACAGCATGGGAAGAAAGAccccAAGTCCGTTCGTTTTACCTGaaaaaa&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.homologous_recombination_excision">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">homologous_recombination_excision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genome</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#homologous_recombination_excision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.homologous_recombination_excision" title="Link to this definition"></a></dt>
+<dd><p>Returns the products resulting from the excision of a fragment from the genome through
+homologous recombination.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genome</strong> (<em>_Dseqrecord</em>) – Target genome sequence</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Minimum homology length required, by default 40</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List containing excised plasmid and remaining genome sequence</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Example of a homologous recombination event, where a plasmid is excised from the
+genome (circular sequence of 25 bp), and that part is removed from the genome,
+leaving a shorter linear sequence (32 bp).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">homologous_recombination_excision</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">homology</span> <span class="o">=</span> <span class="s2">&quot;AAGTCCGTTCGTTTTACCTG&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genome</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aaaaaa</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">ccccc</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">aaaaaa&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">products</span> <span class="o">=</span> <span class="n">homologous_recombination_excision</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">products</span>
+<span class="go">[Dseqrecord(o25), Dseqrecord(-32)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.cre_lox_integration">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">cre_lox_integration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genome</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">inserts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#cre_lox_integration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.cre_lox_integration" title="Link to this definition"></a></dt>
+<dd><p>Returns the products resulting from the integration of an insert (or inserts joined
+through cre-lox recombination among them) into the genome through cre-lox integration.</p>
+<p>Also works with lox66 and lox71 (see <cite>pydna.cre_lox</cite> for more details).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genome</strong> (<em>_Dseqrecord</em>) – Target genome sequence</p></li>
+<li><p><strong>inserts</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>_Dseqrecord</em><em>] or </em><em>_Dseqrecord</em>) – DNA fragment(s) to insert</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of integrated DNA molecules</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Below an example of reversible integration and excision.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">cre_lox_integration</span><span class="p">,</span> <span class="n">cre_lox_excision</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.cre_lox</span><span class="w"> </span><span class="kn">import</span> <span class="n">LOXP_SEQUENCE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cccccc</span><span class="si">{</span><span class="n">LOXP_SEQUENCE</span><span class="si">}</span><span class="s2">aaaaa&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">LOXP_SEQUENCE</span><span class="si">}</span><span class="s2">bbbbb&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span>
+<span class="go">[Dseqrecord(-45), Dseqrecord(o39)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">cre_lox_integration</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="n">b</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span>
+<span class="go">[Dseqrecord(-84)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res2</span> <span class="o">=</span> <span class="n">cre_lox_excision</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res2</span>
+<span class="go">[Dseqrecord(o39), Dseqrecord(-45)]</span>
+</pre></div>
+</div>
+<p>Below an example with lox66 and lox71 (irreversible integration).
+Here, the result of excision is still returned because there is a low
+probability of it happening, but it’s considered a rare event.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lox66</span> <span class="o">=</span> <span class="s1">&#39;ATAACTTCGTATAGCATACATTATACGAACGGTA&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lox71</span> <span class="o">=</span> <span class="s1">&#39;TACCGTTCGTATAGCATACATTATACGAAGTTAT&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cccccc</span><span class="si">{</span><span class="n">lox66</span><span class="si">}</span><span class="s2">aaaaa&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">lox71</span><span class="si">}</span><span class="s2">bbbbb&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">cre_lox_integration</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="n">b</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span>
+<span class="go">[Dseqrecord(-84)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res2</span> <span class="o">=</span> <span class="n">cre_lox_excision</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res2</span>
+<span class="go">[Dseqrecord(o39), Dseqrecord(-45)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.cre_lox_excision">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">cre_lox_excision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genome</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pydna_dseqrecord.html#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/assembly2.html#cre_lox_excision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.cre_lox_excision" title="Link to this definition"></a></dt>
+<dd><p>Returns the products for CRE-lox excision.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>genome</strong> (<em>_Dseqrecord</em>) – Target genome sequence</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List containing excised plasmid and remaining genome sequence</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[_Dseqrecord]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Below an example of reversible integration and excision.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">cre_lox_integration</span><span class="p">,</span> <span class="n">cre_lox_excision</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.cre_lox</span><span class="w"> </span><span class="kn">import</span> <span class="n">LOXP_SEQUENCE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cccccc</span><span class="si">{</span><span class="n">LOXP_SEQUENCE</span><span class="si">}</span><span class="s2">aaaaa&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">LOXP_SEQUENCE</span><span class="si">}</span><span class="s2">bbbbb&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span>
+<span class="go">[Dseqrecord(-45), Dseqrecord(o39)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">cre_lox_integration</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="n">b</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span>
+<span class="go">[Dseqrecord(-84)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res2</span> <span class="o">=</span> <span class="n">cre_lox_excision</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res2</span>
+<span class="go">[Dseqrecord(o39), Dseqrecord(-45)]</span>
+</pre></div>
+</div>
+<p>Below an example with lox66 and lox71 (irreversible integration).
+Here, the result of excision is still returned because there is a low
+probability of it happening, but it’s considered a rare event.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lox66</span> <span class="o">=</span> <span class="s1">&#39;ATAACTTCGTATAGCATACATTATACGAACGGTA&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lox71</span> <span class="o">=</span> <span class="s1">&#39;TACCGTTCGTATAGCATACATTATACGAAGTTAT&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cccccc</span><span class="si">{</span><span class="n">lox66</span><span class="si">}</span><span class="s2">aaaaa&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">lox71</span><span class="si">}</span><span class="s2">bbbbb&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">cre_lox_integration</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="n">b</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span>
+<span class="go">[Dseqrecord(-84)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res2</span> <span class="o">=</span> <span class="n">cre_lox_excision</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res2</span>
+<span class="go">[Dseqrecord(o39), Dseqrecord(-45)]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>

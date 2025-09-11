@@ -298,6 +298,32 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">_Primer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">parse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span></div>
 
+
+
+<div class="viewcode-block" id="parse_snapgene">
+<a class="viewcode-back" href="../../modules/pydna_parsers.html#pydna.all.parse_snapgene">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_snapgene</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse a SnapGene file and return a Dseqrecord object.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file_path : str</span>
+<span class="sd">        The path to the SnapGene file to parse.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Dseqrecord</span>
+<span class="sd">        The parsed SnapGene file as a Dseqrecord object.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">parsed_seq</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">_SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;snapgene&quot;</span><span class="p">))</span>
+        <span class="n">circular</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;topology&quot;</span> <span class="ow">in</span> <span class="n">parsed_seq</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="ow">and</span> <span class="n">parsed_seq</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;topology&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;circular&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">parsed_seq</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="n">circular</span><span class="p">)]</span></div>
+
 </pre></div>
 
            </div>

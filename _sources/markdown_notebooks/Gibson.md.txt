@@ -3,12 +3,7 @@
 
 Gibson Assembly is a powerful method to assemble multiple DNA fragments into a single, continuous sequence in a seamless, one-step reaction. Developed by Daniel Gibson and colleagues in 2009, this method has been widely applied to work in molecular cloning, biotechnology, and synthetic biology.  
 
-`pydna` provides the `Assembly` class to simulate the assembly of DNA sequences. Below is an example fpr performing Gibson Assembly with pre-existing DNA fragments, followed by primer design for generating these fragments via the `pcr` method, if needed.
-
-The `Assembly` takes the following arguments:
-  * `frags`: list of DNA fragments as `Dseqrecord` objects
-  * `limit`: the minimum sequence homology required.
-  * `algorithm`: the function used to find homology regions between DNA fragments. For Gibson Assembly, we use the `terminal_overlap` function, which finds homology regions only at the terminal regions. By default, the `Assembly` class uses the `common_sub_strings` function to find homology regions, which finds homology anywhere, as it could happen in a homologous recombination event.
+`pydna` provides the `gibson_assembly` function to simulate the assembly of DNA sequences. Below is an example for performing Gibson Assembly with pre-existing DNA fragments, followed by primer design for generating these fragments via the `pcr` method, if needed.
 
 
 <a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Gibson.ipynb">
@@ -28,7 +23,7 @@ if 'google.colab' in sys.modules:
 
 ```python
 from pydna.dseqrecord import Dseqrecord
-from pydna.assembly import Assembly
+from pydna.assembly2 import gibson_assembly
 from pydna.common_sub_strings import terminal_overlap
 
 #Creating example Dseqrecord sequences
@@ -40,60 +35,13 @@ fragment3 = Dseqrecord("tattctggctgtatcGGGGGtacgatgctatactg")
 fragments = [fragment1, fragment2, fragment3]
 
 #Performing Gibson assembly, with a minimum shared homology of 14bp
-assembly = Assembly(fragments, limit=14, algorithm=terminal_overlap)
+products = gibson_assembly(fragments, limit=14)
 
 #Displaying the assembled product
-print(assembly)
+print(products[0].seq)
 ```
 
-    Assembly
-    fragments..: 33bp 34bp 35bp
-    limit(bp)..: 14
-    G.nodes....: 6
-    algorithm..: terminal_overlap
+    acgatgctatactgCCCCCtgtgctgtgctctaTTTTTtattctggctgtatcGGGGGt
 
 
-The printed output shows the length of each fragment provided to the assembly, the minimum length required for sequence homology search, the number of nodes (number of overlapping regions), and the algorithm used for sequence homology search. Please refer to the full `Assembly` module documentation for more information on the algorithm applied.
-
-To make a circular sequence from an `Assembly`, pydna provides the `assemble_circular` method. The assembled sequence can be printed as normal, as `Dseqrecord` objects. Note that the `assemble_circular` method returns a list, where the two elements are reverse complement of each other.
-
-
-```python
-from pydna.contig import Contig
-
-#Circularizing the assembled sequence
-assembly_circ = assembly.assemble_circular()
-
-#Printing the sequence records
-print(assembly_circ[0])
-print()
-print(assembly_circ[1])
-
-```
-
-    Dseqrecord
-    circular: True
-    size: 59
-    ID: id
-    Name: name
-    Description: description
-    Number of features: 0
-    /molecule_type=DNA
-    Dseq(o59)
-    acga..GGGt
-    tgct..CCCa
-    
-    Dseqrecord
-    circular: True
-    size: 59
-    ID: id
-    Name: name
-    Description: description
-    Number of features: 0
-    /molecule_type=DNA
-    Dseq(o59)
-    taga..AAAA
-    atct..TTTT
-
-
-Please refer to the Example_Gibson page for an example of a completed workflow for modelling Gibson Assembly using pydna. 
+Please refer to the Example_Gibson page for an example of a completed workflow for primer design and modelling Gibson Assembly using pydna. 

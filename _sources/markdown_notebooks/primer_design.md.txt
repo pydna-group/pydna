@@ -189,33 +189,25 @@ print(' '*55,amplicon2.seq, sep='')
                                                            ATAATCACTCTAATAATGAATCTAACTTTACTTGGAAAGCGTTTCGTGAACAAGTGGAAAAGCAT
 
 
-Once you have the amplicons, you can use `Assembly` to join them together (see the `Gibson` notebook for more details)
+Once you have the amplicons, you can use `gibson_assembly` to join them together (see the `Gibson` notebook for more details)
 
 
 ```python
-from pydna.assembly import Assembly
+from pydna.assembly2 import gibson_assembly
 from pydna.common_sub_strings import terminal_overlap
 
 
-assembly = Assembly([amplicon1, amplicon2], limit=10, algorithm=terminal_overlap)
-product = assembly.assemble_linear()[0]
-print(product.figure())
-
-print()
-
-print(Dseqrecord(product).figure())
+products = gibson_assembly([amplicon1, amplicon2], limit=10)
+products[0]
 
 
 ```
 
-    65bp_PCR_prod|10
-                  \/
-                  /\
-                  10|65bp_PCR_prod
-    
+
+
+
     Dseqrecord(-120)
-    [48;5;11mATGCAAACAGTAATGATGGATGAC[0mATTCAAAGCACTGATTCTATTGCTGAAAAAGATAATCACTCTAATAATGAATCTAACTTTACTTGGAAAGCGTTTCGTGAACAAGTGGAAAAGCAT
-    TACGTTTGTCATTACTACCTACTGTAAGTTTCGTGACTAAGATAACGACTTTTTCTATTAGTGAGATTATTACTTAGATTGAAATGAACCTTTCGCAAAGCACTTGTTCACCTTTTCGTA
+
 
 
 ##### Circular Gibson Assembly
@@ -238,15 +230,10 @@ print(fwd_2.seq)
 print(rvs_2.seq)
 print()
 
-assembly = Assembly([amplicon1, amplicon2], limit=10, algorithm=terminal_overlap)
+products = gibson_assembly([amplicon1, amplicon2], limit=10)
 
-# Here we use assemble_circular!
-product = assembly.assemble_circular()[0]
-print(product.figure())
+print('products',products[0].seq)
 
-print()
-
-print(Dseqrecord(product).figure())
 ```
 
     Primers for fragment 1:
@@ -257,19 +244,7 @@ print(Dseqrecord(product).figure())
     ATAATCACTCTAATAATGAATCTAACTTTACTTGGAAA
     TGCATATGCTTTTCCACTTGTTCACG
     
-     -|70bp_PCR_prod|10
-    |                \/
-    |                /\
-    |                10|70bp_PCR_prod|10
-    |                                 \/
-    |                                 /\
-    |                                 10-
-    |                                    |
-     ------------------------------------
-    
-    Dseqrecord(o120)
-    AGCAT[48;5;11mATGCAAACAGTAATGATGGATGAC[0mATTCAAAGCACTGATTCTATTGCTGAAAAAGATAATCACTCTAATAATGAATCTAACTTTACTTGGAAAGCGTTTCGTGAACAAGTGGAAA
-    TCGTATACGTTTGTCATTACTACCTACTGTAAGTTTCGTGACTAAGATAACGACTTTTTCTATTAGTGAGATTATTACTTAGATTGAAATGAACCTTTCGCAAAGCACTTGTTCACCTTT
+    products AGCATATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATTCTATTGCTGAAAAAGATAATCACTCTAATAATGAATCTAACTTTACTTGGAAAGCGTTTCGTGAACAAGTGGAAA
 
 
 #### Adding spacers / linkers to Gibson Assembly primers
@@ -284,14 +259,11 @@ spacer2 = Dseqrecord('ttt')
 
 amplicon1, amplicon2 = assembly_fragments([pre_amplicon1, spacer1, pre_amplicon2, spacer2], overlap=10, circular=True)
 
-assembly = Assembly([amplicon1, amplicon2], limit=10, algorithm=terminal_overlap)
-
-# Here we use assemble_circular!
-product = assembly.assemble_circular()[0]
+products = gibson_assembly([amplicon1, amplicon2], limit=10)
 
 # See the linkers that have been added
 print()
-print(Dseqrecord(product).seq)
+print(Dseqrecord(products[0]).seq)
 print(4*' ', '^^^', 60*' ', '^^^', sep='')
 
 

@@ -17,6 +17,7 @@ Modules
    pydna_common_sub_strings
    pydna_conftest
    pydna_contig
+   pydna_cre_lox
    pydna_crispr
    pydna_design
    pydna_download
@@ -39,6 +40,7 @@ Modules
    pydna_seq
    pydna_seqrecord
    pydna_sequence_picker
+   pydna_sequence_regex
    pydna_threading_timer_decorator_exit
    pydna_tm
    pydna_types
