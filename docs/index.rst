@@ -22,6 +22,7 @@ Welcome to pydna's documentation!
 .. toctree::
    :caption: Examples:
    :maxdepth: 1
+   :hidden:
    :glob:
 
    notebooks/*
@@ -29,6 +30,7 @@ Welcome to pydna's documentation!
 .. toctree::
    :caption: package
    :maxdepth: 2
+   :hidden:
 
    reference/pydna
    CHANGELOG
