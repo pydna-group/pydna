@@ -64,7 +64,7 @@ nb_merge_streams = True
 
 # Add mappings https://kev.inburke.com/kevin/sphinx-interlinks
 intersphinx_mapping = {
-    "biopython": ("https://biopython.org/docs/latest/api/", None),
+    "biopython": ("https://biopython.org/docs/latest", None),
     "python": ("http://docs.python.org/3.8", None),
 }
 
@@ -82,7 +82,9 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store",
                     "pydna_session",
                     "Makefile",
                     "make",
-                    "autogen_docs"
+                    "autogen_docs",
+                    "README.md",
+                    "example_gallery.md",
                     ]
 
 autodoc_member_order = "bysource"
