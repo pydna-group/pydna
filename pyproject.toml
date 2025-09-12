@@ -94,6 +94,8 @@ myst-parser = [
   { version = ">3.0.0", python = "<3.10" },
   { version = ">=4.0.0", python = ">=3.10" },
 ]
+myst-nb = "*"
+sphinx-book-theme = "*"
 
 [tool.poetry.group.dev.dependencies]
 autopep8 = "^2.1.0"

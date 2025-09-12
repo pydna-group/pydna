@@ -27,16 +27,40 @@ version = ".".join(release.split(".")[:3])
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autodoc.typehints",  # Automatically document type hints in function signatures
     "sphinx.ext.coverage",
     "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",  # Include links to the source code in the documentation
     "sphinx.ext.doctest",
-    "myst_parser",  # Allows to use markdown files instead of rst
     "sphinx.ext.viewcode",
     "sphinx.ext.autosummary",
     "numpydoc",
     "sphinx.ext.intersphinx",
     "sphinx_rtd_theme",
+    # new:
+    # "sphinx_new_tab_link",  # each link opens in a new tab
+    "myst_nb",  # Markdown and Jupyter Notebook support
+    # "sphinx_copybutton",  # add copy button to code blocks
 ]
+
+
+#  https://myst-nb.readthedocs.io/en/latest/computation/execute.html
+nb_execution_mode = "off"
+
+myst_enable_extensions = ["dollarmath", "amsmath"]
+
+# Plotly support through require javascript library
+# https://myst-nb.readthedocs.io/en/latest/render/interactive.html#plotly
+html_js_files = [
+    "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"
+]
+
+# https://myst-nb.readthedocs.io/en/latest/configuration.html
+# Execution
+nb_execution_raise_on_error = True
+# Rendering
+nb_merge_streams = True
+
 
 # Add mappings https://kev.inburke.com/kevin/sphinx-interlinks
 intersphinx_mapping = {
@@ -47,11 +71,19 @@ intersphinx_mapping = {
 # Settings to support markdown files
 source_suffix = {
     ".rst": "restructuredtext",
-    ".md": "markdown",
 }
 
 templates_path = ["_templates"]
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store",
+                    "future_release_names.md",
+                    "cookbook",
+                    "jupyter_execute", # local build folder for notebooks (dev)
+                    "pydna_cheat_sheet",
+                    "pydna_session",
+                    "Makefile",
+                    "make",
+                    "autogen_docs"
+                    ]
 
 autodoc_member_order = "bysource"
 autodoc_preserve_defaults = True
