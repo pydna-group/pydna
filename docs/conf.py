@@ -76,7 +76,7 @@ source_suffix = {
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store",
                     "future_release_names.md",
-                    "cookbook",
+                    "cookbook", # remove once cookbook works
                     "jupyter_execute", # local build folder for notebooks (dev)
                     "pydna_cheat_sheet",
                     "pydna_session",
