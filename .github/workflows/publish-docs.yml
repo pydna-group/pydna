@@ -40,8 +40,8 @@ jobs:
     - name: Build documentation
       run: |
         cd docs
-        poetry run bash autogen_docs.sh
-        poetry run make html
+        sphinx-apidoc --force --implicit-namespaces --module-first -o reference ../src/pydna
+        sphinx-build -n -W --keep-going -b html ./ ./_build/
 
     - name: Deploy to GitHub pages 🚀
       # Deploy only when master changes
