@@ -95,7 +95,31 @@ numpydoc_show_class_members = False
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "sphinx_rtd_theme"
+# The theme to use for HTML and HTML Help pages.  See the documentation for
+# a list of builtin themes.
+# See:
+# https://github.com/executablebooks/MyST-NB/blob/master/docs/conf.py
+# html_title = ""
+html_theme = "sphinx_book_theme"
+# html_logo = "_static/logo-wide.svg"
+# html_favicon = "_static/logo-square.svg"
+html_theme_options = {
+    "github_url": "https://github.com/pydna-group/pydna",
+    "repository_url": "https://github.com/pydna-group/pydna",
+    "repository_branch": "main",
+    "home_page_in_toc": True,
+    "path_to_docs": "docs",
+    "show_navbar_depth": 1,
+    "use_edit_page_button": True,
+    "use_repository_button": True,
+    "use_download_button": True,
+    "launch_buttons": {
+        "colab_url": "https://colab.research.google.com"
+        #     "binderhub_url": "https://mybinder.org",
+        #     "notebook_interface": "jupyterlab",
+    },
+    "navigation_with_keys": False,
+}
 html_static_path = ["_static"]
 
 texinfo_documents = [
