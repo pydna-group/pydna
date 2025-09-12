@@ -96,6 +96,8 @@ myst-parser = [
 ]
 myst-nb = "*"
 sphinx-book-theme = "*"
+pandas = "*"
+teemi = "*"
 
 [tool.poetry.group.dev.dependencies]
 autopep8 = "^2.1.0"
