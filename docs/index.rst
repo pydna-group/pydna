@@ -16,11 +16,24 @@ Welcome to pydna's documentation!
    :maxdepth: 1
    :hidden:
 
-   self
    installation
-   modules/index
    getting_started
-   example_gallery
+
+.. toctree::
+   :caption: Examples:
+   :maxdepth: 1
+   :hidden:
+   :glob:
+
+   notebooks/*
+
+.. toctree::
+   :caption: package
+   :maxdepth: 2
+   :hidden:
+
+   reference/pydna
+   CHANGELOG
 
 .. Indices and tables
 .. ==================
