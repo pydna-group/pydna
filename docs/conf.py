@@ -36,7 +36,7 @@ extensions = [
     "sphinx.ext.autosummary",
     "numpydoc",
     "sphinx.ext.intersphinx",
-    "sphinx_rtd_theme",
+    # "sphinx_book_theme",
     # new:
     # "sphinx_new_tab_link",  # each link opens in a new tab
     "myst_nb",  # Markdown and Jupyter Notebook support
