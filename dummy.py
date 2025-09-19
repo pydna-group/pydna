@@ -17,8 +17,6 @@ assembly_output = golden_gate_assembly(
     [insert1, insert2, insert3, vector], [BsaI], circular_only=True
 )
 
-# print(assembly_output[0].source)
-
 cs = CloningStrategy.from_dseqrecord(assembly_output[0])
 
 

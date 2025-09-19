@@ -16,6 +16,7 @@ from opencloning_linkml.datamodel import (
     AssemblyFragment as _AssemblyFragment,
     ManuallyTypedSource as _ManuallyTypedSource,
     RestrictionAndLigationSource as _RestrictionAndLigationSource,
+    GibsonAssemblySource as _GibsonAssemblySource,
 )
 from Bio.SeqFeature import Location, LocationParserError
 from Bio.Restriction.Restriction import AbstractCut
@@ -143,10 +144,16 @@ class RestrictionAndLigationSource(AssemblySource):
     def to_pydantic_model(self, seq_id) -> _RestrictionAndLigationSource:
         parent_model = super().to_pydantic_model(seq_id)
         return _RestrictionAndLigationSource(
-            id=parent_model.id,
-            input=parent_model.input,
-            circular=parent_model.circular,
+            **{k: v for k, v in parent_model.model_dump().items() if k != "type"},
             restriction_enzymes=[str(enzyme) for enzyme in self.restriction_enzymes],
+        )
+
+
+class GibsonAssemblySource(AssemblySource):
+    def to_pydantic_model(self, seq_id) -> _GibsonAssemblySource:
+        parent_model = super().to_pydantic_model(seq_id)
+        return _GibsonAssemblySource(
+            **{k: v for k, v in parent_model.model_dump().items() if k != "type"},
         )
 
 
