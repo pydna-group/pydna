@@ -35,6 +35,8 @@ import os as _os
 import re as _re
 import time as _time
 import datetime as _datetime
+from typing import Union
+from opencloning_linkml.datamodel import Source
 
 
 # import logging as _logging
@@ -128,6 +130,7 @@ class Dseqrecord(_SeqRecord):
     """
 
     seq: _Dseq
+    source: Union["Source", None]
 
     def __init__(
         self,
@@ -202,6 +205,7 @@ class Dseqrecord(_SeqRecord):
         self.map_target = None
         self.n = n  # amount, set to 5E-14 which is 5 pmols
         self.annotations.update({"molecule_type": "DNA"})
+        self.source = None
 
     @classmethod
     def from_string(

@@ -40,6 +40,11 @@ from pydna.gateway import gateway_overlap, find_gateway_sites
 from pydna.cre_lox import cre_loxP_overlap
 
 from typing import TYPE_CHECKING, Callable
+from pydna.opencloning_models import (
+    AssemblyFragment,
+    AssemblySource,
+    RestrictionAndLigationSource,
+)
 
 if TYPE_CHECKING:
     from Bio.Restriction import AbstractCut as _AbstractCut
@@ -865,6 +870,9 @@ def assemble(
                     feature.location, 0, len(out_dseqrecord)
                 )
 
+    out_dseqrecord.source = subfragment_representation_to_source(
+        subfragment_representation, fragments, is_circular
+    )
     return out_dseqrecord
 
 
@@ -919,6 +927,26 @@ def edge_representation2subfragment_representation(
         subfragment_representation.append((v1, start_location, end_location))
 
     return tuple(subfragment_representation)
+
+
+def subfragment_representation_to_source(
+    assembly: SubFragmentRepresentationAssembly,
+    fragments: list[_Dseqrecord],
+    is_circular: bool,
+) -> AssemblySource:
+
+    input_list = []
+    for f_index, loc1, loc2 in assembly:
+        input_list.append(
+            AssemblyFragment(
+                sequence=fragments[abs(f_index - 1)],
+                left_location=loc1,
+                right_location=loc2,
+                reverse_complemented=f_index < 0,
+            )
+        )
+
+    return AssemblySource(input=input_list, circular=is_circular)
 
 
 def subfragment_representation2edge_representation(
@@ -2172,7 +2200,13 @@ def restriction_ligation_assembly(
         # By default, we allow blunt ends
         return restriction_ligation_overlap(x, y, enzymes, False, allow_blunt)
 
-    return common_function_assembly_products(frags, None, algo, circular_only)
+    prods = common_function_assembly_products(frags, None, algo, circular_only)
+    for prod in prods:
+        prod.source = RestrictionAndLigationSource(
+            **prod.source.model_dump(),
+            restriction_enzymes=enzymes,
+        )
+    return prods
 
 
 def golden_gate_assembly(
