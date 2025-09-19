@@ -44,6 +44,7 @@ from pydna.opencloning_models import (
     AssemblyFragment,
     AssemblySource,
     RestrictionAndLigationSource,
+    GibsonAssemblySource,
 )
 
 if TYPE_CHECKING:
@@ -939,7 +940,7 @@ def subfragment_representation_to_source(
     for f_index, loc1, loc2 in assembly:
         input_list.append(
             AssemblyFragment(
-                sequence=fragments[abs(f_index - 1)],
+                sequence=fragments[abs(f_index) - 1],
                 left_location=loc1,
                 right_location=loc2,
                 reverse_complemented=f_index < 0,
@@ -2054,9 +2055,15 @@ def gibson_assembly(
     list[_Dseqrecord]
         List of assembled DNA molecules
     """
-    return common_function_assembly_products(
+
+    products = common_function_assembly_products(
         frags, limit, gibson_overlap, circular_only
     )
+    for prod in products:
+        prod.source = GibsonAssemblySource(
+            **prod.source.model_dump(),
+        )
+    return products
 
 
 def in_fusion_assembly(
