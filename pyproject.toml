@@ -11,7 +11,6 @@ classifiers = [
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: BSD License",
   "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -53,7 +52,7 @@ pydivsufsort = ">=0.0.14"
 pyfiglet = "0.8.post1"
 pyparsing = { version = ">=2.4.7", optional = true }
 pyperclip = { version = ">=1.8.2", optional = true }
-python = ">=3.9,<4.0"
+python = ">=3.10,<4.0"
 requests = { version = ">=2.26.0", optional = true }
 scipy = [
   { version = ">=1.11.3", python = ">=3.12", optional = true },
@@ -61,6 +60,7 @@ scipy = [
 ]
 seguid = ">=0.0.5"
 regex = "^2024.11.6"
+opencloning-linkml = "^0.4.3"
 [tool.poetry.extras]
 clipboard = ["pyperclip"]
 download = ["pyparsing", "requests"]
