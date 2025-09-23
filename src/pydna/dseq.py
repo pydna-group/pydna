@@ -16,8 +16,6 @@ The Dseq class support the notion of circular and linear DNA topology.
 
 
 import copy as _copy
-
-# import itertools as _itertools
 import re as _re
 import sys as _sys
 import math as _math
@@ -30,6 +28,7 @@ from pydna._pretty import pretty_str as _pretty_str
 from seguid import ldseguid as _ldseguid
 from seguid import cdseguid as _cdseguid
 
+# from pydna.utils import complement as _complement
 from pydna.utils import rc as _rc
 from pydna.utils import flatten as _flatten
 from pydna.utils import cuts_overlap as _cuts_overlap
@@ -37,10 +36,8 @@ from pydna.utils import bp_dict
 from pydna.utils import to_watson_table
 from pydna.utils import to_crick_table
 from pydna.utils import to_full_sequence
-
-# from pydna.utils import to_5tail_table
-# from pydna.utils import to_3tail_table
-
+from pydna.utils import to_5tail_table
+from pydna.utils import to_3tail_table
 from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
 from pydna.common_sub_strings import terminal_overlap as _terminal_overlap
 from Bio.Restriction import RestrictionBatch as _RestrictionBatch
@@ -50,6 +47,88 @@ from Bio.Restriction import CommOnly
 from pydna.types import DseqType, EnzymesType, CutSiteType
 
 from typing import List as _List, Tuple as _Tuple, Union as _Union
+
+
+class CircularString(str):
+    """
+    A circular string: indexing and slicing wrap around the origin (index 0).
+
+    Examples:
+        s = CircularString("ABCDE")
+
+        # Integer indexing (wraps)
+        assert s[7] == "C"         # 7 % 5 == 2
+        assert s[-1] == "E"
+
+        # Forward circular slices (wrap when stop <= start)
+        assert s[3:1] == "DEA"     # 3,4,0
+        assert s[1:1] == "BCDE"    # full turn starting at 1, excluding 1 on next lap
+        assert s[:] == "ABCDE"     # full string
+        assert s[::2] == "ACE"     # every 2nd char, no wrap needed
+        assert s[4:2:2] == "EA"    # 4,0
+
+        # Reverse circular slices
+        assert s[1:1:-1] == "BAEDC"  # full reverse circle starting at 1
+        assert s[2:4:-1] == "CBA"    # 2,1,0
+
+        # Steps > 1 and negatives work with wrap as expected
+        assert s[0:0:2] == "ACE"
+        assert s[0:0:-2] == "AECBD"
+    """
+
+    def __new__(cls, value):
+        return super().__new__(cls, value)
+
+    def __getitem__(self, key):
+        n = len(self)
+        if n == 0:
+            # Behave like str: indexing raises, slicing returns empty
+            if isinstance(key, slice):
+                return self.__class__("")
+            raise IndexError("CircularString index out of range (empty string)")
+
+        if isinstance(key, int):
+            # Wrap single index
+            return super().__getitem__(key % n)
+
+        if isinstance(key, slice):
+            start, stop, step = key.start, key.stop, key.step
+            step = 1 if step is None else step
+            if step == 0:
+                raise ValueError("slice step cannot be zero")
+
+            # Defaults that mimic normal slicing but on an infinite tiling
+            if step > 0:
+                start = 0 if start is None else start
+                stop = n if stop is None else stop
+                # Ensure we move forward; if stop <= start, wrap once.
+                while stop <= start:
+                    stop += n
+                rng = range(start, stop, step)
+            else:
+                # step < 0
+                start = (n - 1) if start is None else start
+                stop = -1 if stop is None else stop
+                # Ensure we move backward; if stop >= start, wrap once (backwards).
+                while stop >= start:
+                    stop -= n
+                rng = range(start, stop, step)
+
+            # Map to modulo-n and collect
+            # Cap at one full lap for safety (no infinite loops)
+            limit = n if step % n == 0 else n * 2  # generous cap for large steps
+            out = []
+            count = 0
+            for i in rng:
+                out.append(super().__getitem__(i % n))
+                count += 1
+                if count > limit:
+                    break  # should never happen with the above normalization
+
+            return self.__class__("".join(out))
+
+        # Fallback (shouldn't be reached)
+        return super().__getitem__(key)
 
 
 class Dseq(_Seq):
@@ -434,6 +513,7 @@ class Dseq(_Seq):
                 print(f"Base mismatch in representation {err}")
                 raise
         obj._data = bytes(data)
+        obj.length = len(data)
         return obj
 
     @classmethod
@@ -555,7 +635,9 @@ class Dseq(_Seq):
             DESCRIPTION.
 
         """
-        return str(self).translate(to_full_sequence)
+        return self._data.translate(to_full_sequence).decode("ascii")
+
+    __str__ = to_blunt_string
 
     def mw(self) -> float:
         """This method returns the molecular weight of the DNA molecule
@@ -621,6 +703,11 @@ class Dseq(_Seq):
             return _Seq.find(self, sub, start, end)
 
         return (_pretty_str(self) + _pretty_str(self)).find(sub, start, end)
+
+    def __contains__(self, item: [str, bytes]):
+        if isinstance(item, bytes):
+            item = item.decode("ascii")
+        return item in self.to_blunt_string()
 
     def __getitem__(self, sl: [slice, int]) -> "Dseq":
         """Method is used by the slice notation"""
@@ -1409,6 +1496,20 @@ class Dseq(_Seq):
             ovhg += len(nucleotides)
         return Dseq(self.watson + nucleotides, self.crick + nucleotides, ovhg)
 
+    def user(self):
+        """
+        USER Enzyme is a mixture of Uracil DNA glycosylase (UDG) and the
+        DNA glycosylase-lyase Endonuclease VIII. UDG catalyses the excision
+        of an uracil base, forming an abasic (apyrimidinic) site while leaving
+        the phosphodiester backbone intact (2,3).
+
+        Returns
+        -------
+        None.
+
+        """
+        return Dseq(self._data.translate(bytes.maketrans(b"UuOo", b"FfEe")))
+
     def cut(self: DseqType, *enzymes: EnzymesType) -> _Tuple[DseqType, ...]:
         """Returns a list of linear Dseq fragments produced in the digestion.
         If there are no cuts, an empty list is returned.
@@ -1614,6 +1715,154 @@ class Dseq(_Seq):
             return len(self) + self.watson_ovhg(), len(self)
         return len(self), len(self) - self.watson_ovhg()
 
+    def get_ss_meltsites(self: DseqType, length) -> _List[CutSiteType]:
+
+        if length < 1:
+            return ()
+
+        regex = _re.compile(
+            (
+                f"(?P<watson>((?<=[PEXIpexi]))([GATCgatcUuOo]{{1,{length}}})((?=[^QFZJqfzjGATCgatcUuOo])))|"
+                f"(?P<crick>((?<=[QFZJqfzj]))([GATCgatcUuOo]{{1,{length}}})((?=[^PEXIpexiGATCgatcUuOo])))"
+            ).encode("ascii")
+        )
+
+        if self.circular:
+
+            spacer = length
+
+            cutfrom = self._data[-length:] + self._data + self._data[:length]
+
+        else:
+
+            spacer = 0
+
+            cutfrom = self._data
+
+        watsoncuts = []
+        crickcuts = []
+
+        for m in regex.finditer(cutfrom):
+
+            if m.lastgroup == "watson":
+                cut1 = m.start() + spacer
+                cut2 = m.end() + spacer
+                watsoncuts.append((cut1, cut2))
+            else:
+                assert m.lastgroup == "crick"
+                cut1 = m.start() + spacer
+                cut2 = m.end() + spacer
+                crickcuts.append((cut1, cut2))
+
+        return watsoncuts, crickcuts
+
+    def get_ds_meltsites(self: DseqType, length) -> _List[CutSiteType]:
+        """Double stranded DNA melt sites
+
+        Returns a sorted list (by distance from the left) of tuples. Each tuple (`((cut_watson, ovhg), enz)`)
+        contains a tuple containing the cut position and the overhang value for the enzyme followed by the
+        an enzyme object.
+
+        """
+
+        if length < 1:
+            return ()
+
+        regex = _re.compile(
+            (
+                f"(?P<watson>((?<=[PEXIpexi])|^)([GATCgatcUuOo]{{1,{length}}})((?=[^PEXIpexiGATCgatcUuOo])|$))|"
+                f"(?P<crick>((?<=[QFZJqfzj])|^)([GATCgatcUuOo]{{1,{length}}})((?=[^QFZJqfzjGATCgatcUuOo])|$))"
+            ).encode("ascii")
+        )
+
+        if self.circular:
+
+            spacer = length
+
+            cutfrom = self._data[-length:] + self._data + self._data[:length]
+
+        else:
+
+            spacer = 0
+
+            cutfrom = self._data
+
+        cuts = []
+
+        for m in regex.finditer(cutfrom):
+
+            if m.lastgroup == "watson":
+                cut = (m.end() - spacer, m.end() - m.start()), None
+            else:
+                assert m.lastgroup == "crick"
+                cut = (m.start() - spacer, m.start() - m.end()), None
+
+            cuts.append(cut)
+
+        return cuts
+
+    def cast_to_ds_right(self):
+        """
+        NNNNQFZJ
+
+        NNNN----
+        NNNNCTAG
+
+        NNNNGATC
+        NNNNCTAG
+
+
+
+        NNNNPEXI
+
+        NNNNGATC
+        NNNN----
+
+        NNNNGATC
+        NNNNCTAG
+
+        """
+
+        def replace(m):
+            return m.group(1).translate(to_full_sequence)
+
+        # Not using f-strings below to avoid bytes/string conversion
+        return self.__class__(
+            _re.sub(b"(?<=[GATCgatc])([PEXIpexiQFZJqfzj]+)$", replace, self._data),
+            circular=False,
+        )
+
+    def cast_to_ds_left(self):
+        """
+        PEXINNNN
+
+        GATCNNNN
+            NNNN
+
+        GATCNNNN
+        CTAGNNNN
+
+
+
+        QFZJNNNN
+
+            NNNN
+        CTAGNNNN
+
+        GATCNNNN
+        CTAGNNNN
+
+        """
+
+        def replace(m):
+            return m.group(1).translate(to_full_sequence)
+
+        # Not using f-strings below to avoid bytes/string conversion
+        return self.__class__(
+            _re.sub(b"^([PEXIpexiQFZJqfzj]+)(?=[GATCgatc])", replace, self._data),
+            circular=False,
+        )
+
     def get_cut_parameters(
         self, cut: _Union[CutSiteType, None], is_left: bool
     ) -> _Tuple[int, int, int]:
@@ -1642,6 +1891,64 @@ class Dseq(_Seq):
             return *self.left_end_position(), self.ovhg
         # In the right end, the overhang does not matter
         return *self.right_end_position(), self.watson_ovhg()
+
+    def melt(self, length):
+        if not length or length < 1:
+            return tuple()
+
+        new, strands = self.shed_ss_dna(length)
+
+        cutsites = new.get_ds_meltsites(length)
+
+        cutsite_pairs = self.get_cutsite_pairs(cutsites)
+
+        result = tuple(new.apply_cut(*cutsite_pair) for cutsite_pair in cutsite_pairs)
+
+        result = tuple([new]) if strands and not result else result
+
+        return strands + result
+
+    def shed_ss_dna(self, length):
+
+        new, strands, intervals = self._shed_ss_dna(length)
+
+        return new, strands
+
+    def _shed_ss_dna(self, length):
+
+        watsonnicks, cricknicks = self.get_ss_meltsites(length)
+
+        watsonstrands = []
+        crickstrands = []
+
+        new = self._data
+
+        for x, y in watsonnicks:
+            stuffer = new[x:y]
+            ss = Dseq.quick(stuffer.translate(to_5tail_table))
+            new = new[:x] + stuffer.translate(to_3tail_table) + new[y:]
+            watsonstrands.append((x, y, ss))
+
+        for x, y in cricknicks:
+            stuffer = new[x:y]
+            ss = Dseq.quick(stuffer.translate(to_3tail_table))
+            new = new[:x] + stuffer.translate(to_5tail_table) + new[y:]
+            crickstrands.append((x, y, ss))
+
+        ordered_strands = sorted(watsonstrands + crickstrands)
+
+        strands = []
+
+        for x, y, ss in ordered_strands:
+            seq = (
+                ss._data[::-1].translate(to_watson_table).strip()
+                or ss._data.translate(to_crick_table).strip()
+            )
+            strands.append(_Seq(seq))
+
+        intervals = tuple((x, y) for x, y, ss in ordered_strands)
+
+        return Dseq(new), tuple(strands), intervals
 
     def apply_cut(self, left_cut: CutSiteType, right_cut: CutSiteType) -> "Dseq":
         """Extracts a subfragment of the sequence between two cuts.
@@ -1698,19 +2005,49 @@ class Dseq(_Seq):
             GttCTTAA
 
         """
-        if _cuts_overlap(left_cut, right_cut, len(self)):
+        if _cuts_overlap(left_cut, right_cut, self.length):
             raise ValueError("Cuts by {} {} overlap.".format(left_cut[1], right_cut[1]))
 
-        left_watson, left_crick, ovhg_left = self.get_cut_parameters(left_cut, True)
-        right_watson, right_crick, _ = self.get_cut_parameters(right_cut, False)
-        return Dseq(
-            self[left_watson:right_watson].to_blunt_string(),
-            # The line below could be easier to understand as _rc(str(self[left_crick:right_crick])), but it does not preserve the case
-            self.rc()[
-                len(self) - right_crick : len(self) - left_crick
-            ].to_blunt_string(),
-            ovhg=ovhg_left,
+        if left_cut:
+            (left_watson_cut, left_overhang), _ = left_cut
+        else:
+            (left_watson_cut, left_overhang), _ = ((0, 0), None)
+
+        if right_cut:
+            (right_watson_cut, right_overhang), _ = right_cut
+        else:
+            (right_watson_cut, right_overhang), _ = (
+                (self.length, 0),
+                None,
+            )
+
+        table1 = to_5tail_table if left_overhang > 0 else to_3tail_table
+        table2 = to_5tail_table if right_overhang < 0 else to_3tail_table
+
+        left_stck_begin = min(left_watson_cut, left_watson_cut - left_overhang)
+        left_stck_end = left_stck_begin + abs(left_overhang)
+
+        right_stck_begin = min(right_watson_cut, right_watson_cut - right_overhang)
+        right_stck_end = right_stck_begin + abs(right_overhang)
+
+        if self.circular:
+            cutfrom = CircularString(self.to_blunt_string())
+        else:
+            cutfrom = self._data.decode("ascii")
+
+        left_sticky_end = (
+            cutfrom[left_stck_begin:left_stck_end]
+            .translate(table1)
+            .encode("ascii")[0 : abs(left_overhang)]
         )
+        ds_middle_part = cutfrom[left_stck_end:right_stck_begin].encode("ascii")
+        right_sticky_end = (
+            cutfrom[right_stck_begin:right_stck_end]
+            .translate(table2)
+            .encode("ascii")[0 : abs(right_overhang)]
+        )
+
+        return Dseq.quick(left_sticky_end + ds_middle_part + right_sticky_end)
 
     def get_cutsite_pairs(
         self, cutsites: _List[CutSiteType]
