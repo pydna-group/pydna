@@ -76,6 +76,46 @@ to_5tail_table = bytes.maketrans(b"GATCgatc", b"QFZJqfzj")
 to_3tail_table = bytes.maketrans(b"GATCgatc", b"PEXIpexi")
 to_full_sequence = bytes.maketrans(b"PEXIpexiQFZJqfzj", b"GATCgatcGATCgatc")
 
+
+iupac_regex = {  # IUPAC Ambiguity Codes for Nucleotide Degeneracy and U for Uracile
+    "A": "(?:A)",
+    "C": "(?:C)",
+    "G": "(?:G)",
+    "T": "(?:T|U)",
+    "U": "(?:U|T|U)",
+    "R": "(?:A|G|R)",
+    "Y": "(?:C|T|Y)",
+    "S": "(?:G|C|S)",
+    "W": "(?:A|T|W)",
+    "K": "(?:G|T|K)",
+    "M": "(?:A|C|M)",
+    "B": "(?:C|G|T|B)",
+    "D": "(?:A|G|T|D)",
+    "H": "(?:A|C|T|H)",
+    "V": "(?:A|C|G|V)",
+    "N": "(?:A|G|C|T|N)",
+}
+
+iupac_compl_regex = {  # IUPAC Ambiguity Code complements
+    "A": "(?:T|U)",
+    "C": "(?:G)",
+    "G": "(?:C)",
+    "T": "(?:A)",
+    "U": "(?:A)",
+    "R": "(?:T|C|Y)",
+    "Y": "(?:G|A|R)",
+    "S": "(?:G|C|S)",
+    "W": "(?:A|T|W)",
+    "K": "(?:C|AM)",
+    "M": "(?:T|G|K)",
+    "B": "(?:C|G|A|V)",
+    "D": "(?:A|C|T|H)",
+    "H": "(?:A|G|T|D)",
+    "V": "(?:T|C|G|B)",
+    "N": "(?:A|G|C|T|N)",
+}
+
+
 bp_dict = {
     (b"P", b"Q"): b"G",  # P / Q  >>--->  G
     (b"E", b"F"): b"A",  # E / F  >>--->  A
@@ -397,6 +437,11 @@ bp_dict = {
     # (b" ", b"n"): b"n",
 }
 
+bp_dict_str = {
+    (x.decode("ascii"), y.decode("ascii")): z.decode("ascii")
+    for (x, y), z in bp_dict.items()
+}
+
 
 def three_frame_orfs(
     dna: str,
@@ -561,6 +606,29 @@ def smallest_rotation(s):
 
     k = min_rotation(bytes(s, "ascii"))
     return s[k:] + s[:k]
+
+
+def anneal_from_left(watson: str, crick: str) -> int:
+    """
+    The length of the common prefix shared by two strings.
+
+    Args:
+        str1 (str): The first string.
+        str2 (str): The second string.
+
+    Returns:
+        int: The length of the common prefix.
+    """
+
+    result = len(
+        list(
+            _itertools.takewhile(
+                lambda x: bp_dict_str.get((x[0], x[1])), zip(watson, crick[::-1])
+            )
+        )
+    )
+
+    return result
 
 
 def cai(seq: str, organism: str = "sce", weights: dict = _weights):
