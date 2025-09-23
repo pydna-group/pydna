@@ -18,7 +18,7 @@ from pydna._pretty import pretty_str as _pretty_str
 from pydna.utils import flatten as _flatten, location_boundaries as _location_boundaries
 
 # from pydna.utils import memorize as _memorize
-from pydna.utils import rc as _rc
+# from pydna.utils import rc as _rc
 from pydna.utils import shift_location as _shift_location
 from pydna.utils import shift_feature as _shift_feature
 from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
@@ -219,9 +219,7 @@ class Dseqrecord(_SeqRecord):
         obj = cls.__new__(cls)  # Does not call __init__
         obj._per_letter_annotations = {}
         obj.seq = _Dseq.quick(
-            record,
-            _rc(record),
-            ovhg=0,
+            record.encode("ascii"),
             # linear=linear,
             circular=circular,
         )
@@ -258,9 +256,7 @@ class Dseqrecord(_SeqRecord):
         obj.n = n
         if circular is None:
             circular = record.annotations.get("topology") == "circular"
-        obj.seq = _Dseq.quick(
-            str(record.seq), _rc(str(record.seq)), ovhg=0, circular=circular
-        )
+        obj.seq = _Dseq.quick(record.seq._data, ovhg=0, circular=circular)
         return obj
 
     @property
