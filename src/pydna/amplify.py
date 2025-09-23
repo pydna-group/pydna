@@ -15,9 +15,7 @@ correctly."""
 
 from pydna._pretty import pretty_str as _pretty_str
 from pydna.utils import flatten as _flatten
-
-# from pydna.utils import memorize as _memorize
-from pydna.utils import rc as _rc, shift_feature as _shift_feature
+from pydna.utils import shift_feature as _shift_feature
 from pydna.amplicon import Amplicon as _Amplicon
 from pydna.primer import Primer as _Primer
 from pydna.seqrecord import SeqRecord as _SeqRecord
@@ -26,35 +24,17 @@ from Bio.SeqFeature import SeqFeature as _SeqFeature
 from Bio.SeqFeature import SimpleLocation as _SimpleLocation
 from Bio.SeqFeature import CompoundLocation as _CompoundLocation
 from pydna.seq import Seq as _Seq
-import itertools as _itertools
 import re as _re
 import copy as _copy
 import operator as _operator
+from pydna.utils import iupac_compl_regex as _iupac_compl_regex
+from pydna.utils import anneal_from_left as _anneal_from_left
 
 # import os as _os
 
 # import logging as _logging
 
 # _module_logger = _logging.getLogger("pydna." + __name__)
-
-_table = {  # IUPAC Ambiguity Codes for Nucleotide Degeneracy and U for Uracile
-    "A": "A",
-    "C": "C",
-    "G": "G",
-    "T": "T",
-    "U": "A",  # XXX
-    "R": "(A|G)",
-    "Y": "(C|T)",
-    "S": "(G|C)",
-    "W": "(A|T)",
-    "K": "(G|T)",
-    "M": "(A|C)",
-    "B": "(C|G|T)",
-    "D": "(A|G|T)",
-    "H": "(A|C|T)",
-    "V": "(A|C|G)",
-    "N": "(A|G|C|T)",
-}
 
 
 def _annealing_positions(primer, template, limit):
@@ -70,12 +50,13 @@ def _annealing_positions(primer, template, limit):
 
         <- - - - - - - - - - template - - - - - - - - - - - - - >
 
-        <------- start (int) ------>
-     5'-...gctactacacacgtactgactgcctccaagatagagtcagtaaccacactcgat...3'
+           < ----- start = 26 ------>
+       5'- gctactacacacgtactgactgcctccaagatagagtcagtaaccacactcgatag...3'
            ||||||||||||||||||||||||||||||||||||||||||||||||
                                   3'-gttctatctcagtcattggtgtATAGTG-5'
 
                                      <-footprint length -->
+
 
     Parameters
     ----------
@@ -85,7 +66,7 @@ def _annealing_positions(primer, template, limit):
     template : string
         The template sequence 5'-3'
 
-    limit : int = 15, optional
+    limit : int
         footprint needs to be at least of length limit.
 
     Returns
@@ -94,32 +75,37 @@ def _annealing_positions(primer, template, limit):
         [ (start1, footprint1), (start2, footprint2) ,..., ]
     """
 
+    #                            under_tail
+    #           anchor         AACCACACTCGAT
+    #           CAAGATAGAGTCAGT
+    #           |||||||||||||||
+    #           gttctatctcagtca
+    #                          ttggtgtATAGTG    revprimer
+    #                              tail
+    #
+    #           | <- limit -> |
+
     # return empty list if primer too short
     if len(primer) < limit:
         return []
 
-    prc = _rc(primer)
+    revprimer = primer[::-1]
 
     # head is minimum part of primer that must anneal
-    head = prc[:limit].upper()
+    head = revprimer[:limit].upper()
+    tail = revprimer[limit:].upper()
 
     # Make regex pattern that reflects extended IUPAC DNA code
-    head = "".join(_table[key] for key in head)
+    head_regex = "".join(_iupac_compl_regex[key] for key in head)
+    primer_regex = f"(?:({head_regex})(.{{0,{len(primer) - limit}}}))"
 
-    positions = [m.start() for m in _re.finditer(f"(?={head})", template, _re.I)]
-
-    if positions:
-        tail = prc[limit:].lower()
-        length = len(tail)
-        results = []
-        for match_start in positions:
-            tm = template[match_start + limit : match_start + limit + length].lower()
-            footprint = len(
-                list(_itertools.takewhile(lambda x: x[0] == x[1], zip(tail, tm)))
-            )
-            results.append((match_start, footprint + limit))
-        return results
-    return []
+    results = []
+    for m in _re.finditer(primer_regex, template.upper()):
+        anchor, under_tail = m.groups()
+        match_start = m.start()
+        match_extension = _anneal_from_left(tail, under_tail[::-1])
+        results.append((match_start, limit + match_extension))
+    return results
 
 
 # class _Memoize(type):
