@@ -674,7 +674,7 @@ def fill_left(seq: _Dseq) -> _Dseq:
     elif seq.ovhg > 0:
         new_watson = reverse_complement(seq.crick[-seq.ovhg :]) + new_watson
 
-    return _Dseq(new_watson, new_crick, 0)
+    return seq.cast_to_ds_left()  # _Dseq(new_watson, new_crick, 0)
 
 
 def fill_right(seq: _Dseq) -> _Dseq:
@@ -691,7 +691,7 @@ def fill_right(seq: _Dseq) -> _Dseq:
     elif watson_ovhg > 0:
         new_crick = reverse_complement(seq.watson[-watson_ovhg:]) + new_crick
 
-    return _Dseq(new_watson, new_crick, seq.ovhg)
+    return seq.cast_to_ds_right()  # _Dseq(new_watson, new_crick, seq.ovhg)
 
 
 def fill_dseq(seq: _Dseq) -> _Dseq:
@@ -855,8 +855,12 @@ def assemble(
         ]
         # Join the left sequence including the overlap with the right sequence without the overlap
         # we use fill_right / fill_left so that it works for ligation of sticky ends
+        # breakpoint()
         out_dseqrecord = _Dseqrecord(
-            fill_right(out_dseqrecord.seq) + fill_left(fragment.seq)[overlap:],
+            fill_right(out_dseqrecord.seq)
+            + fill_left(fragment.seq)[
+                overlap:
+            ],  # FIXME: This is wrong for PCR. Both primers get incorporated into the product.
             features=out_dseqrecord.features + new_features,
         )
 
