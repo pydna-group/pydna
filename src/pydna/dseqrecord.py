@@ -40,6 +40,10 @@ from pydna.opencloning_models import (
     Source,
     RestrictionEnzymeDigestionSource,
     SourceInput,
+    AssemblyFragment,
+    AssemblySource,
+    RestrictionAndLigationSource,
+    GibsonAssemblySource,
 )
 
 
@@ -1441,3 +1445,7 @@ class Dseqrecord(_SeqRecord):
 # there might be a cleaner way to do this
 RestrictionEnzymeDigestionSource.model_rebuild()
 SourceInput.model_rebuild()
+AssemblyFragment.model_rebuild()
+AssemblySource.model_rebuild()
+RestrictionAndLigationSource.model_rebuild()
+GibsonAssemblySource.model_rebuild()
