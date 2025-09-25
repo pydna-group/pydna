@@ -36,7 +36,11 @@ import re as _re
 import time as _time
 import datetime as _datetime
 from typing import Union
-from opencloning_linkml.datamodel import Source
+from pydna.opencloning_models import (
+    Source,
+    RestrictionEnzymeDigestionSource,
+    SourceInput,
+)
 
 
 # import logging as _logging
@@ -1328,7 +1332,14 @@ class Dseqrecord(_SeqRecord):
 
         cutsites = self.seq.get_cutsites(*enzymes)
         cutsite_pairs = self.seq.get_cutsite_pairs(cutsites)
-        return tuple(self.apply_cut(*cs) for cs in cutsite_pairs)
+        products = []
+        for cs in cutsite_pairs:
+            product = self.apply_cut(*cs)
+            product.source = RestrictionEnzymeDigestionSource.from_parent(
+                self, cs[0], cs[1]
+            )
+            products.append(product)
+        return products
 
     def apply_cut(self, left_cut, right_cut):
         dseq = self.seq.apply_cut(left_cut, right_cut)
@@ -1424,3 +1435,9 @@ class Dseqrecord(_SeqRecord):
             features = self[left_edge:right_edge].features
 
         return Dseqrecord(dseq, features=features)
+
+
+# This is necessary due to circular imports,
+# there might be a cleaner way to do this
+RestrictionEnzymeDigestionSource.model_rebuild()
+SourceInput.model_rebuild()

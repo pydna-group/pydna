@@ -17,13 +17,20 @@ from opencloning_linkml.datamodel import (
     ManuallyTypedSource as _ManuallyTypedSource,
     RestrictionAndLigationSource as _RestrictionAndLigationSource,
     GibsonAssemblySource as _GibsonAssemblySource,
+    RestrictionEnzymeDigestionSource as _RestrictionEnzymeDigestionSource,
+    RestrictionSequenceCut as _RestrictionSequenceCut,
 )
 from Bio.SeqFeature import Location, LocationParserError
 from Bio.Restriction.Restriction import AbstractCut
 from typing import List
 
-from pydna.dseqrecord import Dseqrecord
 from Bio.SeqIO.InsdcIO import _insdc_location_string as format_feature_location
+
+from pydna.types import CutSiteType
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pydna.dseqrecord import Dseqrecord
 
 
 class SequenceLocationStr(str):
@@ -81,7 +88,7 @@ class ConfiguredBaseModel(BaseModel):
 class TextFileSequence(_TextFileSequence):
 
     @classmethod
-    def from_dseqrecord(cls, dseqr: Dseqrecord):
+    def from_dseqrecord(cls, dseqr: "Dseqrecord"):
         return cls(
             id=id(dseqr),
             sequence_file_format="genbank",
@@ -92,7 +99,7 @@ class TextFileSequence(_TextFileSequence):
 
 
 class SourceInput(ConfiguredBaseModel):
-    sequence: Dseqrecord
+    sequence: "Dseqrecord"
 
     def to_pydantic_model(self) -> _SourceInput:
         return _SourceInput(sequence=id(self.sequence))
@@ -157,6 +164,47 @@ class GibsonAssemblySource(AssemblySource):
         )
 
 
+class RestrictionEnzymeDigestionSource(Source):
+    left_edge: CutSiteType | None
+    right_edge: CutSiteType | None
+
+    @classmethod
+    def from_parent(
+        cls, parent: "Dseqrecord", left_edge: CutSiteType, right_edge: CutSiteType
+    ):
+        return cls(
+            input=[SourceInput(sequence=parent)],
+            left_edge=left_edge,
+            right_edge=right_edge,
+        )
+
+    def to_pydantic_model(self, seq_id) -> _RestrictionEnzymeDigestionSource:
+        left_edge = (
+            None
+            if self.left_edge is None
+            else _RestrictionSequenceCut(
+                cut_watson=self.left_edge[0][0],
+                overhang=self.left_edge[0][1],
+                restriction_enzyme=str(self.left_edge[1]),
+            )
+        )
+        right_edge = (
+            None
+            if self.right_edge is None
+            else _RestrictionSequenceCut(
+                cut_watson=self.right_edge[0][0],
+                overhang=self.right_edge[0][1],
+                restriction_enzyme=str(self.right_edge[1]),
+            )
+        )
+        return _RestrictionEnzymeDigestionSource(
+            id=seq_id,
+            input=[fragment.to_pydantic_model() for fragment in self.input],
+            left_edge=left_edge,
+            right_edge=right_edge,
+        )
+
+
 class CloningStrategy(_BaseCloningStrategy):
 
     # For now, we don't add anything, but the classes will not have the new methods if this is used
@@ -212,7 +260,7 @@ class CloningStrategy(_BaseCloningStrategy):
             self.all_children_source_ids(new_source_id, source_children)
         return source_children
 
-    def add_dseqrecord(self, dseqr: Dseqrecord):
+    def add_dseqrecord(self, dseqr: "Dseqrecord"):
         existing_ids = {seq.id for seq in self.sequences}
         if id(dseqr) in existing_ids:
             return
@@ -244,8 +292,11 @@ class CloningStrategy(_BaseCloningStrategy):
             primer.id = id_mappings[primer.id]
 
     @classmethod
-    def from_dseqrecord(cls, dseqr: Dseqrecord, description: str = ""):
+    def from_dseqrecord(cls, dseqr: "Dseqrecord", description: str = ""):
         cloning_strategy = cls(sources=[], sequences=[], description=description)
         cloning_strategy.add_dseqrecord(dseqr)
-        cloning_strategy.reassign_ids()
         return cloning_strategy
+
+    def model_dump_json(self, *args, **kwargs):
+        self.reassign_ids()
+        return super().model_dump_json(*args, **kwargs)
