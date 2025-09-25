@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# Copyright 2013-2023 by Björn Johansson.  All rights reserved.
-# This code is part of the Python-dna distribution and governed by its
-# license.  Please see the LICENSE.txt file that should have been included
-# as part of this package.
 """Provides the Dseq class for handling double stranded DNA sequences.
 
 Dseq is a subclass of :class:`Bio.Seq.Seq`. The Dseq class
@@ -20,15 +16,17 @@ import re as _re
 import sys as _sys
 import math as _math
 import inspect as _inspect
+from typing import List as _List, Tuple as _Tuple, Union as _Union
 
-from pydna.seq import Seq as _Seq
-from Bio.Seq import _translate_str, _SeqAbstractBaseClass
+from Bio.Restriction import RestrictionBatch as _RestrictionBatch
+from Bio.Restriction import CommOnly
 
-from pydna._pretty import pretty_str as _pretty_str
 from seguid import ldseguid as _ldseguid
 from seguid import cdseguid as _cdseguid
 
-# from pydna.utils import complement as _complement
+from pydna.seq import Seq as _Seq
+from Bio.Seq import _translate_str, _SeqAbstractBaseClass
+from pydna._pretty import pretty_str as _pretty_str
 from pydna.utils import rc as _rc
 from pydna.utils import flatten as _flatten
 from pydna.utils import cuts_overlap as _cuts_overlap
@@ -40,58 +38,80 @@ from pydna.utils import to_5tail_table
 from pydna.utils import to_3tail_table
 from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
 from pydna.common_sub_strings import terminal_overlap as _terminal_overlap
-from Bio.Restriction import RestrictionBatch as _RestrictionBatch
-from Bio.Restriction import CommOnly
-
-
 from pydna.types import DseqType, EnzymesType, CutSiteType
-
-from typing import List as _List, Tuple as _Tuple, Union as _Union
 
 
 class CircularString(str):
     """
     A circular string: indexing and slicing wrap around the origin (index 0).
 
-    Examples:
-        s = CircularString("ABCDE")
+    Examples
+    --------
+    s = CircularString("ABCDE")
 
-        # Integer indexing (wraps)
-        assert s[7] == "C"         # 7 % 5 == 2
-        assert s[-1] == "E"
+    # Integer indexing (wraps)
+    assert s[7] == "C"         # 7 % 5 == 2
+    assert s[-1] == "E"
 
-        # Forward circular slices (wrap when stop <= start)
-        assert s[3:1] == "DEA"     # 3,4,0
-        assert s[1:1] == "BCDE"    # full turn starting at 1, excluding 1 on next lap
-        assert s[:] == "ABCDE"     # full string
-        assert s[::2] == "ACE"     # every 2nd char, no wrap needed
-        assert s[4:2:2] == "EA"    # 4,0
+    # Forward circular slices (wrap when stop <= start)
+    assert s[3:1] == "DEA"     # 3,4,0
+    assert s[1:1] == "BCDE"    # full turn starting at 1, excluding 1 on next lap
+    assert s[:] == "ABCDE"     # full string
+    assert s[::2] == "ACE"     # every 2nd char, no wrap needed
+    assert s[4:2:2] == "EA"    # 4,0
 
-        # Reverse circular slices
-        assert s[1:1:-1] == "BAEDC"  # full reverse circle starting at 1
-        assert s[2:4:-1] == "CBA"    # 2,1,0
+    # Reverse circular slices
+    assert s[1:1:-1] == "BAEDC"  # full reverse circle starting at 1
+    assert s[2:4:-1] == "CBA"    # 2,1,0
 
-        # Steps > 1 and negatives work with wrap as expected
-        assert s[0:0:2] == "ACE"
-        assert s[0:0:-2] == "AECBD"
+    # Steps > 1 and negatives work with wrap as expected
+    assert s[0:0:2] == "ACE"
+    assert s[0:0:-2] == "AECBD"
     """
 
-    def __new__(cls, value):
+    def __new__(cls, value: str):
+        """
+        Create a new instance of CircularString.
+
+        For immutable built-in types like str, object initialization must be
+        performed in __new__ rather than __init__. The __init__ method is called
+        *after* the immutable value has already been created, which means it
+        cannot alter the underlying string content. By overriding __new__, we
+        ensure that the desired value is passed directly into the construction
+        of the string object before it becomes immutable.
+        """
         return super().__new__(cls, value)
 
     def __getitem__(self, key):
+        """
+        Return a portion of the sequence, supporting both indexing and slicing.
+
+        This method is called whenever the object is accessed with square brackets,
+        e.g. obj[i] or obj[i:j]. If `key` is an integer, the method returns the
+        element at that position. If `key` is a slice, it returns a new instance of
+        the subclass containing the corresponding subsequence.
+
+        This method has been modified to return subsequences assuming that the
+        string is circular.
+        """
         n = len(self)
         if n == 0:
+            # If the circular string is empty.
             # Behave like str: indexing raises, slicing returns empty
             if isinstance(key, slice):
                 return self.__class__("")
             raise IndexError("CircularString index out of range (empty string)")
 
         if isinstance(key, int):
-            # Wrap single index
+            # If obj[i] is called, return the character at that position.
+            # The difference from the normal string class is that the index
+            # wraps around, so it is never out of range.
             return super().__getitem__(key % n)
 
         if isinstance(key, slice):
+            # A slice object has start, stop and step properties, where step
+            # indicates taking for example every 3rd character if step == 3.
+            # str accepts None for each property.
             start, stop, step = key.start, key.stop, key.step
             step = 1 if step is None else step
             if step == 0:
@@ -101,7 +121,10 @@ class CircularString(str):
             if step > 0:
                 start = 0 if start is None else start
                 stop = n if stop is None else stop
-                # Ensure we move forward; if stop <= start, wrap once.
+                # A special case is when stop <= start.
+                # A normal string returns "", but we return the slice
+                # going forward around the end of the string to start.
+                # or if stop <= start, go forward wrap once.
                 while stop <= start:
                     stop += n
                 rng = range(start, stop, step)
@@ -116,6 +139,7 @@ class CircularString(str):
 
             # Map to modulo-n and collect
             # Cap at one full lap for safety (no infinite loops)
+            # This part could probably be simplified if step was not supported.
             limit = n if step % n == 0 else n * 2  # generous cap for large steps
             out = []
             count = 0
@@ -132,26 +156,42 @@ class CircularString(str):
 
 
 class Dseq(_Seq):
-    """Dseq holds information for a double stranded DNA fragment.
+    """Dseq describes a double stranded DNA fragment, linear or circular.
 
-    Dseq also holds information describing the topology of
-    the DNA fragment (linear or circular).
+    Dseq can be initiated in two ways, uisng two strings, each representing the
+    Watson (upper, sense) strand, the Crick (lower, antisense) strand and an
+    optional value describing the stagger betwen the strands on the left side (ovhg).
+
+    Alternatively, a single string represenation using dsIUPAC codes can be used.
+    If a single string is used, the letters of that string are interpreted as base
+    pairs rather than single bases. For example "A" would indicate the basepair
+    "A/T". An expanded IUPAC code is used where the letters PEXI have been assigned
+    to GATC on the Watson strand with no paring base on the Crick strand G/"", A/"",
+    T/"" and C/"". The letters QFZJ have been assigned the opposite base pairs with
+    an empty Watson strand ""/G, ""/A, ""/T, and ""/C.
+
+    ::
+
+        PEXIGATCQFZJ  would indicate the linear double-stranded fragment:
+
+        GATCGATC
+            CTAGCTAG
+
+
 
     Parameters
     ----------
     watson : str
-        a string representing the watson (sense) DNA strand.
+        a string representing the Watson (sense) DNA strand or a basepair
+        represenation.
 
     crick : str, optional
-        a string representing the crick (antisense) DNA strand.
+        a string representing the Crick (antisense) DNA strand.
 
     ovhg : int, optional
         A positive or negative number to describe the stagger between the
-        watson and crick strands.
+        Watson and Crick strands.
         see below for a detailed explanation.
-
-    linear : bool, optional
-        True indicates that sequence is linear, False that it is circular.
 
     circular : bool, optional
         True indicates that sequence is circular, False that it is linear.
@@ -159,31 +199,27 @@ class Dseq(_Seq):
 
     Examples
     --------
-    Dseq is a subclass of the Biopython Seq object. It stores two
-    strings representing the watson (sense) and crick(antisense) strands.
-    two properties called linear and circular, and a numeric value ovhg
-    (overhang) describing the stagger for the watson and crick strand
+    Dseq is a subclass of the Biopython Bio.Seq.Seq class. The constructor
+    can accept two strings representing the Watson (sense) and Crick(antisense)
+    DNA strands. These are interpreted as single stranded DNA. There is a check
+    for complementarity between the strands.
+
+    If the DNA molecule is staggered on the left side, an integer ovhg
+    (overhang) must be given, describing the stagger between the Watson and Crick strand
     in the 5' end of the fragment.
 
-    The most common usage is probably to create a Dseq object as a
-    part of a Dseqrecord object (see :class:`pydna.dseqrecord.Dseqrecord`).
+    Additionally, the optional boolean parameter circular can be given to indicate if the
+    DNA molecule is circular.
 
-    There are three ways of creating a Dseq object directly listed below, but you can also
+    The most common usage of the Dseq class is probably not to use it directly, but to
+    create it as part of a Dseqrecord object (see :class:`pydna.dseqrecord.Dseqrecord`).
+    This works in the same way as for the relationship between the :class:`Bio.Seq.Seq` and
+    :class:`Bio.SeqRecord.SeqRecord` classes in Biopython.
+
+    There are multiple ways of creating a Dseq object directly listed below, but you can also
     use the function Dseq.from_full_sequence_and_overhangs() to create a Dseq:
 
-    Only one argument (string):
-
-    >>> from pydna.dseq import Dseq
-    >>> Dseq("aaa")
-    Dseq(-3)
-    aaa
-    ttt
-
-    The given string will be interpreted as the watson strand of a
-    blunt, linear double stranded sequence object. The crick strand
-    is created automatically from the watson strand.
-
-    Two arguments (string, string):
+    Two arguments (string, string), no overhang provided:
 
     >>> from pydna.dseq import Dseq
     >>> Dseq("gggaaat","ttt")
@@ -191,16 +227,14 @@ class Dseq(_Seq):
     gggaaat
        ttt
 
-    If both watson and crick are given, but not ovhg an attempt
-    will be made to find the best annealing between the strands.
-    There are limitations to this. For long fragments it is quite
-    slow. The length of the annealing sequences have to be at least
-    half the length of the shortest of the strands.
+    If Watson and Crick are given, but not ovhg, an attempt will be made to find the best annealing
+    between the strands. There are important limitations to this. If there are several ways to
+    anneal the strands, this will fail. For long fragments it is quite slow.
 
     Three arguments (string, string, ovhg=int):
 
     The ovhg parameter is an integer describing the length of the
-    crick strand overhang in the 5' end of the molecule.
+    Crick strand overhang in the 5' end of the molecule.
 
     The ovhg parameter controls the stagger at the five prime end::
 
