@@ -158,7 +158,7 @@ class CircularString(str):
 class Dseq(_Seq):
     """Dseq describes a double stranded DNA fragment, linear or circular.
 
-    Dseq can be initiated in two ways, uisng two strings, each representing the
+    Dseq can be initiated in two ways, using two strings, each representing the
     Watson (upper, sense) strand, the Crick (lower, antisense) strand and an
     optional value describing the stagger betwen the strands on the left side (ovhg).
 
@@ -233,8 +233,8 @@ class Dseq(_Seq):
 
     Three arguments (string, string, ovhg=int):
 
-    The ovhg parameter is an integer describing the length of the
-    Crick strand overhang in the 5' end of the molecule.
+    The ovhg parameter is an integer describing the length of the Crick strand overhang on the
+    left side (the 5' end of Watson strand).
 
     The ovhg parameter controls the stagger at the five prime end::
 
@@ -257,29 +257,29 @@ class Dseq(_Seq):
 
     Example of creating Dseq objects with different amounts of stagger:
 
-    >>> Dseq(watson="agt", crick="actta", ovhg=-2)
+    >>> Dseq(watson="att", crick="acata", ovhg=-2)
     Dseq(-7)
-    agt
-      attca
-    >>> Dseq(watson="agt",crick="actta",ovhg=-1)
+    att
+      ataca
+    >>> Dseq(watson="ata",crick="acata",ovhg=-1)
     Dseq(-6)
-    agt
-     attca
-    >>> Dseq(watson="agt",crick="actta",ovhg=0)
+    ata
+     ataca
+    >>> Dseq(watson="taa",crick="actta",ovhg=0)
     Dseq(-5)
-    agt
+    taa
     attca
-    >>> Dseq(watson="agt",crick="actta",ovhg=1)
+    >>> Dseq(watson="aag",crick="actta",ovhg=1)
     Dseq(-5)
-     agt
+     aag
     attca
     >>> Dseq(watson="agt",crick="actta",ovhg=2)
     Dseq(-5)
       agt
     attca
 
-    If the ovhg parameter is specified a crick strand also
-    needs to be supplied, otherwise an exception is raised.
+    If the ovhg parameter is specified a Crick strand also needs to be supplied, or
+    an exception is raised.
 
     >>> Dseq(watson="agt", ovhg=2)
     Traceback (most recent call last):
@@ -288,22 +288,21 @@ class Dseq(_Seq):
         else:
     ValueError: ovhg defined without crick strand!
 
+    The shape or topology of the fragment is set by the circular parameter, True or False (default).
 
-    The shape of the fragment is set by circular = True, False
-
-    Note that both ends of the DNA fragment has to be compatible to set
-    circular = True.
-
-
-    >>> Dseq("aaa","ttt")
+    >>> Dseq("aaa", "ttt", ovhg = 0)  # A linear sequence by default
     Dseq(-3)
     aaa
     ttt
-    >>> Dseq("aaa","ttt",ovhg=0)
+    >>> Dseq("aaa", "ttt", ovhg = 0, circular = False)  # A linear sequence if circular is False
     Dseq(-3)
     aaa
     ttt
-    >>> Dseq("aaa","ttt",ovhg=1)
+    >>> Dseq("aaa", "ttt", ovhg = 0, circular = True)  # A circular sequence
+    Dseq(o3)
+    aaa
+    ttt
+    >>> Dseq("aaa", "ttt", ovhg=1, circular = True)
     Dseq(-4)
      aaa
     ttt
@@ -332,6 +331,18 @@ class Dseq(_Seq):
     >>> b.ovhg
     -4
     >>>
+
+
+    dsIUPAC [#]_ is an nn extension to the IUPAC alphabet used to describe ss regions:
+
+    ::
+
+            aaaGATC       GATCccc          ad-hoc representations
+        CTAGttt               gggCTAG
+
+        QFZJaaaPEXI       PEXIcccQFZJ      dsIUPAC
+
+
 
     Coercing to string
 
