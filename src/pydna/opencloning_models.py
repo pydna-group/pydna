@@ -28,6 +28,7 @@ from Bio.SeqIO.InsdcIO import _insdc_location_string as format_feature_location
 
 from pydna.types import CutSiteType
 from typing import TYPE_CHECKING
+from pydna.primer import Primer
 
 if TYPE_CHECKING:
     from pydna.dseqrecord import Dseqrecord
@@ -99,7 +100,7 @@ class TextFileSequence(_TextFileSequence):
 
 
 class SourceInput(ConfiguredBaseModel):
-    sequence: "Dseqrecord"
+    sequence: Union["Dseqrecord", "Primer"]
 
     def to_pydantic_model(self) -> _SourceInput:
         return _SourceInput(sequence=id(self.sequence))
