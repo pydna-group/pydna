@@ -146,6 +146,7 @@ class Dseqrecord(_SeqRecord):
         *args,
         circular=None,
         n=5e-14,  # mol ( = 0.05 pmol)
+        source=None,
         **kwargs,
     ):
         #        _module_logger.info("### Dseqrecord initialized ###")
@@ -213,7 +214,7 @@ class Dseqrecord(_SeqRecord):
         self.map_target = None
         self.n = n  # amount, set to 5E-14 which is 5 pmols
         self.annotations.update({"molecule_type": "DNA"})
-        self.source = None
+        self.source = source
 
     @classmethod
     def from_string(
@@ -1336,14 +1337,7 @@ class Dseqrecord(_SeqRecord):
 
         cutsites = self.seq.get_cutsites(*enzymes)
         cutsite_pairs = self.seq.get_cutsite_pairs(cutsites)
-        products = []
-        for cs in cutsite_pairs:
-            product = self.apply_cut(*cs)
-            product.source = RestrictionEnzymeDigestionSource.from_parent(
-                self, cs[0], cs[1]
-            )
-            products.append(product)
-        return products
+        return tuple(self.apply_cut(*cs) for cs in cutsite_pairs)
 
     def apply_cut(self, left_cut, right_cut):
         dseq = self.seq.apply_cut(left_cut, right_cut)
@@ -1438,7 +1432,9 @@ class Dseqrecord(_SeqRecord):
             right_edge = right_watson if right_ovhg > 0 else right_crick
             features = self[left_edge:right_edge].features
 
-        return Dseqrecord(dseq, features=features)
+        # This will need to be generalised to all types of cuts
+        source = RestrictionEnzymeDigestionSource.from_parent(self, left_cut, right_cut)
+        return Dseqrecord(dseq, features=features, source=source)
 
 
 # This is necessary due to circular imports,
