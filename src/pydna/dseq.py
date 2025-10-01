@@ -30,15 +30,86 @@ from pydna._pretty import pretty_str as _pretty_str
 from pydna.utils import rc as _rc
 from pydna.utils import flatten as _flatten
 from pydna.utils import cuts_overlap as _cuts_overlap
-from pydna.utils import bp_dict
-from pydna.utils import to_watson_table
-from pydna.utils import to_crick_table
-from pydna.utils import to_full_sequence
-from pydna.utils import to_5tail_table
-from pydna.utils import to_3tail_table
+from pydna.alphabet import bp_dict
+from pydna.alphabet import annealing_dict
+
+# from pydna.utils import bp_dict
+# from pydna.utils import annealing_dict
+from pydna.alphabet import dscode_to_watson_table
+from pydna.alphabet import dscode_to_crick_table
+from pydna.alphabet import dscode_to_to_full_sequence_table
+from pydna.alphabet import dscode_to_watson_tail_table
+from pydna.alphabet import dscode_to_crick_tail_table
+from pydna.alphabet import placeholder1
+from pydna.alphabet import placeholder2
+from pydna.alphabet import interval
 from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
 from pydna.common_sub_strings import terminal_overlap as _terminal_overlap
 from pydna.types import DseqType, EnzymesType, CutSiteType
+
+length_limit_for_repr = (
+    30  # Sequences larger than this gets a truncated representation.
+)
+
+
+def representation(data=b"", length_limit_for_repr=30):
+    """
+    Two line string representation of a sequence of symbols.
+
+
+    Parameters
+    ----------
+    data : TYPE, optional
+        DESCRIPTION. The default is b"".
+
+    Returns
+    -------
+    TYPE
+        DESCRIPTION.
+
+    """
+    m = _re.match(
+        b"([PEXIpexi]*)([QFZJqfzj]*)(?=[GATCUONgatcuon])(.*)(?<=[GATCUONgatcuon])([PEXIpexi]*)([QFZJqfzj]*)|([PEXIpexiQFZJqfzj]+)",
+        data,
+    )
+    result = m.groups() if m else (b"",) * 6
+    sticky_left5, sticky_left3, middle, sticky_right5, sticky_right3, single = result
+    if len(data) > length_limit_for_repr:
+        sticky_left5 = (
+            sticky_left5[:4] + placeholder2 * 2 + sticky_left5[-4:]
+            if sticky_left5 and len(sticky_left5) > 10
+            else sticky_left5
+        )
+        sticky_left3 = (
+            sticky_left3[:4] + placeholder1 * 2 + sticky_left3[-4:]
+            if sticky_left3 and len(sticky_left3) > 10
+            else sticky_left3
+        )
+        middle = (
+            middle[:4] + interval * 2 + middle[-4:]
+            if middle and len(middle) > 10
+            else middle
+        )
+        sticky_right5 = (
+            sticky_right5[:4] + placeholder2 * 2 + sticky_right5[-4:]
+            if sticky_right5 and len(sticky_right5) > 10
+            else sticky_right5
+        )
+        sticky_right3 = (
+            sticky_right3[:4] + placeholder1 * 2 + sticky_right3[-4:]
+            if sticky_right3 and len(sticky_right3) > 10
+            else sticky_right3
+        )
+    r = (
+        (sticky_left5 or sticky_left3 or b"")
+        + (middle or b"")
+        + (sticky_right5 or sticky_right3 or single or b"")
+    )
+
+    return _pretty_str(
+        f"{r.translate(dscode_to_watson_table).decode().rstrip()}\n"
+        f"{r.translate(dscode_to_crick_table).decode().rstrip()}"
+    )
 
 
 class CircularString(str):
@@ -429,8 +500,6 @@ class Dseq(_Seq):
 
     """
 
-    trunc = 30
-
     def __init__(
         self,
         watson: _Union[str, bytes],
@@ -490,6 +559,8 @@ class Dseq(_Seq):
             sense = f"{sense:<{max_len}}"  # pad on right side to max_len
             antisense = f"{antisense:<{max_len}}"  # pad on right side to max_len
 
+            assert len(sense) == len(antisense)
+
             data = bytearray()
 
             for w, c in zip(sense, antisense):
@@ -501,11 +572,22 @@ class Dseq(_Seq):
             self._data = bytes(data)
 
         self.circular = circular
-        # self.watson = _pretty_str(watson)
-        # self.crick = _pretty_str(crick)
-        self.length = len(self._data)
-        # self.ovhg = ovhg
         self.pos = pos
+        test_data = self._data
+        if circular:
+            test_data += self._data[0:1]
+        msg = ""
+        counter = 0
+        for mobj in _re.finditer(
+            b"(.{0,3})([PEXIpexi][QFZJqfzj]|[QFZJqfzj][PEXIpexi])(.{0,3})", test_data
+        ):
+            chunk = mobj.group()
+            msg += f"[{mobj.start()}:{mobj.end()}]\n{representation(chunk)}\n\n"
+            counter += 1
+        if counter:
+            raise ValueError(
+                f"Molecule is internally split in {counter} location(s):\n\n{msg}".strip()
+            )
 
     @classmethod
     def quick(cls, data: bytes, *args, circular=False, pos=0, **kwargs):
@@ -516,7 +598,6 @@ class Dseq(_Seq):
         """
         obj = cls.__new__(cls)
         obj.circular = circular
-        obj.length = len(data)
         obj.pos = pos
         obj._data = data
         return obj
@@ -526,13 +607,11 @@ class Dseq(_Seq):
         cls,
         dna: str,
         *args,
-        # linear=True,
         circular=False,
         **kwargs,
     ):
-        obj = cls.__new__(cls)  # Does not call __init__
+        obj = cls.__new__(cls)
         obj.circular = circular
-        obj.length = len(dna)
         obj.pos = 0
         obj._data = dna.encode("ASCII")
         return obj
@@ -558,7 +637,6 @@ class Dseq(_Seq):
                 print(f"Base mismatch in representation {err}")
                 raise
         obj._data = bytes(data)
-        obj.length = len(data)
         return obj
 
     @classmethod
@@ -637,7 +715,7 @@ class Dseq(_Seq):
             DESCRIPTION.
 
         """
-        return self._data.translate(to_watson_table).strip().decode("ascii")
+        return self._data.translate(dscode_to_watson_table).strip().decode("ascii")
 
     @property
     def crick(self):
@@ -650,7 +728,7 @@ class Dseq(_Seq):
             DESCRIPTION.
 
         """
-        return self._data.translate(to_crick_table).strip().decode("ascii")[::-1]
+        return self._data.translate(dscode_to_crick_table).strip().decode("ascii")[::-1]
 
     @property
     def ovhg(self):
@@ -680,7 +758,7 @@ class Dseq(_Seq):
             DESCRIPTION.
 
         """
-        return self._data.translate(to_full_sequence).decode("ascii")
+        return self._data.translate(dscode_to_to_full_sequence_table).decode("ascii")
 
     __str__ = to_blunt_string
 
@@ -798,52 +876,10 @@ class Dseq(_Seq):
     def __repr__(self):
 
         header = f"{self.__class__.__name__}({({False: '-', True: 'o'}[self.circular])}{len(self)})"
-        # m = _re.match(
-        #     b"([PEXIpexi]*)([QFZJqfzj]*)(?=[GATCUOgatcuo])(.*)(?<=[GATCUOgatcuo])([PEXIpexi]*)([QFZJqfzj]*)|([PEXIpexiQFZJqfzj]+)",
-        #     self._data,
-        # )
-        m = _re.match(
-            b"([PEXIpexi]*)([QFZJqfzj]*)(?=[GATCUONgatcuon])(.*)(?<=[GATCUONgatcuon])([PEXIpexi]*)([QFZJqfzj]*)|([PEXIpexiQFZJqfzj]+)",
-            self._data,
-        )
-        result = m.groups() if m else (b"",) * 6
-        sticky_left5, sticky_left3, middle, sticky_right5, sticky_right3, single = (
-            result
-        )
-        if len(self) > self.trunc:
-            sticky_left5 = (
-                sticky_left5[:4] + b"22" + sticky_left5[-4:]
-                if sticky_left5 and len(sticky_left5) > 10
-                else sticky_left5
-            )
-            sticky_left3 = (
-                sticky_left3[:4] + b"11" + sticky_left3[-4:]
-                if sticky_left3 and len(sticky_left3) > 10
-                else sticky_left3
-            )
-            middle = (
-                middle[:4] + b".." + middle[-4:]
-                if middle and len(middle) > 10
-                else middle
-            )
-            sticky_right5 = (
-                sticky_right5[:4] + b"22" + sticky_right5[-4:]
-                if sticky_right5 and len(sticky_right5) > 10
-                else sticky_right5
-            )
-            sticky_right3 = (
-                sticky_right3[:4] + b"11" + sticky_right3[-4:]
-                if sticky_right3 and len(sticky_right3) > 10
-                else sticky_right3
-            )
-        r = (
-            (sticky_left5 or sticky_left3 or b"")
-            + (middle or b"")
-            + (sticky_right5 or sticky_right3 or single or b"")
-        )
-        return _pretty_str(
-            f"{header}\n{r.translate(to_watson_table).decode().rstrip()}\n{r.translate(to_crick_table).decode().rstrip()}"
-        )
+
+        rpr = representation(self._data)
+
+        return _pretty_str(f"{header}\n{rpr}")
 
     def reverse_complement(self) -> "Dseq":
         """Dseq object where watson and crick have switched places.
@@ -940,7 +976,7 @@ class Dseq(_Seq):
 
         junction = b"".join(
             [
-                bp_dict.get((bytes([w]), bytes([c])), b"-")
+                annealing_dict.get((bytes([w]), bytes([c])), b"-")
                 for w, c in zip(sticky_left_just, sticky_right_just)
             ]
         )
@@ -1125,10 +1161,10 @@ class Dseq(_Seq):
         assert len(sticky_self_just) == len(sticky_other_just)
 
         if perfectmatch:
-
+            # breakpoint()
             junction = b"".join(
                 [
-                    bp_dict.get((bytes([w]), bytes([c])), b"-")
+                    annealing_dict.get((bytes([w]), bytes([c])), b"-")
                     for w, c in zip(sticky_self_just, sticky_other_just)
                 ]
             )
@@ -1139,8 +1175,9 @@ class Dseq(_Seq):
         else:
 
             result = _terminal_overlap(
-                sticky_self.translate(to_full_sequence).decode("ascii"),
-                sticky_other.translate(to_full_sequence).decode("ascii") + "@",
+                sticky_self.translate(dscode_to_to_full_sequence_table).decode("ascii"),
+                sticky_other.translate(dscode_to_to_full_sequence_table).decode("ascii")
+                + "@",
                 limit=1,
             )
 
@@ -1154,7 +1191,7 @@ class Dseq(_Seq):
 
             junction = b"".join(
                 [
-                    bp_dict.get((bytes([w]), bytes([c])), b"-")
+                    annealing_dict.get((bytes([w]), bytes([c])), b"-")
                     for w, c in zip(sticky_self, sticky_other)
                 ]
             )
@@ -1530,7 +1567,7 @@ class Dseq(_Seq):
         cuts = [0]
         for m in _re.finditer(bRNA, self._data):
             cuts.append(m.start() + 17)
-        cuts.append(self.length)
+        cuts.append(len(self))
         slices = tuple(slice(x, y, 1) for x, y in zip(cuts, cuts[1:]))
         return slices
 
@@ -1869,7 +1906,7 @@ class Dseq(_Seq):
         """
 
         def replace(m):
-            return m.group(1).translate(to_full_sequence)
+            return m.group(1).translate(dscode_to_to_full_sequence_table)
 
         # Not using f-strings below to avoid bytes/string conversion
         return self.__class__(
@@ -1900,7 +1937,7 @@ class Dseq(_Seq):
         """
 
         def replace(m):
-            return m.group(1).translate(to_full_sequence)
+            return m.group(1).translate(dscode_to_to_full_sequence_table)
 
         # Not using f-strings below to avoid bytes/string conversion
         return self.__class__(
@@ -1970,14 +2007,14 @@ class Dseq(_Seq):
 
         for x, y in watsonnicks:
             stuffer = new[x:y]
-            ss = Dseq.quick(stuffer.translate(to_5tail_table))
-            new = new[:x] + stuffer.translate(to_3tail_table) + new[y:]
+            ss = Dseq.quick(stuffer.translate(dscode_to_watson_tail_table))
+            new = new[:x] + stuffer.translate(dscode_to_crick_tail_table) + new[y:]
             watsonstrands.append((x, y, ss))
 
         for x, y in cricknicks:
             stuffer = new[x:y]
-            ss = Dseq.quick(stuffer.translate(to_3tail_table))
-            new = new[:x] + stuffer.translate(to_5tail_table) + new[y:]
+            ss = Dseq.quick(stuffer.translate(dscode_to_crick_tail_table))
+            new = new[:x] + stuffer.translate(dscode_to_watson_tail_table) + new[y:]
             crickstrands.append((x, y, ss))
 
         ordered_strands = sorted(watsonstrands + crickstrands)
@@ -1986,8 +2023,8 @@ class Dseq(_Seq):
 
         for x, y, ss in ordered_strands:
             seq = (
-                ss._data[::-1].translate(to_watson_table).strip()
-                or ss._data.translate(to_crick_table).strip()
+                ss._data[::-1].translate(dscode_to_watson_table).strip()
+                or ss._data.translate(dscode_to_crick_table).strip()
             )
             strands.append(_Seq(seq))
 
@@ -2050,7 +2087,7 @@ class Dseq(_Seq):
             GttCTTAA
 
         """
-        if _cuts_overlap(left_cut, right_cut, self.length):
+        if _cuts_overlap(left_cut, right_cut, len(self)):
             raise ValueError("Cuts by {} {} overlap.".format(left_cut[1], right_cut[1]))
 
         if left_cut:
@@ -2062,12 +2099,20 @@ class Dseq(_Seq):
             (right_watson_cut, right_overhang), _ = right_cut
         else:
             (right_watson_cut, right_overhang), _ = (
-                (self.length, 0),
+                (len(self), 0),
                 None,
             )
 
-        table1 = to_5tail_table if left_overhang > 0 else to_3tail_table
-        table2 = to_5tail_table if right_overhang < 0 else to_3tail_table
+        table1 = (
+            dscode_to_watson_tail_table
+            if left_overhang > 0
+            else dscode_to_crick_tail_table
+        )
+        table2 = (
+            dscode_to_watson_tail_table
+            if right_overhang < 0
+            else dscode_to_crick_tail_table
+        )
 
         left_stck_begin = min(left_watson_cut, left_watson_cut - left_overhang)
         left_stck_end = left_stck_begin + abs(left_overhang)
