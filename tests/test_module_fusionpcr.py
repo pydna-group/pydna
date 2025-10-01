@@ -7,6 +7,7 @@ from pydna.utils import eq
 from Bio.SeqFeature import SeqFeature, SimpleLocation
 from pydna.fusionpcr import fuse_by_pcr
 
+
 x = Dseqrecord(
     Dseq("tctggtcaagctgaagggtattc"), features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")]
 )
@@ -78,7 +79,7 @@ def test_fusionpcr3():
         assert eq(result, r)
 
 
-from Bio.SeqFeature import SeqFeature, SimpleLocation
+
 
 x = Dseqrecord(
     Dseq("tctggtcaagctgaagggtattc"), features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")]
@@ -90,7 +91,3 @@ z = Dseqrecord(Dseq("acagatgacgtgt"), features=[SeqFeature(SimpleLocation(5, 10,
 seqtuples = [(x, y, z)]
 for arg in seqtuples:
     result = fuse_by_pcr(arg, limit=5).pop()
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-vv", "-s"])
