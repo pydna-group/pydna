@@ -93,3 +93,18 @@ For further customization, you can edit the `custom.css` file.
 ## Misc
 
 Other changes, such as changing the favicon, the css etc., can be made in the `conf.py` file. See the [sphinx docs](https://www.sphinx-doc.org/en/master/usage/configuration.html) and the [sphinx-rtd-theme](https://sphinx-rtd-theme.readthedocs.io/en/stable/configuring.html) docs for more information.
+
+## Build docs using Sphinx command line tools
+
+Command to be run from `path/to/docs`, i.e. from within the `docs` package folder: 
+
+Options:
+  - `--separate` to build separate pages for each (sub-)module
+
+```bash	
+# pwd: docs
+# apidoc
+sphinx-apidoc --force --implicit-namespaces --module-first -o reference ../src/pydna
+# build docs
+sphinx-build -n -W --keep-going -b html ./ ./_build/
+```
