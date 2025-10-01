@@ -328,7 +328,7 @@ class Dseqrecord(_SeqRecord):
 
         location = _CompoundLocation(
             (
-                _SimpleLocation(x, self.seq.length, strand=strand),
+                _SimpleLocation(x, len(self.seq), strand=strand),
                 _SimpleLocation(0, y, strand=strand),
             )
         )
@@ -846,7 +846,7 @@ class Dseqrecord(_SeqRecord):
                 f
                 for f in answer.features
                 if (
-                    _location_boundaries(f.location)[1] <= answer.seq.length
+                    _location_boundaries(f.location)[1] <= len(answer.seq)
                     and _location_boundaries(f.location)[0]
                     < _location_boundaries(f.location)[1]
                 )
