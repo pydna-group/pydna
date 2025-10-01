@@ -66,6 +66,7 @@ nb_merge_streams = True
 intersphinx_mapping = {
     "biopython": ("https://biopython.org/docs/latest", None),
     "python": ("http://docs.python.org/3.8", None),
+    "typing": ("https://docs.python.org/3/library/typing.html", None),
 }
 
 # Settings to support markdown files
@@ -74,18 +75,21 @@ source_suffix = {
 }
 
 templates_path = ["_templates"]
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store",
-                    "future_release_names.md",
-                    "cookbook", # remove once cookbook works
-                    "jupyter_execute", # local build folder for notebooks (dev)
-                    "pydna_cheat_sheet",
-                    "pydna_session",
-                    "Makefile",
-                    "make",
-                    "autogen_docs",
-                    "README.md",
-                    "example_gallery.md",
-                    ]
+exclude_patterns = [
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "future_release_names.md",
+    "cookbook",  # remove once cookbook works
+    "jupyter_execute",  # local build folder for notebooks (dev)
+    "pydna_cheat_sheet",
+    "pydna_session",
+    "Makefile",
+    "make",
+    "autogen_docs",
+    "README.md",
+    "example_gallery.md",
+]
 
 autodoc_member_order = "bysource"
 autodoc_preserve_defaults = True
