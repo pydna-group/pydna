@@ -27,7 +27,7 @@ from pydna.seq import Seq as _Seq
 import re as _re
 import copy as _copy
 import operator as _operator
-from pydna.utils import iupac_compl_regex as _iupac_compl_regex
+from pydna.alphabet import iupac_compl_regex as _iupac_compl_regex
 from pydna.utils import anneal_from_left as _anneal_from_left
 
 # import os as _os
