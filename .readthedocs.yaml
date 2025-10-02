@@ -20,8 +20,7 @@ build:
       # See https://github.com/readthedocs/readthedocs.org/pull/11152/
       - VIRTUAL_ENV=$READTHEDOCS_VIRTUALENV_PATH poetry install --all-extras
     pre_build:
-      - cd docs
-      - sphinx-apidoc --force --implicit-namespaces --module-first -o reference ../src/pydna
+      - sphinx-apidoc --force --implicit-namespaces --module-first -o docs/reference src/pydna
 
 # Build documentation in the "docs/" directory with Sphinx
 sphinx:
