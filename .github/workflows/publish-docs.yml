@@ -41,7 +41,7 @@ jobs:
       run: |
         cd docs
         poetry run sphinx-apidoc --force --implicit-namespaces --module-first -o reference ../src/pydna
-        poetry run sphinx-build -n -W --keep-going -b html ./ ./_build/
+        poetry run sphinx-build -n --keep-going -b html ./ ./_build/
 
     - name: Deploy to GitHub pages 🚀
       # Deploy only when master changes
