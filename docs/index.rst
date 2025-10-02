@@ -13,27 +13,20 @@ Welcome to pydna's documentation!
 
 .. toctree::
    :caption: Contents:
-   :maxdepth: 1
+   :maxdepth: 2
    :hidden:
 
    installation
    getting_started
+   example_gallery
+   how_pydna_works
 
 .. toctree::
-   :caption: Examples:
-   :maxdepth: 1
-   :hidden:
-   :glob:
-
-   notebooks/*
-
-.. toctree::
-   :caption: package
+   :caption: API reference
    :maxdepth: 2
    :hidden:
 
    reference/pydna
-   CHANGELOG
 
 .. Indices and tables
 .. ==================

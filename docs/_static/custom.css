@@ -1,5 +1,5 @@
 /* Make output cells that are too long scrollable */
-.highlight-none {
-    position: relative;
-    margin-top: 20px;
+div.output div.highlight pre {
+    max-height: 300px;
+    overflow-y: auto;
 }

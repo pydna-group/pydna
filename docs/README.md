@@ -4,69 +4,22 @@ Documentation is built using [Sphinx](http://www.sphinx-doc.org/) from [docstrin
 using a GitHub [action](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml).
 The [numpy](www.numpy.org) [docstring format](https://numpy.org/doc/stable/dev/howto-docs.html#docstring-intro) is used.
 
-Below the commands to run a local sphinx server that auto-updated when files are changed.
+Below the commands to build the documentation locally.
 
 ```bash
 # Install docs dependency group
 poetry install --with docs
-
-# Generate the example gallery and the API reference (from the docs folder)
-bash autogen_docs.sh
-
-# Start the sphinx server to see docs live by default at http://127.0.0.1:8000/
-# (from the root folder)
-sphinx-autobuild --watch src/ docs docs/_build/html
+cd docs
+bash build_docs.sh
 ```
 
-When you run the sphinx server live, it not always updates things if you make relevant changes (e.g. adding new pages,
-changing the css, etc.). To force an update, you can run the command below which deletes the existing build folder and
-then rebuilds it.
-
-```bash
-rm -rf docs/_build/html && sphinx-autobuild --watch src/ docs docs/_build/html
-```
+Then, serve the file `docs/_build/index.html` to see the documentation locally. You can use the `python -m http.server -d _build` command to serve the file at `http://127.0.0.1:8000/`.
 
 ## Adding new sections to the documentation
 
 You can add new sections (equivalent to "Getting started" or "Example gallery") by creating a new `.rst` or `.md` file in the `docs` folder, and then adding a reference to it in the `.. toctree::` directive in the `docs/index.rst` file.
 
-## Auto-generated files
-
-The script `autogen_docs.sh` is run in the github action before creating the docs. If you want to reproduce locally, you
-should run it from the `docs` folder
-
-```bash
-cd docs
-bash autogen_docs.sh
-```
-
-
-* It converts all notebooks in the `docs/notebooks` folder to `.md` in `docs/markdown_notebooks` (excluded from git)
-* It creates all files in `docs/modules`, which are used to generate the API reference. For instance, it will create
-  a `docs/modules/index.rst` file that starts like this:
-
-  ```rst
-  Modules
-  =======
-
-  .. toctree::
-     :maxdepth: 1
-     :caption: Modules:
-
-     pydna
-     pydna__pretty
-  ```
-  And then individual files for each module and submodule, e.g. `docs/modules/pydna.rst`.
-
-  ```
-  pydna
-  =====
-
-  .. automodule:: pydna
-      :members:
-      :undoc-members:
-      :show-inheritance:
-  ```
+To add sub-sections, create a toctree in child files. For instance, see [getting_started.rst](getting_started.rst) for how to add sub-sections to the getting started section.
 
 ## Text imported from README.md
 
@@ -80,9 +33,15 @@ To avoid having to maintain the same text in multiple files, fragments of the `R
    :end-before: <!-- docs/installation.rst-end -->
 ```
 
-## Including notebooks in the getting started and example sections
+## Including notebooks in the documentation
 
-You can see the example of how to do this in the `getting_started.md` file. Note that the notebooks present in the `docs/notebooks` folder will automatically be converted to markdown in the `docs/markdown_notebooks` folder. So if you have a notebook `docs/notebooks/Example_Gibson.ipynb`, it will be converted to `docs/markdown_notebooks/Example_Gibson.md` and you can use that file path to make a link to it.
+All notebooks in the `docs/notebooks` folder will automatically be converted to markdown in the `docs/markdown_notebooks` folder. So if you have a notebook `docs/notebooks/Example_Gibson.ipynb`, it will be converted to `docs/markdown_notebooks/Example_Gibson.md` and you can use that file path to make a link to it.
+
+You can see the example of how to do this in the `getting_started.rst` file.
+
+
+
+Note that the notebooks present in the `docs/notebooks` folder will automatically be converted to markdown in the `docs/markdown_notebooks` folder. So if you have a notebook `docs/notebooks/Example_Gibson.ipynb`, it will be converted to `docs/markdown_notebooks/Example_Gibson.md` and you can use that file path to make a link to it.
 
 ## Custom CSS
 
@@ -96,15 +55,25 @@ Other changes, such as changing the favicon, the css etc., can be made in the `c
 
 ## Build docs using Sphinx command line tools
 
-Command to be run from `path/to/docs`, i.e. from within the `docs` package folder: 
+Command to be run from `path/to/docs`, i.e. from within the `docs` package folder:
 
 Options:
   - `--separate` to build separate pages for each (sub-)module
 
-```bash	
+```bash
 # pwd: docs
 # apidoc
 sphinx-apidoc --force --implicit-namespaces --module-first -o reference ../src/pydna
 # build docs
 sphinx-build -n -W --keep-going -b html ./ ./_build/
 ```
+
+## Debugging notebook execution
+
+If notebook execution fails, it might be that jupyter is using another Kernel than the one you want to use. In my case, I had to delete existing kernels which mapped to other python environments. You can find them:
+
+```
+poetry run jupyter kernelspec list
+```
+
+Then, go to those folders and open the `kernel.json` file. You will see which env they use. I deleted all kernel folders and all envs, since I favour creating envs in the project directory.

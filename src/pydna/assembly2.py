@@ -80,15 +80,22 @@ def ends_from_cutsite(
 ) -> tuple[tuple[str, str], tuple[str, str]]:
     """Get the sticky or blunt ends created by a restriction enzyme cut.
 
-    Args:
-        cutsite (CutSiteType): A tuple ((cut_watson, ovhg), enzyme) describing where the cut occurs
-        seq (_Dseq): The DNA sequence being cut
+    Parameters
+    ----------
+    cutsite : CutSiteType
+        A tuple ((cut_watson, ovhg), enzyme) describing where the cut occurs
+    seq : _Dseq
+        The DNA sequence being cut
 
-    Raises:
-        ValueError: If cutsite is None
+    Raises
+    ------
+    ValueError
+        If cutsite is None
 
-    Returns:
-        tuple[tuple[str, str], tuple[str, str]]: A tuple of two tuples, each containing the type of end ('5\'', '3\'', or 'blunt')
+    Returns
+    -------
+    tuple[tuple[str, str], tuple[str, str]]
+        A tuple of two tuples, each containing the type of end ('5\'', '3\'', or 'blunt')
         and the sequence of the overhang. The first tuple is for the left end, second for the right end.
 
     >>> from Bio.Restriction import NotI
@@ -129,14 +136,23 @@ def restriction_ligation_overlap(
 
     Like in sticky and gibson, the order matters (see example below of partial overlap)
 
-    Args:
-        seqx (_Dseqrecord): The first sequence
-        seqy (_Dseqrecord): The second sequence
-        enzymes (RestrictionBatch): The enzymes to use
-        partial (bool): Whether to allow partial overlaps
-        allow_blunt (bool): Whether to allow blunt ends
-    Returns:
-        list[SequenceOverlap]: A list of overlaps between the two sequences
+    Parameters
+    ----------
+    seqx : _Dseqrecord
+        The first sequence
+    seqy : _Dseqrecord
+        The second sequence
+    enzymes : RestrictionBatch
+        The enzymes to use
+    partial : bool
+        Whether to allow partial overlaps
+    allow_blunt : bool
+        Whether to allow blunt ends
+
+    Returns
+    -------
+    list[SequenceOverlap]
+        A list of overlaps between the two sequences
 
     >>> from pydna.dseqrecord import Dseqrecord
     >>> from pydna.assembly2 import restriction_ligation_overlap
@@ -230,13 +246,19 @@ def blunt_overlap(
     It basically returns [(len(seqx), 0, 0)] if the right end of seqx is blunt and the
     left end of seqy is blunt (compatible with blunt ligation). Otherwise, it returns an empty list.
 
-    Args:
-        seqx (_Dseqrecord): The first sequence
-        seqy (_Dseqrecord): The second sequence
-        limit (int): There for compatibility, but it is ignored
+    Parameters
+    ----------
+    seqx : _Dseqrecord
+        The first sequence
+    seqy : _Dseqrecord
+        The second sequence
+    limit : int
+        There for compatibility, but it is ignored
 
-    Returns:
-        list[SequenceOverlap]: A list of overlaps between the two sequences
+    Returns
+    -------
+    list[SequenceOverlap]
+        A list of overlaps between the two sequences
 
     >>> from pydna.assembly2 import blunt_overlap
     >>> from pydna.dseqrecord import Dseqrecord
@@ -322,25 +344,31 @@ def gibson_overlap(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=25):
     Assembly algorithm to find terminal overlaps (e.g. for Gibson assembly).
     The order matters, we want alignments like:
 
-    ```
-    seqx:    oooo------xxxx
-    seqy:              xxxx------oooo
-    Product: oooo------xxxx------oooo
+    ::
 
-    Not like:
+        seqx:    oooo------xxxx
+        seqy:              xxxx------oooo
+        Product: oooo------xxxx------oooo
 
-    seqx:               oooo------xxxx
-    seqy:     xxxx------oooo
-    Product (unwanted): oooo
-    ```
+        Not like:
 
-    Args:
-        seqx (_Dseqrecord): The first sequence
-        seqy (_Dseqrecord): The second sequence
-        limit (int): Minimum length of the overlap
+        seqx:               oooo------xxxx
+        seqy:     xxxx------oooo
+        Product (unwanted): oooo
 
-    Returns:
-        list[SequenceOverlap]: A list of overlaps between the two sequences
+    Parameters
+    ----------
+    seqx : _Dseqrecord
+        The first sequence
+    seqy : _Dseqrecord
+        The second sequence
+    limit : int
+        Minimum length of the overlap
+
+    Returns
+    -------
+    list[SequenceOverlap]
+        A list of overlaps between the two sequences
 
     >>> from pydna.dseqrecord import Dseqrecord
     >>> from pydna.assembly2 import gibson_overlap
@@ -384,13 +412,19 @@ def sticky_end_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit: bool = F
     For now, if limit 0 / False (default) only full overlaps are considered.
     Otherwise, partial overlaps are also returned.
 
-    Args:
-        seqx (_Dseqrecord): The first sequence
-        seqy (_Dseqrecord): The second sequence
-        limit (bool): Whether to allow partial overlaps
+    Parameters
+    ----------
+    seqx : _Dseqrecord
+        The first sequence
+    seqy : _Dseqrecord
+        The second sequence
+    limit : bool
+        Whether to allow partial overlaps
 
-    Returns:
-        list[SequenceOverlap]: A list of overlaps between the two sequences
+    Returns
+    -------
+    list[SequenceOverlap]
+        A list of overlaps between the two sequences
 
 
     Ligation of fully overlapping sticky ends, note how the order matters
@@ -520,14 +554,21 @@ def primer_template_overlap(
     If seqx is a template and seqy is a primer, it represents the binding of a reverse primer,
     where the primer has been passed as its reverse complement (see examples).
 
-    Args:
-        seqx (_Dseqrecord | _Primer): The primer
-        seqy (_Dseqrecord | _Primer): The template
-        limit (int): Minimum length of the overlap
-        mismatches (int): Maximum number of mismatches (only substitutions, no deletion or insertion)
+    Parameters
+    ----------
+    seqx : _Dseqrecord | _Primer
+        The primer
+    seqy : _Dseqrecord | _Primer
+        The template
+    limit : int
+        Minimum length of the overlap
+    mismatches : int
+        Maximum number of mismatches (only substitutions, no deletion or insertion)
 
-    Returns:
-        list[SequenceOverlap]: A list of overlaps between the primer and the template
+    Returns
+    -------
+    list[SequenceOverlap]
+        A list of overlaps between the primer and the template
 
     >>> from pydna.dseqrecord import Dseqrecord
     >>> from pydna.primer import Primer
@@ -537,7 +578,7 @@ def primer_template_overlap(
     >>> primer_template_overlap(primer, template, limit=8, mismatches=0)
     [(0, 2, 8)]
 
-    This actually represents the binding of the primer `GCTGCTAA` (reverse complement)
+    This actually represents the binding of the primer ``GCTGCTAA`` (reverse complement)
     >>> primer_template_overlap(template, primer, limit=8, mismatches=0)
     [(2, 0, 8)]
     >>> primer_template_overlap(primer, template.reverse_complement(), limit=8, mismatches=0)
@@ -702,7 +743,7 @@ def assembly2str(assembly: EdgeRepresentationAssembly) -> str:
     ('1[8:14]:2[1:7]', '2[10:17]:3[1:8]')
 
     The reason for this is that by default, a feature '[8:14]' when present in a tuple
-    is printed to the console as `SimpleLocation(ExactPosition(8), ExactPosition(14), strand=1)` (very long).
+    is printed to the console as ``SimpleLocation(ExactPosition(8), ExactPosition(14), strand=1)`` (very long).
     """
     return str(tuple(f"{u}{lu}:{v}{lv}" for u, v, lu, lv in assembly))
 
@@ -791,7 +832,7 @@ def assemble(
     out_dseqrecord = _Dseqrecord(subfragments[0])
 
     for fragment, overlap in zip(subfragments[1:], fragment_overlaps):
-        # Shift the features of the right fragment to the left by `overlap`
+        # Shift the features of the right fragment to the left by ``overlap``
         new_features = [
             f._shift(len(out_dseqrecord) - overlap) for f in fragment.features
         ]
@@ -916,30 +957,29 @@ def get_assembly_subfragments(
 
     Subfragments are the slices of the fragments that are joined together
 
-    For example:
-    ```
-      --A--
-    TACGTAAT
-      --B--
-     TCGTAACGA
+    For example::
 
-    Gives: TACGTAA / CGTAACGA
-    ```
-    To reproduce:
-    ```
-    a = Dseqrecord('TACGTAAT')
-    b = Dseqrecord('TCGTAACGA')
-    f = Assembly([a, b], limit=5)
-    a0 = f.get_linear_assemblies()[0]
-    print(assembly2str(a0))
-    a0_subfragment_rep =edge_representation2subfragment_representation(a0, False)
-    for f in get_assembly_subfragments([a, b], a0_subfragment_rep):
-        print(f.seq)
+          --A--
+        TACGTAAT
+          --B--
+         TCGTAACGA
 
-    # prints TACGTAA and CGTAACGA
-    ```
+        Gives: TACGTAA / CGTAACGA
 
-    Subfragments: `cccccgtatcgtgt`, `atcgtgtactgtcatattc`
+    To reproduce::
+
+        a = Dseqrecord('TACGTAAT')
+        b = Dseqrecord('TCGTAACGA')
+        f = Assembly([a, b], limit=5)
+        a0 = f.get_linear_assemblies()[0]
+        print(assembly2str(a0))
+        a0_subfragment_rep =edge_representation2subfragment_representation(a0, False)
+        for f in get_assembly_subfragments([a, b], a0_subfragment_rep):
+            print(f.seq)
+
+        # prints TACGTAA and CGTAACGA
+
+    Subfragments: ``cccccgtatcgtgt``, ``atcgtgtactgtcatattc``
     """
     subfragments = list()
     for node, start_location, end_location in subfragment_representation:
@@ -1028,33 +1068,38 @@ class Assembly:
 
     The assembly contains a directed graph, where nodes represent fragments and
     edges represent overlaps between fragments. :
+
     - The node keys are integers, representing the index of the fragment in the
-    input list of fragments. The sign of the node key represents the orientation
-    of the fragment, positive for forward orientation, negative for reverse orientation.
+      input list of fragments. The sign of the node key represents the orientation
+      of the fragment, positive for forward orientation, negative for reverse orientation.
     - The edges contain the locations of the overlaps in the fragments. For an edge (u, v, key):
         - u and v are the nodes connected by the edge.
         - key is a string that represents the location of the overlap. In the format:
-        'u[start:end](strand):v[start:end](strand)'.
+          'u[start:end](strand):v[start:end](strand)'.
         - Edges have a 'locations' attribute, which is a list of two FeatureLocation objects,
-        representing the location of the overlap in the u and v fragment, respectively.
+          representing the location of the overlap in the u and v fragment, respectively.
         - You can think of an edge as a representation of the join of two fragments.
 
     If fragment 1 and 2 share a subsequence of 6bp, [8:14] in fragment 1 and [1:7] in fragment 2,
     there will be 4 edges representing that overlap in the graph, for all possible
     orientations of the fragments (see add_edges_from_match for details):
-    - `(1, 2, '1[8:14]:2[1:7]')`
-    - `(2, 1, '2[1:7]:1[8:14]')`
-    - `(-1, -2, '-1[0:6]:-2[10:16]')`
-    - `(-2, -1, '-2[10:16]:-1[0:6]')`
+
+    - ``(1, 2, '1[8:14]:2[1:7]')``
+    - ``(2, 1, '2[1:7]:1[8:14]')``
+    - ``(-1, -2, '-1[0:6]:-2[10:16]')``
+    - ``(-2, -1, '-2[10:16]:-1[0:6]')``
 
     An assembly can be thought of as a tuple of graph edges, but instead of representing them with node indexes and keys, we represent them
     as u, v, locu, locv, where u and v are the nodes connected by the edge, and locu and locv are the locations of the overlap in the first
     and second fragment. Assemblies are then represented as:
+
     - Linear: ((1, 2, [8:14], [1:7]), (2, 3, [10:17], [1:8]))
     - Circular: ((1, 2, [8:14], [1:7]), (2, 3, [10:17], [1:8]), (3, 1, [12:17], [1:6]))
+
     Note that the first and last fragment are the same in a circular assembly.
 
     The following constrains are applied to remove duplicate assemblies:
+
     - Circular assemblies: the first subfragment is not reversed, and has the smallest index in the input fragment list.
       use_fragment_order is ignored.
     - Linear assemblies:
@@ -1065,7 +1110,7 @@ class Assembly:
     frags : list
         A list of Dseqrecord objects.
     limit : int, optional
-        The shortest shared homology to be considered, this is passed as the third argument to the `algorithm` function.
+        The shortest shared homology to be considered, this is passed as the third argument to the ``algorithm`` function.
         For certain algorithms, this might be ignored.
     algorithm : function, optional
         The algorithm used to determine the shared sequences. It's a function that takes two Dseqrecord objects as inputs,
@@ -1232,11 +1277,12 @@ class Assembly:
         first: _Dseqrecord,
         secnd: _Dseqrecord,
     ):
-        """Add edges to the graph from a match returned by the `algorithm` function (see pydna.common_substrings). For
+        """Add edges to the graph from a match returned by the ``algorithm`` function (see pydna.common_substrings). For
         format of edges (see documentation of the Assembly class).
 
-        Matches are directional, because not all `algorithm` functions return the same match for (u,v) and (v,u). For example,
+        Matches are directional, because not all ``algorithm`` functions return the same match for (u,v) and (v,u). For example,
         homologous recombination does but sticky end ligation does not. The function returns two edges:
+
         - Fragments in the orientation they were passed, with locations of the match (u, v, loc_u, loc_v)
         - Reverse complement of the fragments with inverted order, with flipped locations (-v, -u, flip(loc_v), flip(loc_u))/
 
@@ -1446,17 +1492,18 @@ class Assembly:
         Here we check if one of the joins between fragments represents the edges of an insertion assembly
         The fragment must be linear, and the join must be as indicated below
 
-        ```
-        --------         -------           Fragment 1
-            ||            ||
-            xxxxxxxx      ||               Fragment 2
-                  ||      ||
-                  oooooooooo               Fragment 3
-        ```
+        ::
+
+            --------         -------           Fragment 1
+                ||            ||
+                xxxxxxxx      ||               Fragment 2
+                      ||      ||
+                      oooooooooo               Fragment 3
+
         The above example will be [(1, 2, [4:6], [0:2]), (2, 3, [6:8], [0:2]), (3, 1, [8:10], [9:11)])]
 
         These could be returned in any order by simple_cycles, so we sort the edges so that the first
-        and last `u` and `v` match the fragment that gets the insertion (1 in the example above).
+        and last ``u`` and ``v`` match the fragment that gets the insertion (1 in the example above).
         """
         edge_pair_index = list()
 
@@ -1637,8 +1684,8 @@ class Assembly:
 
     def get_locations_on_fragments(self) -> dict[int, dict[str, list[Location]]]:
         """Get a dictionary where the keys are the nodes in the graph, and the values are dictionaries with keys
-        `left`, `right`, containing (for each fragment) the locations where the fragment is joined to another fragment on its left
-        and right side. The values in `left` and `right` are often the same, except in restriction-ligation with partial overlap enabled,
+        ``left``, ``right``, containing (for each fragment) the locations where the fragment is joined to another fragment on its left
+        and right side. The values in ``left`` and ``right`` are often the same, except in restriction-ligation with partial overlap enabled,
         where we can end up with a situation like this:
 
         GGTCTCCCCAATT and aGGTCTCCAACCAA as fragments
@@ -1651,13 +1698,14 @@ class Assembly:
         aGGTCTCCxxCCAATT
         tCCAGAGGTTGGxxAA
 
-        Would return
-        {
-            1: {'left': [7:9], 'right': [9:11]},
-            2: {'left': [8:10], 'right': [10:12]},
-            -1: {'left': [2:4], 'right': [4:6]},
-            -2: {'left': [2:4], 'right': [4:6]}
-        }
+        Would return::
+
+            {
+                1: {'left': [7:9], 'right': [9:11]},
+                2: {'left': [8:10], 'right': [10:12]},
+                -1: {'left': [2:4], 'right': [4:6]},
+                -2: {'left': [2:4], 'right': [4:6]}
+            }
 
         """
 
@@ -1686,10 +1734,10 @@ class Assembly:
         and prevent including partially digested fragments. For example, imagine the following fragment being an input for a digestion
         and ligation assembly, where the enzyme cuts at the sites indicated by the vertical lines:
 
-        ```
-                 x       y       z
-          -------|-------|-------|---------
-        ```
+        ::
+
+                     x       y       z
+              -------|-------|-------|---------
 
         We would only want assemblies that contain subfragments start-x, x-y, y-z, z-end, and not start-x, y-end, for instance.
         The latter would indicate that the fragment was partially digested.
@@ -1750,8 +1798,8 @@ class Assembly:
 
 class PCRAssembly(Assembly):
     """
-    An assembly that represents a PCR, where `fragments` is a list of primer, template, primer (in that order).
-    It always uses the `primer_template_overlap` algorithm and accepts the `mismatches` argument to indicate
+    An assembly that represents a PCR, where ``fragments`` is a list of primer, template, primer (in that order).
+    It always uses the ``primer_template_overlap`` algorithm and accepts the ``mismatches`` argument to indicate
     the number of mismatches allowed in the overlap. Only supports substitution mismatches, not indels.
     """
 
@@ -2060,9 +2108,10 @@ def restriction_ligation_assembly(
     circular_only: bool = False,
 ) -> list[_Dseqrecord]:
     """Returns the products for restriction ligation assembly:
-    * Finds cutsites in the fragments
-    * Finds all products that could be assembled by ligating the fragments based on those cutsites
-    * Will NOT return products that combine an existing end with an end generated by the same enzyme (see example below)
+
+    - Finds cutsites in the fragments
+    - Finds all products that could be assembled by ligating the fragments based on those cutsites
+    - Will NOT return products that combine an existing end with an end generated by the same enzyme (see example below)
 
     Parameters
     ----------
@@ -2083,9 +2132,9 @@ def restriction_ligation_assembly(
     Examples
     --------
     In the example below, we plan to assemble a plasmid from a backbone and an insert, using the EcoRI and SalI enzymes.
-    Note how 2 circular products are returned, one contains the insert (`acgt`)
-    and the desired part of the backbone (`cccccc`), the other contains the
-    reversed insert (`tgga`) and the cut-out part of the backbone (`aaa`).
+    Note how 2 circular products are returned, one contains the insert (``acgt``)
+    and the desired part of the backbone (``cccccc``), the other contains the
+    reversed insert (``tgga``) and the cut-out part of the backbone (``aaa``).
 
     >>> from pydna.assembly2 import restriction_ligation_assembly
     >>> from pydna.dseqrecord import Dseqrecord
@@ -2134,7 +2183,7 @@ def golden_gate_assembly(
 ) -> list[_Dseqrecord]:
     """Returns the products for Golden Gate assembly. This is the same as
     restriction ligation assembly, but with a different name. Check the documentation
-    for `restriction_ligation_assembly` for more details.
+    for ``restriction_ligation_assembly`` for more details.
 
     Parameters
     ----------
@@ -2154,7 +2203,7 @@ def golden_gate_assembly(
 
     Examples
     --------
-    See the example for `restriction_ligation_assembly`.
+    See the example for ``restriction_ligation_assembly``.
     """
     return restriction_ligation_assembly(frags, enzymes, allow_blunt, circular_only)
 
@@ -2168,7 +2217,7 @@ def ligation_assembly(
     """Returns the products for ligation assembly, as inputs pass the fragments (digested if needed) that
     will be ligated.
 
-    For most cases, you probably should use `restriction_ligation_assembly` instead.
+    For most cases, you probably should use ``restriction_ligation_assembly`` instead.
 
     Parameters
     ----------
@@ -2288,9 +2337,9 @@ def gateway_assembly(
     >>> len(products_LR)
     2
 
-    Now let's understand the `multi_site_only` parameter. Let's consider a case where we are swapping fragments
+    Now let's understand the ``multi_site_only`` parameter. Let's consider a case where we are swapping fragments
     between two plasmids using an LR reaction. Experimentally, we expect to obtain two plasmids, resulting from the
-    swapping between the two att sites. That's what we get if we set `multi_site_only` to True.
+    swapping between the two att sites. That's what we get if we set ``multi_site_only`` to True.
 
     >>> attL2 = 'aaataatgattttattttgactgatagtgacctgttcgttgcaacaaattgataagcaatgctttcttataatgccaactttgtacaagaaagctg'
     >>> attR2 = 'accactttgtacaagaaagctgaacgagaaacgtaaaatgatataaatatcaatatattaaattagattttgcataaaaaacagactacataatactgtaaaacacaacatatccagtcactatg'
@@ -2300,7 +2349,7 @@ def gateway_assembly(
     >>> len(products)
     2
 
-    However, if we set `multi_site_only` to False, we get 4 products, which also include the intermediate products
+    However, if we set ``multi_site_only`` to False, we get 4 products, which also include the intermediate products
     where the two plasmids are combined into a single one through recombination of a single att site. This is an
     intermediate of the reaction, and typically we don't want it:
 
@@ -2524,7 +2573,7 @@ def cre_lox_integration(
     """Returns the products resulting from the integration of an insert (or inserts joined
     through cre-lox recombination among them) into the genome through cre-lox integration.
 
-    Also works with lox66 and lox71 (see `pydna.cre_lox` for more details).
+    Also works with lox66 and lox71 (see ``pydna.cre_lox`` for more details).
 
     Parameters
     ----------
