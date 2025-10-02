@@ -45,7 +45,7 @@ extensions = [
 
 
 #  https://myst-nb.readthedocs.io/en/latest/computation/execute.html
-nb_execution_mode = "auto"
+nb_execution_mode = "cache"
 
 myst_enable_extensions = ["dollarmath", "amsmath"]
 
@@ -66,7 +66,6 @@ nb_merge_streams = True
 intersphinx_mapping = {
     "biopython": ("https://biopython.org/docs/latest", None),
     "python": ("http://docs.python.org/3.8", None),
-    "typing": ("https://docs.python.org/3/library/typing.html", None),
 }
 
 # Settings to support markdown files
