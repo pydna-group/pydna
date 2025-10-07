@@ -150,6 +150,7 @@ class AssemblyFragment(SourceInput):
 
 class Source(ConfiguredBaseModel):
     input: Optional[list[Union[SourceInput, AssemblyFragment]]] = Field(default=None)
+    TARGET_MODEL: ClassVar[Type[_Source]] = _Source
 
     def to_dict_without_type(self) -> dict:
         return {k: v for k, v in self.model_dump().items() if k != "type"}
@@ -159,26 +160,30 @@ class Source(ConfiguredBaseModel):
             return []
         return [fragment.to_pydantic_model() for fragment in self.input]
 
+    def _kwargs(self, seq_id: int) -> dict:
+        return {
+            "id": seq_id,
+            "input": self.input_models(),
+        }
+
+    def to_pydantic_model(self, seq_id: int):
+        kwargs = self._kwargs(seq_id)
+        return self.TARGET_MODEL(**kwargs)
+
 
 class AssemblySource(Source):
     circular: bool
 
     TARGET_MODEL: ClassVar[Type[_AssemblySource]] = _AssemblySource
 
-    def _base_kwargs(self, seq_id: int) -> dict:
+    def _kwargs(self, seq_id: int) -> dict:
         return {
-            "id": seq_id,
-            "input": self.input_models(),
+            **super()._kwargs(seq_id),
             "circular": self.circular,
         }
 
-    def extra_kwargs(self) -> dict:
-        return {}
-
-    def to_pydantic_model(self, seq_id: int) -> _AssemblySource:
-        kwargs = self._base_kwargs(seq_id)
-        kwargs.update(self.extra_kwargs())
-        return self.TARGET_MODEL(**kwargs)
+    def to_pydantic_model(self, seq_id: int):
+        return self.TARGET_MODEL(**self._kwargs(seq_id))
 
 
 class RestrictionAndLigationSource(AssemblySource):
@@ -188,9 +193,10 @@ class RestrictionAndLigationSource(AssemblySource):
         _RestrictionAndLigationSource
     )
 
-    def extra_kwargs(self) -> dict:
+    def _kwargs(self, seq_id: int) -> dict:
         return {
-            "restriction_enzymes": [str(enzyme) for enzyme in self.restriction_enzymes]
+            **super()._kwargs(seq_id),
+            "restriction_enzymes": [str(enzyme) for enzyme in self.restriction_enzymes],
         }
 
 
@@ -212,27 +218,28 @@ class InVivoAssemblySource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_InVivoAssemblySource]] = _InVivoAssemblySource
 
 
-def cutsite_to_pydantic_model(
-    cut_site: CutSiteType | None,
-) -> _SequenceCut | _RestrictionSequenceCut | None:
-    if cut_site is None:
-        return None
-    elif isinstance(cut_site[1], AbstractCut):
-        return _RestrictionSequenceCut(
-            cut_watson=cut_site[0][0],
-            overhang=cut_site[0][1],
-            restriction_enzyme=str(cut_site[1]),
-        )
-    else:
-        return _SequenceCut(
-            cut_watson=cut_site[0][0],
-            overhang=cut_site[0][1],
-        )
-
-
 class SequenceCutSource(Source):
     left_edge: CutSiteType | None
     right_edge: CutSiteType | None
+
+    BASE_MODEL: ClassVar[Type[_SequenceCutSource]] = _SequenceCutSource
+    ENZYME_MODEL: ClassVar[Type[_RestrictionEnzymeDigestionSource]] = (
+        _RestrictionEnzymeDigestionSource
+    )
+
+    @staticmethod
+    def _cutsite_to_model(cut_site: CutSiteType | None):
+        if cut_site is None:
+            return None
+        watson, overhang = cut_site[0]
+        enzyme_or_none = cut_site[1]
+        if isinstance(enzyme_or_none, AbstractCut):
+            return _RestrictionSequenceCut(
+                cut_watson=watson,
+                overhang=overhang,
+                restriction_enzyme=str(enzyme_or_none),
+            )
+        return _SequenceCut(cut_watson=watson, overhang=overhang)
 
     @classmethod
     def from_parent(
@@ -244,24 +251,24 @@ class SequenceCutSource(Source):
             right_edge=right_edge,
         )
 
-    def to_pydantic_model(self, seq_id) -> _SequenceCutSource:
-        left_has_enzyme = self.left_edge is not None and isinstance(
-            self.left_edge[1], AbstractCut
-        )
-        right_has_enzyme = self.right_edge is not None and isinstance(
-            self.right_edge[1], AbstractCut
-        )
-        pydantic_class = (
-            _RestrictionEnzymeDigestionSource
-            if left_has_enzyme or right_has_enzyme
-            else _SequenceCutSource
-        )
-        return pydantic_class(
-            id=seq_id,
-            input=self.input_models(),
-            left_edge=cutsite_to_pydantic_model(self.left_edge),
-            right_edge=cutsite_to_pydantic_model(self.right_edge),
-        )
+    def _has_enzyme(self) -> bool:
+        def has_enzyme(edge):
+            return edge is not None and isinstance(edge[1], AbstractCut)
+
+        return has_enzyme(self.left_edge) or has_enzyme(self.right_edge)
+
+    def _target_model(self):
+        return self.ENZYME_MODEL if self._has_enzyme() else self.BASE_MODEL
+
+    def _kwargs(self, seq_id: int) -> dict:
+        return {
+            **super()._kwargs(seq_id),
+            "left_edge": self._cutsite_to_model(self.left_edge),
+            "right_edge": self._cutsite_to_model(self.right_edge),
+        }
+
+    def to_pydantic_model(self, seq_id: int):
+        return self._target_model()(**self._kwargs(seq_id))
 
 
 class CloningStrategy(_BaseCloningStrategy):
