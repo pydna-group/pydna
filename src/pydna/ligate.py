@@ -31,7 +31,7 @@ def ligate(fragments: list):
         try:
             seq1 + seq2
         except TypeError as err:
-            if str(err) != "sticky ends not compatible!":
+            if not str(err).startswith("sticky ends not compatible"):
                 raise
         else:
             if seq1.seq.three_prime_end() != (
