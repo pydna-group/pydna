@@ -39,7 +39,7 @@ from pydna.types import (
 from pydna.gateway import gateway_overlap, find_gateway_sites
 from pydna.cre_lox import cre_loxP_overlap
 
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING, Callable, Literal
 from pydna.opencloning_models import (
     AssemblyFragment,
     AssemblySource,
@@ -2105,8 +2105,8 @@ def in_fusion_assembly(
         List of assembled DNA molecules
     """
 
-    prods = gibson_assembly(frags, limit)
-    return _recast_sources(prods, InFusionSource)
+    products = gibson_assembly(frags, limit)
+    return _recast_sources(products, InFusionSource)
 
 
 def fusion_pcr_assembly(
@@ -2129,8 +2129,8 @@ def fusion_pcr_assembly(
     list[_Dseqrecord]
         List of assembled DNA molecules
     """
-    prods = gibson_assembly(frags, limit)
-    return _recast_sources(prods, OverlapExtensionPCRLigationSource)
+    products = gibson_assembly(frags, limit)
+    return _recast_sources(products, OverlapExtensionPCRLigationSource)
 
 
 def in_vivo_assembly(
@@ -2152,10 +2152,10 @@ def in_vivo_assembly(
     list[_Dseqrecord]
         List of assembled DNA molecules
     """
-    prods = common_function_assembly_products(
+    products = common_function_assembly_products(
         frags, limit, common_sub_strings, circular_only
     )
-    return _recast_sources(prods, InVivoAssemblySource)
+    return _recast_sources(products, InVivoAssemblySource)
 
 
 def restriction_ligation_assembly(
@@ -2225,13 +2225,15 @@ def restriction_ligation_assembly(
     TTAAGtttC
     """
 
-    def algo(x, y, _l):
+    def algorithm_fn(x, y, _l):
         # By default, we allow blunt ends
         return restriction_ligation_overlap(x, y, enzymes, False, allow_blunt)
 
-    prods = common_function_assembly_products(frags, None, algo, circular_only)
+    products = common_function_assembly_products(
+        frags, None, algorithm_fn, circular_only
+    )
     return _recast_sources(
-        prods, RestrictionAndLigationSource, restriction_enzymes=enzymes
+        products, RestrictionAndLigationSource, restriction_enzymes=enzymes
     )
 
 
@@ -2324,12 +2326,14 @@ def ligation_assembly(
         return sticky_end_sub_strings(x, y, allow_partial_overlap)
 
     if allow_blunt:
-        algo = combine_algorithms(sticky_end_algorithm, blunt_overlap)
+        algorithm_fn = combine_algorithms(sticky_end_algorithm, blunt_overlap)
     else:
-        algo = sticky_end_algorithm
+        algorithm_fn = sticky_end_algorithm
 
-    prods = common_function_assembly_products(frags, None, algo, circular_only)
-    return _recast_sources(prods, LigationSource)
+    products = common_function_assembly_products(
+        frags, None, algorithm_fn, circular_only
+    )
+    return _recast_sources(products, LigationSource)
 
 
 def assembly_is_multi_site(asm: list[EdgeRepresentationAssembly]) -> bool:
@@ -2346,7 +2350,7 @@ def assembly_is_multi_site(asm: list[EdgeRepresentationAssembly]) -> bool:
 
 def gateway_assembly(
     frags: list[_Dseqrecord],
-    reaction_type: str,
+    reaction_type: Literal["BP", "LR"],
     greedy: bool = False,
     circular_only: bool = False,
     multi_site_only: bool = False,
@@ -2357,8 +2361,8 @@ def gateway_assembly(
     ----------
     frags : list[_Dseqrecord]
         List of DNA fragments to assemble
-    reaction_type : str
-        Type of Gateway reaction, either 'BP' or 'LR'
+    reaction_type : Literal['BP', 'LR']
+        Type of Gateway reaction
     greedy : bool, optional
         If True, use greedy gateway consensus sites, by default False
     circular_only : bool, optional
@@ -2426,13 +2430,13 @@ def gateway_assembly(
             f"Invalid reaction type: {reaction_type}, can only be BP or LR"
         )
 
-    def algo(x, y, _l):
+    def algorithm_fn(x, y, _l):
         return gateway_overlap(x, y, reaction_type, greedy)
 
     filter_results_function = None if not multi_site_only else assembly_is_multi_site
 
     products = common_function_assembly_products(
-        frags, None, algo, circular_only, filter_results_function
+        frags, None, algorithm_fn, circular_only, filter_results_function
     )
     products = _recast_sources(
         products,
