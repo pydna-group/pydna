@@ -8,7 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from opencloning_linkml.datamodel import (
     CloningStrategy as _BaseCloningStrategy,
-    Primer as PrimerModel,
+    Primer as _PrimerModel,
     Source as _Source,
     TextFileSequence as _TextFileSequence,
     AssemblySource as _AssemblySource,
@@ -29,6 +29,7 @@ from opencloning_linkml.datamodel import (
     GatewayReactionType,
     HomologousRecombinationSource as _HomologousRecombinationSource,
     CreLoxRecombinationSource as _CreLoxRecombinationSource,
+    PCRSource as _PCRSource,
 )
 from Bio.SeqFeature import Location, LocationParserError
 from Bio.Restriction.Restriction import AbstractCut
@@ -41,6 +42,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pydna.dseqrecord import Dseqrecord
+    from pydna.primer import Primer
 
 
 class SequenceLocationStr(str):
@@ -105,6 +107,17 @@ class TextFileSequence(_TextFileSequence):
             overhang_crick_3prime=dseqr.seq.ovhg,
             overhang_watson_3prime=dseqr.seq.watson_ovhg(),
             file_content=dseqr.format("genbank"),
+        )
+
+
+class PrimerModel(_PrimerModel):
+
+    @classmethod
+    def from_primer(cls, primer: "Primer"):
+        return cls(
+            id=id(primer),
+            name=primer.name,
+            sequence=str(primer.seq),
         )
 
 
@@ -254,6 +267,11 @@ class CreLoxRecombinationSource(AssemblySource):
     )
 
 
+class PCRSource(AssemblySource):
+    TARGET_MODEL: ClassVar[Type[_PCRSource]] = _PCRSource
+    add_primer_features: bool = Field(default=False)
+
+
 class SequenceCutSource(Source):
     left_edge: CutSiteType | None
     right_edge: CutSiteType | None
@@ -320,11 +338,11 @@ class CloningStrategy(_BaseCloningStrategy):
         },
     )
 
-    def add_primer(self, primer: PrimerModel):
-        if primer in self.primers:
+    def add_primer(self, primer: Primer):
+        existing_ids = {seq.id for seq in self.primers}
+        if id(primer) in existing_ids:
             return
-        primer.id = self.next_id()
-        self.primers.append(primer)
+        self.primers.append(PrimerModel.from_primer(primer))
 
     def next_id(self):
         return (
@@ -367,6 +385,9 @@ class CloningStrategy(_BaseCloningStrategy):
         return source_children
 
     def add_dseqrecord(self, dseqr: "Dseqrecord"):
+        from pydna.dseqrecord import Dseqrecord
+        from pydna.primer import Primer
+
         existing_ids = {seq.id for seq in self.sequences}
         if id(dseqr) in existing_ids:
             return
@@ -375,7 +396,10 @@ class CloningStrategy(_BaseCloningStrategy):
             self.sources.append(dseqr.source.to_pydantic_model(id(dseqr)))
             this_source: Source = dseqr.source
             for source_input in this_source.input:
-                self.add_dseqrecord(source_input.sequence)
+                if isinstance(source_input.sequence, Dseqrecord):
+                    self.add_dseqrecord(source_input.sequence)
+                elif isinstance(source_input.sequence, Primer):
+                    self.add_primer(source_input.sequence)
         else:
             self.sources.append(
                 _ManuallyTypedSource(id=id(dseqr), input=[], user_input="A")
@@ -390,12 +414,12 @@ class CloningStrategy(_BaseCloningStrategy):
         id_mappings = {id: i + 1 for i, id in enumerate(sorted(all_ids))}
         for seq in self.sequences:
             seq.id = id_mappings[seq.id]
+        for primer in self.primers:
+            primer.id = id_mappings[primer.id]
         for source in self.sources:
             source.id = id_mappings[source.id]
             for assembly_fragment in source.input:
                 assembly_fragment.sequence = id_mappings[assembly_fragment.sequence]
-        for primer in self.primers:
-            primer.id = id_mappings[primer.id]
 
     @classmethod
     def from_dseqrecord(cls, dseqr: "Dseqrecord", description: str = ""):

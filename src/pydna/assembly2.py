@@ -52,6 +52,7 @@ from pydna.opencloning_models import (
     GatewaySource,
     HomologousRecombinationSource,
     CreLoxRecombinationSource,
+    PCRSource,
 )
 
 if TYPE_CHECKING:
@@ -2751,3 +2752,48 @@ def cre_lox_excision(genome: _Dseqrecord) -> list[_Dseqrecord]:
     """
     products = common_function_excision_products(genome, None, cre_loxP_overlap)
     return _recast_sources(products, CreLoxRecombinationSource)
+
+
+def pcr_assembly(
+    template: _Dseqrecord,
+    fwd_primer: _Primer,
+    rvs_primer: _Primer,
+    add_primer_features: bool = False,
+    limit: int = 14,
+    mismatches: int = 0,
+) -> list[_Dseqrecord]:
+    """Returns the products for PCR assembly.
+
+    Parameters
+    ----------
+    template : _Dseqrecord
+        Template sequence
+    fwd_primer : _Primer
+        Forward primer
+    rvs_primer : _Primer
+        Reverse primer
+    add_primer_features : bool, optional
+        If True, add primer features to the product, by default False
+    limit : int, optional
+        Minimum overlap length required, by default 14
+    mismatches : int, optional
+        Maximum number of mismatches, by default 0
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of assembled DNA molecules
+    """
+
+    minimal_annealing = limit + mismatches
+    fragments = [fwd_primer, template, rvs_primer]
+    asm = PCRAssembly(
+        fragments,
+        limit=minimal_annealing,
+        mismatches=mismatches,
+    )
+    products = asm.assemble_linear()
+    if add_primer_features:
+        products = [annotate_primer_binding_sites(prod, fragments) for prod in products]
+
+    return _recast_sources(products, PCRSource)
