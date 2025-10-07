@@ -863,21 +863,21 @@ def assemble(
 
         # Special case for blunt circularisation
         if overlap == 0:
-            return out_dseqrecord.looped()
-
-        # Remove trailing overlap
-        out_dseqrecord = _Dseqrecord(
-            fill_dseq(out_dseqrecord.seq)[:-overlap],
-            features=out_dseqrecord.features,
-            circular=True,
-        )
-        for feature in out_dseqrecord.features:
-            start, end = _location_boundaries(feature.location)
-            if start >= len(out_dseqrecord) or end > len(out_dseqrecord):
-                # Wrap around the origin
-                feature.location = _shift_location(
-                    feature.location, 0, len(out_dseqrecord)
-                )
+            out_dseqrecord = out_dseqrecord.looped()
+        else:
+            # Remove trailing overlap
+            out_dseqrecord = _Dseqrecord(
+                fill_dseq(out_dseqrecord.seq)[:-overlap],
+                features=out_dseqrecord.features,
+                circular=True,
+            )
+            for feature in out_dseqrecord.features:
+                start, end = _location_boundaries(feature.location)
+                if start >= len(out_dseqrecord) or end > len(out_dseqrecord):
+                    # Wrap around the origin
+                    feature.location = _shift_location(
+                        feature.location, 0, len(out_dseqrecord)
+                    )
 
     out_dseqrecord.source = subfragment_representation_to_source(
         subfragment_representation, fragments, is_circular
