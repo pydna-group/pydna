@@ -33,6 +33,7 @@ from opencloning_linkml.datamodel import (
 )
 from Bio.SeqFeature import Location, LocationParserError
 from Bio.Restriction.Restriction import AbstractCut
+import networkx as nx
 from typing import List
 
 from Bio.SeqIO.InsdcIO import _insdc_location_string as format_feature_location
@@ -189,6 +190,29 @@ class Source(ConfiguredBaseModel):
     def to_pydantic_model(self, seq_id: int):
         kwargs = self._kwargs(seq_id)
         return self.TARGET_MODEL(**kwargs)
+
+    def add_to_history_graph(self, history_graph: nx.DiGraph, seq: "Dseqrecord"):
+        from pydna.dseqrecord import Dseqrecord
+
+        history_graph.add_node(id(seq), label=f"{seq.name} ({repr(seq)})")
+        history_graph.add_node(id(self), label=str(self.TARGET_MODEL.__name__))
+        history_graph.add_edge(id(seq), id(self))
+        for fragment in self.input:
+            fragment_seq = fragment.sequence
+            # This could be a Primer as well, which doesn't have a source
+            if isinstance(fragment_seq, Dseqrecord) and fragment_seq.source is not None:
+                fragment_seq.source.add_to_history_graph(history_graph, fragment_seq)
+            else:
+                history_graph.add_node(
+                    id(fragment_seq),
+                    label=f"{fragment_seq.name} ({repr(fragment_seq)})",
+                )
+            history_graph.add_edge(id(self), id(fragment_seq))
+
+    def history_string(self, seq: "Dseqrecord"):
+        history_graph = nx.DiGraph()
+        self.add_to_history_graph(history_graph, seq)
+        return nx.write_network_text(history_graph, with_labels=True)
 
 
 class AssemblySource(Source):
