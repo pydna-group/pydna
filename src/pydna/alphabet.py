@@ -1,18 +1,27 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from collections import namedtuple
+import re as _re
+
 """
-Six multiline strings are defined in this file.
+Nucleic acid alphabet used in pydna
 
-codestrings["un_ambiguous_ds_dna"]
-codestrings["ambiguous_ds_dna"]
-codestrings["ds_rna"]
-codestrings["single_stranded_dna_rna"]
-codestrings["mismatched_dna_rna"]
-codestrings["loops_dna_rna"]
+This file serves to define the DNA aplhabet used in pydna. Each symbol usually represents a basepair
+(two opposing bases in the two antiparalell DNA strands). The alphabet is defined in six literal strings
+in this file. These strings serve as the single source of thruth for the alphabet and
+a series of dictionaries and translation tebles are constructed from their content.
 
-Each string has five lines and describe the DNA alphabet
-used in Pydna in this form:
+The strings have the following names:
+
+- un_ambiguous_ds_dna
+- ambiguous_ds_dna
+- ds_rna
+- single_stranded_dna_rna
+- mismatched_dna_rna
+- loops_dna_rna
+
+Each string has five lines following this form:
 
 W             1
 |             2
@@ -23,16 +32,27 @@ S             5
 W (line 1) and C (line 2) are complementary bases in a double stranded DNA molecule and S (line 5) are
 the symbols of the alphabet used to describe the base pair above the symbol.
 
+Line 2 must contain only the pipe character, indicating basepairing and line 4 is empty.
+The lines must be of equal length and a series ot tests are performed to ensure the integrity of
+the alphabet.
+
+D    R  IUPAC       Single     Gaps       DNA / RNA
+N    N  extended    Strand     - = bond   mismatches
+A    A              DNA / RNA
+                    • = empty
+
+GATC UA RYMKSWHBVDN GATC••••U• -----AGCTU AAACCCGGGTTTUUUGCT
+|||| || ||||||||||| |||||||||| |||||||||| ||||||||||||||||||
+CTAG AU YRKMSWDVBHN ••••CTAG•U AGCTU----- ACGACTAGTCGTGCTUUU
+
+GATC UO RYMKSWHBVDN PEXIQFZJ$% 0123456789 !#{}&*()<>@:?[]=_;
+
 """
 
+# An alias for whitespace
 emptyspace = chr(32)
 
-codestrings = dict()
-
-
-codestrings[
-    "un_ambiguous_ds_dna"
-] = """\
+un_ambiguous_ds_dna = """\
 GATC
 ||||
 CTAG
@@ -40,19 +60,7 @@ CTAG
 GATC
 """
 
-codestrings[
-    "ambiguous_ds_dna"
-] = """\
-RYMKSWHBVDN
-|||||||||||
-YRKMSWDVBHN
-
-RYMKSWHBVDN
-"""
-
-codestrings[
-    "ds_rna"
-] = """\
+ds_rna = """\
 UA
 ||
 AU
@@ -60,21 +68,27 @@ AU
 UO
 """
 
-codestrings["single_stranded_dna_rna"] = (
-    """\
-GATC....U.
+ambiguous_ds_dna = """\
+RYMKSWHBVDN
+|||||||||||
+YRKMSWDVBHN
+
+RYMKSWHBVDN
+"""
+
+# The dots in the string below are replaced by emptyspace
+single_stranded_dna_rna = """\
+GATC••••U•
 ||||||||||
-....CTAG.U
+••••CTAG•U
 
 PEXIQFZJ$%
 """.replace(
-        ".", emptyspace
-    )
+    "•", emptyspace
 )
 
-codestrings[
-    "mismatched_dna_rna"
-] = """\
+
+mismatched_dna_rna = """\
 AAACCCGGGTTTUUUGCT
 ||||||||||||||||||
 ACGACTAGTCGTGCTUUU
@@ -82,9 +96,7 @@ ACGACTAGTCGTGCTUUU
 !#{}&*()<>@:?[]=_;
 """
 
-codestrings[
-    "loops_dna_rna"
-] = """\
+loops_dna_rna = """\
 -----AGCTU
 ||||||||||
 AGCTU-----
@@ -92,46 +104,57 @@ AGCTU-----
 0123456789
 """
 
-keys = set(
-    (
-        "un_ambiguous_ds_dna",
-        "ambiguous_ds_dna",
-        "ds_rna",
-        "single_stranded_dna_rna",
-        "mismatched_dna_rna",
-        "loops_dna_rna",
-    )
-)
 
-assert set(codestrings.keys()) == keys
+codestrings = {
+    "un_ambiguous_ds_dna": un_ambiguous_ds_dna,
+    "ambiguous_ds_dna": ambiguous_ds_dna,
+    "ds_rna": ds_rna,
+    "single_stranded_dna_rna": single_stranded_dna_rna,
+    "mismatched_dna_rna": mismatched_dna_rna,
+    "loops_dna_rna": loops_dna_rna,
+}
 
-not_dscode = "lL\"',-./\\^`|+~"
+# This string contains ascii letters not used in the alphabet
+letters_not_in_dscode = "lL\"',-./\\^`|+~"
 
 for name, codestring in codestrings.items():
 
     # This loops all codestrings and checks for consistency of format.
     lines = codestring.splitlines()
 
-    assert len(lines) == 5
+    assert len(lines) == 5, f"{name} does not have 5 lines"
 
     # We want the Watson, Crick and Symbol lines only
     # Second line has to be pipes ("|") and fourth has to be empty
 
     watsn, pipes, crick, empty, symbl = lines
 
-    assert all(ln.isascii() for ln in (watsn, crick, symbl))
+    assert all(
+        ln.isascii() for ln in (watsn, crick, symbl)
+    ), f"{name} has non-ascii letters"
 
-    assert all(ln.isupper() for ln in (watsn, crick, symbl) if ln.isalpha())
+    assert all(
+        ln.isupper() for ln in (watsn, crick, symbl) if ln.isalpha()
+    ), f"{name} has non-uppercase letters"
 
     # check so that pipes contain only "|"
-    assert set(pipes) == set("|")
+    assert set(pipes) == set("|"), f"{name} has non-pipe character(s) in line 2"
 
     # check so strings are the same length
-    assert all(len(ln) == len(watsn) for ln in (watsn, pipes, crick, symbl))
+    assert all(
+        len(ln) == len(watsn) for ln in (watsn, pipes, crick, symbl)
+    ), f"{name} has lines of unequal length"
 
     # These characters are not used.
-    assert not any([letter in not_dscode for letter in symbl])
+    assert not any(
+        [letter in letters_not_in_dscode for letter in symbl]
+    ), f"{name} has chars outside alphabet"
 
+"""
+The `codes` dictionary is a dict of dicts containing the information of the
+code strings in the form if a dict with string names as keys, each containing a
+dict wit this structure: (Watson letter, Crick letter): dscode symbol
+"""
 
 codes = dict()
 
@@ -141,20 +164,15 @@ for name, codestring in codestrings.items():
 
     watsons, _, cricks, _, symbols = lines
 
-    codes[name] = dct = dict()
+    # d is an alias of codes[name] used in this loop for code clarity.
+    codes[name] = d = dict()
 
     for watson, crick, symbol in zip(watsons, cricks, symbols):
-        if watson == emptyspace:
-            dct[watson, crick.lower()] = symbol.lower()
-            dct[watson, crick.upper()] = symbol.upper()
-        else:
-            dct[watson.upper(), crick.upper()] = symbol.upper()
-            dct[watson.upper(), crick.lower()] = symbol.upper()
-            dct[watson.lower(), crick.upper()] = symbol.lower()
-            dct[watson.lower(), crick.lower()] = symbol.lower()
+        d[watson, crick] = symbol
 
+del d
 
-bp_dict_str = (
+basepair_dict = (
     codes["un_ambiguous_ds_dna"]
     | codes["ambiguous_ds_dna"]
     | codes["ds_rna"]
@@ -163,153 +181,242 @@ bp_dict_str = (
     # | codes["loops_dna_rna"]
 )
 
-bp_dict = {
-    (w.encode("ascii"), c.encode("ascii")): s.encode("ascii")
-    for (w, c), s in bp_dict_str.items()
-}
+annealing_dict = dict()
+
+"""
+The annealing_dict_of_str is constructed below. It contains the information needed
+to tell if two DNA fragments (like a and b below) can anneal. This of cource only concerns
+single stranded regions.
+
+The dict has the form (x, y): s
+Where x and y are bases in a and b and the symbol s is the resulting symbol for the base pair
+that is formed. The letters x and y are from the values of the codes["single_stranded_dna_rna"]
+dictionary.
+
+For, example: One key-value pair is ('P', 'Q'): 'G' which matches the first
+of the four new base pairings formed between a and b in the example below.
+
+
+(a)
+gggPEXI    (dscode for a)
+
+gggGATC
+ccc
+       aaa (b)
+   CTAGttt
+
+   QFZJaaa (dscode for b)
+
+
+gggGATCaaa (annealing product between a and b)
+cccCTAGttt
+
+This loops through the base pairs where the upper or lower
+positions are empty. (w, c), s would be ("G", " "), "P"
+in the first iteration.
+"""
 
 temp = codes["un_ambiguous_ds_dna"] | codes["ds_rna"]
 
-
-annealing_dict_str = dict()
-
-# The annealing_dict_str is constructed below. This dict contains the information needed
-# to tell if two DNA fragments (like a and b below) can anneal. The dict has the form (x, y): s
-# Where x and y are bases in a and b and the symbol s is the resulting symbol for the base pair
-# that is formed. One element in the dict is ('P', 'Q'): 'G' which matches the first
-# of the four new base pairings formed between a and b in the example below.
-#
-#
-# (a)
-# gggPEXI    (dscode for a)
-#
-# gggGATC
-# ccc
-#        aaa (b)
-#    CTAGttt
-#
-#    QFZJaaa (dscode for b)
-#
-#
-# gggGATCaaa (annealing product between a and b)
-# cccCTAGttt
-#
-# This loops through the base pairs where the upper or lower
-# positions are empty. (w, c), s would be ("G", " "), "P"
-# in the first iteration.
-#
-
-d = codes["single_stranded_dna_rna"]  # Alias to make the code below more readable.
+# Alias to make the code below more readable.
+d = codes["single_stranded_dna_rna"]
 
 for (x, y), symbol in d.items():
     if y == emptyspace:
         other = next(b for a, b in temp if a == x)
         symbol_other = d[emptyspace, other]
-        annealing_dict_str[symbol, symbol_other] = temp[x, other]
-        annealing_dict_str[symbol_other, symbol] = temp[x, other]
+        annealing_dict[symbol, symbol_other] = temp[x, other]
+        annealing_dict[symbol_other, symbol] = temp[x, other]
     elif x == emptyspace:
         other = next(a for a, b in temp if b == y)
         symbol_other = d[other, emptyspace]
-        annealing_dict_str[symbol, symbol_other] = temp[other, y]
-        annealing_dict_str[symbol_other, symbol] = temp[other, y]
+        annealing_dict[symbol, symbol_other] = temp[other, y]
+        annealing_dict[symbol_other, symbol] = temp[other, y]
     else:
         raise ValueError("This should not happen")
 
-del d
+del d, temp
 
-mixed_case_dict = (
-    dict()
-)  # This dict will contain upper and lower case symbols annealing_dict_str
+temp = {}
 
-for (x, y), symbol in annealing_dict_str.items():
-    mixed_case_dict[x.upper(), y.lower()] = symbol.upper()
-    mixed_case_dict[x.lower(), y.upper()] = symbol.lower()
-    mixed_case_dict[x.lower(), y.lower()] = symbol.lower()
+for (x, y), symbol in annealing_dict.items():
 
-annealing_dict_str = (
-    annealing_dict_str | mixed_case_dict
-)  # Add mixed case entries to the dict
+    temp[x, emptyspace] = x
+    temp[emptyspace, y] = y
 
-# A bytestr version of the annealing_dict_str
-annealing_dict = {
-    (x.encode("ascii"), y.encode("ascii")): s.encode("ascii")
-    for (x, y), s in annealing_dict_str.items()
+annealing_dict_w_holes = annealing_dict | temp
+
+del temp
+
+"""
+A collection of translation tables are a practical way to obtain Watson and Crick
+from dscode or the reverse complement strands when needed.
+
+These are meant to be used by the bytes.translate method.
+
+
+The translation table "complement_table_for_dscode" is used to obtain the
+complement of a DNA sequence in dscode format.
+"""
+
+complement_dict_for_dscode = {
+    s: basepair_dict[c, w] for (w, c), s in basepair_dict.items()
 }
 
-dscode_sense = []
-dscode_compl = []
-watson = []
-crick = []
+from_letters = "".join(complement_dict_for_dscode.keys())
+to_letters = "".join(complement_dict_for_dscode.values())
 
-for (w, c), s in bp_dict.items():
+from_letters += from_letters.lower()
+to_letters += to_letters.lower()
 
-    if w.isupper() and c.islower() or w.islower() and c.isupper():
-        continue
-
-    dscode_sense.append(s)
-    dscode_compl.append(bp_dict[c, w])
-    watson.append(w)
-    crick.append(c)
-
-complement_table_dscode = bytes.maketrans(
-    b"".join(dscode_sense), b"".join(dscode_compl)
+complement_table_for_dscode = bytes.maketrans(
+    from_letters.encode("ascii"), to_letters.encode("ascii")
 )
 
-placeholder1, placeholder2, interval, empty_bs = (
-    b"~",
-    b"+",
-    b".",
-    emptyspace.encode("ascii"),
-)
+"""
+dscode_to_watson_table and dscode_to_crick_table are used to obtain the Watson
+and (reverse) Crick strands from dscode. Four extra letters are added to the
+table and used in the pydna.dseq.representation function. These are used
+to add range indicators ("..") in the watson or crick strings for
+representation of long sequences.
 
-for bstring in placeholder1, placeholder2, interval:
-    assert all(letter in not_dscode.encode("ascii") for letter in bstring)
+The four letters are placeholder1, placeholder2, interval, empty_bs
+"""
+
+dscode_sense = ""
+dscode_compl = ""
+watson = ""
+crick = ""
+
+for (w, c), s in basepair_dict.items():
+    dscode_sense += s
+    dscode_compl += basepair_dict[c, w]
+    watson += w
+    crick += c
+
+dscode_sense += dscode_sense.lower()
+dscode_compl += dscode_compl.lower()
+watson += watson.lower()
+crick += crick.lower()
+
+placeholder1 = "~"
+placeholder2 = "+"
+interval = "."
+
+assert placeholder1 in letters_not_in_dscode
+assert placeholder2 in letters_not_in_dscode
+assert interval in letters_not_in_dscode
 
 dscode_to_watson_table = bytes.maketrans(
-    b"".join(dscode_sense) + placeholder1 + placeholder2,
-    b"".join(watson) + empty_bs + interval,
+    (dscode_sense + placeholder1 + placeholder2).encode("ascii"),
+    (watson + emptyspace + interval).encode("ascii"),
 )
 
 dscode_to_crick_table = bytes.maketrans(
-    b"".join(dscode_sense) + placeholder1 + placeholder2,
-    b"".join(crick) + interval + empty_bs,
+    (dscode_sense + placeholder1 + placeholder2).encode("ascii"),
+    (crick + interval + emptyspace).encode("ascii"),
 )
 
 
 watson_tail_letter_dict = {
-    (w.encode("ascii")): s.encode("ascii")
-    for (w, c), s in codes["single_stranded_dna_rna"].items()
-    if c.isspace()
+    w: s for (w, c), s in codes["single_stranded_dna_rna"].items() if c.isspace()
 }
 
-from_letters = b"".join(watson_tail_letter_dict.keys())
+from_letters = "".join(watson_tail_letter_dict.keys())
+to_letters = "".join(watson_tail_letter_dict.values())
 
-to_letters = b"".join(watson_tail_letter_dict.values())
+from_letters += from_letters.lower()
+to_letters += to_letters.lower()
 
-dscode_to_crick_tail_table = bytes.maketrans(from_letters, to_letters)
-# dscode_to_crick_tail_table = bytes.maketrans(b"GATCgatc", b"PEXIpexi")
+dscode_to_crick_tail_table = bytes.maketrans(
+    from_letters.encode("ascii"), to_letters.encode("ascii")
+)
+# crick_tail_to_dscode_table = bytes.maketrans(to_letters.encode("ascii"),from_letters.encode("ascii"))
 
+
+from_letters_full = five_prime_ss_letters = to_letters
+to_letters_full = from_letters
+
+
+d = codes["single_stranded_dna_rna"]
 
 crick_tail_letter_dict = {
-    (c.encode("ascii")): s.encode("ascii")
-    for (w, c), s in codes["single_stranded_dna_rna"].items()
-    if w.isspace()
+    complement_dict_for_dscode[c]: s for (w, c), s in d.items() if w.isspace()
 }
 
-from_letters = b"".join(crick_tail_letter_dict.keys())
+del d
 
-to_letters = b"".join(crick_tail_letter_dict.values())
+from_letters = "".join(crick_tail_letter_dict.keys())
+to_letters = "".join(crick_tail_letter_dict.values())
 
-dscode_to_watson_tail_table = bytes.maketrans(from_letters, to_letters)
-dscode_to_watson_tail_table = bytes.maketrans(b"GATCgatc", b"QFZJqfzj")
+from_letters += from_letters.lower()
+to_letters += to_letters.lower()
 
+dscode_to_watson_tail_table = bytes.maketrans(
+    from_letters.encode("ascii"), to_letters.encode("ascii")
+)
+# watson_tail_to_dscode_table = bytes.maketrans(to_letters.encode("ascii"), from_letters.encode("ascii"))
 
-dscode_to_to_full_sequence_table = bytes.maketrans(
-    b"PEXIpexiQFZJqfzj", b"GATCgatcGATCgatc"
+three_prime_ss_letters = to_letters
+from_letters_full += to_letters
+to_letters_full += from_letters
+
+dscode_to_full_sequence_table = bytes.maketrans(
+    from_letters_full.encode("ascii"), to_letters_full.encode("ascii")
 )
 
 
-iupac_compl_regex = {  # IUPAC Ambiguity Code complements
+# This loop adds upper and lower case symbols
+mixed_case_dict = {}
+
+for (x, y), symbol in basepair_dict.items():
+    mixed_case_dict[x.lower(), y.lower()] = symbol.lower()
+    mixed_case_dict[x.lower(), y.upper()] = symbol.lower()
+    mixed_case_dict[x.upper(), y.lower()] = symbol.upper()
+
+    if x == emptyspace:
+        mixed_case_dict[x, y.lower()] = symbol.lower()
+        mixed_case_dict[x, y.upper()] = symbol.upper()
+    if y == emptyspace:
+        mixed_case_dict[x.lower(), y] = symbol.lower()
+        mixed_case_dict[x.upper(), y] = symbol.upper()
+
+# Add mixed case entries to the dict
+basepair_dict.update(mixed_case_dict)
+
+# This loop adds upper and lower case symbols
+mixed_case_dict = {}
+
+for (x, y), symbol in annealing_dict.items():
+    mixed_case_dict[x.lower(), y.lower()] = symbol.lower()
+    mixed_case_dict[x.lower(), y.upper()] = symbol.lower()
+    mixed_case_dict[x.upper(), y.lower()] = symbol.upper()
+# Add mixed case entries to the dict
+annealing_dict.update(mixed_case_dict)
+
+ds_letters = (
+    "".join(codes["un_ambiguous_ds_dna"].values())
+    + "".join(codes["ds_rna"].values())
+    + "".join(codes["ambiguous_ds_dna"].values())
+)
+
+ss_letters_watson = "".join(
+    s for (w, c), s in codes["single_stranded_dna_rna"].items() if c == emptyspace
+)
+ss_letters_crick = "".join(
+    s for (w, c), s in codes["single_stranded_dna_rna"].items() if w == emptyspace
+)
+
+ds_letters += ds_letters.lower()
+ss_letters_watson += ss_letters_watson.lower()
+ss_letters_crick += ss_letters_crick.lower()
+
+
+"""
+The dict of regexes below cover IUPAC Ambiguity Code complements
+and is used in the amplify module.
+"""
+iupac_compl_regex = {
     "A": "(?:T|U)",
     "C": "(?:G)",
     "G": "(?:C)",
@@ -327,3 +434,157 @@ iupac_compl_regex = {  # IUPAC Ambiguity Code complements
     "V": "(?:T|C|G|B)",
     "N": "(?:A|G|C|T|N)",
 }
+
+
+# This loop adds upper and lower case symbols
+# mixed_case_dict = {}
+
+for (x, y), symbol in annealing_dict_w_holes.items():
+    mixed_case_dict[x.lower(), y.lower()] = symbol.lower()
+    mixed_case_dict[x.lower(), y.upper()] = symbol.lower()
+    mixed_case_dict[x.upper(), y.lower()] = symbol.upper()
+# Add mixed case entries to the dict
+annealing_dict_w_holes.update(mixed_case_dict)
+
+
+def get_parts(datastring: str):
+
+    m = _re.match(
+        f"([{ss_letters_watson}]*)"  # capture group 0 ssDNA in watson strand
+        f"([{ss_letters_crick}]*)"  # capture group 1 ssDNA in crick strand
+        f"(?=[{ds_letters}])"  # no capture, positive lookahead for dsDNA
+        "(.*)"  # captures group 2 everything in the middle
+        f"(?<=[{ds_letters}])"  # no capture,positive look behind for dsDNA
+        f"([{ss_letters_watson}]*)"  # capture group 3 ssDNA in watson strand
+        f"([{ss_letters_crick}]*)|"  # capture group 4 ssDNA in crick strand
+        f"([{ss_letters_watson}]+)|"  # capture group 5 if data contains only upper strand
+        f"([{ss_letters_crick}]+)",  # capture group 6 if data contains only lower strand
+        datastring,
+    )
+
+    result = m.groups() if m else (None, None, None, None, None, None, None)
+
+    result = ["" if e is None else e for e in result]
+
+    field_names = (
+        "sticky_left5",
+        "sticky_left3",
+        "middle",
+        "sticky_right3",
+        "sticky_right5",
+        "single_watson",
+        "single_crick",
+    )
+
+    fragment = namedtuple("fragment", field_names)
+
+    return fragment(*result)
+
+
+def dsbreaks(data: str):
+
+    wl = _re.escape(five_prime_ss_letters)
+    cl = _re.escape(three_prime_ss_letters)
+
+    breaks = []
+    regex = (
+        "(.{0,3})"  # context if present
+        f"([{wl}][{cl}]|[{cl}][{wl}])"  # ss chars next to each other
+        "(.{0,3})"  # context if present
+    )
+    for mobj in _re.finditer(regex, data):
+        chunk = mobj.group()
+        w, c = representation_tuple(chunk)
+        breaks.append(f"[{mobj.start()}:{mobj.end()}]\n{w}\n{c}\n")
+    return breaks
+
+
+def representation_tuple(
+    datastring: str = "", length_limit_for_repr: int = 30, chunk: int = 4
+):
+    """
+    Two line string representation of a sequence of dscode symbols.
+
+    See pydna.alphabet module for the definition of the pydna dscode
+    alphabet. The dscode has a symbol (ascii) character for base pairs
+    and single stranded DNA.
+
+    This function is used by the Dseq.__repr__() method.
+
+    Parameters
+    ----------
+    data : TYPE, optional
+        DESCRIPTION. The default is "".
+
+    Returns
+    -------
+    str
+        A two line string containing The Watson and Crick strands.
+
+    """
+
+    (
+        sticky_left5,
+        sticky_left3,
+        middle,
+        sticky_right5,
+        sticky_right3,
+        single_watson,
+        single_crick,
+    ) = get_parts(datastring)
+
+    if len(datastring) > length_limit_for_repr:
+        """
+        We need to shorten the repr if the sequence is longer than
+        limit imposed by length_limit_for_repr.
+
+        The representation has three parts, so we divide by three for each part.
+
+        Long DNA strands are interrupted by interval notation, like agc..att
+        where the two dots indicate intervening hidden sequence.
+
+
+        Dseq(-71)
+        GAAA..AATCaaaa..aaaa
+                  tttt..ttttCTAA..AAAG
+
+        placeholder1, placeholder2 are two letters that are replaced by
+        interval characters in the upper or lower strands by the translation
+        """
+
+        part_limit = length_limit_for_repr // 3
+
+        if len(sticky_left5) > part_limit:
+            sticky_left5 = (
+                sticky_left5[:chunk] + placeholder2 * 2 + sticky_left5[-chunk:]
+            )
+
+        if len(sticky_left3) > part_limit:
+            sticky_left3 = (
+                sticky_left3[:chunk] + placeholder1 * 2 + sticky_left3[-chunk:]
+            )
+
+        if len(middle) > part_limit:
+            middle = middle[:4] + interval * 2 + middle[-4:]
+
+        if len(sticky_right5) > part_limit:
+            sticky_right5 = (
+                sticky_right5[:chunk] + placeholder2 * 2 + sticky_right5[-chunk:]
+            )
+
+        if len(sticky_right3) > part_limit:
+            sticky_right3 = (
+                sticky_right3[:chunk] + placeholder1 * 2 + sticky_right3[-chunk:]
+            )
+
+    """
+    The processed string contains
+    """
+    processed_dscode = (sticky_left5 or sticky_left3) + middle + (
+        sticky_right5 or sticky_right3
+    ) or single_watson + single_crick
+
+    watson = processed_dscode.translate(dscode_to_watson_table).rstrip()
+    crick = processed_dscode.translate(dscode_to_crick_table).rstrip()
+
+    return watson, crick
