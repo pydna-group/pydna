@@ -7,7 +7,8 @@ see [issues tagged with fixed-with-new-assembly-model](https://github.com/pydna-
 import networkx as _nx
 import itertools as _itertools
 from Bio.SeqFeature import SimpleLocation, Location
-from Bio.Seq import reverse_complement
+
+# from Bio.Seq import reverse_complement
 from Bio.Restriction.Restriction import RestrictionBatch
 import regex
 import copy
@@ -606,32 +607,33 @@ def primer_template_overlap(
 
 def fill_left(seq: _Dseq) -> _Dseq:
     """Fill the left overhang of a sequence with the complementary sequence."""
-    new_watson = seq.watson
-    new_crick = seq.crick
+    # new_watson = seq.watson
+    # new_crick = seq.crick
 
-    # Watson 5' overhang
-    if seq.ovhg < 0:
-        new_crick = new_crick + reverse_complement(seq.watson[: -seq.ovhg])
-    # Crick 5' overhang
-    elif seq.ovhg > 0:
-        new_watson = reverse_complement(seq.crick[-seq.ovhg :]) + new_watson
+    # # Watson 5' overhang
+    # if seq.ovhg < 0:
+    #     new_crick = new_crick + reverse_complement(seq.watson[: -seq.ovhg])
+    # # Crick 5' overhang
+    # elif seq.ovhg > 0:
+    #     new_watson = reverse_complement(seq.crick[-seq.ovhg :]) + new_watson
+    # if _Dseq(new_watson, new_crick, 0) != seq.cast_to_ds_left():
 
-    return seq.cast_to_ds_left()  # _Dseq(new_watson, new_crick, 0)
+    return seq.cast_to_ds_left()
 
 
 def fill_right(seq: _Dseq) -> _Dseq:
     """Fill the right overhang of a sequence with the complementary sequence."""
-    new_watson = seq.watson
-    new_crick = seq.crick
+    # new_watson = seq.watson
+    # new_crick = seq.crick
 
-    # Watson 3' overhang
-    watson_ovhg = seq.watson_ovhg()
-    if watson_ovhg < 0:
-        new_watson = new_watson + reverse_complement(seq.crick[:-watson_ovhg])
+    # # Watson 3' overhang
+    # watson_ovhg = seq.watson_ovhg()
+    # if watson_ovhg < 0:
+    #     new_watson = new_watson + reverse_complement(seq.crick[:-watson_ovhg])
 
-    # Crick 3' overhang
-    elif watson_ovhg > 0:
-        new_crick = reverse_complement(seq.watson[-watson_ovhg:]) + new_crick
+    # # Crick 3' overhang
+    # elif watson_ovhg > 0:
+    #     new_crick = reverse_complement(seq.watson[-watson_ovhg:]) + new_crick
 
     return seq.cast_to_ds_right()  # _Dseq(new_watson, new_crick, seq.ovhg)
 
@@ -797,7 +799,7 @@ def assemble(
         ]
         # Join the left sequence including the overlap with the right sequence without the overlap
         # we use fill_right / fill_left so that it works for ligation of sticky ends
-        # breakpoint()
+
         out_dseqrecord = _Dseqrecord(
             fill_right(out_dseqrecord.seq)
             + fill_left(fragment.seq)[
