@@ -49,6 +49,7 @@ from pydna.opencloning_models import (
     OverlapExtensionPCRLigationSource,
     InVivoAssemblySource,
     LigationSource,
+    GatewaySource,
 )
 
 if TYPE_CHECKING:
@@ -2440,6 +2441,12 @@ def gateway_assembly(
     products = common_function_assembly_products(
         frags, None, algo, circular_only, filter_results_function
     )
+    for prod in products:
+        prod.source = GatewaySource(
+            **prod.source.model_dump(),
+            reaction_type=reaction_type,
+            greedy=greedy,
+        )
 
     if len(products) == 0:
         # Build a list of all the sites in the fragments
