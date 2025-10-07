@@ -25,6 +25,8 @@ from opencloning_linkml.datamodel import (
     OverlapExtensionPCRLigationSource as _OverlapExtensionPCRLigationSource,
     InVivoAssemblySource as _InVivoAssemblySource,
     LigationSource as _LigationSource,
+    GatewaySource as _GatewaySource,
+    GatewayReactionType,
 )
 from Bio.SeqFeature import Location, LocationParserError
 from Bio.Restriction.Restriction import AbstractCut
@@ -223,6 +225,19 @@ class InVivoAssemblySource(AssemblySource):
 
 class LigationSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_LigationSource]] = _LigationSource
+
+
+class GatewaySource(AssemblySource):
+    TARGET_MODEL: ClassVar[Type[_GatewaySource]] = _GatewaySource
+    reaction_type: GatewayReactionType
+    greedy: bool = Field(default=False)
+
+    def _kwargs(self, seq_id: int) -> dict:
+        return {
+            **super()._kwargs(seq_id),
+            "reaction_type": self.reaction_type,
+            "greedy": self.greedy,
+        }
 
 
 class SequenceCutSource(Source):
