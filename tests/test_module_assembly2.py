@@ -1603,19 +1603,19 @@ def test_insertion_assembly():
 
     # Insertion of linear sequence into linear sequence (like
     # homologous recombination of PCR product with homology arms in genome)
-    a = Dseqrecord("CGTACGCACA1111CGTACGCACAC")
-    b = Dseqrecord("CGTACGCACA2222CGTACGCACAT")
+    a = Dseqrecord("CGTACGCACAbbbbCGTACGCACAC")
+    b = Dseqrecord("CGTACGCACArrrrCGTACGCACAT")
 
     f = assembly.Assembly([a, b], use_fragment_order=False, limit=10)
 
     # All possibilities, including the single insertions
     results = [
-        "CGTACGCACA2222CGTACGCACA1111CGTACGCACAC",
-        "CGTACGCACA2222CGTACGCACAC",
-        "CGTACGCACA1111CGTACGCACA2222CGTACGCACAT",
-        "CGTACGCACA1111CGTACGCACA2222CGTACGCACAC",
-        "CGTACGCACA1111CGTACGCACAT",
-        "CGTACGCACA2222CGTACGCACA1111CGTACGCACAT",
+        "CGTACGCACArrrrCGTACGCACAbbbbCGTACGCACAC",
+        "CGTACGCACArrrrCGTACGCACAC",
+        "CGTACGCACAbbbbCGTACGCACArrrrCGTACGCACAT",
+        "CGTACGCACAbbbbCGTACGCACArrrrCGTACGCACAC",
+        "CGTACGCACAbbbbCGTACGCACAT",
+        "CGTACGCACArrrrCGTACGCACAbbbbCGTACGCACAT",
     ]
 
     assembly_products = [
@@ -1627,21 +1627,21 @@ def test_insertion_assembly():
     # TODO: debatable whether this kind of homologous recombination should happen, or how
     # the overlap restrictions should be applied.
 
-    a = Dseqrecord("CGTACGCACA1111C")
-    b = Dseqrecord("CGTACGCACA2222CGTACGCACAT")
+    a = Dseqrecord("CGTACGCACAbbbbC")
+    b = Dseqrecord("CGTACGCACArrrrCGTACGCACAT")
     f = assembly.Assembly([a, b], use_fragment_order=False, limit=10)
-    results = ["CGTACGCACA2222CGTACGCACA1111C"]
+    results = ["CGTACGCACArrrrCGTACGCACAbbbbC"]
     for assem, result in zip(f.get_insertion_assemblies(), results):
         assert result == str(assembly.assemble([a, b], assem).seq)
 
-    a = Dseqrecord("CGTACGCACA1111C")
-    b = Dseqrecord("CGTACGCACA2222T")
+    a = Dseqrecord("CGTACGCACAbbbbC")
+    b = Dseqrecord("CGTACGCACArrrrT")
     f = assembly.Assembly([a, b], use_fragment_order=False, limit=10)
     assert len(f.get_insertion_assemblies()) == 0
 
     # Does not work for circular molecules
-    a = Dseqrecord("CGTACGCACA1111CGTACGCACAC", circular=True)
-    b = Dseqrecord("CGTACGCACA2222CGTACGCACAT", circular=True)
+    a = Dseqrecord("CGTACGCACAbbbbCGTACGCACAC", circular=True)
+    b = Dseqrecord("CGTACGCACArrrrCGTACGCACAT", circular=True)
     assert (
         assembly.Assembly(
             [a, b], use_fragment_order=False, limit=10
@@ -1649,8 +1649,8 @@ def test_insertion_assembly():
         == []
     )
 
-    a = Dseqrecord("CGTACGCACA1111C", circular=True)
-    b = Dseqrecord("CGTACGCACA2222CGTACGCACAT", circular=True)
+    a = Dseqrecord("CGTACGCACAbbbbC", circular=True)
+    b = Dseqrecord("CGTACGCACArrrrCGTACGCACAT", circular=True)
     assert (
         assembly.Assembly(
             [a, b], use_fragment_order=False, limit=10
@@ -1658,8 +1658,8 @@ def test_insertion_assembly():
         == []
     )
 
-    a = Dseqrecord("CGTACGCACA1111C", circular=True)
-    b = Dseqrecord("CGTACGCACA2222T", circular=True)
+    a = Dseqrecord("CGTACGCACAbbbbC", circular=True)
+    b = Dseqrecord("CGTACGCACArrrrT", circular=True)
     assert (
         assembly.Assembly(
             [a, b], use_fragment_order=False, limit=10
@@ -2451,7 +2451,7 @@ def test_insertion_edge_case():
 
 def test_common_sub_strings():
 
-    a = Dseqrecord("012345", circular=True)
+    a = Dseqrecord("RYBDKM", circular=True)
     for shift_1 in range(len(a)):
         a_shifted = a.shifted(shift_1)
         for shift_2 in range(len(a)):
@@ -2575,5 +2575,3 @@ def test_common_handle_insertion_fragments():
     assert [genome] + inserts == assembly.common_handle_insertion_fragments(
         genome, inserts
     )
-
-# pytest.main([__file__, "-vvv", "-s"])
