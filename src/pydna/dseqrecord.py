@@ -35,16 +35,11 @@ import os as _os
 import re as _re
 import time as _time
 import datetime as _datetime
-from typing import Union
-from pydna.opencloning_models import (
-    Source,
-    RestrictionEnzymeDigestionSource,
-    SourceInput,
-    AssemblyFragment,
-    AssemblySource,
-    RestrictionAndLigationSource,
-    GibsonAssemblySource,
-)
+from typing import Union, TYPE_CHECKING
+from pydna.opencloning_models import RestrictionEnzymeDigestionSource
+
+if TYPE_CHECKING:
+    from pydna.opencloning_models import Source
 
 
 # import logging as _logging
@@ -1435,13 +1430,3 @@ class Dseqrecord(_SeqRecord):
         # This will need to be generalised to all types of cuts
         source = RestrictionEnzymeDigestionSource.from_parent(self, left_cut, right_cut)
         return Dseqrecord(dseq, features=features, source=source)
-
-
-# This is necessary due to circular imports,
-# there might be a cleaner way to do this
-RestrictionEnzymeDigestionSource.model_rebuild()
-SourceInput.model_rebuild()
-AssemblyFragment.model_rebuild()
-AssemblySource.model_rebuild()
-RestrictionAndLigationSource.model_rebuild()
-GibsonAssemblySource.model_rebuild()

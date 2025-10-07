@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
-from typing import Optional, Union
+from typing import Optional, Union, Any
 from pydantic_core import core_schema
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from opencloning_linkml.datamodel import (
     CloningStrategy as _BaseCloningStrategy,
@@ -28,7 +28,6 @@ from Bio.SeqIO.InsdcIO import _insdc_location_string as format_feature_location
 
 from pydna.types import CutSiteType
 from typing import TYPE_CHECKING
-from pydna.primer import Primer
 
 if TYPE_CHECKING:
     from pydna.dseqrecord import Dseqrecord
@@ -51,8 +50,8 @@ class SequenceLocationStr(str):
             value = cls(v)
             try:
                 value.to_biopython_location()
-            except LocationParserError:
-                raise ValueError(f'Location "{v}" is not a valid location')
+            except LocationParserError as err:
+                raise ValueError(f"Location {v!r} is not a valid location") from err
             return value
         raise ValueError(f"Location must be a string or a {cls.__name__}")
 
@@ -100,7 +99,21 @@ class TextFileSequence(_TextFileSequence):
 
 
 class SourceInput(ConfiguredBaseModel):
-    sequence: Union["Dseqrecord", "Primer"]
+    sequence: object
+
+    @field_validator("sequence")
+    @classmethod
+    def _validate_sequence_field(cls, value: Any):
+        """Separate validation to avoid circular imports."""
+
+        from pydna.dseqrecord import Dseqrecord
+        from pydna.primer import Primer
+
+        if isinstance(value, (Dseqrecord, Primer)):
+            return value
+        raise TypeError(
+            f"sequence must be Dseqrecord or Primer; got {type(value).__module__}.{type(value).__name__}"
+        )
 
     def to_pydantic_model(self) -> _SourceInput:
         return _SourceInput(sequence=id(self.sequence))
