@@ -258,7 +258,7 @@ class SequenceCutSource(Source):
         )
         return pydantic_class(
             id=seq_id,
-            input=[fragment.to_pydantic_model() for fragment in self.input],
+            input=self.input_models(),
             left_edge=cutsite_to_pydantic_model(self.left_edge),
             right_edge=cutsite_to_pydantic_model(self.right_edge),
         )
