@@ -47,6 +47,8 @@ from pydna.opencloning_models import (
     GibsonAssemblySource,
     InFusionSource,
     OverlapExtensionPCRLigationSource,
+    InVivoAssemblySource,
+    LigationSource,
 )
 
 if TYPE_CHECKING:
@@ -2145,9 +2147,14 @@ def in_vivo_assembly(
     list[_Dseqrecord]
         List of assembled DNA molecules
     """
-    return common_function_assembly_products(
+    prods = common_function_assembly_products(
         frags, limit, common_sub_strings, circular_only
     )
+    for prod in prods:
+        prod.source = InVivoAssemblySource(
+            **prod.source.model_dump(),
+        )
+    return prods
 
 
 def restriction_ligation_assembly(
@@ -2323,7 +2330,12 @@ def ligation_assembly(
     else:
         algo = sticky_end_algorithm
 
-    return common_function_assembly_products(frags, None, algo, circular_only)
+    prods = common_function_assembly_products(frags, None, algo, circular_only)
+    for prod in prods:
+        prod.source = LigationSource(
+            **prod.source.model_dump(),
+        )
+    return prods
 
 
 def assembly_is_multi_site(asm: list[EdgeRepresentationAssembly]) -> bool:

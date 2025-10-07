@@ -24,6 +24,7 @@ from opencloning_linkml.datamodel import (
     InFusionSource as _InFusionSource,
     OverlapExtensionPCRLigationSource as _OverlapExtensionPCRLigationSource,
     InVivoAssemblySource as _InVivoAssemblySource,
+    LigationSource as _LigationSource,
 )
 from Bio.SeqFeature import Location, LocationParserError
 from Bio.Restriction.Restriction import AbstractCut
@@ -135,15 +136,17 @@ class AssemblyFragment(SourceInput):
         default=...,
     )
 
+    @staticmethod
+    def from_biopython_location(location: Location | None):
+        if location is None:
+            return None
+        return SequenceLocationStr.from_biopython_location(location)
+
     def to_pydantic_model(self) -> _AssemblyFragment:
         return _AssemblyFragment(
             sequence=id(self.sequence),
-            left_location=SequenceLocationStr.from_biopython_location(
-                self.left_location
-            ),
-            right_location=SequenceLocationStr.from_biopython_location(
-                self.right_location
-            ),
+            left_location=self.from_biopython_location(self.left_location),
+            right_location=self.from_biopython_location(self.right_location),
             reverse_complemented=self.reverse_complemented,
         )
 
@@ -216,6 +219,10 @@ class OverlapExtensionPCRLigationSource(AssemblySource):
 
 class InVivoAssemblySource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_InVivoAssemblySource]] = _InVivoAssemblySource
+
+
+class LigationSource(AssemblySource):
+    TARGET_MODEL: ClassVar[Type[_LigationSource]] = _LigationSource
 
 
 class SequenceCutSource(Source):
