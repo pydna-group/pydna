@@ -212,7 +212,7 @@ class Source(ConfiguredBaseModel):
     def history_string(self, seq: "Dseqrecord"):
         history_graph = nx.DiGraph()
         self.add_to_history_graph(history_graph, seq)
-        return nx.write_network_text(history_graph, with_labels=True)
+        return nx.write_network_text(history_graph, with_labels=True, sources=[id(seq)])
 
 
 class AssemblySource(Source):
