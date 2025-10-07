@@ -883,7 +883,11 @@ class Dseqrecord(_SeqRecord):
     def __eq__(self, other):
         """docstring."""
         try:
-            if self.seq == other.seq and str(self.__dict__) == str(other.__dict__):
+            this_dict = self.__dict__.copy()
+            other_dict = other.__dict__.copy()
+            del this_dict["source"]
+            del other_dict["source"]
+            if self.seq == other.seq and str(this_dict) == str(other_dict):
                 return True
         except AttributeError:
             pass
