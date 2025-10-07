@@ -21,6 +21,9 @@ from opencloning_linkml.datamodel import (
     SequenceCutSource as _SequenceCutSource,
     RestrictionSequenceCut as _RestrictionSequenceCut,
     SequenceCut as _SequenceCut,
+    InFusionSource as _InFusionSource,
+    OverlapExtensionPCRLigationSource as _OverlapExtensionPCRLigationSource,
+    InVivoAssemblySource as _InVivoAssemblySource,
 )
 from Bio.SeqFeature import Location, LocationParserError
 from Bio.Restriction.Restriction import AbstractCut
@@ -148,6 +151,9 @@ class AssemblyFragment(SourceInput):
 class Source(ConfiguredBaseModel):
     input: Optional[list[Union[SourceInput, AssemblyFragment]]] = Field(default=None)
 
+    def to_dict_without_type(self) -> dict:
+        return {k: v for k, v in self.model_dump().items() if k != "type"}
+
 
 class AssemblySource(Source):
     circular: bool
@@ -167,7 +173,7 @@ class RestrictionAndLigationSource(AssemblySource):
     def to_pydantic_model(self, seq_id) -> _RestrictionAndLigationSource:
         parent_model = super().to_pydantic_model(seq_id)
         return _RestrictionAndLigationSource(
-            **{k: v for k, v in parent_model.model_dump().items() if k != "type"},
+            **parent_model.to_dict_without_type(),
             restriction_enzymes=[str(enzyme) for enzyme in self.restriction_enzymes],
         )
 
@@ -176,7 +182,31 @@ class GibsonAssemblySource(AssemblySource):
     def to_pydantic_model(self, seq_id) -> _GibsonAssemblySource:
         parent_model = super().to_pydantic_model(seq_id)
         return _GibsonAssemblySource(
-            **{k: v for k, v in parent_model.model_dump().items() if k != "type"},
+            **parent_model.to_dict_without_type(),
+        )
+
+
+class InFusionSource(AssemblySource):
+    def to_pydantic_model(self, seq_id) -> _InFusionSource:
+        parent_model = super().to_pydantic_model(seq_id)
+        return _InFusionSource(
+            **parent_model.to_dict_without_type(),
+        )
+
+
+class OverlapExtensionPCRLigationSource(AssemblySource):
+    def to_pydantic_model(self, seq_id) -> _OverlapExtensionPCRLigationSource:
+        parent_model = super().to_pydantic_model(seq_id)
+        return _OverlapExtensionPCRLigationSource(
+            **parent_model.to_dict_without_type(),
+        )
+
+
+class InVivoAssemblySource(AssemblySource):
+    def to_pydantic_model(self, seq_id) -> _InVivoAssemblySource:
+        parent_model = super().to_pydantic_model(seq_id)
+        return _InVivoAssemblySource(
+            **parent_model.to_dict_without_type(),
         )
 
 
