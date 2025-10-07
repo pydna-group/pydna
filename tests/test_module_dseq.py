@@ -291,8 +291,13 @@ def test_dseq():
 
     obj = Dseq("G", "", 0)
     assert obj.five_prime_end() == ("5'", "g")
+    assert obj.three_prime_end() == ("5'", "g")
     obj = Dseq("", "C", 0)
     assert obj.five_prime_end() == ("3'", "c")
+    assert obj.three_prime_end() == ("3'", "c")
+
+
+
 
     obj = Dseq("ccGGATCC", "aaggatcc", -2)
     # assert obj._data == b"ccGGATCCtt"
@@ -564,8 +569,6 @@ def test_dseq():
 
 def test_Dseq_slicing():
 
-
-
     a = Dseq("ggatcc", "ggatcc", 0)
 
     assert a[:].watson == a.watson
@@ -622,8 +625,6 @@ def test_Dseq___getitem__():
 
 
 def test_cut_circular():
-
-
 
     test = "aaaaaaGGTACCggtctcaaaa"
 
