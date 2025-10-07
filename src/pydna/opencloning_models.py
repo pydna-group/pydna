@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, ClassVar, Type
 from pydantic_core import core_schema
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -116,9 +116,9 @@ class SourceInput(ConfiguredBaseModel):
 
         if isinstance(value, (Dseqrecord, Primer)):
             return value
-        raise TypeError(
-            f"sequence must be Dseqrecord or Primer; got {type(value).__module__}.{type(value).__name__}"
-        )
+        module = type(value).__module__
+        name = type(value).__name__
+        raise TypeError(f"sequence must be Dseqrecord or Primer; got {module}.{name}")
 
     def to_pydantic_model(self) -> _SourceInput:
         return _SourceInput(sequence=id(self.sequence))
@@ -154,60 +154,62 @@ class Source(ConfiguredBaseModel):
     def to_dict_without_type(self) -> dict:
         return {k: v for k, v in self.model_dump().items() if k != "type"}
 
+    def input_models(self):
+        if not self.input:
+            return []
+        return [fragment.to_pydantic_model() for fragment in self.input]
+
 
 class AssemblySource(Source):
     circular: bool
 
-    def to_pydantic_model(self, seq_id) -> _AssemblySource:
+    TARGET_MODEL: ClassVar[Type[_AssemblySource]] = _AssemblySource
 
-        return _AssemblySource(
-            id=seq_id,
-            input=[fragment.to_pydantic_model() for fragment in self.input],
-            circular=self.circular,
-        )
+    def _base_kwargs(self, seq_id: int) -> dict:
+        return {
+            "id": seq_id,
+            "input": self.input_models(),
+            "circular": self.circular,
+        }
+
+    def extra_kwargs(self) -> dict:
+        return {}
+
+    def to_pydantic_model(self, seq_id: int) -> _AssemblySource:
+        kwargs = self._base_kwargs(seq_id)
+        kwargs.update(self.extra_kwargs())
+        return self.TARGET_MODEL(**kwargs)
 
 
 class RestrictionAndLigationSource(AssemblySource):
     restriction_enzymes: list[AbstractCut]
 
-    def to_pydantic_model(self, seq_id) -> _RestrictionAndLigationSource:
-        parent_model = super().to_pydantic_model(seq_id)
-        return _RestrictionAndLigationSource(
-            **parent_model.to_dict_without_type(),
-            restriction_enzymes=[str(enzyme) for enzyme in self.restriction_enzymes],
-        )
+    TARGET_MODEL: ClassVar[Type[_RestrictionAndLigationSource]] = (
+        _RestrictionAndLigationSource
+    )
+
+    def extra_kwargs(self) -> dict:
+        return {
+            "restriction_enzymes": [str(enzyme) for enzyme in self.restriction_enzymes]
+        }
 
 
 class GibsonAssemblySource(AssemblySource):
-    def to_pydantic_model(self, seq_id) -> _GibsonAssemblySource:
-        parent_model = super().to_pydantic_model(seq_id)
-        return _GibsonAssemblySource(
-            **parent_model.to_dict_without_type(),
-        )
+    TARGET_MODEL: ClassVar[Type[_GibsonAssemblySource]] = _GibsonAssemblySource
 
 
 class InFusionSource(AssemblySource):
-    def to_pydantic_model(self, seq_id) -> _InFusionSource:
-        parent_model = super().to_pydantic_model(seq_id)
-        return _InFusionSource(
-            **parent_model.to_dict_without_type(),
-        )
+    TARGET_MODEL: ClassVar[Type[_InFusionSource]] = _InFusionSource
 
 
 class OverlapExtensionPCRLigationSource(AssemblySource):
-    def to_pydantic_model(self, seq_id) -> _OverlapExtensionPCRLigationSource:
-        parent_model = super().to_pydantic_model(seq_id)
-        return _OverlapExtensionPCRLigationSource(
-            **parent_model.to_dict_without_type(),
-        )
+    TARGET_MODEL: ClassVar[Type[_OverlapExtensionPCRLigationSource]] = (
+        _OverlapExtensionPCRLigationSource
+    )
 
 
 class InVivoAssemblySource(AssemblySource):
-    def to_pydantic_model(self, seq_id) -> _InVivoAssemblySource:
-        parent_model = super().to_pydantic_model(seq_id)
-        return _InVivoAssemblySource(
-            **parent_model.to_dict_without_type(),
-        )
+    TARGET_MODEL: ClassVar[Type[_InVivoAssemblySource]] = _InVivoAssemblySource
 
 
 def cutsite_to_pydantic_model(
@@ -264,7 +266,8 @@ class SequenceCutSource(Source):
 
 class CloningStrategy(_BaseCloningStrategy):
 
-    # For now, we don't add anything, but the classes will not have the new methods if this is used
+    # For now, we don't add anything, but the classes will not have the new
+    # methods if this is used
     # It will be used for validation for now
     primers: Optional[List[PrimerModel]] = Field(
         default_factory=list,
@@ -290,7 +293,10 @@ class CloningStrategy(_BaseCloningStrategy):
         if source in self.sources:
             if sequence not in self.sequences:
                 raise ValueError(
-                    f"Source {source.id} already exists in the cloning strategy, but sequence {sequence.id} it's not its output."
+                    (
+                        f"Source {source.id} already exists in the cloning strategy, "
+                        f"but sequence {sequence.id} it's not its output."
+                    )
                 )
             return
         new_id = self.next_id()
