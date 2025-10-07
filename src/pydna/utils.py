@@ -20,8 +20,8 @@ from math import ceil as _ceil
 
 from pydna.codon import weights as _weights
 from pydna.codon import rare_codons as _rare_codons
-from pydna.alphabet import bp_dict_str
-from pydna.alphabet import complement_table_dscode
+from pydna.alphabet import basepair_dict
+from pydna.alphabet import complement_table_for_dscode
 from Bio.SeqFeature import SimpleLocation as _sl
 from Bio.SeqFeature import CompoundLocation as _cl
 from Bio.SeqFeature import Location as _Location
@@ -212,7 +212,7 @@ def anneal_from_left(watson: str, crick: str) -> int:
     result = len(
         list(
             _itertools.takewhile(
-                lambda x: bp_dict_str.get((x[0], x[1])), zip(watson, crick[::-1])
+                lambda x: basepair_dict.get((x[0], x[1])), zip(watson, crick[::-1])
             )
         )
     )
@@ -286,15 +286,15 @@ def rc(sequence: StrOrBytes) -> StrOrBytes:
 
     accepts mixed DNA/RNA
     """
-    return sequence.translate(complement_table_dscode)[::-1]
+    return complement(sequence)[::-1]
 
 
-def complement(sequence: str):
+def complement(sequence: StrOrBytes) -> StrOrBytes:
     """Complement.
 
     accepts mixed DNA/RNA
     """
-    return sequence.translate(complement_table_dscode)
+    return sequence.translate(complement_table_for_dscode)
 
 
 # def memorize(filename):
