@@ -1430,3 +1430,8 @@ class Dseqrecord(_SeqRecord):
         # This will need to be generalised to all types of cuts
         source = SequenceCutSource.from_parent(self, left_cut, right_cut)
         return Dseqrecord(dseq, features=features, source=source)
+
+    def history(self):
+        if self.source is None:
+            return ""
+        return self.source.history_string(self)
