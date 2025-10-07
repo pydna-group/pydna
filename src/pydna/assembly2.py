@@ -2043,6 +2043,21 @@ def common_function_assembly_products(
     return [assemble(frags, a) for a in output_assemblies]
 
 
+def _recast_sources(
+    products: list[_Dseqrecord], source_cls, **extra_fields
+) -> list[_Dseqrecord]:
+    """Recast the `source` of each product to `source_cls` with optional extras.
+
+    This avoids repeating the same for-loop across many assembly functions.
+    """
+    for prod in products:
+        prod.source = source_cls(
+            **prod.source.model_dump(),
+            **extra_fields,
+        )
+    return products
+
+
 def gibson_assembly(
     frags: list[_Dseqrecord], limit: int = 25, circular_only: bool = False
 ) -> list[_Dseqrecord]:
@@ -2066,11 +2081,7 @@ def gibson_assembly(
     products = common_function_assembly_products(
         frags, limit, gibson_overlap, circular_only
     )
-    for prod in products:
-        prod.source = GibsonAssemblySource(
-            **prod.source.model_dump(),
-        )
-    return products
+    return _recast_sources(products, GibsonAssemblySource)
 
 
 def in_fusion_assembly(
@@ -2095,12 +2106,7 @@ def in_fusion_assembly(
     """
 
     prods = gibson_assembly(frags, limit)
-    for prod in prods:
-        prod.source = InFusionSource(
-            **prod.source.model_dump(),
-        )
-
-    return prods
+    return _recast_sources(prods, InFusionSource)
 
 
 def fusion_pcr_assembly(
@@ -2124,11 +2130,7 @@ def fusion_pcr_assembly(
         List of assembled DNA molecules
     """
     prods = gibson_assembly(frags, limit)
-    for prod in prods:
-        prod.source = OverlapExtensionPCRLigationSource(
-            **prod.source.model_dump(),
-        )
-    return prods
+    return _recast_sources(prods, OverlapExtensionPCRLigationSource)
 
 
 def in_vivo_assembly(
@@ -2153,11 +2155,7 @@ def in_vivo_assembly(
     prods = common_function_assembly_products(
         frags, limit, common_sub_strings, circular_only
     )
-    for prod in prods:
-        prod.source = InVivoAssemblySource(
-            **prod.source.model_dump(),
-        )
-    return prods
+    return _recast_sources(prods, InVivoAssemblySource)
 
 
 def restriction_ligation_assembly(
@@ -2232,12 +2230,9 @@ def restriction_ligation_assembly(
         return restriction_ligation_overlap(x, y, enzymes, False, allow_blunt)
 
     prods = common_function_assembly_products(frags, None, algo, circular_only)
-    for prod in prods:
-        prod.source = RestrictionAndLigationSource(
-            **prod.source.model_dump(),
-            restriction_enzymes=enzymes,
-        )
-    return prods
+    return _recast_sources(
+        prods, RestrictionAndLigationSource, restriction_enzymes=enzymes
+    )
 
 
 def golden_gate_assembly(
@@ -2334,11 +2329,7 @@ def ligation_assembly(
         algo = sticky_end_algorithm
 
     prods = common_function_assembly_products(frags, None, algo, circular_only)
-    for prod in prods:
-        prod.source = LigationSource(
-            **prod.source.model_dump(),
-        )
-    return prods
+    return _recast_sources(prods, LigationSource)
 
 
 def assembly_is_multi_site(asm: list[EdgeRepresentationAssembly]) -> bool:
@@ -2443,12 +2434,12 @@ def gateway_assembly(
     products = common_function_assembly_products(
         frags, None, algo, circular_only, filter_results_function
     )
-    for prod in products:
-        prod.source = GatewaySource(
-            **prod.source.model_dump(),
-            reaction_type=reaction_type,
-            greedy=greedy,
-        )
+    products = _recast_sources(
+        products,
+        GatewaySource,
+        reaction_type=reaction_type,
+        greedy=greedy,
+    )
 
     if len(products) == 0:
         # Build a list of all the sites in the fragments
@@ -2607,11 +2598,7 @@ def homologous_recombination_integration(
     products = common_function_integration_products(
         fragments, limit, common_sub_strings
     )
-    for prod in products:
-        prod.source = HomologousRecombinationSource(
-            **prod.source.model_dump(),
-        )
-    return products
+    return _recast_sources(products, HomologousRecombinationSource)
 
 
 def homologous_recombination_excision(
@@ -2648,11 +2635,7 @@ def homologous_recombination_excision(
     [Dseqrecord(o25), Dseqrecord(-32)]
     """
     products = common_function_excision_products(genome, limit, common_sub_strings)
-    for prod in products:
-        prod.source = HomologousRecombinationSource(
-            **prod.source.model_dump(),
-        )
-    return products
+    return _recast_sources(products, HomologousRecombinationSource)
 
 
 def cre_lox_integration(
@@ -2712,11 +2695,7 @@ def cre_lox_integration(
     """
     fragments = common_handle_insertion_fragments(genome, inserts)
     products = common_function_integration_products(fragments, None, cre_loxP_overlap)
-    for prod in products:
-        prod.source = CreLoxRecombinationSource(
-            **prod.source.model_dump(),
-        )
-    return products
+    return _recast_sources(products, CreLoxRecombinationSource)
 
 
 def cre_lox_excision(genome: _Dseqrecord) -> list[_Dseqrecord]:
@@ -2767,8 +2746,4 @@ def cre_lox_excision(genome: _Dseqrecord) -> list[_Dseqrecord]:
     [Dseqrecord(o39), Dseqrecord(-45)]
     """
     products = common_function_excision_products(genome, None, cre_loxP_overlap)
-    for prod in products:
-        prod.source = CreLoxRecombinationSource(
-            **prod.source.model_dump(),
-        )
-    return products
+    return _recast_sources(products, CreLoxRecombinationSource)
