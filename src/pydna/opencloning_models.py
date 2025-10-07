@@ -27,6 +27,7 @@ from opencloning_linkml.datamodel import (
     LigationSource as _LigationSource,
     GatewaySource as _GatewaySource,
     GatewayReactionType,
+    HomologousRecombinationSource as _HomologousRecombinationSource,
 )
 from Bio.SeqFeature import Location, LocationParserError
 from Bio.Restriction.Restriction import AbstractCut
@@ -238,6 +239,12 @@ class GatewaySource(AssemblySource):
             "reaction_type": self.reaction_type,
             "greedy": self.greedy,
         }
+
+
+class HomologousRecombinationSource(AssemblySource):
+    TARGET_MODEL: ClassVar[Type[_HomologousRecombinationSource]] = (
+        _HomologousRecombinationSource
+    )
 
 
 class SequenceCutSource(Source):

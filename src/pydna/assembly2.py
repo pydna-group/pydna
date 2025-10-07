@@ -50,6 +50,7 @@ from pydna.opencloning_models import (
     InVivoAssemblySource,
     LigationSource,
     GatewaySource,
+    HomologousRecombinationSource,
 )
 
 if TYPE_CHECKING:
@@ -2602,7 +2603,14 @@ def homologous_recombination_integration(
     """
     fragments = common_handle_insertion_fragments(genome, inserts)
 
-    return common_function_integration_products(fragments, limit, common_sub_strings)
+    products = common_function_integration_products(
+        fragments, limit, common_sub_strings
+    )
+    for prod in products:
+        prod.source = HomologousRecombinationSource(
+            **prod.source.model_dump(),
+        )
+    return products
 
 
 def homologous_recombination_excision(
