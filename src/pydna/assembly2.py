@@ -2646,7 +2646,12 @@ def homologous_recombination_excision(
     >>> products
     [Dseqrecord(o25), Dseqrecord(-32)]
     """
-    return common_function_excision_products(genome, limit, common_sub_strings)
+    products = common_function_excision_products(genome, limit, common_sub_strings)
+    for prod in products:
+        prod.source = HomologousRecombinationSource(
+            **prod.source.model_dump(),
+        )
+    return products
 
 
 def cre_lox_integration(
