@@ -45,6 +45,8 @@ from pydna.opencloning_models import (
     AssemblySource,
     RestrictionAndLigationSource,
     GibsonAssemblySource,
+    InFusionSource,
+    OverlapExtensionPCRLigationSource,
 )
 
 if TYPE_CHECKING:
@@ -2086,7 +2088,14 @@ def in_fusion_assembly(
     list[_Dseqrecord]
         List of assembled DNA molecules
     """
-    return gibson_assembly(frags, limit)
+
+    prods = gibson_assembly(frags, limit)
+    for prod in prods:
+        prod.source = InFusionSource(
+            **prod.source.model_dump(),
+        )
+
+    return prods
 
 
 def fusion_pcr_assembly(
@@ -2109,7 +2118,12 @@ def fusion_pcr_assembly(
     list[_Dseqrecord]
         List of assembled DNA molecules
     """
-    return gibson_assembly(frags, limit)
+    prods = gibson_assembly(frags, limit)
+    for prod in prods:
+        prod.source = OverlapExtensionPCRLigationSource(
+            **prod.source.model_dump(),
+        )
+    return prods
 
 
 def in_vivo_assembly(
