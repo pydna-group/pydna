@@ -51,6 +51,7 @@ from pydna.opencloning_models import (
     LigationSource,
     GatewaySource,
     HomologousRecombinationSource,
+    CreLoxRecombinationSource,
 )
 
 if TYPE_CHECKING:
@@ -2710,7 +2711,12 @@ def cre_lox_integration(
 
     """
     fragments = common_handle_insertion_fragments(genome, inserts)
-    return common_function_integration_products(fragments, None, cre_loxP_overlap)
+    products = common_function_integration_products(fragments, None, cre_loxP_overlap)
+    for prod in products:
+        prod.source = CreLoxRecombinationSource(
+            **prod.source.model_dump(),
+        )
+    return products
 
 
 def cre_lox_excision(genome: _Dseqrecord) -> list[_Dseqrecord]:
@@ -2760,4 +2766,9 @@ def cre_lox_excision(genome: _Dseqrecord) -> list[_Dseqrecord]:
     >>> res2
     [Dseqrecord(o39), Dseqrecord(-45)]
     """
-    return common_function_excision_products(genome, None, cre_loxP_overlap)
+    products = common_function_excision_products(genome, None, cre_loxP_overlap)
+    for prod in products:
+        prod.source = CreLoxRecombinationSource(
+            **prod.source.model_dump(),
+        )
+    return products

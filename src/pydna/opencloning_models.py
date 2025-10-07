@@ -28,6 +28,7 @@ from opencloning_linkml.datamodel import (
     GatewaySource as _GatewaySource,
     GatewayReactionType,
     HomologousRecombinationSource as _HomologousRecombinationSource,
+    CreLoxRecombinationSource as _CreLoxRecombinationSource,
 )
 from Bio.SeqFeature import Location, LocationParserError
 from Bio.Restriction.Restriction import AbstractCut
@@ -244,6 +245,12 @@ class GatewaySource(AssemblySource):
 class HomologousRecombinationSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_HomologousRecombinationSource]] = (
         _HomologousRecombinationSource
+    )
+
+
+class CreLoxRecombinationSource(AssemblySource):
+    TARGET_MODEL: ClassVar[Type[_CreLoxRecombinationSource]] = (
+        _CreLoxRecombinationSource
     )
 
 
