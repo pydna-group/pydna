@@ -18,7 +18,9 @@ from opencloning_linkml.datamodel import (
     RestrictionAndLigationSource as _RestrictionAndLigationSource,
     GibsonAssemblySource as _GibsonAssemblySource,
     RestrictionEnzymeDigestionSource as _RestrictionEnzymeDigestionSource,
+    SequenceCutSource as _SequenceCutSource,
     RestrictionSequenceCut as _RestrictionSequenceCut,
+    SequenceCut as _SequenceCut,
 )
 from Bio.SeqFeature import Location, LocationParserError
 from Bio.Restriction.Restriction import AbstractCut
@@ -178,7 +180,25 @@ class GibsonAssemblySource(AssemblySource):
         )
 
 
-class RestrictionEnzymeDigestionSource(Source):
+def cutsite_to_pydantic_model(
+    cut_site: CutSiteType | None,
+) -> _SequenceCut | _RestrictionSequenceCut | None:
+    if cut_site is None:
+        return None
+    elif isinstance(cut_site[1], AbstractCut):
+        return _RestrictionSequenceCut(
+            cut_watson=cut_site[0][0],
+            overhang=cut_site[0][1],
+            restriction_enzyme=str(cut_site[1]),
+        )
+    else:
+        return _SequenceCut(
+            cut_watson=cut_site[0][0],
+            overhang=cut_site[0][1],
+        )
+
+
+class SequenceCutSource(Source):
     left_edge: CutSiteType | None
     right_edge: CutSiteType | None
 
@@ -192,30 +212,23 @@ class RestrictionEnzymeDigestionSource(Source):
             right_edge=right_edge,
         )
 
-    def to_pydantic_model(self, seq_id) -> _RestrictionEnzymeDigestionSource:
-        left_edge = (
-            None
-            if self.left_edge is None
-            else _RestrictionSequenceCut(
-                cut_watson=self.left_edge[0][0],
-                overhang=self.left_edge[0][1],
-                restriction_enzyme=str(self.left_edge[1]),
-            )
+    def to_pydantic_model(self, seq_id) -> _SequenceCutSource:
+        left_has_enzyme = self.left_edge is not None and isinstance(
+            self.left_edge[1], AbstractCut
         )
-        right_edge = (
-            None
-            if self.right_edge is None
-            else _RestrictionSequenceCut(
-                cut_watson=self.right_edge[0][0],
-                overhang=self.right_edge[0][1],
-                restriction_enzyme=str(self.right_edge[1]),
-            )
+        right_has_enzyme = self.right_edge is not None and isinstance(
+            self.right_edge[1], AbstractCut
         )
-        return _RestrictionEnzymeDigestionSource(
+        pydantic_class = (
+            _RestrictionEnzymeDigestionSource
+            if left_has_enzyme or right_has_enzyme
+            else _SequenceCutSource
+        )
+        return pydantic_class(
             id=seq_id,
             input=[fragment.to_pydantic_model() for fragment in self.input],
-            left_edge=left_edge,
-            right_edge=right_edge,
+            left_edge=cutsite_to_pydantic_model(self.left_edge),
+            right_edge=cutsite_to_pydantic_model(self.right_edge),
         )
 
 

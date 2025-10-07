@@ -36,7 +36,7 @@ import re as _re
 import time as _time
 import datetime as _datetime
 from typing import Union, TYPE_CHECKING
-from pydna.opencloning_models import RestrictionEnzymeDigestionSource
+from pydna.opencloning_models import SequenceCutSource
 
 if TYPE_CHECKING:
     from pydna.opencloning_models import Source
@@ -1428,5 +1428,5 @@ class Dseqrecord(_SeqRecord):
             features = self[left_edge:right_edge].features
 
         # This will need to be generalised to all types of cuts
-        source = RestrictionEnzymeDigestionSource.from_parent(self, left_cut, right_cut)
+        source = SequenceCutSource.from_parent(self, left_cut, right_cut)
         return Dseqrecord(dseq, features=features, source=source)
