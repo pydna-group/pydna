@@ -1526,7 +1526,7 @@ class Dseq(_Seq):
 
         """
 
-        return Dseq(self._data.translate(bytes.maketrans(b"UuOo", b"FfEe")))
+        return Dseq(self._data.translate(bytes.maketrans(b"UuOo", b"ZzEe")))
 
     def cut(self: DseqType, *enzymes: EnzymesType) -> _Tuple[DseqType, ...]:
         """Returns a list of linear Dseq fragments produced in the digestion.
