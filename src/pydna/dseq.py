@@ -32,7 +32,6 @@ from pydna.utils import flatten as _flatten
 from pydna.utils import cuts_overlap as _cuts_overlap
 
 from pydna.alphabet import basepair_dict
-from pydna.alphabet import annealing_dict
 from pydna.alphabet import dscode_to_watson_table
 from pydna.alphabet import dscode_to_crick_table
 
@@ -682,6 +681,8 @@ class Dseq(_Seq):
 
         """
         parts = get_parts(self._data.decode("ascii"))
+        if parts.single_watson or parts.single_crick:
+            return None
         return -len(parts.sticky_left5) or len(parts.sticky_left3)
 
     def to_blunt_string(self):
@@ -900,21 +901,14 @@ class Dseq(_Seq):
         if self.circular:
             return _copy.deepcopy(self)
 
-        parts = get_parts(self._data.decode("ascii"))
-
-        end = Dseq(parts.sticky_right5 or parts.sticky_right3)
-
-        try:
-            result = end + self
-        except TypeError:
+        type5, sticky5 = self.five_prime_end()
+        type3, sticky3 = self.three_prime_end()
+        if type5 == type3 and str(sticky5) == str(_rc(sticky3)):
+            return self.__class__(self.watson, circular=True)
+        else:
             raise TypeError(
                 "DNA cannot be circularized.\n" "5' and 3' sticky ends not compatible!"
             )
-
-        new_ds_part = get_parts(result._data.decode("ascii")).middle
-        result = Dseq(new_ds_part, circular=True)
-
-        return result
 
     def tolinear(self: DseqType) -> DseqType:  # pragma: no cover
         """Returns a blunt, linear copy of a circular Dseq object. This can
@@ -999,11 +993,15 @@ class Dseq(_Seq):
 
         single_crick = parts.single_crick.translate(dscode_to_crick_table)[::-1]
 
-        if sticky5 == sticky3 == "" and not (single_watson or single_crick):
+        if sticky := single_watson:
+            type_ = "single"
+        elif sticky := single_crick:
+            type_ = "single"
+        elif sticky5 == sticky3 == "":
             type_, sticky = "blunt", ""
-        elif sticky := sticky5 or single_watson:
+        elif sticky := sticky5:
             type_ = "5'"
-        elif sticky := sticky3 or single_crick:
+        elif sticky := sticky3:
             type_ = "3'"
 
         return type_, sticky.lower()
@@ -1048,26 +1046,29 @@ class Dseq(_Seq):
 
         sticky3 = parts.sticky_right3.translate(dscode_to_watson_table)
 
-        single_watson = parts.single_watson.translate(dscode_to_watson_table)[::-1]
+        single_watson = parts.single_watson.translate(dscode_to_watson_table)
 
-        single_crick = parts.single_crick.translate(dscode_to_crick_table)
+        single_crick = parts.single_crick.translate(dscode_to_crick_table)[::-1]
 
-        if sticky5 == sticky3 == "" and not (single_watson or single_crick):
+        if sticky := single_watson:
+            type_ = "single"
+        elif sticky := single_crick:
+            type_ = "single"
+        elif sticky5 == sticky3 == "":
             type_, sticky = "blunt", ""
-        elif sticky := sticky5 or single_watson:
+        elif sticky := sticky5:
             type_ = "5'"
-        elif sticky := sticky3 or single_crick:
+        elif sticky := sticky3:
             type_ = "3'"
 
         return type_, sticky.lower()
 
     def watson_ovhg(self) -> int:
         """Overhang of the watson strand at the right side."""
-        type_, sticky = self.three_prime_end()
-
-        watson_ovhg = {"5'": -len(sticky), "3'": len(sticky), "blunt": 0}[type_]
-
-        return watson_ovhg
+        parts = get_parts(self._data.decode("ascii"))
+        if parts.single_watson or parts.single_crick:
+            return None
+        return -len(parts.sticky_right5) or len(parts.sticky_right3)
 
     def __add__(self: DseqType, other: DseqType) -> DseqType:
 
@@ -1085,52 +1086,14 @@ class Dseq(_Seq):
         elif not self:
             return _copy.deepcopy(other)
 
-        parts = get_parts(self._data.decode("ascii"))
-        other_parts = get_parts(other._data.decode("ascii"))
+        self_type, self_tail = self.three_prime_end()
+        other_type, other_tail = other.five_prime_end()
 
-        this_sticky = (
-            parts.sticky_right5
-            or parts.sticky_right3
-            or parts.single_watson
-            or parts.single_crick
-        )
-        other_sticky = (
-            other_parts.sticky_left5
-            or other_parts.sticky_left3
-            or other_parts.single_watson
-            or other_parts.single_crick
-        )
-
-        max_len = max(len(this_sticky), len(other_sticky))
-
-        this_sticky_just = this_sticky.ljust(max_len)
-        other_sticky_just = other_sticky.rjust(max_len)
-
-        junction = ""
-
-        for x, y in zip(this_sticky_just, other_sticky_just):
-            try:
-                letter = annealing_dict[x, y]
-            except KeyError:
-
-                before_cut = parts.middle[-1] if parts.middle else ""
-                after_cut = other_parts.middle[0] if other_parts.middle else ""
-
-                w, c = representation_tuple(before_cut + this_sticky)
-                ow, oc = representation_tuple(other_sticky + after_cut)
-
-                maxlen = max(len(w), len(c))
-                w, c = w.ljust(maxlen), c.ljust(maxlen)
-
-                raise TypeError(
-                    "sticky ends not compatible!\n" f"-{w}  {ow}-\n" f"-{c}  {oc}-"
-                )
-
-            junction += letter
-
-        result = Dseq("".join(parts[0:3] + (junction,) + other_parts[2:5]))
-
-        return result
+        if self_type == other_type and str(self_tail) == str(_rc(other_tail)):
+            return self.__class__(
+                self.watson + other.watson, other.crick + self.crick, self.ovhg
+            )
+        raise TypeError("sticky ends not compatible!")
 
     def __mul__(self: DseqType, number: int) -> DseqType:
         if not isinstance(number, int):
@@ -2016,89 +1979,18 @@ class Dseq(_Seq):
         if _cuts_overlap(left_cut, right_cut, len(self)):
             raise ValueError("Cuts by {} {} overlap.".format(left_cut[1], right_cut[1]))
 
-        """left_cut is None if start of the sequence"""
-        left_cut = left_cut or ((0, 0), None)
-        """right_cut is None if end of the sequence"""
-        right_cut = right_cut or ((len(self), 0), None)
-
-        """extract (position, overhang), enzyme). Enzyme is not used"""
-        (x, xovhg), _ = left_cut
-        (y, yovhg), _ = right_cut
-
-        """
-        Fragment slice begin:end that contains the sticky ends
-        The length of the overhangs are factored in.
-        """
-        begin = min(x, x - xovhg)
-        end = max(y, y - yovhg)
-
-        """A circular byte string class (CircularBytes) is used to
-           handle slices across the origin of the sequence when
-           begin > end
-        """
-        if self.circular:
-            cutfrom = CircularBytes(self._data)
-            if left_cut == right_cut and begin < end:
-                """
-                The edge case below happens when a circular fragment
-                is cut in the same place, but the length of the sticky
-                ends leads to begin < end although we want a slice
-                over the origin.
-                In the example below, begin is 1 and end is
-                4 which would give us "GATC", to solve this
-                the fragment length is added to the end
-                which gives us 1 and 4 + 6 = 10 which gives us
-                "GATCCGGATC"
-
-                Dseq(o6)
-                GGATCC
-                CCTAGG
-
-                Dseq(o6)
-                GATCCG
-                    GCCTAG
-                """
-                end += len(self)
-        else:
-            cutfrom = self._data
-        """
-        dschunk contains the desired slice including sticky ends
-        bytarrays are mutable sequences, so we can change slices by
-        assignment.
-        """
-        dschunk = bytearray(cutfrom[begin:end])
-
-        """A translation table is chosen to process the sticky end"""
-        if xovhg > 0:
-            tb = dscode_to_watson_tail_table
-        else:
-            tb = dscode_to_crick_tail_table
-        """
-        The slice containing the left sticky end is replaced by
-        translation to single strand dscode
-        """
-        dschunk[: abs(xovhg)] = dschunk[: abs(xovhg)].translate(tb)
-
-        """
-        The processed chunk is reversed, avoiding complicated slicing
-        edge cases.
-        """
-        dschunk_rev = dschunk[::-1]
-
-        if yovhg < 0:
-            tb = dscode_to_watson_tail_table
-        else:
-            tb = dscode_to_crick_tail_table
-        """
-        The right sticky end is processed
-        """
-        dschunk_rev[: abs(yovhg)] = dschunk_rev[: abs(yovhg)].translate(tb)
-        """
-        Finally, sequence is revesed to correct order.
-        """
-        result = Dseq(dschunk_rev[::-1].decode("ascii"))
-
-        return result
+        left_watson, left_crick, ovhg_left = self.get_cut_parameters(left_cut, True)
+        right_watson, right_crick, _ = self.get_cut_parameters(right_cut, False)
+        return Dseq(
+            str(self[left_watson:right_watson]),
+            # The line below could be easier to understand as _rc(str(self[left_crick:right_crick])), but it does not preserve the case
+            str(
+                self.reverse_complement()[
+                    len(self) - right_crick : len(self) - left_crick
+                ]
+            ),
+            ovhg=ovhg_left,
+        )
 
     def get_cutsite_pairs(
         self, cutsites: _List[CutSiteType]
