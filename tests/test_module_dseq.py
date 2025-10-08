@@ -290,11 +290,11 @@ def test_dseq():
     assert obj[2:1]._data == b"ga"
 
     obj = Dseq("G", "", 0)
-    assert obj.five_prime_end() == ("5'", "g")
-    assert obj.three_prime_end() == ("5'", "g")
+    assert obj.five_prime_end() == ("single", "g")
+    assert obj.three_prime_end() == ("single", "g")
     obj = Dseq("", "C", 0)
-    assert obj.five_prime_end() == ("3'", "c")
-    assert obj.three_prime_end() == ("3'", "c")
+    assert obj.five_prime_end() == ("single", "c")
+    assert obj.three_prime_end() == ("single", "c")
 
 
 
@@ -1130,3 +1130,49 @@ def test_checksums():
     truth = "cdseguid=5fHMG19IbYxn7Yr7_sOCkvaaw7U"
     assert cdseguid("ACGTT", "AACGT") == truth == Dseq("ACGTT", "AACGT", circular=True).seguid()
     assert cdseguid("AACGT", "ACGTT") == truth == Dseq("AACGT", "ACGTT", circular=True).seguid()
+
+
+def test_ovhg():
+    # No overhang
+    assert Dseq("AAAA").ovhg == 0
+    assert Dseq("AAAA", circular=True).ovhg == 0
+    # Sticky ends
+    assert Dseq("FFAA").ovhg == 2
+    assert Dseq("EEAA").ovhg == -2
+
+    # Sticky end on the other hang does not matter
+    assert Dseq("AAFF").ovhg == 0
+    assert Dseq("AAEE").ovhg == 0
+
+    #
+    assert Dseq("FFAAFF").ovhg == 2
+    assert Dseq("FFAAEE").ovhg == 2
+    assert Dseq("EEAAEE").ovhg == -2
+    assert Dseq("EEAAFF").ovhg == -2
+
+    # Single strand
+    assert Dseq("EEEE").ovhg is None
+    assert Dseq("FFFF").ovhg is None
+
+
+def test_watson_ovhg():
+    # No overhang
+    for seq in [
+        "AAAA",
+        "AAAA",
+        "FFAA",
+        "EEAA",
+        "AAFF",
+        "AAEE",
+        "FFAAFF",
+        "FFAAEE",
+        "EEAAEE",
+        "EEAAFF",
+    ]:
+        assert (
+            Dseq(seq).watson_ovhg() == Dseq(seq).reverse_complement().ovhg
+        ), f"error for {seq}"
+
+    # Single strand
+    assert Dseq("EEEE").watson_ovhg() is None
+    assert Dseq("FFFF").watson_ovhg() is None
