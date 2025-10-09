@@ -770,27 +770,36 @@ class Dseq(_Seq):
             item = item.decode("ascii")
         return item in self.to_blunt_string()
 
+    # def __getitem__(self, sl: [slice, int]) -> "Dseq":
+    #     """Method is used by the slice notation"""
+    #     if isinstance(sl, int):
+    #         # slice(start, stop, step) where stop = start+1
+    #         sl = slice(sl, sl + 1, 1)
+    #     sl = slice(sl.start or 0, sl.stop or len(self), sl.step)
+    #     if self.circular:
+    #         if sl.start is None and sl.stop is None:
+    #             # Returns a linear copy using slice obj[:]
+    #             return self.quick(self._data[sl])
+    #         elif sl.start == sl.stop:
+    #             # Returns a shifted object
+    #             shift = sl.start % len(self)
+    #             return self.quick(self._data[shift:] + self._data[:shift])
+    #         elif (
+    #             sl.start > sl.stop
+    #             and 0 <= sl.start <= len(self)
+    #             and 0 <= sl.stop <= len(self)
+    #         ):
+    #             # Returns the circular slice spanning the origin
+    #             return self.quick(self._data[sl.start :] + self._data[: sl.stop])
+    #     return super().__getitem__(sl)
+
     def __getitem__(self, sl: [slice, int]) -> "Dseq":
-        """Method is used by the slice notation"""
         if isinstance(sl, int):
-            # slice(start, stop, step) where stop = start+1
             sl = slice(sl, sl + 1, 1)
         sl = slice(sl.start or 0, sl.stop or len(self), sl.step)
         if self.circular:
-            if sl.start is None and sl.stop is None:
-                # Returns a linear copy using slice obj[:]
-                return self.quick(self._data[sl])
-            elif sl.start == sl.stop:
-                # Returns a shifted object
-                shift = sl.start % len(self)
-                return self.quick(self._data[shift:] + self._data[:shift])
-            elif (
-                sl.start > sl.stop
-                and 0 <= sl.start <= len(self)
-                and 0 <= sl.stop <= len(self)
-            ):
-                # Returns the circular slice spanning the origin
-                return self.quick(self._data[sl.start :] + self._data[: sl.stop])
+            cb = CircularBytes(self._data)
+            return self.quick(cb[sl])
         return super().__getitem__(sl)
 
     def __eq__(self, other: DseqType) -> bool:
@@ -904,7 +913,9 @@ class Dseq(_Seq):
         type5, sticky5 = self.five_prime_end()
         type3, sticky3 = self.three_prime_end()
         if type5 == type3 and str(sticky5) == str(_rc(sticky3)):
-            return self.__class__(self.watson, circular=True)
+            new = self.cast_to_ds_left()[: -len(sticky3)]
+            new.circular = True
+            return new
         else:
             raise TypeError(
                 "DNA cannot be circularized.\n" "5' and 3' sticky ends not compatible!"
@@ -1489,7 +1500,7 @@ class Dseq(_Seq):
 
         """
 
-        return Dseq(self._data.translate(bytes.maketrans(b"UuOo", b"FfEe")))
+        return Dseq(self._data.translate(bytes.maketrans(b"UuOo", b"ZzEe")))
 
     def cut(self: DseqType, *enzymes: EnzymesType) -> _Tuple[DseqType, ...]:
         """Returns a list of linear Dseq fragments produced in the digestion.
@@ -1921,7 +1932,7 @@ class Dseq(_Seq):
 
         return Dseq(new), tuple(strands), intervals
 
-    def apply_cut(self, left_cut: CutSiteType, right_cut: CutSiteType) -> "Dseq":
+    def apply_cut_old(self, left_cut: CutSiteType, right_cut: CutSiteType) -> "Dseq":
         """Extracts a subfragment of the sequence between two cuts.
 
         For more detail see the documentation of get_cutsite_pairs.
@@ -1982,7 +1993,7 @@ class Dseq(_Seq):
         left_watson, left_crick, ovhg_left = self.get_cut_parameters(left_cut, True)
         right_watson, right_crick, _ = self.get_cut_parameters(right_cut, False)
         return Dseq(
-            str(self[left_watson:right_watson]),
+            self[left_watson:right_watson].watson,
             # The line below could be easier to understand as _rc(str(self[left_crick:right_crick])), but it does not preserve the case
             str(
                 self.reverse_complement()[
@@ -1991,6 +2002,146 @@ class Dseq(_Seq):
             ),
             ovhg=ovhg_left,
         )
+
+    def apply_cut(self, left_cut: CutSiteType, right_cut: CutSiteType) -> "Dseq":
+        """Extracts a subfragment of the sequence between two cuts.
+
+        For more detail see the documentation of get_cutsite_pairs.
+
+        Parameters
+        ----------
+        left_cut : Union[tuple[tuple[int,int], _AbstractCut], None]
+        right_cut: Union[tuple[tuple[int,int], _AbstractCut], None]
+
+        Returns
+        -------
+        Dseq
+
+        Examples
+        --------
+        >>> from Bio.Restriction import EcoRI
+        >>> from pydna.dseq import Dseq
+        >>> dseq = Dseq('aaGAATTCaaGAATTCaa')
+        >>> cutsites = dseq.get_cutsites([EcoRI])
+        >>> cutsites
+        [((3, -4), EcoRI), ((11, -4), EcoRI)]
+        >>> p1, p2, p3 = dseq.get_cutsite_pairs(cutsites)
+        >>> p1
+        (None, ((3, -4), EcoRI))
+        >>> dseq.apply_cut(*p1)
+        Dseq(-7)
+        aaG
+        ttCTTAA
+        >>> p2
+        (((3, -4), EcoRI), ((11, -4), EcoRI))
+        >>> dseq.apply_cut(*p2)
+        Dseq(-12)
+        AATTCaaG
+            GttCTTAA
+        >>> p3
+        (((11, -4), EcoRI), None)
+        >>> dseq.apply_cut(*p3)
+        Dseq(-7)
+        AATTCaa
+            Gtt
+
+        >>> dseq = Dseq('TTCaaGAA', circular=True)
+        >>> cutsites = dseq.get_cutsites([EcoRI])
+        >>> cutsites
+        [((6, -4), EcoRI)]
+        >>> pair = dseq.get_cutsite_pairs(cutsites)[0]
+        >>> pair
+        (((6, -4), EcoRI), ((6, -4), EcoRI))
+        >>> dseq.apply_cut(*pair)
+        Dseq(-12)
+        AATTCaaG
+            GttCTTAA
+
+        """
+        if _cuts_overlap(left_cut, right_cut, len(self)):
+            raise ValueError("Cuts by {} {} overlap.".format(left_cut[1], right_cut[1]))
+
+        # left_cut is None if start of the sequence
+        left_cut = left_cut or ((0, 0), None)
+        # right_cut is None if end of the sequence
+        right_cut = right_cut or ((len(self), 0), None)
+
+        # extract (position, overhang), enzyme). Enzyme is not used
+        (x, xovhg), _ = left_cut
+        (y, yovhg), _ = right_cut
+
+        # Fragment slice begin:end that contains the sticky ends
+        # The length of the overhangs are factored in.
+
+        begin = min(x, x - xovhg)
+        end = max(y, y - yovhg)
+
+        # A circular byte string class (CircularBytes) is used to
+        # handle slices across the origin of the sequence when
+        # begin > end
+
+        if self.circular:
+            cutfrom = CircularBytes(self._data)
+            if left_cut == right_cut and begin < end:
+
+                # The edge case below happens when a circular fragment
+                # is cut in the same place, but the length of the sticky
+                # ends leads to begin < end although we want a slice
+                # over the origin.
+                # In the example below, begin is 1 and end is
+                # 4 which would give us "GATC", to solve this
+                # the fragment length is added to the end
+                # which gives us 1 and 4 + 6 = 10 which gives us
+                # "GATCCGGATC"
+
+                # Dseq(o6)
+                # GGATCC
+                # CCTAGG
+
+                # Dseq(o6)
+                # GATCCG
+                #     GCCTAG
+
+                end += len(self)
+        else:
+            cutfrom = self._data
+
+        # dschunk contains the desired slice including sticky ends
+        # bytarrays are mutable sequences, so we can change slices by
+        # assignment.
+
+        dschunk = bytearray(cutfrom[begin:end])
+
+        # A translation table is chosen to process the sticky end
+        if xovhg > 0:
+            tb = dscode_to_watson_tail_table
+        else:
+            tb = dscode_to_crick_tail_table
+
+        # The slice containing the left sticky end is replaced by
+        # translation to single strand dscode
+
+        dschunk[: abs(xovhg)] = dschunk[: abs(xovhg)].translate(tb)
+
+        # The processed chunk is reversed, avoiding complicated slicing
+        # edge cases.
+
+        dschunk_rev = dschunk[::-1]
+
+        if yovhg < 0:
+            tb = dscode_to_watson_tail_table
+        else:
+            tb = dscode_to_crick_tail_table
+
+        # The right sticky end is processed
+
+        dschunk_rev[: abs(yovhg)] = dschunk_rev[: abs(yovhg)].translate(tb)
+
+        # Finally, sequence is reversed to correct order.
+
+        result = Dseq(dschunk_rev[::-1].decode("ascii"))
+
+        return result
 
     def get_cutsite_pairs(
         self, cutsites: _List[CutSiteType]
