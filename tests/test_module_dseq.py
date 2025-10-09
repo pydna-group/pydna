@@ -613,9 +613,9 @@ def test_Dseq___getitem__():
 
     assert t[5:1] == Dseq("CG")
     assert s[9:1] == Dseq("")
-    assert t[9:1] == Dseq("")
+    assert t[9:1] == Dseq("TCCG")  # XXX: This is important!
+    assert t[1:9] == Dseq("GATCCGGA")  # XXX: This is important!
 
-    s[-1:9]
 
     # Indexing of full circular molecule (https://github.com/pydna-group/pydna/issues/161)
     s = Dseq("GGATCC", circular=True)

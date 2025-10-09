@@ -1873,10 +1873,10 @@ def test___getitem__():
 
     assert t[1:1].seq == Dseqrecord("GATCCG").seq
     assert t[5:1].seq == Dseqrecord("CG", circular=False).seq
-    assert t[9:1].seq == Dseqrecord("").seq
-    assert t[1:9].seq == Dseqrecord("GATCC").seq  # FIXME: Significant change
-    assert t[9:10].seq == Dseqrecord("").seq
-    assert t[10:9].seq == Dseqrecord("").seq
+    assert t[9:1].seq == Dseqrecord("TCCG").seq  # XXX: This is important!
+    assert t[1:9].seq == Dseqrecord("GATCCGGA").seq  # XXX: This is important!
+    assert t[9:10].seq == Dseqrecord("T").seq  # XXX: This is important!
+    assert t[10:9].seq == Dseqrecord("CCGGA").seq  # XXX: This is important!
 
     # Test how slicing works with features (using sequence as in test_features_change_ori)
     seqRecord = Dseqrecord("aaagGTACCTTTGGATCcggg", circular=True)
