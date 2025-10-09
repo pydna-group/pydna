@@ -892,12 +892,21 @@ class Dseq(_Seq):
         Dseq(o7)
         catcgat
         gtagcta
-        >>> c = Dseq("ietcgazj")
+        >>> c = Dseq("jatcgati")
         >>> c
+        Dseq(-8)
+         atcgatc
+        gtagcta
+        >>> c.looped()
+        Dseq(o7)
+        catcgat
+        gtagcta
+        >>> d = Dseq("ietcgazj")
+        >>> d
         Dseq(-8)
         catcga
           agctag
-        >>> c.looped()
+        >>> d.looped()
         Traceback (most recent call last):
           File "<stdin>", line 1, in <module>
           File "/usr/local/lib/python2.7/dist-packages/pydna/dsdna.py", line 357, in looped
@@ -913,6 +922,8 @@ class Dseq(_Seq):
         type5, sticky5 = self.five_prime_end()
         type3, sticky3 = self.three_prime_end()
         if type5 == type3 and str(sticky5) == str(_rc(sticky3)):
+            # This code makes makes shure that the sequence is not
+            # shifted after looping.
             new = self.cast_to_ds_left()[: -len(sticky3)]
             new.circular = True
             return new
