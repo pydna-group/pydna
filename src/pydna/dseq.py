@@ -2071,7 +2071,24 @@ class Dseq(_Seq):
         (y, yovhg), _ = right_cut
 
         # Fragment slice begin:end that contains the sticky ends
-        # The length of the overhangs are factored in.
+        # regardless of type.
+        #
+        #      GATCgggGATC
+        #      CTAGcccCTAG
+        #
+        #      begin
+        #      |
+        #      GATCggg
+        #          cccCTAG
+        #                |
+        #                end
+        #
+        #      begin
+        #      |
+        #      |   gggGATC
+        #      CTAGccc   |
+        #                |
+        #                end
 
         begin = min(x, x - xovhg)
         end = max(y, y - yovhg)
