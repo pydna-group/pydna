@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import pytest
 from pydna.dseq import Dseq
 from pydna.parsers import parse, parse_primers
 from pydna.amplify import pcr
@@ -52,12 +51,38 @@ def test_USER_cloning():
 
     USERprocessed = p.seq.user()
 
-    assert USERprocessed.melt(1) == USERprocessed.melt(12)
+    correct_figure = dedent(
+    """\
+    Dseq(-17)
+    G GGATTaaaCGGCGAg
+    CACCTAAtttGCCGC c
+    """).strip()
 
-    stuffer, insert, stuffer = USERprocessed.melt(1)
+    assert repr(USERprocessed) == correct_figure
 
-    plasmid = Dseq("FqaaaPE")
+    melted1 = USERprocessed.melt(1)
+
+    melted12 = USERprocessed.melt(12)
+
+    assert melted1 == melted12
+
+    stuffer, insert, stuffer = melted1
+
+    correct_figure = dedent(
+    """\
+    Dseq(-17)
+      GGATTaaaCGGCGAg
+    CACCTAAtttGCCGC
+    """).strip()
+
+    assert repr(insert) == correct_figure
+
+    plasmid = Dseq.from_representation("""
+                                       Dseq(-7)
+                                         aaaGT
+                                       Tcttt
+                                       """)
 
     plasmid_insert = (plasmid + insert).looped()
 
-    assert plasmid_insert == Dseq("AgaaaGAGGATTaaaCGGCG", circular=True)
+    assert plasmid_insert == Dseq("AgaaaGTGGATTaaaCGGCG", circular=True)
