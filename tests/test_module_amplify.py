@@ -831,7 +831,3 @@ def test_annotation():
         product_seqs = set(str(f.location.extract(product).seq) for f in product.features if f.type == "test")
 
         assert product_seqs == feature_seqs, f"Shift {shift}"
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-vv", "-s"])

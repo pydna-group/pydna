@@ -62,6 +62,9 @@ class CircularBytes(bytes):
     def __new__(cls, value: bytes | bytearray | memoryview):
         return super().__new__(cls, bytes(value))
 
+    def __repr__(self):
+        return f"CircularBytes({super().__repr__()})"
+
     def __getitem__(self, key):
         n = len(self)
         if n == 0:
@@ -102,6 +105,15 @@ class CircularBytes(bytes):
             return self.__class__(bytes(out))
 
         return super().__getitem__(key)
+
+    def _wrap(self, b: bytes):
+        """Return a new instance of this subclass from a plain bytes object"""
+        obj = self.__class__(b)
+        return obj
+
+    def replace(self, old: bytes, new: bytes, count: int = -1):
+        base = super().replace(old, new, count)
+        return self._wrap(base)
 
     def cutaround(self, start: int, length: int) -> bytes:
         """
@@ -407,10 +419,10 @@ class Dseq(_Seq):
         circular=False,
         pos=0,
     ):
-        if isinstance(watson, bytes):
+        if isinstance(watson, (bytes, bytearray)):
             # watson is decoded to a string if needed.
             watson = watson.decode("ascii")
-        if isinstance(crick, bytes):
+        if isinstance(crick, (bytes, bytearray)):
             # crick is decoded to a string if needed.
             crick = crick.decode("ascii")
 
@@ -502,11 +514,11 @@ class Dseq(_Seq):
             data = "".join(data)
             self._data = data.encode("ascii")
 
-        self.circular = circular
         self.pos = pos
 
         if circular:
             data += data[0:1]
+            self._data = CircularBytes(self._data)
 
         dsb = dsbreaks(data)
 
@@ -524,9 +536,9 @@ class Dseq(_Seq):
         Does not call Bio.Seq.Seq.__init__() which has lots of time consuming checks.
         """
         obj = cls.__new__(cls)
-        obj.circular = circular
         obj.pos = pos
         obj._data = data
+        obj.circular = circular
         return obj
 
     @classmethod
@@ -538,15 +550,14 @@ class Dseq(_Seq):
         **kwargs,
     ):
         obj = cls.__new__(cls)
-        obj.circular = circular
         obj.pos = 0
         obj._data = dna.encode("ascii")
+        obj.circular = circular
         return obj
 
     @classmethod
     def from_representation(cls, dsdna: str, *args, **kwargs):
         obj = cls.__new__(cls)
-        obj.circular = False
         obj.pos = 0
         clean = _inspect.cleandoc("\n" + dsdna)
         watson, crick = [
@@ -562,19 +573,7 @@ class Dseq(_Seq):
         watson = watson.strip()
         crick = crick.strip()[::-1]
 
-        return Dseq(watson, crick, ovhg)
-
-        # watson = f"{watson:<{len(crick)}}"
-        # crick = f"{crick:<{len(watson)}}"
-        # data = bytearray()
-        # for w, c in zip(watson, crick):
-        #     try:
-        #         data.extend(basepair_dict[w, c])
-        #     except KeyError as err:
-        #         print(f"Base mismatch in representation {err}")
-        #         raise
-        # obj._data = bytes(data)
-        # return obj
+        return Dseq(watson, crick, ovhg, circular=False)
 
     @classmethod
     def from_full_sequence_and_overhangs(
@@ -640,6 +639,24 @@ class Dseq(_Seq):
             crick = crick[watson_ovhg:]
 
         return Dseq(watson, crick=crick, ovhg=crick_ovhg)
+
+    @property
+    def circular(self) -> str:
+        """
+        The watson (upper) strand of the double stranded fragment 5'-3'.
+
+        Returns
+        -------
+        TYPE
+            DESCRIPTION.
+
+        """
+        return True if type(self._data) is CircularBytes else False
+
+    @circular.setter
+    def circular(self, circular: bool):
+        if self._data and circular:
+            self._data = CircularBytes(self._data)
 
     @property
     def watson(self) -> str:
@@ -797,9 +814,6 @@ class Dseq(_Seq):
         if isinstance(sl, int):
             sl = slice(sl, sl + 1, 1)
         sl = slice(sl.start or 0, sl.stop or len(self), sl.step)
-        if self.circular:
-            cb = CircularBytes(self._data)
-            return self.quick(cb[sl])
         return super().__getitem__(sl)
 
     def __eq__(self, other: DseqType) -> bool:
@@ -2108,37 +2122,35 @@ class Dseq(_Seq):
         # handle slices across the origin of the sequence when
         # begin > end
 
-        if self.circular:
-            cutfrom = CircularBytes(self._data)
-            if left_cut == right_cut and begin < end:
+        if self.circular and left_cut == right_cut and begin < end:
 
-                # The edge case below happens when a circular fragment
-                # is cut in the same place, but the length of the sticky
-                # ends leads to begin < end although we want a slice
-                # over the origin.
-                # In the example below, begin is 1 and end is
-                # 4 which would give us "GATC", to solve this
-                # the fragment length is added to the end
-                # which gives us 1 and 4 + 6 = 10 which gives us
-                # "GATCCGGATC"
+            # This edge case below happens when a circular fragment
+            # is cut in the same place, but the length of the sticky
+            # ends leads to "begin" smaller than "end" although we want
+            # a slice over the origin that is longer than the sequence.
+            # In the example below, begin is 1 and end is
+            # 4 which would give us "GATC", to solve this
+            # we use the cutaround method of the CircularBytes class
+            # allowing slices longer than the
+            # "GATCCGGATC"
 
-                # Dseq(o6)
-                # GGATCC
-                # CCTAGG
+            # Dseq(o6)
+            # GGATCC
+            # CCTAGG
 
-                # Dseq(o6)
-                # GATCCG
-                #     GCCTAG
+            # Dseq(o6)
+            # GATCCG
+            #     GCCTAG
 
-                end += len(self)
+            slice_length = len(self) + (end - begin)
+
+            dschunk = bytearray(self._data.cutaround(begin, slice_length))
         else:
-            cutfrom = self._data
+            dschunk = bytearray(self._data[begin:end])
 
         # dschunk contains the desired slice including sticky ends
         # bytarrays are mutable sequences, so we can change slices by
         # assignment.
-
-        dschunk = bytearray(cutfrom[begin:end])
 
         # A translation table is chosen to process the sticky end
         if xovhg > 0:
@@ -2165,7 +2177,7 @@ class Dseq(_Seq):
 
         dschunk_rev[: abs(yovhg)] = dschunk_rev[: abs(yovhg)].translate(tb)
 
-        # Finally, sequence is reversed to correct order.
+        # Finally, sequence is reversed to correct order and decoded to string.
 
         result = Dseq(dschunk_rev[::-1].decode("ascii"))
 

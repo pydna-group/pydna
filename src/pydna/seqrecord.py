@@ -86,7 +86,9 @@ class SeqRecord(_SeqRecord):
         if not hasattr(self.seq, "transcribe"):
             self.seq = _Seq(self.seq)
 
-        self.seq._data = b"".join(self.seq._data.split())  # remove whitespaces
+        self.seq._data = (
+            self.seq._data.replace(b" ", b"").replace(b"\n", b"").replace(b"\t", b"")
+        )  # remove whitespaces
         self.annotations = {
             _pretty_str(k): _pretty_str(v) for k, v in self.annotations.items()
         }

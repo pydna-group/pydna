@@ -137,12 +137,8 @@ class Dseqrecord(_SeqRecord):
         n=5e-14,  # mol ( = 0.05 pmol)
         **kwargs,
     ):
-        #        _module_logger.info("### Dseqrecord initialized ###")
-        #        _module_logger.info("argument circular = %s", circular)
-        #        _module_logger.info("circular = %s", circular)
 
         if isinstance(record, str):
-            #           _module_logger.info("record is a string")
             super().__init__(
                 _Dseq.from_string(
                     record,
@@ -214,13 +210,10 @@ class Dseqrecord(_SeqRecord):
         **kwargs,
     ):
         """docstring."""
-        # def from_string(cls, record:str="", *args,
-        # linear=True, circular=False, n = 5E-14, **kwargs):
         obj = cls.__new__(cls)  # Does not call __init__
         obj._per_letter_annotations = {}
         obj.seq = _Dseq.quick(
             record.encode("ascii"),
-            # linear=linear,
             circular=circular,
         )
         obj.id = _pretty_str("id")
