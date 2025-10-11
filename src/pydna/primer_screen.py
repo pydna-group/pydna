@@ -1,15 +1,18 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 # Aho–Corasick algorithm
 # https://github.com/WojciechMula/pyahocorasick
 # https://pypi.org/project/pyahocorasick/
 
-import ahocorasick
-from pydna.parsers import parse_primers
-from pydna.readers import read
 from itertools import product
+from collections import defaultdict
+
+import ahocorasick
+from pydna.readers import read
+
 
 # from Bio.SeqIO.FastaIO import SimpleFastaParser
-
 # with open(p) as handle:
 #     for values in SimpleFastaParser(handle):
 #         print(values)
@@ -66,19 +69,13 @@ def iter_iupac_expansions(seq: str):
         yield "".join(tup)
 
 
-def primer_screen(first_sequence, second_sequence, primer_list):
-
-    p = "/home/bjorn/myvault/PRIMERS.md"
-
-    lst = parse_primers(p)[::-1]
-
-    del lst[582]
-
-    limit = 16
+def primer_screen(
+    first_sequence, second_sequence, primer_list, limit=16, low=300, high=2500
+):
 
     automaton = ahocorasick.Automaton()
 
-    for idx, key in enumerate(lst):
+    for idx, key in enumerate(primer_list):
         footprint = str(key.seq)[-limit:].upper()
         if len(footprint) >= limit:
             for anchor in expand_iupac_to_dna(footprint):
@@ -87,60 +84,65 @@ def primer_screen(first_sequence, second_sequence, primer_list):
 
     automaton.make_automaton()
 
-    paths = [
-        "/home/bjorn/Desktop/pydna/ahocorasick/fas2::KanMX4_locus.gb",
-        "/home/bjorn/Desktop/pydna/ahocorasick/fas2::NatMX4_locus.gb",
-        "/home/bjorn/Desktop/pydna/ahocorasick/FAS2_S288C_wild-type_locus.gb",
-    ]
-
-    sequences = []
-
-    for path in paths:
-        sequences.append(read(path))
-
-    del sequences[1]
-
     forward_primers = {}
     reverse_primers = {}
+    products = {}
+    product_dict = {}
 
-    for seq in sequences:
+    for seq in (first_sequence, second_sequence):
 
         haystack = str(seq.seq).upper()
-
-        ln = len(haystack)
-
         fps = dict()
 
         for end_index, (insert_order, original_value) in automaton.iter(haystack):
 
             start_index = end_index - limit + 1
-
             fps[insert_order] = start_index + limit
 
-        forward_primers[seq] = fps
+        forward_primers[seq] = fps  # sorted by position
 
         haystack_rc = str(seq.seq.rc()).upper()
-
         rps = dict()
+        ln = len(haystack)
 
         for end_index, (insert_order, original_value) in automaton.iter(haystack_rc):
 
             start_index = end_index - limit + 1
-
             rps[insert_order] = ln - (start_index + limit)
 
-            reverse_primers[seq] = rps
+        reverse_primers[seq] = rps  # reverse sorted by position
 
-    data = forward_primers
+        products[seq] = [
+            ((f_key, f_val), (r_key, r_val), r_val - f_val)
+            for f_key, f_val in fps.items()
+            for r_key, r_val in rps.items()
+            if low <= r_val - f_val <= high
+        ]
 
-    common_fps = set.intersection(*(set(inner.keys()) for inner in data.values()))
+        product_dict[seq] = defaultdict(list)
 
-    data = reverse_primers
+        for (fprm, fpos), (rpro, rpos), diff in products[seq]:
+            product_dict[seq][fprm, rpro].append(((fprm, fpos), (rpro, rpos), diff))
 
-    common_rps = set.intersection(*(set(inner.keys()) for inner in data.values()))
+    # for key in forward_primers.keys():
 
-    print(common_fps)
-    print(common_rps)
+    #     fps = {k:data[key][k] for k in common_fps}
+
+    #     fps = dict(sorted(fps.items(), key=lambda item: item[1]))
+
+    # for key in reverse_primers.keys():
+
+    #     rps = {k:data[key][k] for k in common_rps}
+
+    #     rps = dict(sorted(rps.items(), key=lambda item: item[1]))
+
+    # data = forward_primers
+
+    # common_fps = set.intersection(*(set(inner.keys()) for inner in data.values()))
+
+    # data = reverse_primers
+
+    # common_rps = set.intersection(*(set(inner.keys()) for inner in data.values()))
 
 
 if __name__ == "__main__":
