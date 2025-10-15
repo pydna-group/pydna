@@ -1,30 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
-# Aho–Corasick algorithm
-# https://github.com/WojciechMula/pyahocorasick
-# https://pypi.org/project/pyahocorasick/
+"""
+Aho–Corasick algorithm
+https://github.com/WojciechMula/pyahocorasick
+https://pypi.org/project/pyahocorasick/
+"""
 
 from itertools import product
+from itertools import permutations
 from collections import defaultdict
+from collections.abc import Callable
+
+from pydna.readers import read
+from pydna.dseqrecord import Dseqrecord
+from pydna.primer import Primer
 
 import ahocorasick
-from pydna.readers import read
-
-
-# from Bio.SeqIO.FastaIO import SimpleFastaParser
-# with open(p) as handle:
-#     for values in SimpleFastaParser(handle):
-#         print(values)
-
-# primer_bind     1..35
-#                 /PCR_conditions="primer
-#                 sequence:GATCGGCCGGATCCAAATGACTGAATTCAAGGCCG"
-#                 /locus_tag="1_5CYC1clone"
-#                 /label="1_5CYC1clone"
-#                 /ApEinfo_label="1_5CYC1clone"
-
-# Map IUPAC -> sets over {A,C,G,T}. U is treated as T.
 
 _IUPAC_TO_DNA = {
     "A": "A",
@@ -61,97 +52,217 @@ def expand_iupac_to_dna(seq: str) -> list[str]:
     return ["".join(tup) for tup in product(*choices_per_pos)]
 
 
-def iter_iupac_expansions(seq: str):
-    """
-    Yield DNA strings one-by-one instead of building a full list.
-    """
-    for tup in product(*(_IUPAC_TO_DNA[ch] for ch in seq.upper())):
-        yield "".join(tup)
-
-
-def primer_screen(
-    first_sequence, second_sequence, primer_list, limit=16, low=300, high=2500
-):
-
+def make_automaton(primer_list, limit=16):
     automaton = ahocorasick.Automaton()
-
+    tempdict = defaultdict(list)
     for idx, key in enumerate(primer_list):
         footprint = str(key.seq)[-limit:].upper()
         if len(footprint) >= limit:
+            tempdict[footprint].append(idx)
             for anchor in expand_iupac_to_dna(footprint):
-                if anchor:
-                    automaton.add_word(anchor, (idx, anchor))
-
+                automaton.add_word(anchor, (*tempdict[footprint],))
     automaton.make_automaton()
+    return automaton
 
+
+def callback(s: list[int]):
+    return max(s) - min(s) >= 0.2 * max(s)
+
+
+def primer_screen(
+    seq: Dseqrecord, primer_list: list[Primer] | tuple[Primer], limit: int = 16
+):
+
+    automaton = make_automaton(primer_list, limit=limit)
     forward_primers = {}
     reverse_primers = {}
-    products = {}
+
+    fps = defaultdict(list)
+
+    # fps = {primer1: [psition1, position2, ...],
+    #        primer2: [psition1, position2, ...], ... }
+    # fps is a dict of lists where the key is the index of the primer
+    # in the list used to make the automaton.
+
+    for end_index, ids in automaton.iter(str(seq.seq).upper()):
+        for i in ids:
+            fps[i].append(end_index + 1)
+
+    # automaton.iter return positions sorted in ascending order
+    #
+    # forward_primers is a dict with each input sequence as key
+    # and the fps dict (see above as value)
+
+    forward_primers[seq] = fps
+
+    # The rps is a dict for reverse primers, similar to the fps
+
+    rps = defaultdict(list)
+    ln = len(seq)
+
+    for end_index, ids in automaton.iter(str(seq.seq.rc()).upper()):
+        for i in ids:
+            rps[i].append(ln - (end_index + 1))
+
+    reverse_primers[seq] = rps
+
+    return dict(fps), dict(rps)
+
+
+def primer_pairs(
+    seq: Dseqrecord,
+    primer_list: list[Primer] | tuple[Primer],
+    limit: int = 16,
+    low: int = 500,
+    high: int = 2000,
+):
+
+    fps, rps = primer_screen(seq, primer_list)
+    products = []
+
+    for fp, fpositions in fps.items():
+        for fposition in fpositions:
+            for rp, rpositions in rps.items():
+                for rposition in rpositions:
+                    size = (
+                        len(primer_list[fp])
+                        + rposition
+                        - fposition
+                        + len(primer_list[rp])
+                    )
+                    if low <= size <= high:
+                        products.append(((fp, fposition), (rp, rposition), size))
+    return products
+
+
+def diff_primer_pairs(
+    sequences: list[Dseqrecord] | tuple[Dseqrecord],
+    primer_list: list[Primer] | tuple[Primer],
+    limit: int = 16,
+    low: int = 500,
+    high: int = 2000,
+    callback: Callable[[list], bool] = callback,
+):
+
     product_dict = {}
+    number_of_sequences = len(sequences)
 
-    for seq in (first_sequence, second_sequence):
+    for seq in sequences:
 
-        haystack = str(seq.seq).upper()
-        fps = dict()
-
-        for end_index, (insert_order, original_value) in automaton.iter(haystack):
-
-            start_index = end_index - limit + 1
-            fps[insert_order] = start_index + limit
-
-        forward_primers[seq] = fps  # sorted by position
-
-        haystack_rc = str(seq.seq.rc()).upper()
-        rps = dict()
-        ln = len(haystack)
-
-        for end_index, (insert_order, original_value) in automaton.iter(haystack_rc):
-
-            start_index = end_index - limit + 1
-            rps[insert_order] = ln - (start_index + limit)
-
-        reverse_primers[seq] = rps  # reverse sorted by position
-
-        products[seq] = [
-            ((f_key, f_val), (r_key, r_val), r_val - f_val)
-            for f_key, f_val in fps.items()
-            for r_key, r_val in rps.items()
-            if low <= r_val - f_val <= high
+        products = [
+            (fp, rp, size)
+            for (fp, _), (rp, _), size in primer_pairs(
+                seq, primer_list, limit, low, high
+            )
         ]
 
         product_dict[seq] = defaultdict(list)
 
-        for (fprm, fpos), (rpro, rpos), diff in products[seq]:
-            product_dict[seq][fprm, rpro].append(((fprm, fpos), (rpro, rpos), diff))
+        for fp, rp, size in products:
+            product_dict[seq][frozenset((fp, rp))].append((fp, rp, size))
 
-    # for key in forward_primers.keys():
+    # all primer pairs that are common between the sequences
+    common = set.intersection(*(set(inner.keys()) for inner in product_dict.values()))
+    result = []
 
-    #     fps = {k:data[key][k] for k in common_fps}
+    # The length of each pcr product is collected across sequences.
+    # The ones with different lengths as one distinct length per sequence
+    # are kept.
+    for primer_pair_set in common:
+        sizes = defaultdict(list)
+        for seq, d in product_dict.items():
+            for fp, rp, size in d[primer_pair_set]:
+                sizes[size].append(seq)
+        # Callback function returns True or False and meant to
+        # filter for size differences.
+        if len(sizes) >= number_of_sequences and callback(sizes.keys()):
+            result.append((max(sizes.keys()) - min(sizes.keys()), fp, rp, dict(sizes)))
 
-    #     fps = dict(sorted(fps.items(), key=lambda item: item[1]))
+    result.sort(reverse=True)
 
-    # for key in reverse_primers.keys():
+    return tuple((fp, rp, dct) for (s, fp, rp, dct) in result)
 
-    #     rps = {k:data[key][k] for k in common_rps}
 
-    #     rps = dict(sorted(rps.items(), key=lambda item: item[1]))
+def diff_primer_trios(
+    sequences: list[Dseqrecord] | tuple[Dseqrecord],
+    primer_list: list[Primer] | tuple[Primer],
+    limit: int = 16,
+    low: int = 300,
+    high: int = 2500,
+    callback: Callable[[list], bool] = callback,
+):
 
-    # data = forward_primers
+    product_dict = {}
+    fprimers = {}
+    rprimers = {}
 
-    # common_fps = set.intersection(*(set(inner.keys()) for inner in data.values()))
+    for seq in sequences:
 
-    # data = reverse_primers
+        products = primer_pairs(seq, primer_list, limit, low, high)
 
-    # common_rps = set.intersection(*(set(inner.keys()) for inner in data.values()))
+        product_dict[seq] = defaultdict(list)
+
+        for (fp, x), (rp, y), size in products:
+            product_dict[seq][frozenset((fp, rp))].append((fp, rp, size, x, y))
+
+        fprimers[seq], rprimers[seq] = primer_screen(seq, pl)
+
+    # all primer pairs that are common between the sequences
+    common = set.intersection(*(set(inner.keys()) for inner in product_dict.values()))
+    result = []
+
+    # The length of each pcr product is collected across sequences.
+    # The ones with identical lengths are kept.
+
+    for primer_pair_set in common:
+        sizes = defaultdict(list)
+        for seq, d in product_dict.items():
+            for fp, rp, size, x, y in d[primer_pair_set]:
+                sizes[size].append(seq)
+        if len(sizes) == 1:
+            result.append((fp, rp, size, x, y))
+
+    for seq1, seq2 in permutations(sequences, 2):
+        fps = fprimers[seq1].keys() - fprimers[seq2].keys()
+        rps = rprimers[seq1].keys() - rprimers[seq2].keys()
+        fps, rps
+        # for fp, rp, size, x, y in results:
+        #     for
+
+    # breakpoint()
 
 
 if __name__ == "__main__":
 
     from pydna_utils.myprimers import PrimerList
 
+    # from pydna.amplify import pcr
+
     pl = PrimerList()
 
-    fs = read("/home/bjorn/Desktop/pydna/ahocorasick/FAS2_S288C_wild-type_locus.gb")
+    s = read("/home/bjorn/Desktop/pydna/ahocorasick/FAS2_S288C_wild-type_locus.gb")
+
+    primer_screen(s, pl)
+    primer_pairs(s, pl)
+
+    fs = read("/home/bjorn/Desktop/pydna/ahocorasick/fas2::NatMX4_locus.gb")
     ss = read("/home/bjorn/Desktop/pydna/ahocorasick/fas2::KanMX4_locus.gb")
 
-    primer_screen(fs, ss, pl)
+    # result = diff_primer_pairs((fs, ss), pl)
+
+    result = diff_primer_trios((s, fs), pl)
+
+    # print(fp, rp, tuple((v, k) for k,v in sizes.items()))
+    # [((1775, 1415), {1446: [File(.)(-3308)], 1751: [File(.)(-3613)]}, 305),
+    #  ((701, 1421), {1858: [File(.)(-3308)], 2163: [File(.)(-3613)]}, 305),
+    #  ((1477, 1447), {2216: [File(.)(-3308)], 2521: [File(.)(-3613)]}, 305),
+    # fp = pl[701]
+    # rp = pl[1421]
+    # rp = pl[473]
+    # rp = pl[189]
+    # >1775_fw_ERG10_KanMX_del
+    # GCGCCATATCATATATATTTATACAGATTAGACGTACTCAAAATGcagctgaagcttcgtacgc
+    # >1415_ScFas2.3_loxP_rv
+    # Aaacgatagaaaaataacaaagtaattactattatgtctgataaa
+    # pcr(fp,rp,fs, limit=16).figure()
+    # pcr(fp,rp,ss, limit=16).figure()
