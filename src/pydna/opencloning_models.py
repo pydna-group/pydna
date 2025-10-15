@@ -30,6 +30,7 @@ from opencloning_linkml.datamodel import (
     HomologousRecombinationSource as _HomologousRecombinationSource,
     CreLoxRecombinationSource as _CreLoxRecombinationSource,
     PCRSource as _PCRSource,
+    CRISPRSource as _CRISPRSource,
 )
 from Bio.SeqFeature import Location, LocationParserError
 from Bio.Restriction.Restriction import AbstractCut
@@ -212,7 +213,9 @@ class Source(ConfiguredBaseModel):
     def history_string(self, seq: "Dseqrecord"):
         history_graph = nx.DiGraph()
         self.add_to_history_graph(history_graph, seq)
-        return nx.write_network_text(history_graph, with_labels=True, sources=[id(seq)])
+        return "\n".join(
+            nx.generate_network_text(history_graph, with_labels=True, sources=[id(seq)])
+        )
 
 
 class AssemblySource(Source):
@@ -283,6 +286,10 @@ class HomologousRecombinationSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_HomologousRecombinationSource]] = (
         _HomologousRecombinationSource
     )
+
+
+class CRISPRSource(HomologousRecombinationSource):
+    TARGET_MODEL: ClassVar[Type[_CRISPRSource]] = _CRISPRSource
 
 
 class CreLoxRecombinationSource(AssemblySource):

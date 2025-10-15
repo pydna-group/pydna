@@ -53,7 +53,11 @@ from pydna.opencloning_models import (
     HomologousRecombinationSource,
     CreLoxRecombinationSource,
     PCRSource,
+    SourceInput,
+    CRISPRSource,
 )
+from pydna.crispr import cas9
+import warnings
 
 if TYPE_CHECKING:
     from Bio.Restriction import AbstractCut as _AbstractCut
@@ -2752,6 +2756,82 @@ def cre_lox_excision(genome: _Dseqrecord) -> list[_Dseqrecord]:
     """
     products = common_function_excision_products(genome, None, cre_loxP_overlap)
     return _recast_sources(products, CreLoxRecombinationSource)
+
+
+def crispr_integration(
+    genome: _Dseqrecord,
+    inserts: list[_Dseqrecord],
+    guides: list[_Primer],
+    limit: int = 40,
+) -> list[_Dseqrecord]:
+    """
+    Returns the products for CRISPR integration.
+
+    Parameters
+    ----------
+    genome : _Dseqrecord
+        Target genome sequence
+    inserts : list[_Dseqrecord]
+        DNA fragment(s) to insert
+    guides : list[_Primer]
+        List of guide RNAs as Primer objects. This may change in the future.
+    limit : int, optional
+        Minimum overlap length required, by default 40
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of integrated DNA molecules
+
+    Examples
+    --------
+    """
+    if len(guides) == 0:
+        raise ValueError("At least one guide RNA is required for CRISPR integration")
+
+    # Get all the possible products from the homologous recombination integration
+    products = homologous_recombination_integration(genome, inserts, limit)
+
+    # Verify that the guides cut in the region that will be repaired
+
+    # First we collect the positions where the guides cut
+    guide_cuts = []
+    for guide in guides:
+        enzyme = cas9(str(guide.seq))
+        possible_cuts = genome.seq.get_cutsites(enzyme)
+        if len(possible_cuts) == 0:
+            raise ValueError(
+                f"Could not find Cas9 cutsite in the target sequence using the guide: {guide.name}"
+            )
+        # Keep only the position of the cut
+        possible_cuts = [cut[0] for (cut, _) in possible_cuts]
+        guide_cuts.append(possible_cuts)
+
+    # Then, we check it the possible homologous recombination products contain the cuts
+    # from the guides inside the repair region.
+    # We also add the used guides to each product. This is very important!
+    valid_products = []
+    for i, product in enumerate(products):
+        repair_start = _location_boundaries(product.source.input[1].left_location)[0]
+        repair_end = _location_boundaries(product.source.input[1].right_location)[1]
+        repair_location = create_location(repair_start, repair_end, len(genome))
+        some_cuts_inside_repair = []
+        all_cuts_inside_repair = []
+        for cut_group in guide_cuts:
+            cuts_in_repair = [cut for cut in cut_group if cut in repair_location]
+            some_cuts_inside_repair.append(len(cuts_in_repair) != 0)
+            all_cuts_inside_repair.append(len(cuts_in_repair) == len(cut_group))
+
+        if all(some_cuts_inside_repair):
+            used_guides = [g for i, g in enumerate(guides) if all_cuts_inside_repair[i]]
+            # Add the used guides to the product <----- VERY IMPORTANT!
+            product.source.input.extend([SourceInput(sequence=g) for g in used_guides])
+            valid_products.append(product)
+
+        if not all(all_cuts_inside_repair):
+            warnings.warn(f"Product at index {i} has off-target cuts", stacklevel=1)
+
+    return _recast_sources(valid_products, CRISPRSource)
 
 
 def pcr_assembly(
