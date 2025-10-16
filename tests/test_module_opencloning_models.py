@@ -2,21 +2,105 @@ from pydna.opencloning_models import SequenceLocationStr
 from Bio.SeqFeature import SimpleLocation
 from pydna.utils import shift_location
 from pydna.dseqrecord import Dseqrecord
+from pydna.dseq import Dseq
 from unittest import TestCase
 from pydna.opencloning_models import (
     AssemblySource,
     AssemblyFragment,
     Source,
     SourceInput,
+    TextFileSequence,
+    PrimerModel,
+    CloningStrategy,
 )
 from pydna.primer import Primer
 from opencloning_linkml.datamodel import (
     AssemblySource as _AssemblySource,
     AssemblyFragment as _AssemblyFragment,
-    Primer as _PrimerModel,
     Source as _Source,
     SourceInput as _SourceInput,
 )
+from pydantic import BaseModel, ValidationError
+from pydna.assembly2 import (
+    golden_gate_assembly,
+    crispr_integration,
+    ligation_assembly,
+    pcr_assembly,
+)
+from Bio.Seq import reverse_complement
+from Bio.Restriction import BsaI, EcoRI, SalI
+import textwrap
+import json
+
+# Examples that will be used in several tests ==============================================
+
+## Generic assembly examples
+
+example_assembly = [
+    (1, SimpleLocation(1, 3), SimpleLocation(4, 6)),
+    (2, SimpleLocation(7, 9), SimpleLocation(10, 12)),
+]
+example_fragments = [
+    Dseqrecord("AAAAAAAAAAAAAAAAAAAA"),
+    Dseqrecord("TTTTTTTTTTTTTTTTTTT"),
+    Primer("AATT", name="forward_primer"),
+]
+
+## Golden gate assembly example
+
+insert1 = Dseqrecord("GGTCTCAattaAAAAAttaaAGAGACC", name="insert1")
+insert2 = Dseqrecord("GGTCTCAttaaCCCCCatatAGAGACC", name="insert2")
+insert3 = Dseqrecord("GGTCTCAatatGGGGGccggAGAGACC", name="insert3")
+
+vector = Dseqrecord("TTTTattaAGAGACCTTTTTGGTCTCAccggTTTT", circular=True, name="vector")
+
+golden_gate_product, *_ = golden_gate_assembly(
+    [insert1, insert2, insert3, vector], [BsaI], circular_only=True
+)
+golden_gate_product.name = "product"
+
+## CRISPR integration example
+
+genome = Dseqrecord("aaccggttcaatgcaaacagtaatgatggatgacattcaaagcac", name="genome")
+insert = Dseqrecord("aaccggttAAAAAAAAAttcaaagcac", name="insert")
+guide = Primer("ttcaatgcaaacagtaatga", name="guide")
+
+crispr_product, *_ = crispr_integration(genome, [insert], [guide], 8)
+crispr_product.name = "product"
+
+## Restriction and ligation example
+
+a = Dseqrecord("aaGAATTCccGTCGACaa")
+c, d, e = a.cut(EcoRI, SalI)
+ligation_product, *_ = ligation_assembly([c, d, e])
+
+a.name = "a"
+c.name = "c"
+d.name = "d"
+e.name = "e"
+ligation_product.name = "product"
+
+## PCR
+
+primer1 = Primer("ACGTACGT")
+primer2 = Primer(reverse_complement("GCGCGCGC"))
+
+seq = Dseqrecord("ccccACGTACGTAAAAAAGCGCGCGCcccc")
+
+pcr_product, *_ = pcr_assembly(seq, primer1, primer2, limit=8)
+
+primer1.name = "primer1"
+primer2.name = "primer2"
+seq.name = "seq"
+pcr_product.name = "product"
+
+## Custom cut
+
+custom_cut_template = Dseqrecord("aaGAATTCccGTCGACaa")
+custom_cut_product = custom_cut_template.apply_cut(None, ((3, -4), None))
+custom_cut_product.name = "custom_cut_product"
+
+# ========================================================================================
 
 
 class SequenceLocationStrTest(TestCase):
@@ -81,16 +165,14 @@ class SequenceLocationStrTest(TestCase):
             SequenceLocationStr.field_validator("aaa")
         self.assertEqual(e.exception.args[0], "Location 'aaa' is not a valid location")
 
+    def test_pydantic_core_schema(self):
+        """Test that the SequenceLocationStr can be used as a field in a Pydantic model."""
 
-example_assembly = [
-    (1, SimpleLocation(1, 3), SimpleLocation(4, 6)),
-    (2, SimpleLocation(7, 9), SimpleLocation(10, 12)),
-]
-example_fragments = [
-    Dseqrecord("AAAAAAAAAAAAAAAAAAAA"),
-    Dseqrecord("TTTTTTTTTTTTTTTTTTT"),
-    Primer("AATT", name="forward_primer"),
-]
+        class DummyModel(BaseModel):
+            location: SequenceLocationStr
+
+        DummyModel(location="1..3")
+        DummyModel(location=SequenceLocationStr("1..3"))
 
 
 class SourceTest(TestCase):
@@ -127,8 +209,88 @@ class SourceTest(TestCase):
             ),
         )
 
+    def test_history_string(self):
+        self.assertEqual(
+            golden_gate_product.history(),
+            textwrap.dedent(
+                """
+            ╙── product (Dseqrecord(o39))
+                └─╼ RestrictionAndLigationSource
+                    ├─╼ insert1 (Dseqrecord(-27))
+                    ├─╼ insert2 (Dseqrecord(-27))
+                    ├─╼ insert3 (Dseqrecord(-27))
+                    └─╼ vector (Dseqrecord(o35))
+            """
+            ).strip(),
+        )
+
+        # Handles primers as well
+        self.assertEqual(
+            crispr_product.history(),
+            textwrap.dedent(
+                """
+            ╙── product (Dseqrecord(-27))
+                └─╼ CRISPRSource
+                    ├─╼ genome (Dseqrecord(-45))
+                    ├─╼ insert (Dseqrecord(-27))
+                    └─╼ guide (id 20-mer:5'-ttcaatgcaaacagtaatga-3')
+            """
+            ).strip(),
+        )
+
+        # More nested history
+        self.assertEqual(
+            ligation_product.history(),
+            textwrap.dedent(
+                """
+            ╙── product (Dseqrecord(-18))
+                └─╼ LigationSource
+                    ├─╼ c (Dseqrecord(-7))
+                    │   └─╼ Source
+                    │       └─╼ a (Dseqrecord(-18)) ╾ Source, Source
+                    ├─╼ d (Dseqrecord(-12))
+                    │   └─╼ Source
+                    │       └─╼  ...
+                    └─╼ e (Dseqrecord(-7))
+                        └─╼ Source
+                            └─╼  ...
+            """
+            ).strip(),
+        )
+
+        self.assertEqual(
+            pcr_product.history(),
+            textwrap.dedent(
+                """
+            ╙── product (Dseqrecord(-22))
+                └─╼ PCRSource
+                    ├─╼ primer1 (id 8-mer:5'-ACGTACGT-3')
+                    ├─╼ seq (Dseqrecord(-30))
+                    └─╼ primer2 (id 8-mer:5'-GCGCGCGC-3')
+            """
+            ).strip(),
+        )
+        self.assertEqual(
+            custom_cut_product.history(),
+            textwrap.dedent(
+                """
+            ╙── custom_cut_product (Dseqrecord(-7))
+                └─╼ Source
+                    └─╼ name (Dseqrecord(-18))
+            """
+            ).strip(),
+        )
+
 
 class AssemblySourceTest(TestCase):
+
+    def test_input_field_validation(self):
+        source = AssemblySource(circular=True)
+        self.assertEqual(source.input, [])
+        self.assertRaises(
+            ValidationError, AssemblySource, circular=True, input=["Hello", "World"]
+        )
+        self.assertRaises(ValidationError, AssemblySource, circular=True, input=None)
 
     def test_from_subfragment_representation(self):
         source = AssemblySource.from_subfragment_representation(
@@ -178,3 +340,90 @@ class AssemblySourceTest(TestCase):
                 circular=True,
             ),
         )
+
+
+class TextFileSequenceTest(TestCase):
+    def test_from_dseqrecord(self):
+        dseqrecord = Dseqrecord("AAAAAAAAAAAAAAAAAAAA")
+        text_file_sequence = TextFileSequence.from_dseqrecord(dseqrecord)
+        self.assertEqual(
+            text_file_sequence,
+            TextFileSequence(
+                id=id(dseqrecord),
+                sequence_file_format="genbank",
+                overhang_crick_3prime=0,
+                overhang_watson_3prime=0,
+                file_content=dseqrecord.format("genbank"),
+            ),
+        )
+
+        dseqrecord = Dseqrecord(
+            Dseq.from_full_sequence_and_overhangs("AAAAAAAAAAAAAAAAAAAA", 2, 3)
+        )
+        text_file_sequence = TextFileSequence.from_dseqrecord(dseqrecord)
+        self.assertEqual(
+            text_file_sequence,
+            TextFileSequence(
+                id=id(dseqrecord),
+                sequence_file_format="genbank",
+                overhang_crick_3prime=2,
+                overhang_watson_3prime=3,
+                file_content=dseqrecord.format("genbank"),
+            ),
+        )
+
+
+class PrimerModelTest(TestCase):
+    def test_from_primer(self):
+        primer = Primer("AATT", name="forward_primer")
+        primer_model = PrimerModel.from_primer(primer)
+        self.assertEqual(
+            primer_model,
+            PrimerModel(id=id(primer), name="forward_primer", sequence="AATT"),
+        )
+
+
+class SourceInputTest(TestCase):
+    def test_validation(self):
+        with self.assertRaises(TypeError):
+            SourceInput(sequence=1)
+        with self.assertRaises(TypeError):
+            SourceInput(sequence="AATT")
+        with self.assertRaises(TypeError):
+            SourceInput(sequence=Dseq("AA"))
+        SourceInput(sequence=Dseqrecord("AA"))
+        SourceInput(sequence=Primer("AATT", name="forward_primer"))
+
+
+class CloningStrategyTest(TestCase):
+    def test_from_dseqrecords(self):
+        # If it can be serialized, it means that everything is working correctly
+        # Passing the same twice does not lead to duplicates
+        cs = CloningStrategy.from_dseqrecords(
+            [
+                golden_gate_product,
+                crispr_product,
+                ligation_product,
+                ligation_product,
+                pcr_product,
+                custom_cut_product,
+            ]
+        )
+        cs.add_primer(primer1)
+        cs.add_primer(guide)
+
+        self.assertEqual(len(cs.sequences), 17)
+        self.assertEqual(len(cs.primers), 3)
+
+        # Validate that output works and that ids are reassigned
+        for i in range(2):
+            if i == 0:
+                out_dict = cs.model_dump()
+            else:
+                json_str = cs.model_dump_json()
+                out_dict = json.loads(json_str)
+            ids_seq = {seq["id"] for seq in out_dict["sequences"]}
+            ids_primers = {primer["id"] for primer in out_dict["primers"]}
+            ids_sources = {source["id"] for source in out_dict["sources"]}
+            all_ids = ids_seq | ids_primers | ids_sources
+            self.assertEqual(max(all_ids), 20)

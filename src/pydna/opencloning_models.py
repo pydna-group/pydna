@@ -43,7 +43,7 @@ from pydna.types import CutSiteType, SubFragmentRepresentationAssembly
 from pydna.utils import create_location
 from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from pydna.dseqrecord import Dseqrecord
     from pydna.primer import Primer
 
@@ -178,12 +178,10 @@ class AssemblyFragment(SourceInput):
 
 
 class Source(ConfiguredBaseModel):
-    input: Optional[list[Union[SourceInput, AssemblyFragment]]] = Field(default=None)
+    input: list[Union[SourceInput, AssemblyFragment]] = Field(default_factory=list)
     TARGET_MODEL: ClassVar[Type[_Source]] = _Source
 
     def input_models(self):
-        if not self.input:
-            return []
         return [fragment.to_pydantic_model() for fragment in self.input]
 
     def _kwargs(self, seq_id: int) -> dict:
@@ -400,46 +398,6 @@ class CloningStrategy(_BaseCloningStrategy):
             return
         self.primers.append(PrimerModel.from_primer(primer))
 
-    def next_id(self):
-        return (
-            max([s.id for s in self.sources + self.sequences + self.primers], default=0)
-            + 1
-        )
-
-    def add_source_and_sequence(self, source: _Source, sequence: TextFileSequence):
-        if source in self.sources:
-            if sequence not in self.sequences:
-                raise ValueError(
-                    (
-                        f"Source {source.id} already exists in the cloning strategy, "
-                        f"but sequence {sequence.id} it's not its output."
-                    )
-                )
-            return
-        new_id = self.next_id()
-        source.id = new_id
-        self.sources.append(source)
-        sequence.id = new_id
-        self.sequences.append(sequence)
-
-    def all_children_source_ids(
-        self, source_id: int, source_children: list | None = None
-    ) -> list[int]:
-        """Returns the ids of all source children ids of a source"""
-        source = next(s for s in self.sources if s.id == source_id)
-        if source_children is None:
-            source_children = []
-
-        sources_that_take_output_as_input = [
-            s for s in self.sources if source.id in [inp.sequence for inp in s.input]
-        ]
-        new_source_ids = [s.id for s in sources_that_take_output_as_input]
-
-        source_children.extend(new_source_ids)
-        for new_source_id in new_source_ids:
-            self.all_children_source_ids(new_source_id, source_children)
-        return source_children
-
     def add_dseqrecord(self, dseqr: "Dseqrecord"):
         from pydna.dseqrecord import Dseqrecord
         from pydna.primer import Primer
@@ -478,11 +436,16 @@ class CloningStrategy(_BaseCloningStrategy):
                 assembly_fragment.sequence = id_mappings[assembly_fragment.sequence]
 
     @classmethod
-    def from_dseqrecord(cls, dseqr: "Dseqrecord", description: str = ""):
+    def from_dseqrecords(cls, dseqrs: list["Dseqrecord"], description: str = ""):
         cloning_strategy = cls(sources=[], sequences=[], description=description)
-        cloning_strategy.add_dseqrecord(dseqr)
+        for dseqr in dseqrs:
+            cloning_strategy.add_dseqrecord(dseqr)
         return cloning_strategy
 
     def model_dump_json(self, *args, **kwargs):
         self.reassign_ids()
         return super().model_dump_json(*args, **kwargs)
+
+    def model_dump(self, *args, **kwargs):
+        self.reassign_ids()
+        return super().model_dump(*args, **kwargs)
