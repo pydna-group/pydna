@@ -390,7 +390,7 @@ class CloningStrategy(_BaseCloningStrategy):
         },
     )
 
-    def add_primer(self, primer: Primer):
+    def add_primer(self, primer: "Primer"):
         existing_ids = {seq.id for seq in self.primers}
         if id(primer) in existing_ids:
             return
