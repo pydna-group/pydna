@@ -1,4 +1,21 @@
 # -*- coding: utf-8 -*-
+"""
+This module provides classes that roughly map to the `OpenCloning <https://opencloning.org>`_
+data model, which is defined using `LinkML <https://linkml.io>`, and available as a python
+package `opencloning-linkml <https://pypi.org/project/opencloning-linkml/>`_. These classes
+are documented there, and the ones in this module essentially replace the fields pointing to
+sequences and primers (which use ids in the data model) to ``Dseqrecord`` and ``Primer`` objects, respectively.
+Similarly, it uses Location from ``Biopython`` instead of a string, which is what the data model uses.
+
+When using pydna to plan cloning, it stores the provenance of ``Dseqrecord`` objects in
+their ``source`` attribute. Not all methods generate sources so far, so refer to the documentation
+notebooks for examples on how to use this feature. The ``history`` method of ``Dseqrecord`` objects
+can be used to get a string representation of the provenance of the sequence. You can also
+use the ``CloningStrategy`` class to create a JSON representation of the cloning strategy.
+That ``CloningStrategy`` can be loaded in the OpenCloning web interface to see a representation
+of the cloning strategy.
+
+"""
 from __future__ import annotations
 
 from typing import Optional, Union, Any, ClassVar, Type
@@ -152,9 +169,6 @@ class SourceInput(ConfiguredBaseModel):
 
 
 class AssemblyFragment(SourceInput):
-    """
-    Represents a fragment in an assembly
-    """
 
     left_location: Optional[Location] = Field(default=None)
     right_location: Optional[Location] = Field(default=None)

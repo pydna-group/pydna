@@ -1436,6 +1436,34 @@ class Dseqrecord(_SeqRecord):
         return Dseqrecord(dseq, features=features, source=source)
 
     def history(self):
+        """
+        Creating a string representation of the cloning history of the sequence.
+        Returns an empty string if the sequence has no source.
+
+        Check the documentation notebooks for extensive examples.
+
+        Returns
+        -------
+            str: A string representation of the cloning history of the sequence.
+
+        Examples
+        --------
+        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.assembly2 import gibson_assembly
+        >>> fragments = [
+        ...    Dseqrecord("TTTTacgatAAtgctccCCCC", circular=False, name="fragment1"),
+        ...    Dseqrecord("CCCCtcatGGGG", circular=False, name="fragment2"),
+        ...    Dseqrecord("GGGGatataTTTT", circular=False, name="fragment3"),
+        ... ]
+        >>> product, *_ = gibson_assembly(fragments, limit=4)
+        >>> product.name = "product_name"
+        >>> print(product.history())
+        ╙── product_name (Dseqrecord(o34))
+            └─╼ GibsonAssemblySource
+                ├─╼ fragment1 (Dseqrecord(-21))
+                ├─╼ fragment2 (Dseqrecord(-12))
+                └─╼ fragment3 (Dseqrecord(-13))
+        """
         if self.source is None:
             return ""
         return self.source.history_string(self)
