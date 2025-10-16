@@ -38,7 +38,7 @@ import datetime as _datetime
 from typing import Union, TYPE_CHECKING
 from pydna.opencloning_models import SequenceCutSource
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from pydna.opencloning_models import Source
 
 
