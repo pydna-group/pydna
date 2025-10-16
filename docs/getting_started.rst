@@ -49,7 +49,8 @@ Pydna uses the `OpenCloning <https://opencloning.org>`_ data model to store the 
 
 You can then visualize that as a graph in the command line:
 
-.. code-block::
+::
+
     ╙── product_name (Dseqrecord(o34))
         └─╼ GibsonAssemblySource
             ├─╼ fragment1 (Dseqrecord(-21))
@@ -59,6 +60,8 @@ You can then visualize that as a graph in the command line:
 Or load it into the `OpenCloning <https://opencloning.org>`_ web interface, where you can have a rich
 visual representation of the sequences, and plan cloning and primer design using a web interface. See
 an example in `this link <https://app.opencloning.org/?source=example&example=homologous_recombination.json>`_.
+
+To see how to use this feature, check the `history notebook <./notebooks/history.html>`_.
 
 .. image:: _static/cloning_strategy.png
    :alt: Cloning strategy
