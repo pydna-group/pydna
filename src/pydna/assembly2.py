@@ -41,7 +41,6 @@ from pydna.cre_lox import cre_loxP_overlap
 
 from typing import TYPE_CHECKING, Callable, Literal
 from pydna.opencloning_models import (
-    AssemblyFragment,
     AssemblySource,
     RestrictionAndLigationSource,
     GibsonAssemblySource,
@@ -883,7 +882,7 @@ def assemble(
                         feature.location, 0, len(out_dseqrecord)
                     )
 
-    out_dseqrecord.source = subfragment_representation_to_source(
+    out_dseqrecord.source = AssemblySource.from_subfragment_representation(
         subfragment_representation, fragments, is_circular
     )
     return out_dseqrecord
@@ -940,26 +939,6 @@ def edge_representation2subfragment_representation(
         subfragment_representation.append((v1, start_location, end_location))
 
     return tuple(subfragment_representation)
-
-
-def subfragment_representation_to_source(
-    assembly: SubFragmentRepresentationAssembly,
-    fragments: list[_Dseqrecord],
-    is_circular: bool,
-) -> AssemblySource:
-
-    input_list = []
-    for f_index, loc1, loc2 in assembly:
-        input_list.append(
-            AssemblyFragment(
-                sequence=fragments[abs(f_index) - 1],
-                left_location=loc1,
-                right_location=loc2,
-                reverse_complemented=f_index < 0,
-            )
-        )
-
-    return AssemblySource(input=input_list, circular=is_circular)
 
 
 def subfragment_representation2edge_representation(
