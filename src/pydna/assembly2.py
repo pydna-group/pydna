@@ -2791,8 +2791,10 @@ def crispr_integration(
     # We also add the used guides to each product. This is very important!
     valid_products = []
     for i, product in enumerate(products):
-        repair_start = _location_boundaries(product.source.input[1].left_location)[0]
-        repair_end = _location_boundaries(product.source.input[1].right_location)[1]
+        # The second element of product.source.input is conventionally the insert/repair fragment
+        insert_fragment = product.source.input[1]
+        repair_start = _location_boundaries(insert_fragment.left_location)[0]
+        repair_end = _location_boundaries(insert_fragment.right_location)[1]
         repair_location = create_location(repair_start, repair_end, len(genome))
         some_cuts_inside_repair = []
         all_cuts_inside_repair = []

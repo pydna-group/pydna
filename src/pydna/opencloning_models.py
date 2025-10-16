@@ -158,9 +158,7 @@ class AssemblyFragment(SourceInput):
 
     left_location: Optional[Location] = Field(default=None)
     right_location: Optional[Location] = Field(default=None)
-    reverse_complemented: bool = Field(
-        default=...,
-    )
+    reverse_complemented: bool
 
     @staticmethod
     def from_biopython_location(location: Location | None):
