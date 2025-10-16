@@ -39,7 +39,8 @@ from typing import List
 
 from Bio.SeqIO.InsdcIO import _insdc_location_string as format_feature_location
 
-from pydna.types import CutSiteType
+from pydna.types import CutSiteType, SubFragmentRepresentationAssembly
+from pydna.utils import create_location
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -85,6 +86,12 @@ class SequenceLocationStr(str):
     def _validate(cls, value: str, info):
         """Validate and create SequenceLocationStr instance."""
         return cls.field_validator(value)
+
+    @classmethod
+    def from_start_and_end(
+        cls, start: int, end: int, seq_len: int | None = None, strand: int | None = 1
+    ):
+        return cls.from_biopython_location(create_location(start, end, seq_len, strand))
 
 
 class ConfiguredBaseModel(BaseModel):
@@ -174,9 +181,6 @@ class Source(ConfiguredBaseModel):
     input: Optional[list[Union[SourceInput, AssemblyFragment]]] = Field(default=None)
     TARGET_MODEL: ClassVar[Type[_Source]] = _Source
 
-    def to_dict_without_type(self) -> dict:
-        return {k: v for k, v in self.model_dump().items() if k != "type"}
-
     def input_models(self):
         if not self.input:
             return []
@@ -231,6 +235,27 @@ class AssemblySource(Source):
 
     def to_pydantic_model(self, seq_id: int):
         return self.TARGET_MODEL(**self._kwargs(seq_id))
+
+    @classmethod
+    def from_subfragment_representation(
+        cls,
+        assembly: SubFragmentRepresentationAssembly,
+        fragments: list["Dseqrecord"],
+        is_circular: bool,
+    ):
+
+        input_list = []
+        for f_index, loc1, loc2 in assembly:
+            input_list.append(
+                AssemblyFragment(
+                    sequence=fragments[abs(f_index) - 1],
+                    left_location=loc1,
+                    right_location=loc2,
+                    reverse_complemented=f_index < 0,
+                )
+            )
+
+        return AssemblySource(input=input_list, circular=is_circular)
 
 
 class RestrictionAndLigationSource(AssemblySource):
