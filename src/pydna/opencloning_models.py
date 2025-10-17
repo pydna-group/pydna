@@ -415,6 +415,12 @@ class PCRSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_PCRSource]] = _PCRSource
     add_primer_features: bool = Field(default=False)
 
+    def _kwargs(self, seq_id: int) -> dict:
+        return {
+            **super()._kwargs(seq_id),
+            "add_primer_features": self.add_primer_features,
+        }
+
 
 class SequenceCutSource(Source):
     left_edge: CutSiteType | None
