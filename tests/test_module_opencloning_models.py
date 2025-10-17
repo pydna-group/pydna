@@ -12,6 +12,8 @@ from pydna.opencloning_models import (
     TextFileSequence,
     PrimerModel,
     CloningStrategy,
+    id_mode,
+    get_id,
 )
 from pydna.primer import Primer
 from opencloning_linkml.datamodel import (
@@ -34,6 +36,19 @@ import textwrap
 import json
 
 # Examples that will be used in several tests ==============================================
+
+
+# We use this to assign ids to objects in a deterministic way for testing
+class Counter:
+    def __init__(self, start=1):
+        self.counter = start
+
+    def get_next_id(self):
+        self.counter += 1
+        return str(self.counter)
+
+
+counter = Counter(start=200)
 
 ## Generic assembly examples
 
@@ -76,24 +91,33 @@ c, d, e = a.cut(EcoRI, SalI)
 ligation_product, *_ = ligation_assembly([c, d, e])
 
 a.name = "a"
+a.id = counter.get_next_id()
 c.name = "c"
+c.id = counter.get_next_id()
 d.name = "d"
+d.id = counter.get_next_id()
 e.name = "e"
+e.id = counter.get_next_id()
 ligation_product.name = "product"
+ligation_product.id = counter.get_next_id()
 
 ## PCR
 
 primer1 = Primer("ACGTACGT")
 primer2 = Primer(reverse_complement("GCGCGCGC"))
 
-seq = Dseqrecord("ccccACGTACGTAAAAAAGCGCGCGCcccc")
+pcr_template = Dseqrecord("ccccACGTACGTAAAAAAGCGCGCGCcccc")
 
-pcr_product, *_ = pcr_assembly(seq, primer1, primer2, limit=8)
+pcr_product, *_ = pcr_assembly(pcr_template, primer1, primer2, limit=8)
 
 primer1.name = "primer1"
+primer1.id = counter.get_next_id()
 primer2.name = "primer2"
-seq.name = "seq"
+primer2.id = counter.get_next_id()
+pcr_template.name = "seq"
+pcr_template.id = counter.get_next_id()
 pcr_product.name = "product"
+pcr_product.id = counter.get_next_id()
 
 ## Custom cut
 
@@ -275,12 +299,12 @@ class SourceTest(TestCase):
         self.assertEqual(
             pcr_product.history(),
             textwrap.dedent(
-                """
+                f"""
             ╙── product (Dseqrecord(-22))
                 └─╼ PCRSource
-                    ├─╼ primer1 (id 8-mer:5'-ACGTACGT-3')
+                    ├─╼ primer1 ({primer1.id} 8-mer:5'-ACGTACGT-3')
                     ├─╼ seq (Dseqrecord(-30))
-                    └─╼ primer2 (id 8-mer:5'-GCGCGCGC-3')
+                    └─╼ primer2 ({primer2.id} 8-mer:5'-GCGCGCGC-3')
             """
             ).strip(),
         )
@@ -453,3 +477,72 @@ class CloningStrategyTest(TestCase):
             ids_sources = {source["id"] for source in out_dict["sources"]}
             all_ids = ids_seq | ids_primers | ids_sources
             self.assertEqual(max(all_ids), 23)
+
+    def test_use_object_id_false(self):
+
+        with id_mode(use_object_id=False):
+            cs = CloningStrategy.from_dseqrecords([pcr_product])
+
+            # Validate primer ids
+            primer_ids = {primer.id for primer in cs.primers}
+            self.assertEqual(primer_ids, {int(primer1.id), int(primer2.id)})
+
+            # Validate sequence ids
+            sequence_ids = {seq.id for seq in cs.sequences}
+            self.assertEqual(sequence_ids, {int(pcr_product.id), int(pcr_template.id)})
+
+            # Validate source ids
+            source_ids = {source.id for source in cs.sources}
+            self.assertEqual(source_ids, {int(pcr_product.id), int(pcr_template.id)})
+
+            # Validate assembly fragment ids
+            assembly_fragment_ids = {
+                fragment.sequence for fragment in cs.sources[0].input
+            }
+            self.assertEqual(
+                assembly_fragment_ids,
+                {int(pcr_template.id), int(primer1.id), int(primer2.id)},
+            )
+
+            cs = CloningStrategy.from_dseqrecords([ligation_product])
+            source_ids = {source.id for source in cs.sources}
+            self.assertEqual(
+                source_ids,
+                {int(ligation_product.id), int(a.id), int(c.id), int(d.id), int(e.id)},
+            )
+
+            # Validate sequence ids
+            sequence_ids = {seq.id for seq in cs.sequences}
+            self.assertEqual(
+                sequence_ids,
+                {int(ligation_product.id), int(a.id), int(c.id), int(d.id), int(e.id)},
+            )
+
+            # Validate assembly fragment ids
+            assembly_fragment_ids = {
+                fragment.sequence
+                for fragment in (cs.sources[0].input + cs.sources[1].input)
+            }
+            self.assertEqual(
+                assembly_fragment_ids,
+                {int(a.id), int(c.id), int(d.id), int(e.id)},
+            )
+
+
+class IdModeTest(TestCase):
+    def test_id_mode(self):
+        primer = Primer("AATT", name="forward_primer", id="123")
+        primer_wrong = Primer("AATT", name="forward_primer", id="abc")
+        dseqrecord = Dseqrecord("AAAAAAAAAAAAAAAAAAAA", id="456")
+        dseqrecord_wrong = Dseqrecord("AAAAAAAAAAAAAAAAAAAA", id="abc")
+        self.assertEqual(get_id(primer), id(primer))
+        self.assertEqual(get_id(dseqrecord), id(dseqrecord))
+        # The "wrong ids" are only a problem if use_object_id is False
+        self.assertEqual(get_id(primer_wrong), id(primer_wrong))
+        self.assertEqual(get_id(dseqrecord_wrong), id(dseqrecord_wrong))
+
+        with id_mode(use_object_id=False):
+            self.assertEqual(get_id(primer), 123)
+            self.assertEqual(get_id(dseqrecord), 456)
+            self.assertRaises(ValueError, get_id, primer_wrong)
+            self.assertRaises(ValueError, get_id, dseqrecord_wrong)

@@ -1438,7 +1438,7 @@ class Dseqrecord(_SeqRecord):
 
     def history(self):
         """
-        Creating a string representation of the cloning history of the sequence.
+        Returns a string representation of the cloning history of the sequence.
         Returns an empty string if the sequence has no source.
 
         Check the documentation notebooks for extensive examples.

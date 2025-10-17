@@ -4,22 +4,25 @@ This module provides classes that roughly map to the `OpenCloning <https://openc
 data model, which is defined using `LinkML <https://linkml.io>`, and available as a python
 package `opencloning-linkml <https://pypi.org/project/opencloning-linkml/>`_. These classes
 are documented there, and the ones in this module essentially replace the fields pointing to
-sequences and primers (which use ids in the data model) to ``Dseqrecord`` and ``Primer`` objects, respectively.
-Similarly, it uses Location from ``Biopython`` instead of a string, which is what the data model uses.
+sequences and primers (which use ids in the data model) to ``Dseqrecord`` and ``Primer``
+objects, respectively. Similarly, it uses Location from ``Biopython`` instead of a string,
+which is what the data model uses.
 
 When using pydna to plan cloning, it stores the provenance of ``Dseqrecord`` objects in
-their ``source`` attribute. Not all methods generate sources so far, so refer to the documentation
-notebooks for examples on how to use this feature. The ``history`` method of ``Dseqrecord`` objects
-can be used to get a string representation of the provenance of the sequence. You can also
-use the ``CloningStrategy`` class to create a JSON representation of the cloning strategy.
-That ``CloningStrategy`` can be loaded in the OpenCloning web interface to see a representation
-of the cloning strategy.
+their ``source`` attribute. Not all methods generate sources so far, so refer to the
+documentation notebooks for examples on how to use this feature. The ``history`` method of
+``Dseqrecord`` objects can be used to get a string representation of the provenance of the
+sequence. You can also use the ``CloningStrategy`` class to create a JSON representation of
+the cloning strategy. That ``CloningStrategy`` can be loaded in the OpenCloning web interface
+to see a representation of the cloning strategy.
 
 """
 from __future__ import annotations
 
 from typing import Optional, Union, Any, ClassVar, Type
 from pydantic_core import core_schema
+from contextlib import contextmanager
+from threading import local
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -63,6 +66,71 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:  # pragma: no cover
     from pydna.dseqrecord import Dseqrecord
     from pydna.primer import Primer
+
+
+# Thread-local storage for ID strategy
+_thread_local = local()
+
+
+@contextmanager
+def id_mode(use_object_id: bool = True):
+    """Context manager that is used to determine how ids are assigned to objects when
+    mapping them to the OpenCloning data model. If ``use_object_id`` is True,
+    the built-in python ``id()`` function is used to assign ids to objects. That function
+    produces a unique integer for each object in python, so it's guaranteed to be unique.
+    If ``use_object_id`` is False, the object's ``.id`` attribute (must be a string integer)
+    is used to assign ids to objects. This is useful when the objects already have meaningful ids,
+    and you want to keep references to them in ``SourceInput`` objects (which sequences and
+    primers are used in a particular source).
+
+    Parameters
+    ----------
+    use_object_id: bool
+        If True, use Python's built-in id() function.
+        If False, use the object's .id attribute (must be a string integer).
+
+    Examples
+    --------
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.opencloning_models import get_id, id_mode
+    >>> dseqr = Dseqrecord("ATGC")
+    >>> dseqr.name = "my_sequence"
+    >>> dseqr.id = "123"
+    >>> get_id(dseqr) == id(dseqr)
+    True
+    >>> with id_mode(use_object_id=False):
+    ...     get_id(dseqr)
+    123
+    """
+    old_value = getattr(_thread_local, "use_object_id", True)
+    _thread_local.use_object_id = use_object_id
+    try:
+        yield
+    finally:
+        _thread_local.use_object_id = old_value
+
+
+def get_id(obj: "Primer" | "Dseqrecord") -> int:
+    """Get ID using the current strategy from thread-local storage (see id_mode)
+    Parameters
+    ----------
+    obj: Primer | Dseqrecord
+        The object to get the id of
+
+    Returns
+    -------
+    int: The id of the object
+
+    """
+    use_object_id = getattr(_thread_local, "use_object_id", True)
+    if use_object_id:
+        return id(obj)
+    if not isinstance(obj.id, str) or not obj.id.isdigit():
+        raise ValueError(
+            f"If use_object_id is False, id must be a string representing an integer, "
+            f"but object {obj} has an invalid id: {obj.id}"
+        )
+    return int(obj.id)
 
 
 class SequenceLocationStr(str):
@@ -128,7 +196,7 @@ class TextFileSequence(_TextFileSequence):
     @classmethod
     def from_dseqrecord(cls, dseqr: "Dseqrecord"):
         return cls(
-            id=id(dseqr),
+            id=get_id(dseqr),
             sequence_file_format="genbank",
             overhang_crick_3prime=dseqr.seq.ovhg,
             overhang_watson_3prime=dseqr.seq.watson_ovhg(),
@@ -141,7 +209,7 @@ class PrimerModel(_PrimerModel):
     @classmethod
     def from_primer(cls, primer: "Primer"):
         return cls(
-            id=id(primer),
+            id=get_id(primer),
             name=primer.name,
             sequence=str(primer.seq),
         )
@@ -165,7 +233,7 @@ class SourceInput(ConfiguredBaseModel):
         raise TypeError(f"sequence must be Dseqrecord or Primer; got {module}.{name}")
 
     def to_pydantic_model(self) -> _SourceInput:
-        return _SourceInput(sequence=id(self.sequence))
+        return _SourceInput(sequence=get_id(self.sequence))
 
 
 class AssemblyFragment(SourceInput):
@@ -182,7 +250,7 @@ class AssemblyFragment(SourceInput):
 
     def to_pydantic_model(self) -> _AssemblyFragment:
         return _AssemblyFragment(
-            sequence=id(self.sequence),
+            sequence=get_id(self.sequence),
             left_location=self.from_biopython_location(self.left_location),
             right_location=self.from_biopython_location(self.right_location),
             reverse_complemented=self.reverse_complemented,
@@ -207,6 +275,12 @@ class Source(ConfiguredBaseModel):
         return self.TARGET_MODEL(**kwargs)
 
     def add_to_history_graph(self, history_graph: nx.DiGraph, seq: "Dseqrecord"):
+        """
+        Add the source to the history graph.
+
+        It does not use the get_id function, because it just uses it to have unique identifiers
+        for graph nodes, not to store them anywhere.
+        """
         from pydna.dseqrecord import Dseqrecord
 
         history_graph.add_node(id(seq), label=f"{seq.name} ({repr(seq)})")
@@ -225,6 +299,10 @@ class Source(ConfiguredBaseModel):
             history_graph.add_edge(id(self), id(fragment_seq))
 
     def history_string(self, seq: "Dseqrecord"):
+        """
+        Returns a string representation of the cloning history of the sequence.
+        See dseqrecord.history() for examples.
+        """
         history_graph = nx.DiGraph()
         self.add_to_history_graph(history_graph, seq)
         return "\n".join(
@@ -406,7 +484,7 @@ class CloningStrategy(_BaseCloningStrategy):
 
     def add_primer(self, primer: "Primer"):
         existing_ids = {seq.id for seq in self.primers}
-        if id(primer) in existing_ids:
+        if get_id(primer) in existing_ids:
             return
         self.primers.append(PrimerModel.from_primer(primer))
 
@@ -414,11 +492,11 @@ class CloningStrategy(_BaseCloningStrategy):
         from pydna.dseqrecord import Dseqrecord
 
         existing_ids = {seq.id for seq in self.sequences}
-        if id(dseqr) in existing_ids:
+        if get_id(dseqr) in existing_ids:
             return
         self.sequences.append(TextFileSequence.from_dseqrecord(dseqr))
         if dseqr.source is not None:
-            self.sources.append(dseqr.source.to_pydantic_model(id(dseqr)))
+            self.sources.append(dseqr.source.to_pydantic_model(get_id(dseqr)))
             this_source: Source = dseqr.source
             for source_input in this_source.input:
                 if isinstance(source_input.sequence, Dseqrecord):
@@ -427,7 +505,7 @@ class CloningStrategy(_BaseCloningStrategy):
                     self.add_primer(source_input.sequence)
         else:
             self.sources.append(
-                _ManuallyTypedSource(id=id(dseqr), input=[], user_input="A")
+                _ManuallyTypedSource(id=get_id(dseqr), input=[], user_input="A")
             )
 
     def reassign_ids(self):
@@ -454,9 +532,16 @@ class CloningStrategy(_BaseCloningStrategy):
         return cloning_strategy
 
     def model_dump_json(self, *args, **kwargs):
-        self.reassign_ids()
+        if getattr(_thread_local, "use_object_id", True):
+            # Make a deep copy of the cloning strategy and reassign ids
+            cs = self.__deepcopy__()
+            cs.reassign_ids()
+            return super(CloningStrategy, cs).model_dump_json(*args, **kwargs)
         return super().model_dump_json(*args, **kwargs)
 
     def model_dump(self, *args, **kwargs):
-        self.reassign_ids()
+        if getattr(_thread_local, "use_object_id", True):
+            cs = self.__deepcopy__()
+            cs.reassign_ids()
+            return super(CloningStrategy, cs).model_dump(*args, **kwargs)
         return super().model_dump(*args, **kwargs)
