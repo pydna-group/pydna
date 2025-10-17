@@ -2828,7 +2828,8 @@ def crispr_integration(
     if len(valid_products) != len(products):
         warnings.warn(
             "Some recombination products were discarded because they had off-target cuts",
-            UserWarning,
+            category=UserWarning,
+            stacklevel=2,
         )
 
     return _recast_sources(valid_products, CRISPRSource)
@@ -2876,4 +2877,4 @@ def pcr_assembly(
     if add_primer_features:
         products = [annotate_primer_binding_sites(prod, fragments) for prod in products]
 
-    return _recast_sources(products, PCRSource)
+    return _recast_sources(products, PCRSource, add_primer_features=add_primer_features)

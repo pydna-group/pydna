@@ -2658,11 +2658,13 @@ def test_pcr_assembly():
     # No annotation
     assert len(products[0].features) == 0
 
+    # By default, this should be false
+    assert products[0].source.add_primer_features is False
     # Now with add_primer_features
     product, *_ = assembly.pcr_assembly(
         template, primer_fwd, primer_rvs, limit=8, add_primer_features=True
     )
-
+    assert product.source.add_primer_features is True
     assert len(product.features) == 2
     assert product.features[0].type == "primer_bind"
     assert product.features[0].qualifiers["label"] == [primer_fwd.name]
