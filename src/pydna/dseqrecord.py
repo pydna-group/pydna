@@ -133,7 +133,7 @@ class Dseqrecord(_SeqRecord):
     """
 
     seq: _Dseq
-    source: Union["Source", None]
+    source: Union["Source", None] = None
 
     def __init__(
         self,
