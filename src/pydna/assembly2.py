@@ -58,7 +58,7 @@ from pydna.opencloning_models import (
 from pydna.crispr import cas9
 import warnings
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from Bio.Restriction import AbstractCut as _AbstractCut
 
 
@@ -2764,6 +2764,17 @@ def crispr_integration(
 
     Examples
     --------
+
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.assembly2 import crispr_integration
+    >>> from pydna.primer import Primer
+    >>> genome = Dseqrecord("aaccggttcaatgcaaacagtaatgatggatgacattcaaagcac", name="genome")
+    >>> insert = Dseqrecord("aaccggttAAAAAAAAAttcaaagcac", name="insert")
+    >>> guide = Primer("ttcaatgcaaacagtaatga", name="guide")
+    >>> product, *_ = crispr_integration(genome, [insert], [guide], 8)
+    >>> product
+    Dseqrecord(-27)
+
     """
     if len(guides) == 0:
         raise ValueError("At least one guide RNA is required for CRISPR integration")
@@ -2792,9 +2803,9 @@ def crispr_integration(
     valid_products = []
     for i, product in enumerate(products):
         # The second element of product.source.input is conventionally the insert/repair fragment
-        insert_fragment = product.source.input[1]
-        repair_start = _location_boundaries(insert_fragment.left_location)[0]
-        repair_end = _location_boundaries(insert_fragment.right_location)[1]
+        # The other two (first and third) are the two bits of the genome
+        repair_start = _location_boundaries(product.source.input[0].right_location)[0]
+        repair_end = _location_boundaries(product.source.input[2].left_location)[1]
         repair_location = create_location(repair_start, repair_end, len(genome))
         some_cuts_inside_repair = []
         all_cuts_inside_repair = []
@@ -2809,8 +2820,16 @@ def crispr_integration(
             product.source.input.extend([SourceInput(sequence=g) for g in used_guides])
             valid_products.append(product)
 
-        if not all(all_cuts_inside_repair):
-            warnings.warn(f"Product at index {i} has off-target cuts", stacklevel=1)
+            if not all(all_cuts_inside_repair):
+                raise ValueError(
+                    "Some guides cut outside the repair region, please check the guides"
+                )
+
+    if len(valid_products) != len(products):
+        warnings.warn(
+            "Some recombination products were discarded because they had off-target cuts",
+            UserWarning,
+        )
 
     return _recast_sources(valid_products, CRISPRSource)
 
