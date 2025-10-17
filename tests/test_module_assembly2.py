@@ -2572,3 +2572,100 @@ def test_common_handle_insertion_fragments():
     assert [genome] + inserts == assembly.common_handle_insertion_fragments(
         genome, inserts
     )
+
+
+def test_crispr_integration():
+    genome = Dseqrecord(
+        "AAaaccggttcaatgcaaacagtaatgatggatgacattcaaagcacTT", name="genome"
+    )
+    insert = Dseqrecord("aaccggttAAAAAAAAAttcaaagcac", name="insert")
+    guide = Primer("ttcaatgcaaacagtaatga", name="guide")
+    product, *_ = assembly.crispr_integration(genome, [insert], [guide], 8)
+    assert product.seq == Dseq("AAaaccggttAAAAAAAAAttcaaagcacTT")
+
+    # Same result if primer in caps
+    guide_caps = Primer(str(guide.seq).upper())
+    product, *_ = assembly.crispr_integration(genome, [insert], [guide_caps], 8)
+    assert product.seq == Dseq("AAaaccggttAAAAAAAAAttcaaagcacTT")
+
+    # Value error if no guides passed
+    with pytest.raises(ValueError):
+        assembly.crispr_integration(genome, [insert], [], 8)
+
+    guide2 = Primer("ttcaatgcTTTcagtaatga")
+    # Value error if it does not cut
+    with pytest.raises(ValueError):
+        assembly.crispr_integration(genome, [insert], [guide, guide2], 8)
+
+    # If all guides cut outside, no products
+    genome = Dseqrecord(
+        "GTGGTCTGAACTCGGTGTTGAGCCCTGGCTGATGTAAaaccggttcaatgcaaacagtaatgatggatgacattcaaagcacTT",
+        name="genome",
+    )
+    guide_outside = Primer("CTGAACTCGGTGTTGAGCCC")
+    with pytest.warns(UserWarning):
+        products = assembly.crispr_integration(genome, [insert], [guide_outside], 8)
+    # Empty products
+    assert len(products) == 0
+
+    # If some guides cut outside and others don't, empty list and warning
+    with pytest.warns(UserWarning):
+        products = assembly.crispr_integration(
+            genome, [insert], [guide_outside, guide], 8
+        )
+    assert len(products) == 0
+
+    # Case where there is offtargets
+    homology1 = "AAGTCCGTTCGTTTTACCTG"
+    homology2 = "ctgaaatttcgtacaaaaaa"
+    guide = Primer("ttcaatgcaaacagtaatga")
+    genome = Dseqrecord(
+        f"aaattcaatgcaaacagtaatgaTGGaaaaaaaa{homology1}aaattcaatgcaaacagtaatgaTGGaa{homology2}aaaaaa"
+    )
+    insert = Dseqrecord(f"{homology1}gggg{homology2}", circular=True)
+
+    with pytest.raises(ValueError):
+        assembly.crispr_integration(genome, [insert], [guide], 20)
+
+    # Off-targets for the single integrations, but not for the one that uses both homology sites
+    genome = Dseqrecord(
+        f"aaaaaaaa{homology1}aaattcaatgcaaacagtaatgaTGGaa{homology2}aaaaaa"
+    )
+    assembly.crispr_integration(genome, [insert], [guide], 20)
+
+    with pytest.warns(UserWarning):
+        products = assembly.crispr_integration(genome, [insert], [guide], 20)
+    assert len(products) == 1
+
+
+def test_pcr_assembly():
+
+    template = Dseqrecord("TTTTACGTACGTAAAAAAGCGCGCGCTTTTT")
+    primer_fwd = Primer("ACGTACGT", name="forward")
+    primer_rvs = Primer("GCGCGCGC", name="reverse")
+
+    products = assembly.pcr_assembly(template, primer_fwd, primer_rvs, limit=8)
+    assert len(products) == 1
+    assert str(products[0].seq) == "ACGTACGTAAAAAAGCGCGCGC"
+
+    # Works with the reverse complement as well, and directionality
+    # is determined by forward primer
+    products = assembly.pcr_assembly(
+        template.reverse_complement(), primer_fwd, primer_rvs, limit=8
+    )
+    assert len(products) == 1
+    assert str(products[0].seq) == "ACGTACGTAAAAAAGCGCGCGC"
+    # No annotation
+    assert len(products[0].features) == 0
+
+    # Now with add_primer_features
+    product, *_ = assembly.pcr_assembly(
+        template, primer_fwd, primer_rvs, limit=8, add_primer_features=True
+    )
+
+    assert len(product.features) == 2
+    assert product.features[0].type == "primer_bind"
+    assert product.features[0].qualifiers["label"] == [primer_fwd.name]
+    assert product.features[1].type == "primer_bind"
+    assert product.features[1].qualifiers["label"] == [primer_rvs.name]
+    assert str(product.seq) == "ACGTACGTAAAAAAGCGCGCGC"

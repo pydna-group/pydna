@@ -210,6 +210,8 @@ class SourceTest(TestCase):
         )
 
     def test_history_string(self):
+        # If source is None, returns empty string
+        self.assertEqual(Dseqrecord("A").history(), "")
         self.assertEqual(
             golden_gate_product.history(),
             textwrap.dedent(
