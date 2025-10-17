@@ -264,6 +264,7 @@ class Dseqrecord(_SeqRecord):
         obj.features = record.features
         obj.map_target = None
         obj.n = n
+        obj.source = None
         if circular is None:
             circular = record.annotations.get("topology") == "circular"
         obj.seq = _Dseq.quick(
