@@ -1852,6 +1852,8 @@ def test___getitem__():
 
 def test___eq__():
     from pydna.dseqrecord import Dseqrecord
+    from Bio.SeqRecord import SeqRecord
+    from pydna.genbankfile import GenbankFile
 
     s = Dseqrecord("GGATCC", circular=False)
     t = Dseqrecord("GGATCC", circular=False)
@@ -1863,6 +1865,12 @@ def test___eq__():
     assert s != u
 
     assert s != 123
+
+    # Test that when instantiated from a seqrecord, the source
+    # field is instantiated (this is removed in the __eq__ method
+    # to compare seqrecords, and if it's missing it gives an error)
+    assert Dseqrecord("AAA") != Dseqrecord.from_SeqRecord(SeqRecord("AAA"))
+    assert Dseqrecord("AAA") != GenbankFile.from_SeqRecord(SeqRecord("AAA"))
 
 
 def test___ne__():
