@@ -2874,6 +2874,9 @@ def pcr_assembly(
         mismatches=mismatches,
     )
     products = asm.assemble_linear()
+    # If both primers are the same, remove duplicates
+    if fwd_primer is rvs_primer:
+        products = [p for p in products if not p.source.input[1].reverse_complemented]
     if add_primer_features:
         products = [annotate_primer_binding_sites(prod, fragments) for prod in products]
 

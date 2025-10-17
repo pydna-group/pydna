@@ -2671,3 +2671,9 @@ def test_pcr_assembly():
     assert product.features[1].type == "primer_bind"
     assert product.features[1].qualifiers["label"] == [primer_rvs.name]
     assert str(product.seq) == "ACGTACGTAAAAAAGCGCGCGC"
+
+    # Test with two identical primers
+    template = Dseqrecord("TTTTACGTACGTAAAAAAACGTACGTTTTTT")
+    primer_fwd = Primer("ACGTACGT")
+    products = assembly.pcr_assembly(template, primer_fwd, primer_fwd, limit=8)
+    assert len(products) == 1
