@@ -412,7 +412,6 @@ class CloningStrategy(_BaseCloningStrategy):
 
     def add_dseqrecord(self, dseqr: "Dseqrecord"):
         from pydna.dseqrecord import Dseqrecord
-        from pydna.primer import Primer
 
         existing_ids = {seq.id for seq in self.sequences}
         if id(dseqr) in existing_ids:
@@ -424,7 +423,7 @@ class CloningStrategy(_BaseCloningStrategy):
             for source_input in this_source.input:
                 if isinstance(source_input.sequence, Dseqrecord):
                     self.add_dseqrecord(source_input.sequence)
-                elif isinstance(source_input.sequence, Primer):
+                else:
                     self.add_primer(source_input.sequence)
         else:
             self.sources.append(
