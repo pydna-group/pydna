@@ -26,6 +26,7 @@ from pydna.assembly2 import (
     crispr_integration,
     ligation_assembly,
     pcr_assembly,
+    gateway_assembly,
 )
 from Bio.Seq import reverse_complement
 from Bio.Restriction import BsaI, EcoRI, SalI
@@ -99,6 +100,17 @@ pcr_product.name = "product"
 custom_cut_template = Dseqrecord("aaGAATTCccGTCGACaa")
 custom_cut_product = custom_cut_template.apply_cut(None, ((3, -4), None))
 custom_cut_product.name = "custom_cut_product"
+
+## Gateway
+
+attB1 = "ACAACTTTGTACAAAAAAGCAGAAG"
+attP1 = "AAAATAATGATTTTATTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCTGAACGAGAAGCGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATCCAGTCACTATGAATCAACTACTTAGATGGTATTAGTGACCTGTA"
+
+seq1 = Dseqrecord("aaa" + attB1 + "ccc")
+seq2 = Dseqrecord("aaa" + attP1 + "ccc")
+
+product_gateway_BP, *_ = gateway_assembly([seq1, seq2], "BP")
+product_gateway_BP.name = "product_gateway_BP"
 
 # ========================================================================================
 
@@ -282,6 +294,17 @@ class SourceTest(TestCase):
             """
             ).strip(),
         )
+        self.assertEqual(
+            product_gateway_BP.history(),
+            textwrap.dedent(
+                """
+            ╙── product_gateway_BP (Dseqrecord(-164))
+                └─╼ GatewaySource
+                    ├─╼ name (Dseqrecord(-31))
+                    └─╼ name (Dseqrecord(-238))
+            """
+            ).strip(),
+        )
 
 
 class AssemblySourceTest(TestCase):
@@ -409,12 +432,13 @@ class CloningStrategyTest(TestCase):
                 ligation_product,
                 pcr_product,
                 custom_cut_product,
+                product_gateway_BP,
             ]
         )
         cs.add_primer(primer1)
         cs.add_primer(guide)
 
-        self.assertEqual(len(cs.sequences), 17)
+        self.assertEqual(len(cs.sequences), 20)
         self.assertEqual(len(cs.primers), 3)
 
         # Validate that output works and that ids are reassigned
@@ -428,4 +452,4 @@ class CloningStrategyTest(TestCase):
             ids_primers = {primer["id"] for primer in out_dict["primers"]}
             ids_sources = {source["id"] for source in out_dict["sources"]}
             all_ids = ids_seq | ids_primers | ids_sources
-            self.assertEqual(max(all_ids), 20)
+            self.assertEqual(max(all_ids), 23)
