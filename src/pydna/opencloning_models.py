@@ -73,19 +73,19 @@ _thread_local = local()
 
 
 @contextmanager
-def id_mode(use_object_id: bool = True):
+def id_mode(use_python_internal_id: bool = True):
     """Context manager that is used to determine how ids are assigned to objects when
-    mapping them to the OpenCloning data model. If ``use_object_id`` is True,
+    mapping them to the OpenCloning data model. If ``use_python_internal_id`` is True,
     the built-in python ``id()`` function is used to assign ids to objects. That function
     produces a unique integer for each object in python, so it's guaranteed to be unique.
-    If ``use_object_id`` is False, the object's ``.id`` attribute (must be a string integer)
+    If ``use_python_internal_id`` is False, the object's ``.id`` attribute (must be a string integer)
     is used to assign ids to objects. This is useful when the objects already have meaningful ids,
     and you want to keep references to them in ``SourceInput`` objects (which sequences and
     primers are used in a particular source).
 
     Parameters
     ----------
-    use_object_id: bool
+    use_python_internal_id: bool
         If True, use Python's built-in id() function.
         If False, use the object's .id attribute (must be a string integer).
 
@@ -98,16 +98,16 @@ def id_mode(use_object_id: bool = True):
     >>> dseqr.id = "123"
     >>> get_id(dseqr) == id(dseqr)
     True
-    >>> with id_mode(use_object_id=False):
+    >>> with id_mode(use_python_internal_id=False):
     ...     get_id(dseqr)
     123
     """
-    old_value = getattr(_thread_local, "use_object_id", True)
-    _thread_local.use_object_id = use_object_id
+    old_value = getattr(_thread_local, "use_python_internal_id", True)
+    _thread_local.use_python_internal_id = use_python_internal_id
     try:
         yield
     finally:
-        _thread_local.use_object_id = old_value
+        _thread_local.use_python_internal_id = old_value
 
 
 def get_id(obj: "Primer" | "Dseqrecord") -> int:
@@ -122,12 +122,12 @@ def get_id(obj: "Primer" | "Dseqrecord") -> int:
     int: The id of the object
 
     """
-    use_object_id = getattr(_thread_local, "use_object_id", True)
-    if use_object_id:
+    use_python_internal_id = getattr(_thread_local, "use_python_internal_id", True)
+    if use_python_internal_id:
         return id(obj)
     if not isinstance(obj.id, str) or not obj.id.isdigit():
         raise ValueError(
-            f"If use_object_id is False, id must be a string representing an integer, "
+            f"If use_python_internal_id is False, id must be a string representing an integer, "
             f"but object {obj} has an invalid id: {obj.id}"
         )
     return int(obj.id)
@@ -538,7 +538,7 @@ class CloningStrategy(_BaseCloningStrategy):
         return cloning_strategy
 
     def model_dump_json(self, *args, **kwargs):
-        if getattr(_thread_local, "use_object_id", True):
+        if getattr(_thread_local, "use_python_internal_id", True):
             # Make a deep copy of the cloning strategy and reassign ids
             cs = self.__deepcopy__()
             cs.reassign_ids()
@@ -546,7 +546,7 @@ class CloningStrategy(_BaseCloningStrategy):
         return super().model_dump_json(*args, **kwargs)
 
     def model_dump(self, *args, **kwargs):
-        if getattr(_thread_local, "use_object_id", True):
+        if getattr(_thread_local, "use_python_internal_id", True):
             cs = self.__deepcopy__()
             cs.reassign_ids()
             return super(CloningStrategy, cs).model_dump(*args, **kwargs)

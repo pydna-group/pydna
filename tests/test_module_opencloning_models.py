@@ -478,9 +478,9 @@ class CloningStrategyTest(TestCase):
             all_ids = ids_seq | ids_primers | ids_sources
             self.assertEqual(max(all_ids), 23)
 
-    def test_use_object_id_false(self):
+    def test_use_python_internal_id_false(self):
 
-        with id_mode(use_object_id=False):
+        with id_mode(use_python_internal_id=False):
             cs = CloningStrategy.from_dseqrecords([pcr_product])
 
             # Validate primer ids
@@ -537,11 +537,11 @@ class IdModeTest(TestCase):
         dseqrecord_wrong = Dseqrecord("AAAAAAAAAAAAAAAAAAAA", id="abc")
         self.assertEqual(get_id(primer), id(primer))
         self.assertEqual(get_id(dseqrecord), id(dseqrecord))
-        # The "wrong ids" are only a problem if use_object_id is False
+        # The "wrong ids" are only a problem if use_python_internal_id is False
         self.assertEqual(get_id(primer_wrong), id(primer_wrong))
         self.assertEqual(get_id(dseqrecord_wrong), id(dseqrecord_wrong))
 
-        with id_mode(use_object_id=False):
+        with id_mode(use_python_internal_id=False):
             self.assertEqual(get_id(primer), 123)
             self.assertEqual(get_id(dseqrecord), 456)
             self.assertRaises(ValueError, get_id, primer_wrong)
