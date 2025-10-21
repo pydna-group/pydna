@@ -21,6 +21,13 @@ from pydna.amplify import pcr
 from pydna.dseq import Dseq
 from pydna.readers import read
 import pydna.assembly2 as assembly
+from pydna.assembly2_utils import (
+    edge_representation2subfragment_representation,
+    subfragment_representation2edge_representation,
+    assembly2str,
+    assembly2str_tuple,
+    assembly_has_mismatches,
+)
 from Bio.SeqFeature import ExactPosition, FeatureLocation, SeqFeature, SimpleLocation
 from pydna.dseqrecord import Dseqrecord
 from pydna.parsers import parse
@@ -1265,15 +1272,13 @@ def test_fragments_only_once():
     )
     for a in asm.get_linear_assemblies():
         nodes_used = [
-            f[0]
-            for f in assembly.edge_representation2subfragment_representation(a, False)
+            f[0] for f in edge_representation2subfragment_representation(a, False)
         ]
         assert len(nodes_used) == len(set(nodes_used))
 
     for a in asm.get_circular_assemblies():
         nodes_used = [
-            f[0]
-            for f in assembly.edge_representation2subfragment_representation(a, True)
+            f[0] for f in edge_representation2subfragment_representation(a, True)
         ]
         assert len(nodes_used) == len(set(nodes_used))
 
@@ -1285,16 +1290,14 @@ def test_both_representations():
         (2, 3, "loc_2_r", "loc_3_l"),
     )
 
-    subf = assembly.edge_representation2subfragment_representation(
-        assembly_linear, False
-    )
+    subf = edge_representation2subfragment_representation(assembly_linear, False)
     assert subf == (
         (1, None, "loc_1_r"),
         (2, "loc_2_l", "loc_2_r"),
         (3, "loc_3_l", None),
     )
 
-    back_to_edge = assembly.subfragment_representation2edge_representation(subf, False)
+    back_to_edge = subfragment_representation2edge_representation(subf, False)
     assert back_to_edge == assembly_linear
 
     assembly_linear = (
@@ -1302,16 +1305,14 @@ def test_both_representations():
         (-2, -3, "loc_2_r", "loc_3_l"),
     )
 
-    subf = assembly.edge_representation2subfragment_representation(
-        assembly_linear, False
-    )
+    subf = edge_representation2subfragment_representation(assembly_linear, False)
     assert subf == (
         (1, None, "loc_1_r"),
         (-2, "loc_2_l", "loc_2_r"),
         (-3, "loc_3_l", None),
     )
 
-    back_to_edge = assembly.subfragment_representation2edge_representation(subf, False)
+    back_to_edge = subfragment_representation2edge_representation(subf, False)
     assert back_to_edge == assembly_linear
 
     # Circular example
@@ -1322,16 +1323,14 @@ def test_both_representations():
         (3, 1, "loc_3_r", "loc_1_l"),
     )
 
-    subf = assembly.edge_representation2subfragment_representation(
-        assembly_circular, True
-    )
+    subf = edge_representation2subfragment_representation(assembly_circular, True)
     assert subf == (
         (1, "loc_1_l", "loc_1_r"),
         (2, "loc_2_l", "loc_2_r"),
         (3, "loc_3_l", "loc_3_r"),
     )
 
-    back_to_edge = assembly.subfragment_representation2edge_representation(subf, True)
+    back_to_edge = subfragment_representation2edge_representation(subf, True)
     assert back_to_edge == assembly_circular
 
 
@@ -2364,10 +2363,10 @@ def test_assembly_str():
     loc2_a = SimpleLocation(0, 4)
     loc2_b = SimpleLocation(6, 10)
 
-    st = assembly.assembly2str([(1, 2, loc1_a, loc2_a), (2, 1, loc2_b, loc1_b)])
+    st = assembly2str([(1, 2, loc1_a, loc2_a), (2, 1, loc2_b, loc1_b)])
     assert st, "('1[2:6]:2[0:4]', '2[6:10]:1[8:12]')"
 
-    st = assembly.assembly2str_tuple([(1, 2, loc1_a, loc2_a), (2, 1, loc2_b, loc1_b)])
+    st = assembly2str_tuple([(1, 2, loc1_a, loc2_a), (2, 1, loc2_b, loc1_b)])
     assert st, "((1, 2, '[2:6]', '[0:4]'), (2, 1, '[6:10]', '[8:12]'))"
 
 
@@ -2389,9 +2388,9 @@ def test_assembly_has_mismatches():
                 seq2 = fragments[1].shifted(shift2)
                 asm = [(1, 2, seq1.features[0].location, seq2.features[0].location)]
                 if i == 0:
-                    assert not assembly.assembly_has_mismatches([seq1, seq2], asm)
+                    assert not assembly_has_mismatches([seq1, seq2], asm)
                 else:
-                    assert assembly.assembly_has_mismatches([seq1, seq2], asm)
+                    assert assembly_has_mismatches([seq1, seq2], asm)
 
 
 def test_single_fragment_assembly_error():

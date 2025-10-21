@@ -1459,7 +1459,7 @@ class Dseqrecord(_SeqRecord):
         >>> product, *_ = gibson_assembly(fragments, limit=4)
         >>> product.name = "product_name"
         >>> print(product.history())
-        ╙── product_name (Dseqrecord(o34))
+        *── product_name (Dseqrecord(o34))
             └─╼ GibsonAssemblySource
                 ├─╼ fragment1 (Dseqrecord(-21))
                 ├─╼ fragment2 (Dseqrecord(-12))

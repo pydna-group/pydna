@@ -23,6 +23,7 @@ from typing import Optional, Union, Any, ClassVar, Type
 from pydantic_core import core_schema
 from contextlib import contextmanager
 from threading import local
+import re
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -59,7 +60,11 @@ from typing import List
 
 from Bio.SeqIO.InsdcIO import _insdc_location_string as format_feature_location
 
-from pydna.types import CutSiteType, SubFragmentRepresentationAssembly
+from pydna.types import (
+    CutSiteType,
+    SubFragmentRepresentationAssembly,
+    EdgeRepresentationAssembly,
+)
 from pydna.utils import create_location
 from typing import TYPE_CHECKING
 
@@ -305,9 +310,26 @@ class Source(ConfiguredBaseModel):
         """
         history_graph = nx.DiGraph()
         self.add_to_history_graph(history_graph, seq)
-        return "\n".join(
+        out_str = "\n".join(
             nx.generate_network_text(history_graph, with_labels=True, sources=[id(seq)])
         )
+        # Replace special characters with normal ASCII characters, otherwise
+        # notebooks are not properly rendered in GitHub
+        replace_dict = {
+            "╙": "*",  # root node
+            "└": "+",  # corner
+            "├": "|",  # junction
+            "╼": ">",  # arrow
+            "─": "-",  # horizontal line
+            "╾": "~",  # junction
+            "│": "|",  # vertical line
+        }
+        out_str = re.sub(
+            rf"{'|'.join(replace_dict.keys())}",
+            lambda m: replace_dict[m.group()],
+            out_str,
+        )
+        return out_str
 
 
 class AssemblySource(Source):
@@ -344,6 +366,14 @@ class AssemblySource(Source):
             )
 
         return AssemblySource(input=input_list, circular=is_circular)
+
+    def from_edge_representation(
+        cls,
+        edge_representation: EdgeRepresentationAssembly,
+        fragments: list["Dseqrecord"],
+        is_circular: bool,
+    ):
+        pass
 
 
 class RestrictionAndLigationSource(AssemblySource):

@@ -252,7 +252,7 @@ class SourceTest(TestCase):
             golden_gate_product.history(),
             textwrap.dedent(
                 """
-            ╙── product (Dseqrecord(o39))
+            *── product (Dseqrecord(o39))
                 └─╼ RestrictionAndLigationSource
                     ├─╼ insert1 (Dseqrecord(-27))
                     ├─╼ insert2 (Dseqrecord(-27))
@@ -267,7 +267,7 @@ class SourceTest(TestCase):
             crispr_product.history(),
             textwrap.dedent(
                 """
-            ╙── product (Dseqrecord(-27))
+            *── product (Dseqrecord(-27))
                 └─╼ CRISPRSource
                     ├─╼ genome (Dseqrecord(-45))
                     ├─╼ insert (Dseqrecord(-27))
@@ -281,7 +281,7 @@ class SourceTest(TestCase):
             ligation_product.history(),
             textwrap.dedent(
                 """
-            ╙── product (Dseqrecord(-18))
+            *── product (Dseqrecord(-18))
                 └─╼ LigationSource
                     ├─╼ c (Dseqrecord(-7))
                     │   └─╼ Source
@@ -300,7 +300,7 @@ class SourceTest(TestCase):
             pcr_product.history(),
             textwrap.dedent(
                 f"""
-            ╙── product (Dseqrecord(-22))
+            *── product (Dseqrecord(-22))
                 └─╼ PCRSource
                     ├─╼ primer1 ({primer1.id} 8-mer:5'-ACGTACGT-3')
                     ├─╼ seq (Dseqrecord(-30))
@@ -312,7 +312,7 @@ class SourceTest(TestCase):
             custom_cut_product.history(),
             textwrap.dedent(
                 """
-            ╙── custom_cut_product (Dseqrecord(-7))
+            *── custom_cut_product (Dseqrecord(-7))
                 └─╼ Source
                     └─╼ name (Dseqrecord(-18))
             """
@@ -322,7 +322,7 @@ class SourceTest(TestCase):
             product_gateway_BP.history(),
             textwrap.dedent(
                 """
-            ╙── product_gateway_BP (Dseqrecord(-164))
+            *── product_gateway_BP (Dseqrecord(-164))
                 └─╼ GatewaySource
                     ├─╼ name (Dseqrecord(-31))
                     └─╼ name (Dseqrecord(-238))
