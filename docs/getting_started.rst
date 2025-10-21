@@ -51,7 +51,7 @@ You can then visualize that as a graph in the command line:
 
 ::
 
-    *── product_name (Dseqrecord(o34))
+    ╙── product_name (Dseqrecord(o34))
         └─╼ GibsonAssemblySource
             ├─╼ fragment1 (Dseqrecord(-21))
             ├─╼ fragment2 (Dseqrecord(-12))
