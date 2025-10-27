@@ -368,5 +368,5 @@ def test_primer_design_correct_value():
             assert str(rvs.seq) == str(correct_rvs.seq)
 
 
-if __name__ == "__main__":
-    pytest.cmdline.main([__file__, "-v", "-s"])
+# if __name__ == "__main__":
+#     pytest.cmdline.main([__file__, "-v", "-s"])

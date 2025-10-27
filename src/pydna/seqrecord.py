@@ -301,7 +301,7 @@ class SeqRecord(_SeqRecord):
             if self.circular:
                 location = _CompoundLocation(
                     (
-                        _SimpleLocation(x, self.seq.length, strand=strand),
+                        _SimpleLocation(x, len(self.seq), strand=strand),
                         _SimpleLocation(0, y, strand=strand),
                     )
                 )
