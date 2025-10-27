@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import pytest
+import tempfile
 import pickle
 import ahocorasick
 from pydna.readers import read
-from pydna_utils.myprimers import PrimerList
 from pydna.amplify import pcr
 
 from pydna.primer_screen import make_automaton
@@ -15,7 +15,6 @@ from pydna.primer_screen import primer_pairs
 from pydna.primer_screen import flanking_primer_pairs
 from pydna.primer_screen import diff_primer_pairs
 from pydna.primer_screen import diff_primer_triplets
-
 
 from pydna.parsers import parse_primers
 
@@ -53,9 +52,18 @@ def test_automaton():
 
     atm = make_automaton(pl)
 
-    atm.save("atm.automaton", pickle.dumps)
+    with tempfile.NamedTemporaryFile() as tmp:
+        # Save automaton to temporary file
+        atm.save(tmp.name, pickle.dumps)
+        tmp.flush()
 
-    atm = ahocorasick.load("atm.automaton", pickle.loads)
+        # Load it back from the same file
+        atm2 = ahocorasick.load(tmp.name, pickle.loads)
+
+    # Verify that loading worked
+    assert atm2 is not None
+    assert [x for x in atm2.keys()] == [x for x in atm.keys()]
+    assert [x for x in atm2.values()] == [x for x in atm.values()]
 
 
 def test_diff_primer_pairs():
