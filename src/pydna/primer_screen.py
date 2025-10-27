@@ -565,15 +565,32 @@ def diff_primer_pairs(
     callback: Callable[[list], bool] = callback,
 ) -> tuple[tuple[Dseqrecord, int, int, int]]:
     """
-    Primer pairs for diagnistic PCR to distinguish between sequences.
+    Primer pairs for diagnostic PCR to distinguish between sequences.
 
     Given a list of sequences and a primer list, primers are selected that result in
-    PCR products of different lengths from each of the input sequences.
+    PCR unique products of different sizes from each of the input sequences. Primers 1 and 2
+    both form PCR products from sequenceA and B below, but of different sizes. Primers 1
+    and 2 could be used to verify genetic modifications.
+
+    ::
+
+         1>              <2
+        -------NNNNNNNNN----  sequenceA
+
+
+         1>           <2
+        -------XXXXX--------  sequenceB
+
 
     The callback function is used return true or false for the PCR products. This score can
     be used to decide if a collection of PCR products are likely to migrate to distinct
     locations on a typical agarose gel. Only products larger than `short` and smaller than
     `long` are returned.
+
+
+
+
+
 
     An example of the output for two sequences (Dseqrecord(-3308), Dseqrecord(-3613)).
     Primers 501 and 1806 would yield a 933 bp product with the first sequence and the same
@@ -667,6 +684,20 @@ def diff_primer_triplets(
 
     Given a list of sequences and a primer list, primer triplets are selected that result in
     PCR products of different lengths from each of the input sequences.
+
+    Primers 1, 2 and 3 form PCR products from sequenceA and B below, but of different sizes. Primers 1
+    binds both sequences while 2 and 3 bind one sequence each. This primer triplet could be used to
+    verify genetic modifications.
+
+    ::
+
+         1>        <2
+        -------NNNNNNNNN----  sequenceA
+
+         1>     <3
+        -------XXXXX--------  sequenceB
+
+
 
     The callback function is used to give a score for the PCR products. This score can
     be used to decide if a collection of PCR products are likely to migrate to distinct
