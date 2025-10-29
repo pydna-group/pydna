@@ -499,7 +499,7 @@ class Dseq(_Seq):
                 except KeyError as err:
                     print(f"Base mismatch in representation {err}")
                     raise ValueError()
-            data = "".join(data)
+            data = "".join(data).strip()
             self._data = data.encode("ascii")
 
         self.circular = circular
