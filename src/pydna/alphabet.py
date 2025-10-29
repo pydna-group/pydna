@@ -1,118 +1,112 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+dscode - The nucleic acid alphabet used in pydna
+
+This file serves to define the DNA alphabet used in pydna. Each symbol usually
+represents a basepair (two opposing bases in the two antiparalell DNA strands).
+
+The alphabet is defined in this docstring which serve as the single source of
+thruth for the alphabet.
+
+A series of dictionaries:
+
+- basepair_dict
+- annealing_dict
+- annealing_dict_w_holes
+- complement_dict_for_dscode
+- watson_tail_letter_dict
+- crick_tail_letter_dict
+
+The following bytestring translation tables are constructed from the
+content in this docstring:
+
+- complement_table_for_dscode
+- dscode_to_watson_table
+- dscode_to_crick_table
+- dscode_to_crick_tail_table
+- dscode_to_watson_tail_table
+- dscode_to_full_sequence_table
+
+The codestrings dictionary has the following keys (strings) in the order
+indicated:
+
+1. un_ambiguous_ds_dna
+2. ds_rna
+3. ambiguous_ds_dna
+4. single_stranded_dna_rna
+5. loops_dna_rna
+6. mismatched_dna_rna
+7. gap
+
+Each value of the codestrings dictionary is also a string. This string has five
+lines following this form:
+
+W             1   Watson symbol
+|             2   Pipe
+C             3   Crick symbol
+<empty line>  4
+S             5   dscode symbol
+
+W (line 1) and C (line 2) are complementary bases in a double stranded DNA
+molecule and S (line 5) are the symbols of the alphabet (dscode) used to
+describe the base pair above the symbol.
+
+Line 2 must contain only the pipe character, indicating basepairing and
+line 4 must be empty. The lines must be of equal length and a series ot
+tests are performed to ensure the integrity of the alphabet. The string
+definition follows this line and is contained in the last 13 lines of the
+docstring:
+
+un_ambiguous_ds_dna
+|    ds_rna
+|    |  ambiguous_ds_dna
+|    |  |           single_stranded_dna_rna
+|    |  |           |          loops_dna_rna
+|    |  |           |          |          mismatched_dna_rna
+|    |  |           |          |          |                  gap
+|    |  |           |          |          |                  |
+GATC UA RYMKSWHBVDN GATC••••U• -----AGCTU AAACCCGGGTTTUUUGCT •
+|||| || ||||||||||| |||||||||| |||||||||| |||||||||||||||||| |
+CTAG AU YRKMSWDVBHN ••••CTAG•U AGCTU----- ACGACTAGTCGTGCTUUU •
+
+GATC UO RYMKSWHBVDN PEXIQFZJ$% 0123456789 !#{}&*()<>@:?[]=_; •
+
+"""
+
 from collections import namedtuple
 import re as _re
-
-"""
-Nucleic acid alphabet used in pydna
-
-This file serves to define the DNA aplhabet used in pydna. Each symbol usually represents a basepair
-(two opposing bases in the two antiparalell DNA strands). The alphabet is defined in six literal strings
-in this file. These strings serve as the single source of thruth for the alphabet and
-a series of dictionaries and translation tebles are constructed from their content.
-
-The strings have the following names:
-
-- un_ambiguous_ds_dna
-- ambiguous_ds_dna
-- ds_rna
-- single_stranded_dna_rna
-- mismatched_dna_rna
-- loops_dna_rna
-
-Each string has five lines following this form:
-
-W             1
-|             2
-C             3
-<empty line>  4
-S             5
-
-W (line 1) and C (line 2) are complementary bases in a double stranded DNA molecule and S (line 5) are
-the symbols of the alphabet used to describe the base pair above the symbol.
-
-Line 2 must contain only the pipe character, indicating basepairing and line 4 is empty.
-The lines must be of equal length and a series ot tests are performed to ensure the integrity of
-the alphabet.
-
-D    R  IUPAC       Single     Gaps       DNA / RNA
-N    N  extended    Strand     - = bond   mismatches
-A    A              DNA / RNA
-                    • = empty
-
-GATC UA RYMKSWHBVDN GATC••••U• -----AGCTU AAACCCGGGTTTUUUGCT
-|||| || ||||||||||| |||||||||| |||||||||| ||||||||||||||||||
-CTAG AU YRKMSWDVBHN ••••CTAG•U AGCTU----- ACGACTAGTCGTGCTUUU
-
-GATC UO RYMKSWHBVDN PEXIQFZJ$% 0123456789 !#{}&*()<>@:?[]=_;
-
-"""
 
 # An alias for whitespace
 emptyspace = chr(32)
 
-un_ambiguous_ds_dna = """\
-GATC
-||||
-CTAG
+lines = __doc__.rstrip().splitlines()[-13:]
 
-GATC
-"""
+assert not lines[-2]
+assert set(lines[-4]) == {" ", "|"}
 
-ds_rna = """\
-UA
-||
-AU
+uppers = lines[-5]
+pipes = lines[-4]
+lowers = lines[-3]
+codes = lines[-1]
 
-UO
-"""
-
-ambiguous_ds_dna = """\
-RYMKSWHBVDN
-|||||||||||
-YRKMSWDVBHN
-
-RYMKSWHBVDN
-"""
-
-# The dots in the string below are replaced by emptyspace
-single_stranded_dna_rna = """\
-GATC••••U•
-||||||||||
-••••CTAG•U
-
-PEXIQFZJ$%
-""".replace(
-    "•", emptyspace
+assert (
+    len(uppers.split())
+    == len(lowers.split())
+    == len(pipes.split())
+    == len(codes.split())
 )
 
+names = [x.strip("| ") for x in lines[: len(codes.split())]]
 
-mismatched_dna_rna = """\
-AAACCCGGGTTTUUUGCT
-||||||||||||||||||
-ACGACTAGTCGTGCTUUU
-
-!#{}&*()<>@:?[]=_;
-"""
-
-loops_dna_rna = """\
------AGCTU
-||||||||||
-AGCTU-----
-
-0123456789
-"""
-
-
-codestrings = {
-    "un_ambiguous_ds_dna": un_ambiguous_ds_dna,
-    "ambiguous_ds_dna": ambiguous_ds_dna,
-    "ds_rna": ds_rna,
-    "single_stranded_dna_rna": single_stranded_dna_rna,
-    "mismatched_dna_rna": mismatched_dna_rna,
-    "loops_dna_rna": loops_dna_rna,
-}
+codestrings = {}
+for upper, pipe, lower, code, name in zip(
+    uppers.split(), pipes.split(), lowers.split(), codes.split(), names
+):
+    codestrings[name.strip()] = f"{upper}\n{pipe}\n{lower}\n\n{code}\n".replace(
+        "•", emptyspace
+    )
 
 # This string contains ascii letters not used in the alphabet
 letters_not_in_dscode = "lL\"',-./\\^`|+~"
@@ -122,7 +116,7 @@ for name, codestring in codestrings.items():
     # This loops all codestrings and checks for consistency of format.
     lines = codestring.splitlines()
 
-    assert len(lines) == 5, f"{name} does not have 5 lines"
+    assert len(lines) == 5, f'codestring["{name}"] does not have 5 lines'
 
     # We want the Watson, Crick and Symbol lines only
     # Second line has to be pipes ("|") and fourth has to be empty
@@ -131,29 +125,31 @@ for name, codestring in codestrings.items():
 
     assert all(
         ln.isascii() for ln in (watsn, crick, symbl)
-    ), f"{name} has non-ascii letters"
+    ), f'codestring["{name}"] has non-ascii letters'
 
     assert all(
         ln.isupper() for ln in (watsn, crick, symbl) if ln.isalpha()
-    ), f"{name} has non-uppercase letters"
+    ), f'codestring["{name}"] has non-uppercase letters'
 
     # check so that pipes contain only "|"
-    assert set(pipes) == set("|"), f"{name} has non-pipe character(s) in line 2"
+    assert set(pipes) == set(
+        "|"
+    ), f'codestring["{name}"] has non-pipe character(s) in line 2'
 
     # check so strings are the same length
     assert all(
         len(ln) == len(watsn) for ln in (watsn, pipes, crick, symbl)
-    ), f"{name} has lines of unequal length"
+    ), f'codestring["{name}"] has lines of unequal length'
 
     # These characters are not used.
     assert not any(
         [letter in letters_not_in_dscode for letter in symbl]
-    ), f"{name} has chars outside alphabet"
+    ), f'codestring["{name}"] has chars outside alphabet'
 
 """
 The `codes` dictionary is a dict of dicts containing the information of the
 code strings in the form if a dict with string names as keys, each containing a
-dict wit this structure: (Watson letter, Crick letter): dscode symbol
+dict with this structure: (Watson letter, Crick letter): dscode symbol
 """
 
 codes = dict()
@@ -179,6 +175,7 @@ basepair_dict = (
     | codes["single_stranded_dna_rna"]
     # | codes["mismatched_dna_rna"]
     # | codes["loops_dna_rna"]
+    | codes["gap"]
 )
 
 annealing_dict = dict()
@@ -331,8 +328,6 @@ to_letters += to_letters.lower()
 dscode_to_crick_tail_table = bytes.maketrans(
     from_letters.encode("ascii"), to_letters.encode("ascii")
 )
-# crick_tail_to_dscode_table = bytes.maketrans(to_letters.encode("ascii"),from_letters.encode("ascii"))
-
 
 from_letters_full = five_prime_ss_letters = to_letters
 to_letters_full = from_letters
@@ -355,7 +350,6 @@ to_letters += to_letters.lower()
 dscode_to_watson_tail_table = bytes.maketrans(
     from_letters.encode("ascii"), to_letters.encode("ascii")
 )
-# watson_tail_to_dscode_table = bytes.maketrans(to_letters.encode("ascii"), from_letters.encode("ascii"))
 
 three_prime_ss_letters = to_letters
 from_letters_full += to_letters
