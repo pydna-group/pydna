@@ -832,9 +832,13 @@ def assemble(
         u, v, loc_u, loc_v = asm_edge
         f_u = fragments[u - 1] if u > 0 else fragments[-u - 1].reverse_complement()
         f_v = fragments[v - 1] if v > 0 else fragments[-v - 1].reverse_complement()
-        seq_u = str(loc_u.extract(f_u).seq).upper()
-        seq_v = str(loc_v.extract(f_v).seq).upper()
-        if seq_u != seq_v:
+        from pydna.alphabet import basepair_dict
+
+        seq_u = loc_u.extract(f_u).seq
+        seq_v = loc_v.extract(f_v).seq
+        # instead of testing for identity we test if seq_u and seq_v anneal
+        anneal = all(basepair_dict.get(x, y) for x, y in zip(str(seq_u), str(seq_v)))
+        if not anneal:
             raise ValueError("Mismatch in assembly")
 
     # We transform into Dseqrecords (for primers)
