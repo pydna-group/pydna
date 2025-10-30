@@ -1,80 +1,328 @@
 
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydna.assembly2 &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a051be83" />
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pydna.assembly2 &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-      <script src="../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=d848064a"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/js/theme.js"></script>
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydna/assembly2';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            pydna
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Pydna</a></li>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../example_gallery.html">Example gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../getting_started.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../reference/pydna.html">pydna package</a></li>
 </ul>
 
-        </div>
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
       </div>
-    </nav>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">pydna</a>
-      </nav>
+<div class="sbt-scroll-pixel-helper"></div>
 
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-          <li class="breadcrumb-item"><a href="../pydna.html">pydna</a></li>
-      <li class="breadcrumb-item active">pydna.assembly2</li>
-      <li class="wy-breadcrumbs-aside">
-      </li>
-  </ul>
-  <hr/>
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <h1>Source code for pydna.assembly2</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -117,14 +365,31 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.gateway</span><span class="w"> </span><span class="kn">import</span> <span class="n">gateway_overlap</span><span class="p">,</span> <span class="n">find_gateway_sites</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.cre_lox</span><span class="w"> </span><span class="kn">import</span> <span class="n">cre_loxP_overlap</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AssemblySource</span><span class="p">,</span>
+    <span class="n">RestrictionAndLigationSource</span><span class="p">,</span>
+    <span class="n">GibsonAssemblySource</span><span class="p">,</span>
+    <span class="n">InFusionSource</span><span class="p">,</span>
+    <span class="n">OverlapExtensionPCRLigationSource</span><span class="p">,</span>
+    <span class="n">InVivoAssemblySource</span><span class="p">,</span>
+    <span class="n">LigationSource</span><span class="p">,</span>
+    <span class="n">GatewaySource</span><span class="p">,</span>
+    <span class="n">HomologousRecombinationSource</span><span class="p">,</span>
+    <span class="n">CreLoxRecombinationSource</span><span class="p">,</span>
+    <span class="n">PCRSource</span><span class="p">,</span>
+    <span class="n">SourceInput</span><span class="p">,</span>
+    <span class="n">CRISPRSource</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.crispr</span><span class="w"> </span><span class="kn">import</span> <span class="n">cas9</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
-<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractCut</span> <span class="k">as</span> <span class="n">_AbstractCut</span>
 
 
 <div class="viewcode-block" id="gather_overlapping_locations">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.gather_overlapping_locations">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.gather_overlapping_locations">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">gather_overlapping_locations</span><span class="p">(</span>
     <span class="n">locs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Location</span><span class="p">],</span> <span class="n">fragment_length</span><span class="p">:</span> <span class="nb">int</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Location</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
@@ -157,21 +422,28 @@
 
 
 <div class="viewcode-block" id="ends_from_cutsite">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.ends_from_cutsite">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.ends_from_cutsite">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">ends_from_cutsite</span><span class="p">(</span>
     <span class="n">cutsite</span><span class="p">:</span> <span class="n">CutSiteType</span><span class="p">,</span> <span class="n">seq</span><span class="p">:</span> <span class="n">_Dseq</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the sticky or blunt ends created by a restriction enzyme cut.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        cutsite (CutSiteType): A tuple ((cut_watson, ovhg), enzyme) describing where the cut occurs</span>
-<span class="sd">        seq (_Dseq): The DNA sequence being cut</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cutsite : CutSiteType</span>
+<span class="sd">        A tuple ((cut_watson, ovhg), enzyme) describing where the cut occurs</span>
+<span class="sd">    seq : _Dseq</span>
+<span class="sd">        The DNA sequence being cut</span>
 
-<span class="sd">    Raises:</span>
-<span class="sd">        ValueError: If cutsite is None</span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If cutsite is None</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        tuple[tuple[str, str], tuple[str, str]]: A tuple of two tuples, each containing the type of end (&#39;5\&#39;&#39;, &#39;3\&#39;&#39;, or &#39;blunt&#39;)</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple[tuple[str, str], tuple[str, str]]</span>
+<span class="sd">        A tuple of two tuples, each containing the type of end (&#39;5\&#39;&#39;, &#39;3\&#39;&#39;, or &#39;blunt&#39;)</span>
 <span class="sd">        and the sequence of the overhang. The first tuple is for the left end, second for the right end.</span>
 
 <span class="sd">    &gt;&gt;&gt; from Bio.Restriction import NotI</span>
@@ -203,7 +475,7 @@
 
 
 <div class="viewcode-block" id="restriction_ligation_overlap">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.restriction_ligation_overlap">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.restriction_ligation_overlap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">restriction_ligation_overlap</span><span class="p">(</span>
     <span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span>
     <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span>
@@ -215,14 +487,23 @@
 
 <span class="sd">    Like in sticky and gibson, the order matters (see example below of partial overlap)</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        seqx (_Dseqrecord): The first sequence</span>
-<span class="sd">        seqy (_Dseqrecord): The second sequence</span>
-<span class="sd">        enzymes (RestrictionBatch): The enzymes to use</span>
-<span class="sd">        partial (bool): Whether to allow partial overlaps</span>
-<span class="sd">        allow_blunt (bool): Whether to allow blunt ends</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        list[SequenceOverlap]: A list of overlaps between the two sequences</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    seqx : _Dseqrecord</span>
+<span class="sd">        The first sequence</span>
+<span class="sd">    seqy : _Dseqrecord</span>
+<span class="sd">        The second sequence</span>
+<span class="sd">    enzymes : RestrictionBatch</span>
+<span class="sd">        The enzymes to use</span>
+<span class="sd">    partial : bool</span>
+<span class="sd">        Whether to allow partial overlaps</span>
+<span class="sd">    allow_blunt : bool</span>
+<span class="sd">        Whether to allow blunt ends</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[SequenceOverlap]</span>
+<span class="sd">        A list of overlaps between the two sequences</span>
 
 <span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
 <span class="sd">    &gt;&gt;&gt; from pydna.assembly2 import restriction_ligation_overlap</span>
@@ -293,7 +574,7 @@
 
 
 <div class="viewcode-block" id="combine_algorithms">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.combine_algorithms">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.combine_algorithms">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">combine_algorithms</span><span class="p">(</span><span class="o">*</span><span class="n">algorithms</span><span class="p">:</span> <span class="n">AssemblyAlgorithmType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AssemblyAlgorithmType</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Combine assembly algorithms, if any of them returns a match, the match is returned.</span>
@@ -312,7 +593,7 @@
 
 
 <div class="viewcode-block" id="blunt_overlap">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.blunt_overlap">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.blunt_overlap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">blunt_overlap</span><span class="p">(</span>
     <span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SequenceOverlap</span><span class="p">]:</span>
@@ -322,13 +603,19 @@
 <span class="sd">    It basically returns [(len(seqx), 0, 0)] if the right end of seqx is blunt and the</span>
 <span class="sd">    left end of seqy is blunt (compatible with blunt ligation). Otherwise, it returns an empty list.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        seqx (_Dseqrecord): The first sequence</span>
-<span class="sd">        seqy (_Dseqrecord): The second sequence</span>
-<span class="sd">        limit (int): There for compatibility, but it is ignored</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    seqx : _Dseqrecord</span>
+<span class="sd">        The first sequence</span>
+<span class="sd">    seqy : _Dseqrecord</span>
+<span class="sd">        The second sequence</span>
+<span class="sd">    limit : int</span>
+<span class="sd">        There for compatibility, but it is ignored</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        list[SequenceOverlap]: A list of overlaps between the two sequences</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[SequenceOverlap]</span>
+<span class="sd">        A list of overlaps between the two sequences</span>
 
 <span class="sd">    &gt;&gt;&gt; from pydna.assembly2 import blunt_overlap</span>
 <span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
@@ -347,7 +634,7 @@
 
 
 <div class="viewcode-block" id="common_sub_strings">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.common_sub_strings">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.common_sub_strings">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">common_sub_strings</span><span class="p">(</span>
     <span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SequenceOverlap</span><span class="p">]:</span>
@@ -414,31 +701,37 @@
 
 
 <div class="viewcode-block" id="gibson_overlap">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.gibson_overlap">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.gibson_overlap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">gibson_overlap</span><span class="p">(</span><span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Assembly algorithm to find terminal overlaps (e.g. for Gibson assembly).</span>
 <span class="sd">    The order matters, we want alignments like:</span>
 
-<span class="sd">    ```</span>
-<span class="sd">    seqx:    oooo------xxxx</span>
-<span class="sd">    seqy:              xxxx------oooo</span>
-<span class="sd">    Product: oooo------xxxx------oooo</span>
+<span class="sd">    ::</span>
 
-<span class="sd">    Not like:</span>
+<span class="sd">        seqx:    oooo------xxxx</span>
+<span class="sd">        seqy:              xxxx------oooo</span>
+<span class="sd">        Product: oooo------xxxx------oooo</span>
 
-<span class="sd">    seqx:               oooo------xxxx</span>
-<span class="sd">    seqy:     xxxx------oooo</span>
-<span class="sd">    Product (unwanted): oooo</span>
-<span class="sd">    ```</span>
+<span class="sd">        Not like:</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        seqx (_Dseqrecord): The first sequence</span>
-<span class="sd">        seqy (_Dseqrecord): The second sequence</span>
-<span class="sd">        limit (int): Minimum length of the overlap</span>
+<span class="sd">        seqx:               oooo------xxxx</span>
+<span class="sd">        seqy:     xxxx------oooo</span>
+<span class="sd">        Product (unwanted): oooo</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        list[SequenceOverlap]: A list of overlaps between the two sequences</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    seqx : _Dseqrecord</span>
+<span class="sd">        The first sequence</span>
+<span class="sd">    seqy : _Dseqrecord</span>
+<span class="sd">        The second sequence</span>
+<span class="sd">    limit : int</span>
+<span class="sd">        Minimum length of the overlap</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[SequenceOverlap]</span>
+<span class="sd">        A list of overlaps between the two sequences</span>
 
 <span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
 <span class="sd">    &gt;&gt;&gt; from pydna.assembly2 import gibson_overlap</span>
@@ -477,7 +770,7 @@
 
 
 <div class="viewcode-block" id="sticky_end_sub_strings">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.sticky_end_sub_strings">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.sticky_end_sub_strings">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sticky_end_sub_strings</span><span class="p">(</span><span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Assembly algorithm for ligation of sticky ends.</span>
@@ -485,13 +778,19 @@
 <span class="sd">    For now, if limit 0 / False (default) only full overlaps are considered.</span>
 <span class="sd">    Otherwise, partial overlaps are also returned.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        seqx (_Dseqrecord): The first sequence</span>
-<span class="sd">        seqy (_Dseqrecord): The second sequence</span>
-<span class="sd">        limit (bool): Whether to allow partial overlaps</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    seqx : _Dseqrecord</span>
+<span class="sd">        The first sequence</span>
+<span class="sd">    seqy : _Dseqrecord</span>
+<span class="sd">        The second sequence</span>
+<span class="sd">    limit : bool</span>
+<span class="sd">        Whether to allow partial overlaps</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        list[SequenceOverlap]: A list of overlaps between the two sequences</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[SequenceOverlap]</span>
+<span class="sd">        A list of overlaps between the two sequences</span>
 
 
 <span class="sd">    Ligation of fully overlapping sticky ends, note how the order matters</span>
@@ -526,7 +825,7 @@
 
 
 <div class="viewcode-block" id="zip_match_leftwards">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.zip_match_leftwards">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.zip_match_leftwards">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">zip_match_leftwards</span><span class="p">(</span>
     <span class="n">seqx</span><span class="p">:</span> <span class="n">_SeqRecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_SeqRecord</span><span class="p">,</span> <span class="n">match</span><span class="p">:</span> <span class="n">SequenceOverlap</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SequenceOverlap</span><span class="p">:</span>
@@ -587,7 +886,7 @@
 
 
 <div class="viewcode-block" id="zip_match_rightwards">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.zip_match_rightwards">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.zip_match_rightwards">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">zip_match_rightwards</span><span class="p">(</span>
     <span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">match</span><span class="p">:</span> <span class="n">SequenceOverlap</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SequenceOverlap</span><span class="p">:</span>
@@ -607,7 +906,7 @@
 
 
 <div class="viewcode-block" id="seqrecord2_uppercase_DNA_string">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.seqrecord2_uppercase_DNA_string">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.seqrecord2_uppercase_DNA_string">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">seqrecord2_uppercase_DNA_string</span><span class="p">(</span><span class="n">seqr</span><span class="p">:</span> <span class="n">_SeqRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transform a Dseqrecord to a sequence string where U is replaced by T, everything is upper case and</span>
@@ -621,7 +920,7 @@
 
 
 <div class="viewcode-block" id="primer_template_overlap">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.primer_template_overlap">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.primer_template_overlap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">primer_template_overlap</span><span class="p">(</span>
     <span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span> <span class="o">|</span> <span class="n">_Primer</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span> <span class="o">|</span> <span class="n">_Primer</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">mismatches</span><span class="o">=</span><span class="mi">0</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SequenceOverlap</span><span class="p">]:</span>
@@ -633,14 +932,21 @@
 <span class="sd">    If seqx is a template and seqy is a primer, it represents the binding of a reverse primer,</span>
 <span class="sd">    where the primer has been passed as its reverse complement (see examples).</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        seqx (_Dseqrecord | _Primer): The primer</span>
-<span class="sd">        seqy (_Dseqrecord | _Primer): The template</span>
-<span class="sd">        limit (int): Minimum length of the overlap</span>
-<span class="sd">        mismatches (int): Maximum number of mismatches (only substitutions, no deletion or insertion)</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    seqx : _Dseqrecord | _Primer</span>
+<span class="sd">        The primer</span>
+<span class="sd">    seqy : _Dseqrecord | _Primer</span>
+<span class="sd">        The template</span>
+<span class="sd">    limit : int</span>
+<span class="sd">        Minimum length of the overlap</span>
+<span class="sd">    mismatches : int</span>
+<span class="sd">        Maximum number of mismatches (only substitutions, no deletion or insertion)</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        list[SequenceOverlap]: A list of overlaps between the primer and the template</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[SequenceOverlap]</span>
+<span class="sd">        A list of overlaps between the primer and the template</span>
 
 <span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
 <span class="sd">    &gt;&gt;&gt; from pydna.primer import Primer</span>
@@ -650,7 +956,7 @@
 <span class="sd">    &gt;&gt;&gt; primer_template_overlap(primer, template, limit=8, mismatches=0)</span>
 <span class="sd">    [(0, 2, 8)]</span>
 
-<span class="sd">    This actually represents the binding of the primer `GCTGCTAA` (reverse complement)</span>
+<span class="sd">    This actually represents the binding of the primer ``GCTGCTAA`` (reverse complement)</span>
 <span class="sd">    &gt;&gt;&gt; primer_template_overlap(template, primer, limit=8, mismatches=0)</span>
 <span class="sd">    [(2, 0, 8)]</span>
 <span class="sd">    &gt;&gt;&gt; primer_template_overlap(primer, template.reverse_complement(), limit=8, mismatches=0)</span>
@@ -719,7 +1025,7 @@
 
 
 <div class="viewcode-block" id="fill_left">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.fill_left">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.fill_left">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fill_left</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">_Dseq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseq</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill the left overhang of a sequence with the complementary sequence.&quot;&quot;&quot;</span>
     <span class="n">new_watson</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">watson</span>
@@ -737,7 +1043,7 @@
 
 
 <div class="viewcode-block" id="fill_right">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.fill_right">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.fill_right">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fill_right</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">_Dseq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseq</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill the right overhang of a sequence with the complementary sequence.&quot;&quot;&quot;</span>
     <span class="n">new_watson</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">watson</span>
@@ -757,7 +1063,7 @@
 
 
 <div class="viewcode-block" id="fill_dseq">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.fill_dseq">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.fill_dseq">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fill_dseq</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">_Dseq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseq</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill the overhangs of a sequence with the complementary sequence.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">fill_left</span><span class="p">(</span><span class="n">fill_right</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span></div>
@@ -765,7 +1071,7 @@
 
 
 <div class="viewcode-block" id="reverse_complement_assembly">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.reverse_complement_assembly">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.reverse_complement_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">reverse_complement_assembly</span><span class="p">(</span>
     <span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">,</span> <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">:</span>
@@ -780,7 +1086,7 @@
 
 
 <div class="viewcode-block" id="filter_linear_subassemblies">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.filter_linear_subassemblies">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.filter_linear_subassemblies">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">filter_linear_subassemblies</span><span class="p">(</span>
     <span class="n">linear_assemblies</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">],</span>
     <span class="n">circular_assemblies</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">],</span>
@@ -802,7 +1108,7 @@
 
 
 <div class="viewcode-block" id="remove_subassemblies">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.remove_subassemblies">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.remove_subassemblies">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">remove_subassemblies</span><span class="p">(</span>
     <span class="n">assemblies</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">]:</span>
@@ -828,7 +1134,7 @@
 
 
 <div class="viewcode-block" id="assembly2str">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.assembly2str">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.assembly2str">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">assembly2str</span><span class="p">(</span><span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an assembly to a string representation, for example:</span>
 <span class="sd">    ((1, 2, [8:14], [1:7]),(2, 3, [10:17], [1:8]))</span>
@@ -836,14 +1142,14 @@
 <span class="sd">    (&#39;1[8:14]:2[1:7]&#39;, &#39;2[10:17]:3[1:8]&#39;)</span>
 
 <span class="sd">    The reason for this is that by default, a feature &#39;[8:14]&#39; when present in a tuple</span>
-<span class="sd">    is printed to the console as `SimpleLocation(ExactPosition(8), ExactPosition(14), strand=1)` (very long).</span>
+<span class="sd">    is printed to the console as ``SimpleLocation(ExactPosition(8), ExactPosition(14), strand=1)`` (very long).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">u</span><span class="si">}{</span><span class="n">lu</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">v</span><span class="si">}{</span><span class="n">lv</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">lu</span><span class="p">,</span> <span class="n">lv</span> <span class="ow">in</span> <span class="n">assembly</span><span class="p">))</span></div>
 
 
 
 <div class="viewcode-block" id="assembly2str_tuple">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.assembly2str_tuple">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.assembly2str_tuple">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">assembly2str_tuple</span><span class="p">(</span><span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an assembly to a string representation, like</span>
 <span class="sd">    ((1, 2, [8:14], [1:7]),(2, 3, [10:17], [1:8]))</span>
@@ -853,7 +1159,7 @@
 
 
 <div class="viewcode-block" id="assembly_has_mismatches">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.assembly_has_mismatches">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.assembly_has_mismatches">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">assembly_has_mismatches</span><span class="p">(</span>
     <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span> <span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -872,7 +1178,7 @@
 
 
 <div class="viewcode-block" id="assembly_is_circular">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.assembly_is_circular">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.assembly_is_circular">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">assembly_is_circular</span><span class="p">(</span>
     <span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">,</span> <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -896,7 +1202,7 @@
 
 
 <div class="viewcode-block" id="assemble">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.assemble">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.assemble">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">assemble</span><span class="p">(</span>
     <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
     <span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">,</span>
@@ -937,7 +1243,7 @@
     <span class="n">out_dseqrecord</span> <span class="o">=</span> <span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">subfragments</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
     <span class="k">for</span> <span class="n">fragment</span><span class="p">,</span> <span class="n">overlap</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">subfragments</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">fragment_overlaps</span><span class="p">):</span>
-        <span class="c1"># Shift the features of the right fragment to the left by `overlap`</span>
+        <span class="c1"># Shift the features of the right fragment to the left by ``overlap``</span>
         <span class="n">new_features</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">f</span><span class="o">.</span><span class="n">_shift</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out_dseqrecord</span><span class="p">)</span> <span class="o">-</span> <span class="n">overlap</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fragment</span><span class="o">.</span><span class="n">features</span>
         <span class="p">]</span>
@@ -954,28 +1260,31 @@
 
         <span class="c1"># Special case for blunt circularisation</span>
         <span class="k">if</span> <span class="n">overlap</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">looped</span><span class="p">()</span>
+            <span class="n">out_dseqrecord</span> <span class="o">=</span> <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">looped</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Remove trailing overlap</span>
+            <span class="n">out_dseqrecord</span> <span class="o">=</span> <span class="n">_Dseqrecord</span><span class="p">(</span>
+                <span class="n">fill_dseq</span><span class="p">(</span><span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span><span class="p">)[:</span><span class="o">-</span><span class="n">overlap</span><span class="p">],</span>
+                <span class="n">features</span><span class="o">=</span><span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">features</span><span class="p">,</span>
+                <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
+                <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_dseqrecord</span><span class="p">)</span> <span class="ow">or</span> <span class="n">end</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_dseqrecord</span><span class="p">):</span>
+                    <span class="c1"># Wrap around the origin</span>
+                    <span class="n">feature</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">_shift_location</span><span class="p">(</span>
+                        <span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_dseqrecord</span><span class="p">)</span>
+                    <span class="p">)</span>
 
-        <span class="c1"># Remove trailing overlap</span>
-        <span class="n">out_dseqrecord</span> <span class="o">=</span> <span class="n">_Dseqrecord</span><span class="p">(</span>
-            <span class="n">fill_dseq</span><span class="p">(</span><span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span><span class="p">)[:</span><span class="o">-</span><span class="n">overlap</span><span class="p">],</span>
-            <span class="n">features</span><span class="o">=</span><span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">features</span><span class="p">,</span>
-            <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
-            <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_dseqrecord</span><span class="p">)</span> <span class="ow">or</span> <span class="n">end</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_dseqrecord</span><span class="p">):</span>
-                <span class="c1"># Wrap around the origin</span>
-                <span class="n">feature</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">_shift_location</span><span class="p">(</span>
-                    <span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_dseqrecord</span><span class="p">)</span>
-                <span class="p">)</span>
-
+    <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">AssemblySource</span><span class="o">.</span><span class="n">from_subfragment_representation</span><span class="p">(</span>
+        <span class="n">subfragment_representation</span><span class="p">,</span> <span class="n">fragments</span><span class="p">,</span> <span class="n">is_circular</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">out_dseqrecord</span></div>
 
 
 
 <div class="viewcode-block" id="annotate_primer_binding_sites">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.annotate_primer_binding_sites">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.annotate_primer_binding_sites">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">annotate_primer_binding_sites</span><span class="p">(</span>
     <span class="n">input_dseqr</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseqrecord</span><span class="p">:</span>
@@ -1005,7 +1314,7 @@
 
 
 <div class="viewcode-block" id="edge_representation2subfragment_representation">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.edge_representation2subfragment_representation">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.edge_representation2subfragment_representation">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">edge_representation2subfragment_representation</span><span class="p">(</span>
     <span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">,</span> <span class="n">is_circular</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SubFragmentRepresentationAssembly</span><span class="p">:</span>
@@ -1034,7 +1343,7 @@
 
 
 <div class="viewcode-block" id="subfragment_representation2edge_representation">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.subfragment_representation2edge_representation">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.subfragment_representation2edge_representation">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">subfragment_representation2edge_representation</span><span class="p">(</span>
     <span class="n">assembly</span><span class="p">:</span> <span class="n">SubFragmentRepresentationAssembly</span><span class="p">,</span> <span class="n">is_circular</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">:</span>
@@ -1065,7 +1374,7 @@
 
 
 <div class="viewcode-block" id="get_assembly_subfragments">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.get_assembly_subfragments">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.get_assembly_subfragments">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_assembly_subfragments</span><span class="p">(</span>
     <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
     <span class="n">subfragment_representation</span><span class="p">:</span> <span class="n">SubFragmentRepresentationAssembly</span><span class="p">,</span>
@@ -1074,30 +1383,29 @@
 
 <span class="sd">    Subfragments are the slices of the fragments that are joined together</span>
 
-<span class="sd">    For example:</span>
-<span class="sd">    ```</span>
-<span class="sd">      --A--</span>
-<span class="sd">    TACGTAAT</span>
-<span class="sd">      --B--</span>
-<span class="sd">     TCGTAACGA</span>
+<span class="sd">    For example::</span>
 
-<span class="sd">    Gives: TACGTAA / CGTAACGA</span>
-<span class="sd">    ```</span>
-<span class="sd">    To reproduce:</span>
-<span class="sd">    ```</span>
-<span class="sd">    a = Dseqrecord(&#39;TACGTAAT&#39;)</span>
-<span class="sd">    b = Dseqrecord(&#39;TCGTAACGA&#39;)</span>
-<span class="sd">    f = Assembly([a, b], limit=5)</span>
-<span class="sd">    a0 = f.get_linear_assemblies()[0]</span>
-<span class="sd">    print(assembly2str(a0))</span>
-<span class="sd">    a0_subfragment_rep =edge_representation2subfragment_representation(a0, False)</span>
-<span class="sd">    for f in get_assembly_subfragments([a, b], a0_subfragment_rep):</span>
-<span class="sd">        print(f.seq)</span>
+<span class="sd">          --A--</span>
+<span class="sd">        TACGTAAT</span>
+<span class="sd">          --B--</span>
+<span class="sd">         TCGTAACGA</span>
 
-<span class="sd">    # prints TACGTAA and CGTAACGA</span>
-<span class="sd">    ```</span>
+<span class="sd">        Gives: TACGTAA / CGTAACGA</span>
 
-<span class="sd">    Subfragments: `cccccgtatcgtgt`, `atcgtgtactgtcatattc`</span>
+<span class="sd">    To reproduce::</span>
+
+<span class="sd">        a = Dseqrecord(&#39;TACGTAAT&#39;)</span>
+<span class="sd">        b = Dseqrecord(&#39;TCGTAACGA&#39;)</span>
+<span class="sd">        f = Assembly([a, b], limit=5)</span>
+<span class="sd">        a0 = f.get_linear_assemblies()[0]</span>
+<span class="sd">        print(assembly2str(a0))</span>
+<span class="sd">        a0_subfragment_rep =edge_representation2subfragment_representation(a0, False)</span>
+<span class="sd">        for f in get_assembly_subfragments([a, b], a0_subfragment_rep):</span>
+<span class="sd">            print(f.seq)</span>
+
+<span class="sd">        # prints TACGTAA and CGTAACGA</span>
+
+<span class="sd">    Subfragments: ``cccccgtatcgtgt``, ``atcgtgtactgtcatattc``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">subfragments</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">start_location</span><span class="p">,</span> <span class="n">end_location</span> <span class="ow">in</span> <span class="n">subfragment_representation</span><span class="p">:</span>
@@ -1112,7 +1420,7 @@
 
 
 <div class="viewcode-block" id="extract_subfragment">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.extract_subfragment">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.extract_subfragment">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">extract_subfragment</span><span class="p">(</span>
     <span class="n">seq</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">start_location</span><span class="p">:</span> <span class="n">Location</span><span class="p">,</span> <span class="n">end_location</span><span class="p">:</span> <span class="n">Location</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseqrecord</span><span class="p">:</span>
@@ -1143,7 +1451,7 @@
 
 
 <div class="viewcode-block" id="is_sublist">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.is_sublist">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.is_sublist">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_sublist</span><span class="p">(</span><span class="n">sublist</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">my_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">my_list_is_cyclic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns True if argument sublist is a sublist of argument my_list (can be treated as cyclic), False otherwise.</span>
 
@@ -1172,7 +1480,7 @@
 
 
 <div class="viewcode-block" id="circular_permutation_min_abs">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.circular_permutation_min_abs">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.circular_permutation_min_abs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">circular_permutation_min_abs</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the circular permutation of lst with the smallest absolute value first.</span>
 
@@ -1189,7 +1497,7 @@
 
 
 <div class="viewcode-block" id="Assembly">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Assembly</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Assembly of a list of DNA fragments into linear or circular constructs.</span>
 <span class="sd">    Accepts a list of Dseqrecords (source fragments) to</span>
@@ -1198,33 +1506,38 @@
 
 <span class="sd">    The assembly contains a directed graph, where nodes represent fragments and</span>
 <span class="sd">    edges represent overlaps between fragments. :</span>
+
 <span class="sd">    - The node keys are integers, representing the index of the fragment in the</span>
-<span class="sd">    input list of fragments. The sign of the node key represents the orientation</span>
-<span class="sd">    of the fragment, positive for forward orientation, negative for reverse orientation.</span>
+<span class="sd">      input list of fragments. The sign of the node key represents the orientation</span>
+<span class="sd">      of the fragment, positive for forward orientation, negative for reverse orientation.</span>
 <span class="sd">    - The edges contain the locations of the overlaps in the fragments. For an edge (u, v, key):</span>
 <span class="sd">        - u and v are the nodes connected by the edge.</span>
 <span class="sd">        - key is a string that represents the location of the overlap. In the format:</span>
-<span class="sd">        &#39;u[start:end](strand):v[start:end](strand)&#39;.</span>
+<span class="sd">          &#39;u[start:end](strand):v[start:end](strand)&#39;.</span>
 <span class="sd">        - Edges have a &#39;locations&#39; attribute, which is a list of two FeatureLocation objects,</span>
-<span class="sd">        representing the location of the overlap in the u and v fragment, respectively.</span>
+<span class="sd">          representing the location of the overlap in the u and v fragment, respectively.</span>
 <span class="sd">        - You can think of an edge as a representation of the join of two fragments.</span>
 
 <span class="sd">    If fragment 1 and 2 share a subsequence of 6bp, [8:14] in fragment 1 and [1:7] in fragment 2,</span>
 <span class="sd">    there will be 4 edges representing that overlap in the graph, for all possible</span>
 <span class="sd">    orientations of the fragments (see add_edges_from_match for details):</span>
-<span class="sd">    - `(1, 2, &#39;1[8:14]:2[1:7]&#39;)`</span>
-<span class="sd">    - `(2, 1, &#39;2[1:7]:1[8:14]&#39;)`</span>
-<span class="sd">    - `(-1, -2, &#39;-1[0:6]:-2[10:16]&#39;)`</span>
-<span class="sd">    - `(-2, -1, &#39;-2[10:16]:-1[0:6]&#39;)`</span>
+
+<span class="sd">    - ``(1, 2, &#39;1[8:14]:2[1:7]&#39;)``</span>
+<span class="sd">    - ``(2, 1, &#39;2[1:7]:1[8:14]&#39;)``</span>
+<span class="sd">    - ``(-1, -2, &#39;-1[0:6]:-2[10:16]&#39;)``</span>
+<span class="sd">    - ``(-2, -1, &#39;-2[10:16]:-1[0:6]&#39;)``</span>
 
 <span class="sd">    An assembly can be thought of as a tuple of graph edges, but instead of representing them with node indexes and keys, we represent them</span>
 <span class="sd">    as u, v, locu, locv, where u and v are the nodes connected by the edge, and locu and locv are the locations of the overlap in the first</span>
 <span class="sd">    and second fragment. Assemblies are then represented as:</span>
+
 <span class="sd">    - Linear: ((1, 2, [8:14], [1:7]), (2, 3, [10:17], [1:8]))</span>
 <span class="sd">    - Circular: ((1, 2, [8:14], [1:7]), (2, 3, [10:17], [1:8]), (3, 1, [12:17], [1:6]))</span>
+
 <span class="sd">    Note that the first and last fragment are the same in a circular assembly.</span>
 
 <span class="sd">    The following constrains are applied to remove duplicate assemblies:</span>
+
 <span class="sd">    - Circular assemblies: the first subfragment is not reversed, and has the smallest index in the input fragment list.</span>
 <span class="sd">      use_fragment_order is ignored.</span>
 <span class="sd">    - Linear assemblies:</span>
@@ -1235,7 +1548,7 @@
 <span class="sd">    frags : list</span>
 <span class="sd">        A list of Dseqrecord objects.</span>
 <span class="sd">    limit : int, optional</span>
-<span class="sd">        The shortest shared homology to be considered, this is passed as the third argument to the `algorithm` function.</span>
+<span class="sd">        The shortest shared homology to be considered, this is passed as the third argument to the ``algorithm`` function.</span>
 <span class="sd">        For certain algorithms, this might be ignored.</span>
 <span class="sd">    algorithm : function, optional</span>
 <span class="sd">        The algorithm used to determine the shared sequences. It&#39;s a function that takes two Dseqrecord objects as inputs,</span>
@@ -1319,7 +1632,7 @@
         <span class="k">return</span>
 
 <div class="viewcode-block" id="Assembly.assembly_is_valid">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.assembly_is_valid">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.assembly_is_valid">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">assembly_is_valid</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
@@ -1398,7 +1711,7 @@
 
 
 <div class="viewcode-block" id="Assembly.add_edges_from_match">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.add_edges_from_match">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.add_edges_from_match">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_edges_from_match</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">match</span><span class="p">:</span> <span class="n">SequenceOverlap</span><span class="p">,</span>
@@ -1407,11 +1720,12 @@
         <span class="n">first</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span>
         <span class="n">secnd</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add edges to the graph from a match returned by the `algorithm` function (see pydna.common_substrings). For</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add edges to the graph from a match returned by the ``algorithm`` function (see pydna.common_substrings). For</span>
 <span class="sd">        format of edges (see documentation of the Assembly class).</span>
 
-<span class="sd">        Matches are directional, because not all `algorithm` functions return the same match for (u,v) and (v,u). For example,</span>
+<span class="sd">        Matches are directional, because not all ``algorithm`` functions return the same match for (u,v) and (v,u). For example,</span>
 <span class="sd">        homologous recombination does but sticky end ligation does not. The function returns two edges:</span>
+
 <span class="sd">        - Fragments in the orientation they were passed, with locations of the match (u, v, loc_u, loc_v)</span>
 <span class="sd">        - Reverse complement of the fragments with inverted order, with flipped locations (-v, -u, flip(loc_v), flip(loc_u))/</span>
 
@@ -1447,7 +1761,7 @@
 
 
 <div class="viewcode-block" id="Assembly.format_assembly_edge">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.format_assembly_edge">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.format_assembly_edge">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">format_assembly_edge</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">graph_edge</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AssemblyEdgeType</span><span class="p">:</span>
@@ -1458,7 +1772,7 @@
 
 
 <div class="viewcode-block" id="Assembly.get_linear_assemblies">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.get_linear_assemblies">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.get_linear_assemblies">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_linear_assemblies</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">]:</span>
@@ -1504,7 +1818,7 @@
 
 
 <div class="viewcode-block" id="Assembly.node_path2assembly_list">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.node_path2assembly_list">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.node_path2assembly_list">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">node_path2assembly_list</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">cycle</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">circular</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">]:</span>
@@ -1527,7 +1841,7 @@
 
 
 <div class="viewcode-block" id="Assembly.get_unique_linear_paths">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.get_unique_linear_paths">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.get_unique_linear_paths">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_unique_linear_paths</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">G_with_begin_end</span><span class="p">:</span> <span class="n">_nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">,</span> <span class="n">max_paths</span><span class="o">=</span><span class="mi">10000</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
@@ -1567,7 +1881,7 @@
 
 
 <div class="viewcode-block" id="Assembly.get_possible_assembly_number">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.get_possible_assembly_number">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.get_possible_assembly_number">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_possible_assembly_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">paths</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of possible assemblies from a list of node paths. Basically, for each path</span>
@@ -1585,7 +1899,7 @@
 
 
 <div class="viewcode-block" id="Assembly.get_circular_assemblies">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.get_circular_assemblies">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.get_circular_assemblies">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_circular_assemblies</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">]:</span>
@@ -1632,7 +1946,7 @@
 
 
 <div class="viewcode-block" id="Assembly.format_insertion_assembly">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.format_insertion_assembly">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.format_insertion_assembly">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">format_insertion_assembly</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EdgeRepresentationAssembly</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
@@ -1642,17 +1956,18 @@
 <span class="sd">        Here we check if one of the joins between fragments represents the edges of an insertion assembly</span>
 <span class="sd">        The fragment must be linear, and the join must be as indicated below</span>
 
-<span class="sd">        ```</span>
-<span class="sd">        --------         -------           Fragment 1</span>
-<span class="sd">            ||            ||</span>
-<span class="sd">            xxxxxxxx      ||               Fragment 2</span>
-<span class="sd">                  ||      ||</span>
-<span class="sd">                  oooooooooo               Fragment 3</span>
-<span class="sd">        ```</span>
+<span class="sd">        ::</span>
+
+<span class="sd">            --------         -------           Fragment 1</span>
+<span class="sd">                ||            ||</span>
+<span class="sd">                xxxxxxxx      ||               Fragment 2</span>
+<span class="sd">                      ||      ||</span>
+<span class="sd">                      oooooooooo               Fragment 3</span>
+
 <span class="sd">        The above example will be [(1, 2, [4:6], [0:2]), (2, 3, [6:8], [0:2]), (3, 1, [8:10], [9:11)])]</span>
 
 <span class="sd">        These could be returned in any order by simple_cycles, so we sort the edges so that the first</span>
-<span class="sd">        and last `u` and `v` match the fragment that gets the insertion (1 in the example above).</span>
+<span class="sd">        and last ``u`` and ``v`` match the fragment that gets the insertion (1 in the example above).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">edge_pair_index</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
 
@@ -1688,7 +2003,7 @@
 
 
 <div class="viewcode-block" id="Assembly.format_insertion_assembly_edge_case">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.format_insertion_assembly_edge_case">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.format_insertion_assembly_edge_case">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">format_insertion_assembly_edge_case</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">:</span>
@@ -1761,7 +2076,7 @@
 
 
 <div class="viewcode-block" id="Assembly.get_insertion_assemblies">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.get_insertion_assemblies">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.get_insertion_assemblies">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_insertion_assemblies</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">]:</span>
@@ -1818,7 +2133,7 @@
 
 
 <div class="viewcode-block" id="Assembly.assemble_linear">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.assemble_linear">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.assemble_linear">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">assemble_linear</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
@@ -1828,7 +2143,7 @@
 
 
 <div class="viewcode-block" id="Assembly.assemble_circular">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.assemble_circular">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.assemble_circular">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">assemble_circular</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
@@ -1838,7 +2153,7 @@
 
 
 <div class="viewcode-block" id="Assembly.assemble_insertion">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.assemble_insertion">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.assemble_insertion">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">assemble_insertion</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
@@ -1848,11 +2163,11 @@
 
 
 <div class="viewcode-block" id="Assembly.get_locations_on_fragments">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.get_locations_on_fragments">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.get_locations_on_fragments">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_locations_on_fragments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Location</span><span class="p">]]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a dictionary where the keys are the nodes in the graph, and the values are dictionaries with keys</span>
-<span class="sd">        `left`, `right`, containing (for each fragment) the locations where the fragment is joined to another fragment on its left</span>
-<span class="sd">        and right side. The values in `left` and `right` are often the same, except in restriction-ligation with partial overlap enabled,</span>
+<span class="sd">        ``left``, ``right``, containing (for each fragment) the locations where the fragment is joined to another fragment on its left</span>
+<span class="sd">        and right side. The values in ``left`` and ``right`` are often the same, except in restriction-ligation with partial overlap enabled,</span>
 <span class="sd">        where we can end up with a situation like this:</span>
 
 <span class="sd">        GGTCTCCCCAATT and aGGTCTCCAACCAA as fragments</span>
@@ -1865,13 +2180,14 @@
 <span class="sd">        aGGTCTCCxxCCAATT</span>
 <span class="sd">        tCCAGAGGTTGGxxAA</span>
 
-<span class="sd">        Would return</span>
-<span class="sd">        {</span>
-<span class="sd">            1: {&#39;left&#39;: [7:9], &#39;right&#39;: [9:11]},</span>
-<span class="sd">            2: {&#39;left&#39;: [8:10], &#39;right&#39;: [10:12]},</span>
-<span class="sd">            -1: {&#39;left&#39;: [2:4], &#39;right&#39;: [4:6]},</span>
-<span class="sd">            -2: {&#39;left&#39;: [2:4], &#39;right&#39;: [4:6]}</span>
-<span class="sd">        }</span>
+<span class="sd">        Would return::</span>
+
+<span class="sd">            {</span>
+<span class="sd">                1: {&#39;left&#39;: [7:9], &#39;right&#39;: [9:11]},</span>
+<span class="sd">                2: {&#39;left&#39;: [8:10], &#39;right&#39;: [10:12]},</span>
+<span class="sd">                -1: {&#39;left&#39;: [2:4], &#39;right&#39;: [4:6]},</span>
+<span class="sd">                -2: {&#39;left&#39;: [2:4], &#39;right&#39;: [4:6]}</span>
+<span class="sd">            }</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1896,17 +2212,17 @@
 
 
 <div class="viewcode-block" id="Assembly.assembly_uses_only_adjacent_edges">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.Assembly.assembly_uses_only_adjacent_edges">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.assembly_uses_only_adjacent_edges">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">assembly_uses_only_adjacent_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assembly</span><span class="p">,</span> <span class="n">is_circular</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check whether only adjacent edges within each fragment are used in the assembly. This is useful to check if a cut and ligate assembly is valid,</span>
 <span class="sd">        and prevent including partially digested fragments. For example, imagine the following fragment being an input for a digestion</span>
 <span class="sd">        and ligation assembly, where the enzyme cuts at the sites indicated by the vertical lines:</span>
 
-<span class="sd">        ```</span>
-<span class="sd">                 x       y       z</span>
-<span class="sd">          -------|-------|-------|---------</span>
-<span class="sd">        ```</span>
+<span class="sd">        ::</span>
+
+<span class="sd">                     x       y       z</span>
+<span class="sd">              -------|-------|-------|---------</span>
 
 <span class="sd">        We would only want assemblies that contain subfragments start-x, x-y, y-z, z-end, and not start-x, y-end, for instance.</span>
 <span class="sd">        The latter would indicate that the fragment was partially digested.</span>
@@ -1968,11 +2284,11 @@
 
 
 <div class="viewcode-block" id="PCRAssembly">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.PCRAssembly">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.PCRAssembly">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PCRAssembly</span><span class="p">(</span><span class="n">Assembly</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    An assembly that represents a PCR, where `fragments` is a list of primer, template, primer (in that order).</span>
-<span class="sd">    It always uses the `primer_template_overlap` algorithm and accepts the `mismatches` argument to indicate</span>
+<span class="sd">    An assembly that represents a PCR, where ``fragments`` is a list of primer, template, primer (in that order).</span>
+<span class="sd">    It always uses the ``primer_template_overlap`` algorithm and accepts the ``mismatches`` argument to indicate</span>
 <span class="sd">    the number of mismatches allowed in the overlap. Only supports substitution mismatches, not indels.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -2028,7 +2344,7 @@
         <span class="k">return</span>
 
 <div class="viewcode-block" id="PCRAssembly.get_linear_assemblies">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.PCRAssembly.get_linear_assemblies">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.PCRAssembly.get_linear_assemblies">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_linear_assemblies</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">]:</span>
@@ -2041,7 +2357,7 @@
 
 
 <div class="viewcode-block" id="PCRAssembly.get_circular_assemblies">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.PCRAssembly.get_circular_assemblies">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.PCRAssembly.get_circular_assemblies">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_circular_assemblies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
             <span class="s2">&quot;get_circular_assemblies not implemented for PCR assemblies&quot;</span>
@@ -2049,7 +2365,7 @@
 
 
 <div class="viewcode-block" id="PCRAssembly.get_insertion_assemblies">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.PCRAssembly.get_insertion_assemblies">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.PCRAssembly.get_insertion_assemblies">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_insertion_assemblies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
             <span class="s2">&quot;get_insertion_assemblies not implemented for PCR assemblies&quot;</span>
@@ -2059,7 +2375,7 @@
 
 
 <div class="viewcode-block" id="SingleFragmentAssembly">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.SingleFragmentAssembly">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.SingleFragmentAssembly">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SingleFragmentAssembly</span><span class="p">(</span><span class="n">Assembly</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An assembly that represents the circularisation or splicing of a single fragment.</span>
@@ -2095,7 +2411,7 @@
         <span class="k">return</span>
 
 <div class="viewcode-block" id="SingleFragmentAssembly.get_circular_assemblies">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.SingleFragmentAssembly.get_circular_assemblies">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.SingleFragmentAssembly.get_circular_assemblies">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_circular_assemblies</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">]:</span>
@@ -2112,7 +2428,7 @@
 
 
 <div class="viewcode-block" id="SingleFragmentAssembly.get_insertion_assemblies">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.SingleFragmentAssembly.get_insertion_assemblies">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.SingleFragmentAssembly.get_insertion_assemblies">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_insertion_assemblies</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">]:</span>
@@ -2149,7 +2465,7 @@
 
 
 <div class="viewcode-block" id="SingleFragmentAssembly.get_linear_assemblies">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.SingleFragmentAssembly.get_linear_assemblies">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.SingleFragmentAssembly.get_linear_assemblies">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_linear_assemblies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Linear assembly does not make sense&quot;</span><span class="p">)</span></div>
 </div>
@@ -2157,7 +2473,7 @@
 
 
 <div class="viewcode-block" id="common_function_assembly_products">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.common_function_assembly_products">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.common_function_assembly_products">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">common_function_assembly_products</span><span class="p">(</span>
     <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -2205,8 +2521,23 @@
 
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_recast_sources</span><span class="p">(</span>
+    <span class="n">products</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span> <span class="n">source_cls</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_fields</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Recast the `source` of each product to `source_cls` with optional extras.</span>
+
+<span class="sd">    This avoids repeating the same for-loop across many assembly functions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">prod</span> <span class="ow">in</span> <span class="n">products</span><span class="p">:</span>
+        <span class="n">prod</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source_cls</span><span class="p">(</span>
+            <span class="o">**</span><span class="n">prod</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(),</span>
+            <span class="o">**</span><span class="n">extra_fields</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">products</span>
+
+
 <div class="viewcode-block" id="gibson_assembly">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.gibson_assembly">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.gibson_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">gibson_assembly</span><span class="p">(</span>
     <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
@@ -2226,14 +2557,16 @@
 <span class="sd">    list[_Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">common_function_assembly_products</span><span class="p">(</span>
+
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_assembly_products</span><span class="p">(</span>
         <span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">gibson_overlap</span><span class="p">,</span> <span class="n">circular_only</span>
-    <span class="p">)</span></div>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">GibsonAssemblySource</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="in_fusion_assembly">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.in_fusion_assembly">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.in_fusion_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">in_fusion_assembly</span><span class="p">(</span>
     <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
@@ -2254,12 +2587,14 @@
 <span class="sd">    list[_Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">gibson_assembly</span><span class="p">(</span><span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span></div>
+
+    <span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">(</span><span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">InFusionSource</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="fusion_pcr_assembly">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.fusion_pcr_assembly">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.fusion_pcr_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fusion_pcr_assembly</span><span class="p">(</span>
     <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
@@ -2280,12 +2615,13 @@
 <span class="sd">    list[_Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">gibson_assembly</span><span class="p">(</span><span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span></div>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">(</span><span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">OverlapExtensionPCRLigationSource</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="in_vivo_assembly">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.in_vivo_assembly">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.in_vivo_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">in_vivo_assembly</span><span class="p">(</span>
     <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
@@ -2305,14 +2641,15 @@
 <span class="sd">    list[_Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">common_function_assembly_products</span><span class="p">(</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_assembly_products</span><span class="p">(</span>
         <span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">common_sub_strings</span><span class="p">,</span> <span class="n">circular_only</span>
-    <span class="p">)</span></div>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">InVivoAssemblySource</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="restriction_ligation_assembly">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.restriction_ligation_assembly">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.restriction_ligation_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">restriction_ligation_assembly</span><span class="p">(</span>
     <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
     <span class="n">enzymes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;_AbstractCut&quot;</span><span class="p">],</span>
@@ -2320,9 +2657,10 @@
     <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for restriction ligation assembly:</span>
-<span class="sd">    * Finds cutsites in the fragments</span>
-<span class="sd">    * Finds all products that could be assembled by ligating the fragments based on those cutsites</span>
-<span class="sd">    * Will NOT return products that combine an existing end with an end generated by the same enzyme (see example below)</span>
+
+<span class="sd">    - Finds cutsites in the fragments</span>
+<span class="sd">    - Finds all products that could be assembled by ligating the fragments based on those cutsites</span>
+<span class="sd">    - Will NOT return products that combine an existing end with an end generated by the same enzyme (see example below)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2343,9 +2681,9 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    In the example below, we plan to assemble a plasmid from a backbone and an insert, using the EcoRI and SalI enzymes.</span>
-<span class="sd">    Note how 2 circular products are returned, one contains the insert (`acgt`)</span>
-<span class="sd">    and the desired part of the backbone (`cccccc`), the other contains the</span>
-<span class="sd">    reversed insert (`tgga`) and the cut-out part of the backbone (`aaa`).</span>
+<span class="sd">    Note how 2 circular products are returned, one contains the insert (``acgt``)</span>
+<span class="sd">    and the desired part of the backbone (``cccccc``), the other contains the</span>
+<span class="sd">    reversed insert (``tgga``) and the cut-out part of the backbone (``aaa``).</span>
 
 <span class="sd">    &gt;&gt;&gt; from pydna.assembly2 import restriction_ligation_assembly</span>
 <span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
@@ -2379,16 +2717,21 @@
 <span class="sd">    TTAAGtttC</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">algo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">_l</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">algorithm_fn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">_l</span><span class="p">):</span>
         <span class="c1"># By default, we allow blunt ends</span>
         <span class="k">return</span> <span class="n">restriction_ligation_overlap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">enzymes</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">allow_blunt</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">common_function_assembly_products</span><span class="p">(</span><span class="n">frags</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algo</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">)</span></div>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_assembly_products</span><span class="p">(</span>
+        <span class="n">frags</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algorithm_fn</span><span class="p">,</span> <span class="n">circular_only</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span>
+        <span class="n">products</span><span class="p">,</span> <span class="n">RestrictionAndLigationSource</span><span class="p">,</span> <span class="n">restriction_enzymes</span><span class="o">=</span><span class="n">enzymes</span>
+    <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="golden_gate_assembly">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.golden_gate_assembly">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.golden_gate_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">golden_gate_assembly</span><span class="p">(</span>
     <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
     <span class="n">enzymes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;_AbstractCut&quot;</span><span class="p">],</span>
@@ -2397,7 +2740,7 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for Golden Gate assembly. This is the same as</span>
 <span class="sd">    restriction ligation assembly, but with a different name. Check the documentation</span>
-<span class="sd">    for `restriction_ligation_assembly` for more details.</span>
+<span class="sd">    for ``restriction_ligation_assembly`` for more details.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2417,14 +2760,14 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    See the example for `restriction_ligation_assembly`.</span>
+<span class="sd">    See the example for ``restriction_ligation_assembly``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">restriction_ligation_assembly</span><span class="p">(</span><span class="n">frags</span><span class="p">,</span> <span class="n">enzymes</span><span class="p">,</span> <span class="n">allow_blunt</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="ligation_assembly">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.ligation_assembly">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.ligation_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">ligation_assembly</span><span class="p">(</span>
     <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
     <span class="n">allow_blunt</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -2434,7 +2777,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for ligation assembly, as inputs pass the fragments (digested if needed) that</span>
 <span class="sd">    will be ligated.</span>
 
-<span class="sd">    For most cases, you probably should use `restriction_ligation_assembly` instead.</span>
+<span class="sd">    For most cases, you probably should use ``restriction_ligation_assembly`` instead.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2481,16 +2824,19 @@
         <span class="k">return</span> <span class="n">sticky_end_sub_strings</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">allow_partial_overlap</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">allow_blunt</span><span class="p">:</span>
-        <span class="n">algo</span> <span class="o">=</span> <span class="n">combine_algorithms</span><span class="p">(</span><span class="n">sticky_end_algorithm</span><span class="p">,</span> <span class="n">blunt_overlap</span><span class="p">)</span>
+        <span class="n">algorithm_fn</span> <span class="o">=</span> <span class="n">combine_algorithms</span><span class="p">(</span><span class="n">sticky_end_algorithm</span><span class="p">,</span> <span class="n">blunt_overlap</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">algo</span> <span class="o">=</span> <span class="n">sticky_end_algorithm</span>
+        <span class="n">algorithm_fn</span> <span class="o">=</span> <span class="n">sticky_end_algorithm</span>
 
-    <span class="k">return</span> <span class="n">common_function_assembly_products</span><span class="p">(</span><span class="n">frags</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algo</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">)</span></div>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_assembly_products</span><span class="p">(</span>
+        <span class="n">frags</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algorithm_fn</span><span class="p">,</span> <span class="n">circular_only</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">LigationSource</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="assembly_is_multi_site">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.assembly_is_multi_site">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.assembly_is_multi_site">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">assembly_is_multi_site</span><span class="p">(</span><span class="n">asm</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns True if the assembly is a multi-site assembly, False otherwise.&quot;&quot;&quot;</span>
 
@@ -2505,10 +2851,10 @@
 
 
 <div class="viewcode-block" id="gateway_assembly">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.gateway_assembly">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.gateway_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">gateway_assembly</span><span class="p">(</span>
     <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
-    <span class="n">reaction_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">reaction_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;BP&quot;</span><span class="p">,</span> <span class="s2">&quot;LR&quot;</span><span class="p">],</span>
     <span class="n">greedy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">multi_site_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -2519,8 +2865,8 @@
 <span class="sd">    ----------</span>
 <span class="sd">    frags : list[_Dseqrecord]</span>
 <span class="sd">        List of DNA fragments to assemble</span>
-<span class="sd">    reaction_type : str</span>
-<span class="sd">        Type of Gateway reaction, either &#39;BP&#39; or &#39;LR&#39;</span>
+<span class="sd">    reaction_type : Literal[&#39;BP&#39;, &#39;LR&#39;]</span>
+<span class="sd">        Type of Gateway reaction</span>
 <span class="sd">    greedy : bool, optional</span>
 <span class="sd">        If True, use greedy gateway consensus sites, by default False</span>
 <span class="sd">    circular_only : bool, optional</span>
@@ -2560,9 +2906,9 @@
 <span class="sd">    &gt;&gt;&gt; len(products_LR)</span>
 <span class="sd">    2</span>
 
-<span class="sd">    Now let&#39;s understand the `multi_site_only` parameter. Let&#39;s consider a case where we are swapping fragments</span>
+<span class="sd">    Now let&#39;s understand the ``multi_site_only`` parameter. Let&#39;s consider a case where we are swapping fragments</span>
 <span class="sd">    between two plasmids using an LR reaction. Experimentally, we expect to obtain two plasmids, resulting from the</span>
-<span class="sd">    swapping between the two att sites. That&#39;s what we get if we set `multi_site_only` to True.</span>
+<span class="sd">    swapping between the two att sites. That&#39;s what we get if we set ``multi_site_only`` to True.</span>
 
 <span class="sd">    &gt;&gt;&gt; attL2 = &#39;aaataatgattttattttgactgatagtgacctgttcgttgcaacaaattgataagcaatgctttcttataatgccaactttgtacaagaaagctg&#39;</span>
 <span class="sd">    &gt;&gt;&gt; attR2 = &#39;accactttgtacaagaaagctgaacgagaaacgtaaaatgatataaatatcaatatattaaattagattttgcataaaaaacagactacataatactgtaaaacacaacatatccagtcactatg&#39;</span>
@@ -2572,7 +2918,7 @@
 <span class="sd">    &gt;&gt;&gt; len(products)</span>
 <span class="sd">    2</span>
 
-<span class="sd">    However, if we set `multi_site_only` to False, we get 4 products, which also include the intermediate products</span>
+<span class="sd">    However, if we set ``multi_site_only`` to False, we get 4 products, which also include the intermediate products</span>
 <span class="sd">    where the two plasmids are combined into a single one through recombination of a single att site. This is an</span>
 <span class="sd">    intermediate of the reaction, and typically we don&#39;t want it:</span>
 
@@ -2588,13 +2934,19 @@
             <span class="sa">f</span><span class="s2">&quot;Invalid reaction type: </span><span class="si">{</span><span class="n">reaction_type</span><span class="si">}</span><span class="s2">, can only be BP or LR&quot;</span>
         <span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">algo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">_l</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">algorithm_fn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">_l</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">gateway_overlap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">reaction_type</span><span class="p">,</span> <span class="n">greedy</span><span class="p">)</span>
 
     <span class="n">filter_results_function</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">multi_site_only</span> <span class="k">else</span> <span class="n">assembly_is_multi_site</span>
 
     <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_assembly_products</span><span class="p">(</span>
-        <span class="n">frags</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algo</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">,</span> <span class="n">filter_results_function</span>
+        <span class="n">frags</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algorithm_fn</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">,</span> <span class="n">filter_results_function</span>
+    <span class="p">)</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">_recast_sources</span><span class="p">(</span>
+        <span class="n">products</span><span class="p">,</span>
+        <span class="n">GatewaySource</span><span class="p">,</span>
+        <span class="n">reaction_type</span><span class="o">=</span><span class="n">reaction_type</span><span class="p">,</span>
+        <span class="n">greedy</span><span class="o">=</span><span class="n">greedy</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">products</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -2615,7 +2967,7 @@
 
 
 <div class="viewcode-block" id="common_function_integration_products">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.common_function_integration_products">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.common_function_integration_products">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">common_function_integration_products</span><span class="p">(</span>
     <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">:</span> <span class="n">Callable</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
@@ -2654,7 +3006,7 @@
 
 
 <div class="viewcode-block" id="common_handle_insertion_fragments">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.common_handle_insertion_fragments">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.common_handle_insertion_fragments">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">common_handle_insertion_fragments</span><span class="p">(</span>
     <span class="n">genome</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">inserts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
@@ -2688,7 +3040,7 @@
 
 
 <div class="viewcode-block" id="common_function_excision_products">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.common_function_excision_products">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.common_function_excision_products">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">common_function_excision_products</span><span class="p">(</span>
     <span class="n">genome</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">:</span> <span class="n">Callable</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
@@ -2714,7 +3066,7 @@
 
 
 <div class="viewcode-block" id="homologous_recombination_integration">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.homologous_recombination_integration">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.homologous_recombination_integration">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">homologous_recombination_integration</span><span class="p">(</span>
     <span class="n">genome</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span>
     <span class="n">inserts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
@@ -2763,12 +3115,15 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fragments</span> <span class="o">=</span> <span class="n">common_handle_insertion_fragments</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">inserts</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">common_function_integration_products</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">common_sub_strings</span><span class="p">)</span></div>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_integration_products</span><span class="p">(</span>
+        <span class="n">fragments</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">common_sub_strings</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">HomologousRecombinationSource</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="homologous_recombination_excision">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.homologous_recombination_excision">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.homologous_recombination_excision">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">homologous_recombination_excision</span><span class="p">(</span>
     <span class="n">genome</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
@@ -2802,19 +3157,20 @@
 <span class="sd">    &gt;&gt;&gt; products</span>
 <span class="sd">    [Dseqrecord(o25), Dseqrecord(-32)]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">common_function_excision_products</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">common_sub_strings</span><span class="p">)</span></div>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_excision_products</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">common_sub_strings</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">HomologousRecombinationSource</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="cre_lox_integration">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.cre_lox_integration">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.cre_lox_integration">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cre_lox_integration</span><span class="p">(</span>
     <span class="n">genome</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">inserts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products resulting from the integration of an insert (or inserts joined</span>
 <span class="sd">    through cre-lox recombination among them) into the genome through cre-lox integration.</span>
 
-<span class="sd">    Also works with lox66 and lox71 (see `pydna.cre_lox` for more details).</span>
+<span class="sd">    Also works with lox66 and lox71 (see ``pydna.cre_lox`` for more details).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2864,12 +3220,13 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fragments</span> <span class="o">=</span> <span class="n">common_handle_insertion_fragments</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">inserts</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">common_function_integration_products</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cre_loxP_overlap</span><span class="p">)</span></div>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_integration_products</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cre_loxP_overlap</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">CreLoxRecombinationSource</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="cre_lox_excision">
-<a class="viewcode-back" href="../../modules/pydna_assembly2.html#pydna.assembly2.cre_lox_excision">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.cre_lox_excision">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cre_lox_excision</span><span class="p">(</span><span class="n">genome</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for CRE-lox excision.</span>
 
@@ -2917,35 +3274,227 @@
 <span class="sd">    &gt;&gt;&gt; res2</span>
 <span class="sd">    [Dseqrecord(o39), Dseqrecord(-45)]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">common_function_excision_products</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cre_loxP_overlap</span><span class="p">)</span></div>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_excision_products</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cre_loxP_overlap</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">CreLoxRecombinationSource</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="crispr_integration">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.crispr_integration">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">crispr_integration</span><span class="p">(</span>
+    <span class="n">genome</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span>
+    <span class="n">inserts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
+    <span class="n">guides</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Primer</span><span class="p">],</span>
+    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the products for CRISPR integration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    genome : _Dseqrecord</span>
+<span class="sd">        Target genome sequence</span>
+<span class="sd">    inserts : list[_Dseqrecord]</span>
+<span class="sd">        DNA fragment(s) to insert</span>
+<span class="sd">    guides : list[_Primer]</span>
+<span class="sd">        List of guide RNAs as Primer objects. This may change in the future.</span>
+<span class="sd">    limit : int, optional</span>
+<span class="sd">        Minimum overlap length required, by default 40</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">        List of integrated DNA molecules</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.assembly2 import crispr_integration</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.primer import Primer</span>
+<span class="sd">    &gt;&gt;&gt; genome = Dseqrecord(&quot;aaccggttcaatgcaaacagtaatgatggatgacattcaaagcac&quot;, name=&quot;genome&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; insert = Dseqrecord(&quot;aaccggttAAAAAAAAAttcaaagcac&quot;, name=&quot;insert&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; guide = Primer(&quot;ttcaatgcaaacagtaatga&quot;, name=&quot;guide&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; product, *_ = crispr_integration(genome, [insert], [guide], 8)</span>
+<span class="sd">    &gt;&gt;&gt; product</span>
+<span class="sd">    Dseqrecord(-27)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">guides</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;At least one guide RNA is required for CRISPR integration&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get all the possible products from the homologous recombination integration</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">homologous_recombination_integration</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">inserts</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+
+    <span class="c1"># Verify that the guides cut in the region that will be repaired</span>
+
+    <span class="c1"># First we collect the positions where the guides cut</span>
+    <span class="n">guide_cuts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">guide</span> <span class="ow">in</span> <span class="n">guides</span><span class="p">:</span>
+        <span class="n">enzyme</span> <span class="o">=</span> <span class="n">cas9</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">guide</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span>
+        <span class="n">possible_cuts</span> <span class="o">=</span> <span class="n">genome</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">get_cutsites</span><span class="p">(</span><span class="n">enzyme</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">possible_cuts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Could not find Cas9 cutsite in the target sequence using the guide: </span><span class="si">{</span><span class="n">guide</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="c1"># Keep only the position of the cut</span>
+        <span class="n">possible_cuts</span> <span class="o">=</span> <span class="p">[</span><span class="n">cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="p">(</span><span class="n">cut</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">possible_cuts</span><span class="p">]</span>
+        <span class="n">guide_cuts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">possible_cuts</span><span class="p">)</span>
+
+    <span class="c1"># Then, we check it the possible homologous recombination products contain the cuts</span>
+    <span class="c1"># from the guides inside the repair region.</span>
+    <span class="c1"># We also add the used guides to each product. This is very important!</span>
+    <span class="n">valid_products</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">product</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">products</span><span class="p">):</span>
+        <span class="c1"># The second element of product.source.input is conventionally the insert/repair fragment</span>
+        <span class="c1"># The other two (first and third) are the two bits of the genome</span>
+        <span class="n">repair_start</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">right_location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">repair_end</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">left_location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">repair_location</span> <span class="o">=</span> <span class="n">create_location</span><span class="p">(</span><span class="n">repair_start</span><span class="p">,</span> <span class="n">repair_end</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">genome</span><span class="p">))</span>
+        <span class="n">some_cuts_inside_repair</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">all_cuts_inside_repair</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cut_group</span> <span class="ow">in</span> <span class="n">guide_cuts</span><span class="p">:</span>
+            <span class="n">cuts_in_repair</span> <span class="o">=</span> <span class="p">[</span><span class="n">cut</span> <span class="k">for</span> <span class="n">cut</span> <span class="ow">in</span> <span class="n">cut_group</span> <span class="k">if</span> <span class="n">cut</span> <span class="ow">in</span> <span class="n">repair_location</span><span class="p">]</span>
+            <span class="n">some_cuts_inside_repair</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cuts_in_repair</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">all_cuts_inside_repair</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cuts_in_repair</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">cut_group</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">some_cuts_inside_repair</span><span class="p">):</span>
+            <span class="n">used_guides</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">guides</span><span class="p">)</span> <span class="k">if</span> <span class="n">all_cuts_inside_repair</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+            <span class="c1"># Add the used guides to the product &lt;----- VERY IMPORTANT!</span>
+            <span class="n">product</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">SourceInput</span><span class="p">(</span><span class="n">sequence</span><span class="o">=</span><span class="n">g</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">used_guides</span><span class="p">])</span>
+            <span class="n">valid_products</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">product</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">all_cuts_inside_repair</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Some guides cut outside the repair region, please check the guides&quot;</span>
+                <span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_products</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">products</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Some recombination products were discarded because they had off-target cuts&quot;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">valid_products</span><span class="p">,</span> <span class="n">CRISPRSource</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="pcr_assembly">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.pcr_assembly">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pcr_assembly</span><span class="p">(</span>
+    <span class="n">template</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span>
+    <span class="n">fwd_primer</span><span class="p">:</span> <span class="n">_Primer</span><span class="p">,</span>
+    <span class="n">rvs_primer</span><span class="p">:</span> <span class="n">_Primer</span><span class="p">,</span>
+    <span class="n">add_primer_features</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="n">mismatches</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for PCR assembly.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    template : _Dseqrecord</span>
+<span class="sd">        Template sequence</span>
+<span class="sd">    fwd_primer : _Primer</span>
+<span class="sd">        Forward primer</span>
+<span class="sd">    rvs_primer : _Primer</span>
+<span class="sd">        Reverse primer</span>
+<span class="sd">    add_primer_features : bool, optional</span>
+<span class="sd">        If True, add primer features to the product, by default False</span>
+<span class="sd">    limit : int, optional</span>
+<span class="sd">        Minimum overlap length required, by default 14</span>
+<span class="sd">    mismatches : int, optional</span>
+<span class="sd">        Maximum number of mismatches, by default 0</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">        List of assembled DNA molecules</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">minimal_annealing</span> <span class="o">=</span> <span class="n">limit</span> <span class="o">+</span> <span class="n">mismatches</span>
+    <span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span><span class="n">fwd_primer</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">rvs_primer</span><span class="p">]</span>
+    <span class="n">asm</span> <span class="o">=</span> <span class="n">PCRAssembly</span><span class="p">(</span>
+        <span class="n">fragments</span><span class="p">,</span>
+        <span class="n">limit</span><span class="o">=</span><span class="n">minimal_annealing</span><span class="p">,</span>
+        <span class="n">mismatches</span><span class="o">=</span><span class="n">mismatches</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">asm</span><span class="o">.</span><span class="n">assemble_linear</span><span class="p">()</span>
+    <span class="c1"># If both primers are the same, remove duplicates</span>
+    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">fwd_primer</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">rvs_primer</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">():</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">products</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reverse_complemented</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">add_primer_features</span><span class="p">:</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="p">[</span><span class="n">annotate_primer_binding_sites</span><span class="p">(</span><span class="n">prod</span><span class="p">,</span> <span class="n">fragments</span><span class="p">)</span> <span class="k">for</span> <span class="n">prod</span> <span class="ow">in</span> <span class="n">products</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">PCRSource</span><span class="p">,</span> <span class="n">add_primer_features</span><span class="o">=</span><span class="n">add_primer_features</span><span class="p">)</span></div>
 
 </pre></div>
 
-           </div>
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
           </div>
-          <footer>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
 
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2024, Björn F. Johansson.</p>
   </div>
+  
+  <div class="footer-item">
+    
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
 
-</footer>
-        </div>
-      </div>
-    </section>
   </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
 
-</body>
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
 </html>

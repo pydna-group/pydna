@@ -1,80 +1,328 @@
 
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydna.seqrecord &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a051be83" />
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pydna.seqrecord &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-      <script src="../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=d848064a"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/js/theme.js"></script>
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydna/seqrecord';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            pydna
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Pydna</a></li>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../example_gallery.html">Example gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../getting_started.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../reference/pydna.html">pydna package</a></li>
 </ul>
 
-        </div>
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
       </div>
-    </nav>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">pydna</a>
-      </nav>
+<div class="sbt-scroll-pixel-helper"></div>
 
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-          <li class="breadcrumb-item"><a href="../pydna.html">pydna</a></li>
-      <li class="breadcrumb-item active">pydna.seqrecord</li>
-      <li class="wy-breadcrumbs-aside">
-      </li>
-  </ul>
-  <hr/>
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <h1>Source code for pydna.seqrecord</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
@@ -120,7 +368,7 @@
 
 
 <div class="viewcode-block" id="SeqRecord">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SeqRecord</span><span class="p">(</span><span class="n">_SeqRecord</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subclass of the Biopython SeqRecord class.</span>
@@ -172,7 +420,7 @@
         <span class="p">}</span>
 
 <div class="viewcode-block" id="SeqRecord.from_Bio_SeqRecord">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.from_Bio_SeqRecord">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.from_Bio_SeqRecord">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_Bio_SeqRecord</span><span class="p">(</span><span class="n">clc</span><span class="p">,</span> <span class="n">sr</span><span class="p">:</span> <span class="n">_SeqRecord</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a pydnaSeqRecord from a Biopython SeqRecord.&quot;&quot;&quot;</span>
@@ -227,7 +475,7 @@
         <span class="k">return</span>
 
 <div class="viewcode-block" id="SeqRecord.reverse_complement">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.reverse_complement">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.reverse_complement">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reverse_complement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the reverse complement of the sequence.&quot;&quot;&quot;</span>
         <span class="n">answer</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -238,7 +486,7 @@
     <span class="n">rc</span> <span class="o">=</span> <span class="n">reverse_complement</span>
 
 <div class="viewcode-block" id="SeqRecord.isorf">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.isorf">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.isorf">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">isorf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Detect if sequence is an open reading frame (orf) in the 5&#39;-3&#39;.</span>
 
@@ -284,7 +532,7 @@
 
 
 <div class="viewcode-block" id="SeqRecord.translate">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.translate">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.translate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">translate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="n">p</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">translate</span><span class="p">()</span>
@@ -292,7 +540,7 @@
 
 
 <div class="viewcode-block" id="SeqRecord.add_colors_to_features_for_ape">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.add_colors_to_features_for_ape">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.add_colors_to_features_for_ape">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_colors_to_features_for_ape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign colors to features.</span>
 
@@ -339,7 +587,7 @@
 
 
 <div class="viewcode-block" id="SeqRecord.add_feature">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.add_feature">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.add_feature">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_feature</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">type_</span><span class="o">=</span><span class="s2">&quot;misc&quot;</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
@@ -416,7 +664,7 @@
 
 
 <div class="viewcode-block" id="SeqRecord.list_features">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.list_features">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.list_features">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">list_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Print ASCII table with all features.</span>
 
@@ -474,7 +722,7 @@
 
 
 <div class="viewcode-block" id="SeqRecord.extract_feature">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.extract_feature">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.extract_feature">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract feature and return a new SeqRecord object.</span>
 
@@ -497,7 +745,7 @@
 
 
 <div class="viewcode-block" id="SeqRecord.sorted_features">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.sorted_features">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.sorted_features">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">sorted_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a list of the features sorted by start position.</span>
 
@@ -526,7 +774,7 @@
 
 
 <div class="viewcode-block" id="SeqRecord.seguid">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.seguid">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.seguid">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">seguid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the url safe SEGUID [#]_ for the sequence.</span>
 
@@ -550,7 +798,7 @@
 
 
 <div class="viewcode-block" id="SeqRecord.comment">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.comment">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.comment">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newcomment</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;comment&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -561,14 +809,14 @@
 
 
 <div class="viewcode-block" id="SeqRecord.datefunction">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.datefunction">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.datefunction">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">datefunction</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="SeqRecord.stamp">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.stamp">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.stamp">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">stamp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">now</span><span class="o">=</span><span class="n">datefunction</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="s2">&quot;pydna&quot;</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add seguid checksum to COMMENTS sections</span>
 
@@ -614,7 +862,7 @@
 
 
 <div class="viewcode-block" id="SeqRecord.lcs">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.lcs">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.lcs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">lcs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the longest common substring between the sequence.</span>
 
@@ -675,21 +923,21 @@
 
 
 <div class="viewcode-block" id="SeqRecord.gc">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.gc">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.gc">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">gc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return GC content.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">gc</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="SeqRecord.cai">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.cai">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.cai">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cai</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organism</span><span class="o">=</span><span class="s2">&quot;sce&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">cai</span><span class="p">(</span><span class="n">organism</span><span class="o">=</span><span class="n">organism</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SeqRecord.rarecodons">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.rarecodons">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.rarecodons">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rarecodons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organism</span><span class="o">=</span><span class="s2">&quot;sce&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="n">sfs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -706,28 +954,28 @@
 
 
 <div class="viewcode-block" id="SeqRecord.startcodon">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.startcodon">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.startcodon">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">startcodon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organism</span><span class="o">=</span><span class="s2">&quot;sce&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">startcodon</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="SeqRecord.stopcodon">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.stopcodon">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.stopcodon">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">stopcodon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organism</span><span class="o">=</span><span class="s2">&quot;sce&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">stopcodon</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="SeqRecord.express">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.express">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.express">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">express</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organism</span><span class="o">=</span><span class="s2">&quot;sce&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">express</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="SeqRecord.copy">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.copy">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.copy">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
@@ -841,7 +1089,7 @@
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SeqRecord.dump">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.SeqRecord.dump">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.dump">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -857,11 +1105,11 @@
 
 
 <div class="viewcode-block" id="ProteinSeqRecord">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.ProteinSeqRecord">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.ProteinSeqRecord">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ProteinSeqRecord</span><span class="p">(</span><span class="n">SeqRecord</span><span class="p">):</span>
 
 <div class="viewcode-block" id="ProteinSeqRecord.reverse_complement">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.ProteinSeqRecord.reverse_complement">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.ProteinSeqRecord.reverse_complement">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reverse_complement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Not defined for protein.&quot;</span><span class="p">)</span></div>
 
@@ -869,43 +1117,43 @@
     <span class="n">rc</span> <span class="o">=</span> <span class="n">reverse_complement</span>
 
 <div class="viewcode-block" id="ProteinSeqRecord.isorf">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.ProteinSeqRecord.isorf">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.ProteinSeqRecord.isorf">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">isorf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Not defined for protein.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProteinSeqRecord.gc">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.ProteinSeqRecord.gc">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.ProteinSeqRecord.gc">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">gc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Not defined for protein.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProteinSeqRecord.cai">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.ProteinSeqRecord.cai">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.ProteinSeqRecord.cai">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cai</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Not defined for protein.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProteinSeqRecord.rarecodons">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.ProteinSeqRecord.rarecodons">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.ProteinSeqRecord.rarecodons">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rarecodons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Not defined for protein.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProteinSeqRecord.startcodon">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.ProteinSeqRecord.startcodon">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.ProteinSeqRecord.startcodon">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">startcodon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Not defined for protein.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProteinSeqRecord.stopcodon">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.ProteinSeqRecord.stopcodon">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.ProteinSeqRecord.stopcodon">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">stopcodon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Not defined for protein.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProteinSeqRecord.express">
-<a class="viewcode-back" href="../../modules/pydna_seqrecord.html#pydna.seqrecord.ProteinSeqRecord.express">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.ProteinSeqRecord.express">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">express</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Not defined for protein.&quot;</span><span class="p">)</span></div>
 
@@ -916,31 +1164,70 @@
 
 </pre></div>
 
-           </div>
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
           </div>
-          <footer>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
 
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2024, Björn F. Johansson.</p>
   </div>
+  
+  <div class="footer-item">
+    
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
 
-</footer>
-        </div>
-      </div>
-    </section>
   </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
 
-</body>
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
 </html>

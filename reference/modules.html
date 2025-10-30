@@ -1,0 +1,1258 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pydna &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/modules';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../getting_started.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="pydna.html">pydna package</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna/edit/main/docs/reference/modules.rst" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/reference/modules.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>pydna</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pydna">
+<h1>pydna<a class="headerlink" href="#pydna" title="Link to this heading">#</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pydna.html">pydna package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#pydna">pydna</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna-package-layout">pydna package layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#how-to-use-the-documentation">How to use the documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna-source-code">pydna source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#how-to-get-more-help">How to get more help</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#examples-of-pydna-in-use">Examples of pydna in use</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#pydna.get_env"><code class="docutils literal notranslate"><span class="pre">get_env()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#pydna.logo"><code class="docutils literal notranslate"><span class="pre">logo()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.all">pydna.all module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.Anneal"><code class="docutils literal notranslate"><span class="pre">Anneal</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Anneal.forward_primers"><code class="docutils literal notranslate"><span class="pre">Anneal.forward_primers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Anneal.reverse_primers"><code class="docutils literal notranslate"><span class="pre">Anneal.reverse_primers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Anneal.template"><code class="docutils literal notranslate"><span class="pre">Anneal.template</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Anneal.limit"><code class="docutils literal notranslate"><span class="pre">Anneal.limit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Anneal.products"><code class="docutils literal notranslate"><span class="pre">Anneal.products</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Anneal.report"><code class="docutils literal notranslate"><span class="pre">Anneal.report()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.pcr"><code class="docutils literal notranslate"><span class="pre">pcr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.Assembly"><code class="docutils literal notranslate"><span class="pre">Assembly</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Assembly.assemble_circular"><code class="docutils literal notranslate"><span class="pre">Assembly.assemble_circular()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Assembly.assemble_linear"><code class="docutils literal notranslate"><span class="pre">Assembly.assemble_linear()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.genbank"><code class="docutils literal notranslate"><span class="pre">genbank()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.Genbank"><code class="docutils literal notranslate"><span class="pre">Genbank</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Genbank.nucleotide"><code class="docutils literal notranslate"><span class="pre">Genbank.nucleotide()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.download_text"><code class="docutils literal notranslate"><span class="pre">download_text()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord"><code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.add_feature"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.add_feature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.apply_cut"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.apply_cut()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.cas9"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.cas9()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.circular"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.circular</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.copy_fasta_to_clipboard"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.copy_fasta_to_clipboard()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.copy_gb_to_clipboard"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.copy_gb_to_clipboard()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.cut"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.cut()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.cutters"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.extract_feature"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.extract_feature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.figure"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.figure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.find"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.find()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.find_aa"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.find_aa()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.find_aminoacids"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.find_aminoacids()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.format"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.format()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.from_SeqRecord"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.from_SeqRecord()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.from_string"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.from_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.history"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.history()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.linearize"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.linearize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.looped"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.looped()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.lower"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.lower()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.m"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.m()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.map_trace_files"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.map_trace_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.n_cutters"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.n_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.no_cutters"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.no_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.number_of_cuts"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.number_of_cuts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.once_cutters"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.once_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.orfs"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.orfs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.orfs_to_features"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.orfs_to_features()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.rc"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.rc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.reverse_complement"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.reverse_complement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.seguid"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.seguid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.shifted"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.shifted()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.source"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.source</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.synced"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.synced()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.terminal_transferase"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.terminal_transferase()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.tolinear"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.tolinear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.twice_cutters"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.twice_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.unique_cutters"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.unique_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.upper"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.upper()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseqrecord.write"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.Dseq"><code class="docutils literal notranslate"><span class="pre">Dseq</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.T4"><code class="docutils literal notranslate"><span class="pre">Dseq.T4()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.apply_cut"><code class="docutils literal notranslate"><span class="pre">Dseq.apply_cut()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.cas9"><code class="docutils literal notranslate"><span class="pre">Dseq.cas9()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.cut"><code class="docutils literal notranslate"><span class="pre">Dseq.cut()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.cutsite_is_valid"><code class="docutils literal notranslate"><span class="pre">Dseq.cutsite_is_valid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.cutters"><code class="docutils literal notranslate"><span class="pre">Dseq.cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.exo1_end"><code class="docutils literal notranslate"><span class="pre">Dseq.exo1_end()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.exo1_front"><code class="docutils literal notranslate"><span class="pre">Dseq.exo1_front()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.fill_in"><code class="docutils literal notranslate"><span class="pre">Dseq.fill_in()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.find"><code class="docutils literal notranslate"><span class="pre">Dseq.find()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.five_prime_end"><code class="docutils literal notranslate"><span class="pre">Dseq.five_prime_end()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.from_full_sequence_and_overhangs"><code class="docutils literal notranslate"><span class="pre">Dseq.from_full_sequence_and_overhangs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.from_representation"><code class="docutils literal notranslate"><span class="pre">Dseq.from_representation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.from_string"><code class="docutils literal notranslate"><span class="pre">Dseq.from_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.get_cut_parameters"><code class="docutils literal notranslate"><span class="pre">Dseq.get_cut_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.get_cutsite_pairs"><code class="docutils literal notranslate"><span class="pre">Dseq.get_cutsite_pairs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.get_cutsites"><code class="docutils literal notranslate"><span class="pre">Dseq.get_cutsites()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.isblunt"><code class="docutils literal notranslate"><span class="pre">Dseq.isblunt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.left_end_position"><code class="docutils literal notranslate"><span class="pre">Dseq.left_end_position()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.looped"><code class="docutils literal notranslate"><span class="pre">Dseq.looped()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.lower"><code class="docutils literal notranslate"><span class="pre">Dseq.lower()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.mung"><code class="docutils literal notranslate"><span class="pre">Dseq.mung()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.mw"><code class="docutils literal notranslate"><span class="pre">Dseq.mw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.n_cutters"><code class="docutils literal notranslate"><span class="pre">Dseq.n_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.no_cutters"><code class="docutils literal notranslate"><span class="pre">Dseq.no_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.once_cutters"><code class="docutils literal notranslate"><span class="pre">Dseq.once_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.quick"><code class="docutils literal notranslate"><span class="pre">Dseq.quick()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.rc"><code class="docutils literal notranslate"><span class="pre">Dseq.rc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.reverse_complement"><code class="docutils literal notranslate"><span class="pre">Dseq.reverse_complement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.right_end_position"><code class="docutils literal notranslate"><span class="pre">Dseq.right_end_position()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.seguid"><code class="docutils literal notranslate"><span class="pre">Dseq.seguid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.shifted"><code class="docutils literal notranslate"><span class="pre">Dseq.shifted()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.t4"><code class="docutils literal notranslate"><span class="pre">Dseq.t4()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.terminal_transferase"><code class="docutils literal notranslate"><span class="pre">Dseq.terminal_transferase()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.three_prime_end"><code class="docutils literal notranslate"><span class="pre">Dseq.three_prime_end()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.tolinear"><code class="docutils literal notranslate"><span class="pre">Dseq.tolinear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.transcribe"><code class="docutils literal notranslate"><span class="pre">Dseq.transcribe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.translate"><code class="docutils literal notranslate"><span class="pre">Dseq.translate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.trunc"><code class="docutils literal notranslate"><span class="pre">Dseq.trunc</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.twice_cutters"><code class="docutils literal notranslate"><span class="pre">Dseq.twice_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.unique_cutters"><code class="docutils literal notranslate"><span class="pre">Dseq.unique_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.upper"><code class="docutils literal notranslate"><span class="pre">Dseq.upper()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.all.Dseq.watson_ovhg"><code class="docutils literal notranslate"><span class="pre">Dseq.watson_ovhg()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.read"><code class="docutils literal notranslate"><span class="pre">read()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.read_primer"><code class="docutils literal notranslate"><span class="pre">read_primer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.parse"><code class="docutils literal notranslate"><span class="pre">parse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.parse_primers"><code class="docutils literal notranslate"><span class="pre">parse_primers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.primer_design"><code class="docutils literal notranslate"><span class="pre">primer_design()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.assembly_fragments"><code class="docutils literal notranslate"><span class="pre">assembly_fragments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.eq"><code class="docutils literal notranslate"><span class="pre">eq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.all.gbtext_clean"><code class="docutils literal notranslate"><span class="pre">gbtext_clean()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.amplicon">pydna.amplicon module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.amplicon.Amplicon"><code class="docutils literal notranslate"><span class="pre">Amplicon</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.amplicon.Amplicon.from_SeqRecord"><code class="docutils literal notranslate"><span class="pre">Amplicon.from_SeqRecord()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.amplicon.Amplicon.reverse_complement"><code class="docutils literal notranslate"><span class="pre">Amplicon.reverse_complement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.amplicon.Amplicon.rc"><code class="docutils literal notranslate"><span class="pre">Amplicon.rc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.amplicon.Amplicon.figure"><code class="docutils literal notranslate"><span class="pre">Amplicon.figure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.amplicon.Amplicon.set_forward_primer_footprint"><code class="docutils literal notranslate"><span class="pre">Amplicon.set_forward_primer_footprint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.amplicon.Amplicon.set_reverse_primer_footprint"><code class="docutils literal notranslate"><span class="pre">Amplicon.set_reverse_primer_footprint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.amplicon.Amplicon.program"><code class="docutils literal notranslate"><span class="pre">Amplicon.program()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.amplicon.Amplicon.dbd_program"><code class="docutils literal notranslate"><span class="pre">Amplicon.dbd_program()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.amplicon.Amplicon.primers"><code class="docutils literal notranslate"><span class="pre">Amplicon.primers()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.amplify">pydna.amplify module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.amplify.Anneal"><code class="docutils literal notranslate"><span class="pre">Anneal</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.amplify.Anneal.forward_primers"><code class="docutils literal notranslate"><span class="pre">Anneal.forward_primers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.amplify.Anneal.reverse_primers"><code class="docutils literal notranslate"><span class="pre">Anneal.reverse_primers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.amplify.Anneal.template"><code class="docutils literal notranslate"><span class="pre">Anneal.template</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.amplify.Anneal.limit"><code class="docutils literal notranslate"><span class="pre">Anneal.limit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.amplify.Anneal.products"><code class="docutils literal notranslate"><span class="pre">Anneal.products</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.amplify.Anneal.report"><code class="docutils literal notranslate"><span class="pre">Anneal.report()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.amplify.pcr"><code class="docutils literal notranslate"><span class="pre">pcr()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.assembly">pydna.assembly module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly.Assembly"><code class="docutils literal notranslate"><span class="pre">Assembly</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly.Assembly.assemble_linear"><code class="docutils literal notranslate"><span class="pre">Assembly.assemble_linear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly.Assembly.assemble_circular"><code class="docutils literal notranslate"><span class="pre">Assembly.assemble_circular()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.assembly2">pydna.assembly2 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.gather_overlapping_locations"><code class="docutils literal notranslate"><span class="pre">gather_overlapping_locations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.ends_from_cutsite"><code class="docutils literal notranslate"><span class="pre">ends_from_cutsite()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.restriction_ligation_overlap"><code class="docutils literal notranslate"><span class="pre">restriction_ligation_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.combine_algorithms"><code class="docutils literal notranslate"><span class="pre">combine_algorithms()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.blunt_overlap"><code class="docutils literal notranslate"><span class="pre">blunt_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.common_sub_strings"><code class="docutils literal notranslate"><span class="pre">common_sub_strings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.gibson_overlap"><code class="docutils literal notranslate"><span class="pre">gibson_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.sticky_end_sub_strings"><code class="docutils literal notranslate"><span class="pre">sticky_end_sub_strings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.zip_match_leftwards"><code class="docutils literal notranslate"><span class="pre">zip_match_leftwards()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.zip_match_rightwards"><code class="docutils literal notranslate"><span class="pre">zip_match_rightwards()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.seqrecord2_uppercase_DNA_string"><code class="docutils literal notranslate"><span class="pre">seqrecord2_uppercase_DNA_string()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.primer_template_overlap"><code class="docutils literal notranslate"><span class="pre">primer_template_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.fill_left"><code class="docutils literal notranslate"><span class="pre">fill_left()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.fill_right"><code class="docutils literal notranslate"><span class="pre">fill_right()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.fill_dseq"><code class="docutils literal notranslate"><span class="pre">fill_dseq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.reverse_complement_assembly"><code class="docutils literal notranslate"><span class="pre">reverse_complement_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.filter_linear_subassemblies"><code class="docutils literal notranslate"><span class="pre">filter_linear_subassemblies()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.remove_subassemblies"><code class="docutils literal notranslate"><span class="pre">remove_subassemblies()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.assembly2str"><code class="docutils literal notranslate"><span class="pre">assembly2str()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.assembly2str_tuple"><code class="docutils literal notranslate"><span class="pre">assembly2str_tuple()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.assembly_has_mismatches"><code class="docutils literal notranslate"><span class="pre">assembly_has_mismatches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.assembly_is_circular"><code class="docutils literal notranslate"><span class="pre">assembly_is_circular()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.assemble"><code class="docutils literal notranslate"><span class="pre">assemble()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.annotate_primer_binding_sites"><code class="docutils literal notranslate"><span class="pre">annotate_primer_binding_sites()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.edge_representation2subfragment_representation"><code class="docutils literal notranslate"><span class="pre">edge_representation2subfragment_representation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.subfragment_representation2edge_representation"><code class="docutils literal notranslate"><span class="pre">subfragment_representation2edge_representation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.get_assembly_subfragments"><code class="docutils literal notranslate"><span class="pre">get_assembly_subfragments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.extract_subfragment"><code class="docutils literal notranslate"><span class="pre">extract_subfragment()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.is_sublist"><code class="docutils literal notranslate"><span class="pre">is_sublist()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.circular_permutation_min_abs"><code class="docutils literal notranslate"><span class="pre">circular_permutation_min_abs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly"><code class="docutils literal notranslate"><span class="pre">Assembly</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.assembly_is_valid"><code class="docutils literal notranslate"><span class="pre">Assembly.assembly_is_valid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.add_edges_from_match"><code class="docutils literal notranslate"><span class="pre">Assembly.add_edges_from_match()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.format_assembly_edge"><code class="docutils literal notranslate"><span class="pre">Assembly.format_assembly_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.get_linear_assemblies"><code class="docutils literal notranslate"><span class="pre">Assembly.get_linear_assemblies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.node_path2assembly_list"><code class="docutils literal notranslate"><span class="pre">Assembly.node_path2assembly_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.get_unique_linear_paths"><code class="docutils literal notranslate"><span class="pre">Assembly.get_unique_linear_paths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.get_possible_assembly_number"><code class="docutils literal notranslate"><span class="pre">Assembly.get_possible_assembly_number()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.get_circular_assemblies"><code class="docutils literal notranslate"><span class="pre">Assembly.get_circular_assemblies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.format_insertion_assembly"><code class="docutils literal notranslate"><span class="pre">Assembly.format_insertion_assembly()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.format_insertion_assembly_edge_case"><code class="docutils literal notranslate"><span class="pre">Assembly.format_insertion_assembly_edge_case()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.get_insertion_assemblies"><code class="docutils literal notranslate"><span class="pre">Assembly.get_insertion_assemblies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.assemble_linear"><code class="docutils literal notranslate"><span class="pre">Assembly.assemble_linear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.assemble_circular"><code class="docutils literal notranslate"><span class="pre">Assembly.assemble_circular()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.assemble_insertion"><code class="docutils literal notranslate"><span class="pre">Assembly.assemble_insertion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.get_locations_on_fragments"><code class="docutils literal notranslate"><span class="pre">Assembly.get_locations_on_fragments()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.Assembly.assembly_uses_only_adjacent_edges"><code class="docutils literal notranslate"><span class="pre">Assembly.assembly_uses_only_adjacent_edges()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.PCRAssembly"><code class="docutils literal notranslate"><span class="pre">PCRAssembly</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.PCRAssembly.get_linear_assemblies"><code class="docutils literal notranslate"><span class="pre">PCRAssembly.get_linear_assemblies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.PCRAssembly.get_circular_assemblies"><code class="docutils literal notranslate"><span class="pre">PCRAssembly.get_circular_assemblies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.PCRAssembly.get_insertion_assemblies"><code class="docutils literal notranslate"><span class="pre">PCRAssembly.get_insertion_assemblies()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.SingleFragmentAssembly"><code class="docutils literal notranslate"><span class="pre">SingleFragmentAssembly</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.SingleFragmentAssembly.get_circular_assemblies"><code class="docutils literal notranslate"><span class="pre">SingleFragmentAssembly.get_circular_assemblies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.SingleFragmentAssembly.get_insertion_assemblies"><code class="docutils literal notranslate"><span class="pre">SingleFragmentAssembly.get_insertion_assemblies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.assembly2.SingleFragmentAssembly.get_linear_assemblies"><code class="docutils literal notranslate"><span class="pre">SingleFragmentAssembly.get_linear_assemblies()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.common_function_assembly_products"><code class="docutils literal notranslate"><span class="pre">common_function_assembly_products()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.gibson_assembly"><code class="docutils literal notranslate"><span class="pre">gibson_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.in_fusion_assembly"><code class="docutils literal notranslate"><span class="pre">in_fusion_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.fusion_pcr_assembly"><code class="docutils literal notranslate"><span class="pre">fusion_pcr_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.in_vivo_assembly"><code class="docutils literal notranslate"><span class="pre">in_vivo_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.restriction_ligation_assembly"><code class="docutils literal notranslate"><span class="pre">restriction_ligation_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.golden_gate_assembly"><code class="docutils literal notranslate"><span class="pre">golden_gate_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.ligation_assembly"><code class="docutils literal notranslate"><span class="pre">ligation_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.assembly_is_multi_site"><code class="docutils literal notranslate"><span class="pre">assembly_is_multi_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.gateway_assembly"><code class="docutils literal notranslate"><span class="pre">gateway_assembly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.common_function_integration_products"><code class="docutils literal notranslate"><span class="pre">common_function_integration_products()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.common_handle_insertion_fragments"><code class="docutils literal notranslate"><span class="pre">common_handle_insertion_fragments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.common_function_excision_products"><code class="docutils literal notranslate"><span class="pre">common_function_excision_products()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.homologous_recombination_integration"><code class="docutils literal notranslate"><span class="pre">homologous_recombination_integration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.homologous_recombination_excision"><code class="docutils literal notranslate"><span class="pre">homologous_recombination_excision()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.cre_lox_integration"><code class="docutils literal notranslate"><span class="pre">cre_lox_integration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.cre_lox_excision"><code class="docutils literal notranslate"><span class="pre">cre_lox_excision()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.crispr_integration"><code class="docutils literal notranslate"><span class="pre">crispr_integration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.pcr_assembly"><code class="docutils literal notranslate"><span class="pre">pcr_assembly()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.codon">pydna.codon module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.common_sub_strings">pydna.common_sub_strings module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.common_sub_strings.common_sub_strings"><code class="docutils literal notranslate"><span class="pre">common_sub_strings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.common_sub_strings.terminal_overlap"><code class="docutils literal notranslate"><span class="pre">terminal_overlap()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.conftest">pydna.conftest module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.contig">pydna.contig module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.contig.Contig"><code class="docutils literal notranslate"><span class="pre">Contig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.contig.Contig.from_string"><code class="docutils literal notranslate"><span class="pre">Contig.from_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.contig.Contig.from_SeqRecord"><code class="docutils literal notranslate"><span class="pre">Contig.from_SeqRecord()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.contig.Contig.reverse_complement"><code class="docutils literal notranslate"><span class="pre">Contig.reverse_complement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.contig.Contig.rc"><code class="docutils literal notranslate"><span class="pre">Contig.rc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.contig.Contig.detailed_figure"><code class="docutils literal notranslate"><span class="pre">Contig.detailed_figure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.contig.Contig.figure"><code class="docutils literal notranslate"><span class="pre">Contig.figure()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.cre_lox">pydna.cre_lox module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.cre_lox.cre_loxP_overlap"><code class="docutils literal notranslate"><span class="pre">cre_loxP_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.cre_lox.get_regex_dict"><code class="docutils literal notranslate"><span class="pre">get_regex_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.cre_lox.find_loxP_sites"><code class="docutils literal notranslate"><span class="pre">find_loxP_sites()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.cre_lox.annotate_loxP_sites"><code class="docutils literal notranslate"><span class="pre">annotate_loxP_sites()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.crispr">pydna.crispr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.crispr.cas9"><code class="docutils literal notranslate"><span class="pre">cas9</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.crispr.cas9.scaffold"><code class="docutils literal notranslate"><span class="pre">cas9.scaffold</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.crispr.cas9.pam"><code class="docutils literal notranslate"><span class="pre">cas9.pam</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.crispr.cas9.size"><code class="docutils literal notranslate"><span class="pre">cas9.size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.crispr.cas9.fst5"><code class="docutils literal notranslate"><span class="pre">cas9.fst5</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.crispr.cas9.fst3"><code class="docutils literal notranslate"><span class="pre">cas9.fst3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.crispr.cas9.ovhg"><code class="docutils literal notranslate"><span class="pre">cas9.ovhg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.crispr.cas9.search"><code class="docutils literal notranslate"><span class="pre">cas9.search()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.crispr.protospacer"><code class="docutils literal notranslate"><span class="pre">protospacer()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.design">pydna.design module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.design.primer_design"><code class="docutils literal notranslate"><span class="pre">primer_design()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.design.assembly_fragments"><code class="docutils literal notranslate"><span class="pre">assembly_fragments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.design.circular_assembly_fragments"><code class="docutils literal notranslate"><span class="pre">circular_assembly_fragments()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.download">pydna.download module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.download.download_text"><code class="docutils literal notranslate"><span class="pre">download_text()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.dseq">pydna.dseq module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq"><code class="docutils literal notranslate"><span class="pre">Dseq</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.trunc"><code class="docutils literal notranslate"><span class="pre">Dseq.trunc</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.quick"><code class="docutils literal notranslate"><span class="pre">Dseq.quick()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.from_string"><code class="docutils literal notranslate"><span class="pre">Dseq.from_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.from_representation"><code class="docutils literal notranslate"><span class="pre">Dseq.from_representation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.from_full_sequence_and_overhangs"><code class="docutils literal notranslate"><span class="pre">Dseq.from_full_sequence_and_overhangs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.mw"><code class="docutils literal notranslate"><span class="pre">Dseq.mw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.upper"><code class="docutils literal notranslate"><span class="pre">Dseq.upper()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.lower"><code class="docutils literal notranslate"><span class="pre">Dseq.lower()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.find"><code class="docutils literal notranslate"><span class="pre">Dseq.find()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.reverse_complement"><code class="docutils literal notranslate"><span class="pre">Dseq.reverse_complement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.rc"><code class="docutils literal notranslate"><span class="pre">Dseq.rc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.shifted"><code class="docutils literal notranslate"><span class="pre">Dseq.shifted()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.looped"><code class="docutils literal notranslate"><span class="pre">Dseq.looped()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.tolinear"><code class="docutils literal notranslate"><span class="pre">Dseq.tolinear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.five_prime_end"><code class="docutils literal notranslate"><span class="pre">Dseq.five_prime_end()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.three_prime_end"><code class="docutils literal notranslate"><span class="pre">Dseq.three_prime_end()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.watson_ovhg"><code class="docutils literal notranslate"><span class="pre">Dseq.watson_ovhg()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.fill_in"><code class="docutils literal notranslate"><span class="pre">Dseq.fill_in()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.transcribe"><code class="docutils literal notranslate"><span class="pre">Dseq.transcribe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.translate"><code class="docutils literal notranslate"><span class="pre">Dseq.translate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.mung"><code class="docutils literal notranslate"><span class="pre">Dseq.mung()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.T4"><code class="docutils literal notranslate"><span class="pre">Dseq.T4()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.t4"><code class="docutils literal notranslate"><span class="pre">Dseq.t4()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.exo1_front"><code class="docutils literal notranslate"><span class="pre">Dseq.exo1_front()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.exo1_end"><code class="docutils literal notranslate"><span class="pre">Dseq.exo1_end()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.no_cutters"><code class="docutils literal notranslate"><span class="pre">Dseq.no_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.unique_cutters"><code class="docutils literal notranslate"><span class="pre">Dseq.unique_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.once_cutters"><code class="docutils literal notranslate"><span class="pre">Dseq.once_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.twice_cutters"><code class="docutils literal notranslate"><span class="pre">Dseq.twice_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.n_cutters"><code class="docutils literal notranslate"><span class="pre">Dseq.n_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.cutters"><code class="docutils literal notranslate"><span class="pre">Dseq.cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.seguid"><code class="docutils literal notranslate"><span class="pre">Dseq.seguid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.isblunt"><code class="docutils literal notranslate"><span class="pre">Dseq.isblunt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.cas9"><code class="docutils literal notranslate"><span class="pre">Dseq.cas9()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.terminal_transferase"><code class="docutils literal notranslate"><span class="pre">Dseq.terminal_transferase()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.cut"><code class="docutils literal notranslate"><span class="pre">Dseq.cut()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.cutsite_is_valid"><code class="docutils literal notranslate"><span class="pre">Dseq.cutsite_is_valid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.get_cutsites"><code class="docutils literal notranslate"><span class="pre">Dseq.get_cutsites()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.left_end_position"><code class="docutils literal notranslate"><span class="pre">Dseq.left_end_position()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.right_end_position"><code class="docutils literal notranslate"><span class="pre">Dseq.right_end_position()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.get_cut_parameters"><code class="docutils literal notranslate"><span class="pre">Dseq.get_cut_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.apply_cut"><code class="docutils literal notranslate"><span class="pre">Dseq.apply_cut()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseq.Dseq.get_cutsite_pairs"><code class="docutils literal notranslate"><span class="pre">Dseq.get_cutsite_pairs()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.dseqrecord">pydna.dseqrecord module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord"><code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.source"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.source</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.from_string"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.from_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.from_SeqRecord"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.from_SeqRecord()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.circular"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.circular</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.m"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.m()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.extract_feature"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.extract_feature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.add_feature"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.add_feature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.seguid"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.seguid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.looped"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.looped()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.tolinear"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.tolinear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.terminal_transferase"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.terminal_transferase()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.format"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.format()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.write"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.write()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.find"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.find()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.find_aminoacids"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.find_aminoacids()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.find_aa"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.find_aa()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.map_trace_files"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.map_trace_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.linearize"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.linearize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.no_cutters"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.no_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.unique_cutters"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.unique_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.once_cutters"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.once_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.twice_cutters"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.twice_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.n_cutters"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.n_cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.cutters"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.cutters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.number_of_cuts"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.number_of_cuts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.cas9"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.cas9()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.reverse_complement"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.reverse_complement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.rc"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.rc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.synced"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.synced()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.upper"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.upper()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.lower"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.lower()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.orfs"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.orfs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.orfs_to_features"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.orfs_to_features()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.copy_gb_to_clipboard"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.copy_gb_to_clipboard()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.copy_fasta_to_clipboard"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.copy_fasta_to_clipboard()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.figure"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.figure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.shifted"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.shifted()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.cut"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.cut()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.annotations"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.annotations</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.dbxrefs"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.dbxrefs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.apply_cut"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.apply_cut()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.history"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.history()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.fakeseq">pydna.fakeseq module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.fakeseq.FakeSeq"><code class="docutils literal notranslate"><span class="pre">FakeSeq</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.fakeseq.FakeSeq.m"><code class="docutils literal notranslate"><span class="pre">FakeSeq.m()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.fakeseq.FakeSeq.M"><code class="docutils literal notranslate"><span class="pre">FakeSeq.M()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.fusionpcr">pydna.fusionpcr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.fusionpcr.fuse_by_pcr"><code class="docutils literal notranslate"><span class="pre">fuse_by_pcr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.fusionpcr.list_parts"><code class="docutils literal notranslate"><span class="pre">list_parts()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.gateway">pydna.gateway module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.gateway.gateway_overlap"><code class="docutils literal notranslate"><span class="pre">gateway_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.gateway.find_gateway_sites"><code class="docutils literal notranslate"><span class="pre">find_gateway_sites()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.gateway.annotate_gateway_sites"><code class="docutils literal notranslate"><span class="pre">annotate_gateway_sites()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.gel">pydna.gel module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.gel.interpolator"><code class="docutils literal notranslate"><span class="pre">interpolator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.gel.gel"><code class="docutils literal notranslate"><span class="pre">gel()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.genbank">pydna.genbank module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.genbank.Genbank"><code class="docutils literal notranslate"><span class="pre">Genbank</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.genbank.Genbank.nucleotide"><code class="docutils literal notranslate"><span class="pre">Genbank.nucleotide()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.genbank.genbank"><code class="docutils literal notranslate"><span class="pre">genbank()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.genbankfile">pydna.genbankfile module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.genbankfile.GenbankFile"><code class="docutils literal notranslate"><span class="pre">GenbankFile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.genbankfile.GenbankFile.from_SeqRecord"><code class="docutils literal notranslate"><span class="pre">GenbankFile.from_SeqRecord()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.genbankfile.GenbankFile.reverse_complement"><code class="docutils literal notranslate"><span class="pre">GenbankFile.reverse_complement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.genbankfile.GenbankFile.rc"><code class="docutils literal notranslate"><span class="pre">GenbankFile.rc()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.genbankfixer">pydna.genbankfixer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.genbankfixer.parseGBLoc"><code class="docutils literal notranslate"><span class="pre">parseGBLoc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.genbankfixer.strip_multiline"><code class="docutils literal notranslate"><span class="pre">strip_multiline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.genbankfixer.toInt"><code class="docutils literal notranslate"><span class="pre">toInt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.genbankfixer.strip_indent"><code class="docutils literal notranslate"><span class="pre">strip_indent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.genbankfixer.concat_dict"><code class="docutils literal notranslate"><span class="pre">concat_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.genbankfixer.toJSON"><code class="docutils literal notranslate"><span class="pre">toJSON()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.genbankfixer.wrapstring"><code class="docutils literal notranslate"><span class="pre">wrapstring()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.genbankfixer.locstr"><code class="docutils literal notranslate"><span class="pre">locstr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.genbankfixer.originstr"><code class="docutils literal notranslate"><span class="pre">originstr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.genbankfixer.toGB"><code class="docutils literal notranslate"><span class="pre">toGB()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.genbankfixer.gbtext_clean"><code class="docutils literal notranslate"><span class="pre">gbtext_clean()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.genbankrecord">pydna.genbankrecord module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.genbankrecord.GenbankRecord"><code class="docutils literal notranslate"><span class="pre">GenbankRecord</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.genbankrecord.GenbankRecord.from_string"><code class="docutils literal notranslate"><span class="pre">GenbankRecord.from_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.genbankrecord.GenbankRecord.from_SeqRecord"><code class="docutils literal notranslate"><span class="pre">GenbankRecord.from_SeqRecord()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.genbankrecord.GenbankRecord.reverse_complement"><code class="docutils literal notranslate"><span class="pre">GenbankRecord.reverse_complement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.genbankrecord.GenbankRecord.rc"><code class="docutils literal notranslate"><span class="pre">GenbankRecord.rc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.genbankrecord.GenbankRecord.pydna_code"><code class="docutils literal notranslate"><span class="pre">GenbankRecord.pydna_code()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.genbankrecord.GenbankRecord.biopython_code"><code class="docutils literal notranslate"><span class="pre">GenbankRecord.biopython_code()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.goldengate">pydna.goldengate module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.ladders">pydna.ladders module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.ligate">pydna.ligate module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.ligate.ligate"><code class="docutils literal notranslate"><span class="pre">ligate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.opencloning_models">pydna.opencloning_models module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.id_mode"><code class="docutils literal notranslate"><span class="pre">id_mode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.get_id"><code class="docutils literal notranslate"><span class="pre">get_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceLocationStr"><code class="docutils literal notranslate"><span class="pre">SequenceLocationStr</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceLocationStr.from_biopython_location"><code class="docutils literal notranslate"><span class="pre">SequenceLocationStr.from_biopython_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceLocationStr.to_biopython_location"><code class="docutils literal notranslate"><span class="pre">SequenceLocationStr.to_biopython_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceLocationStr.field_validator"><code class="docutils literal notranslate"><span class="pre">SequenceLocationStr.field_validator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceLocationStr.from_start_and_end"><code class="docutils literal notranslate"><span class="pre">SequenceLocationStr.from_start_and_end()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.ConfiguredBaseModel"><code class="docutils literal notranslate"><span class="pre">ConfiguredBaseModel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.ConfiguredBaseModel.model_config"><code class="docutils literal notranslate"><span class="pre">ConfiguredBaseModel.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.TextFileSequence"><code class="docutils literal notranslate"><span class="pre">TextFileSequence</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.TextFileSequence.from_dseqrecord"><code class="docutils literal notranslate"><span class="pre">TextFileSequence.from_dseqrecord()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.TextFileSequence.model_config"><code class="docutils literal notranslate"><span class="pre">TextFileSequence.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.PrimerModel"><code class="docutils literal notranslate"><span class="pre">PrimerModel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.PrimerModel.from_primer"><code class="docutils literal notranslate"><span class="pre">PrimerModel.from_primer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.PrimerModel.model_config"><code class="docutils literal notranslate"><span class="pre">PrimerModel.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SourceInput"><code class="docutils literal notranslate"><span class="pre">SourceInput</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SourceInput.sequence"><code class="docutils literal notranslate"><span class="pre">SourceInput.sequence</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SourceInput.to_pydantic_model"><code class="docutils literal notranslate"><span class="pre">SourceInput.to_pydantic_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SourceInput.model_config"><code class="docutils literal notranslate"><span class="pre">SourceInput.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.AssemblyFragment"><code class="docutils literal notranslate"><span class="pre">AssemblyFragment</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.AssemblyFragment.left_location"><code class="docutils literal notranslate"><span class="pre">AssemblyFragment.left_location</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.AssemblyFragment.right_location"><code class="docutils literal notranslate"><span class="pre">AssemblyFragment.right_location</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.AssemblyFragment.reverse_complemented"><code class="docutils literal notranslate"><span class="pre">AssemblyFragment.reverse_complemented</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.AssemblyFragment.from_biopython_location"><code class="docutils literal notranslate"><span class="pre">AssemblyFragment.from_biopython_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.AssemblyFragment.to_pydantic_model"><code class="docutils literal notranslate"><span class="pre">AssemblyFragment.to_pydantic_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.AssemblyFragment.model_config"><code class="docutils literal notranslate"><span class="pre">AssemblyFragment.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.Source"><code class="docutils literal notranslate"><span class="pre">Source</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.Source.input"><code class="docutils literal notranslate"><span class="pre">Source.input</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.Source.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">Source.TARGET_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.Source.input_models"><code class="docutils literal notranslate"><span class="pre">Source.input_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.Source.to_pydantic_model"><code class="docutils literal notranslate"><span class="pre">Source.to_pydantic_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.Source.add_to_history_graph"><code class="docutils literal notranslate"><span class="pre">Source.add_to_history_graph()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.Source.history_string"><code class="docutils literal notranslate"><span class="pre">Source.history_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.Source.model_config"><code class="docutils literal notranslate"><span class="pre">Source.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.AssemblySource"><code class="docutils literal notranslate"><span class="pre">AssemblySource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.AssemblySource.circular"><code class="docutils literal notranslate"><span class="pre">AssemblySource.circular</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.AssemblySource.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">AssemblySource.TARGET_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.AssemblySource.to_pydantic_model"><code class="docutils literal notranslate"><span class="pre">AssemblySource.to_pydantic_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.AssemblySource.from_subfragment_representation"><code class="docutils literal notranslate"><span class="pre">AssemblySource.from_subfragment_representation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.AssemblySource.model_config"><code class="docutils literal notranslate"><span class="pre">AssemblySource.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.RestrictionAndLigationSource"><code class="docutils literal notranslate"><span class="pre">RestrictionAndLigationSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.RestrictionAndLigationSource.restriction_enzymes"><code class="docutils literal notranslate"><span class="pre">RestrictionAndLigationSource.restriction_enzymes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.RestrictionAndLigationSource.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">RestrictionAndLigationSource.TARGET_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.RestrictionAndLigationSource.model_config"><code class="docutils literal notranslate"><span class="pre">RestrictionAndLigationSource.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.GibsonAssemblySource"><code class="docutils literal notranslate"><span class="pre">GibsonAssemblySource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.GibsonAssemblySource.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">GibsonAssemblySource.TARGET_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.GibsonAssemblySource.model_config"><code class="docutils literal notranslate"><span class="pre">GibsonAssemblySource.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.InFusionSource"><code class="docutils literal notranslate"><span class="pre">InFusionSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.InFusionSource.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">InFusionSource.TARGET_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.InFusionSource.model_config"><code class="docutils literal notranslate"><span class="pre">InFusionSource.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.OverlapExtensionPCRLigationSource"><code class="docutils literal notranslate"><span class="pre">OverlapExtensionPCRLigationSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.OverlapExtensionPCRLigationSource.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">OverlapExtensionPCRLigationSource.TARGET_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.OverlapExtensionPCRLigationSource.model_config"><code class="docutils literal notranslate"><span class="pre">OverlapExtensionPCRLigationSource.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.InVivoAssemblySource"><code class="docutils literal notranslate"><span class="pre">InVivoAssemblySource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.InVivoAssemblySource.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">InVivoAssemblySource.TARGET_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.InVivoAssemblySource.model_config"><code class="docutils literal notranslate"><span class="pre">InVivoAssemblySource.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.LigationSource"><code class="docutils literal notranslate"><span class="pre">LigationSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.LigationSource.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">LigationSource.TARGET_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.LigationSource.model_config"><code class="docutils literal notranslate"><span class="pre">LigationSource.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.GatewaySource"><code class="docutils literal notranslate"><span class="pre">GatewaySource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.GatewaySource.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">GatewaySource.TARGET_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.GatewaySource.reaction_type"><code class="docutils literal notranslate"><span class="pre">GatewaySource.reaction_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.GatewaySource.greedy"><code class="docutils literal notranslate"><span class="pre">GatewaySource.greedy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.GatewaySource.model_config"><code class="docutils literal notranslate"><span class="pre">GatewaySource.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.HomologousRecombinationSource"><code class="docutils literal notranslate"><span class="pre">HomologousRecombinationSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.HomologousRecombinationSource.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">HomologousRecombinationSource.TARGET_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.HomologousRecombinationSource.model_config"><code class="docutils literal notranslate"><span class="pre">HomologousRecombinationSource.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.CRISPRSource"><code class="docutils literal notranslate"><span class="pre">CRISPRSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.CRISPRSource.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">CRISPRSource.TARGET_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.CRISPRSource.model_config"><code class="docutils literal notranslate"><span class="pre">CRISPRSource.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.CreLoxRecombinationSource"><code class="docutils literal notranslate"><span class="pre">CreLoxRecombinationSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.CreLoxRecombinationSource.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">CreLoxRecombinationSource.TARGET_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.CreLoxRecombinationSource.model_config"><code class="docutils literal notranslate"><span class="pre">CreLoxRecombinationSource.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.PCRSource"><code class="docutils literal notranslate"><span class="pre">PCRSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.PCRSource.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">PCRSource.TARGET_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.PCRSource.add_primer_features"><code class="docutils literal notranslate"><span class="pre">PCRSource.add_primer_features</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.PCRSource.model_config"><code class="docutils literal notranslate"><span class="pre">PCRSource.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceCutSource"><code class="docutils literal notranslate"><span class="pre">SequenceCutSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceCutSource.left_edge"><code class="docutils literal notranslate"><span class="pre">SequenceCutSource.left_edge</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceCutSource.right_edge"><code class="docutils literal notranslate"><span class="pre">SequenceCutSource.right_edge</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceCutSource.BASE_MODEL"><code class="docutils literal notranslate"><span class="pre">SequenceCutSource.BASE_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceCutSource.ENZYME_MODEL"><code class="docutils literal notranslate"><span class="pre">SequenceCutSource.ENZYME_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceCutSource.from_parent"><code class="docutils literal notranslate"><span class="pre">SequenceCutSource.from_parent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceCutSource.to_pydantic_model"><code class="docutils literal notranslate"><span class="pre">SequenceCutSource.to_pydantic_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceCutSource.model_config"><code class="docutils literal notranslate"><span class="pre">SequenceCutSource.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.CloningStrategy"><code class="docutils literal notranslate"><span class="pre">CloningStrategy</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.CloningStrategy.primers"><code class="docutils literal notranslate"><span class="pre">CloningStrategy.primers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.CloningStrategy.add_primer"><code class="docutils literal notranslate"><span class="pre">CloningStrategy.add_primer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.CloningStrategy.add_dseqrecord"><code class="docutils literal notranslate"><span class="pre">CloningStrategy.add_dseqrecord()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.CloningStrategy.reassign_ids"><code class="docutils literal notranslate"><span class="pre">CloningStrategy.reassign_ids()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.CloningStrategy.from_dseqrecords"><code class="docutils literal notranslate"><span class="pre">CloningStrategy.from_dseqrecords()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.CloningStrategy.model_dump_json"><code class="docutils literal notranslate"><span class="pre">CloningStrategy.model_dump_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.CloningStrategy.model_dump"><code class="docutils literal notranslate"><span class="pre">CloningStrategy.model_dump()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.CloningStrategy.model_config"><code class="docutils literal notranslate"><span class="pre">CloningStrategy.model_config</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.parsers">pydna.parsers module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.parsers.extract_from_text"><code class="docutils literal notranslate"><span class="pre">extract_from_text()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.parsers.embl_gb_fasta"><code class="docutils literal notranslate"><span class="pre">embl_gb_fasta()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.parsers.parse"><code class="docutils literal notranslate"><span class="pre">parse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.parsers.parse_primers"><code class="docutils literal notranslate"><span class="pre">parse_primers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.parsers.parse_snapgene"><code class="docutils literal notranslate"><span class="pre">parse_snapgene()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.primer">pydna.primer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.primer.Primer"><code class="docutils literal notranslate"><span class="pre">Primer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.primer.Primer.footprint"><code class="docutils literal notranslate"><span class="pre">Primer.footprint</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.primer.Primer.tail"><code class="docutils literal notranslate"><span class="pre">Primer.tail</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.primer.Primer.reverse_complement"><code class="docutils literal notranslate"><span class="pre">Primer.reverse_complement()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.readers">pydna.readers module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.readers.read"><code class="docutils literal notranslate"><span class="pre">read()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.readers.read_primer"><code class="docutils literal notranslate"><span class="pre">read_primer()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.seq">pydna.seq module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.seq.Seq"><code class="docutils literal notranslate"><span class="pre">Seq</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.Seq.translate"><code class="docutils literal notranslate"><span class="pre">Seq.translate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.Seq.gc"><code class="docutils literal notranslate"><span class="pre">Seq.gc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.Seq.cai"><code class="docutils literal notranslate"><span class="pre">Seq.cai()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.Seq.rarecodons"><code class="docutils literal notranslate"><span class="pre">Seq.rarecodons()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.Seq.startcodon"><code class="docutils literal notranslate"><span class="pre">Seq.startcodon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.Seq.stopcodon"><code class="docutils literal notranslate"><span class="pre">Seq.stopcodon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.Seq.express"><code class="docutils literal notranslate"><span class="pre">Seq.express()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.Seq.orfs2"><code class="docutils literal notranslate"><span class="pre">Seq.orfs2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.Seq.orfs"><code class="docutils literal notranslate"><span class="pre">Seq.orfs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.Seq.seguid"><code class="docutils literal notranslate"><span class="pre">Seq.seguid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.Seq.reverse_complement"><code class="docutils literal notranslate"><span class="pre">Seq.reverse_complement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.Seq.rc"><code class="docutils literal notranslate"><span class="pre">Seq.rc()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.seq.ProteinSeq"><code class="docutils literal notranslate"><span class="pre">ProteinSeq</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.ProteinSeq.translate"><code class="docutils literal notranslate"><span class="pre">ProteinSeq.translate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.ProteinSeq.complement"><code class="docutils literal notranslate"><span class="pre">ProteinSeq.complement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.ProteinSeq.complement_rna"><code class="docutils literal notranslate"><span class="pre">ProteinSeq.complement_rna()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.ProteinSeq.reverse_complement"><code class="docutils literal notranslate"><span class="pre">ProteinSeq.reverse_complement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.ProteinSeq.rc"><code class="docutils literal notranslate"><span class="pre">ProteinSeq.rc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.ProteinSeq.reverse_complement_rna"><code class="docutils literal notranslate"><span class="pre">ProteinSeq.reverse_complement_rna()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.ProteinSeq.transcribe"><code class="docutils literal notranslate"><span class="pre">ProteinSeq.transcribe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.ProteinSeq.back_transcribe"><code class="docutils literal notranslate"><span class="pre">ProteinSeq.back_transcribe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.ProteinSeq.seguid"><code class="docutils literal notranslate"><span class="pre">ProteinSeq.seguid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.ProteinSeq.molecular_weight"><code class="docutils literal notranslate"><span class="pre">ProteinSeq.molecular_weight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.ProteinSeq.pI"><code class="docutils literal notranslate"><span class="pre">ProteinSeq.pI()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seq.ProteinSeq.instability_index"><code class="docutils literal notranslate"><span class="pre">ProteinSeq.instability_index()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.seqrecord">pydna.seqrecord module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord"><code class="docutils literal notranslate"><span class="pre">SeqRecord</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.from_Bio_SeqRecord"><code class="docutils literal notranslate"><span class="pre">SeqRecord.from_Bio_SeqRecord()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.locus"><code class="docutils literal notranslate"><span class="pre">SeqRecord.locus</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.accession"><code class="docutils literal notranslate"><span class="pre">SeqRecord.accession</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.definition"><code class="docutils literal notranslate"><span class="pre">SeqRecord.definition</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.reverse_complement"><code class="docutils literal notranslate"><span class="pre">SeqRecord.reverse_complement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.rc"><code class="docutils literal notranslate"><span class="pre">SeqRecord.rc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.isorf"><code class="docutils literal notranslate"><span class="pre">SeqRecord.isorf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.translate"><code class="docutils literal notranslate"><span class="pre">SeqRecord.translate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.add_colors_to_features_for_ape"><code class="docutils literal notranslate"><span class="pre">SeqRecord.add_colors_to_features_for_ape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.add_feature"><code class="docutils literal notranslate"><span class="pre">SeqRecord.add_feature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.list_features"><code class="docutils literal notranslate"><span class="pre">SeqRecord.list_features()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.extract_feature"><code class="docutils literal notranslate"><span class="pre">SeqRecord.extract_feature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.sorted_features"><code class="docutils literal notranslate"><span class="pre">SeqRecord.sorted_features()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.seguid"><code class="docutils literal notranslate"><span class="pre">SeqRecord.seguid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.comment"><code class="docutils literal notranslate"><span class="pre">SeqRecord.comment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.datefunction"><code class="docutils literal notranslate"><span class="pre">SeqRecord.datefunction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.stamp"><code class="docutils literal notranslate"><span class="pre">SeqRecord.stamp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.lcs"><code class="docutils literal notranslate"><span class="pre">SeqRecord.lcs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.gc"><code class="docutils literal notranslate"><span class="pre">SeqRecord.gc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.cai"><code class="docutils literal notranslate"><span class="pre">SeqRecord.cai()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.rarecodons"><code class="docutils literal notranslate"><span class="pre">SeqRecord.rarecodons()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.startcodon"><code class="docutils literal notranslate"><span class="pre">SeqRecord.startcodon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.stopcodon"><code class="docutils literal notranslate"><span class="pre">SeqRecord.stopcodon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.express"><code class="docutils literal notranslate"><span class="pre">SeqRecord.express()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.copy"><code class="docutils literal notranslate"><span class="pre">SeqRecord.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.SeqRecord.dump"><code class="docutils literal notranslate"><span class="pre">SeqRecord.dump()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.seqrecord.ProteinSeqRecord"><code class="docutils literal notranslate"><span class="pre">ProteinSeqRecord</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.ProteinSeqRecord.reverse_complement"><code class="docutils literal notranslate"><span class="pre">ProteinSeqRecord.reverse_complement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.ProteinSeqRecord.rc"><code class="docutils literal notranslate"><span class="pre">ProteinSeqRecord.rc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.ProteinSeqRecord.isorf"><code class="docutils literal notranslate"><span class="pre">ProteinSeqRecord.isorf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.ProteinSeqRecord.gc"><code class="docutils literal notranslate"><span class="pre">ProteinSeqRecord.gc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.ProteinSeqRecord.cai"><code class="docutils literal notranslate"><span class="pre">ProteinSeqRecord.cai()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.ProteinSeqRecord.rarecodons"><code class="docutils literal notranslate"><span class="pre">ProteinSeqRecord.rarecodons()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.ProteinSeqRecord.startcodon"><code class="docutils literal notranslate"><span class="pre">ProteinSeqRecord.startcodon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.ProteinSeqRecord.stopcodon"><code class="docutils literal notranslate"><span class="pre">ProteinSeqRecord.stopcodon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.seqrecord.ProteinSeqRecord.express"><code class="docutils literal notranslate"><span class="pre">ProteinSeqRecord.express()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.sequence_picker">pydna.sequence_picker module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.sequence_picker.genbank_accession"><code class="docutils literal notranslate"><span class="pre">genbank_accession()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.sequence_regex">pydna.sequence_regex module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.sequence_regex.compute_regex_site"><code class="docutils literal notranslate"><span class="pre">compute_regex_site()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.sequence_regex.dseqrecord_finditer"><code class="docutils literal notranslate"><span class="pre">dseqrecord_finditer()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.threading_timer_decorator_exit">pydna.threading_timer_decorator_exit module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.threading_timer_decorator_exit.cdquit"><code class="docutils literal notranslate"><span class="pre">cdquit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.threading_timer_decorator_exit.exit_after"><code class="docutils literal notranslate"><span class="pre">exit_after()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.threading_timer_decorator_exit.a"><code class="docutils literal notranslate"><span class="pre">a()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.threading_timer_decorator_exit.b"><code class="docutils literal notranslate"><span class="pre">b()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.threading_timer_decorator_exit.c"><code class="docutils literal notranslate"><span class="pre">c()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.threading_timer_decorator_exit.d"><code class="docutils literal notranslate"><span class="pre">d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.threading_timer_decorator_exit.countdown"><code class="docutils literal notranslate"><span class="pre">countdown()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.threading_timer_decorator_exit.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.tm">pydna.tm module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.tm.tm_default"><code class="docutils literal notranslate"><span class="pre">tm_default()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.tm.tm_dbd"><code class="docutils literal notranslate"><span class="pre">tm_dbd()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.tm.tm_product"><code class="docutils literal notranslate"><span class="pre">tm_product()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.tm.ta_default"><code class="docutils literal notranslate"><span class="pre">ta_default()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.tm.ta_dbd"><code class="docutils literal notranslate"><span class="pre">ta_dbd()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.tm.program"><code class="docutils literal notranslate"><span class="pre">program()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.tm.taq_program"><code class="docutils literal notranslate"><span class="pre">taq_program()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.tm.dbd_program"><code class="docutils literal notranslate"><span class="pre">dbd_program()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.tm.pfu_sso7d_program"><code class="docutils literal notranslate"><span class="pre">pfu_sso7d_program()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.tm.Q5"><code class="docutils literal notranslate"><span class="pre">Q5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.tm.tmbresluc"><code class="docutils literal notranslate"><span class="pre">tmbresluc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.tm.tm_neb"><code class="docutils literal notranslate"><span class="pre">tm_neb()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.types">pydna.types module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.user_cloning">pydna.user_cloning module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.utils">pydna.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.three_frame_orfs"><code class="docutils literal notranslate"><span class="pre">three_frame_orfs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.shift_location"><code class="docutils literal notranslate"><span class="pre">shift_location()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.shift_feature"><code class="docutils literal notranslate"><span class="pre">shift_feature()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.smallest_rotation"><code class="docutils literal notranslate"><span class="pre">smallest_rotation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.cai"><code class="docutils literal notranslate"><span class="pre">cai()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.rarecodons"><code class="docutils literal notranslate"><span class="pre">rarecodons()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.express"><code class="docutils literal notranslate"><span class="pre">express()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.open_folder"><code class="docutils literal notranslate"><span class="pre">open_folder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.rc"><code class="docutils literal notranslate"><span class="pre">rc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.complement"><code class="docutils literal notranslate"><span class="pre">complement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.identifier_from_string"><code class="docutils literal notranslate"><span class="pre">identifier_from_string()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.flatten"><code class="docutils literal notranslate"><span class="pre">flatten()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.seq31"><code class="docutils literal notranslate"><span class="pre">seq31()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.randomRNA"><code class="docutils literal notranslate"><span class="pre">randomRNA()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.randomDNA"><code class="docutils literal notranslate"><span class="pre">randomDNA()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.randomORF"><code class="docutils literal notranslate"><span class="pre">randomORF()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.randomprot"><code class="docutils literal notranslate"><span class="pre">randomprot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.eq"><code class="docutils literal notranslate"><span class="pre">eq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.cuts_overlap"><code class="docutils literal notranslate"><span class="pre">cuts_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.location_boundaries"><code class="docutils literal notranslate"><span class="pre">location_boundaries()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.locations_overlap"><code class="docutils literal notranslate"><span class="pre">locations_overlap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.sum_is_sticky"><code class="docutils literal notranslate"><span class="pre">sum_is_sticky()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.limit_iterator"><code class="docutils literal notranslate"><span class="pre">limit_iterator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.utils.create_location"><code class="docutils literal notranslate"><span class="pre">create_location()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

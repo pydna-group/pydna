@@ -1,0 +1,775 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Restriction and Ligation &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/Restrict_Ligate_Cloning';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="PCR" href="PCR.html" />
+    <link rel="prev" title="Importing and viewing sequence files in pydna" href="Importing_Seqs.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../getting_started.html">Getting started</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reference/pydna.html">pydna package</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/pydna-group/pydna/blob/main/docs/notebooks/Restrict_Ligate_Cloning.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna/edit/main/docs/notebooks/Restrict_Ligate_Cloning.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/Restrict_Ligate_Cloning.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Restriction and Ligation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cutting-with-one-or-more-restriction-enzymes">Cutting with one or more restriction enzymes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ligating-fragments">Ligating fragments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#circularizing-fragments">Circularizing fragments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-notes-what-happens-to-features-when-cutting-ligating">Extra Notes: What happens to features when cutting/ligating?</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="restriction-and-ligation">
+<h1>Restriction and Ligation<a class="headerlink" href="#restriction-and-ligation" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p>Visit the full library documentation <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a></p>
+</div></blockquote>
+<p>In this page, we explore how to use pydna to cut, ligate, circularise DNA sequences. pydna works in conjugation with the <code class="docutils literal notranslate"><span class="pre">Bio.Restriction</span></code> module to apply a vast variety of restriction enzymes for cutting, whose module documentations can be found <a class="reference external" href="https://biopython.org/DIST/docs/cookbook/Restriction.html">here</a>.</p>
+<section id="cutting-with-one-or-more-restriction-enzymes">
+<h2>Cutting with one or more restriction enzymes<a class="headerlink" href="#cutting-with-one-or-more-restriction-enzymes" title="Link to this heading">#</a></h2>
+<p>Restriction enzymes recognise specific DNA sequences and cut them, leaving sticky ends or blunt ends. To cut a sequence using <code class="docutils literal notranslate"><span class="pre">pydna</span></code>, we can use the <code class="docutils literal notranslate"><span class="pre">cut</span></code> method on a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object. Here is an example showing how to use the <code class="docutils literal notranslate"><span class="pre">cut</span></code> method to genenrate EcoRI restriction digests. The record includes a 338bp circular sequence, with an example gene feature.</p>
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Restrict_Ligate_Cloning.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="c1"># Install pydna (only when running on Colab)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span><span class="p">[</span><span class="n">clipboard</span><span class="p">,</span><span class="n">download</span><span class="p">,</span><span class="n">express</span><span class="p">,</span><span class="n">gel</span><span class="p">]</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/sample_seq.gb&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">EcoRI</span>
+
+<span class="c1"># Create a Dseqrecord with your FASTA/GenBank file</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;./sample_seq.gb&quot;</span>
+<span class="n">record</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Cut with a single enzyme</span>
+<span class="n">cut_records</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">EcoRI</span><span class="p">)</span>
+
+<span class="c1"># Display the resulting fragments</span>
+<span class="k">for</span> <span class="n">frag</span> <span class="ow">in</span> <span class="n">cut_records</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseqrecord
+circular: False
+size: 338
+ID: id
+Name: name
+Description: description
+Number of features: 1
+/molecule_type=DNA
+Dseq(-338)
+AATTCTTC..TGTG    
+    GAAG..ACACTTAA
+</pre></div>
+</div>
+</div>
+</div>
+<p>The circular <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> is cut into a linear <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object, since there is only one EcoRI recognition site. <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> also shows the 5’ sticky end after cutting.</p>
+<p>The sequence can also be cut with multiple restriction enzymes, into multiple linear DNA sequences. We can simply import all the restriction enzymes, and use the cut method as normal.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">EcoRV</span>
+
+<span class="c1"># Cut with a multiple enzymes</span>
+<span class="n">multi_cut_records</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">EcoRI</span><span class="p">,</span> <span class="n">EcoRV</span><span class="p">)</span>
+
+<span class="c1"># Display the resulting fragments</span>
+<span class="k">for</span> <span class="n">frag</span> <span class="ow">in</span> <span class="n">multi_cut_records</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseqrecord
+circular: False
+size: 51
+ID: id
+Name: name
+Description: description
+Number of features: 0
+/molecule_type=DNA
+Dseq(-51)
+ATCT..TGTG    
+TAGA..ACACTTAA
+
+
+Dseqrecord
+circular: False
+size: 214
+ID: id
+Name: name
+Description: description
+Number of features: 0
+/molecule_type=DNA
+Dseq(-214)
+AATTCTTC..TGAT
+    GAAG..ACTA
+
+
+Dseqrecord
+circular: False
+size: 73
+ID: id
+Name: name
+Description: description
+Number of features: 0
+/molecule_type=DNA
+Dseq(-73)
+ATCT..AGAT
+TAGA..TCTA
+</pre></div>
+</div>
+</div>
+</div>
+<p>There are two EcoRV recognition sites in <code class="docutils literal notranslate"><span class="pre">sample_seq</span></code>, and coupled with the one EcoRI recognition site, three DNA fragments are returned. Note how <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> returns the blunt end after EcoRV cuts.</p>
+<p>You can model any, and and number of, enzymes with the <code class="docutils literal notranslate"><span class="pre">cut</span></code> method and <code class="docutils literal notranslate"><span class="pre">Bio.Restriction</span></code> module. This makes <code class="docutils literal notranslate"><span class="pre">pydna</span></code> a quick and powerful method to plan your molecular cloning experiments, for instance to check the restriction digests of a 10kb plasmid with multiple enzymes. <code class="docutils literal notranslate"><span class="pre">cut</span></code> is also a method of the <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> class, so <code class="docutils literal notranslate"><span class="pre">Dseq</span></code>s can be used as well.</p>
+</section>
+<section id="ligating-fragments">
+<h2>Ligating fragments<a class="headerlink" href="#ligating-fragments" title="Link to this heading">#</a></h2>
+<p>After cutting a DNA sequence, you can ligate the fragments back together in <code class="docutils literal notranslate"><span class="pre">pydna</span></code> using the <code class="docutils literal notranslate"><span class="pre">+</span></code> operator on <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> or <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> objects. Ligation can occur via complementary sticky ends or blunt ends. For instance, we can select the first and second fragments from <code class="docutils literal notranslate"><span class="pre">multi_cut_records</span></code> via indexing, and then ligate sticky ends produced by EcoRI to make a single linear sequence.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ligated_product</span> <span class="o">=</span> <span class="n">multi_cut_records</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">multi_cut_records</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ligated_product</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseqrecord
+circular: False
+size: 261
+ID: id
+Name: name
+Description: description
+Number of features: 0
+/molecule_type=DNA
+Dseq(-261)
+ATCT..TGAT
+TAGA..ACTA
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can also join blunt ends in a similar way. Note that the sticky-ends must be a perfect match to join. If  <code class="docutils literal notranslate"><span class="pre">+</span></code> ligation (or any other method, really) doesn’t work, make sure that:</p>
+<ol class="arabic simple">
+<li><p>you are indeed performing the operation on <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> objects, as opposed to other data types (e.g lists, strings, etc)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> and the correct enzyme name (with correct roman numeral spelling) has been imported.</p></li>
+</ol>
+</section>
+<section id="circularizing-fragments">
+<h2>Circularizing fragments<a class="headerlink" href="#circularizing-fragments" title="Link to this heading">#</a></h2>
+<p>To circularize a cut DNA sequence use the <code class="docutils literal notranslate"><span class="pre">looped</span></code> method, which returns a new sequence object.</p>
+<p>🚨🚨 <strong>VERY IMPORTANT</strong> 🚨🚨 <code class="docutils literal notranslate"><span class="pre">.looped()</span></code> method does not act in place, so a new variable should be created to store the new circularised sequence, as shown in the following example.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circular_record</span> <span class="o">=</span> <span class="n">ligated_product</span><span class="o">.</span><span class="n">looped</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;is ligated_product circular?&#39;</span><span class="p">,</span> <span class="n">ligated_product</span><span class="o">.</span><span class="n">circular</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;is circular_record circular?&#39;</span><span class="p">,</span> <span class="n">circular_record</span><span class="o">.</span><span class="n">circular</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">circular_record</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>is ligated_product circular? False
+is circular_record circular? True
+
+Dseqrecord
+circular: True
+size: 261
+ID: id
+Name: name
+Description: description
+Number of features: 0
+/molecule_type=DNA
+Dseq(o261)
+ATCT..TGAT
+TAGA..ACTA
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="extra-notes-what-happens-to-features-when-cutting-ligating">
+<h2>Extra Notes: What happens to features when cutting/ligating?<a class="headerlink" href="#extra-notes-what-happens-to-features-when-cutting-ligating" title="Link to this heading">#</a></h2>
+<p>A feature is removed from a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> if the features is truncated by the cut. For instance, the example_gene feature is removed from the record after cutting <code class="docutils literal notranslate"><span class="pre">record</span></code> with PstI, which has recognition site within example_gene.  within the cutand if the feature is completely within the cut, it is retained.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">PstI</span>
+
+<span class="n">cut_record2</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">PstI</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">cut_record2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseqrecord
+circular: False
+size: 222
+ID: id
+Name: name
+Description: description
+Number of features: 0
+/molecule_type=DNA
+Dseq(-222)
+    GAGT..TAACTGCA
+ACGTCTCA..ATTG
+</pre></div>
+</div>
+</div>
+</div>
+<p>However, if a cut does not overlap with the feature, the feature is retained on the <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code>. For instance, if we go back to the first example given by the EcoRI cut, example_gene has been retained after cutting. For more information on Features, please refer to the <code class="docutils literal notranslate"><span class="pre">Dseq_Feature</span></code> documentations.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Importing_Seqs.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Importing and viewing sequence files in pydna</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="PCR.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">PCR</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cutting-with-one-or-more-restriction-enzymes">Cutting with one or more restriction enzymes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ligating-fragments">Ligating fragments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#circularizing-fragments">Circularizing fragments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-notes-what-happens-to-features-when-cutting-ligating">Extra Notes: What happens to features when cutting/ligating?</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

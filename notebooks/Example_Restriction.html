@@ -1,0 +1,1476 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Plasmid Restriction/Ligation Cloning &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/Example_Restriction';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Gibson Assembly from the original publication" href="Example_Gibson.html" />
+    <link rel="prev" title="Example gallery" href="../example_gallery.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../getting_started.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../example_gallery.html">Example gallery</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reference/pydna.html">pydna package</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/pydna-group/pydna/blob/main/docs/notebooks/Example_Restriction.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna/edit/main/docs/notebooks/Example_Restriction.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/Example_Restriction.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Plasmid Restriction/Ligation Cloning</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="plasmid-restriction-ligation-cloning">
+<h1>Plasmid Restriction/Ligation Cloning<a class="headerlink" href="#plasmid-restriction-ligation-cloning" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p>Visit the full library documentation <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a></p>
+</div></blockquote>
+<p>This example showcases a workflow of modelling molecular cloning with restriction enzymes, PCR, and ligases, to clone gene fragments into plasmids. This example constructs a synthetic plasmid by cloning the ase1 gene, which encodes a microtubule associated protein responsible for mitotic spindle assembly, into the pFA6a-kanMX6 cloning vector:</p>
+<ol class="arabic simple">
+<li><p>The ase1 gene fragment is first cloned from a portion of the <em>S. pombe</em> genome through PCR:</p></li>
+<li><p>The pFA6a-kanMX6 cloning vector is then cleaved with AscI and SalI. The ase1 gene fragment is also cleaved with SalI and AscI</p></li>
+<li><p>The fragment is ligated with the linearized pFA6a-kanMX6 vector.</p></li>
+</ol>
+<p>Source files can be found alongside this notebook, if you would like to follow along. Annotations are made alongside the code to describe key steps.</p>
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Example_Gibson.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="c1"># Install pydna (only when running on Colab)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span><span class="p">[</span><span class="n">clipboard</span><span class="p">,</span><span class="n">download</span><span class="p">,</span><span class="n">express</span><span class="p">,</span><span class="n">gel</span><span class="p">]</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/pFA6a-kanMX6.gb&quot;</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/CU329670.gb&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importing all necessary classes and methods</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.tm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tm_default</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplify</span><span class="w"> </span><span class="kn">import</span> <span class="n">pcr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">SalI</span><span class="p">,</span> <span class="n">AscI</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parsing the files</span>
+<span class="n">pFA6akanMX6_path</span> <span class="o">=</span> <span class="s2">&quot;./pFA6a-kanMX6.gb&quot;</span>
+<span class="n">ase1_path</span> <span class="o">=</span> <span class="s2">&quot;./CU329670.gb&quot;</span>
+<span class="n">vector</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">pFA6akanMX6_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">pombe_chromosome_I</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">ase1_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Printing the parsed files</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;gb&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pombe_chromosome_I</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;gb&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LOCUS       pFA6a-kanMX6            3938 bp    ds-DNA  circular SYN 16-JUN-2022
+DEFINITION  synthetic circular DNA.
+ACCESSION   .
+VERSION     .
+KEYWORDS    pFA6a-kanMX6.
+SOURCE      synthetic DNA construct
+  ORGANISM  synthetic DNA construct
+            .
+REFERENCE   1  (bases 1 to 3938)
+  AUTHORS   Bahler J, Wu JQ, Longtine MS, Shah NG, McKenzie A 3rd, Steever AB,
+            Wach A, Philippsen P, Pringle JR
+  TITLE     Heterologous modules for efficient and versatile PCR-based gene
+            targeting in Schizosaccharomyces pombe.
+  JOURNAL   Yeast. 1998 Jul;14(10):943-51.
+   PUBMED   9717240
+REFERENCE   2  (bases 1 to 3938)
+  AUTHORS   .
+  TITLE     Direct Submission
+  JOURNAL   Exported Jun 16, 2022 from SnapGene Server 1.1.58
+            http://www.snapgene.com
+FEATURES             Location/Qualifiers
+     source          1..3938
+                     /organism=&quot;synthetic DNA construct&quot;
+                     /mol_type=&quot;other DNA&quot;
+     primer_bind     complement(35..52)
+                     /label=&quot;L4440&quot;
+                     /note=&quot;L4440 vector, forward primer&quot;
+     rep_origin      complement(206..794)
+                     /direction=LEFT
+                     /label=&quot;ori&quot;
+                     /note=&quot;high-copy-number ColE1/pMB1/pBR322/pUC origin of
+                     replication&quot;
+     primer_bind     complement(286..305)
+                     /label=&quot;pBR322ori-F&quot;
+                     /note=&quot;pBR322 origin, forward primer&quot;
+     CDS             complement(965..1825)
+                     /codon_start=1
+                     /gene=&quot;bla&quot;
+                     /product=&quot;beta-lactamase&quot;
+                     /label=&quot;AmpR&quot;
+                     /note=&quot;confers resistance to ampicillin, carbenicillin, and
+                     related antibiotics&quot;
+                     /translation=&quot;MSIQHFRVALIPFFAAFCLPVFAHPETLVKVKDAEDQLGARVGYI
+                     ELDLNSGKILESFRPEERFPMMSTFKVLLCGAVLSRIDAGQEQLGRRIHYSQNDLVEYS
+                     PVTEKHLTDGMTVRELCSAAITMSDNTAANLLLTTIGGPKELTAFLHNMGDHVTRLDRW
+                     EPELNEAIPNDERDTTMPVAMATTLRKLLTGELLTLASRQQLIDWMEADKVAGPLLRSA
+                     LPAGWFIADKSGAGERGSRGIIAALGPDGKPSRIVVIYTTGSQATMDERNRQIAEIGAS
+                     LIKHW&quot;
+     primer_bind     1588..1607
+                     /label=&quot;Amp-R&quot;
+                     /note=&quot;Ampicillin resistance gene, reverse primer&quot;
+     promoter        complement(1826..1930)
+                     /gene=&quot;bla&quot;
+                     /label=&quot;AmpR promoter&quot;
+     primer_bind     1998..2016
+                     /label=&quot;pBRforEco&quot;
+                     /note=&quot;pBR322 vectors, upsteam of EcoRI site, forward
+                     primer&quot;
+     primer_bind     complement(2054..2076)
+                     /label=&quot;pGEX 3&#39;&quot;
+                     /note=&quot;pGEX vectors, reverse primer&quot;
+     primer_bind     2176..2195
+                     /label=&quot;pRS-marker&quot;
+                     /note=&quot;pRS vectors, use to sequence yeast selectable
+                     marker&quot;
+     promoter        2276..2294
+                     /label=&quot;SP6 promoter&quot;
+                     /note=&quot;promoter for bacteriophage SP6 RNA polymerase&quot;
+     primer_bind     2276..2293
+                     /label=&quot;SP6&quot;
+                     /note=&quot;SP6 promoter, forward primer&quot;
+     gene            2407..3763
+                     /label=&quot;kanMX&quot;
+                     /note=&quot;yeast selectable marker conferring kanamycin
+                     resistance (Wach et al., 1994)&quot;
+     promoter        2407..2750
+                     /label=&quot;TEF promoter&quot;
+                     /note=&quot;Ashbya gossypii TEF promoter&quot;
+     CDS             2751..3560
+                     /codon_start=1
+                     /gene=&quot;aph(3&#39;)-Ia&quot;
+                     /product=&quot;aminoglycoside phosphotransferase&quot;
+                     /label=&quot;KanR&quot;
+                     /note=&quot;confers resistance to kanamycin&quot;
+                     /translation=&quot;MGKEKTHVSRPRLNSNMDADLYGYKWARDNVGQSGATIYRLYGKP
+                     DAPELFLKHGKGSVANDVTDEMVRLNWLTEFMPLPTIKHFIRTPDDAWLLTTAIPGKTA
+                     FQVLEEYPDSGENIVDALAVFLRRLHSIPVCNCPFNSDRVFRLAQAQSRMNNGLVDASD
+                     FDDERNGWPVEQVWKEMHKLLPFSPDSVVTHGDFSLDNLIFDEGKLIGCIDVGRVGIAD
+                     RYQDLAILWNCLGEFSPSLQKRLFQKYGIDNPDMNKLQFHLMLDEFF&quot;
+     primer_bind     complement(2818..2837)
+                     /label=&quot;Kan-R&quot;
+                     /note=&quot;Kanamycin resistance gene, reverse primer&quot;
+     terminator      3566..3763
+                     /label=&quot;TEF terminator&quot;
+                     /note=&quot;Ashbya gossypii TEF terminator&quot;
+     primer_bind     complement(3867..3886)
+                     /label=&quot;T7&quot;
+                     /note=&quot;T7 promoter, forward primer&quot;
+     promoter        complement(3868..3886)
+                     /label=&quot;T7 promoter&quot;
+                     /note=&quot;promoter for bacteriophage T7 RNA polymerase&quot;
+ORIGIN
+        1 gaggcggttt gcgtattggg cgctcttccg cttcctcgct cactgactcg ctgcgctcgg
+       61 tcgttcggct gcggcgagcg gtatcagctc actcaaaggc ggtaatacgg ttatccacag
+      121 aatcagggga taacgcagga aagaacatgt gagcaaaagg ccagcaaaag gccaggaacc
+      181 gtaaaaaggc cgcgttgctg gcgtttttcc ataggctccg cccccctgac gagcatcaca
+      241 aaaatcgacg ctcaagtcag aggtggcgaa acccgacagg actataaaga taccaggcgt
+      301 ttccccctgg aagctccctc gtgcgctctc ctgttccgac cctgccgctt accggatacc
+      361 tgtccgcctt tctcccttcg ggaagcgtgg cgctttctca tagctcacgc tgtaggtatc
+      421 tcagttcggt gtaggtcgtt cgctccaagc tgggctgtgt gcacgaaccc cccgttcagc
+      481 ccgaccgctg cgccttatcc ggtaactatc gtcttgagtc caacccggta agacacgact
+      541 tatcgccact ggcagcagcc actggtaaca ggattagcag agcgaggtat gtaggcggtg
+      601 ctacagagtt cttgaagtgg tggcctaact acggctacac tagaagaaca gtatttggta
+      661 tctgcgctct gctgaagcca gttaccttcg gaaaaagagt tggtagctct tgatccggca
+      721 aacaaaccac cgctggtagc ggtggttttt ttgtttgcaa gcagcagatt acgcgcagaa
+      781 aaaaaggatc tcaagaagat cctttgatct tttctacggg gtctgacgct cagtggaacg
+      841 aaaactcacg ttaagggatt ttggtcatga gattatcaaa aaggatcttc acctagatcc
+      901 ttttaaatta aaaatgaagt tttaaatcaa tctaaagtat atatgagtaa acttggtctg
+      961 acagttacca atgcttaatc agtgaggcac ctatctcagc gatctgtcta tttcgttcat
+     1021 ccatagttgc ctgactcccc gtcgtgtaga taactacgat acgggagggc ttaccatctg
+     1081 gccccagtgc tgcaatgata ccgcgagacc cacgctcacc ggctccagat ttatcagcaa
+     1141 taaaccagcc agccggaagg gccgagcgca gaagtggtcc tgcaacttta tccgcctcca
+     1201 tccagtctat taattgttgc cgggaagcta gagtaagtag ttcgccagtt aatagtttgc
+     1261 gcaacgttgt tgccattgct acaggcatcg tggtgtcacg ctcgtcgttt ggtatggctt
+     1321 cattcagctc cggttcccaa cgatcaaggc gagttacatg atcccccatg ttgtgcaaaa
+     1381 aagcggttag ctccttcggt cctccgatcg ttgtcagaag taagttggcc gcagtgttat
+     1441 cactcatggt tatggcagca ctgcataatt ctcttactgt catgccatcc gtaagatgct
+     1501 tttctgtgac tggtgagtac tcaaccaagt cattctgaga atagtgtatg cggcgaccga
+     1561 gttgctcttg cccggcgtca atacgggata ataccgcgcc acatagcaga actttaaaag
+     1621 tgctcatcat tggaaaacgt tcttcggggc gaaaactctc aaggatctta ccgctgttga
+     1681 gatccagttc gatgtaaccc actcgtgcac ccaactgatc ttcagcatct tttactttca
+     1741 ccagcgtttc tgggtgagca aaaacaggaa ggcaaaatgc cgcaaaaaag ggaataaggg
+     1801 cgacacggaa atgttgaata ctcatactct tcctttttca atattattga agcatttatc
+     1861 agggttattg tctcatgagc ggatacatat ttgaatgtat ttagaaaaat aaacaaatag
+     1921 gggttccgcg cacatttccc cgaaaagtgc cacctgacgt ctaagaaacc attattatca
+     1981 tgacattaac ctataaaaat aggcgtatca cgaggccctt tcgtctcgcg cgtttcggtg
+     2041 atgacggtga aaacctctga cacatgcagc tcccggagac ggtcacagct tgtctgtaag
+     2101 cggatgccgg gagcagacaa gcccgtcagg gcgcgtcagc gggtgttggc gggtgtcggg
+     2161 gctggcttaa ctatgcggca tcagagcaga ttgtactgag agtgcaccat atggacatat
+     2221 tgtcgttaga acgcggctac aattaataca taaccttatg tatcatacac atacgattta
+     2281 ggtgacacta tagaacgcgg ccgccagctg aagcttcgta cgctgcaggt cgacggatcc
+     2341 ccgggttaat taaggcgcgc cagatctgtt tagcttgcct cgtccccgcc gggtcacccg
+     2401 gccagcgaca tggaggccca gaataccctc cttgacagtc ttgacgtgcg cagctcaggg
+     2461 gcatgatgtg actgtcgccc gtacatttag cccatacatc cccatgtata atcatttgca
+     2521 tccatacatt ttgatggccg cacggcgcga agcaaaaatt acggctcctc gctgcagacc
+     2581 tgcgagcagg gaaacgctcc cctcacagac gcgttgaatt gtccccacgc cgcgcccctg
+     2641 tagagaaata taaaaggtta ggatttgcca ctgaggttct tctttcatat acttcctttt
+     2701 aaaatcttgc taggatacag ttctcacatc acatccgaac ataaacaacc atgggtaagg
+     2761 aaaagactca cgtttcgagg ccgcgattaa attccaacat ggatgctgat ttatatgggt
+     2821 ataaatgggc tcgcgataat gtcgggcaat caggtgcgac aatctatcga ttgtatggga
+     2881 agcccgatgc gccagagttg tttctgaaac atggcaaagg tagcgttgcc aatgatgtta
+     2941 cagatgagat ggtcagacta aactggctga cggaatttat gcctcttccg accatcaagc
+     3001 attttatccg tactcctgat gatgcatggt tactcaccac tgcgatcccc ggcaaaacag
+     3061 cattccaggt attagaagaa tatcctgatt caggtgaaaa tattgttgat gcgctggcag
+     3121 tgttcctgcg ccggttgcat tcgattcctg tttgtaattg tccttttaac agcgatcgcg
+     3181 tatttcgtct cgctcaggcg caatcacgaa tgaataacgg tttggttgat gcgagtgatt
+     3241 ttgatgacga gcgtaatggc tggcctgttg aacaagtctg gaaagaaatg cataagcttt
+     3301 tgccattctc accggattca gtcgtcactc atggtgattt ctcacttgat aaccttattt
+     3361 ttgacgaggg gaaattaata ggttgtattg atgttggacg agtcggaatc gcagaccgat
+     3421 accaggatct tgccatccta tggaactgcc tcggtgagtt ttctccttca ttacagaaac
+     3481 ggctttttca aaaatatggt attgataatc ctgatatgaa taaattgcag tttcatttga
+     3541 tgctcgatga gtttttctaa tcagtactga caataaaaag attcttgttt tcaagaactt
+     3601 gtcatttgta tagttttttt atattgtagt tgttctattt taatcaaatg ttagcgtgat
+     3661 ttatattttt tttcgcctcg acatcatctg cccagatgcg aagttaagtg cgcagaaagt
+     3721 aatatcatgc gtcaatcgta tgtgaatgct ggtcgctata ctgctgtcga ttcgatacta
+     3781 acgccgccat ccagtttaaa cgagctcgaa ttcatcgatg atatcagatc cactagtggc
+     3841 ctatgcggcc gcggatctgc cggtctccct atagtgagtc gtattaattt cgataagcca
+     3901 ggttaacctg cattaatgaa tcggccaacg cgcgggga
+//
+LOCUS       CU329670                4538 bp    DNA     linear   PLN 26-APR-2024
+DEFINITION  Schizosaccharomyces pombe strain 972h- genome assembly, chromosome:
+            I.
+ACCESSION   CU329670
+VERSION     CU329670.1
+DBLINK      BioProject: PRJNA13836
+            BioSample: SAMEA3138176
+KEYWORDS    .
+SOURCE      Schizosaccharomyces pombe (fission yeast)
+  ORGANISM  Schizosaccharomyces pombe
+            Eukaryota; Fungi; Dikarya; Ascomycota; Taphrinomycotina;
+            Schizosaccharomycetes; Schizosaccharomycetales;
+            Schizosaccharomycetaceae; Schizosaccharomyces.
+REFERENCE   1  (bases 1 to 4538)
+  AUTHORS   Lang,B.F.
+  TITLE     The mitochondrial genome of the fission yeast Schizosaccharomyces
+            pombe: highly homologous introns are inserted at the same position
+            of the otherwise less conserved cox1 genes in Schizosaccharomyces
+            pombe and Aspergillus nidulans
+  JOURNAL   EMBO J 3 (9), 2129-2136 (1984)
+   PUBMED   6092057
+REFERENCE   2  (bases 1 to 4538)
+  AUTHORS   Lang,B.F., Ahne,F. and Bonen,L.
+  TITLE     The mitochondrial genome of the fission yeast Schizosaccharomyces
+            pombe. The cytochrome b gene has an intron closely related to the
+            first two introns in the Saccharomyces cerevisiae cox1 gene
+  JOURNAL   J Mol Biol 184 (3), 353-366 (1985)
+   PUBMED   4046021
+REFERENCE   3  (bases 1 to 4538)
+  AUTHORS   Lang,B.F., Cedergren,R. and Gray,M.W.
+  TITLE     The mitochondrial genome of the fission yeast, Schizosaccharomyces
+            pombe. Sequence of the large-subunit ribosomal RNA gene, comparison
+            of potential secondary structure in fungal mitochondrial
+            large-subunit rRNAs and evolutionary considerations
+  JOURNAL   Eur J Biochem 169 (3), 527-537 (1987)
+   PUBMED   2446871
+REFERENCE   4  (bases 1 to 4538)
+  AUTHORS   Trinkl,H., Lang,B.F. and Wolf,K.
+  TITLE     Nucleotide sequence of the gene encoding the small ribosomal RNA in
+            the mitochondrial genome of the fission yeast Schizosaccharomyces
+            pombe
+  JOURNAL   Nucleic Acids Res 17 (16), 6730 (1989)
+   PUBMED   2780299
+REFERENCE   5  (bases 1 to 4538)
+  AUTHORS   Wood,V., Gwilliam,R., Rajandream,M.A., Lyne,M., Lyne,R., Stewart,A.,
+            Sgouros,J., Peat,N., Hayles,J., Baker,S., Basham,D., Bowman,S.,
+            Brooks,K., Brown,D., Brown,S., Chillingworth,T., Churcher,C.,
+            Collins,M., Connor,R., Cronin,A., Davis,P., Feltwell,T., Fraser,A.,
+            Gentles,S., Goble,A., Hamlin,N., Harris,D., Hidalgo,J., Hodgson,G.,
+            Holroyd,S., Hornsby,T., Howarth,S., Huckle,E.J., Hunt,S., Jagels,K.,
+            James,K., Jones,L., Jones,M., Leather,S., McDonald,S., McLean,J.,
+            Mooney,P., Moule,S., Mungall,K., Murphy,L., Niblett,D., Odell,C.,
+            Oliver,K., O&#39;Neil,S., Pearson,D., Quail,M.A., Rabbinowitsch,E.,
+            Rutherford,K., Rutter,S., Saunders,D., Seeger,K., Sharp,S.,
+            Skelton,J., Simmonds,M., Squares,R., Squares,S., Stevens,K.,
+            Taylor,K., Taylor,R.G., Tivey,A., Walsh,S., Warren,T., Whitehead,S.,
+            Woodward,J., Volckaert,G., Aert,R., Robben,J., Grymonprez,B.,
+            Weltjens,I., Vanstreels,E., Rieger,M., Schafer,M., Muller-Auer,S.,
+            Gabel,C., Fuchs,M., Dusterhoft,A., Fritzc,C., Holzer,E., Moestl,D.,
+            Hilbert,H., Borzym,K., Langer,I., Beck,A., Lehrach,H., Reinhardt,R.,
+            Pohl,T.M., Eger,P., Zimmermann,W., Wedler,H., Wambutt,R.,
+            Purnelle,B., Goffeau,A., Cadieu,E., Dreano,S., Gloux,S., Lelaure,V.,
+            Mottier,S., Galibert,F., Aves,S.J., Xiang,Z., Hunt,C., Moore,K.,
+            Hurst,S.M., Lucas,M., Rochet,M., Gaillardin,C., Tallada,V.A.,
+            Garzon,A., Thode,G., Daga,R.R., Cruzado,L., Jimenez,J., Sanchez,M.,
+            del Rey,F., Benito,J., Dominguez,A., Revuelta,J.L., Moreno,S.,
+            Armstrong,J., Forsburg,S.L., Cerutti,L., Lowe,T., McCombie,W.R.,
+            Paulsen,I., Potashkin,J., Shpakovski,G.V., Ussery,D., Barrell,B.G.
+            and Nurse,P.
+  TITLE     The genome sequence of Schizosaccharomyces pombe
+  JOURNAL   Nature 415 (6874), 871-880 (2002)
+   PUBMED   11859360
+  REMARK    Erratum:[Nature 2003 Jan 2;421(6918):94. Cerrutti L [corrected to
+            Cerutti L]]
+REFERENCE   6
+  AUTHORS   Wood,V., Gwilliam,R., Rajandream,M.A., Lyne,M., Lyne,R., Stewart,A.,
+            Sgouros,J., Peat,N., Hayles,J., Baker,S., Basham,D., Bowman,S.,
+            Brooks,K., Brown,D., Brown,S., Chillingworth,T., Churcher,C.,
+            Collins,M., Connor,R., Cronin,A., Davis,P., Feltwell,T., Fraser,A.,
+            Gentles,S., Goble,A., Hamlin,N., Harris,D., Hidalgo,J., Hodgson,G.,
+            Holroyd,S., Hornsby,T., Howarth,S., Huckle,E.J., Hunt,S., Jagels,K.,
+            James,K., Jones,L., Jones,M., Leather,S., McDonald,S., McLean,J.,
+            Mooney,P., Moule,S., Mungall,K., Murphy,L., Niblett,D., Odell,C.,
+            Oliver,K., O&#39;Neil,S., Pearson,D., Quail,M.A., Rabbinowitsch,E.,
+            Rutherford,K., Rutter,S., Saunders,D., Seeger,K., Sharp,S.,
+            Skelton,J., Simmonds,M., Squares,R., Squares,S., Stevens,K.,
+            Taylor,K., Taylor,R.G., Tivey,A., Walsh,S., Warren,T., Whitehead,S.,
+            Woodward,J., Volckaert,G., Aert,R., Robben,J., Grymonprez,B.,
+            Weltjens,I., Vanstreels,E., Rieger,M., Schafer,M., Muller-Auer,S.,
+            Gabel,C., Fuchs,M., Dusterhoft,A., Fritzc,C., Holzer,E., Moestl,D.,
+            Hilbert,H., Borzym,K., Langer,I., Beck,A., Lehrach,H., Reinhardt,R.,
+            Pohl,T.M., Eger,P., Zimmermann,W., Wedler,H., Wambutt,R.,
+            Purnelle,B., Goffeau,A., Cadieu,E., Dreano,S., Gloux,S., Lelaure,V.,
+            Mottier,S., Galibert,F., Aves,S.J., Xiang,Z., Hunt,C., Moore,K.,
+            Hurst,S.M., Lucas,M., Rochet,M., Gaillardin,C., Tallada,V.A.,
+            Garzon,A., Thode,G., Daga,R.R., Cruzado,L., Jimenez,J., Sanchez,M.,
+            del Rey,F., Benito,J., Dominguez,A., Revuelta,J.L., Moreno,S.,
+            Armstrong,J., Forsburg,S.L., Cerutti,L., Lowe,T., McCombie,W.R.,
+            Paulsen,I., Potashkin,J., Shpakovski,G.V., Ussery,D., Barrell,B.G.
+            and Nurse,P.
+  TITLE     The genome sequence of Schizosaccharomyces pombe
+  JOURNAL   Nature 415 (6874), 871-880 (2002)
+   PUBMED   11859360
+  REMARK    Erratum:[Nature 2003 Jan 2;421(6918):94. Cerrutti L [corrected to
+            Cerutti L]]
+REFERENCE   7  (bases 1 to 4538)
+  AUTHORS   Schafer,B., Hansen,M. and Lang,B.F.
+  TITLE     Transcription and RNA-processing in fission yeast mitochondria
+  JOURNAL   RNA 11 (5), 785-795 (2005)
+   PUBMED   15811919
+REFERENCE   8
+  AUTHORS   Wood,V.
+  CONSRTM   The Schizosaccharomyces pombe Genome Sequencing Consortium
+  TITLE     Direct Submission
+  JOURNAL   Submitted (29-JUN-2007) European Schizosaccharomyces genome
+            sequencing project, Sanger Institute, The Wellcome Trust Genome
+            Campus, Hinxton, Cambridge CB10 1SA
+REFERENCE   9
+  AUTHORS   Wood,V. and Rutherford,K.
+  CONSRTM   PomBase
+  TITLE     Direct Submission
+  JOURNAL   Submitted (13-MAR-2024) University of Cambridge, PomBase, Hopkins
+            building, Tennis Court Rd, Cambridge, United Kingdom
+COMMENT     On or before Jan 26, 2012 this sequence version replaced
+            AL672256.4, AL009197.1, AL009227.1, AL021046.4, AL021809.4,
+            AL021813.1, AL021817.2, AL031180.3, AL034486.1, AL034565.1,
+            AL034583.1, AL035064.1, AL035248.2, AL035254.1, AL035439.1,
+            AL096845.1, AL109734.1, AL109738.1, AL109739.1, AL109770.1,
+            AL109820.1, AL109831.1, AL109832.1, AL109951.1, AL109988.1,
+            AL110469.1, AL110509.2, AL117210.1, AL117212.1, AL117213.1,
+            AL117390.1, AL121732.1, AL121741.1, AL121745.2, AL121764.1,
+            AL121765.1, AL121770.1, AL122032.1, AL132667.1, AL132675.1,
+            AL132714.1, AL132769.1, AL132779.2, AL132798.2, AL132828.1,
+            AL132839.1, AL132983.1, AL132984.1, AL133154.2, AL133156.1,
+            AL133157.1, AL133225.2, AL133302.1, AL133357.1, AL133359.1,
+            AL133360.1, AL133361.1, AL133442.1, AL133498.1, AL133521.1,
+            AL133522.1, AL135751.1, AL136078.1, AL136235.1, AL136499.1,
+            AL136521.2, AL136538.1, AL137130.1, AL138666.2, AL138854.1,
+            AL139315.1, AL157734.1, AL157811.1, AL157872.1, AL157917.1,
+            AL157993.1, AL157994.1, AL158056.1, AL159180.1, AL159951.1,
+            AL162531.1, AL162631.1, AL163031.1, AL163071.1, AL163191.2,
+            AL163481.1, AL163529.1, AL353014.1, AL353860.2, AL355012.1,
+            AL355013.1, AL355252.1, AL355452.1, AL355632.1, AL355652.1,
+            AL355653.1, AL356333.1, AL356335.1, AL357232.1, AL358272.1,
+            AL360054.1, AL360094.1, AL390095.1, AL390274.1, AL390814.1,
+            AL391713.1, AL391744.1, AL391746.2, AL391783.1, AL441621.1,
+            AL441624.1, AL512486.1, AL512487.1, AL512491.1, AL512493.1,
+            AL512496.1, AL512549.1, AL512562.1, AL583902.1, AL590562.1,
+            AL590582.1, AL590602.1, AL590605.1, AL590902.2, AL590903.1,
+            AL691401.1, AL691402.1, AL691405.1, Z49811.1, Z50112.1, Z50113.1,
+            Z50142.1, Z50728.2, Z54096.1, Z54142.2, Z54285.2, Z54308.1,
+            Z54328.1, Z54354.1, Z54366.1, Z56276.2, Z64354.1, Z66568.2,
+            Z67757.1, Z67961.2, Z67998.1, Z67999.1, Z68136.2, Z68144.1,
+            Z68166.1, Z68197.2, Z68198.1, Z68887.1, Z69086.1, Z69239.1,
+            Z69240.1, Z69368.1, Z69369.1, Z69380.1, Z69725.1, Z69726.1,
+            Z69727.1, Z69728.1, Z69729.1, Z69730.1, Z69731.1, Z69795.1,
+            Z69796.1, Z69944.1, Z70043.1, Z70690.1, Z70691.1, Z70721.1,
+            Z73099.2, Z73100.2, Z81312.1, Z81317.1, Z94864.1, Z95334.1,
+            Z95395.1, Z95396.2, Z97185.1, Z97208.1, Z97209.1, Z97210.2,
+            Z98056.2, Z98529.1, Z98530.2, Z98531.2, Z98532.1, Z98533.1,
+            Z98559.1, Z98560.1, Z98595.1, Z98596.1, Z98597.1, Z98598.1,
+            Z98600.1, Z98601.1, Z98602.1, Z98603.1, Z98762.1, Z98763.1,
+            Z98849.1, Z98944.1, Z98974.2, Z98975.1, Z98977.4, Z98978.1,
+            Z98979.1, Z98980.1, Z98981.3, Z99091.2, Z99126.1, Z99161.1,
+            Z99162.1, Z99163.2, Z99164.2, Z99165.1, Z99166.1, Z99167.1,
+            Z99168.1, Z99258.1, Z99259.1, Z99260.2, Z99261.1, Z99262.1,
+            Z99292.1, Z99295.1, Z99296.2, Z99531.1, Z99532.2, Z99568.2,
+            Z99753.1.
+FEATURES             Location/Qualifiers
+     source          1..4538
+                     /organism=&quot;Schizosaccharomyces pombe&quot;
+                     /mol_type=&quot;genomic DNA&quot;
+                     /strain=&quot;972h-&quot;
+                     /db_xref=&quot;taxon:4896&quot;
+                     /chromosome=&quot;I&quot;
+     gene            &lt;1..676
+                     /locus_tag=&quot;SPOM_SPAPB1A10.08&quot;
+     CDS             &lt;1..393
+                     /locus_tag=&quot;SPOM_SPAPB1A10.08&quot;
+                     /codon_start=1
+                     /product=&quot;conserved fungal protein&quot;
+                     /protein_id=&quot;CAC21481.2&quot;
+                     /translation=&quot;MMTRMELRPLEIGFSKALTEVAPVTCQCECWDHNLCSSQASEMDL
+                     IYQSQDTHSCASKQDAVFQLLSETKIPVPNRYRKISHRLSTLSNKKTLKSQLDRFLSSS
+                     KKLHNDDVNRGDYCFLLSTPVECSASTNSHSYDCLWNFSCNSFPEYSSYSASETSSVAS
+                     YSYYSGPNPATPSSSSCNLVNANSLDIYLNINNLKKSKSVPRLRGQFMEPVEHNHPLSK
+                     SLEEQSSFLEQSKDASSNLTACNRSGSSLSSNFYSSRLSKKTSLASLNKSRASLQHKIM
+                     SLSRNIIRRVFHKPEVHLDPSASILNLSSSHGESNLTNGLLCQNFKLFQDDWLMEDCAP
+                     DANFTLYTPLQPWEKRSVKPEIRRPRLNPNFFRVFVLEAQMRRAGKLSANTAGRAQLIY
+                     LPKPAVTFSTSPLHVEL&quot;
+     gene            complement(&lt;1..1972)
+                     /locus_tag=&quot;SPOM_SPNCRNA.2846&quot;
+     ncRNA           complement(&lt;1..1972)
+                     /ncRNA_class=&quot;lncRNA&quot;
+                     /locus_tag=&quot;SPOM_SPNCRNA.2846&quot;
+                     /product=&quot;non-coding RNA&quot;
+     3&#39;UTR           394..676
+                     /locus_tag=&quot;SPOM_SPAPB1A10.08&quot;
+     gene            1001..3538
+                     /gene=&quot;ase1&quot;
+                     /locus_tag=&quot;SPOM_SPAPB1A10.09&quot;
+     5&#39;UTR           1001..1173
+                     /gene=&quot;ase1&quot;
+                     /locus_tag=&quot;SPOM_SPAPB1A10.09&quot;
+     CDS             join(1174..1597,1645..3416)
+                     /gene=&quot;ase1&quot;
+                     /locus_tag=&quot;SPOM_SPAPB1A10.09&quot;
+                     /codon_start=1
+                     /product=&quot;antiparallel microtubule cross-linking factor
+                     Ase1&quot;
+                     /protein_id=&quot;CAC21482.1&quot;
+                     /translation=&quot;MQTVMMDDIQSTDSIAEKDNHSNNESNFTWKAFREQVEKHFSKIE
+                     RLHQVLGTDGDNSSLFELFTTAMNAQLHEMEQCQKKLEDDCQQRIDSIRFLVSSLKLTD
+                     DTSSLKIESPLIQCLNRLSMVEGQYMAQYDQKLSTIKEMYHKLESYCNRLGSPFVLPDF
+                     ENSFLSDVSDAFTESLRGRINEAEKEIDARLEVINSFEEEILGLWSELGVEPADVPQYE
+                     QLLESHTNRPNDVYVTQELIDQLCKQKEVFSAEKEKRSDHLKSIQSEVSNLWNKLQVSP
+                     NEQSQFGDSSNINQENISLWETELEKLHQLKKEHLPIFLEDCRQQILQLWDSLFYSEEQ
+                     RKSFTPMYEDIITEQVLTAHENYIKQLEAEVSANKSFLSLINRYASLIEGKKELEASSN
+                     DASRLTQRGRRDPGLLLREEKIRKRLSRELPKVQSLLIPEITAWEERNGRTFLFYDEPL
+                     LKICQEATQPKSLYRSASAAANRPKTATTTDSVNRTPSQRGRVAVPSTPSVRSASRAMT
+                     SPRTPLPRVKNTQNPSRSISAEPPSATSTANRRHPTANRIDINARLNSASRSRSANMIR
+                     QGANGSDSNMSSSPVSGNSNTPFNKFPNSVSRNTHFESKSPHPNYSRTPHETYSKASSK
+                     NVPLSPPKQRVVNEHALNIMSEKLQRTNLKEQTPEMDIENSSQNLPFSPMKISPIRASP
+                     VKTIPSSPSPTTNIFSAPLNNITNCTPMEDEWGEEGF&quot;
+     3&#39;UTR           3417..3538
+                     /gene=&quot;ase1&quot;
+                     /locus_tag=&quot;SPOM_SPAPB1A10.09&quot;
+     gene            complement(3510..&gt;4538)
+                     /gene=&quot;ypt71&quot;
+                     /locus_tag=&quot;SPOM_SPAPB1A10.10C&quot;
+     3&#39;UTR           complement(3510..3690)
+                     /gene=&quot;ypt71&quot;
+                     /locus_tag=&quot;SPOM_SPAPB1A10.10C&quot;
+     CDS             complement(join(3691..4137,4192..&gt;4290))
+                     /gene=&quot;ypt71&quot;
+                     /locus_tag=&quot;SPOM_SPAPB1A10.10C&quot;
+                     /codon_start=1
+                     /product=&quot;GTPase Ypt71&quot;
+                     /protein_id=&quot;CAC21483.1&quot;
+                     /translation=&quot;MSAQKRVFLKVVILGDSGVGKTCLMNQFVNQKFSREYKATIGADF
+                     LTKDVVVDDKLVTLQLWDTAGQERFQSLGMAFYRGADCCVIVYNVNNSKSFDSVENWRQ
+                     EFLYQTSQDECAFPFIIVGNQIDKDASKRAVSLHRALDYCKSKHGSNMIHFEASAKENT
+                     NVTDLFETVSRLALENESSRDDFVNDFSEPLLLSKPLNNTSSCNC&quot;
+     gene            4049..&gt;4538
+                     /locus_tag=&quot;SPOM_SPNCRNA.2847&quot;
+     ncRNA           4049..&gt;4538
+                     /ncRNA_class=&quot;lncRNA&quot;
+                     /locus_tag=&quot;SPOM_SPNCRNA.2847&quot;
+                     /product=&quot;non-coding RNA&quot;
+ORIGIN
+        1 atcatcagac gtgtatttca caagccagaa gtgcatttgg atccaagtgc ctccatttta
+       61 aatctctcat cttcgcatgg cgaaagcaac ctgacaaatg gtttgctttg tcaaaatttc
+      121 aagctttttc aggatgattg gttgatggag gattgtgcgc cagatgccaa tttcactttg
+      181 tacaccccgc ttcaaccctg ggaaaagcga agtgtgaaac ctgaaatcag acgtcctcga
+      241 ttaaatccta attttttccg agtatttgtt ttagaagctc aaatgcgacg agctggaaag
+      301 ctatcagcaa acactgctgg ccgagcccag ttaatttacc tcccaaagcc tgccgttacc
+      361 ttctccacta gccctttgca tgttgaattg taaaaattta acgcatgact tatatacatt
+      421 tgcattcttc caagctggtt atatttattt tcattttttt ctcacccaat acttttttat
+      481 ccctactgtc tttatggaca atcgactcac aattgtttct ttttgttgta tatgattttt
+      541 tttttaaagg aaatgggttt cgcgatactg ggttgaatcc caattgcggt taatattaca
+      601 taaaataatt ctcccatagt cctagatcct gtctttgaat atgagcaaat aaaagaattg
+      661 aacaaatcat gaatgctttt ctctcttaga tgatattttg tatgcataag tctaattata
+      721 ttgattacga taagacttaa aaagtaagcc tttgtatcct tttaagcagt atttgaattt
+      781 tcttgtatca tattttaggt agagcaaaag ataccagttt gtagaacttt atgtgcttcc
+      841 ttacattggt atatttcagg cacataaata ttcttcaact tacaattcta agtattttgt
+      901 ttatactaaa aggagctgaa taacgtttat acagtgctga cattgaaatc tatttgcttt
+      961 ctttggaata taagcgcatg ctgagttact ttcgcaggcc aagccatatc caaccaccat
+     1021 ttttgtgcca agcttttatg caaggttaat tccttgtact gcttgttatg ttataatata
+     1081 tcaacatctt aacagttttc atatcttcct ttatattcta ttaattgaat ttcaaacatc
+     1141 gttttattga gctcatttac atcaaccggt tcaatgcaaa cagtaatgat ggatgacatt
+     1201 caaagcactg attctattgc tgaaaaagat aatcactcta ataatgaatc taactttact
+     1261 tggaaagcgt ttcgtgaaca agtggaaaag catttttcta aaattgaaag gcttcaccaa
+     1321 gtccttggaa cagatggaga caattcatca ttatttgagt tgtttacaac ggcaatgaat
+     1381 gcccagcttc atgaaatgga acagtgccag aaaaaacttg aagatgactg tcagcaaaga
+     1441 attgattcaa tcagattttt ggtttcctca ttaaagttaa cggatgatac ttctagtctc
+     1501 aaaattgagt ctcctttaat tcagtgtttg aatcgtttgt caatggtaga aggacaatat
+     1561 atggcacagt atgatcaaaa gttaagtacg attaaaggta tgtaatcgtc tttaatttag
+     1621 acttgtgttt taactgatgt atagaaatgt atcacaaatt ggagtcatat tgtaaccgct
+     1681 taggaagtcc gttcgtttta cctgattttg agaattcatt tttatctgat gtatccgatg
+     1741 cttttactga atctttgaga ggacgcatca acgaagccga aaaggagatt gatgcgagat
+     1801 tagaggttat taattccttt gaagaagaaa ttttgggttt gtggtctgaa ctcggtgttg
+     1861 agcccgctga tgttccacaa tacgaacaat tgcttgaatc ccatactaat cgaccaaatg
+     1921 atgtttatgt tactcaagaa cttatcgacc aactttgcaa gcaaaaagaa gttttttccg
+     1981 ctgaaaaaga aaagagaagt gatcatttaa aaagtataca atcagaagtt agcaacttgt
+     2041 ggaataagct tcaagtttct cccaatgaac aaagtcaatt tggcgattca tcaaacatta
+     2101 atcaagaaaa tatttcatta tgggaaactg aacttgaaaa acttcatcag ttaaaaaagg
+     2161 agcatttacc cattttttta gaagactgtc gtcaacaaat tcttcagctt tgggattctc
+     2221 tgttttattc agaagaacaa agaaagtcct ttacacctat gtatgaagac attattacag
+     2281 agcaggttct tacggcccat gaaaactata taaagcaact agaggccgaa gtttctgcta
+     2341 ataagtcctt tttaagctta attaatcgct atgcctcttt aatagaagga aagaaagagc
+     2401 ttgaagctag ttctaatgat gcctctcgtc taacacaacg gggacgccgg gacccaggtt
+     2461 tacttctacg tgaagagaaa atccgtaagc gactttctag agaacttcct aaggttcagt
+     2521 cgctgcttat accagagatt acagcatggg aagaaagaaa tggaaggacg ttcctttttt
+     2581 atgatgaacc acttctcaag atttgccaag aggccactca accaaaatca ttatatagaa
+     2641 gtgcaagtgc tgccgcaaac cgcccgaaaa cagcaactac aacggactct gttaatagaa
+     2701 caccttctca acgagggcgt gtagctgtac cttcaacacc aagtgttagg tccgcttctc
+     2761 gagctatgac gagtccaagg acaccgcttc ctagagtaaa aaacactcaa aatccaagtc
+     2821 gttccattag tgcagaaccg ccatcagcaa ccagtaccgc caatagaaga caccccactg
+     2881 ctaatcgaat tgatataaac gctagattaa acagtgctag tcggtctcga agcgcgaaca
+     2941 tgataagaca aggggcaaat ggtagtgaca gcaatatgtc ttcttcaccc gtttctggaa
+     3001 attccaatac cccttttaac aagtttccaa attctgtatc tcgcaataca cattttgaat
+     3061 ccaagtcacc gcacccaaat tactctcgaa ctcctcatga aacgtattca aaggcttcat
+     3121 ctaagaacgt cccattaagt cctccaaagc agcgtgtagt taatgaacac gctttaaata
+     3181 ttatgtcgga aaaattgcaa agaactaatc tgaaagaaca aacacccgag atggacattg
+     3241 aaaacagctc gcagaacctt cctttttctc ctatgaagat atcccccata agagcatcac
+     3301 ccgtaaagac aattccatca tcaccgtccc ccactaccaa cattttttct gctccactca
+     3361 acaatattac aaattgtaca ccgatggagg atgaatgggg agaagaaggc ttttaagctt
+     3421 cttatttacc taatcgatca aatttaaata tacatatttt tgcatatgaa tacagcatat
+     3481 agataattca taaaagttta ttaactgagg tcataattaa aagactattt acacctaaaa
+     3541 aaaaacgtgt atcaatagag ggaaaagaga agaattaaga acagaaagta accatagttt
+     3601 tgttaaaata gcaatgtaaa aaaatattat gaaaagaaaa cgtatagcac attttgaaat
+     3661 gtaaaagaat ctgagagagc gtgtgaatat ctagcaatta caagaagatg tattattcaa
+     3721 aggctttgaa agaagcaaag gttcagagaa gtcattaaca aagtcatctc tcgagctttc
+     3781 attttctaaa gctaaacgac tgactgtttc gaaaaggtca gtaacgtttg tattttcttt
+     3841 tgcactagct tcaaaatgaa tcatatttga tccatgtttg gatttgcaat agtcaagagc
+     3901 tcgatgaaga gatacggctc gtttagacgc gtctttgtcg atttgatttc caacgataat
+     3961 gaaagggaat gcacattcat cttgtgaagt ttgatataaa aattcttgcc tccagttttc
+     4021 tactgagtca aaagacttcg agttattcac attataaaca attacacaac aatcggcccc
+     4081 tctgtaaaaa gccattccca ggctttgaaa tcgttcttga ccagcagtat cccaaagctg
+     4141 tttataatta gcaaacgaat ttagatgggc ggaacttata ttggaactta cctgtaatgt
+     4201 gaccaatttg tcgtcaacca caacgtcctt ggttaaaaaa tcagcaccga tggtagcttt
+     4261 atattcgcga ctaaactttt gattgacgaa ctaaaatgac gatgttaaca aattgccaaa
+     4321 gcaatactca tagagaagct gatgtaaaga tcgttaacca tatttgagct agtatttaat
+     4381 aacaaagtga ataaatttta aaagcaatca ccttgtagcg acaaataaca acttatcgac
+     4441 ataaaatcaa tgggaaattg cagtattgga ttttacagct caatacaaaa accaaaaaga
+     4501 aaaatatact gaacgtataa aatttaacgc ttcaattg
+//
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.design</span><span class="w"> </span><span class="kn">import</span> <span class="n">primer_design</span>
+<span class="c1">#Finding the feature containing the CDS with ase1 as a type qualifier</span>
+<span class="n">gene</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">pombe_chromosome_I</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CDS&quot;</span> <span class="ow">and</span>
+                <span class="s2">&quot;gene&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span> <span class="ow">and</span>
+                <span class="s2">&quot;ase1&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;gene&quot;</span><span class="p">])</span>
+
+<span class="c1"># Using the primer_design function to design primers to amplify the CDS</span>
+<span class="c1"># `min` and `max` can be used on a SeqFeature to get the start (leftmost) and end (rightmost) positions</span>
+<span class="c1"># this works both on feature with SimpleLocation and CompoundLocation</span>
+<span class="n">amplicon</span> <span class="o">=</span> <span class="n">primer_design</span><span class="p">(</span><span class="n">pombe_chromosome_I</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">gene</span><span class="p">):</span><span class="nb">max</span><span class="p">(</span><span class="n">gene</span><span class="p">)],</span> <span class="n">target_tm</span><span class="o">=</span><span class="mi">55</span><span class="p">)</span>
+
+<span class="n">fwd_align</span><span class="p">,</span> <span class="n">rvs_align</span> <span class="o">=</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">primers</span><span class="p">()</span>
+<span class="n">fwd_primer_ase1</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;ACCATGTCGAC&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">fwd_align</span> <span class="c1"># Adding a SalI cut site</span>
+<span class="n">rvs_primer_ase1</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;GGCGCGCCAT&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">rvs_align</span> <span class="c1"># Adding a AscI cut site</span>
+
+<span class="c1"># Printing out the primers</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">fwd_primer_ase1</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="s1">&#39;, Tm: &#39;</span><span class="p">,</span> <span class="n">tm_default</span><span class="p">(</span><span class="n">fwd_align</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rvs_primer_ase1</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="s1">&#39;, Tm: &#39;</span><span class="p">,</span> <span class="n">tm_default</span><span class="p">(</span><span class="n">rvs_align</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ACCATGTCGACATGCAAACAGTAATGATGGA , Tm:  57.24061148156318
+GGCGCGCCATTAAAAGCCTTCTTCTCCC , Tm:  56.64459495003314
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Performing a PCR to check that the primers are specific. An error message is returned if otherwise.</span>
+
+<span class="n">pcr_product</span> <span class="o">=</span> <span class="n">pcr</span><span class="p">(</span><span class="n">fwd_primer_ase1</span><span class="p">,</span> <span class="n">rvs_primer_ase1</span><span class="p">,</span> <span class="n">pombe_chromosome_I</span><span class="p">)</span>
+
+<span class="c1"># Printing out the PCR results</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">pcr_product</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;gb&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LOCUS       2263bp_PCR_prod         2263 bp    DNA     linear   UNK 01-JAN-1980
+DEFINITION  pcr_product_description_description.
+ACCESSION   2263bp
+VERSION     2263bp
+DBLINK      BioProject: PRJNA13836
+            BioSample: SAMEA3138176
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     CDS             join(12..435,483..2254)
+                     /gene=&quot;ase1&quot;
+                     /locus_tag=&quot;SPOM_SPAPB1A10.09&quot;
+                     /codon_start=1
+                     /product=&quot;antiparallel microtubule cross-linking factor
+                     Ase1&quot;
+                     /protein_id=&quot;CAC21482.1&quot;
+                     /translation=&quot;MQTVMMDDIQSTDSIAEKDNHSNNESNFTWKAFREQVEKHFSKIE
+                     RLHQVLGTDGDNSSLFELFTTAMNAQLHEMEQCQKKLEDDCQQRIDSIRFLVSSLKLTD
+                     DTSSLKIESPLIQCLNRLSMVEGQYMAQYDQKLSTIKEMYHKLESYCNRLGSPFVLPDF
+                     ENSFLSDVSDAFTESLRGRINEAEKEIDARLEVINSFEEEILGLWSELGVEPADVPQYE
+                     QLLESHTNRPNDVYVTQELIDQLCKQKEVFSAEKEKRSDHLKSIQSEVSNLWNKLQVSP
+                     NEQSQFGDSSNINQENISLWETELEKLHQLKKEHLPIFLEDCRQQILQLWDSLFYSEEQ
+                     RKSFTPMYEDIITEQVLTAHENYIKQLEAEVSANKSFLSLINRYASLIEGKKELEASSN
+                     DASRLTQRGRRDPGLLLREEKIRKRLSRELPKVQSLLIPEITAWEERNGRTFLFYDEPL
+                     LKICQEATQPKSLYRSASAAANRPKTATTTDSVNRTPSQRGRVAVPSTPSVRSASRAMT
+                     SPRTPLPRVKNTQNPSRSISAEPPSATSTANRRHPTANRIDINARLNSASRSRSANMIR
+                     QGANGSDSNMSSSPVSGNSNTPFNKFPNSVSRNTHFESKSPHPNYSRTPHETYSKASSK
+                     NVPLSPPKQRVVNEHALNIMSEKLQRTNLKEQTPEMDIENSSQNLPFSPMKISPIRASP
+                     VKTIPSSPSPTTNIFSAPLNNITNCTPMEDEWGEEGF&quot;
+     primer_bind     12..31
+                     /label=&quot;name&quot;
+                     /PCR_conditions=&quot;primer
+                     sequence:ACCATGTCGACATGCAAACAGTAATGATGGA&quot;
+                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;
+                     /ApEinfo_revcolor=&quot;#ffbaba&quot;
+     primer_bind     complement(2236..2254)
+                     /label=&quot;name&quot;
+                     /PCR_conditions=&quot;primer
+                     sequence:GGCGCGCCATTAAAAGCCTTCTTCTCCC&quot;
+                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;
+                     /ApEinfo_revcolor=&quot;#ffbaba&quot;
+ORIGIN
+        1 accatgtcga catgcaaaca gtaatgatgg atgacattca aagcactgat tctattgctg
+       61 aaaaagataa tcactctaat aatgaatcta actttacttg gaaagcgttt cgtgaacaag
+      121 tggaaaagca tttttctaaa attgaaaggc ttcaccaagt ccttggaaca gatggagaca
+      181 attcatcatt atttgagttg tttacaacgg caatgaatgc ccagcttcat gaaatggaac
+      241 agtgccagaa aaaacttgaa gatgactgtc agcaaagaat tgattcaatc agatttttgg
+      301 tttcctcatt aaagttaacg gatgatactt ctagtctcaa aattgagtct cctttaattc
+      361 agtgtttgaa tcgtttgtca atggtagaag gacaatatat ggcacagtat gatcaaaagt
+      421 taagtacgat taaaggtatg taatcgtctt taatttagac ttgtgtttta actgatgtat
+      481 agaaatgtat cacaaattgg agtcatattg taaccgctta ggaagtccgt tcgttttacc
+      541 tgattttgag aattcatttt tatctgatgt atccgatgct tttactgaat ctttgagagg
+      601 acgcatcaac gaagccgaaa aggagattga tgcgagatta gaggttatta attcctttga
+      661 agaagaaatt ttgggtttgt ggtctgaact cggtgttgag cccgctgatg ttccacaata
+      721 cgaacaattg cttgaatccc atactaatcg accaaatgat gtttatgtta ctcaagaact
+      781 tatcgaccaa ctttgcaagc aaaaagaagt tttttccgct gaaaaagaaa agagaagtga
+      841 tcatttaaaa agtatacaat cagaagttag caacttgtgg aataagcttc aagtttctcc
+      901 caatgaacaa agtcaatttg gcgattcatc aaacattaat caagaaaata tttcattatg
+      961 ggaaactgaa cttgaaaaac ttcatcagtt aaaaaaggag catttaccca tttttttaga
+     1021 agactgtcgt caacaaattc ttcagctttg ggattctctg ttttattcag aagaacaaag
+     1081 aaagtccttt acacctatgt atgaagacat tattacagag caggttctta cggcccatga
+     1141 aaactatata aagcaactag aggccgaagt ttctgctaat aagtcctttt taagcttaat
+     1201 taatcgctat gcctctttaa tagaaggaaa gaaagagctt gaagctagtt ctaatgatgc
+     1261 ctctcgtcta acacaacggg gacgccggga cccaggttta cttctacgtg aagagaaaat
+     1321 ccgtaagcga ctttctagag aacttcctaa ggttcagtcg ctgcttatac cagagattac
+     1381 agcatgggaa gaaagaaatg gaaggacgtt ccttttttat gatgaaccac ttctcaagat
+     1441 ttgccaagag gccactcaac caaaatcatt atatagaagt gcaagtgctg ccgcaaaccg
+     1501 cccgaaaaca gcaactacaa cggactctgt taatagaaca ccttctcaac gagggcgtgt
+     1561 agctgtacct tcaacaccaa gtgttaggtc cgcttctcga gctatgacga gtccaaggac
+     1621 accgcttcct agagtaaaaa acactcaaaa tccaagtcgt tccattagtg cagaaccgcc
+     1681 atcagcaacc agtaccgcca atagaagaca ccccactgct aatcgaattg atataaacgc
+     1741 tagattaaac agtgctagtc ggtctcgaag cgcgaacatg ataagacaag gggcaaatgg
+     1801 tagtgacagc aatatgtctt cttcacccgt ttctggaaat tccaataccc cttttaacaa
+     1861 gtttccaaat tctgtatctc gcaatacaca ttttgaatcc aagtcaccgc acccaaatta
+     1921 ctctcgaact cctcatgaaa cgtattcaaa ggcttcatct aagaacgtcc cattaagtcc
+     1981 tccaaagcag cgtgtagtta atgaacacgc tttaaatatt atgtcggaaa aattgcaaag
+     2041 aactaatctg aaagaacaaa cacccgagat ggacattgaa aacagctcgc agaaccttcc
+     2101 tttttctcct atgaagatat cccccataag agcatcaccc gtaaagacaa ttccatcatc
+     2161 accgtccccc actaccaaca ttttttctgc tccactcaac aatattacaa attgtacacc
+     2221 gatggaggat gaatggggag aagaaggctt ttaatggcgc gcc
+//
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cleaving the cloning vector with restriction enzymes</span>
+
+<span class="n">plasmid_digests</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">SalI</span><span class="p">,</span> <span class="n">AscI</span><span class="p">)</span>
+
+<span class="c1"># Cleaving the gene fragment with restriction enzymes</span>
+
+<span class="n">gene_digests</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">pcr_product</span><span class="p">)</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">SalI</span><span class="p">,</span> <span class="n">AscI</span><span class="p">)</span>
+
+<span class="c1"># Printing out the digests</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">plasmid_digests</span><span class="p">)</span> 
+<span class="nb">print</span><span class="p">(</span><span class="n">gene_digests</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Dseqrecord(-30), Dseqrecord(-3916))
+(Dseqrecord(-10), Dseqrecord(-2255), Dseqrecord(-6))
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ligating, then circularising the synthetic plasmid</span>
+
+<span class="n">synthetic_vector</span> <span class="o">=</span> <span class="n">plasmid_digests</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">gene_digests</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">synthetic_vector</span> <span class="o">=</span> <span class="n">synthetic_vector</span><span class="o">.</span><span class="n">looped</span><span class="p">()</span>
+
+<span class="c1"># Printing out the completed cloning vector</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">synthetic_vector</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;gb&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LOCUS       name                    6163 bp    DNA     circular UNK 01-JAN-1980
+DEFINITION  description.
+ACCESSION   id
+VERSION     id
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     gene            52..1408
+                     /label=&quot;kanMX&quot;
+                     /note=&quot;yeast selectable marker conferring kanamycin
+                     resistance (Wach et al., 1994)&quot;
+     promoter        52..395
+                     /label=&quot;TEF promoter&quot;
+                     /note=&quot;Ashbya gossypii TEF promoter&quot;
+     CDS             396..1205
+                     /codon_start=1
+                     /gene=&quot;aph(3&#39;)-Ia&quot;
+                     /product=&quot;aminoglycoside phosphotransferase&quot;
+                     /label=&quot;KanR&quot;
+                     /note=&quot;confers resistance to kanamycin&quot;
+                     /translation=&quot;MGKEKTHVSRPRLNSNMDADLYGYKWARDNVGQSGATIYRLYGKP
+                     DAPELFLKHGKGSVANDVTDEMVRLNWLTEFMPLPTIKHFIRTPDDAWLLTTAIPGKTA
+                     FQVLEEYPDSGENIVDALAVFLRRLHSIPVCNCPFNSDRVFRLAQAQSRMNNGLVDASD
+                     FDDERNGWPVEQVWKEMHKLLPFSPDSVVTHGDFSLDNLIFDEGKLIGCIDVGRVGIAD
+                     RYQDLAILWNCLGEFSPSLQKRLFQKYGIDNPDMNKLQFHLMLDEFF&quot;
+     primer_bind     complement(463..482)
+                     /label=&quot;Kan-R&quot;
+                     /note=&quot;Kanamycin resistance gene, reverse primer&quot;
+     terminator      1211..1408
+                     /label=&quot;TEF terminator&quot;
+                     /note=&quot;Ashbya gossypii TEF terminator&quot;
+     primer_bind     complement(1512..1531)
+                     /label=&quot;T7&quot;
+                     /note=&quot;T7 promoter, forward primer&quot;
+     promoter        complement(1513..1531)
+                     /label=&quot;T7 promoter&quot;
+                     /note=&quot;promoter for bacteriophage T7 RNA polymerase&quot;
+     primer_bind     complement(1618..1635)
+                     /label=&quot;L4440&quot;
+                     /note=&quot;L4440 vector, forward primer&quot;
+     rep_origin      complement(1789..2377)
+                     /direction=LEFT
+                     /label=&quot;ori&quot;
+                     /note=&quot;high-copy-number ColE1/pMB1/pBR322/pUC origin of
+                     replication&quot;
+     primer_bind     complement(1869..1888)
+                     /label=&quot;pBR322ori-F&quot;
+                     /note=&quot;pBR322 origin, forward primer&quot;
+     CDS             complement(2548..3408)
+                     /codon_start=1
+                     /gene=&quot;bla&quot;
+                     /product=&quot;beta-lactamase&quot;
+                     /label=&quot;AmpR&quot;
+                     /note=&quot;confers resistance to ampicillin, carbenicillin, and
+                     related antibiotics&quot;
+                     /translation=&quot;MSIQHFRVALIPFFAAFCLPVFAHPETLVKVKDAEDQLGARVGYI
+                     ELDLNSGKILESFRPEERFPMMSTFKVLLCGAVLSRIDAGQEQLGRRIHYSQNDLVEYS
+                     PVTEKHLTDGMTVRELCSAAITMSDNTAANLLLTTIGGPKELTAFLHNMGDHVTRLDRW
+                     EPELNEAIPNDERDTTMPVAMATTLRKLLTGELLTLASRQQLIDWMEADKVAGPLLRSA
+                     LPAGWFIADKSGAGERGSRGIIAALGPDGKPSRIVVIYTTGSQATMDERNRQIAEIGAS
+                     LIKHW&quot;
+     primer_bind     3171..3190
+                     /label=&quot;Amp-R&quot;
+                     /note=&quot;Ampicillin resistance gene, reverse primer&quot;
+     promoter        complement(3409..3513)
+                     /gene=&quot;bla&quot;
+                     /label=&quot;AmpR promoter&quot;
+     primer_bind     3581..3599
+                     /label=&quot;pBRforEco&quot;
+                     /note=&quot;pBR322 vectors, upsteam of EcoRI site, forward
+                     primer&quot;
+     primer_bind     complement(3637..3659)
+                     /label=&quot;pGEX 3&#39;&quot;
+                     /note=&quot;pGEX vectors, reverse primer&quot;
+     primer_bind     3759..3778
+                     /label=&quot;pRS-marker&quot;
+                     /note=&quot;pRS vectors, use to sequence yeast selectable
+                     marker&quot;
+     promoter        3859..3877
+                     /label=&quot;SP6 promoter&quot;
+                     /note=&quot;promoter for bacteriophage SP6 RNA polymerase&quot;
+     primer_bind     3859..3876
+                     /label=&quot;SP6&quot;
+                     /note=&quot;SP6 promoter, forward primer&quot;
+     CDS             join(3918..4341,4389..6160)
+                     /gene=&quot;ase1&quot;
+                     /locus_tag=&quot;SPOM_SPAPB1A10.09&quot;
+                     /codon_start=1
+                     /product=&quot;antiparallel microtubule cross-linking factor
+                     Ase1&quot;
+                     /protein_id=&quot;CAC21482.1&quot;
+                     /translation=&quot;MQTVMMDDIQSTDSIAEKDNHSNNESNFTWKAFREQVEKHFSKIE
+                     RLHQVLGTDGDNSSLFELFTTAMNAQLHEMEQCQKKLEDDCQQRIDSIRFLVSSLKLTD
+                     DTSSLKIESPLIQCLNRLSMVEGQYMAQYDQKLSTIKEMYHKLESYCNRLGSPFVLPDF
+                     ENSFLSDVSDAFTESLRGRINEAEKEIDARLEVINSFEEEILGLWSELGVEPADVPQYE
+                     QLLESHTNRPNDVYVTQELIDQLCKQKEVFSAEKEKRSDHLKSIQSEVSNLWNKLQVSP
+                     NEQSQFGDSSNINQENISLWETELEKLHQLKKEHLPIFLEDCRQQILQLWDSLFYSEEQ
+                     RKSFTPMYEDIITEQVLTAHENYIKQLEAEVSANKSFLSLINRYASLIEGKKELEASSN
+                     DASRLTQRGRRDPGLLLREEKIRKRLSRELPKVQSLLIPEITAWEERNGRTFLFYDEPL
+                     LKICQEATQPKSLYRSASAAANRPKTATTTDSVNRTPSQRGRVAVPSTPSVRSASRAMT
+                     SPRTPLPRVKNTQNPSRSISAEPPSATSTANRRHPTANRIDINARLNSASRSRSANMIR
+                     QGANGSDSNMSSSPVSGNSNTPFNKFPNSVSRNTHFESKSPHPNYSRTPHETYSKASSK
+                     NVPLSPPKQRVVNEHALNIMSEKLQRTNLKEQTPEMDIENSSQNLPFSPMKISPIRASP
+                     VKTIPSSPSPTTNIFSAPLNNITNCTPMEDEWGEEGF&quot;
+     primer_bind     3918..3937
+                     /label=&quot;name&quot;
+                     /PCR_conditions=&quot;primer
+                     sequence:ACCATGTCGACATGCAAACAGTAATGATGGA&quot;
+                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;
+                     /ApEinfo_revcolor=&quot;#ffbaba&quot;
+     primer_bind     complement(6142..6160)
+                     /label=&quot;name&quot;
+                     /PCR_conditions=&quot;primer
+                     sequence:GGCGCGCCATTAAAAGCCTTCTTCTCCC&quot;
+                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;
+                     /ApEinfo_revcolor=&quot;#ffbaba&quot;
+ORIGIN
+        1 cgcgccagat ctgtttagct tgcctcgtcc ccgccgggtc acccggccag cgacatggag
+       61 gcccagaata ccctccttga cagtcttgac gtgcgcagct caggggcatg atgtgactgt
+      121 cgcccgtaca tttagcccat acatccccat gtataatcat ttgcatccat acattttgat
+      181 ggccgcacgg cgcgaagcaa aaattacggc tcctcgctgc agacctgcga gcagggaaac
+      241 gctcccctca cagacgcgtt gaattgtccc cacgccgcgc ccctgtagag aaatataaaa
+      301 ggttaggatt tgccactgag gttcttcttt catatacttc cttttaaaat cttgctagga
+      361 tacagttctc acatcacatc cgaacataaa caaccatggg taaggaaaag actcacgttt
+      421 cgaggccgcg attaaattcc aacatggatg ctgatttata tgggtataaa tgggctcgcg
+      481 ataatgtcgg gcaatcaggt gcgacaatct atcgattgta tgggaagccc gatgcgccag
+      541 agttgtttct gaaacatggc aaaggtagcg ttgccaatga tgttacagat gagatggtca
+      601 gactaaactg gctgacggaa tttatgcctc ttccgaccat caagcatttt atccgtactc
+      661 ctgatgatgc atggttactc accactgcga tccccggcaa aacagcattc caggtattag
+      721 aagaatatcc tgattcaggt gaaaatattg ttgatgcgct ggcagtgttc ctgcgccggt
+      781 tgcattcgat tcctgtttgt aattgtcctt ttaacagcga tcgcgtattt cgtctcgctc
+      841 aggcgcaatc acgaatgaat aacggtttgg ttgatgcgag tgattttgat gacgagcgta
+      901 atggctggcc tgttgaacaa gtctggaaag aaatgcataa gcttttgcca ttctcaccgg
+      961 attcagtcgt cactcatggt gatttctcac ttgataacct tatttttgac gaggggaaat
+     1021 taataggttg tattgatgtt ggacgagtcg gaatcgcaga ccgataccag gatcttgcca
+     1081 tcctatggaa ctgcctcggt gagttttctc cttcattaca gaaacggctt tttcaaaaat
+     1141 atggtattga taatcctgat atgaataaat tgcagtttca tttgatgctc gatgagtttt
+     1201 tctaatcagt actgacaata aaaagattct tgttttcaag aacttgtcat ttgtatagtt
+     1261 tttttatatt gtagttgttc tattttaatc aaatgttagc gtgatttata ttttttttcg
+     1321 cctcgacatc atctgcccag atgcgaagtt aagtgcgcag aaagtaatat catgcgtcaa
+     1381 tcgtatgtga atgctggtcg ctatactgct gtcgattcga tactaacgcc gccatccagt
+     1441 ttaaacgagc tcgaattcat cgatgatatc agatccacta gtggcctatg cggccgcgga
+     1501 tctgccggtc tccctatagt gagtcgtatt aatttcgata agccaggtta acctgcatta
+     1561 atgaatcggc caacgcgcgg ggagaggcgg tttgcgtatt gggcgctctt ccgcttcctc
+     1621 gctcactgac tcgctgcgct cggtcgttcg gctgcggcga gcggtatcag ctcactcaaa
+     1681 ggcggtaata cggttatcca cagaatcagg ggataacgca ggaaagaaca tgtgagcaaa
+     1741 aggccagcaa aaggccagga accgtaaaaa ggccgcgttg ctggcgtttt tccataggct
+     1801 ccgcccccct gacgagcatc acaaaaatcg acgctcaagt cagaggtggc gaaacccgac
+     1861 aggactataa agataccagg cgtttccccc tggaagctcc ctcgtgcgct ctcctgttcc
+     1921 gaccctgccg cttaccggat acctgtccgc ctttctccct tcgggaagcg tggcgctttc
+     1981 tcatagctca cgctgtaggt atctcagttc ggtgtaggtc gttcgctcca agctgggctg
+     2041 tgtgcacgaa ccccccgttc agcccgaccg ctgcgcctta tccggtaact atcgtcttga
+     2101 gtccaacccg gtaagacacg acttatcgcc actggcagca gccactggta acaggattag
+     2161 cagagcgagg tatgtaggcg gtgctacaga gttcttgaag tggtggccta actacggcta
+     2221 cactagaaga acagtatttg gtatctgcgc tctgctgaag ccagttacct tcggaaaaag
+     2281 agttggtagc tcttgatccg gcaaacaaac caccgctggt agcggtggtt tttttgtttg
+     2341 caagcagcag attacgcgca gaaaaaaagg atctcaagaa gatcctttga tcttttctac
+     2401 ggggtctgac gctcagtgga acgaaaactc acgttaaggg attttggtca tgagattatc
+     2461 aaaaaggatc ttcacctaga tccttttaaa ttaaaaatga agttttaaat caatctaaag
+     2521 tatatatgag taaacttggt ctgacagtta ccaatgctta atcagtgagg cacctatctc
+     2581 agcgatctgt ctatttcgtt catccatagt tgcctgactc cccgtcgtgt agataactac
+     2641 gatacgggag ggcttaccat ctggccccag tgctgcaatg ataccgcgag acccacgctc
+     2701 accggctcca gatttatcag caataaacca gccagccgga agggccgagc gcagaagtgg
+     2761 tcctgcaact ttatccgcct ccatccagtc tattaattgt tgccgggaag ctagagtaag
+     2821 tagttcgcca gttaatagtt tgcgcaacgt tgttgccatt gctacaggca tcgtggtgtc
+     2881 acgctcgtcg tttggtatgg cttcattcag ctccggttcc caacgatcaa ggcgagttac
+     2941 atgatccccc atgttgtgca aaaaagcggt tagctccttc ggtcctccga tcgttgtcag
+     3001 aagtaagttg gccgcagtgt tatcactcat ggttatggca gcactgcata attctcttac
+     3061 tgtcatgcca tccgtaagat gcttttctgt gactggtgag tactcaacca agtcattctg
+     3121 agaatagtgt atgcggcgac cgagttgctc ttgcccggcg tcaatacggg ataataccgc
+     3181 gccacatagc agaactttaa aagtgctcat cattggaaaa cgttcttcgg ggcgaaaact
+     3241 ctcaaggatc ttaccgctgt tgagatccag ttcgatgtaa cccactcgtg cacccaactg
+     3301 atcttcagca tcttttactt tcaccagcgt ttctgggtga gcaaaaacag gaaggcaaaa
+     3361 tgccgcaaaa aagggaataa gggcgacacg gaaatgttga atactcatac tcttcctttt
+     3421 tcaatattat tgaagcattt atcagggtta ttgtctcatg agcggataca tatttgaatg
+     3481 tatttagaaa aataaacaaa taggggttcc gcgcacattt ccccgaaaag tgccacctga
+     3541 cgtctaagaa accattatta tcatgacatt aacctataaa aataggcgta tcacgaggcc
+     3601 ctttcgtctc gcgcgtttcg gtgatgacgg tgaaaacctc tgacacatgc agctcccgga
+     3661 gacggtcaca gcttgtctgt aagcggatgc cgggagcaga caagcccgtc agggcgcgtc
+     3721 agcgggtgtt ggcgggtgtc ggggctggct taactatgcg gcatcagagc agattgtact
+     3781 gagagtgcac catatggaca tattgtcgtt agaacgcggc tacaattaat acataacctt
+     3841 atgtatcata cacatacgat ttaggtgaca ctatagaacg cggccgccag ctgaagcttc
+     3901 gtacgctgca ggtcgacatg caaacagtaa tgatggatga cattcaaagc actgattcta
+     3961 ttgctgaaaa agataatcac tctaataatg aatctaactt tacttggaaa gcgtttcgtg
+     4021 aacaagtgga aaagcatttt tctaaaattg aaaggcttca ccaagtcctt ggaacagatg
+     4081 gagacaattc atcattattt gagttgttta caacggcaat gaatgcccag cttcatgaaa
+     4141 tggaacagtg ccagaaaaaa cttgaagatg actgtcagca aagaattgat tcaatcagat
+     4201 ttttggtttc ctcattaaag ttaacggatg atacttctag tctcaaaatt gagtctcctt
+     4261 taattcagtg tttgaatcgt ttgtcaatgg tagaaggaca atatatggca cagtatgatc
+     4321 aaaagttaag tacgattaaa ggtatgtaat cgtctttaat ttagacttgt gttttaactg
+     4381 atgtatagaa atgtatcaca aattggagtc atattgtaac cgcttaggaa gtccgttcgt
+     4441 tttacctgat tttgagaatt catttttatc tgatgtatcc gatgctttta ctgaatcttt
+     4501 gagaggacgc atcaacgaag ccgaaaagga gattgatgcg agattagagg ttattaattc
+     4561 ctttgaagaa gaaattttgg gtttgtggtc tgaactcggt gttgagcccg ctgatgttcc
+     4621 acaatacgaa caattgcttg aatcccatac taatcgacca aatgatgttt atgttactca
+     4681 agaacttatc gaccaacttt gcaagcaaaa agaagttttt tccgctgaaa aagaaaagag
+     4741 aagtgatcat ttaaaaagta tacaatcaga agttagcaac ttgtggaata agcttcaagt
+     4801 ttctcccaat gaacaaagtc aatttggcga ttcatcaaac attaatcaag aaaatatttc
+     4861 attatgggaa actgaacttg aaaaacttca tcagttaaaa aaggagcatt tacccatttt
+     4921 tttagaagac tgtcgtcaac aaattcttca gctttgggat tctctgtttt attcagaaga
+     4981 acaaagaaag tcctttacac ctatgtatga agacattatt acagagcagg ttcttacggc
+     5041 ccatgaaaac tatataaagc aactagaggc cgaagtttct gctaataagt cctttttaag
+     5101 cttaattaat cgctatgcct ctttaataga aggaaagaaa gagcttgaag ctagttctaa
+     5161 tgatgcctct cgtctaacac aacggggacg ccgggaccca ggtttacttc tacgtgaaga
+     5221 gaaaatccgt aagcgacttt ctagagaact tcctaaggtt cagtcgctgc ttataccaga
+     5281 gattacagca tgggaagaaa gaaatggaag gacgttcctt ttttatgatg aaccacttct
+     5341 caagatttgc caagaggcca ctcaaccaaa atcattatat agaagtgcaa gtgctgccgc
+     5401 aaaccgcccg aaaacagcaa ctacaacgga ctctgttaat agaacacctt ctcaacgagg
+     5461 gcgtgtagct gtaccttcaa caccaagtgt taggtccgct tctcgagcta tgacgagtcc
+     5521 aaggacaccg cttcctagag taaaaaacac tcaaaatcca agtcgttcca ttagtgcaga
+     5581 accgccatca gcaaccagta ccgccaatag aagacacccc actgctaatc gaattgatat
+     5641 aaacgctaga ttaaacagtg ctagtcggtc tcgaagcgcg aacatgataa gacaaggggc
+     5701 aaatggtagt gacagcaata tgtcttcttc acccgtttct ggaaattcca ataccccttt
+     5761 taacaagttt ccaaattctg tatctcgcaa tacacatttt gaatccaagt caccgcaccc
+     5821 aaattactct cgaactcctc atgaaacgta ttcaaaggct tcatctaaga acgtcccatt
+     5881 aagtcctcca aagcagcgtg tagttaatga acacgcttta aatattatgt cggaaaaatt
+     5941 gcaaagaact aatctgaaag aacaaacacc cgagatggac attgaaaaca gctcgcagaa
+     6001 ccttcctttt tctcctatga agatatcccc cataagagca tcacccgtaa agacaattcc
+     6061 atcatcaccg tcccccacta ccaacatttt ttctgctcca ctcaacaata ttacaaattg
+     6121 tacaccgatg gaggatgaat ggggagaaga aggcttttaa tgg
+//
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../example_gallery.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Example gallery</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Example_Gibson.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Gibson Assembly from the original publication</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

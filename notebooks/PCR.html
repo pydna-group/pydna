@@ -1,0 +1,796 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>PCR &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/PCR';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Primer design" href="primer_design.html" />
+    <link rel="prev" title="Restriction and Ligation" href="Restrict_Ligate_Cloning.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../getting_started.html">Getting started</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reference/pydna.html">pydna package</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/pydna-group/pydna/blob/main/docs/notebooks/PCR.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna/edit/main/docs/notebooks/PCR.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/PCR.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>PCR</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">PCR</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modelling-pcr-with-known-primers">Modelling PCR with Known Primers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-ways-of-visualising-the-pcr-products">Other ways of visualising the PCR products</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#designing-primers-and-calculating-tm-in-pydna">Designing Primers and Calculating Tm in pydna</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-tm">Calculating Tm</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="pcr">
+<h1>PCR<a class="headerlink" href="#pcr" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p>Visit the full library documentation <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a></p>
+</div></blockquote>
+<p>This page walks you through how to perform a PCR, and design PCR primers, using <code class="docutils literal notranslate"><span class="pre">pydna</span></code>. A PCR amplifies a specific stretch of DNA defined by the primers, and it is critical to ensure primer binding specificity and appropriate primer melting temperature (tm) through careful design. <code class="docutils literal notranslate"><span class="pre">pydna</span></code> provides tools for quick modelling of PCR to check for correct PCR products, and methods for calculating tm and primer design, as performed in other popular web servcies (e.g Primer3Plus).</p>
+<section id="modelling-pcr-with-known-primers">
+<h2>Modelling PCR with Known Primers<a class="headerlink" href="#modelling-pcr-with-known-primers" title="Link to this heading">#</a></h2>
+<p>To perform PCR, <code class="docutils literal notranslate"><span class="pre">pydna</span></code> provides the <code class="docutils literal notranslate"><span class="pre">anneal</span></code> class and the <code class="docutils literal notranslate"><span class="pre">pcr</span></code> method to quickly generate expected primer products, on a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object. The <code class="docutils literal notranslate"><span class="pre">pcr</span></code> method needs only the forward and reverse primers, and the sequence. The primers must be passed from the 5’ to the 3’ end, following biological convention. More information on <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> and importing DNA sequences can be found in the other guide pages.</p>
+<p>The following example uses a 300+ bp custom sample circular DNA, containing an example gene that we would like to clone. 18 bp forward and reverse primers have been provided.</p>
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/PCR.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="c1"># Install pydna (only when running on Colab)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span><span class="p">[</span><span class="n">clipboard</span><span class="p">,</span><span class="n">download</span><span class="p">,</span><span class="n">express</span><span class="p">,</span><span class="n">gel</span><span class="p">]</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/sample_seq.gb&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplify</span><span class="w"> </span><span class="kn">import</span> <span class="n">pcr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
+
+<span class="c1">#Importing GenBank file containing sample sequence </span>
+<span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;./sample_seq.gb&quot;</span>
+<span class="n">record</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1">#Defining forward and reverse primers</span>
+<span class="n">fwd_primer</span> <span class="o">=</span> <span class="s2">&quot;ATTCCTGCAGAGTACATC&quot;</span>
+<span class="n">rvs_primer</span> <span class="o">=</span> <span class="s2">&quot;ACCATCCGAAGATATCTT&quot;</span>
+
+<span class="c1">#Performing PCR</span>
+<span class="n">pcr_product</span> <span class="o">=</span> <span class="n">pcr</span><span class="p">(</span><span class="n">fwd_primer</span><span class="p">,</span> <span class="n">rvs_primer</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span>
+
+<span class="c1">#Printing results</span>
+<span class="n">pcr_product</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;gb&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;LOCUS       45bp_PCR_prod             45 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  pcr_product_description_description.\nACCESSION   45bp\nVERSION     45bp\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\n     gene            1..45\n                     /label=&quot;example_gene&quot;\n     primer_bind     1..18\n                     /label=&quot;name&quot;\n                     /PCR_conditions=&quot;primer sequence:ATTCCTGCAGAGTACATC&quot;\n                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;\n                     /ApEinfo_revcolor=&quot;#ffbaba&quot;\n     primer_bind     complement(28..45)\n                     /label=&quot;name&quot;\n                     /PCR_conditions=&quot;primer sequence:ACCATCCGAAGATATCTT&quot;\n                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;\n                     /ApEinfo_revcolor=&quot;#ffbaba&quot;\nORIGIN\n        1 attcctgcag agtacatcaa ttctatgaag atatcttcgg atggt\n//&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">pcr</span></code> method then returns a <code class="docutils literal notranslate"><span class="pre">Amplicon</span></code> class object (to model a PCR product), a subclass of <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> with some extra methods (e.g <code class="docutils literal notranslate"><span class="pre">.figure</span></code>. See “Other ways of visualising the PCR products” section below). All the features inside the PCR product has been retained. Note how the example gene has been retained as a feature in <code class="docutils literal notranslate"><span class="pre">pcr_product</span></code>. In addition, two new features have been added to the record to indicate the forward and reverse primer binding regions.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pydna</span></code> also allows modelling for PCR with extra bases on the 5’ end of primers. This functionality is useful for modelling molecular cloning with multiple steps, where you might want to add different restriction sites to PCR products and ensure that the right sequences have been replicated.</p>
+<p>For instance, to make sure that I can add a HindIII restriction site (AAGCTT) at the end of my <code class="docutils literal notranslate"><span class="pre">example_gene</span></code> without accidental hybridisation with other parts of the circular sequence, I can perform PCR in the <code class="docutils literal notranslate"><span class="pre">pydna</span></code> package like so.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fwd_primer</span> <span class="o">=</span> <span class="s2">&quot;AAGCTTATTCCTGCAGAGTACATC&quot;</span>
+<span class="n">rvs_primer</span> <span class="o">=</span> <span class="s2">&quot;AAGCTTACCATCCGAAGATATCTT&quot;</span>
+
+<span class="c1">#Performing PCR</span>
+<span class="n">pcr_product_HindIII</span> <span class="o">=</span> <span class="n">pcr</span><span class="p">(</span><span class="n">fwd_primer</span><span class="p">,</span> <span class="n">rvs_primer</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span>
+
+<span class="c1">#Printing results</span>
+<span class="n">pcr_product_HindIII</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;gb&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;LOCUS       57bp_PCR_prod             57 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  pcr_product_description_description.\nACCESSION   57bp\nVERSION     57bp\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\n     primer_bind     4..24\n                     /label=&quot;name&quot;\n                     /PCR_conditions=&quot;primer sequence:AAGCTTATTCCTGCAGAGTACATC&quot;\n                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;\n                     /ApEinfo_revcolor=&quot;#ffbaba&quot;\n     gene            7..51\n                     /label=&quot;example_gene&quot;\n     primer_bind     complement(34..51)\n                     /label=&quot;name&quot;\n                     /PCR_conditions=&quot;primer sequence:AAGCTTACCATCCGAAGATATCTT&quot;\n                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;\n                     /ApEinfo_revcolor=&quot;#ffbaba&quot;\nORIGIN\n        1 aagcttattc ctgcagagta catcaattct atgaagatat cttcggatgg taagctt\n//&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>For more information on restriction digests and ligation, please refer to the Restriction and Ligation page.</p>
+</section>
+<section id="other-ways-of-visualising-the-pcr-products">
+<h2>Other ways of visualising the PCR products<a class="headerlink" href="#other-ways-of-visualising-the-pcr-products" title="Link to this heading">#</a></h2>
+<p>In addition to the normal <code class="docutils literal notranslate"><span class="pre">print</span></code> function and the <code class="docutils literal notranslate"><span class="pre">.format()</span></code> method (More information can be found in Dseq and Importing_Seqs pages, respectively), pcr products can also be visualized in other ways.</p>
+<p>We can check the sequence of the pcr products alone using the <code class="docutils literal notranslate"><span class="pre">.seq</span></code> attribute on a PCR product:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">pcr_product</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ATTCCTGCAGAGTACATCAATTCTATGAAGATATCTTCGGATGGT
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can also visualize the pcr products as a figure, using the <code class="docutils literal notranslate"><span class="pre">.figure</span></code> method.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">pcr_product</span><span class="o">.</span><span class="n">figure</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5ATTCCTGCAGAGTACATC...AAGATATCTTCGGATGGT3
+                      ||||||||||||||||||
+                     3TTCTATAGAAGCCTACCA5
+5ATTCCTGCAGAGTACATC3
+ ||||||||||||||||||
+3TAAGGACGTCTCATGTAG...TTCTATAGAAGCCTACCA5
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="designing-primers-and-calculating-tm-in-pydna">
+<h1>Designing Primers and Calculating Tm in pydna<a class="headerlink" href="#designing-primers-and-calculating-tm-in-pydna" title="Link to this heading">#</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">pydna</span></code> also provides the <code class="docutils literal notranslate"><span class="pre">primer_design</span></code> method to design primer sequences based on the desired pcr product and the template sequence’s melting temperature (Tm). The <code class="docutils literal notranslate"><span class="pre">primer_design</span></code> method can be imported from the <code class="docutils literal notranslate"><span class="pre">pydna.design</span></code> module, and needs the user to supply the PCR template sequence (as a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object) and the Tm. The template sequence should be given as the first parameter, and the Tm give through the <code class="docutils literal notranslate"><span class="pre">target_tm=</span></code> argument, as demonstrated below. If you have no specific Tm in mind, the method uses the default Tm of 55 degrees celcius.</p>
+<p>Note that in the following example below, I used zero-based indexing on the <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> to find the sequence of my example gene, of which I would like to clone via PCR. Please refer to the <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> page for more information on how to index a sequence.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.design</span><span class="w"> </span><span class="kn">import</span> <span class="n">primer_design</span>
+
+<span class="c1">#Designing the primers</span>
+<span class="n">primers</span> <span class="o">=</span> <span class="n">primer_design</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">51</span><span class="p">],</span> <span class="n">target_tm</span><span class="o">=</span><span class="mf">50.0</span><span class="p">)</span>
+
+<span class="c1">#Printing the output</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">primers</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;gb&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LOCUS       example_gene              45 bp    DNA     linear   UNK 01-JAN-1980
+DEFINITION  pcr_product_f45 example_gene_r45 example_gene.
+ACCESSION   example_gene
+VERSION     example_gene
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     gene            1..45
+                     /label=&quot;example_gene&quot;
+     primer_bind     1..16
+                     /label=&quot;f45&quot;
+                     /PCR_conditions=&quot;primer sequence:ATTCCTGCAGAGTACA&quot;
+                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;
+                     /ApEinfo_revcolor=&quot;#ffbaba&quot;
+     primer_bind     complement(29..45)
+                     /label=&quot;r45&quot;
+                     /PCR_conditions=&quot;primer sequence:ACCATCCGAAGATATCT&quot;
+                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;
+                     /ApEinfo_revcolor=&quot;#ffbaba&quot;
+ORIGIN
+        1 attcctgcag agtacatcaa ttctatgaag atatcttcgg atggt
+//
+</pre></div>
+</div>
+</div>
+</div>
+<p>The formula for primer design in <code class="docutils literal notranslate"><span class="pre">pydna</span></code> is based on the Tm formula from Rychlik et al (1990), found <a class="reference external" href="http://www.ncbi.nlm.nih.gov/pubmed/2243783">here</a>. Additional information on calculating Tm can be found in the “Calculating Tm” section below.</p>
+<p>The forward and reverse primer sequences are printed in the features list of the <code class="docutils literal notranslate"><span class="pre">Amplicon</span></code> object. Note how the feature representing the example gene is retained, as appropriate.</p>
+<p>If you already have a forward / reverse primer, <code class="docutils literal notranslate"><span class="pre">primer_design</span></code> also allows this information to be taken as arguments. <code class="docutils literal notranslate"><span class="pre">fp</span></code> specifies the forward primer, <code class="docutils literal notranslate"><span class="pre">rp</span></code> specifies the reverse primers. <code class="docutils literal notranslate"><span class="pre">fp</span></code> and <code class="docutils literal notranslate"><span class="pre">rp</span></code> can be should be given as <code class="docutils literal notranslate"><span class="pre">Primer</span></code> class objects, which should be imported from <code class="docutils literal notranslate"><span class="pre">pydna</span></code> too.</p>
+<p>For instance, if I already have a forward primer containing an EcoRI restriction site, and I aim to to generate a reverse primer of a similar Tm, I can apply the following code:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span>
+
+<span class="n">forward_primer</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="s2">&quot;GAATTCATTCCTGCAGAGTACATCA&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;forward_primer&quot;</span><span class="p">)</span>
+
+<span class="n">primers_sixfive</span> <span class="o">=</span> <span class="n">primer_design</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">51</span><span class="p">],</span> <span class="n">fp</span> <span class="o">=</span> <span class="n">forward_primer</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">primers_sixfive</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;gb&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LOCUS       example_gene              51 bp    DNA     linear   UNK 01-JAN-1980
+DEFINITION  pcr_product_forward_primer example_gene_r45 example_gene.
+ACCESSION   example_gene
+VERSION     example_gene
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     gene            7..51
+                     /label=&quot;example_gene&quot;
+     primer_bind     7..25
+                     /label=&quot;f45&quot;
+                     /PCR_conditions=&quot;primer sequence:GAATTCATTCCTGCAGAGTACATCA&quot;
+                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;
+                     /ApEinfo_revcolor=&quot;#ffbaba&quot;
+     primer_bind     complement(32..51)
+                     /label=&quot;r45&quot;
+                     /PCR_conditions=&quot;primer sequence:ACCATCCGAAGATATCTTCA&quot;
+                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;
+                     /ApEinfo_revcolor=&quot;#ffbaba&quot;
+ORIGIN
+        1 gaattcattc ctgcagagta catcaattct atgaagatat cttcggatgg t
+//
+</pre></div>
+</div>
+</div>
+</div>
+<section id="calculating-tm">
+<h2>Calculating Tm<a class="headerlink" href="#calculating-tm" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">pydna</span></code> comes with some functions to calculate Tms. The default function <code class="docutils literal notranslate"><span class="pre">tm_default</span></code> used is the previously mentioned one by Rychlik et al (1990), which takes a string as input. Another function derive from the Tm calculation adapted for primers using polymerases with a DNA binding domain (e.g Phusion polymerase). The default values for Tm calculation, including primer concentration, buffer strengths, and more, can also be modified through arguments in the <code class="docutils literal notranslate"><span class="pre">tm_default</span></code> method. Please refer to the <code class="docutils literal notranslate"><span class="pre">pydna.tm</span></code> module docstring for more information. An example is provided with a pair of primers; the temperature is given in degrees celcius.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.tm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tm_default</span>
+
+<span class="c1"># Example Tm calculation for a pair of primers</span>
+<span class="n">primer_f</span> <span class="o">=</span> <span class="s2">&quot;ATTCCTGCAGAGTACATCA&quot;</span>
+<span class="n">primer_r</span> <span class="o">=</span> <span class="s2">&quot;ACCATCCGAAGATATCTTCA&quot;</span>
+<span class="n">tm_f</span> <span class="o">=</span> <span class="n">tm_default</span><span class="p">(</span><span class="n">primer_f</span><span class="p">)</span>
+<span class="n">tm_r</span> <span class="o">=</span> <span class="n">tm_default</span><span class="p">(</span><span class="n">primer_r</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">tm_f</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tm_r</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>55.901005046706075
+55.841913263215304
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Restrict_Ligate_Cloning.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Restriction and Ligation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="primer_design.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Primer design</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">PCR</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modelling-pcr-with-known-primers">Modelling PCR with Known Primers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-ways-of-visualising-the-pcr-products">Other ways of visualising the PCR products</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#designing-primers-and-calculating-tm-in-pydna">Designing Primers and Calculating Tm in pydna</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-tm">Calculating Tm</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

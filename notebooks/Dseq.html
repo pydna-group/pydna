@@ -1,0 +1,1030 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Representing sequences in pydna &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/Dseq';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Working with Features using the Dseqrecord class" href="Dseq_Features.html" />
+    <link rel="prev" title="Getting started" href="../getting_started.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../getting_started.html">Getting started</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reference/pydna.html">pydna package</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/pydna-group/pydna/blob/main/docs/notebooks/Dseq.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna/edit/main/docs/notebooks/Dseq.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/Dseq.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Representing sequences in pydna</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dseq-class">Dseq Class</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getitem-repr-and-str-methods"><strong>getitem</strong>, <strong>repr</strong>, and  <strong>str</strong> methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#slicing-sequences-getitem">Slicing sequences (<code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#slicing-circular-sequences">Slicing circular sequences</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#printing-sequences-to-the-console-repr-and-str">Printing sequences to the console: <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> and <code class="docutils literal notranslate"><span class="pre">__str__</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#edge-cases">Edge cases</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="representing-sequences-in-pydna">
+<h1>Representing sequences in pydna<a class="headerlink" href="#representing-sequences-in-pydna" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p>Visit the full library documentation <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a></p>
+</div></blockquote>
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Dseq.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="c1"># Install pydna (only when running on Colab)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span><span class="p">[</span><span class="n">clipboard</span><span class="p">,</span><span class="n">download</span><span class="p">,</span><span class="n">express</span><span class="p">,</span><span class="n">gel</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Pydna contains classes to represent double stranded DNA sequences that can:</p>
+<ul class="simple">
+<li><p>Be linear</p></li>
+<li><p>Be circular</p></li>
+<li><p>Contain overhangs (sticky ends).</p></li>
+</ul>
+<p>These sequences can be used to simulate molecular biology methods such as cloning and PCR. The main classes used to represent sequences are <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> and <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Dseq</span></code> represents the sequence only. Think of it as a FASTA file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> can contain sequence features and other info such as publication, authors, etc. Think of it as a Genbank file.</p></li>
+</ul>
+<blockquote>
+<div><p>NOTE: The <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> class is a subclass of biopython’s <code class="docutils literal notranslate"><span class="pre">Seq</span></code>, whose documentation can be found <a class="reference external" href="https://biopython.org/wiki/Seq">here</a>. <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> is a subclass of biopython’s <code class="docutils literal notranslate"><span class="pre">SeqRecord</span></code>, whose documentation can be found <a class="reference external" href="https://biopython.org/wiki/SeqRecord">here</a>.</p>
+</div></blockquote>
+<section id="dseq-class">
+<h2>Dseq Class<a class="headerlink" href="#dseq-class" title="Link to this heading">#</a></h2>
+<p>We can create a <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> object in different ways.</p>
+<p>For a linear sequence without overhangs, we create a <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> object passing a string with the sequence. For example:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span>
+<span class="n">my_seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;aatat&quot;</span><span class="p">)</span>
+<span class="n">my_seq</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-5)
+aatat
+ttata
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the console representation above, there are three lines:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Dseq(-5)</span></code> indicates that the sequence is linear and has 5 basepairs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">aatat</span></code>, the top / sense / watson strand, referred from now on as <strong>watson</strong> strand..</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ttata</span></code>, the bottom / anti-sense / crick strand, referred from now on as <strong>crick</strong> strand.</p></li>
+</ol>
+<p>Now, let’s create a circular sequence:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;aatat&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">my_seq</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(o5)
+aatat
+ttata
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p>Note how <code class="docutils literal notranslate"><span class="pre">o5</span></code> indicates that the sequence is circular and has 5 basepairs.</p>
+</div></blockquote>
+<p>One way to represent a linear sequence with overhangs is to instantiate <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> with the following arguments:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">watson</span></code> strand as a string in the 5’-3’ direction.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">crick</span></code> strand as a string in the 5’-3’ direction.</p></li>
+<li><p>The 5’ overhang <code class="docutils literal notranslate"><span class="pre">ovhg</span></code> (overhang), which can be positive or negative, and represents the number of basepairs that the <code class="docutils literal notranslate"><span class="pre">watson</span></code> strand extends beyond the <code class="docutils literal notranslate"><span class="pre">crick</span></code> strand.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;actag&quot;</span><span class="p">,</span> <span class="s2">&quot;ctag&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-5)
+actag
+ gatc
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p>Note how the bottom strand is passed in the 5’-3’ direction, but it is represented in the 3’-5’ direction in the console output.</p>
+</div></blockquote>
+<p>If you omit the <code class="docutils literal notranslate"><span class="pre">ovhg</span></code> argument, pydna will try to find the value that makes the <code class="docutils literal notranslate"><span class="pre">watson</span></code> and <code class="docutils literal notranslate"><span class="pre">crick</span></code> strands complementary.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;actag&quot;</span><span class="p">,</span> <span class="s2">&quot;ctag&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-5)
+actag
+ gatc
+</pre></div>
+</div>
+</div>
+</div>
+<p>The best way to get a feeling for the meaning of <code class="docutils literal notranslate"><span class="pre">ovhg</span></code> is to visualise the possible scenarios as such:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dsDNA</span>       <span class="n">overhang</span>
+
+  <span class="n">nnn</span><span class="o">...</span>    <span class="mi">2</span>
+<span class="n">nnnnn</span><span class="o">...</span>
+
+  <span class="n">nnnn</span><span class="o">...</span>   <span class="mi">1</span>
+<span class="n">nnnnn</span><span class="o">...</span>
+
+<span class="n">nnnnn</span><span class="o">...</span>    <span class="mi">0</span>
+<span class="n">nnnnn</span><span class="o">...</span>
+
+<span class="n">nnnnn</span><span class="o">...</span>   <span class="o">-</span><span class="mi">1</span>
+  <span class="n">nnnn</span><span class="o">...</span>
+
+<span class="n">nnnnn</span><span class="o">...</span>   <span class="o">-</span><span class="mi">2</span>
+  <span class="n">nnn</span><span class="o">...</span>
+</pre></div>
+</div>
+<p>Of note, the DNA sequence can be passed in both lower case and upper case, and are not restricted to the conventional ATCG nucleotides (E.g ), The class supports the IUPAC ambiguous nucleotide code.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;Actag&quot;</span><span class="p">,</span> <span class="s2">&quot;Ctag&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-5)
+Actag
+ gatC
+</pre></div>
+</div>
+</div>
+</div>
+<p>Another way to pass the overhangs is to use the <code class="docutils literal notranslate"><span class="pre">from_full_sequence_and_overhangs</span></code> classmethod, which only needs the <code class="docutils literal notranslate"><span class="pre">watson</span></code>/sense strand. This is useful you can only store the entire sequence (e.g. in a FASTA file), or if you want to specify overhangs on both sides of the double stranded DNA when you create the object.</p>
+<p>Both the <code class="docutils literal notranslate"><span class="pre">watson_ovhg</span></code> and <code class="docutils literal notranslate"><span class="pre">crick_ovhg</span></code> can be passed following the same rules as above. Specifically, the <code class="docutils literal notranslate"><span class="pre">crick_ovhg</span></code> argument is identical to the conventional <code class="docutils literal notranslate"><span class="pre">ovhg</span></code> argument. The <code class="docutils literal notranslate"><span class="pre">watson_ovhg</span></code> argument is the <code class="docutils literal notranslate"><span class="pre">ovhg</span></code> argument applied to the reverse complementary sequence.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">from_full_sequence_and_overhangs</span><span class="p">(</span><span class="s2">&quot;aaattaaa&quot;</span><span class="p">,</span> <span class="n">crick_ovhg</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span> <span class="n">watson_ovhg</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">my_seq</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-8)
+aaatta
+   aattt
+</pre></div>
+</div>
+</div>
+</div>
+<p>A list of possible scenarios, applying positive and negative <code class="docutils literal notranslate"><span class="pre">crick_ovhg</span></code> and <code class="docutils literal notranslate"><span class="pre">watson_ovhg</span></code> to a <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> object are visualised in the output of the code below:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">crick_ovhg</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">watson_ovhg</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;watson_ovhg is &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">watson_ovhg</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, crick_ovhg is &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">crick_ovhg</span><span class="p">))</span>
+        <span class="n">my_seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">from_full_sequence_and_overhangs</span><span class="p">(</span><span class="s2">&quot;aaattaaa&quot;</span><span class="p">,</span> <span class="n">crick_ovhg</span><span class="p">,</span> <span class="n">watson_ovhg</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">my_seq</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>watson_ovhg is -3, crick_ovhg is -2
+Dseq(-8)
+aaatt
+  taattt
+
+watson_ovhg is 3, crick_ovhg is -2
+Dseq(-8)
+aaattaaa
+  taa
+
+watson_ovhg is -3, crick_ovhg is 2
+Dseq(-8)
+  att
+tttaattt
+
+watson_ovhg is 3, crick_ovhg is 2
+Dseq(-8)
+  attaaa
+tttaa
+</pre></div>
+</div>
+</div>
+</div>
+<p>The drawing below can help visualize the meaning of the overhangs.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span><span class="o">--</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">--</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">--</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">--</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">--</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">--</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">--</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="mi">5</span><span class="s1">&#39;( a)--( a)--( a)--(t)--(t)--(a)--( a)--( a)3&#39;</span>
+<span class="mi">3</span><span class="s1">&#39;( a)--( a)--( a)--(t)--(t)--(a)--( a)--( a)5&#39;</span>
+
+<span class="mi">5</span><span class="s1">&#39;( a)--( a)--( a)--(t)--(t)--(a)--(  )--(  )3&#39;</span>
+<span class="mi">3</span><span class="s1">&#39;(  )--(  )--(  )--(t)--(t)--(a)--( a)--( a)5&#39;</span>
+</pre></div>
+</div>
+<p>If you would like to check the overhangs for a <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> object, it can be done by calling the methods <code class="docutils literal notranslate"><span class="pre">five_prime_end</span></code> and <code class="docutils literal notranslate"><span class="pre">three_prime_end</span></code> to show the 5’ and 3’ overhangs, respectively. An example of a <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> object, and examples showing what the print-out of the methods looks like are demonstrated here:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;aatat&quot;</span><span class="p">,</span> <span class="s2">&quot;ttata&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_seq</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_seq</span><span class="o">.</span><span class="n">five_prime_end</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_seq</span><span class="o">.</span><span class="n">three_prime_end</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-7)
+aatat
+  atatt
+(&quot;5&#39;&quot;, &#39;aa&#39;)
+(&quot;5&#39;&quot;, &#39;tt&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>If you now want to join your sequence’s sticky ends to make a circular sequence (i.e Plasmid), you can use the <code class="docutils literal notranslate"><span class="pre">looped</span></code> method. The sticky ends must be compatible to do so.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;aatat&quot;</span><span class="p">,</span> <span class="s2">&quot;ttata&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">my_seq</span><span class="o">.</span><span class="n">looped</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(o5)
+aatat
+ttata
+</pre></div>
+</div>
+</div>
+</div>
+<p>If you want to change the circular origin of the sequence/plasmid, this can be easily done using the <code class="docutils literal notranslate"><span class="pre">shifted</span></code> method. This can be done by providing the number of bases between the original origin with the new origin:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;aatat&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">my_seq</span><span class="o">.</span><span class="n">shifted</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(o5)
+tataa
+atatt
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="getitem-repr-and-str-methods">
+<h2><strong>getitem</strong>, <strong>repr</strong>, and  <strong>str</strong> methods<a class="headerlink" href="#getitem-repr-and-str-methods" title="Link to this heading">#</a></h2>
+<section id="slicing-sequences-getitem">
+<h3>Slicing sequences (<code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>)<a class="headerlink" href="#slicing-sequences-getitem" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> is the method that is called when you use the square brackets <code class="docutils literal notranslate"><span class="pre">[]</span></code> after a python object. Below is an example of the builtin python <code class="docutils literal notranslate"><span class="pre">list</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;using square brackets:&#39;</span><span class="p">,</span> <span class="n">my_list</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;is the same as using __getitem__:&#39;</span><span class="p">,</span> <span class="n">my_list</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>using square brackets: [2, 3]
+is the same as using __getitem__: [2, 3]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> method is modified in pydna to deal with <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> objects and returns a slice of the <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> object, defined by the a start value and a stop value, similarly to string indexing. In other words, <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> indexes <code class="docutils literal notranslate"><span class="pre">Dseq</span></code>. Note that ‘<strong>getitem</strong>’ (and, consequently, <code class="docutils literal notranslate"><span class="pre">[]</span></code>) uses zero-based indexing.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;aatataa&quot;</span><span class="p">)</span>
+<span class="n">my_seq</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-3)
+tat
+ata
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> respects overhangs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">from_full_sequence_and_overhangs</span><span class="p">(</span><span class="s2">&quot;aatataa&quot;</span><span class="p">,</span> <span class="n">crick_ovhg</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">watson_ovhg</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">my_seq</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-5)
+tata
+atatt
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that index zero corresponds to the leftmost base of the sequence, which might not necessarily be on the <code class="docutils literal notranslate"><span class="pre">watson</span></code> strand. Let’s create a sequence that has an overhang on the left side.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sequence_with_overhangs</span> <span class="o">=</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">from_full_sequence_and_overhangs</span><span class="p">(</span><span class="s2">&quot;aatacgttcc&quot;</span><span class="p">,</span> <span class="n">crick_ovhg</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">watson_ovhg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">sequence_with_overhangs</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-10)
+   acgttcc
+ttatgcaagg
+</pre></div>
+</div>
+</div>
+</div>
+<p>When we index starting from <code class="docutils literal notranslate"><span class="pre">2</span></code>, we don’t start counting on the watson, but on the crick strand since it is the leftmost one.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sequence_with_overhangs</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-8)
+ acgttcc
+atgcaagg
+</pre></div>
+</div>
+</div>
+</div>
+<section id="slicing-circular-sequences">
+<h4>Slicing circular sequences<a class="headerlink" href="#slicing-circular-sequences" title="Link to this heading">#</a></h4>
+<p>When slicing circular <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> objects we get linear sequences.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circular_seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;aatctaa&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">circular_seq</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-4)
+atct
+taga
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can slice circular sequences across the origin (where index is zero) if the first index is bigger than the second index. This is demonstrated in the example below:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circular_seq</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-4)
+aaaa
+tttt
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="printing-sequences-to-the-console-repr-and-str">
+<h3>Printing sequences to the console: <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> and <code class="docutils literal notranslate"><span class="pre">__str__</span></code><a class="headerlink" href="#printing-sequences-to-the-console-repr-and-str" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">__repr__</span></code> and <code class="docutils literal notranslate"><span class="pre">__str__</span></code> are methods present in all python classes that return a string representation of an object. <code class="docutils literal notranslate"><span class="pre">__str__</span></code> is called by the <code class="docutils literal notranslate"><span class="pre">print</span></code> function, and <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> is used by the console or notebook output when the object is not assigned to a variable. Below is an example with a <code class="docutils literal notranslate"><span class="pre">date</span></code> object:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+
+<span class="n">my_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2023</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt; print statement:&#39;</span><span class="p">,</span> <span class="n">my_date</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt; repr:&#39;</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">my_date</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt; repr from class method:&#39;</span><span class="p">,</span> <span class="n">my_date</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt; console output:&#39;</span><span class="p">)</span>
+<span class="n">my_date</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt; print statement: 2023-08-15
+&gt; repr: datetime.date(2023, 8, 15)
+&gt; repr from class method: datetime.date(2023, 8, 15)
+
+&gt; console output:
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>datetime.date(2023, 8, 15)
+</pre></div>
+</div>
+</div>
+</div>
+<p>In a similar way, <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> and <code class="docutils literal notranslate"><span class="pre">__str__</span></code> methods are used by pydna to represent sequences as strings for different purposes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">__repr__</span></code> is used to make a figure-like representation that shows both strands and the overhangs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__str__</span></code> is used to return the entire sequence as a string of characters (from the left-most to the right-most base of both strands), the way we would store it in a FASTA file.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">from_full_sequence_and_overhangs</span><span class="p">(</span><span class="s2">&quot;aaattaaa&quot;</span><span class="p">,</span> <span class="n">crick_ovhg</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span> <span class="n">watson_ovhg</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt; figure-like representation:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">my_seq</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt; string representation:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">my_seq</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt; figure-like representation:
+ Dseq(-8)
+aaatta
+   aattt
+
+&gt; string representation:
+ aaattaaa
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that on the string representation, the bases correspond to the entire sequence provided, even when they are only present on either the <code class="docutils literal notranslate"><span class="pre">watson</span></code> or <code class="docutils literal notranslate"><span class="pre">crick</span></code> strand. In the example above, the last two <code class="docutils literal notranslate"><span class="pre">aa</span></code> bases are missing from the <code class="docutils literal notranslate"><span class="pre">watson</span></code> strand,  and that only the <code class="docutils literal notranslate"><span class="pre">crick</span></code> strand has them.</p>
+</section>
+</section>
+<section id="edge-cases">
+<h2>Edge cases<a class="headerlink" href="#edge-cases" title="Link to this heading">#</a></h2>
+<p>You can create arbitrary double-stranded sequences that are not complementary if you specify both strands and an overhang, but you won’t be able to use them for molecular biology simulations. For example:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;xxxx&quot;</span><span class="p">,</span> <span class="s2">&quot;atat&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-6)
+  xxxx
+tata
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../getting_started.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Getting started</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Dseq_Features.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Working with Features using the Dseqrecord class</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dseq-class">Dseq Class</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getitem-repr-and-str-methods"><strong>getitem</strong>, <strong>repr</strong>, and  <strong>str</strong> methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#slicing-sequences-getitem">Slicing sequences (<code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#slicing-circular-sequences">Slicing circular sequences</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#printing-sequences-to-the-console-repr-and-str">Printing sequences to the console: <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> and <code class="docutils literal notranslate"><span class="pre">__str__</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#edge-cases">Edge cases</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

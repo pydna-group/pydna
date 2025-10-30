@@ -1,80 +1,328 @@
 
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydna.dseqrecord &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a051be83" />
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pydna.dseqrecord &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-      <script src="../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=d848064a"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/js/theme.js"></script>
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydna/dseqrecord';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            pydna
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Pydna</a></li>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../example_gallery.html">Example gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../getting_started.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../reference/pydna.html">pydna package</a></li>
 </ul>
 
-        </div>
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
       </div>
-    </nav>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">pydna</a>
-      </nav>
+<div class="sbt-scroll-pixel-helper"></div>
 
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-          <li class="breadcrumb-item"><a href="../pydna.html">pydna</a></li>
-      <li class="breadcrumb-item active">pydna.dseqrecord</li>
-      <li class="wy-breadcrumbs-aside">
-      </li>
-  </ul>
-  <hr/>
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <h1>Source code for pydna.dseqrecord</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
@@ -113,6 +361,11 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_time</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SequenceCutSource</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Source</span>
 
 
 <span class="c1"># import logging as _logging</span>
@@ -129,7 +382,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Dseqrecord</span><span class="p">(</span><span class="n">_SeqRecord</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Dseqrecord is a double stranded version of the Biopython SeqRecord [#]_ class.</span>
 <span class="sd">    The Dseqrecord object holds a Dseq object describing the sequence.</span>
@@ -208,6 +461,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">seq</span><span class="p">:</span> <span class="n">_Dseq</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Source&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -215,6 +469,7 @@
         <span class="o">*</span><span class="n">args</span><span class="p">,</span>
         <span class="n">circular</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">n</span><span class="o">=</span><span class="mf">5e-14</span><span class="p">,</span>  <span class="c1"># mol ( = 0.05 pmol)</span>
+        <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1">#        _module_logger.info(&quot;### Dseqrecord initialized ###&quot;)</span>
@@ -282,9 +537,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">map_target</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>  <span class="c1"># amount, set to 5E-14 which is 5 pmols</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">:</span> <span class="s2">&quot;DNA&quot;</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
 
 <div class="viewcode-block" id="Dseqrecord.from_string">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.from_string">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.from_string">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_string</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
@@ -320,7 +576,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.from_SeqRecord">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.from_SeqRecord">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.from_SeqRecord">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_SeqRecord</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
@@ -341,6 +597,7 @@
         <span class="n">obj</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">features</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">map_target</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">circular</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">circular</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;topology&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;circular&quot;</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">_Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span>
@@ -356,7 +613,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">circular</span>
 
 <div class="viewcode-block" id="Dseqrecord.m">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.m">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.m">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">m</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;This method returns the mass of the DNA molecule in grams. This is</span>
 <span class="sd">        calculated as the product between the molecular weight of the Dseq object</span>
@@ -365,7 +622,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.extract_feature">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.extract_feature">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.extract_feature">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts a feature and creates a new Dseqrecord object.</span>
 
@@ -392,7 +649,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.add_feature">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.add_feature">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.add_feature">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_feature</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">type_</span><span class="o">=</span><span class="s2">&quot;misc&quot;</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
@@ -443,7 +700,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.seguid">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.seguid">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.seguid">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">seguid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Url safe SEGUID for the sequence.</span>
 
@@ -464,7 +721,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.looped">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.looped">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.looped">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">looped</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Circular version of the Dseqrecord object.</span>
@@ -519,7 +776,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.tolinear">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.tolinear">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.tolinear">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">tolinear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a linear, blunt copy of a circular Dseqrecord object. The</span>
@@ -559,7 +816,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.terminal_transferase">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.terminal_transferase">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.terminal_transferase">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">terminal_transferase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nucleotides</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="n">newseq</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -570,7 +827,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.format">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.format">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.format">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="s2">&quot;gb&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the sequence as a string using a format supported by Biopython</span>
 <span class="sd">        SeqIO [#]_. Default is &quot;gb&quot; which is short for Genbank.</span>
@@ -614,7 +871,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.write">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.write">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.write">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="s2">&quot;gb&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Writes the Dseqrecord to a file using the format f, which must</span>
 <span class="sd">        be a format supported by Biopython SeqIO for writing [#]_. Default</span>
@@ -736,7 +993,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.find">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.find">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.find">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="c1"># TODO allow strings, seqs, seqrecords or Dseqrecords</span>
         <span class="c1"># TODO check for linearity of other, raise exception if not</span>
@@ -770,7 +1027,7 @@
         <span class="k">return</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="Dseqrecord.find_aminoacids">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.find_aminoacids">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.find_aminoacids">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">find_aminoacids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
@@ -823,7 +1080,7 @@
     <span class="n">find_aa</span> <span class="o">=</span> <span class="n">find_aminoacids</span>
 
 <div class="viewcode-block" id="Dseqrecord.map_trace_files">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.map_trace_files">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.map_trace_files">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">map_trace_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pth</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>  <span class="c1"># TODO allow path-like objects</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
 
@@ -997,7 +1254,11 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">seq</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">):</span>
+            <span class="n">this_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">other_dict</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">this_dict</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span>
+            <span class="k">del</span> <span class="n">other_dict</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">seq</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">this_dict</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">other_dict</span><span class="p">):</span>
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">pass</span>
@@ -1012,7 +1273,7 @@
         <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">())))))</span>
 
 <div class="viewcode-block" id="Dseqrecord.linearize">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.linearize">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.linearize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">linearize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">enzymes</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Similar to `:func:cut`.</span>
 
@@ -1033,49 +1294,49 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.no_cutters">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.no_cutters">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.no_cutters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">no_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">no_cutters</span><span class="p">(</span><span class="n">batch</span><span class="o">=</span><span class="n">batch</span> <span class="ow">or</span> <span class="n">CommOnly</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.unique_cutters">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.unique_cutters">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.unique_cutters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">unique_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">unique_cutters</span><span class="p">(</span><span class="n">batch</span><span class="o">=</span><span class="n">batch</span> <span class="ow">or</span> <span class="n">CommOnly</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.once_cutters">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.once_cutters">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.once_cutters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">once_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">once_cutters</span><span class="p">(</span><span class="n">batch</span><span class="o">=</span><span class="n">batch</span> <span class="ow">or</span> <span class="n">CommOnly</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.twice_cutters">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.twice_cutters">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.twice_cutters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">twice_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">twice_cutters</span><span class="p">(</span><span class="n">batch</span><span class="o">=</span><span class="n">batch</span> <span class="ow">or</span> <span class="n">CommOnly</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.n_cutters">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.n_cutters">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.n_cutters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">n_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">n_cutters</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="n">batch</span> <span class="ow">or</span> <span class="n">CommOnly</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.cutters">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.cutters">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.cutters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">cutters</span><span class="p">(</span><span class="n">batch</span><span class="o">=</span><span class="n">batch</span> <span class="ow">or</span> <span class="n">CommOnly</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.number_of_cuts">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.number_of_cuts">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.number_of_cuts">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">number_of_cuts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">enzymes</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The number of cuts by digestion with the Restriction enzymes</span>
 <span class="sd">        contained in the iterable.&quot;&quot;&quot;</span>
@@ -1083,7 +1344,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.cas9">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.cas9">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.cas9">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cas9</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RNA</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="n">fragments</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1095,7 +1356,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.reverse_complement">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.reverse_complement">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.reverse_complement">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reverse_complement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reverse complement.</span>
 
@@ -1133,7 +1394,7 @@
 
     <span class="c1"># @_memorize(&quot;pydna.dseqrecord.Dseqrecord.synced&quot;)</span>
 <div class="viewcode-block" id="Dseqrecord.synced">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.synced">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.synced">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">synced</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;This method returns a new circular sequence (Dseqrecord object), which has been rotated</span>
 <span class="sd">        in such a way that there is maximum overlap between the sequence and</span>
@@ -1222,7 +1483,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.upper">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.upper">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.upper">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">upper</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an uppercase copy.</span>
 <span class="sd">        &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
@@ -1258,7 +1519,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.lower">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.lower">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.lower">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">lower</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;&gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
 <span class="sd">        &gt;&gt;&gt; my_seq = Dseqrecord(&quot;aAa&quot;)</span>
@@ -1294,14 +1555,14 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.orfs">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.orfs">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.orfs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">orfs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minsize</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">x</span><span class="p">:</span><span class="n">y</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">orfs</span><span class="p">(</span><span class="n">minsize</span><span class="o">=</span><span class="n">minsize</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.orfs_to_features">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.orfs_to_features">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.orfs_to_features">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">orfs_to_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minsize</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1336,7 +1597,7 @@
         <span class="k">return</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Dseqrecord.copy_gb_to_clipboard">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.copy_gb_to_clipboard">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.copy_gb_to_clipboard">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">copy_gb_to_clipboard</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_copy_to_clipboard</span><span class="p">(</span><span class="s2">&quot;gb&quot;</span><span class="p">)</span>
@@ -1344,7 +1605,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.copy_fasta_to_clipboard">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.copy_fasta_to_clipboard">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.copy_fasta_to_clipboard">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">copy_fasta_to_clipboard</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_copy_to_clipboard</span><span class="p">(</span><span class="s2">&quot;fasta&quot;</span><span class="p">)</span>
@@ -1352,7 +1613,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.figure">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.figure">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.figure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">figure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">highlight</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\x1b</span><span class="s2">[48;5;11m&quot;</span><span class="p">,</span> <span class="n">plain</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\x1b</span><span class="s2">[0m&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
@@ -1397,7 +1658,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.shifted">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.shifted">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.shifted">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">shifted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shift</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Circular Dseqrecord with a new origin &lt;shift&gt;.</span>
 
@@ -1464,7 +1725,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.cut">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.cut">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.cut">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">enzymes</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Digest a Dseqrecord object with one or more restriction enzymes.</span>
 
@@ -1509,7 +1770,7 @@
 
 
 <div class="viewcode-block" id="Dseqrecord.apply_cut">
-<a class="viewcode-back" href="../../modules/pydna_dseqrecord.html#pydna.all.Dseqrecord.apply_cut">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.apply_cut">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">apply_cut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left_cut</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">):</span>
         <span class="n">dseq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">apply_cut</span><span class="p">(</span><span class="n">left_cut</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">)</span>
         <span class="c1"># TODO: maybe remove depending on https://github.com/pydna-group/pydna/issues/161</span>
@@ -1603,36 +1864,113 @@
             <span class="n">right_edge</span> <span class="o">=</span> <span class="n">right_watson</span> <span class="k">if</span> <span class="n">right_ovhg</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">right_crick</span>
             <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">left_edge</span><span class="p">:</span><span class="n">right_edge</span><span class="p">]</span><span class="o">.</span><span class="n">features</span>
 
-        <span class="k">return</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">dseq</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span></div>
+        <span class="c1"># This will need to be generalised to all types of cuts</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">SequenceCutSource</span><span class="o">.</span><span class="n">from_parent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left_cut</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">dseq</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Dseqrecord.history">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.history">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a string representation of the cloning history of the sequence.</span>
+<span class="sd">        Returns an empty string if the sequence has no source.</span>
+
+<span class="sd">        Check the documentation notebooks for extensive examples.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            str: A string representation of the cloning history of the sequence.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
+<span class="sd">        &gt;&gt;&gt; from pydna.assembly2 import gibson_assembly</span>
+<span class="sd">        &gt;&gt;&gt; fragments = [</span>
+<span class="sd">        ...    Dseqrecord(&quot;TTTTacgatAAtgctccCCCC&quot;, circular=False, name=&quot;fragment1&quot;),</span>
+<span class="sd">        ...    Dseqrecord(&quot;CCCCtcatGGGG&quot;, circular=False, name=&quot;fragment2&quot;),</span>
+<span class="sd">        ...    Dseqrecord(&quot;GGGGatataTTTT&quot;, circular=False, name=&quot;fragment3&quot;),</span>
+<span class="sd">        ... ]</span>
+<span class="sd">        &gt;&gt;&gt; product, *_ = gibson_assembly(fragments, limit=4)</span>
+<span class="sd">        &gt;&gt;&gt; product.name = &quot;product_name&quot;</span>
+<span class="sd">        &gt;&gt;&gt; print(product.history())</span>
+<span class="sd">        ╙── product_name (Dseqrecord(o34))</span>
+<span class="sd">            └─╼ GibsonAssemblySource</span>
+<span class="sd">                ├─╼ fragment1 (Dseqrecord(-21))</span>
+<span class="sd">                ├─╼ fragment2 (Dseqrecord(-12))</span>
+<span class="sd">                └─╼ fragment3 (Dseqrecord(-13))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">history_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 </pre></div>
 
-           </div>
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
           </div>
-          <footer>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
 
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2024, Björn F. Johansson.</p>
   </div>
+  
+  <div class="footer-item">
+    
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
 
-</footer>
-        </div>
-      </div>
-    </section>
   </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
 
-</body>
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
 </html>

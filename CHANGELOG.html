@@ -1,92 +1,665 @@
 
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
-<head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Changelog &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=a051be83" />
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Changelog &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-    <link rel="shortcut icon" href="_static/favicon.ico"/>
-      <script src="_static/jquery.js?v=5d32c60e"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=d848064a"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/js/theme.js"></script>
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eea9577"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'CHANGELOG';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
-</head>
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
-          
-          
-          <a href="index.html" class="icon icon-home">
-            pydna
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="index.html">Pydna</a></li>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/index.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="example_gallery.html">Example gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="getting_started.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="notebooks/primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="reference/pydna.html">pydna package</a></li>
 </ul>
 
-        </div>
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
       </div>
-    </nav>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pydna</a>
-      </nav>
+<div class="sbt-scroll-pixel-helper"></div>
 
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Changelog</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="_sources/CHANGELOG.md.txt" rel="nofollow"> View page source</a>
-      </li>
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna/edit/main/docs/CHANGELOG.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
   </ul>
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <section id="changelog">
-<h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/CHANGELOG.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Changelog</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unreleased">Unreleased</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a01-2023-05-04">[6.0.0a01] - 2023-05-04</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#added">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#changed">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">[5.3.0] - 2023-05-04</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">[5.0.1]</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">[5.0.0]</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">[4.0.0] - 2020-10-10</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">3.1.3 - 2020-10-10</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">3.1.2 - 2020-09-28</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">3.1.1 - 2020-09-25</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">3.1.0 - 2020-09-16</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-2019-07-23">3.0.2a1 - 2019-07-23</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">3.0.1 - 2019-05-28</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">3.0.0 - 2019-05-17</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">2.0.3 - 2017-12-14</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-2017-12-14">[2.0.3a1] - 2017-12-14</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a0-2017-12-03">2.0.3a0 - 2017-12-03</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">2.0.2 - 2017-08-26</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">2.0.2 - 2017-08-26</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id30">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id31">2.0.1 - 2017-08-24</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id32">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id33">2.0.0 - 2017-06-23</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id34">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a4-2017-05-05">2.0.0a4 - 2017-05-05</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id35">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-2017-04-04">2.0.0a3 - 2017-04-04</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id36">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a2">2.0.0a2 - —</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id37">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a1">[2.0.0a1] -</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id38">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a0-2017-03-15">2.0.0a0 - 2017-03-15</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id39">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id40">1.2.0 - 2017-03-10</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id41">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id42">1.1.5 - 2016-12-16</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id43">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id44">1.1.4 - 2016-12-15</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id45">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id46">1.1.1 - 2016-11-20</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id47">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id48">1.0.2 - 2016-10-08</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id49">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id50">1.0.1 - 2016-03-10</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id51">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id52">1.0.0 - -</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id53">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id54">0.9.3 - 2015-06-03</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id55">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id56">0.9.2 - 2015-05-28</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id57">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id58">0.9.1 - 2015-05-26</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id59">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id60">0.9.0 - 2015-05-26</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id61">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id62">0.8.4 - 2015-04-17</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id63">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id64">0.8.3 - -</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id65">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id66">0.8.2 - -</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id67">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id68">0.8.1 - 2015-03-07</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id69">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id70">[0.8.0] - 2015-02-06</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id71">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id72">[0.7.2] - 2014-11-21</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id73">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notpublic">[0.7.1] - notpublic</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id74">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id75">[0.7.0] - notpublic</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id76">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id77">[0.6.6] -</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id78">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id79">[0.6.5] - 2014-07-31</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id80">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id81">[0.6.4] - 2014-07-09</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id82">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id83">[0.6.3] - 2014-07-06</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id84">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id85">[0.6.2] - 2014-06-13</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id86">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id87">[0.6.1] - 2014-04-25</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id88">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id89">[0.6.0] - 2014-04-18</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id90">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id91">[0.5.0] - 2013-12-16</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id92">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id93">[0.2.2] - 2013-11-05</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id94">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id95">[0.2.1] - 2013-08-18</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id96">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id97">[0.1.8] - 2013-06-02</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id98">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id99">[0.1.7] - 2013-05-29</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id100">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id101">[0.1.6] - 2013-04-22</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id102">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id103">[0.1.5] - 2013-04-18</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id104">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id105">[0.1.4] - 2013-04-10</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id106">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id107">[0.1.3] - 2013-04-09</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id108">Changed</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">#</a></h1>
 <p>All notable changes to this project will be documented in this file.</p>
 <p>The format is based on <a class="reference external" href="https://keepachangelog.com">Keep a Changelog</a>,
 and this project adheres to <a class="reference external" href="https://semver.org">Semantic Versioning</a>.</p>
 <section id="unreleased">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/HEAD..3.1.3">Unreleased</a><a class="headerlink" href="#unreleased" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/HEAD..3.1.3">Unreleased</a><a class="headerlink" href="#unreleased" title="Link to this heading">#</a></h2>
 </section>
 <section id="a01-2023-05-04">
-<h2>[6.0.0a01] - 2023-05-04<a class="headerlink" href="#a01-2023-05-04" title="Link to this heading"></a></h2>
+<h2>[6.0.0a01] - 2023-05-04<a class="headerlink" href="#a01-2023-05-04" title="Link to this heading">#</a></h2>
 <section id="added">
-<h3>Added<a class="headerlink" href="#added" title="Link to this heading"></a></h3>
+<h3>Added<a class="headerlink" href="#added" title="Link to this heading">#</a></h3>
 <p>New common_sub_strings function. The previous version was implemented in pure python that was quite fast, but still a bottleneck in the code.
 Thanks to &#64;louisabraham, we now have code based on <a class="reference external" href="https://github.com/louisabraham/pydivsufsort">pydivsufsort</a> which provide
 bindings to libdivsufsort, a very fast suffix array construction algorithm written in c. As a consequence, the Assembly code is now much faster.</p>
@@ -94,7 +667,7 @@ bindings to libdivsufsort, a very fast suffix array construction algorithm writt
 Anaconda packages anymore, as conda-build got too slow to work with. I have plans to update the Bioconda recipe for the new version. As pydna is pure Python, anyone can make a conda package using <a class="reference external" href="https://github.com/marcelotrevisani/grayskull">grayskull</a> for example.</p>
 </section>
 <section id="changed">
-<h3>Changed<a class="headerlink" href="#changed" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#changed" title="Link to this heading">#</a></h3>
 <p>Dseq and Dseqrecord now only take a <code class="docutils literal notranslate"><span class="pre">circular</span></code> argument (True or False) to indicate topology. Previously, <code class="docutils literal notranslate"><span class="pre">linear</span></code> was also
 accepted. This was a little used feature (by me) that made the <strong>init</strong> methods of both classes slow and complex. As this
 was a violation of zen#13 (“There should be one– and preferably only one…”) This change could break code,
@@ -225,12 +798,12 @@ the assemble_linear and assemble_circular methods. There might be a better way t
 </section>
 </section>
 <section id="id1">
-<h2>[5.3.0] - 2023-05-04<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<h2>[5.3.0] - 2023-05-04<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <section id="id2">
-<h3>Added<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<h3>Added<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
 </section>
 <section id="id3">
-<h3>Changed<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>07:26 $ git log --oneline --graph v5.2.0..a16e7a004da1292f33db5a9a48f19c61b415dff6
 * a16e7a004d (HEAD -&gt; dev_bjorn, origin/dev_bjorn) uppdate
 * 5190177811 removed python 2 code
@@ -303,15 +876,15 @@ the assemble_linear and assemble_circular methods. There might be a better way t
 </section>
 </section>
 <section id="id4">
-<h2>[5.0.1]<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<h2>[5.0.1]<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
 </section>
 <section id="id5">
-<h2>[5.0.0]<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<h2>[5.0.0]<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
 </section>
 <section id="id6">
-<h2>[4.0.0] - 2020-10-10<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<h2>[4.0.0] - 2020-10-10<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
 <section id="id7">
-<h3>Added<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<h3>Added<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>New gel module</p></li>
 <li><p>New module myprimers_gdoc for storing primers in a google doc</p></li>
@@ -320,23 +893,23 @@ the assemble_linear and assemble_circular methods. There might be a better way t
 </ul>
 </section>
 <section id="id8">
-<h3>Changed<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Changes to myprimer module.</p></li>
 </ul>
 </section>
 </section>
 <section id="id9">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/3.1.3..3.1.2">3.1.3</a> - 2020-10-10<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/3.1.3..3.1.2">3.1.3</a> - 2020-10-10<a class="headerlink" href="#id9" title="Link to this heading">#</a></h2>
 <section id="id10">
-<h3>Added<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<h3>Added<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>added .sorted_features method for SeqRecord</p></li>
 <li><p>added a new lcs (<em>l</em>ongest <em>c</em>ommon <em>s</em>ubstring) method for SeqRecord and DseqRecord</p></li>
 </ul>
 </section>
 <section id="id11">
-<h3>Changed<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>changed format for changelog</p></li>
 <li><p>biopython 1.78 in requirements.txt</p></li>
@@ -345,18 +918,18 @@ the assemble_linear and assemble_circular methods. There might be a better way t
 </section>
 </section>
 <section id="id12">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/3.1.2..3.1.1">3.1.2</a> - 2020-09-28<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/3.1.2..3.1.1">3.1.2</a> - 2020-09-28<a class="headerlink" href="#id12" title="Link to this heading">#</a></h2>
 <section id="id13">
-<h3>Changed<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id13" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Bugfix release. There was a bug in stamping genbank files with cSEGUID.</p></li>
 </ul>
 </section>
 </section>
 <section id="id14">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/3.1.1..3.1.0a1">3.1.1</a> - 2020-09-25<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/3.1.1..3.1.0a1">3.1.1</a> - 2020-09-25<a class="headerlink" href="#id14" title="Link to this heading">#</a></h2>
 <section id="id15">
-<h3>Changed<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Bugfix release. There was a bug in locating features in certain circular assemblies.</p></li>
 <li><p>Added a test: “test_marker_replacement_on_plasmid” in test_module_assembly.py to test for this.</p></li>
@@ -364,9 +937,9 @@ the assemble_linear and assemble_circular methods. There might be a better way t
 </section>
 </section>
 <section id="id16">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/3.1.0..3.0.2a5">3.1.0</a> - 2020-09-16<a class="headerlink" href="#id16" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/3.1.0..3.0.2a5">3.1.0</a> - 2020-09-16<a class="headerlink" href="#id16" title="Link to this heading">#</a></h2>
 <section id="id17">
-<h3>Changed<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id17" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Changed to src layout for the package. Changed how melting temperature is calculated.</p></li>
 <li><p>Changes to tests, added a conftest.py. Updated for comatibility with biopython 1.7.8.</p></li>
@@ -377,94 +950,94 @@ the assemble_linear and assemble_circular methods. There might be a better way t
 </section>
 </section>
 <section id="a1-2019-07-23">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/3.0.2a1..3.0.2">3.0.2a1</a> - 2019-07-23<a class="headerlink" href="#a1-2019-07-23" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/3.0.2a1..3.0.2">3.0.2a1</a> - 2019-07-23<a class="headerlink" href="#a1-2019-07-23" title="Link to this heading">#</a></h2>
 <section id="id18">
-<h3>Changed<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id18" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>.upper() and .lower() methods for Dseq and Dseqrecord classes. Improved slicing</p></li>
 </ul>
 </section>
 </section>
 <section id="id19">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/3.0.1..3.0.0a9">3.0.1</a> - 2019-05-28<a class="headerlink" href="#id19" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/3.0.1..3.0.0a9">3.0.1</a> - 2019-05-28<a class="headerlink" href="#id19" title="Link to this heading">#</a></h2>
 <section id="id20">
-<h3>Changed<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id20" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Many changes and improvements, especially for the Assembly class.</p></li>
 </ul>
 </section>
 </section>
 <section id="id21">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/3.0.0..2.0.4a5">3.0.0</a> - 2019-05-17<a class="headerlink" href="#id21" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/3.0.0..2.0.4a5">3.0.0</a> - 2019-05-17<a class="headerlink" href="#id21" title="Link to this heading">#</a></h2>
 <section id="id22">
-<h3>Changed<a class="headerlink" href="#id22" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id22" title="Link to this heading">#</a></h3>
 </section>
 </section>
 <hr class="docutils" />
 <section id="id23">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.3..2.0.2a0">2.0.3</a> - 2017-12-14<a class="headerlink" href="#id23" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.3..2.0.2a0">2.0.3</a> - 2017-12-14<a class="headerlink" href="#id23" title="Link to this heading">#</a></h2>
 <section id="id24">
-<h3>Changed<a class="headerlink" href="#id24" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id24" title="Link to this heading">#</a></h3>
 </section>
 </section>
 <hr class="docutils" />
 <section id="a1-2017-12-14">
-<h2>[2.0.3a1] - 2017-12-14<a class="headerlink" href="#a1-2017-12-14" title="Link to this heading"></a></h2>
+<h2>[2.0.3a1] - 2017-12-14<a class="headerlink" href="#a1-2017-12-14" title="Link to this heading">#</a></h2>
 <section id="id25">
-<h3>Changed<a class="headerlink" href="#id25" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id25" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>pcr function now takes an amplicon. This way an amplicon can easily be rerun after modification of primers or template</p></li>
 </ul>
 </section>
 </section>
 <section id="a0-2017-12-03">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.3a0..2.0.3">2.0.3a0</a> - 2017-12-03<a class="headerlink" href="#a0-2017-12-03" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.3a0..2.0.3">2.0.3a0</a> - 2017-12-03<a class="headerlink" href="#a0-2017-12-03" title="Link to this heading">#</a></h2>
 <section id="id26">
-<h3>Changed<a class="headerlink" href="#id26" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id26" title="Link to this heading">#</a></h3>
 </section>
 </section>
 <hr class="docutils" />
 <section id="id27">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.2..2.0.1">2.0.2</a> - 2017-08-26<a class="headerlink" href="#id27" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.2..2.0.1">2.0.2</a> - 2017-08-26<a class="headerlink" href="#id27" title="Link to this heading">#</a></h2>
 <section id="id28">
-<h3>Changed<a class="headerlink" href="#id28" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id28" title="Link to this heading">#</a></h3>
 </section>
 </section>
 <hr class="docutils" />
 <section id="id29">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.2..2.0.1">2.0.2</a> - 2017-08-26<a class="headerlink" href="#id29" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.2..2.0.1">2.0.2</a> - 2017-08-26<a class="headerlink" href="#id29" title="Link to this heading">#</a></h2>
 <section id="id30">
-<h3>Changed<a class="headerlink" href="#id30" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id30" title="Link to this heading">#</a></h3>
 </section>
 </section>
 <hr class="docutils" />
 <section id="id31">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.1..2.0.0a8">2.0.1</a> - 2017-08-24<a class="headerlink" href="#id31" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.1..2.0.0a8">2.0.1</a> - 2017-08-24<a class="headerlink" href="#id31" title="Link to this heading">#</a></h2>
 <section id="id32">
-<h3>Changed<a class="headerlink" href="#id32" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id32" title="Link to this heading">#</a></h3>
 </section>
 </section>
 <hr class="docutils" />
 <section id="id33">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.0..1.2.0a1">2.0.0</a> - 2017-06-23<a class="headerlink" href="#id33" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.0..1.2.0a1">2.0.0</a> - 2017-06-23<a class="headerlink" href="#id33" title="Link to this heading">#</a></h2>
 <section id="id34">
-<h3>Changed<a class="headerlink" href="#id34" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id34" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>First release of 2.0.0. This version adds changes in the alpha versions</p></li>
 </ul>
 </section>
 </section>
 <section id="a4-2017-05-05">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.0a4..2.0.0a3">2.0.0a4</a> - 2017-05-05<a class="headerlink" href="#a4-2017-05-05" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.0a4..2.0.0a3">2.0.0a4</a> - 2017-05-05<a class="headerlink" href="#a4-2017-05-05" title="Link to this heading">#</a></h2>
 <section id="id35">
-<h3>Changed<a class="headerlink" href="#id35" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id35" title="Link to this heading">#</a></h3>
 <p>-Fixed bug in _multiply_circular</p>
 </section>
 </section>
 <section id="a3-2017-04-04">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.0a3..2.0.0a2">2.0.0a3</a> - 2017-04-04<a class="headerlink" href="#a3-2017-04-04" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.0a3..2.0.0a2">2.0.0a3</a> - 2017-04-04<a class="headerlink" href="#a3-2017-04-04" title="Link to this heading">#</a></h2>
 <section id="id36">
-<h3>Changed<a class="headerlink" href="#id36" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id36" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>added the all module, from pydna.all import *, now imports a set of useful pydna modules into the main namespace.</p></li>
 <li><p>Finer control over cache, genbank download is now on by default. Bug fix in assembly_fragments function that created too long primer tails.</p></li>
@@ -472,16 +1045,16 @@ the assemble_linear and assemble_circular methods. There might be a better way t
 </section>
 </section>
 <section id="a2">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.0a2..2.0.0a0">2.0.0a2</a> - —<a class="headerlink" href="#a2" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.0a2..2.0.0a0">2.0.0a2</a> - —<a class="headerlink" href="#a2" title="Link to this heading">#</a></h2>
 <section id="id37">
-<h3>Changed<a class="headerlink" href="#id37" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id37" title="Link to this heading">#</a></h3>
 </section>
 </section>
 <hr class="docutils" />
 <section id="a1">
-<h2>[2.0.0a1] -<a class="headerlink" href="#a1" title="Link to this heading"></a></h2>
+<h2>[2.0.0a1] -<a class="headerlink" href="#a1" title="Link to this heading">#</a></h2>
 <section id="id38">
-<h3>Changed<a class="headerlink" href="#id38" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id38" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>removed setting functions for cache in _<em>init</em> and the delete_cache function for simplicity</p></li>
 <li><p>removed these functions</p></li>
@@ -493,9 +1066,9 @@ the assemble_linear and assemble_circular methods. There might be a better way t
 </section>
 </section>
 <section id="a0-2017-03-15">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.0a0..2.0.0">2.0.0a0</a> - 2017-03-15<a class="headerlink" href="#a0-2017-03-15" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/2.0.0a0..2.0.0">2.0.0a0</a> - 2017-03-15<a class="headerlink" href="#a0-2017-03-15" title="Link to this heading">#</a></h2>
 <section id="id39">
-<h3>Changed<a class="headerlink" href="#id39" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id39" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>alpha release, removed imports in <strong>init</strong></p></li>
 <li><p>This version breaks compatibility.</p></li>
@@ -503,9 +1076,9 @@ the assemble_linear and assemble_circular methods. There might be a better way t
 </section>
 </section>
 <section id="id40">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/1.2.0..1.1.6a4">1.2.0</a> - 2017-03-10<a class="headerlink" href="#id40" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/1.2.0..1.1.6a4">1.2.0</a> - 2017-03-10<a class="headerlink" href="#id40" title="Link to this heading">#</a></h2>
 <section id="id41">
-<h3>Changed<a class="headerlink" href="#id41" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id41" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>New and simpler primer design api, especially for gibson assembly primers. See docstrings</p></li>
 <li><p>Dseqrecord.find method that allows finding subsequences “over the edge” of circular sequences.</p></li>
@@ -513,18 +1086,18 @@ the assemble_linear and assemble_circular methods. There might be a better way t
 </section>
 </section>
 <section id="id42">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/1.1.5..1.1.4">1.1.5</a> - 2016-12-16<a class="headerlink" href="#id42" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/1.1.5..1.1.4">1.1.5</a> - 2016-12-16<a class="headerlink" href="#id42" title="Link to this heading">#</a></h2>
 <section id="id43">
-<h3>Changed<a class="headerlink" href="#id43" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id43" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>added message for Dseqrecord write</p></li>
 </ul>
 </section>
 </section>
 <section id="id44">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/1.1.4..1.1.1">1.1.4</a> - 2016-12-15<a class="headerlink" href="#id44" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/1.1.4..1.1.1">1.1.4</a> - 2016-12-15<a class="headerlink" href="#id44" title="Link to this heading">#</a></h2>
 <section id="id45">
-<h3>Changed<a class="headerlink" href="#id45" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id45" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>split some files into more logical and smaller chunks.</p></li>
 <li><p>The Primer class is now the same in primer design and amplify modules</p></li>
@@ -543,9 +1116,9 @@ the assemble_linear and assemble_circular methods. There might be a better way t
 </section>
 </section>
 <section id="id46">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/1.1.1..1.0.2">1.1.1</a> - 2016-11-20<a class="headerlink" href="#id46" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/1.1.1..1.0.2">1.1.1</a> - 2016-11-20<a class="headerlink" href="#id46" title="Link to this heading">#</a></h2>
 <section id="id47">
-<h3>Changed<a class="headerlink" href="#id47" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id47" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>New module genbankfixer for salvaging broken genbank files (pydna.gbtext_clean).</p></li>
 <li><p>New pydna.readprimer function (shortcut for reading to Biopython.SeqRecord).</p></li>
@@ -558,9 +1131,9 @@ the assemble_linear and assemble_circular methods. There might be a better way t
 </section>
 </section>
 <section id="id48">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/1.0.2..1.0.1">1.0.2</a> - 2016-10-08<a class="headerlink" href="#id48" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/1.0.2..1.0.1">1.0.2</a> - 2016-10-08<a class="headerlink" href="#id48" title="Link to this heading">#</a></h2>
 <section id="id49">
-<h3>Changed<a class="headerlink" href="#id49" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id49" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Python 3 only!</p></li>
 <li><p>pydna.open_cache -&gt; pydna.open_cache_folder; opens the cache folder in the file browser</p></li>
@@ -575,9 +1148,9 @@ on linux it is in ~/.config/pydna</p></li>
 </section>
 </section>
 <section id="id50">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/1.0.1..1.0.0">1.0.1</a> - 2016-03-10<a class="headerlink" href="#id50" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/1.0.1..1.0.0">1.0.1</a> - 2016-03-10<a class="headerlink" href="#id50" title="Link to this heading">#</a></h2>
 <section id="id51">
-<h3>Changed<a class="headerlink" href="#id51" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id51" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Bugfix: for errors in IPython import if IPython is too old ( &lt; 4.0)</p></li>
 <li><p>Bugfix: Large genbank records were not downloaded completely.</p></li>
@@ -585,18 +1158,18 @@ on linux it is in ~/.config/pydna</p></li>
 </section>
 </section>
 <section id="id52">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/1.0.0..0.9.9">1.0.0</a> - -<a class="headerlink" href="#id52" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/1.0.0..0.9.9">1.0.0</a> - -<a class="headerlink" href="#id52" title="Link to this heading">#</a></h2>
 <section id="id53">
-<h3>Changed<a class="headerlink" href="#id53" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id53" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Gel simulation added</p></li>
 </ul>
 </section>
 </section>
 <section id="id54">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.9.3..0.9.2">0.9.3</a> - 2015-06-03<a class="headerlink" href="#id54" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.9.3..0.9.2">0.9.3</a> - 2015-06-03<a class="headerlink" href="#id54" title="Link to this heading">#</a></h2>
 <section id="id55">
-<h3>Changed<a class="headerlink" href="#id55" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id55" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Shelve does not work under MacOS under certain conditions.</p></li>
 <li><p>This release tries to solve this by not specifying file extensions
@@ -605,9 +1178,9 @@ for the cache files. Two functions are added, pydna.</p></li>
 </section>
 </section>
 <section id="id56">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.9.2..0.9.1">0.9.2</a> - 2015-05-28<a class="headerlink" href="#id56" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.9.2..0.9.1">0.9.2</a> - 2015-05-28<a class="headerlink" href="#id56" title="Link to this heading">#</a></h2>
 <section id="id57">
-<h3>Changed<a class="headerlink" href="#id57" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id57" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>pydna_data_dir is encoded to a string in <strong>init</strong>.py instead of
 unicode. The Popen module does not accept environment variables that
@@ -616,9 +1189,9 @@ are not strings.</p></li>
 </section>
 </section>
 <section id="id58">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.9.1..0.9.0">0.9.1</a> - 2015-05-26<a class="headerlink" href="#id58" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.9.1..0.9.0">0.9.1</a> - 2015-05-26<a class="headerlink" href="#id58" title="Link to this heading">#</a></h2>
 <section id="id59">
-<h3>Changed<a class="headerlink" href="#id59" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id59" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>fixed critical error in the calculation of seguid and cseguid
 checksums</p></li>
@@ -626,9 +1199,9 @@ checksums</p></li>
 </section>
 </section>
 <section id="id60">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.9.0..0.8.4">0.9.0</a> - 2015-05-26<a class="headerlink" href="#id60" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.9.0..0.8.4">0.9.0</a> - 2015-05-26<a class="headerlink" href="#id60" title="Link to this heading">#</a></h2>
 <section id="id61">
-<h3>Changed<a class="headerlink" href="#id61" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id61" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>seguid and cseguid are now url safe so they can be part of urls and
 file names.</p></li>
@@ -654,54 +1227,54 @@ file names.</p></li>
 </section>
 </section>
 <section id="id62">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.8.4..0.8.3">0.8.4</a> - 2015-04-17<a class="headerlink" href="#id62" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.8.4..0.8.3">0.8.4</a> - 2015-04-17<a class="headerlink" href="#id62" title="Link to this heading">#</a></h2>
 <section id="id63">
-<h3>Changed<a class="headerlink" href="#id63" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id63" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Bugfix for parsing text files with unicode characters.</p></li>
 </ul>
 </section>
 </section>
 <section id="id64">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.8.3..0.8.2">0.8.3</a> - -<a class="headerlink" href="#id64" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.8.3..0.8.2">0.8.3</a> - -<a class="headerlink" href="#id64" title="Link to this heading">#</a></h2>
 <section id="id65">
-<h3>Changed<a class="headerlink" href="#id65" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id65" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li></li>
 </ul>
 </section>
 </section>
 <section id="id66">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.8.2..0.8.1">0.8.2</a> - -<a class="headerlink" href="#id66" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.8.2..0.8.1">0.8.2</a> - -<a class="headerlink" href="#id66" title="Link to this heading">#</a></h2>
 <section id="id67">
-<h3>Changed<a class="headerlink" href="#id67" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id67" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li></li>
 </ul>
 </section>
 </section>
 <section id="id68">
-<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.8.1..0.8.0">0.8.1</a> - 2015-03-07<a class="headerlink" href="#id68" title="Link to this heading"></a></h2>
+<h2><a class="reference external" href="https://github.com/BjornFJohansson/pydna/compare/0.8.1..0.8.0">0.8.1</a> - 2015-03-07<a class="headerlink" href="#id68" title="Link to this heading">#</a></h2>
 <section id="id69">
-<h3>Changed<a class="headerlink" href="#id69" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id69" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Bugfix for windows. The data directory was not created.</p></li>
 </ul>
 </section>
 </section>
 <section id="id70">
-<h2>[0.8.0] - 2015-02-06<a class="headerlink" href="#id70" title="Link to this heading"></a></h2>
+<h2>[0.8.0] - 2015-02-06<a class="headerlink" href="#id70" title="Link to this heading">#</a></h2>
 <section id="id71">
-<h3>Changed<a class="headerlink" href="#id71" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id71" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Mapping reads added.</p></li>
 </ul>
 </section>
 </section>
 <section id="id72">
-<h2>[0.7.2] - 2014-11-21<a class="headerlink" href="#id72" title="Link to this heading"></a></h2>
+<h2>[0.7.2] - 2014-11-21<a class="headerlink" href="#id72" title="Link to this heading">#</a></h2>
 <section id="id73">
-<h3>Changed<a class="headerlink" href="#id73" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id73" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>First public release with the changes from 0.7.0 and 0.7.1.</p></li>
 <li><p>Added a Pretty_str class to beautify output of strings in
@@ -710,9 +1283,9 @@ the IPython shell.</p></li>
 </section>
 </section>
 <section id="notpublic">
-<h2>[0.7.1] - notpublic<a class="headerlink" href="#notpublic" title="Link to this heading"></a></h2>
+<h2>[0.7.1] - notpublic<a class="headerlink" href="#notpublic" title="Link to this heading">#</a></h2>
 <section id="id74">
-<h3>Changed<a class="headerlink" href="#id74" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id74" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Short linkers can be incorporated in PCR primers in the
 assembly_primers function.</p></li>
@@ -720,9 +1293,9 @@ assembly_primers function.</p></li>
 </section>
 </section>
 <section id="id75">
-<h2>[0.7.0] - notpublic<a class="headerlink" href="#id75" title="Link to this heading"></a></h2>
+<h2>[0.7.0] - notpublic<a class="headerlink" href="#id75" title="Link to this heading">#</a></h2>
 <section id="id76">
-<h3>Changed<a class="headerlink" href="#id76" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id76" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Caching to speed up Amplify, Assembly, download and the</p></li>
 <li><p>Desqrecord synced method. The data is stored in four shelf
@@ -737,18 +1310,18 @@ files in the users application directory.</p></li>
 </section>
 </section>
 <section id="id77">
-<h2>[0.6.6] -<a class="headerlink" href="#id77" title="Link to this heading"></a></h2>
+<h2>[0.6.6] -<a class="headerlink" href="#id77" title="Link to this heading">#</a></h2>
 <section id="id78">
-<h3>Changed<a class="headerlink" href="#id78" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id78" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>new function nopcr.</p></li>
 </ul>
 </section>
 </section>
 <section id="id79">
-<h2>[0.6.5] - 2014-07-31<a class="headerlink" href="#id79" title="Link to this heading"></a></h2>
+<h2>[0.6.5] - 2014-07-31<a class="headerlink" href="#id79" title="Link to this heading">#</a></h2>
 <section id="id80">
-<h3>Changed<a class="headerlink" href="#id80" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id80" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>bugfix: cutting an amplicon object now preserves features</p></li>
 <li><p>Changed requirement for NetworkX to 1.8.1</p></li>
@@ -756,9 +1329,9 @@ files in the users application directory.</p></li>
 </section>
 </section>
 <section id="id81">
-<h2>[0.6.4] - 2014-07-09<a class="headerlink" href="#id81" title="Link to this heading"></a></h2>
+<h2>[0.6.4] - 2014-07-09<a class="headerlink" href="#id81" title="Link to this heading">#</a></h2>
 <section id="id82">
-<h3>Changed<a class="headerlink" href="#id82" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id82" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>The pcr function and Anneal class can now deal with primers
 with ambiguous codons like R = A or G. In the resulting PCR
@@ -769,9 +1342,9 @@ have the sequence corresponding to the template.</p></li>
 </section>
 </section>
 <section id="id83">
-<h2>[0.6.3] - 2014-07-06<a class="headerlink" href="#id83" title="Link to this heading"></a></h2>
+<h2>[0.6.3] - 2014-07-06<a class="headerlink" href="#id83" title="Link to this heading">#</a></h2>
 <section id="id84">
-<h3>Changed<a class="headerlink" href="#id84" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id84" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Dseqrecord.add_feature can now take a string or some other
 sequence as input. The assembly primers function can now produce
@@ -780,9 +1353,9 @@ primers for a circular assembly.</p></li>
 </section>
 </section>
 <section id="id85">
-<h2>[0.6.2] - 2014-06-13<a class="headerlink" href="#id85" title="Link to this heading"></a></h2>
+<h2>[0.6.2] - 2014-06-13<a class="headerlink" href="#id85" title="Link to this heading">#</a></h2>
 <section id="id86">
-<h3>Changed<a class="headerlink" href="#id86" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id86" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Dseqrecord gained three new methods:</p></li>
 <li><p>isorf() method returning True or False.</p></li>
@@ -796,9 +1369,9 @@ assembly primers.</p></li>
 </section>
 </section>
 <section id="id87">
-<h2>[0.6.1] - 2014-04-25<a class="headerlink" href="#id87" title="Link to this heading"></a></h2>
+<h2>[0.6.1] - 2014-04-25<a class="headerlink" href="#id87" title="Link to this heading">#</a></h2>
 <section id="id88">
-<h3>Changed<a class="headerlink" href="#id88" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id88" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Fixed a bug in the Dseqrecord synced method and removed the
 utils synced function.</p></li>
@@ -806,18 +1379,18 @@ utils synced function.</p></li>
 </section>
 </section>
 <section id="id89">
-<h2>[0.6.0] - 2014-04-18<a class="headerlink" href="#id89" title="Link to this heading"></a></h2>
+<h2>[0.6.0] - 2014-04-18<a class="headerlink" href="#id89" title="Link to this heading">#</a></h2>
 <section id="id90">
-<h3>Changed<a class="headerlink" href="#id90" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id90" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Bugfixes and improvements in documentation.</p></li>
 </ul>
 </section>
 </section>
 <section id="id91">
-<h2>[0.5.0] - 2013-12-16<a class="headerlink" href="#id91" title="Link to this heading"></a></h2>
+<h2>[0.5.0] - 2013-12-16<a class="headerlink" href="#id91" title="Link to this heading">#</a></h2>
 <section id="id92">
-<h3>Changed<a class="headerlink" href="#id92" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id92" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Changes to how the amplify and assembly modules work
 the Amplicon and Assembly classes are now subclasses of
@@ -826,9 +1399,9 @@ Dseqrecord.</p></li>
 </section>
 </section>
 <section id="id93">
-<h2>[0.2.2] - 2013-11-05<a class="headerlink" href="#id93" title="Link to this heading"></a></h2>
+<h2>[0.2.2] - 2013-11-05<a class="headerlink" href="#id93" title="Link to this heading">#</a></h2>
 <section id="id94">
-<h3>Changed<a class="headerlink" href="#id94" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id94" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>bugfix: changed the handling of compound features
 to fit with the new version of BioPython (1.62) which is
@@ -837,16 +1410,16 @@ now a requirement.</p></li>
 </section>
 </section>
 <section id="id95">
-<h2>[0.2.1] - 2013-08-18<a class="headerlink" href="#id95" title="Link to this heading"></a></h2>
+<h2>[0.2.1] - 2013-08-18<a class="headerlink" href="#id95" title="Link to this heading">#</a></h2>
 <section id="id96">
-<h3>Changed<a class="headerlink" href="#id96" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id96" title="Link to this heading">#</a></h3>
 </section>
 </section>
 <hr class="docutils" />
 <section id="id97">
-<h2>[0.1.8] - 2013-06-02<a class="headerlink" href="#id97" title="Link to this heading"></a></h2>
+<h2>[0.1.8] - 2013-06-02<a class="headerlink" href="#id97" title="Link to this heading">#</a></h2>
 <section id="id98">
-<h3>Changed<a class="headerlink" href="#id98" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id98" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>bugfix: changed the SeqFeatures added to PCR products in the</p></li>
 <li><p>amplify module to a dict of list of strings instead of
@@ -855,9 +1428,9 @@ a dict of strings.</p></li>
 </section>
 </section>
 <section id="id99">
-<h2>[0.1.7] - 2013-05-29<a class="headerlink" href="#id99" title="Link to this heading"></a></h2>
+<h2>[0.1.7] - 2013-05-29<a class="headerlink" href="#id99" title="Link to this heading">#</a></h2>
 <section id="id100">
-<h3>Changed<a class="headerlink" href="#id100" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id100" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Changed the code in amplify.Amplicon to handle features
 spanning the origin of circular sequences.</p></li>
@@ -865,9 +1438,9 @@ spanning the origin of circular sequences.</p></li>
 </section>
 </section>
 <section id="id101">
-<h2>[0.1.6] - 2013-04-22<a class="headerlink" href="#id101" title="Link to this heading"></a></h2>
+<h2>[0.1.6] - 2013-04-22<a class="headerlink" href="#id101" title="Link to this heading">#</a></h2>
 <section id="id102">
-<h3>Changed<a class="headerlink" href="#id102" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id102" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Changed the behaviour of the find method of the Dseq object
 to find substrings that span the origin. Slicing for circular
@@ -876,9 +1449,9 @@ Dseq objects now works slightly different.</p></li>
 </section>
 </section>
 <section id="id103">
-<h2>[0.1.5] - 2013-04-18<a class="headerlink" href="#id103" title="Link to this heading"></a></h2>
+<h2>[0.1.5] - 2013-04-18<a class="headerlink" href="#id103" title="Link to this heading">#</a></h2>
 <section id="id104">
-<h3>Changed<a class="headerlink" href="#id104" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id104" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Changed the setup.py script to permit installation
 of the source installer without access to a c compiler.</p></li>
@@ -886,9 +1459,9 @@ of the source installer without access to a c compiler.</p></li>
 </section>
 </section>
 <section id="id105">
-<h2>[0.1.4] - 2013-04-10<a class="headerlink" href="#id105" title="Link to this heading"></a></h2>
+<h2>[0.1.4] - 2013-04-10<a class="headerlink" href="#id105" title="Link to this heading">#</a></h2>
 <section id="id106">
-<h3>Changed<a class="headerlink" href="#id106" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id106" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Cleaned up some docstrings</p></li>
 <li><p>Renamed Drecord -&gt; Dseqrecord to be more consistent with</p></li>
@@ -899,9 +1472,9 @@ of the source installer without access to a c compiler.</p></li>
 </section>
 </section>
 <section id="id107">
-<h2>[0.1.3] - 2013-04-09<a class="headerlink" href="#id107" title="Link to this heading"></a></h2>
+<h2>[0.1.3] - 2013-04-09<a class="headerlink" href="#id107" title="Link to this heading">#</a></h2>
 <section id="id108">
-<h3>Changed<a class="headerlink" href="#id108" title="Link to this heading"></a></h3>
+<h3>Changed<a class="headerlink" href="#id108" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>pydna created from Python-dna.</p></li>
 </ul>
@@ -910,31 +1483,319 @@ of the source installer without access to a c compiler.</p></li>
 </section>
 
 
-           </div>
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unreleased">Unreleased</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a01-2023-05-04">[6.0.0a01] - 2023-05-04</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#added">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#changed">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">[5.3.0] - 2023-05-04</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">[5.0.1]</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">[5.0.0]</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">[4.0.0] - 2020-10-10</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">3.1.3 - 2020-10-10</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Added</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">3.1.2 - 2020-09-28</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">3.1.1 - 2020-09-25</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">3.1.0 - 2020-09-16</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-2019-07-23">3.0.2a1 - 2019-07-23</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">3.0.1 - 2019-05-28</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">3.0.0 - 2019-05-17</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">2.0.3 - 2017-12-14</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a1-2017-12-14">[2.0.3a1] - 2017-12-14</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a0-2017-12-03">2.0.3a0 - 2017-12-03</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">2.0.2 - 2017-08-26</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">2.0.2 - 2017-08-26</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id30">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id31">2.0.1 - 2017-08-24</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id32">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id33">2.0.0 - 2017-06-23</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id34">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a4-2017-05-05">2.0.0a4 - 2017-05-05</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id35">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a3-2017-04-04">2.0.0a3 - 2017-04-04</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id36">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a2">2.0.0a2 - —</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id37">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a1">[2.0.0a1] -</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id38">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a0-2017-03-15">2.0.0a0 - 2017-03-15</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id39">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id40">1.2.0 - 2017-03-10</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id41">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id42">1.1.5 - 2016-12-16</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id43">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id44">1.1.4 - 2016-12-15</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id45">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id46">1.1.1 - 2016-11-20</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id47">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id48">1.0.2 - 2016-10-08</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id49">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id50">1.0.1 - 2016-03-10</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id51">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id52">1.0.0 - -</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id53">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id54">0.9.3 - 2015-06-03</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id55">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id56">0.9.2 - 2015-05-28</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id57">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id58">0.9.1 - 2015-05-26</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id59">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id60">0.9.0 - 2015-05-26</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id61">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id62">0.8.4 - 2015-04-17</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id63">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id64">0.8.3 - -</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id65">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id66">0.8.2 - -</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id67">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id68">0.8.1 - 2015-03-07</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id69">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id70">[0.8.0] - 2015-02-06</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id71">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id72">[0.7.2] - 2014-11-21</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id73">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notpublic">[0.7.1] - notpublic</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id74">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id75">[0.7.0] - notpublic</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id76">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id77">[0.6.6] -</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id78">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id79">[0.6.5] - 2014-07-31</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id80">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id81">[0.6.4] - 2014-07-09</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id82">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id83">[0.6.3] - 2014-07-06</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id84">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id85">[0.6.2] - 2014-06-13</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id86">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id87">[0.6.1] - 2014-04-25</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id88">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id89">[0.6.0] - 2014-04-18</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id90">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id91">[0.5.0] - 2013-12-16</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id92">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id93">[0.2.2] - 2013-11-05</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id94">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id95">[0.2.1] - 2013-08-18</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id96">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id97">[0.1.8] - 2013-06-02</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id98">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id99">[0.1.7] - 2013-05-29</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id100">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id101">[0.1.6] - 2013-04-22</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id102">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id103">[0.1.5] - 2013-04-18</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id104">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id105">[0.1.4] - 2013-04-10</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id106">Changed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id107">[0.1.3] - 2013-04-09</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id108">Changed</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
           </div>
-          <footer>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
 
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2024, Björn F. Johansson.</p>
   </div>
+  
+  <div class="footer-item">
+    
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
 
-</footer>
-        </div>
-      </div>
-    </section>
   </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
 
-</body>
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
 </html>

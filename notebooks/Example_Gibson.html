@@ -1,0 +1,719 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Gibson Assembly from the original publication &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/Example_Gibson';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Designing a CRISPR-Cas9 toolbox for genome engineering." href="Example_CRISPR.html" />
+    <link rel="prev" title="Plasmid Restriction/Ligation Cloning" href="Example_Restriction.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../getting_started.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../example_gallery.html">Example gallery</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reference/pydna.html">pydna package</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/pydna-group/pydna/blob/main/docs/notebooks/Example_Gibson.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna/edit/main/docs/notebooks/Example_Gibson.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/Example_Gibson.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Gibson Assembly from the original publication</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="gibson-assembly-from-the-original-publication">
+<h1>Gibson Assembly from the original publication<a class="headerlink" href="#gibson-assembly-from-the-original-publication" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p>Visit the full library documentation <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a></p>
+</div></blockquote>
+<p>This example showcases a workflow of modelling Gibson assembly to clone gene fragments into plasmids for synthetic biology. The biological example is sourced <a class="reference external" href="https://www.nature.com/articles/nmeth.1318#MOESM319">here</a>, from the original Gibson assembly paper. This example constructs a synthetic pCC1BAC plasmid by joining sequence fragments from Ruminiclostridium (Clostridium) cellulolyticum. The R. cellulolyticum fragments joined are termed F1, F2, and F3, as in the paper.</p>
+<p>Source files can be found alongside this notebook, if you would like to follow along. Annotations are made alongside the code to describe key steps.</p>
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Example_Gibson.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="c1"># Install pydna (only when running on Colab)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span><span class="p">[</span><span class="n">clipboard</span><span class="p">,</span><span class="n">download</span><span class="p">,</span><span class="n">express</span><span class="p">,</span><span class="n">gel</span><span class="p">]</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/pCC1BAC.gb&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importing all necessary classes and methods</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.tm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tm_default</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplify</span><span class="w"> </span><span class="kn">import</span> <span class="n">pcr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">gibson_assembly</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.genbank</span><span class="w"> </span><span class="kn">import</span> <span class="n">Genbank</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.gel</span><span class="w"> </span><span class="kn">import</span> <span class="n">gel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.ladders</span><span class="w"> </span><span class="kn">import</span> <span class="n">GeneRuler_1kb_plus</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reading the R. cellulolyticum genome from GenBank</span>
+<span class="n">gb</span> <span class="o">=</span> <span class="n">Genbank</span><span class="p">(</span><span class="s2">&quot;example@example.com&quot;</span><span class="p">)</span>
+<span class="n">genome</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">nucleotide</span><span class="p">(</span><span class="s2">&quot;CP001348.1&quot;</span><span class="p">)</span>
+<span class="c1"># Print the info of the genome</span>
+<span class="n">genome</span><span class="o">.</span><span class="n">annotations</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;molecule_type&#39;: &#39;DNA&#39;,
+ &#39;topology&#39;: &#39;circular&#39;,
+ &#39;data_file_division&#39;: &#39;BCT&#39;,
+ &#39;date&#39;: &#39;25-AUG-2017&#39;,
+ &#39;accessions&#39;: [&#39;CP001348&#39;, &#39;AAVC01000000&#39;, &#39;AAVC01000001-AAVC01000121&#39;],
+ &#39;sequence_version&#39;: 1,
+ &#39;keywords&#39;: [&#39;&#39;],
+ &#39;source&#39;: &#39;Ruminiclostridium cellulolyticum H10&#39;,
+ &#39;organism&#39;: &#39;Ruminiclostridium cellulolyticum H10&#39;,
+ &#39;taxonomy&#39;: [&#39;Bacteria&#39;,
+  &#39;Bacillati&#39;,
+  &#39;Bacillota&#39;,
+  &#39;Clostridia&#39;,
+  &#39;Eubacteriales&#39;,
+  &#39;Oscillospiraceae&#39;,
+  &#39;Ruminiclostridium&#39;],
+ &#39;references&#39;: [Reference(title=&#39;Complete sequence of Clostridium cellulolyticum H10&#39;, ...),
+  Reference(title=&#39;Direct Submission&#39;, ...)],
+ &#39;comment&#39;: &#39;URL -- http://www.jgi.doe.gov\nJGI Project ID: 4002584\nSource DNA and bacteria available from Jizhong Zhou\n(jzhou@rccc.ou.edu)\nContacts: Jizhong Zhou (jzhou@rccc.ou.edu)\n          David Bruce (microbe@cuba.jgi-psf.org)\nAnnotation done by JGI-ORNL and JGI-PGF\nFinishing done by JGI-LANL\nFinished microbial genomes have been curated to close all gaps with\ngreater than 98% coverage of at least two independent clones. Each\nbase pair has a minimum q (quality) value of 30 and the total error\nrate is less than one per 50000.\nThe JGI and collaborators endorse the principles for the\ndistribution and use of large scale sequencing data adopted by the\nlarger genome sequencing community and urge users of this data to\nfollow them. it is our intention to publish the work of this\nproject in a timely fashion and we welcome collaborative\ninteraction on the project and analysis.\n(http://www.genome.gov/page.cfm?pageID=10506376).&#39;}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reading the plasmid</span>
+<span class="n">vector</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="s2">&quot;./pCC1BAC.gb&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">vector</span><span class="o">.</span><span class="n">annotations</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/pydna/pydna/.venv/lib/python3.12/site-packages/Bio/GenBank/Scanner.py:1537: BiopythonParserWarning: Attempting to parse malformed locus line:
+&#39;LOCUS       Exported                8139 bp DNA     circular SYN 29-AUG-2024\n&#39;
+Found locus &#39;Exported&#39; size &#39;8139&#39; residue_type &#39;DNA&#39;
+Some fields may be wrong.
+  warnings.warn(
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;molecule_type&#39;: &#39;DNA&#39;,
+ &#39;topology&#39;: &#39;circular&#39;,
+ &#39;data_file_division&#39;: &#39;SYN&#39;,
+ &#39;date&#39;: &#39;29-AUG-2024&#39;,
+ &#39;accessions&#39;: [&#39;.&#39;],
+ &#39;keywords&#39;: [&#39;&#39;],
+ &#39;source&#39;: &#39;synthetic DNA construct&#39;,
+ &#39;organism&#39;: &#39;synthetic DNA construct&#39;,
+ &#39;taxonomy&#39;: [],
+ &#39;references&#39;: [Reference(title=&#39;Direct Submission&#39;, ...),
+  Reference(title=&#39;Direct Submission&#39;, ...),
+  Reference(title=&#39;Direct Submission&#39;, ...),
+  Reference(title=&#39;Direct Submission&#39;, ...)],
+ &#39;comment&#39;: &#39;SGRef: number: 1; type: &quot;Journal Article&quot;; journalName: &quot;Submitted\n(23-AUG-2007) 726 Post Road, Madison, WI 53713, USA&quot;\nSGRef: number: 2; type: &quot;Journal Article&quot;\nSGRef: number: 3; type: &quot;Journal Article&quot;&#39;}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importing pre-designed primers for the PylRS insert fragment. </span>
+
+<span class="n">F1_For</span> <span class="o">=</span> <span class="s2">&quot;GCAGCTTCAAGTCCTGCAAACAAGGTGTACCAGGATCGTT&quot;</span>
+<span class="n">F1_Rev</span> <span class="o">=</span> <span class="s2">&quot;GATTTCAGTGTAGTTAGGGCCAGTTGAATTCAAACCTGCC&quot;</span>
+<span class="n">F2_For</span> <span class="o">=</span> <span class="s2">&quot;GGCAGGTTTGAATTCAACTGGCCCTAACTACACTGAAATC&quot;</span>
+<span class="n">F2_Rev</span> <span class="o">=</span> <span class="s2">&quot;CTTGGTGCCATCAGCATTGTTCTCTGTACCGCCCACTGTC&quot;</span>
+<span class="n">F3_For</span> <span class="o">=</span> <span class="s2">&quot;GACAGTGGGCGGTACAGAGAACAATGCTGATGGCACCAAG&quot;</span>
+<span class="n">F3_Rev</span> <span class="o">=</span> <span class="s2">&quot;CAGTTGAATAATCATGTGTTCCTGCGGCAAATGCAGTACC&quot;</span>
+<span class="n">BACF1_For</span> <span class="o">=</span> <span class="s2">&quot;AACGATCCTGGTACACCTTGTTTGCAGGACTTGAAGCTGCgcggccgcgatcctctagagtcgacctg&quot;</span>
+<span class="n">BACF3_Rev</span> <span class="o">=</span> <span class="s2">&quot;GGTACTGCATTTGCCGCAGGAACACATGATTATTCAACTGgcggccgccgggtaccgagctcgaattc&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Getting the PCR products from the genome (might take a while since the genome is large)</span>
+
+<span class="n">pcr_product_F1</span> <span class="o">=</span> <span class="n">pcr</span><span class="p">(</span><span class="n">F1_For</span><span class="p">,</span> <span class="n">F1_Rev</span><span class="p">,</span> <span class="n">genome</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">pcr_product_F2</span> <span class="o">=</span> <span class="n">pcr</span><span class="p">(</span><span class="n">F2_For</span><span class="p">,</span> <span class="n">F2_Rev</span><span class="p">,</span> <span class="n">genome</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">pcr_product_F3</span> <span class="o">=</span> <span class="n">pcr</span><span class="p">(</span><span class="n">F3_For</span><span class="p">,</span> <span class="n">F3_Rev</span><span class="p">,</span> <span class="n">genome</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">pcr_product_BAC</span> <span class="o">=</span> <span class="n">pcr</span><span class="p">(</span><span class="n">BACF1_For</span><span class="p">,</span> <span class="n">BACF3_Rev</span><span class="p">,</span> <span class="n">vector</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="c1"># Printing out the PCR fragment sizes</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pcr_product_F1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pcr_product_F2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pcr_product_F3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pcr_product_BAC</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5210
+5384
+5172
+8221
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Making a gel to show the PCR products</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">gel</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">GeneRuler_1kb_plus</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">pcr_product_F1</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">pcr_product_F2</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">pcr_product_F3</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">pcr_product_BAC</span><span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">im</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c526b7f85ff3c1bbeb0a92ba16af03ef9ced8f5d8dc4a8b43ae7571dd1e14f25.png" src="../_images/c526b7f85ff3c1bbeb0a92ba16af03ef9ced8f5d8dc4a8b43ae7571dd1e14f25.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Performing the Gibson Assembly. Note that the assembly class parameters should be given as a list.</span>
+
+<span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">([</span><span class="n">pcr_product_F1</span><span class="p">,</span><span class="n">pcr_product_F2</span><span class="p">,</span><span class="n">pcr_product_F3</span><span class="p">,</span><span class="n">pcr_product_BAC</span><span class="p">])</span>
+
+<span class="c1"># Printing out the Gibson Assembly product</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseqrecord
+circular: True
+size: 23827
+ID: id
+Name: name
+Description: description
+Number of features: 42
+/molecule_type=DNA
+Dseq(o23827)
+GCAG..ccgc
+CGTC..ggcg
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Example_Restriction.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Plasmid Restriction/Ligation Cloning</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Example_CRISPR.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Designing a CRISPR-Cas9 toolbox for genome engineering.</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

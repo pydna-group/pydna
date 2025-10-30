@@ -1,0 +1,942 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Primer design &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/primer_design';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Gibson Assembly" href="Gibson.html" />
+    <link rel="prev" title="PCR" href="PCR.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../getting_started.html">Getting started</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PCR.html">PCR</a></li>
+
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reference/pydna.html">pydna package</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/pydna-group/pydna/blob/main/docs/notebooks/primer_design.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna/edit/main/docs/notebooks/primer_design.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/primer_design.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Primer design</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checking-the-tm-of-a-primer">Checking the Tm of a primer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-neb-tm-calculator">Using NEB Tm calculator</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#designing-primers-for-pcr">Designing primers for PCR</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#special-primers">Special primers</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#restriction-enzyme">Restriction enzyme</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#gibson-assembly">Gibson Assembly</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-gibson-assembly">Linear Gibson Assembly</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#circular-gibson-assembly">Circular Gibson Assembly</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-spacers-linkers-to-gibson-assembly-primers">Adding spacers / linkers to Gibson Assembly primers</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-of-assembly-fragments-behaviour">Summary of assembly_fragments behaviour</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-neb-tm-calculator-for-primer-design">Using the NEB Tm calculator for primer design</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="primer-design">
+<h1>Primer design<a class="headerlink" href="#primer-design" title="Link to this heading">#</a></h1>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">pydna</span></code> for primer design in different contexts, let’s start with some basic primer functionalities.</p>
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/primer_design.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="c1"># Install pydna (only when running on Colab)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span><span class="p">[</span><span class="n">clipboard</span><span class="p">,</span><span class="n">download</span><span class="p">,</span><span class="n">express</span><span class="p">,</span><span class="n">gel</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="checking-the-tm-of-a-primer">
+<h2>Checking the Tm of a primer<a class="headerlink" href="#checking-the-tm-of-a-primer" title="Link to this heading">#</a></h2>
+<p>Primer design in pydna is very flexible, and supports different methods. For typical use-cases, we recommend using <code class="docutils literal notranslate"><span class="pre">tm_default</span></code>, which uses the method <code class="docutils literal notranslate"><span class="pre">Bio.SeqUtils.MeltingTemp</span></code> from biopython, nearest neighbor thermodynamics values from <a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/15139820/">SantaLucia &amp; Hicks (2004)</a> and common values for nucleotide concentration, salt concentration, etc. You can of course change those settings. For a full dive check <code class="docutils literal notranslate"><span class="pre">src/pydna/tm.py</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.tm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tm_default</span>
+
+<span class="c1"># The primers from the readme example</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tm_default</span><span class="p">(</span><span class="s2">&quot;ATGCAAACAGTAATGATGGA&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tm_default</span><span class="p">(</span><span class="s2">&quot;ATTATCTTTTTCAGCAATAGAATCA&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>55.047602641480864
+54.55481807340169
+</pre></div>
+</div>
+</div>
+</div>
+<section id="using-neb-tm-calculator">
+<h3>Using NEB Tm calculator<a class="headerlink" href="#using-neb-tm-calculator" title="Link to this heading">#</a></h3>
+<p>If you are used to the NEB Tm calculator, and you want to use it programmatically, you can do so as well. The function takes three arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">primer</span></code>: The primer sequence.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">conc</span></code>: The primer concentration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prodcode</span></code>: The product code, which you can find on <a class="reference external" href="https://tmapi.neb.com/docs/productcodes">NEB’s website</a>.</p></li>
+</ul>
+<blockquote>
+<div><p><strong>NOTE:</strong> When you call the function, it will make a request to the NEB server. This makes it much slower than using the builtin methods. In addition, we cannot guarantee that the NEB server will always be available, nor that the calculations that they use will not change in the future, since the code is not available.</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.tm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tm_neb</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">tm_neb</span><span class="p">(</span><span class="s2">&quot;ATGCAAACAGTAATGATGGA&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;q5-0&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tm_neb</span><span class="p">(</span><span class="s2">&quot;ATTATCTTTTTCAGCAATAGAATCA&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;q5-0&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>59
+57
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="designing-primers-for-pcr">
+<h2>Designing primers for PCR<a class="headerlink" href="#designing-primers-for-pcr" title="Link to this heading">#</a></h2>
+<p>Let’s use pydna to amplify a region from a DNA sequence. You can use the <code class="docutils literal notranslate"><span class="pre">primer_design</span></code> function to design primers for a given target Tm (<code class="docutils literal notranslate"><span class="pre">target_tm</span></code>) and indicate a minimum primer hybridization length in basepairs (<code class="docutils literal notranslate"><span class="pre">limit</span></code>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqFeature</span><span class="p">,</span> <span class="n">SimpleLocation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.design</span><span class="w"> </span><span class="kn">import</span> <span class="n">primer_design</span>
+
+<span class="n">dna</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;ggttcaATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATTCTATTGCTGAATAAcatttacatca&quot;</span><span class="p">)</span>
+
+<span class="c1"># Let&#39;s add a feature representing the CDS</span>
+<span class="n">dna</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SeqFeature</span><span class="p">(</span><span class="n">SimpleLocation</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;CDS&quot;</span><span class="p">))</span>
+
+<span class="c1"># To design the primer, we extract the template sequence we want to amplify, and use the `primer_design` method.</span>
+<span class="n">template</span> <span class="o">=</span> <span class="n">dna</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">dna</span><span class="p">)</span>
+
+<span class="c1"># We get an amplicon object (a subclass of Dseqrecord), that also contains extra info</span>
+<span class="c1"># of where the primers align etc.</span>
+<span class="n">amplicon</span> <span class="o">=</span> <span class="n">primer_design</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">target_tm</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="c1"># We extract the primers</span>
+<span class="n">fwd_primer</span><span class="p">,</span> <span class="n">rvs_primer</span> <span class="o">=</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">primers</span><span class="p">()</span>
+
+<span class="c1"># We print the Tms</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Forward primer Tm:&quot;</span><span class="p">,</span> <span class="n">tm_default</span><span class="p">(</span><span class="n">fwd_primer</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Forward primer sequence:&quot;</span><span class="p">,</span> <span class="n">fwd_primer</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reverse primer Tm:&quot;</span><span class="p">,</span> <span class="n">tm_default</span><span class="p">(</span><span class="n">rvs_primer</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reverse primer sequence:&quot;</span><span class="p">,</span> <span class="n">rvs_primer</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Forward primer Tm: 59.71997924024873
+Forward primer sequence: ATGCAAACAGTAATGATGGATGAC
+
+Reverse primer Tm: 60.22377911083646
+Reverse primer sequence: TTATTCAGCAATAGAATCAGTGCTTTG
+</pre></div>
+</div>
+</div>
+</div>
+<section id="special-primers">
+<h3>Special primers<a class="headerlink" href="#special-primers" title="Link to this heading">#</a></h3>
+<p>We saw an example where we simply want to amplify a region of DNA. But what if we want to design primers for a specific restriction enzyme, or for Gibson Assembly? That’s also easy.</p>
+<section id="restriction-enzyme">
+<h4>Restriction enzyme<a class="headerlink" href="#restriction-enzyme" title="Link to this heading">#</a></h4>
+<p>Simply append the sequence you want at the 5’ end of the primers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">EcoRI</span>
+<span class="n">fwd_primer_EcoRI</span> <span class="o">=</span> <span class="s1">&#39;ttGAATTC&#39;</span> <span class="o">+</span> <span class="n">fwd_primer</span>
+<span class="c1"># You can also do it like this!</span>
+<span class="n">rvs_primer_EcoRI</span> <span class="o">=</span> <span class="s1">&#39;tt&#39;</span> <span class="o">+</span> <span class="n">EcoRI</span><span class="o">.</span><span class="n">site</span> <span class="o">+</span> <span class="n">rvs_primer</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">fwd_primer_EcoRI</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rvs_primer_EcoRI</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ttGAATTCATGCAAACAGTAATGATGGATGAC
+ttGAATTCTTATTCAGCAATAGAATCAGTGCTTTG
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p><strong>Edge case:</strong> Some recognition sites contain ambiguous bases, for instance <code class="docutils literal notranslate"><span class="pre">Bst4CI</span></code> cuts at site <code class="docutils literal notranslate"><span class="pre">ACNGT</span></code>, where <code class="docutils literal notranslate"><span class="pre">N</span></code> can be any nucleotide. In that case, you can use the dictionary provided by biopython (<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">Bio.Data.IUPACData</span> <span class="pre">import</span> <span class="pre">ambiguous_dna_values</span></code>) to produce a concrete DNA sequence you can use in real life.</p>
+</div></blockquote>
+</section>
+<section id="gibson-assembly">
+<h4>Gibson Assembly<a class="headerlink" href="#gibson-assembly" title="Link to this heading">#</a></h4>
+<p>To design primers for Gibson Assembly, you can use the <code class="docutils literal notranslate"><span class="pre">assembly_fragments</span></code> function.</p>
+<section id="linear-gibson-assembly">
+<h5>Linear Gibson Assembly<a class="headerlink" href="#linear-gibson-assembly" title="Link to this heading">#</a></h5>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.design</span><span class="w"> </span><span class="kn">import</span> <span class="n">assembly_fragments</span>
+<span class="c1"># Let&#39;s imagine we want to join these two sequences together linearly with Gibson Assembly</span>
+<span class="n">seq1</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;ATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATTCTATTGCTGAAAAAGATAAT&#39;</span><span class="p">)</span>
+<span class="n">seq2</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;CACTCTAATAATGAATCTAACTTTACTTGGAAAGCGTTTCGTGAACAAGTGGAAAAGCAT&#39;</span><span class="p">)</span>
+
+<span class="c1"># First, we design primers for each fragment, as before:</span>
+<span class="n">pre_amplicon1</span> <span class="o">=</span> <span class="n">primer_design</span><span class="p">(</span><span class="n">seq1</span><span class="p">,</span> <span class="n">target_tm</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">pre_amplicon2</span> <span class="o">=</span> <span class="n">primer_design</span><span class="p">(</span><span class="n">seq2</span><span class="p">,</span> <span class="n">target_tm</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="c1"># Then, we use the `assembly_fragments` function to design primers for Gibson Assembly</span>
+<span class="n">amplicon1</span><span class="p">,</span> <span class="n">amplicon2</span> <span class="o">=</span> <span class="n">assembly_fragments</span><span class="p">([</span><span class="n">pre_amplicon1</span><span class="p">,</span> <span class="n">pre_amplicon2</span><span class="p">],</span> <span class="n">overlap</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># We print the primers:</span>
+<span class="n">fwd_1</span><span class="p">,</span> <span class="n">rvs_1</span> <span class="o">=</span> <span class="n">amplicon1</span><span class="o">.</span><span class="n">primers</span><span class="p">()</span>
+<span class="n">fwd_2</span><span class="p">,</span> <span class="n">rvs_2</span> <span class="o">=</span> <span class="n">amplicon2</span><span class="o">.</span><span class="n">primers</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Primers for fragment 1:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fwd_1</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rvs_1</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Primers for fragment 2:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fwd_2</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rvs_2</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="c1"># The amplicons contain the PCR products (note the overlap between the two fragments)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;PCR product 1:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">amplicon1</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;PCR product 2:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">amplicon2</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Overlap&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">amplicon1</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">*</span><span class="mi">55</span><span class="p">,</span><span class="n">amplicon2</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Primers for fragment 1:
+ATGCAAACAGTAATGATGGATGAC
+GAGTGATTATCTTTTTCAGCAATAGAATCAGTGC
+
+Primers for fragment 2:
+ATAATCACTCTAATAATGAATCTAACTTTACTTGGAAA
+ATGCTTTTCCACTTGTTCACG
+
+PCR product 1:
+ATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATTCTATTGCTGAAAAAGATAATCACTC
+
+PCR product 2:
+ATAATCACTCTAATAATGAATCTAACTTTACTTGGAAAGCGTTTCGTGAACAAGTGGAAAAGCAT
+
+Overlap
+ATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATTCTATTGCTGAAAAAGATAATCACTC
+                                                       ATAATCACTCTAATAATGAATCTAACTTTACTTGGAAAGCGTTTCGTGAACAAGTGGAAAAGCAT
+</pre></div>
+</div>
+</div>
+</div>
+<p>Once you have the amplicons, you can use <code class="docutils literal notranslate"><span class="pre">gibson_assembly</span></code> to join them together (see the <code class="docutils literal notranslate"><span class="pre">Gibson</span></code> notebook for more details)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">gibson_assembly</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.common_sub_strings</span><span class="w"> </span><span class="kn">import</span> <span class="n">terminal_overlap</span>
+
+
+<span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">([</span><span class="n">amplicon1</span><span class="p">,</span> <span class="n">amplicon2</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseqrecord(-120)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="circular-gibson-assembly">
+<h5>Circular Gibson Assembly<a class="headerlink" href="#circular-gibson-assembly" title="Link to this heading">#</a></h5>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We use the `assembly_fragments` function with `circular=True`</span>
+<span class="n">amplicon1</span><span class="p">,</span> <span class="n">amplicon2</span> <span class="o">=</span> <span class="n">assembly_fragments</span><span class="p">([</span><span class="n">pre_amplicon1</span><span class="p">,</span> <span class="n">pre_amplicon2</span><span class="p">],</span> <span class="n">overlap</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># We print the primers:</span>
+<span class="n">fwd_1</span><span class="p">,</span> <span class="n">rvs_1</span> <span class="o">=</span> <span class="n">amplicon1</span><span class="o">.</span><span class="n">primers</span><span class="p">()</span>
+<span class="n">fwd_2</span><span class="p">,</span> <span class="n">rvs_2</span> <span class="o">=</span> <span class="n">amplicon2</span><span class="o">.</span><span class="n">primers</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Primers for fragment 1:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fwd_1</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rvs_1</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Primers for fragment 2:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fwd_2</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rvs_2</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">([</span><span class="n">amplicon1</span><span class="p">,</span> <span class="n">amplicon2</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;products&#39;</span><span class="p">,</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Primers for fragment 1:
+AGCATATGCAAACAGTAATGATGGATGAC
+GAGTGATTATCTTTTTCAGCAATAGAATCAGTGC
+
+Primers for fragment 2:
+ATAATCACTCTAATAATGAATCTAACTTTACTTGGAAA
+TGCATATGCTTTTCCACTTGTTCACG
+
+products AGCATATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATTCTATTGCTGAAAAAGATAATCACTCTAATAATGAATCTAACTTTACTTGGAAAGCGTTTCGTGAACAAGTGGAAA
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="adding-spacers-linkers-to-gibson-assembly-primers">
+<h4>Adding spacers / linkers to Gibson Assembly primers<a class="headerlink" href="#adding-spacers-linkers-to-gibson-assembly-primers" title="Link to this heading">#</a></h4>
+<p>In this case, you can pass a list of <code class="docutils literal notranslate"><span class="pre">Amplicons</span></code> and <code class="docutils literal notranslate"><span class="pre">Dseqrecords</span></code> to the <code class="docutils literal notranslate"><span class="pre">assembly_fragments</span></code> function. The <code class="docutils literal notranslate"><span class="pre">amplicons</span></code> will be used as the fragments to assemble, and the <code class="docutils literal notranslate"><span class="pre">dseqrecords</span></code> will be used as spacers between the fragments, as long as they are shorter than the argument <code class="docutils literal notranslate"><span class="pre">maxlink</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We create two spacers as dseqrecords</span>
+<span class="n">spacer1</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">)</span>
+<span class="n">spacer2</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;ttt&#39;</span><span class="p">)</span>
+
+<span class="n">amplicon1</span><span class="p">,</span> <span class="n">amplicon2</span> <span class="o">=</span> <span class="n">assembly_fragments</span><span class="p">([</span><span class="n">pre_amplicon1</span><span class="p">,</span> <span class="n">spacer1</span><span class="p">,</span> <span class="n">pre_amplicon2</span><span class="p">,</span> <span class="n">spacer2</span><span class="p">],</span> <span class="n">overlap</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">([</span><span class="n">amplicon1</span><span class="p">,</span> <span class="n">amplicon2</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># See the linkers that have been added</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;^^^&#39;</span><span class="p">,</span> <span class="mi">60</span><span class="o">*</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;^^^&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GCATtttATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATTCTATTGCTGAAAAAGATAATaaaCACTCTAATAATGAATCTAACTTTACTTGGAAAGCGTTTCGTGAACAAGTGGAAAA
+    ^^^                                                            ^^^
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="summary-of-assembly-fragments-behaviour">
+<h4>Summary of assembly_fragments behaviour<a class="headerlink" href="#summary-of-assembly-fragments-behaviour" title="Link to this heading">#</a></h4>
+<p>The behaviour is summarised in the following graphics for linear and circular assembly.</p>
+<p><img alt="assembly_fragments behaviour" src="../_images/assembly_fragment_slide_linear.png" />
+<img alt="assembly_fragments behaviour" src="../_images/assembly_fragment_slide_circular.png" /></p>
+</section>
+</section>
+<section id="using-the-neb-tm-calculator-for-primer-design">
+<h3>Using the NEB Tm calculator for primer design<a class="headerlink" href="#using-the-neb-tm-calculator-for-primer-design" title="Link to this heading">#</a></h3>
+<p>You can use the NEB Tm calculator for primer design, but it is much slower than the other methods because it relies on making requests to the NEB server.</p>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">estimate_function</span></code> argument to pass another function that will be used to estimate a first Tm, then the NEB calculator will be used to refine it.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">estimate_function</span></code> and <code class="docutils literal notranslate"><span class="pre">tm_method</span></code> only takes the sequence string as argument, so you need to make an adapter function for the the case of <code class="docutils literal notranslate"><span class="pre">tm_neb</span></code> (see below)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">custom_tm_function</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+    <span class="c1"># We include the print statement to show that is only called a few times</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Estimating Tm using NEB Tm calculator&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tm_neb</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;q5-0&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;With an estimate function&quot;</span><span class="p">)</span>
+<span class="n">primer_design</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">tm_func</span><span class="o">=</span><span class="n">custom_tm_function</span><span class="p">,</span> <span class="n">estimate_function</span><span class="o">=</span><span class="n">tm_default</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Without an estimate function&quot;</span><span class="p">)</span>
+<span class="n">primer_design</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">tm_func</span><span class="o">=</span><span class="n">custom_tm_function</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>With an estimate function
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+
+Without an estimate function
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+Estimating Tm using NEB Tm calculator
+</pre></div>
+</div>
+<div class="output text_html">Amplicon(54)</div></div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="PCR.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">PCR</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Gibson.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Gibson Assembly</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checking-the-tm-of-a-primer">Checking the Tm of a primer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-neb-tm-calculator">Using NEB Tm calculator</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#designing-primers-for-pcr">Designing primers for PCR</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#special-primers">Special primers</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#restriction-enzyme">Restriction enzyme</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#gibson-assembly">Gibson Assembly</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-gibson-assembly">Linear Gibson Assembly</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#circular-gibson-assembly">Circular Gibson Assembly</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-spacers-linkers-to-gibson-assembly-primers">Adding spacers / linkers to Gibson Assembly primers</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-of-assembly-fragments-behaviour">Summary of assembly_fragments behaviour</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-neb-tm-calculator-for-primer-design">Using the NEB Tm calculator for primer design</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

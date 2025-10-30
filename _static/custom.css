@@ -1,48 +1,5 @@
 /* Make output cells that are too long scrollable */
-.highlight-none {
-    position: relative;
-    margin-top: 20px;
-}
-
-/* Add a label to the top of the output cell */
-.highlight-none::before {
-    content: "output";
-    position: absolute;
-    top: 0px;
-    left: 0;
-    background-color: #f0f0f0;
-    color: #333;
-    padding: 2px 8px;
-    font-size: 12px;
-    border-radius: 3px 3px 0 0;
-    z-index: 1;
-}
-
-div.highlight-none pre {
+div.output div.highlight pre {
     max-height: 300px;
     overflow-y: auto;
-}
-
-/* Add same label to highlight-python cells */
-.highlight-python {
-    position: relative;
-}
-
-/* Add a label to the top of the output cell */
-.highlight-python::before {
-    content: "python code";
-    position: absolute;
-    top: 0px;
-    left: 0;
-    background-color: #f0f0f0;
-    color: #333;
-    padding: 2px 8px;
-    font-size: 12px;
-    border-radius: 3px 3px 0 0;
-    z-index: 1;
-}
-
-/* Add padding to the top to fit the label */
-.rst-content div[class^="highlight"] pre {
-    padding-top: 25px;
 }

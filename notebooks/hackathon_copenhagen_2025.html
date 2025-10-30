@@ -1,0 +1,1258 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Hackathon Copenhagen 2025 &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/hackathon_copenhagen_2025';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../getting_started.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reference/pydna.html">pydna package</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/pydna-group/pydna/blob/main/docs/notebooks/hackathon_copenhagen_2025.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna/edit/main/docs/notebooks/hackathon_copenhagen_2025.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/hackathon_copenhagen_2025.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Hackathon Copenhagen 2025</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Hackathon Copenhagen 2025</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#dseq-and-dseqrecord">Dseq and Dseqrecord</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-sequence-files">Importing Sequence Files</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-external-sequences">Importing external sequences</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#sequence-features">Sequence features</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#cloning">Cloning</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#restriction-and-ligation">Restriction and ligation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-first-method-first-restriction-then-ligation">Using the first method (first restriction, then ligation)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-second-method-restriciton-ligation-in-one-step">Using the second method (restriciton-ligation in one step)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pcr">PCR</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gibson-assembly">Gibson Assembly</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#genome-integration-excision">Genome integration / excision</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-cloning-methods">Other cloning methods</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#sequence-equality">Sequence equality</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="hackathon-copenhagen-2025">
+<h1>Hackathon Copenhagen 2025<a class="headerlink" href="#hackathon-copenhagen-2025" title="Link to this heading">#</a></h1>
+<p>This notebook is an introduction to the pydna package, meant to be used as a starting point for the hackathon.</p>
+<p>Click on the link below to open the notebook in Google Colab, so that you can   easily run it locally.</p>
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/hackathon_copenhagen_2025.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+<p>The below cell simply installs the necessary dependencies to run pydna and downloads the files to run the code if you are running in google collab. If you are running this in your computer, you will have to install <code class="docutils literal notranslate"><span class="pre">pydna</span></code> from pip or your favourite package manager, and download the files yourself from <a class="reference external" href="https://github.com/pydna-group/pydna/tree/master/docs/notebooks">here</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="c1"># Install pydna (only when running on Colab)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span><span class="p">[</span><span class="n">clipboard</span><span class="p">,</span><span class="n">download</span><span class="p">,</span><span class="n">express</span><span class="p">,</span><span class="n">gel</span><span class="p">]</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/U49845.fasta&quot;</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/CU329670.gb&quot;</span>
+    <span class="err">!</span><span class="n">mkdir</span> <span class="n">images</span><span class="o">/</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/images/snapgene_screenshot.png&quot;</span>
+    <span class="err">!</span><span class="n">mv</span> <span class="n">snapgene_screenshot</span><span class="o">.</span><span class="n">png</span> <span class="n">images</span><span class="o">/</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/images/snapgene_screenshot2.png&quot;</span>
+    <span class="err">!</span><span class="n">mv</span> <span class="n">snapgene_screenshot2</span><span class="o">.</span><span class="n">png</span> <span class="n">images</span><span class="o">/</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="dseq-and-dseqrecord">
+<h1>Dseq and Dseqrecord<a class="headerlink" href="#dseq-and-dseqrecord" title="Link to this heading">#</a></h1>
+<p>Pydna contains classes to represent double stranded DNA sequences that can:</p>
+<ul class="simple">
+<li><p>Be linear</p></li>
+<li><p>Be circular</p></li>
+<li><p>Contain overhangs (sticky ends).</p></li>
+</ul>
+<p>These sequences can be used to simulate molecular biology methods such as cloning and PCR. The main classes used to represent sequences are <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> and <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Dseq</span></code> represents the sequence only. Think of it as a FASTA file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> can contain sequence features and other info such as publication, authors, etc. Think of it as a Genbank file.</p></li>
+</ul>
+<p>The most important aspects are shown below:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span>
+
+<span class="c1"># We initialize a Dseq object with a string of DNA sequence, by default it is linear</span>
+<span class="n">my_dseq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;ATCG&quot;</span><span class="p">)</span>
+
+<span class="c1"># We can specify the circularity of the sequence</span>
+<span class="n">my_circ_dseq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;ATCG&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dseq is printed as a string sequence:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_dseq</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">my_circ_dseq</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The representation also prints the circularity and both strands:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">my_dseq</span><span class="p">),</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">my_circ_dseq</span><span class="p">),</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Circular sequences support circular indexing:&quot;</span><span class="p">,</span> <span class="n">my_circ_dseq</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Linear sequences return an empty sequence object:&quot;</span><span class="p">,</span> <span class="n">my_dseq</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq is printed as a string sequence:
+ATCG
+
+ATCG
+
+The representation also prints the circularity and both strands:
+Dseq(-4)
+ATCG
+TAGC
+
+Dseq(o4)
+ATCG
+TAGC
+
+Circular sequences support circular indexing: CGA
+Linear sequences return an empty sequence object:
+</pre></div>
+</div>
+</div>
+</div>
+<p>A <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object contains a <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> object and other information such as the sequence name, description, and features.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+
+<span class="c1"># One way to initialize a Dseqrecord object is to pass a Dseq object</span>
+<span class="n">my_dseqrecord</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;TGCAAACAGTAATGATGGATGAC&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+<span class="c1"># Another way is to pass a string of DNA sequence</span>
+<span class="n">my_dseqrecord</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;TGCAAACAGTAATGATGGATGAC&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># We can print the Dseqrecord object to see the sequence and other information</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_dseqrecord</span><span class="p">)</span>
+
+<span class="c1"># We can also print the sequence only (it is a Dseq object)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">my_dseqrecord</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="n">my_dseqrecord</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+
+<span class="c1"># We can add features, name it, etc. more on this later.</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseqrecord
+circular: False
+size: 23
+ID: id
+Name: name
+Description: description
+Number of features: 0
+/molecule_type=DNA
+Dseq(-23)
+TGCAAACAGTAATGATGGATGAC
+ACGTTTGTCATTACTACCTACTG
+
+&lt;class &#39;pydna.dseq.Dseq&#39;&gt; TGCAAACAGTAATGATGGATGAC
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p>NOTE: The <code class="docutils literal notranslate"><span class="pre">Dseq</span></code> class is a subclass of biopython’s <code class="docutils literal notranslate"><span class="pre">Seq</span></code>, whose documentation can be found <a class="reference external" href="https://biopython.org/wiki/Seq">here</a>. <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> is a subclass of biopython’s <code class="docutils literal notranslate"><span class="pre">SeqRecord</span></code>, whose documentation can be found <a class="reference external" href="https://biopython.org/wiki/SeqRecord">here</a>.</p>
+</div></blockquote>
+</section>
+<section id="importing-sequence-files">
+<h1>Importing Sequence Files<a class="headerlink" href="#importing-sequence-files" title="Link to this heading">#</a></h1>
+<p>To import files into pydna is simple. pydna provides the <code class="docutils literal notranslate"><span class="pre">parse</span></code> method to read all DNA sequences in a file into a list. As an input, <code class="docutils literal notranslate"><span class="pre">parse</span></code> can take:</p>
+<ul class="simple">
+<li><p>The path to a file from your computer</p></li>
+<li><p>A python string with the file content.</p></li>
+</ul>
+<p>The following code shows an example of how to use the <code class="docutils literal notranslate"><span class="pre">parse</span></code> function to import a FASTA file.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
+
+<span class="c1">#Import your file into python using its path</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;./U49845.fasta&quot;</span>
+<span class="n">files</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+<span class="c1">#Show your FASTA file in python</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;fasta&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt;lcl|U49845.1_cds_AAA98665.1_1 [protein=TCP1-beta] [frame=3] [protein_id=AAA98665.1] [location=&lt;1..206] [gbkey=CDS]
+TCCTCCATATACAACGGTATCTCCACCTCAGGTTTAGATCTCAACAACGGAACCATTGCC
+GACATGAGACAGTTAGGTATCGTCGAGAGTTACAAGCTAAAACGAGCAGTAGTCAGCTCT
+GCATCTGAAGCCGCTGAAGTTCTACTAAGGGTGGATAACATCATCCGTGCAAGACCAAGA
+ACCGCCAATAGACAACATATGTAA
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">parse</span></code> returns a <code class="docutils literal notranslate"><span class="pre">list</span></code> object, hence requiring <code class="docutils literal notranslate"><span class="pre">[0]</span></code> to take the first element of the list. When you have a FASTA file that contains multiple sequences, you can index the list accordingly (e.g  <code class="docutils literal notranslate"><span class="pre">[0]</span></code>, <code class="docutils literal notranslate"><span class="pre">[1]</span></code>, …)</p>
+<p>The last line of code uses the <code class="docutils literal notranslate"><span class="pre">format</span></code> method to generate a string representation of the sequence as a FASTA file.</p>
+<p>Another example, using a GenBank file (<a class="reference external" href="https://www.ncbi.nlm.nih.gov/nucleotide/U49845">U49845</a>), is shown below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
+
+<span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;./CU329670.gb&quot;</span>
+<span class="n">files</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+<span class="c1"># Convert the Dseqrecord object into a formatted string in GenBank format</span>
+<span class="n">ase1_locus</span> <span class="o">=</span> <span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ase1_locus</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseqrecord
+circular: False
+size: 4538
+ID: CU329670.1
+Name: CU329670
+Description: Schizosaccharomyces pombe strain 972h- genome assembly, chromosome: I
+Database cross-references: BioProject:PRJNA13836, BioSample:SAMEA3138176
+Number of features: 15
+/molecule_type=DNA
+/topology=linear
+/data_file_division=PLN
+/date=26-APR-2024
+/accessions=[&#39;CU329670&#39;]
+/sequence_version=1
+/keywords=[&#39;&#39;]
+/source=Schizosaccharomyces pombe (fission yeast)
+/organism=Schizosaccharomyces pombe
+/taxonomy=[&#39;Eukaryota&#39;, &#39;Fungi&#39;, &#39;Dikarya&#39;, &#39;Ascomycota&#39;, &#39;Taphrinomycotina&#39;, &#39;Schizosaccharomycetes&#39;, &#39;Schizosaccharomycetales&#39;, &#39;Schizosaccharomycetaceae&#39;, &#39;Schizosaccharomyces&#39;]
+/references=[Reference(title=&#39;The mitochondrial genome of the fission yeast Schizosaccharomyces pombe: highly homologous introns are inserted at the same position of the otherwise less conserved cox1 genes in Schizosaccharomyces pombe and Aspergillus nidulans&#39;, ...), Reference(title=&#39;The mitochondrial genome of the fission yeast Schizosaccharomyces pombe. The cytochrome b gene has an intron closely related to the first two introns in the Saccharomyces cerevisiae cox1 gene&#39;, ...), Reference(title=&#39;The mitochondrial genome of the fission yeast, Schizosaccharomyces pombe. Sequence of the large-subunit ribosomal RNA gene, comparison of potential secondary structure in fungal mitochondrial large-subunit rRNAs and evolutionary considerations&#39;, ...), Reference(title=&#39;Nucleotide sequence of the gene encoding the small ribosomal RNA in the mitochondrial genome of the fission yeast Schizosaccharomyces pombe&#39;, ...), Reference(title=&#39;The genome sequence of Schizosaccharomyces pombe&#39;, ...), Reference(title=&#39;The genome sequence of Schizosaccharomyces pombe&#39;, ...), Reference(title=&#39;Transcription and RNA-processing in fission yeast mitochondria&#39;, ...), Reference(title=&#39;Direct Submission&#39;, ...), Reference(title=&#39;Direct Submission&#39;, ...)]
+/comment=On or before Jan 26, 2012 this sequence version replaced
+AL672256.4, AL009197.1, AL009227.1, AL021046.4, AL021809.4,
+AL021813.1, AL021817.2, AL031180.3, AL034486.1, AL034565.1,
+AL034583.1, AL035064.1, AL035248.2, AL035254.1, AL035439.1,
+AL096845.1, AL109734.1, AL109738.1, AL109739.1, AL109770.1,
+AL109820.1, AL109831.1, AL109832.1, AL109951.1, AL109988.1,
+AL110469.1, AL110509.2, AL117210.1, AL117212.1, AL117213.1,
+AL117390.1, AL121732.1, AL121741.1, AL121745.2, AL121764.1,
+AL121765.1, AL121770.1, AL122032.1, AL132667.1, AL132675.1,
+AL132714.1, AL132769.1, AL132779.2, AL132798.2, AL132828.1,
+AL132839.1, AL132983.1, AL132984.1, AL133154.2, AL133156.1,
+AL133157.1, AL133225.2, AL133302.1, AL133357.1, AL133359.1,
+AL133360.1, AL133361.1, AL133442.1, AL133498.1, AL133521.1,
+AL133522.1, AL135751.1, AL136078.1, AL136235.1, AL136499.1,
+AL136521.2, AL136538.1, AL137130.1, AL138666.2, AL138854.1,
+AL139315.1, AL157734.1, AL157811.1, AL157872.1, AL157917.1,
+AL157993.1, AL157994.1, AL158056.1, AL159180.1, AL159951.1,
+AL162531.1, AL162631.1, AL163031.1, AL163071.1, AL163191.2,
+AL163481.1, AL163529.1, AL353014.1, AL353860.2, AL355012.1,
+AL355013.1, AL355252.1, AL355452.1, AL355632.1, AL355652.1,
+AL355653.1, AL356333.1, AL356335.1, AL357232.1, AL358272.1,
+AL360054.1, AL360094.1, AL390095.1, AL390274.1, AL390814.1,
+AL391713.1, AL391744.1, AL391746.2, AL391783.1, AL441621.1,
+AL441624.1, AL512486.1, AL512487.1, AL512491.1, AL512493.1,
+AL512496.1, AL512549.1, AL512562.1, AL583902.1, AL590562.1,
+AL590582.1, AL590602.1, AL590605.1, AL590902.2, AL590903.1,
+AL691401.1, AL691402.1, AL691405.1, Z49811.1, Z50112.1, Z50113.1,
+Z50142.1, Z50728.2, Z54096.1, Z54142.2, Z54285.2, Z54308.1,
+Z54328.1, Z54354.1, Z54366.1, Z56276.2, Z64354.1, Z66568.2,
+Z67757.1, Z67961.2, Z67998.1, Z67999.1, Z68136.2, Z68144.1,
+Z68166.1, Z68197.2, Z68198.1, Z68887.1, Z69086.1, Z69239.1,
+Z69240.1, Z69368.1, Z69369.1, Z69380.1, Z69725.1, Z69726.1,
+Z69727.1, Z69728.1, Z69729.1, Z69730.1, Z69731.1, Z69795.1,
+Z69796.1, Z69944.1, Z70043.1, Z70690.1, Z70691.1, Z70721.1,
+Z73099.2, Z73100.2, Z81312.1, Z81317.1, Z94864.1, Z95334.1,
+Z95395.1, Z95396.2, Z97185.1, Z97208.1, Z97209.1, Z97210.2,
+Z98056.2, Z98529.1, Z98530.2, Z98531.2, Z98532.1, Z98533.1,
+Z98559.1, Z98560.1, Z98595.1, Z98596.1, Z98597.1, Z98598.1,
+Z98600.1, Z98601.1, Z98602.1, Z98603.1, Z98762.1, Z98763.1,
+Z98849.1, Z98944.1, Z98974.2, Z98975.1, Z98977.4, Z98978.1,
+Z98979.1, Z98980.1, Z98981.3, Z99091.2, Z99126.1, Z99161.1,
+Z99162.1, Z99163.2, Z99164.2, Z99165.1, Z99166.1, Z99167.1,
+Z99168.1, Z99258.1, Z99259.1, Z99260.2, Z99261.1, Z99262.1,
+Z99292.1, Z99295.1, Z99296.2, Z99531.1, Z99532.2, Z99568.2,
+Z99753.1.
+Dseq(-4538)
+ATCA..ATTG
+TAGT..TAAC
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="importing-external-sequences">
+<h1>Importing external sequences<a class="headerlink" href="#importing-external-sequences" title="Link to this heading">#</a></h1>
+<p>You can use genbank to get sequences from GenBank files. If you need to get sequences from other sources (AddGene, for instance). Let us know and we can help with that.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.genbank</span><span class="w"> </span><span class="kn">import</span> <span class="n">Genbank</span>
+
+<span class="c1"># Reading the R. cellulolyticum genome from GenBank</span>
+<span class="n">gb</span> <span class="o">=</span> <span class="n">Genbank</span><span class="p">(</span><span class="s2">&quot;example@example.com&quot;</span><span class="p">)</span>
+<span class="n">genome</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">nucleotide</span><span class="p">(</span><span class="s2">&quot;CP001348.1&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">genome</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseqrecord
+circular: True
+size: 4068724
+ID: CP001348.1
+Name: CP001348
+Description: Ruminiclostridium cellulolyticum H10 chromosome, complete genome
+Database cross-references: BioProject:PRJNA17419, BioSample:SAMN00623037
+Number of features: 7582
+/molecule_type=DNA
+/topology=circular
+/data_file_division=BCT
+/date=25-AUG-2017
+/accessions=[&#39;CP001348&#39;, &#39;AAVC01000000&#39;, &#39;AAVC01000001-AAVC01000121&#39;]
+/sequence_version=1
+/keywords=[&#39;&#39;]
+/source=Ruminiclostridium cellulolyticum H10
+/organism=Ruminiclostridium cellulolyticum H10
+/taxonomy=[&#39;Bacteria&#39;, &#39;Bacillati&#39;, &#39;Bacillota&#39;, &#39;Clostridia&#39;, &#39;Eubacteriales&#39;, &#39;Oscillospiraceae&#39;, &#39;Ruminiclostridium&#39;]
+/references=[Reference(title=&#39;Complete sequence of Clostridium cellulolyticum H10&#39;, ...), Reference(title=&#39;Direct Submission&#39;, ...)]
+/comment=URL -- http://www.jgi.doe.gov
+JGI Project ID: 4002584
+Source DNA and bacteria available from Jizhong Zhou
+(jzhou@rccc.ou.edu)
+Contacts: Jizhong Zhou (jzhou@rccc.ou.edu)
+          David Bruce (microbe@cuba.jgi-psf.org)
+Annotation done by JGI-ORNL and JGI-PGF
+Finishing done by JGI-LANL
+Finished microbial genomes have been curated to close all gaps with
+greater than 98% coverage of at least two independent clones. Each
+base pair has a minimum q (quality) value of 30 and the total error
+rate is less than one per 50000.
+The JGI and collaborators endorse the principles for the
+distribution and use of large scale sequencing data adopted by the
+larger genome sequencing community and urge users of this data to
+follow them. it is our intention to publish the work of this
+project in a timely fashion and we welcome collaborative
+interaction on the project and analysis.
+(http://www.genome.gov/page.cfm?pageID=10506376).
+Dseq(o4068724)
+GTAT..ATAT
+CATA..TATA
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sequence-features">
+<h1>Sequence features<a class="headerlink" href="#sequence-features" title="Link to this heading">#</a></h1>
+<p>Some sequence file formats (like Genbank) include features, describing key biological properties of sequence regions. Let’s look at our previous example in SnapGene:</p>
+<img src="./images/snapgene_screenshot.png" alt="SnapGene screenshot of the U49845 sequence" style="max-width: 600px;">
+<br>
+<img src="./images/snapgene_screenshot2.png" alt="SnapGene screenshot of the U49845 sequence" style="max-width: 600px;"><p>These features can also be seen in the Genbank file. For example, the below text in the Genbank file represents the coding sequence (<code class="docutils literal notranslate"><span class="pre">CDS</span></code>) of the <code class="docutils literal notranslate"><span class="pre">ase1</span></code> gene.</p>
+<p>Each feature has:</p>
+<ul class="simple">
+<li><p>A type (e.g. <code class="docutils literal notranslate"><span class="pre">CDS</span></code>)</p></li>
+<li><p>A location (e.g. <code class="docutils literal notranslate"><span class="pre">join(1174..1597,1645..3416)</span></code>)</p></li>
+<li><p>Optionally, some qualifiers ( key-value pairs, e.g. <code class="docutils literal notranslate"><span class="pre">gene=&quot;ase1&quot;</span></code>). Features can have multiple qualifiers of the same type.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>     <span class="n">CDS</span>             <span class="n">join</span><span class="p">(</span><span class="mf">1174..1597</span><span class="p">,</span><span class="mf">1645..3416</span><span class="p">)</span>
+                     <span class="o">/</span><span class="n">gene</span><span class="o">=</span><span class="s2">&quot;ase1&quot;</span>
+                     <span class="o">/</span><span class="n">locus_tag</span><span class="o">=</span><span class="s2">&quot;SPOM_SPAPB1A10.09&quot;</span>
+                     <span class="o">/</span><span class="n">codon_start</span><span class="o">=</span><span class="mi">1</span>
+                     <span class="o">/</span><span class="n">product</span><span class="o">=</span><span class="s2">&quot;antiparallel microtubule cross-linking factor</span>
+                     <span class="n">Ase1</span><span class="s2">&quot;</span>
+                     <span class="o">/</span><span class="n">protein_id</span><span class="o">=</span><span class="s2">&quot;CAC21482.1&quot;</span>
+</pre></div>
+</div>
+<p>How do these features look like in the <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object, and how do we access them? Let’s go back to our previous example:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">ase1_locus</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">9</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type: 3&#39;UTR
+location: [393:676](+)
+qualifiers:
+    Key: locus_tag, Value: [&#39;SPOM_SPAPB1A10.08&#39;]
+
+type: gene
+location: [1000:3538](+)
+qualifiers:
+    Key: gene, Value: [&#39;ase1&#39;]
+    Key: locus_tag, Value: [&#39;SPOM_SPAPB1A10.09&#39;]
+
+type: 5&#39;UTR
+location: [1000:1173](+)
+qualifiers:
+    Key: gene, Value: [&#39;ase1&#39;]
+    Key: locus_tag, Value: [&#39;SPOM_SPAPB1A10.09&#39;]
+
+type: CDS
+location: join{[1173:1597](+), [1644:3416](+)}
+qualifiers:
+    Key: codon_start, Value: [&#39;1&#39;]
+    Key: gene, Value: [&#39;ase1&#39;]
+    Key: locus_tag, Value: [&#39;SPOM_SPAPB1A10.09&#39;]
+    Key: product, Value: [&#39;antiparallel microtubule cross-linking factor Ase1&#39;]
+    Key: protein_id, Value: [&#39;CAC21482.1&#39;]
+    Key: translation, Value: [&#39;MQTVMMDDIQSTDSIAEKDNHSNNESNFTWKAFREQVEKHFSKIERLHQVLGTDGDNSSLFELFTTAMNAQLHEMEQCQKKLEDDCQQRIDSIRFLVSSLKLTDDTSSLKIESPLIQCLNRLSMVEGQYMAQYDQKLSTIKEMYHKLESYCNRLGSPFVLPDFENSFLSDVSDAFTESLRGRINEAEKEIDARLEVINSFEEEILGLWSELGVEPADVPQYEQLLESHTNRPNDVYVTQELIDQLCKQKEVFSAEKEKRSDHLKSIQSEVSNLWNKLQVSPNEQSQFGDSSNINQENISLWETELEKLHQLKKEHLPIFLEDCRQQILQLWDSLFYSEEQRKSFTPMYEDIITEQVLTAHENYIKQLEAEVSANKSFLSLINRYASLIEGKKELEASSNDASRLTQRGRRDPGLLLREEKIRKRLSRELPKVQSLLIPEITAWEERNGRTFLFYDEPLLKICQEATQPKSLYRSASAAANRPKTATTTDSVNRTPSQRGRVAVPSTPSVRSASRAMTSPRTPLPRVKNTQNPSRSISAEPPSATSTANRRHPTANRIDINARLNSASRSRSANMIRQGANGSDSNMSSSPVSGNSNTPFNKFPNSVSRNTHFESKSPHPNYSRTPHETYSKASSKNVPLSPPKQRVVNEHALNIMSEKLQRTNLKEQTPEMDIENSSQNLPFSPMKISPIRASPVKTIPSSPSPTTNIFSAPLNNITNCTPMEDEWGEEGF&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Let&#39;s look at the types:</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;feature:&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">ase1_locus</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">8</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;feature.type:&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">ase1_locus</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">type</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;feature.location:&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">ase1_locus</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">location</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;feature.qualifiers:&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">ase1_locus</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;feature.qualifiers[&#39;gene&#39;]:&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">ase1_locus</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;gene&quot;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>feature: &lt;class &#39;Bio.SeqFeature.SeqFeature&#39;&gt;
+feature.type: &lt;class &#39;str&#39;&gt;
+feature.location: &lt;class &#39;Bio.SeqFeature.CompoundLocation&#39;&gt;
+feature.qualifiers: &lt;class &#39;dict&#39;&gt;
+feature.qualifiers[&#39;gene&#39;]: &lt;class &#39;list&#39;&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>This information is important if we want to extract the sequence of a specific feature, or filter a subset of features to do something with them.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extract the dseqrecord of the locus only</span>
+<span class="c1"># Note how we first check if the key &#39;gene&#39; is in the qualifiers and then check if the value &#39;ase1&#39; is in the list of qualifiers[&#39;gene&#39;], not equal to &quot;ase1&quot;</span>
+
+<span class="n">locus_feature</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">feature</span> <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">ase1_locus</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="s1">&#39;gene&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="o">.</span><span class="n">qualifiers</span> <span class="ow">and</span> <span class="s2">&quot;ase1&quot;</span> <span class="ow">in</span> <span class="n">feature</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">])</span>
+
+<span class="c1"># Then we can get a subset of the dseqrecord like this:</span>
+<span class="n">extracted_locus</span> <span class="o">=</span> <span class="n">locus_feature</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">ase1_locus</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;length of extracted_locus:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">extracted_locus</span><span class="p">))</span>
+
+<span class="c1">## Another example, getting a subset of features representing the 3&#39; UTRs</span>
+<span class="n">utr_features</span> <span class="o">=</span> <span class="p">[</span><span class="n">feature</span> <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">ase1_locus</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="n">feature</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;3&#39;UTR&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;number of utr_features:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">utr_features</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>length of extracted_locus: 2538
+number of utr_features: 3
+</pre></div>
+</div>
+</div>
+</div>
+<p>More details on how to work with features in the <a class="reference internal" href="Dseq_Features.html"><span class="std std-doc">Dseq_Features notebook</span></a>.</p>
+</section>
+<section id="cloning">
+<h1>Cloning<a class="headerlink" href="#cloning" title="Link to this heading">#</a></h1>
+<p>pydna has multiple functions to simulate cloning, having support for the following methods:</p>
+<ul class="simple">
+<li><p>Gibson Assembly</p></li>
+<li><p>Restriction and Ligation / Golgen gate</p></li>
+<li><p>Homologous recombination</p></li>
+<li><p>CRISPR-Cas9 (ask the organisers if you plan to use it)</p></li>
+<li><p>Gateway Cloning</p></li>
+<li><p>Cre-Lox recombination</p></li>
+</ul>
+<section id="restriction-and-ligation">
+<h2>Restriction and ligation<a class="headerlink" href="#restriction-and-ligation" title="Link to this heading">#</a></h2>
+<p>There are several ways to do restriction and ligation in pydna. You can first do the restriction, pick the fragments for ligation, then do the ligation. You can also do everything in one step. The second method is relatively new, so most examples in the library use the first method.</p>
+<p>Let’s do an example in which we clone an insert into a backbone plasmid.</p>
+<section id="using-the-first-method-first-restriction-then-ligation">
+<h3>Using the first method (first restriction, then ligation)<a class="headerlink" href="#using-the-first-method-first-restriction-then-ligation" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Using the first method</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">EcoRI</span><span class="p">,</span> <span class="n">SalI</span>
+
+
+<span class="c1"># A dummy backbone plasmid, let&#39;s assume that we want to replace the</span>
+<span class="c1"># cccc by our insert.</span>
+<span class="n">backbone</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;aaaaaaaGAATTCcccGTCGACaa&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">restriction_products</span> <span class="o">=</span> <span class="n">backbone</span><span class="o">.</span><span class="n">cut</span><span class="p">([</span><span class="n">EcoRI</span><span class="p">,</span> <span class="n">SalI</span><span class="p">])</span>
+<span class="c1"># We print the products</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The first one is the cutout - we discard it&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">restriction_products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The second one is the digested backbone - we keep it&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">restriction_products</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span>
+
+<span class="n">digested_backbone</span> <span class="o">=</span> <span class="n">restriction_products</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The first one is the cutout - we discard it
+Dseq(-13)
+AATTCcccG
+    GgggCAGCT
+
+The second one is the digested backbone - we keep it
+Dseq(-19)
+TCGACaaaaaaaaaG
+    GtttttttttCTTAA
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we do the same with the insert</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">insert</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;aaGAATTCaaaccgGTCGACaa&#39;</span><span class="p">)</span>
+<span class="n">restriction_products</span> <span class="o">=</span> <span class="n">insert</span><span class="o">.</span><span class="n">cut</span><span class="p">([</span><span class="n">EcoRI</span><span class="p">,</span> <span class="n">SalI</span><span class="p">])</span>
+
+<span class="c1"># The second one is the one we want</span>
+<span class="n">digested_insert</span> <span class="o">=</span> <span class="n">restriction_products</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">digested_insert</span><span class="o">.</span><span class="n">seq</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-16)
+AATTCaaaccgG
+    GtttggcCAGCT
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally we ligate the products, and then circularize</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># They have to be in the right order, and fragments must be complementary</span>
+<span class="n">linear_ligation</span> <span class="o">=</span> <span class="n">digested_insert</span> <span class="o">+</span> <span class="n">digested_backbone</span>
+
+<span class="c1"># Then we used the function looped to circularize</span>
+<span class="c1"># IMPORTANT: this functions does not act in place, it returns a new sequence.</span>
+
+<span class="n">desired_plasmid</span> <span class="o">=</span> <span class="n">linear_ligation</span><span class="o">.</span><span class="n">looped</span><span class="p">()</span>
+
+<span class="n">desired_plasmid</span><span class="o">.</span><span class="n">seq</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(o27)
+AATTCaaaccgGTCGACaaaaaaaaaG
+TTAAGtttggcCAGCTGtttttttttC
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="using-the-second-method-restriciton-ligation-in-one-step">
+<h3>Using the second method (restriciton-ligation in one step)<a class="headerlink" href="#using-the-second-method-restriciton-ligation-in-one-step" title="Link to this heading">#</a></h3>
+<p>This is particularly useful for restriction-ligation reactions with many inputs, for example for Golden Gate.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">restriction_ligation_assembly</span>
+
+<span class="c1"># We indicate that we only want circular products</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">restriction_ligation_assembly</span><span class="p">([</span><span class="n">backbone</span><span class="p">,</span> <span class="n">insert</span><span class="p">],</span> <span class="p">[</span><span class="n">EcoRI</span><span class="p">,</span> <span class="n">SalI</span><span class="p">],</span> <span class="n">circular_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The first plasmid is the desired one&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The second one is a circularization of the digested insert and the cutout&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The first plasmid is the desired one
+Dseq(o27)
+TCGACaaaaaaaaaGAATTCaaaccgG
+AGCTGtttttttttCTTAAGtttggcC
+
+The second one is a circularization of the digested insert and the cutout
+Dseq(o21)
+AATTCcccGTCGACcggtttG
+TTAAGgggCAGCTGgccaaaC
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="pcr">
+<h2>PCR<a class="headerlink" href="#pcr" title="Link to this heading">#</a></h2>
+<p>Using pydna, you can easily simulate PCR. For details on primer design, visit <a class="reference external" href="https://pydna-group.github.io/pydna/markdown_notebooks/PCR.html">the documentation</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplify</span><span class="w"> </span><span class="kn">import</span> <span class="n">pcr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span>
+
+<span class="c1">#Defining forward and reverse primers</span>
+<span class="n">fwd_primer</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="s2">&quot;aaaATTCCTGCAGAGTACATC&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;fwd_primer&quot;</span><span class="p">)</span>
+<span class="n">rvs_primer</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="s2">&quot;cccACCATCCGAAGATATCTT&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;rvs_primer&quot;</span><span class="p">)</span>
+
+<span class="n">template</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;gccATTCCTGCAGAGTACATCaaaccggttAAGATATCTTCGGATGGTatta&quot;</span><span class="p">)</span>
+
+<span class="n">pcr_product</span> <span class="o">=</span> <span class="n">pcr</span><span class="p">(</span><span class="n">fwd_primer</span><span class="p">,</span> <span class="n">rvs_primer</span><span class="p">,</span> <span class="n">template</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pcr_product</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pcr_product</span><span class="o">.</span><span class="n">figure</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>aaaATTCCTGCAGAGTACATCaaaccggttAAGATATCTTCGGATGGTggg
+   5ATTCCTGCAGAGTACATC...AAGATATCTTCGGATGGT3
+                         ||||||||||||||||||
+                        3TTCTATAGAAGCCTACCAccc5
+5aaaATTCCTGCAGAGTACATC3
+    ||||||||||||||||||
+   3TAAGGACGTCTCATGTAG...TTCTATAGAAGCCTACCA5
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="gibson-assembly">
+<h2>Gibson Assembly<a class="headerlink" href="#gibson-assembly" title="Link to this heading">#</a></h2>
+<p>See below a dummy example of Gibson Assembly. More details on primer design, etc. in <a class="reference external" href="https://pydna-group.github.io/pydna/markdown_notebooks/Example_Gibson.html">the documentation examples</a>.</p>
+<p>Equivalent methods, such as in-fusion and fusion-pcr are also available.</p>
+<p>In vivo assembly is also available. The difference is that a Gibson Assembly only joins fragments that have terminal overlaps (at the end of the fragments), but the in vivo assembly (which relies on homologous recombination) can join fragments that have non-terminal overlaps.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">gibson_assembly</span>
+
+<span class="n">fragment1</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;GTCGACTaaaAGAGACC&quot;</span><span class="p">)</span>
+<span class="n">fragment2</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;AGAGACCcgcGTCGACT&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># In the funtion, we specify the fragments and the minimum overlap length,</span>
+<span class="c1"># for this example, we want a minimum overlap of 7 bp.</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">([</span><span class="n">fragment1</span><span class="p">,</span> <span class="n">fragment2</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(o20)
+GTCGACTaaaAGAGACCcgc
+CAGCTGAtttTCTCTGGgcg
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="genome-integration-excision">
+<h2>Genome integration / excision<a class="headerlink" href="#genome-integration-excision" title="Link to this heading">#</a></h2>
+<p>Homologous recombination, Cre-Lox recombination and other methods that are normally used on genomes have special arguments</p>
+<p>Insertions take a first <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object with the genome, and a list of <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> objects with the fragments to integrate / excise.</p>
+<p>Excisions take a single <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object with the genome from which to excise a circular DNA molecule.</p>
+<p>Let’s take an example for homologous recombination. In which we want to integrate a plasmid into the genome via a single homology site:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">homologous_recombination_integration</span>
+
+<span class="n">genome</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;aaaCGTACGCACAaaa&#39;</span><span class="p">)</span>
+<span class="n">plasmid</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;CGTACGCACAcccc&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">products</span> <span class="o">=</span> <span class="n">homologous_recombination_integration</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="p">[</span><span class="n">plasmid</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">transformed_genome</span> <span class="o">=</span> <span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">transformed_genome</span><span class="o">.</span><span class="n">seq</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-30)
+aaaCGTACGCACAccccCGTACGCACAaaa
+tttGCATGCGTGTggggGCATGCGTGTttt
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can also simulate the opposite process, an excission, and recover the original inputs (plasmid and gneome)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">homologous_recombination_excision</span>
+
+<span class="n">products</span> <span class="o">=</span> <span class="n">homologous_recombination_excision</span><span class="p">(</span><span class="n">transformed_genome</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CGTACGCACAcccc
+aaaCGTACGCACAaaa
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="other-cloning-methods">
+<h2>Other cloning methods<a class="headerlink" href="#other-cloning-methods" title="Link to this heading">#</a></h2>
+<p>You can find most other cloning methods at the bottom of the <a class="reference external" href="https://pydna-group.github.io/pydna/modules/pydna_assembly2.html">documentation page of the assemmbly2 module</a>.</p>
+</section>
+</section>
+<section id="sequence-equality">
+<h1>Sequence equality<a class="headerlink" href="#sequence-equality" title="Link to this heading">#</a></h1>
+<p>Sometimes, you may want to check if two double-stranded sequences are equal. Comparing the sequence strings is not great, because they could be reverse-complemented, and for circular molecules, they might be shifted. Pydna comes with a function that produces a unique string for a given sequence, independently of its orientation or rotation (for circular DNA).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_plasmid</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;AAGGTC&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">my_plasmid_rotated</span> <span class="o">=</span> <span class="n">my_plasmid</span><span class="o">.</span><span class="n">shifted</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">my_plasmid_rotated_rc</span> <span class="o">=</span> <span class="n">my_plasmid_rotated</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">my_plasmid</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">my_plasmid</span><span class="o">.</span><span class="n">seguid</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_plasmid_rotated</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">my_plasmid_rotated</span><span class="o">.</span><span class="n">seguid</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_plasmid_rotated_rc</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">my_plasmid_rotated_rc</span><span class="o">.</span><span class="n">seguid</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AAGGTC cdseguid=J56O6n-fwbT2-SLlxCMBVDjXzKg
+GTCAAG cdseguid=J56O6n-fwbT2-SLlxCMBVDjXzKg
+CTTGAC cdseguid=J56O6n-fwbT2-SLlxCMBVDjXzKg
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Hackathon Copenhagen 2025</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#dseq-and-dseqrecord">Dseq and Dseqrecord</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-sequence-files">Importing Sequence Files</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-external-sequences">Importing external sequences</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#sequence-features">Sequence features</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#cloning">Cloning</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#restriction-and-ligation">Restriction and ligation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-first-method-first-restriction-then-ligation">Using the first method (first restriction, then ligation)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-second-method-restriciton-ligation-in-one-step">Using the second method (restriciton-ligation in one step)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pcr">PCR</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gibson-assembly">Gibson Assembly</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#genome-integration-excision">Genome integration / excision</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-cloning-methods">Other cloning methods</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#sequence-equality">Sequence equality</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

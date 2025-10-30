@@ -1,80 +1,328 @@
 
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pydna.utils &mdash; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=a051be83" />
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pydna.utils &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
-      <script src="../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=d848064a"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/js/theme.js"></script>
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydna/utils';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            pydna
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Pydna</a></li>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules/index.html">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../example_gallery.html">Example gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../getting_started.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../reference/pydna.html">pydna package</a></li>
 </ul>
 
-        </div>
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
       </div>
-    </nav>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">pydna</a>
-      </nav>
+<div class="sbt-scroll-pixel-helper"></div>
 
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-          <li class="breadcrumb-item"><a href="../pydna.html">pydna</a></li>
-      <li class="breadcrumb-item active">pydna.utils</li>
-      <li class="wy-breadcrumbs-aside">
-      </li>
-  </ul>
-  <hr/>
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <h1>Source code for pydna.utils</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
@@ -124,7 +372,7 @@
 
 
 <div class="viewcode-block" id="three_frame_orfs">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.three_frame_orfs">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.three_frame_orfs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">three_frame_orfs</span><span class="p">(</span>
     <span class="n">dna</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
@@ -163,7 +411,7 @@
 
 
 <div class="viewcode-block" id="shift_location">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.shift_location">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.shift_location">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">shift_location</span><span class="p">(</span><span class="n">original_location</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">lim</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="n">newparts</span> <span class="o">=</span> <span class="p">[]</span>
@@ -225,7 +473,7 @@
 
 
 <div class="viewcode-block" id="shift_feature">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.shift_feature">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.shift_feature">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">shift_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">lim</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a new feature with shifted location.&quot;&quot;&quot;</span>
     <span class="c1"># TODO: Missing tests</span>
@@ -277,7 +525,7 @@
 
 
 <div class="viewcode-block" id="smallest_rotation">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.smallest_rotation">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.smallest_rotation">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">smallest_rotation</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Smallest rotation of a string.</span>
 
@@ -301,7 +549,7 @@
 
 
 <div class="viewcode-block" id="cai">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.cai">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.cai">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cai</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">organism</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sce&quot;</span><span class="p">,</span> <span class="n">weights</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">_weights</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">cai2</span><span class="w"> </span><span class="kn">import</span> <span class="n">CAI</span> <span class="k">as</span> <span class="n">_CAI</span>
@@ -311,7 +559,7 @@
 
 
 <div class="viewcode-block" id="rarecodons">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.rarecodons">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.rarecodons">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rarecodons</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">organism</span><span class="o">=</span><span class="s2">&quot;sce&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="n">rare</span> <span class="o">=</span> <span class="n">_rare_codons</span><span class="p">[</span><span class="n">organism</span><span class="p">]</span>
@@ -327,7 +575,7 @@
 
 
 <div class="viewcode-block" id="express">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.express">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.express">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">express</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">organism</span><span class="o">=</span><span class="s2">&quot;sce&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.</span>
 
@@ -358,7 +606,7 @@
 
 
 <div class="viewcode-block" id="open_folder">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.open_folder">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.open_folder">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">open_folder</span><span class="p">(</span><span class="n">pth</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">_sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
@@ -374,7 +622,7 @@
 
 
 <div class="viewcode-block" id="rc">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.rc">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.rc">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rc</span><span class="p">(</span><span class="n">sequence</span><span class="p">:</span> <span class="n">StrOrBytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StrOrBytes</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reverse complement.</span>
 
@@ -385,7 +633,7 @@
 
 
 <div class="viewcode-block" id="complement">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.complement">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.complement">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Complement.</span>
 
@@ -441,7 +689,7 @@
 
 
 <div class="viewcode-block" id="identifier_from_string">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.identifier_from_string">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.identifier_from_string">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">identifier_from_string</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a valid python identifier.</span>
 
@@ -459,7 +707,7 @@
 
 
 <div class="viewcode-block" id="flatten">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.flatten">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.flatten">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">flatten</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_List</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Flattens an iterable of iterables.</span>
 
@@ -482,7 +730,7 @@
 
 
 <div class="viewcode-block" id="seq31">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.seq31">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.seq31">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">seq31</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Turn a three letter code protein sequence into one with one letter code.</span>
 
@@ -545,7 +793,7 @@
 
 
 <div class="viewcode-block" id="randomRNA">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.randomRNA">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.randomRNA">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">randomRNA</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">maxlength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">maxlength</span> <span class="ow">and</span> <span class="n">maxlength</span> <span class="o">&gt;</span> <span class="n">length</span><span class="p">:</span>
@@ -555,7 +803,7 @@
 
 
 <div class="viewcode-block" id="randomDNA">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.randomDNA">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.randomDNA">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">randomDNA</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">maxlength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">maxlength</span> <span class="ow">and</span> <span class="n">maxlength</span> <span class="o">&gt;</span> <span class="n">length</span><span class="p">:</span>
@@ -565,7 +813,7 @@
 
 
 <div class="viewcode-block" id="randomORF">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.randomORF">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.randomORF">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">randomORF</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">maxlength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="n">length</span> <span class="o">-=</span> <span class="mi">2</span>
@@ -648,7 +896,7 @@
 
 
 <div class="viewcode-block" id="randomprot">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.randomprot">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.randomprot">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">randomprot</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">maxlength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">maxlength</span> <span class="ow">and</span> <span class="n">maxlength</span> <span class="o">&gt;</span> <span class="n">length</span><span class="p">:</span>
@@ -658,7 +906,7 @@
 
 
 <div class="viewcode-block" id="eq">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.eq">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.eq">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">eq</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare two or more DNA sequences for equality.</span>
 
@@ -829,7 +1077,7 @@
 
 
 <div class="viewcode-block" id="cuts_overlap">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.cuts_overlap">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.cuts_overlap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cuts_overlap</span><span class="p">(</span><span class="n">left_cut</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">):</span>
     <span class="c1"># Special cases:</span>
     <span class="k">if</span> <span class="n">left_cut</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">right_cut</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">left_cut</span> <span class="o">==</span> <span class="n">right_cut</span><span class="p">:</span>
@@ -857,7 +1105,7 @@
 
 
 <div class="viewcode-block" id="location_boundaries">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.location_boundaries">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.location_boundaries">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">location_boundaries</span><span class="p">(</span><span class="n">loc</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_sl</span><span class="p">,</span> <span class="n">_cl</span><span class="p">]):</span>
     <span class="k">if</span> <span class="n">loc</span><span class="o">.</span><span class="n">strand</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">loc</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">loc</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">end</span>
@@ -867,7 +1115,7 @@
 
 
 <div class="viewcode-block" id="locations_overlap">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.locations_overlap">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.locations_overlap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">locations_overlap</span><span class="p">(</span><span class="n">loc1</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_sl</span><span class="p">,</span> <span class="n">_cl</span><span class="p">],</span> <span class="n">loc2</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_sl</span><span class="p">,</span> <span class="n">_cl</span><span class="p">],</span> <span class="n">seq_len</span><span class="p">):</span>
     <span class="n">start1</span><span class="p">,</span> <span class="n">end1</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">loc1</span><span class="p">)</span>
     <span class="n">start2</span><span class="p">,</span> <span class="n">end2</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">loc2</span><span class="p">)</span>
@@ -895,7 +1143,7 @@
 
 
 <div class="viewcode-block" id="sum_is_sticky">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.sum_is_sticky">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.sum_is_sticky">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sum_is_sticky</span><span class="p">(</span>
     <span class="n">three_prime_end</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">five_prime_end</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
@@ -934,7 +1182,7 @@
 
 
 <div class="viewcode-block" id="limit_iterator">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.limit_iterator">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.limit_iterator">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">limit_iterator</span><span class="p">(</span><span class="n">iterator</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Call the function with an iterator to raise an error if the number of items is greater than the limit.</span>
@@ -947,7 +1195,7 @@
 
 
 <div class="viewcode-block" id="create_location">
-<a class="viewcode-back" href="../../modules/pydna_utils.html#pydna.all.create_location">[docs]</a>
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.create_location">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_location</span><span class="p">(</span>
     <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">lim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">strand</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Location</span><span class="p">:</span>
@@ -1009,31 +1257,70 @@
 
 </pre></div>
 
-           </div>
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
           </div>
-          <footer>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
 
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2024, Björn F. Johansson.</p>
   </div>
+  
+  <div class="footer-item">
+    
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
 
-</footer>
-        </div>
-      </div>
-    </section>
   </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
 
-</body>
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
 </html>

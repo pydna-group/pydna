@@ -1,0 +1,1179 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Working with Features using the Dseqrecord class &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/Dseq_Features';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Importing and viewing sequence files in pydna" href="Importing_Seqs.html" />
+    <link rel="prev" title="Representing sequences in pydna" href="Dseq.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../getting_started.html">Getting started</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reference/pydna.html">pydna package</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/pydna-group/pydna/blob/main/docs/notebooks/Dseq_Features.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pydna-group/pydna/edit/main/docs/notebooks/Dseq_Features.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/Dseq_Features.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Working with Features using the Dseqrecord class</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-features-and-qualifiers">Adding Features and Qualifiers</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-a-feature-with-parts">Adding a Feature with Parts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standard-feature-types-and-qualifiers">Standard Feature Types and Qualifiers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-origin-spanning-features">Handling Origin Spanning Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-methods-to-viewing-features">Other Methods to Viewing Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-features">Removing Features</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="working-with-features-using-the-dseqrecord-class">
+<h1>Working with Features using the Dseqrecord class<a class="headerlink" href="#working-with-features-using-the-dseqrecord-class" title="Link to this heading">#</a></h1>
+<blockquote>
+<div><p>Before working with features, check how to import sequences from files in the <a class="reference internal" href="Importing_Seqs.html"><span class="std std-doc">Importing_Seqs notebook</span></a>.</p>
+<p>For full library documentation, visit <a class="reference external" href="https://pydna-group.github.io/pydna/">here</a>.</p>
+</div></blockquote>
+<p>Some sequence file formats (like Genbank) include features, describing key biological properties of sequence regions. In Genbank, features “include genes, gene products, as well as regions of biological significance reported in the sequence.” (See <a class="reference external" href="https://www.ncbi.nlm.nih.gov/genbank/samplerecord/">here</a> for a description of a Genbank file and associated terminologies/annotations) Examples include coding sequences (CDS), introns, promoters, etc.</p>
+<p>pydna offers many ways to easily view, add, extract, and write features into a Genbank file via the <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> class. After reading a file into a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object, we can check out the list of features in the record using the following code. This example uses the sample record <a class="reference external" href="https://www.ncbi.nlm.nih.gov/genbank/samplerecord/">U49845</a>.</p>
+<a target="_blank" href="https://colab.research.google.com/github/pydna-group/pydna/blob/master/docs/notebooks/Dseq_Features.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="c1"># Install pydna (only when running on Colab)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span><span class="p">[</span><span class="n">clipboard</span><span class="p">,</span><span class="n">download</span><span class="p">,</span><span class="n">express</span><span class="p">,</span><span class="n">gel</span><span class="p">]</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/U49845.gb&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
+
+<span class="c1">#Import your file into python. </span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;./U49845.gb&quot;</span>
+<span class="n">records</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+<span class="n">sample_record</span> <span class="o">=</span> <span class="n">records</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># List all features</span>
+<span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">sample_record</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type: source
+location: [0:5028](+)
+qualifiers:
+    Key: chromosome, Value: [&#39;IX&#39;]
+    Key: db_xref, Value: [&#39;taxon:4932&#39;]
+    Key: mol_type, Value: [&#39;genomic DNA&#39;]
+    Key: organism, Value: [&#39;Saccharomyces cerevisiae&#39;]
+
+type: mRNA
+location: [&lt;0:&gt;206](+)
+qualifiers:
+    Key: product, Value: [&#39;TCP1-beta&#39;]
+
+type: CDS
+location: [&lt;0:206](+)
+qualifiers:
+    Key: codon_start, Value: [&#39;3&#39;]
+    Key: product, Value: [&#39;TCP1-beta&#39;]
+    Key: protein_id, Value: [&#39;AAA98665.1&#39;]
+    Key: translation, Value: [&#39;SSIYNGISTSGLDLNNGTIADMRQLGIVESYKLKRAVVSSASEAAEVLLRVDNIIRARPRTANRQHM&#39;]
+
+type: gene
+location: [&lt;686:&gt;3158](+)
+qualifiers:
+    Key: gene, Value: [&#39;AXL2&#39;]
+
+type: mRNA
+location: [&lt;686:&gt;3158](+)
+qualifiers:
+    Key: gene, Value: [&#39;AXL2&#39;]
+    Key: product, Value: [&#39;Axl2p&#39;]
+
+type: CDS
+location: [686:3158](+)
+qualifiers:
+    Key: codon_start, Value: [&#39;1&#39;]
+    Key: gene, Value: [&#39;AXL2&#39;]
+    Key: note, Value: [&#39;plasma membrane glycoprotein&#39;]
+    Key: product, Value: [&#39;Axl2p&#39;]
+    Key: protein_id, Value: [&#39;AAA98666.1&#39;]
+    Key: translation, Value: [&#39;MTQLQISLLLTATISLLHLVVATPYEAYPIGKQYPPVARVNESFTFQISNDTYKSSVDKTAQITYNCFDLPSWLSFDSSSRTFSGEPSSDLLSDANTTLYFNVILEGTDSADSTSLNNTYQFVVTNRPSISLSSDFNLLALLKNYGYTNGKNALKLDPNEVFNVTFDRSMFTNEESIVSYYGRSQLYNAPLPNWLFFDSGELKFTGTAPVINSAIAPETSYSFVIIATDIEGFSAVEVEFELVIGAHQLTTSIQNSLIINVTDTGNVSYDLPLNYVYLDDDPISSDKLGSINLLDAPDWVALDNATISGSVPDELLGKNSNPANFSVSIYDTYGDVIYFNFEVVSTTDLFAISSLPNINATRGEWFSYYFLPSQFTDYVNTNVSLEFTNSSQDHDWVKFQSSNLTLAGEVPKNFDKLSLGLKANQGSQSQELYFNIIGMDSKITHSNHSANATSTRSSHHSTSTSSYTSSTYTAKISSTSAAATSSAPAALPAANKTSSHNKKAVAIACGVAIPLGVILVALICFLIFWRRRRENPDDENLPHAISGPDLNNPANKPNQENATPLNNPFDDDASSYDDTSIARRLAALNTLKLDNHSATESDISSVDEKRDSLSGMNTYNDQFQSQSKEELLAKPPVQPPESPFFDPQNRSSSVYMDSEPAVNKSWRYTGNLSPVSDIVRDSYGSQKTVDTEKLFDLEAPEKEKRTSRDVTMSSLDPWNSNISPSPVRKSVTPSPYNVTKHRNRHLQNIQDSQSGKNGITPTTMSTSSSDDFVPVKDGENFCWVHSMEPDRRPSKKRLVDFSNKSNVNVGQVKDIHGRIPEML&#39;]
+
+type: gene
+location: [&lt;3299:&gt;4037](-)
+qualifiers:
+    Key: gene, Value: [&#39;REV7&#39;]
+
+type: mRNA
+location: [&lt;3299:&gt;4037](-)
+qualifiers:
+    Key: gene, Value: [&#39;REV7&#39;]
+    Key: product, Value: [&#39;Rev7p&#39;]
+
+type: CDS
+location: [3299:4037](-)
+qualifiers:
+    Key: codon_start, Value: [&#39;1&#39;]
+    Key: gene, Value: [&#39;REV7&#39;]
+    Key: product, Value: [&#39;Rev7p&#39;]
+    Key: protein_id, Value: [&#39;AAA98667.1&#39;]
+    Key: translation, Value: [&#39;MNRWVEKWLRVYLKCYINLILFYRNVYPPQSFDYTTYQSFNLPQFVPINRHPALIDYIEELILDVLSKLTHVYRFSICIINKKNDLCIEKYVLDFSELQHVDKDDQIITETEVFDEFRSSLNSLIMHLEKLPKVNDDTITFEAVINAIELELGHKLDRNRRVDSLEEKAEIERDSNWVKCQEDENLPDNNGFQPPKIKLTSLVGSDVGPLIIHQFSEKLISGDDKILNGVYSQYEEGESIFGSLF&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Additional ways to view and search for particular features are shown at the bottom of the page under “Other Methods to Viewing Features”</p>
+<section id="adding-features-and-qualifiers">
+<h2>Adding Features and Qualifiers<a class="headerlink" href="#adding-features-and-qualifiers" title="Link to this heading">#</a></h2>
+<p>To add new feature to describe a region of interest to a record, for instance a region that you would like to perform a PCR, you need to create a <code class="docutils literal notranslate"><span class="pre">SeqFeature</span></code> (sequence feature). The minimal information required is:</p>
+<ul class="simple">
+<li><p>A <code class="docutils literal notranslate"><span class="pre">FeatureLocation</span></code>: position of the feature in the sequence.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">type</span></code> of feature you want to add.</p></li>
+</ul>
+<p>🚨🚨 <strong>VERY IMPORTANT</strong> 🚨🚨. Note that <code class="docutils literal notranslate"><span class="pre">FeatureLocation</span></code>s are like python ranges (zero-based open intervals), whereas in GenBank files, locations are one-based closed intervals. For instance, the following code adds a new feature from the 2nd to the 5th nucleotide (<code class="docutils literal notranslate"><span class="pre">FeatureLocation(3,</span> <span class="pre">15)</span></code>), of the <code class="docutils literal notranslate"><span class="pre">gene</span></code> type, but in the GenBank file will be represented as <code class="docutils literal notranslate"><span class="pre">4..15</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureLocation</span><span class="p">,</span> <span class="n">SeqFeature</span>
+
+<span class="c1"># Create a dummy record</span>
+<span class="n">dummy_record</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;aaaATGCGTACGTGAacgt&quot;</span><span class="p">)</span>
+
+<span class="c1"># Define the locations of a CDS</span>
+<span class="n">location</span> <span class="o">=</span> <span class="n">FeatureLocation</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+
+<span class="c1"># Create a SeqFeature with the type mRNA</span>
+<span class="n">my_feature</span> <span class="o">=</span> <span class="n">SeqFeature</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;gene&quot;</span><span class="p">)</span>
+
+<span class="c1"># Add my_feature to dummy_record with .append</span>
+<span class="n">dummy_record</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">my_feature</span><span class="p">)</span>
+
+<span class="c1"># Confirm that my_feature has been added</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dummy_record</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Print the feature in GenBank format (see how the location is `4..15`)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dummy_record</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;genbank&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type: gene
+location: [3:15]
+qualifiers:
+
+LOCUS       name                      19 bp    DNA     linear   UNK 01-JAN-1980
+DEFINITION  description.
+ACCESSION   id
+VERSION     id
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     gene            4..15
+ORIGIN
+        1 aaaatgcgta cgtgaacgt
+//
+</pre></div>
+</div>
+</div>
+</div>
+<p>To give further information about a feature, we can add a qualifier using the <code class="docutils literal notranslate"><span class="pre">qualifiers</span></code> property of <code class="docutils literal notranslate"><span class="pre">SeqFeature</span></code>, which contains a dictionary of qualifiers. For instance, if I would like to note a new feature of type ‘domain’, between 3-9 bases as my region of interest, I can instantiate the <code class="docutils literal notranslate"><span class="pre">SeqFeature</span></code> class object as such.</p>
+<blockquote>
+<div><p>Note that a new feature is always added to the last position of the features list.</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">location</span> <span class="o">=</span> <span class="n">FeatureLocation</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+
+<span class="c1"># Create a SeqFeature with a qualifier</span>
+<span class="n">my_feature2</span> <span class="o">=</span> <span class="n">SeqFeature</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;domain&quot;</span><span class="p">,</span> <span class="n">qualifiers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Note&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Region of interest&quot;</span><span class="p">]})</span>
+
+<span class="c1"># Add my_feature to my_record with .append</span>
+<span class="n">dummy_record</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">my_feature2</span><span class="p">)</span>
+
+<span class="c1"># Confirm that my_feature has been added</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt;&gt; Feature was added:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dummy_record</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="c1"># Print the feature in GenBank format</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt;&gt; GenBank format:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dummy_record</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;genbank&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt;&gt; Feature was added:
+type: domain
+location: [3:9]
+qualifiers:
+    Key: Note, Value: [&#39;Region of interest&#39;]
+
+
+&gt;&gt; GenBank format:
+LOCUS       name                      19 bp    DNA     linear   UNK 01-JAN-1980
+DEFINITION  description.
+ACCESSION   id
+VERSION     id
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     gene            4..15
+     domain          4..9
+                     /Note=&quot;Region of interest&quot;
+ORIGIN
+        1 aaaatgcgta cgtgaacgt
+//
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>🤔 Best practices for qualifiers:</strong></p>
+<p>The values in the <code class="docutils literal notranslate"><span class="pre">qualifiers</span></code> dictionary should be lists. The reason for this is that in a GenBank file, a single feature can have multiple values for a single qualifier. Below is a real world of the ase1 CDS example from the <em>S. pombe</em> genome in EMBL format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FT</span>   <span class="n">CDS</span>             <span class="n">join</span><span class="p">(</span><span class="mf">1878362..1878785</span><span class="p">,</span><span class="mf">1878833..1880604</span><span class="p">)</span>
+<span class="n">FT</span>                   <span class="o">/</span><span class="n">colour</span><span class="o">=</span><span class="mi">2</span>
+<span class="n">FT</span>                   <span class="o">/</span><span class="n">primary_name</span><span class="o">=</span><span class="s2">&quot;ase1&quot;</span>
+<span class="n">FT</span>                   <span class="o">/</span><span class="n">product</span><span class="o">=</span><span class="s2">&quot;antiparallel microtubule cross-linking factor</span>
+<span class="n">FT</span>                   <span class="n">Ase1</span><span class="s2">&quot;</span>
+<span class="n">FT</span>                   <span class="o">/</span><span class="n">systematic_id</span><span class="o">=</span><span class="s2">&quot;SPAPB1A10.09&quot;</span>
+<span class="n">FT</span>                   <span class="o">/</span><span class="n">controlled_curation</span><span class="o">=</span><span class="s2">&quot;term=species distribution, conserved</span>
+<span class="n">FT</span>                   <span class="ow">in</span> <span class="n">eukaryotes</span><span class="p">;</span> <span class="n">date</span><span class="o">=</span><span class="mi">20081110</span><span class="s2">&quot;</span>
+<span class="n">FT</span>                   <span class="o">/</span><span class="n">controlled_curation</span><span class="o">=</span><span class="s2">&quot;term=species distribution, conserved</span>
+<span class="n">FT</span>                   <span class="ow">in</span> <span class="n">metazoa</span><span class="p">;</span> <span class="n">date</span><span class="o">=</span><span class="mi">20081110</span><span class="s2">&quot;</span>
+<span class="n">FT</span>                   <span class="o">/</span><span class="n">controlled_curation</span><span class="o">=</span><span class="s2">&quot;term=species distribution, conserved</span>
+<span class="n">FT</span>                   <span class="ow">in</span> <span class="n">vertebrates</span><span class="p">;</span> <span class="n">date</span><span class="o">=</span><span class="mi">20081110</span><span class="s2">&quot;</span>
+<span class="n">FT</span>                   <span class="o">/</span><span class="n">controlled_curation</span><span class="o">=</span><span class="s2">&quot;term=species distribution,</span>
+<span class="n">FT</span>                   <span class="n">predominantly</span> <span class="n">single</span> <span class="n">copy</span> <span class="p">(</span><span class="n">one</span> <span class="n">to</span> <span class="n">one</span><span class="p">);</span> <span class="n">date</span><span class="o">=</span><span class="mi">20081110</span><span class="s2">&quot;</span>
+<span class="n">FT</span>                   <span class="o">/</span><span class="n">controlled_curation</span><span class="o">=</span><span class="s2">&quot;term=species distribution, conserved</span>
+<span class="n">FT</span>                   <span class="ow">in</span> <span class="n">fungi</span><span class="p">;</span> <span class="n">date</span><span class="o">=</span><span class="mi">20081110</span><span class="s2">&quot;</span>
+<span class="n">FT</span>                   <span class="o">/</span><span class="n">controlled_curation</span><span class="o">=</span><span class="s2">&quot;term=species distribution, conserved</span>
+<span class="n">FT</span>                   <span class="ow">in</span> <span class="n">eukaryotes</span> <span class="n">only</span><span class="p">;</span> <span class="n">date</span><span class="o">=</span><span class="mi">20081110</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>Note how there are several <code class="docutils literal notranslate"><span class="pre">controlled_curation</span></code> qualifiers, therefore it makes sense to store them as a list.</p>
+<p>By default, you can add any type of object in the qualifiers dictionary, and most things will work if you add a string. However, you risk overwriting the existing value for a qualifier, so best practice is:</p>
+<ol class="arabic simple">
+<li><p>Check if the qualifier already exists using <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">&quot;qualifier_name&quot;</span> <span class="pre">in</span> <span class="pre">feature.qualifiers</span></code></p></li>
+<li><p>If it exists, append to the existing list of values using <code class="docutils literal notranslate"><span class="pre">feature.qualifiers[&quot;qualifier_name&quot;].append(&quot;new_value&quot;)</span></code></p></li>
+<li><p>If it does not exist, add it to the qualifiers dictionary using <code class="docutils literal notranslate"><span class="pre">feature.qualifiers[&quot;qualifier_name&quot;]</span> <span class="pre">=</span> <span class="pre">[&quot;new_value&quot;]</span></code></p></li>
+</ol>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">Bio.SeqFeatures</span></code> does not automatically assume a sequence strand for the feature. If you would like to refer to a feature on the positive or minus strand, you can add a parameter in <code class="docutils literal notranslate"><span class="pre">FeatureLocation</span></code> specifying <code class="docutils literal notranslate"><span class="pre">strand=+1</span></code> or <code class="docutils literal notranslate"><span class="pre">strand=-1</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create a location specifying the minus strand</span>
+<span class="n">location</span> <span class="o">=</span> <span class="n">FeatureLocation</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="n">strand</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">my_feature3</span> <span class="o">=</span> <span class="n">SeqFeature</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;domain&quot;</span><span class="p">,</span> <span class="n">qualifiers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;gene&quot;</span><span class="p">:[</span><span class="s2">&quot;example_domain&quot;</span><span class="p">]})</span>
+
+<span class="n">dummy_record</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">my_feature3</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">dummy_record</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">dummy_record</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;genbank&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type: domain
+location: [15:19](-)
+qualifiers:
+    Key: gene, Value: [&#39;example_domain&#39;]
+
+LOCUS       name                      19 bp    DNA     linear   UNK 01-JAN-1980
+DEFINITION  description.
+ACCESSION   id
+VERSION     id
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     gene            4..15
+     domain          4..9
+                     /Note=&quot;Region of interest&quot;
+     domain          complement(16..19)
+                     /gene=&quot;example_domain&quot;
+ORIGIN
+        1 aaaatgcgta cgtgaacgt
+//
+</pre></div>
+</div>
+</div>
+</div>
+<section id="adding-a-feature-with-parts">
+<h3>Adding a Feature with Parts<a class="headerlink" href="#adding-a-feature-with-parts" title="Link to this heading">#</a></h3>
+<p>To add a feature with parts, like a CDS with introns, we need to use a <code class="docutils literal notranslate"><span class="pre">CompoundLocation</span></code> object when creating a <code class="docutils literal notranslate"><span class="pre">SeqFeature</span></code>.</p>
+<p>The example code below adds a CDS with two parts, between 3-9bp and 12-15bp, to my features list. In a real-world scenario this would represent a CDS with an intron that skips the <code class="docutils literal notranslate"><span class="pre">ACG</span></code> codon: ATGCGT~~ACG~~TGA</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompoundLocation</span>
+
+<span class="c1"># Define the locations of the CDS</span>
+<span class="n">locations</span> <span class="o">=</span> <span class="p">[</span><span class="n">FeatureLocation</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="n">FeatureLocation</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">)]</span>
+
+<span class="c1"># Create a compound location from these parts</span>
+<span class="n">compound_location</span> <span class="o">=</span> <span class="n">CompoundLocation</span><span class="p">(</span><span class="n">locations</span><span class="p">)</span>
+
+<span class="c1"># Create a SeqFeature with this compound location, including type and qualifiers. </span>
+<span class="n">cds_feature</span> <span class="o">=</span> <span class="n">SeqFeature</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">compound_location</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;CDS&quot;</span><span class="p">,</span> <span class="n">qualifiers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;gene&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;example_gene&quot;</span><span class="p">]})</span>
+
+<span class="c1"># Add the feature to the Dseqrecord</span>
+<span class="n">dummy_record</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cds_feature</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">dummy_record</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">dummy_record</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;genbank&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type: CDS
+location: join{[3:9], [12:15]}
+qualifiers:
+    Key: gene, Value: [&#39;example_gene&#39;]
+
+LOCUS       name                      19 bp    DNA     linear   UNK 01-JAN-1980
+DEFINITION  description.
+ACCESSION   id
+VERSION     id
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     gene            4..15
+     domain          4..9
+                     /Note=&quot;Region of interest&quot;
+     domain          complement(16..19)
+                     /gene=&quot;example_domain&quot;
+     CDS             join(4..9,13..15)
+                     /gene=&quot;example_gene&quot;
+ORIGIN
+        1 aaaatgcgta cgtgaacgt
+//
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can even extract a protein record as follows (see how the protein sequence is <code class="docutils literal notranslate"><span class="pre">MR</span></code>, skipping the intron):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sub_record</span> <span class="o">=</span> <span class="n">dummy_record</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">dummy_record</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">sub_record</span><span class="o">.</span><span class="n">translate</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ID: id
+Name: name
+Description: description
+Number of features: 0
+/molecule_type=DNA
+ProteinSeq(&#39;MR*&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="standard-feature-types-and-qualifiers">
+<h3>Standard Feature Types and Qualifiers<a class="headerlink" href="#standard-feature-types-and-qualifiers" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">pydna</span></code> and <code class="docutils literal notranslate"><span class="pre">Bio.SeqFeature</span></code> suppports all the conventional feature types through the <code class="docutils literal notranslate"><span class="pre">type</span></code> parameters. A non-exhaustive list include gene, CDS, promoter, exon, intron, 5’ UTR, 3’ UTR, terminator, enhancer, and RBS. You can also define custom features, which could be useful for synthetic biology applications. For instance, you might want to have Bio_brick or spacer features to describe a synthetic standardised plasmid construct.</p>
+<p>It is important to note that while <code class="docutils literal notranslate"><span class="pre">pydna</span></code> and <code class="docutils literal notranslate"><span class="pre">Bio.SeqFeature</span></code> does not restrict the feature types you can use, sticking to standard types helps maintain compatibility with other bioinformatics tools and databases. Please refer to the official <a class="reference external" href="https://www.insdc.org/submitting-standards/feature-table/#2">GenBank_Feature_Table</a>, that lists the standard feature types and their associated qualifiers.</p>
+<p>Further documentation for <code class="docutils literal notranslate"><span class="pre">SeqFeature</span></code>, <code class="docutils literal notranslate"><span class="pre">CompoundLocation</span></code>, and <code class="docutils literal notranslate"><span class="pre">FeatureLocation</span></code> can be found in the <code class="docutils literal notranslate"><span class="pre">SeqFeature</span></code> module <a class="reference external" href="https://biopython.org/docs/1.75/api/Bio.SeqFeature.html">here</a>.</p>
+</section>
+<section id="handling-origin-spanning-features">
+<h3>Handling Origin Spanning Features<a class="headerlink" href="#handling-origin-spanning-features" title="Link to this heading">#</a></h3>
+<p>An origin spanning feature is a special type of feature that crosses over a circular sequence’s origin. In pydna, such a feature is represented as a feature with parts, joining the part of the sequence immediately before the origin and immediately after the origin. They can be added using <code class="docutils literal notranslate"><span class="pre">CompoundLocation</span></code> as normal.</p>
+<p>An origin spanning feature, between base 19 to base 6, in a 25bp long circular sequence, is represented like so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">:</span> <span class="n">gene</span> 
+<span class="n">location</span><span class="p">:</span> <span class="n">join</span><span class="p">{[</span><span class="mi">19</span><span class="p">:</span><span class="mi">25</span><span class="p">](</span><span class="o">+</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">](</span><span class="o">+</span><span class="p">)}</span>  
+<span class="n">qualifiers</span><span class="p">:</span> <span class="n">gene</span><span class="p">,</span> <span class="n">Value</span><span class="p">:</span> <span class="n">example_gene</span>  
+</pre></div>
+</div>
+<p>This feature will be displayed as a single feature in SnapGene viewer and Benchling, since they support this convention.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circular_record</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s1">&#39;ACGTGAaaaaaaaaaaaaaATGCGT&#39;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">location</span> <span class="o">=</span> <span class="p">[</span><span class="n">FeatureLocation</span><span class="p">(</span><span class="mi">19</span><span class="p">,</span><span class="mi">25</span><span class="p">),</span> <span class="n">FeatureLocation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)]</span>
+<span class="n">ori_feat_location</span> <span class="o">=</span> <span class="n">CompoundLocation</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+<span class="n">ori_feature</span> <span class="o">=</span> <span class="n">SeqFeature</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">ori_feat_location</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;misc&quot;</span><span class="p">,</span> <span class="n">qualifiers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;gene&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;example origin spanning gene&quot;</span><span class="p">]})</span>
+<span class="n">circular_record</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ori_feature</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt;&gt; Feature:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">circular_record</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Note how the feature sequence is extracted properly across the origin.</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt;&gt; Feature sequence:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">circular_record</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">circular_record</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt;&gt; GenBank format:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">circular_record</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;genbank&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&gt;&gt; Feature:
+type: misc
+location: join{[19:25], [0:6]}
+qualifiers:
+    Key: gene, Value: [&#39;example origin spanning gene&#39;]
+
+&gt;&gt; Feature sequence:
+ATGCGTACGTGA
+
+&gt;&gt; GenBank format:
+LOCUS       name                      25 bp    DNA     circular UNK 01-JAN-1980
+DEFINITION  description.
+ACCESSION   id
+VERSION     id
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     misc            join(20..25,1..6)
+                     /gene=&quot;example origin spanning gene&quot;
+ORIGIN
+        1 acgtgaaaaa aaaaaaaaaa tgcgt
+//
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="other-methods-to-viewing-features">
+<h3>Other Methods to Viewing Features<a class="headerlink" href="#other-methods-to-viewing-features" title="Link to this heading">#</a></h3>
+<p>pydna also provides the <code class="docutils literal notranslate"><span class="pre">list_features</span></code> method as a simple way to list all the features in a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">sample_record</span><span class="o">.</span><span class="n">list_features</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>+-----+------------------+-----+-------+-------+------+--------+------+
+| Ft# | Label or Note    | Dir | Sta   | End   |  Len | type   | orf? |
++-----+------------------+-----+-------+-------+------+--------+------+
+|   0 | nd               | --&gt; | 0     | 5028  | 5028 | source |  no  |
+|   1 | nd               | --&gt; | &lt;0    | &gt;206  |  206 | mRNA   |  no  |
+|   2 | nd               | --&gt; | &lt;0    | 206   |  206 | CDS    |  no  |
+|   3 | nd               | --&gt; | &lt;686  | &gt;3158 | 2472 | gene   | yes  |
+|   4 | nd               | --&gt; | &lt;686  | &gt;3158 | 2472 | mRNA   | yes  |
+|   5 | N:plasma membran | --&gt; | 686   | 3158  | 2472 | CDS    | yes  |
+|   6 | nd               | &lt;-- | &lt;3299 | &gt;4037 |  738 | gene   | yes  |
+|   7 | nd               | &lt;-- | &lt;3299 | &gt;4037 |  738 | mRNA   | yes  |
+|   8 | nd               | &lt;-- | 3299  | 4037  |  738 | CDS    | yes  |
++-----+------------------+-----+-------+-------+------+--------+------+
+</pre></div>
+</div>
+</div>
+</div>
+<p>This method is convenient for checking-out a brief overview of each feature, without reading through an entire sequence record.</p>
+<p>Alternatively, we can look for specific features using their qualifiers. For instance:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter based on feature type</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting all CDS features:&#39;</span><span class="p">)</span>
+<span class="n">cds_features</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">sample_record</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CDS&quot;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">cds_features</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Getting all CDS features:
+type: CDS
+location: [&lt;0:206](+)
+qualifiers:
+    Key: codon_start, Value: [&#39;3&#39;]
+    Key: product, Value: [&#39;TCP1-beta&#39;]
+    Key: protein_id, Value: [&#39;AAA98665.1&#39;]
+    Key: translation, Value: [&#39;SSIYNGISTSGLDLNNGTIADMRQLGIVESYKLKRAVVSSASEAAEVLLRVDNIIRARPRTANRQHM&#39;]
+
+type: CDS
+location: [686:3158](+)
+qualifiers:
+    Key: codon_start, Value: [&#39;1&#39;]
+    Key: gene, Value: [&#39;AXL2&#39;]
+    Key: note, Value: [&#39;plasma membrane glycoprotein&#39;]
+    Key: product, Value: [&#39;Axl2p&#39;]
+    Key: protein_id, Value: [&#39;AAA98666.1&#39;]
+    Key: translation, Value: [&#39;MTQLQISLLLTATISLLHLVVATPYEAYPIGKQYPPVARVNESFTFQISNDTYKSSVDKTAQITYNCFDLPSWLSFDSSSRTFSGEPSSDLLSDANTTLYFNVILEGTDSADSTSLNNTYQFVVTNRPSISLSSDFNLLALLKNYGYTNGKNALKLDPNEVFNVTFDRSMFTNEESIVSYYGRSQLYNAPLPNWLFFDSGELKFTGTAPVINSAIAPETSYSFVIIATDIEGFSAVEVEFELVIGAHQLTTSIQNSLIINVTDTGNVSYDLPLNYVYLDDDPISSDKLGSINLLDAPDWVALDNATISGSVPDELLGKNSNPANFSVSIYDTYGDVIYFNFEVVSTTDLFAISSLPNINATRGEWFSYYFLPSQFTDYVNTNVSLEFTNSSQDHDWVKFQSSNLTLAGEVPKNFDKLSLGLKANQGSQSQELYFNIIGMDSKITHSNHSANATSTRSSHHSTSTSSYTSSTYTAKISSTSAAATSSAPAALPAANKTSSHNKKAVAIACGVAIPLGVILVALICFLIFWRRRRENPDDENLPHAISGPDLNNPANKPNQENATPLNNPFDDDASSYDDTSIARRLAALNTLKLDNHSATESDISSVDEKRDSLSGMNTYNDQFQSQSKEELLAKPPVQPPESPFFDPQNRSSSVYMDSEPAVNKSWRYTGNLSPVSDIVRDSYGSQKTVDTEKLFDLEAPEKEKRTSRDVTMSSLDPWNSNISPSPVRKSVTPSPYNVTKHRNRHLQNIQDSQSGKNGITPTTMSTSSSDDFVPVKDGENFCWVHSMEPDRRPSKKRLVDFSNKSNVNVGQVKDIHGRIPEML&#39;]
+
+type: CDS
+location: [3299:4037](-)
+qualifiers:
+    Key: codon_start, Value: [&#39;1&#39;]
+    Key: gene, Value: [&#39;REV7&#39;]
+    Key: product, Value: [&#39;Rev7p&#39;]
+    Key: protein_id, Value: [&#39;AAA98667.1&#39;]
+    Key: translation, Value: [&#39;MNRWVEKWLRVYLKCYINLILFYRNVYPPQSFDYTTYQSFNLPQFVPINRHPALIDYIEELILDVLSKLTHVYRFSICIINKKNDLCIEKYVLDFSELQHVDKDDQIITETEVFDEFRSSLNSLIMHLEKLPKVNDDTITFEAVINAIELELGHKLDRNRRVDSLEEKAEIERDSNWVKCQEDENLPDNNGFQPPKIKLTSLVGSDVGPLIIHQFSEKLISGDDKILNGVYSQYEEGESIFGSLF&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find a particular feature by its qualifier (e.g. gene name)</span>
+<span class="n">rev7_cds_feature</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">sample_record</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> 
+     <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;gene&quot;</span> <span class="ow">and</span>
+     <span class="s2">&quot;gene&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span> <span class="ow">and</span> <span class="s2">&quot;REV7&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;gene&quot;</span><span class="p">]</span>
+     <span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">rev7_cds_feature</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type: gene
+location: [&lt;3299:&gt;4037](-)
+qualifiers:
+    Key: gene, Value: [&#39;REV7&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>If you would like to search for another type of features, simply replace the <code class="docutils literal notranslate"><span class="pre">&quot;gene&quot;</span></code> with your desired feature type in quotation marks.</p>
+</section>
+<section id="removing-features">
+<h3>Removing Features<a class="headerlink" href="#removing-features" title="Link to this heading">#</a></h3>
+<p>In pydna, we can search for the feature that we would like to remove using the feature’s types or qualififers. For instance, we can modify the features list to exclude all CDS:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Remove all CDS type features from my feature list</span>
+<span class="n">sample_record</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">sample_record</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CDS&quot;</span><span class="p">)]</span>
+
+<span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">sample_record</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type: source
+location: [0:5028](+)
+qualifiers:
+    Key: chromosome, Value: [&#39;IX&#39;]
+    Key: db_xref, Value: [&#39;taxon:4932&#39;]
+    Key: mol_type, Value: [&#39;genomic DNA&#39;]
+    Key: organism, Value: [&#39;Saccharomyces cerevisiae&#39;]
+
+type: mRNA
+location: [&lt;0:&gt;206](+)
+qualifiers:
+    Key: product, Value: [&#39;TCP1-beta&#39;]
+
+type: gene
+location: [&lt;686:&gt;3158](+)
+qualifiers:
+    Key: gene, Value: [&#39;AXL2&#39;]
+
+type: mRNA
+location: [&lt;686:&gt;3158](+)
+qualifiers:
+    Key: gene, Value: [&#39;AXL2&#39;]
+    Key: product, Value: [&#39;Axl2p&#39;]
+
+type: gene
+location: [&lt;3299:&gt;4037](-)
+qualifiers:
+    Key: gene, Value: [&#39;REV7&#39;]
+
+type: mRNA
+location: [&lt;3299:&gt;4037](-)
+qualifiers:
+    Key: gene, Value: [&#39;REV7&#39;]
+    Key: product, Value: [&#39;Rev7p&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can also modify the features list to exclude a specific gene:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Exclude REV7 from my feature list</span>
+<span class="n">sample_record</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">sample_record</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="s1">&#39;gene&#39;</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span> <span class="ow">and</span> <span class="s1">&#39;REV7&#39;</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">])]</span>
+
+<span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">sample_record</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>type: source
+location: [0:5028](+)
+qualifiers:
+    Key: chromosome, Value: [&#39;IX&#39;]
+    Key: db_xref, Value: [&#39;taxon:4932&#39;]
+    Key: mol_type, Value: [&#39;genomic DNA&#39;]
+    Key: organism, Value: [&#39;Saccharomyces cerevisiae&#39;]
+
+type: mRNA
+location: [&lt;0:&gt;206](+)
+qualifiers:
+    Key: product, Value: [&#39;TCP1-beta&#39;]
+
+type: gene
+location: [&lt;686:&gt;3158](+)
+qualifiers:
+    Key: gene, Value: [&#39;AXL2&#39;]
+
+type: mRNA
+location: [&lt;686:&gt;3158](+)
+qualifiers:
+    Key: gene, Value: [&#39;AXL2&#39;]
+    Key: product, Value: [&#39;Axl2p&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Dseq.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Representing sequences in pydna</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Importing_Seqs.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Importing and viewing sequence files in pydna</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-features-and-qualifiers">Adding Features and Qualifiers</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-a-feature-with-parts">Adding a Feature with Parts</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standard-feature-types-and-qualifiers">Standard Feature Types and Qualifiers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#handling-origin-spanning-features">Handling Origin Spanning Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-methods-to-viewing-features">Other Methods to Viewing Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-features">Removing Features</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
