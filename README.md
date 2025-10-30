@@ -435,27 +435,6 @@ poetry shell
 poetry run pre-commit install
 ```
 
-#### Alternative method (using `pip`) 🐍
-
-Use this for a small contribution or if you don't manage to set up the dev environment.
-
-```bash
-# Create a new virtual environment
-python -m venv .venv
-
-# Activate the virtual environment
-source .venv/bin/activate
-
-# Install all dependencies (library deps + dev and test requirements)
-pip install -r requirements.txt
-
-# Install the project as editable dependency
-pip install -e .
-
-# Install the pre-commit hooks
-pre-commit install
-```
-
 #### Contributing code 💻
 
 1. Make your changes.
