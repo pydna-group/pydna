@@ -35,6 +35,11 @@ import os as _os
 import re as _re
 import time as _time
 import datetime as _datetime
+from typing import Union, TYPE_CHECKING
+from pydna.opencloning_models import SequenceCutSource
+
+if TYPE_CHECKING:  # pragma: no cover
+    from pydna.opencloning_models import Source
 
 
 # import logging as _logging
@@ -128,6 +133,7 @@ class Dseqrecord(_SeqRecord):
     """
 
     seq: _Dseq
+    source: Union["Source", None] = None
 
     def __init__(
         self,
@@ -135,6 +141,7 @@ class Dseqrecord(_SeqRecord):
         *args,
         circular=None,
         n=5e-14,  # mol ( = 0.05 pmol)
+        source=None,
         **kwargs,
     ):
         #        _module_logger.info("### Dseqrecord initialized ###")
@@ -202,6 +209,7 @@ class Dseqrecord(_SeqRecord):
         self.map_target = None
         self.n = n  # amount, set to 5E-14 which is 5 pmols
         self.annotations.update({"molecule_type": "DNA"})
+        self.source = source
 
     @classmethod
     def from_string(
@@ -256,6 +264,7 @@ class Dseqrecord(_SeqRecord):
         obj.features = record.features
         obj.map_target = None
         obj.n = n
+        obj.source = None
         if circular is None:
             circular = record.annotations.get("topology") == "circular"
         obj.seq = _Dseq.quick(
@@ -875,7 +884,11 @@ class Dseqrecord(_SeqRecord):
     def __eq__(self, other):
         """docstring."""
         try:
-            if self.seq == other.seq and str(self.__dict__) == str(other.__dict__):
+            this_dict = self.__dict__.copy()
+            other_dict = other.__dict__.copy()
+            del this_dict["source"]
+            del other_dict["source"]
+            if self.seq == other.seq and str(this_dict) == str(other_dict):
                 return True
         except AttributeError:
             pass
@@ -1419,4 +1432,39 @@ class Dseqrecord(_SeqRecord):
             right_edge = right_watson if right_ovhg > 0 else right_crick
             features = self[left_edge:right_edge].features
 
-        return Dseqrecord(dseq, features=features)
+        # This will need to be generalised to all types of cuts
+        source = SequenceCutSource.from_parent(self, left_cut, right_cut)
+        return Dseqrecord(dseq, features=features, source=source)
+
+    def history(self):
+        """
+        Returns a string representation of the cloning history of the sequence.
+        Returns an empty string if the sequence has no source.
+
+        Check the documentation notebooks for extensive examples.
+
+        Returns
+        -------
+            str: A string representation of the cloning history of the sequence.
+
+        Examples
+        --------
+        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.assembly2 import gibson_assembly
+        >>> fragments = [
+        ...    Dseqrecord("TTTTacgatAAtgctccCCCC", circular=False, name="fragment1"),
+        ...    Dseqrecord("CCCCtcatGGGG", circular=False, name="fragment2"),
+        ...    Dseqrecord("GGGGatataTTTT", circular=False, name="fragment3"),
+        ... ]
+        >>> product, *_ = gibson_assembly(fragments, limit=4)
+        >>> product.name = "product_name"
+        >>> print(product.history())
+        ╙── product_name (Dseqrecord(o34))
+            └─╼ GibsonAssemblySource
+                ├─╼ fragment1 (Dseqrecord(-21))
+                ├─╼ fragment2 (Dseqrecord(-12))
+                └─╼ fragment3 (Dseqrecord(-13))
+        """
+        if self.source is None:
+            return ""
+        return self.source.history_string(self)

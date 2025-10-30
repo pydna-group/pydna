@@ -39,9 +39,26 @@ from pydna.types import (
 from pydna.gateway import gateway_overlap, find_gateway_sites
 from pydna.cre_lox import cre_loxP_overlap
 
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING, Callable, Literal
+from pydna.opencloning_models import (
+    AssemblySource,
+    RestrictionAndLigationSource,
+    GibsonAssemblySource,
+    InFusionSource,
+    OverlapExtensionPCRLigationSource,
+    InVivoAssemblySource,
+    LigationSource,
+    GatewaySource,
+    HomologousRecombinationSource,
+    CreLoxRecombinationSource,
+    PCRSource,
+    SourceInput,
+    CRISPRSource,
+)
+from pydna.crispr import cas9
+import warnings
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from Bio.Restriction import AbstractCut as _AbstractCut
 
 
@@ -849,22 +866,25 @@ def assemble(
 
         # Special case for blunt circularisation
         if overlap == 0:
-            return out_dseqrecord.looped()
+            out_dseqrecord = out_dseqrecord.looped()
+        else:
+            # Remove trailing overlap
+            out_dseqrecord = _Dseqrecord(
+                fill_dseq(out_dseqrecord.seq)[:-overlap],
+                features=out_dseqrecord.features,
+                circular=True,
+            )
+            for feature in out_dseqrecord.features:
+                start, end = _location_boundaries(feature.location)
+                if start >= len(out_dseqrecord) or end > len(out_dseqrecord):
+                    # Wrap around the origin
+                    feature.location = _shift_location(
+                        feature.location, 0, len(out_dseqrecord)
+                    )
 
-        # Remove trailing overlap
-        out_dseqrecord = _Dseqrecord(
-            fill_dseq(out_dseqrecord.seq)[:-overlap],
-            features=out_dseqrecord.features,
-            circular=True,
-        )
-        for feature in out_dseqrecord.features:
-            start, end = _location_boundaries(feature.location)
-            if start >= len(out_dseqrecord) or end > len(out_dseqrecord):
-                # Wrap around the origin
-                feature.location = _shift_location(
-                    feature.location, 0, len(out_dseqrecord)
-                )
-
+    out_dseqrecord.source = AssemblySource.from_subfragment_representation(
+        subfragment_representation, fragments, is_circular
+    )
     return out_dseqrecord
 
 
@@ -2007,6 +2027,21 @@ def common_function_assembly_products(
     return [assemble(frags, a) for a in output_assemblies]
 
 
+def _recast_sources(
+    products: list[_Dseqrecord], source_cls, **extra_fields
+) -> list[_Dseqrecord]:
+    """Recast the `source` of each product to `source_cls` with optional extras.
+
+    This avoids repeating the same for-loop across many assembly functions.
+    """
+    for prod in products:
+        prod.source = source_cls(
+            **prod.source.model_dump(),
+            **extra_fields,
+        )
+    return products
+
+
 def gibson_assembly(
     frags: list[_Dseqrecord], limit: int = 25, circular_only: bool = False
 ) -> list[_Dseqrecord]:
@@ -2026,9 +2061,11 @@ def gibson_assembly(
     list[_Dseqrecord]
         List of assembled DNA molecules
     """
-    return common_function_assembly_products(
+
+    products = common_function_assembly_products(
         frags, limit, gibson_overlap, circular_only
     )
+    return _recast_sources(products, GibsonAssemblySource)
 
 
 def in_fusion_assembly(
@@ -2051,7 +2088,9 @@ def in_fusion_assembly(
     list[_Dseqrecord]
         List of assembled DNA molecules
     """
-    return gibson_assembly(frags, limit)
+
+    products = gibson_assembly(frags, limit)
+    return _recast_sources(products, InFusionSource)
 
 
 def fusion_pcr_assembly(
@@ -2074,7 +2113,8 @@ def fusion_pcr_assembly(
     list[_Dseqrecord]
         List of assembled DNA molecules
     """
-    return gibson_assembly(frags, limit)
+    products = gibson_assembly(frags, limit)
+    return _recast_sources(products, OverlapExtensionPCRLigationSource)
 
 
 def in_vivo_assembly(
@@ -2096,9 +2136,10 @@ def in_vivo_assembly(
     list[_Dseqrecord]
         List of assembled DNA molecules
     """
-    return common_function_assembly_products(
+    products = common_function_assembly_products(
         frags, limit, common_sub_strings, circular_only
     )
+    return _recast_sources(products, InVivoAssemblySource)
 
 
 def restriction_ligation_assembly(
@@ -2168,11 +2209,16 @@ def restriction_ligation_assembly(
     TTAAGtttC
     """
 
-    def algo(x, y, _l):
+    def algorithm_fn(x, y, _l):
         # By default, we allow blunt ends
         return restriction_ligation_overlap(x, y, enzymes, False, allow_blunt)
 
-    return common_function_assembly_products(frags, None, algo, circular_only)
+    products = common_function_assembly_products(
+        frags, None, algorithm_fn, circular_only
+    )
+    return _recast_sources(
+        products, RestrictionAndLigationSource, restriction_enzymes=enzymes
+    )
 
 
 def golden_gate_assembly(
@@ -2264,11 +2310,14 @@ def ligation_assembly(
         return sticky_end_sub_strings(x, y, allow_partial_overlap)
 
     if allow_blunt:
-        algo = combine_algorithms(sticky_end_algorithm, blunt_overlap)
+        algorithm_fn = combine_algorithms(sticky_end_algorithm, blunt_overlap)
     else:
-        algo = sticky_end_algorithm
+        algorithm_fn = sticky_end_algorithm
 
-    return common_function_assembly_products(frags, None, algo, circular_only)
+    products = common_function_assembly_products(
+        frags, None, algorithm_fn, circular_only
+    )
+    return _recast_sources(products, LigationSource)
 
 
 def assembly_is_multi_site(asm: list[EdgeRepresentationAssembly]) -> bool:
@@ -2285,7 +2334,7 @@ def assembly_is_multi_site(asm: list[EdgeRepresentationAssembly]) -> bool:
 
 def gateway_assembly(
     frags: list[_Dseqrecord],
-    reaction_type: str,
+    reaction_type: Literal["BP", "LR"],
     greedy: bool = False,
     circular_only: bool = False,
     multi_site_only: bool = False,
@@ -2296,8 +2345,8 @@ def gateway_assembly(
     ----------
     frags : list[_Dseqrecord]
         List of DNA fragments to assemble
-    reaction_type : str
-        Type of Gateway reaction, either 'BP' or 'LR'
+    reaction_type : Literal['BP', 'LR']
+        Type of Gateway reaction
     greedy : bool, optional
         If True, use greedy gateway consensus sites, by default False
     circular_only : bool, optional
@@ -2365,13 +2414,19 @@ def gateway_assembly(
             f"Invalid reaction type: {reaction_type}, can only be BP or LR"
         )
 
-    def algo(x, y, _l):
+    def algorithm_fn(x, y, _l):
         return gateway_overlap(x, y, reaction_type, greedy)
 
     filter_results_function = None if not multi_site_only else assembly_is_multi_site
 
     products = common_function_assembly_products(
-        frags, None, algo, circular_only, filter_results_function
+        frags, None, algorithm_fn, circular_only, filter_results_function
+    )
+    products = _recast_sources(
+        products,
+        GatewaySource,
+        reaction_type=reaction_type,
+        greedy=greedy,
     )
 
     if len(products) == 0:
@@ -2528,7 +2583,10 @@ def homologous_recombination_integration(
     """
     fragments = common_handle_insertion_fragments(genome, inserts)
 
-    return common_function_integration_products(fragments, limit, common_sub_strings)
+    products = common_function_integration_products(
+        fragments, limit, common_sub_strings
+    )
+    return _recast_sources(products, HomologousRecombinationSource)
 
 
 def homologous_recombination_excision(
@@ -2564,7 +2622,8 @@ def homologous_recombination_excision(
     >>> products
     [Dseqrecord(o25), Dseqrecord(-32)]
     """
-    return common_function_excision_products(genome, limit, common_sub_strings)
+    products = common_function_excision_products(genome, limit, common_sub_strings)
+    return _recast_sources(products, HomologousRecombinationSource)
 
 
 def cre_lox_integration(
@@ -2623,7 +2682,8 @@ def cre_lox_integration(
 
     """
     fragments = common_handle_insertion_fragments(genome, inserts)
-    return common_function_integration_products(fragments, None, cre_loxP_overlap)
+    products = common_function_integration_products(fragments, None, cre_loxP_overlap)
+    return _recast_sources(products, CreLoxRecombinationSource)
 
 
 def cre_lox_excision(genome: _Dseqrecord) -> list[_Dseqrecord]:
@@ -2673,4 +2733,151 @@ def cre_lox_excision(genome: _Dseqrecord) -> list[_Dseqrecord]:
     >>> res2
     [Dseqrecord(o39), Dseqrecord(-45)]
     """
-    return common_function_excision_products(genome, None, cre_loxP_overlap)
+    products = common_function_excision_products(genome, None, cre_loxP_overlap)
+    return _recast_sources(products, CreLoxRecombinationSource)
+
+
+def crispr_integration(
+    genome: _Dseqrecord,
+    inserts: list[_Dseqrecord],
+    guides: list[_Primer],
+    limit: int = 40,
+) -> list[_Dseqrecord]:
+    """
+    Returns the products for CRISPR integration.
+
+    Parameters
+    ----------
+    genome : _Dseqrecord
+        Target genome sequence
+    inserts : list[_Dseqrecord]
+        DNA fragment(s) to insert
+    guides : list[_Primer]
+        List of guide RNAs as Primer objects. This may change in the future.
+    limit : int, optional
+        Minimum overlap length required, by default 40
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of integrated DNA molecules
+
+    Examples
+    --------
+
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.assembly2 import crispr_integration
+    >>> from pydna.primer import Primer
+    >>> genome = Dseqrecord("aaccggttcaatgcaaacagtaatgatggatgacattcaaagcac", name="genome")
+    >>> insert = Dseqrecord("aaccggttAAAAAAAAAttcaaagcac", name="insert")
+    >>> guide = Primer("ttcaatgcaaacagtaatga", name="guide")
+    >>> product, *_ = crispr_integration(genome, [insert], [guide], 8)
+    >>> product
+    Dseqrecord(-27)
+
+    """
+    if len(guides) == 0:
+        raise ValueError("At least one guide RNA is required for CRISPR integration")
+
+    # Get all the possible products from the homologous recombination integration
+    products = homologous_recombination_integration(genome, inserts, limit)
+
+    # Verify that the guides cut in the region that will be repaired
+
+    # First we collect the positions where the guides cut
+    guide_cuts = []
+    for guide in guides:
+        enzyme = cas9(str(guide.seq))
+        possible_cuts = genome.seq.get_cutsites(enzyme)
+        if len(possible_cuts) == 0:
+            raise ValueError(
+                f"Could not find Cas9 cutsite in the target sequence using the guide: {guide.name}"
+            )
+        # Keep only the position of the cut
+        possible_cuts = [cut[0] for (cut, _) in possible_cuts]
+        guide_cuts.append(possible_cuts)
+
+    # Then, we check it the possible homologous recombination products contain the cuts
+    # from the guides inside the repair region.
+    # We also add the used guides to each product. This is very important!
+    valid_products = []
+    for i, product in enumerate(products):
+        # The second element of product.source.input is conventionally the insert/repair fragment
+        # The other two (first and third) are the two bits of the genome
+        repair_start = _location_boundaries(product.source.input[0].right_location)[0]
+        repair_end = _location_boundaries(product.source.input[2].left_location)[1]
+        repair_location = create_location(repair_start, repair_end, len(genome))
+        some_cuts_inside_repair = []
+        all_cuts_inside_repair = []
+        for cut_group in guide_cuts:
+            cuts_in_repair = [cut for cut in cut_group if cut in repair_location]
+            some_cuts_inside_repair.append(len(cuts_in_repair) != 0)
+            all_cuts_inside_repair.append(len(cuts_in_repair) == len(cut_group))
+
+        if all(some_cuts_inside_repair):
+            used_guides = [g for i, g in enumerate(guides) if all_cuts_inside_repair[i]]
+            # Add the used guides to the product <----- VERY IMPORTANT!
+            product.source.input.extend([SourceInput(sequence=g) for g in used_guides])
+            valid_products.append(product)
+
+            if not all(all_cuts_inside_repair):
+                raise ValueError(
+                    "Some guides cut outside the repair region, please check the guides"
+                )
+
+    if len(valid_products) != len(products):
+        warnings.warn(
+            "Some recombination products were discarded because they had off-target cuts",
+            category=UserWarning,
+            stacklevel=2,
+        )
+
+    return _recast_sources(valid_products, CRISPRSource)
+
+
+def pcr_assembly(
+    template: _Dseqrecord,
+    fwd_primer: _Primer,
+    rvs_primer: _Primer,
+    add_primer_features: bool = False,
+    limit: int = 14,
+    mismatches: int = 0,
+) -> list[_Dseqrecord]:
+    """Returns the products for PCR assembly.
+
+    Parameters
+    ----------
+    template : _Dseqrecord
+        Template sequence
+    fwd_primer : _Primer
+        Forward primer
+    rvs_primer : _Primer
+        Reverse primer
+    add_primer_features : bool, optional
+        If True, add primer features to the product, by default False
+    limit : int, optional
+        Minimum overlap length required, by default 14
+    mismatches : int, optional
+        Maximum number of mismatches, by default 0
+
+    Returns
+    -------
+    list[_Dseqrecord]
+        List of assembled DNA molecules
+    """
+
+    minimal_annealing = limit + mismatches
+    fragments = [fwd_primer, template, rvs_primer]
+    asm = PCRAssembly(
+        fragments,
+        limit=minimal_annealing,
+        mismatches=mismatches,
+    )
+    products = asm.assemble_linear()
+    # If both primers are the same, remove duplicates
+    if str(fwd_primer.seq).upper() == str(rvs_primer.seq).upper():
+        products = [p for p in products if not p.source.input[1].reverse_complemented]
+    if add_primer_features:
+        products = [annotate_primer_binding_sites(prod, fragments) for prod in products]
+
+    return _recast_sources(products, PCRSource, add_primer_features=add_primer_features)
