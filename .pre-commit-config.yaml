@@ -32,28 +32,6 @@ repos:
       - id: flake8
         args: ["--max-line-length=88"]
 
-  # Verify that requirements.txt is up to date with poetry dependencies every commit
-  - repo: https://github.com/python-poetry/poetry-plugin-export
-    rev: 1.9.0
-    hooks:
-      - id: poetry-export
-        args:
-          [
-            "-f",
-            "requirements.txt",
-            "--output",
-            "requirements.txt",
-            "--with",
-            "dev",
-            "--with",
-            "test",
-            "--with",
-            "docs",
-            "-E",
-            "clipboard download express gel",
-          ]
-        files: "requirements.txt|poetry.lock|pyproject.toml|poetry.toml"
-
   # Remove metadata from jupyter notebooks. This will always be triggered when you commit a change in a notebook.
   - repo: local
     hooks:
