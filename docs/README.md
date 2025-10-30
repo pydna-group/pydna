@@ -55,18 +55,7 @@ Other changes, such as changing the favicon, the css etc., can be made in the `c
 
 ## Build docs using Sphinx command line tools
 
-Command to be run from `path/to/docs`, i.e. from within the `docs` package folder:
-
-Options:
-  - `--separate` to build separate pages for each (sub-)module
-
-```bash
-# pwd: docs
-# apidoc
-sphinx-apidoc --force --implicit-namespaces --module-first -o reference ../src/pydna
-# build docs
-sphinx-build -n -W --keep-going -b html ./ ./_build/
-```
+See [build_docs.sh](build_docs.sh) for the commands to build the documentation.
 
 ## Debugging notebook execution
 

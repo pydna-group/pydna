@@ -471,22 +471,10 @@ supported python versions.
 
 ### Building the documentation locally 📚
 
-Documentation is built using [Sphinx](http://www.sphinx-doc.org/) from [docstrings](https://www.python.org/dev/peps/pep-0257/)
-using a GitHub [action](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml).
+Documentation is built using [Sphinx](http://www.sphinx-doc.org/) from [docstrings](https://www.python.org/dev/peps/pep-0257/) using a GitHub [action](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml) and also built in readthedocs.
 The [numpy](https://www.numpy.org) [docstring format](https://numpy.org/doc/stable/dev/howto-docs.html#docstring-intro) is used.
 
-Below the commands to run a local sphinx server that auto-updated when files are changed.
-
-```bash
-# Install docs dependency group
-poetry install --with docs
-
-# Start the sphinx server to see docs live by default at http://127.0.0.1:8000/
-sphinx-autobuild --watch src/ docs docs/_build/html
-
-```
-
-More info about how to contribute to the documentation can be found [here](docs/README.md)
+To work locally with the documentation, check the [documentation README](docs/README.md) for instructions.
 
 ## Release process 🚀
 

@@ -17,37 +17,37 @@ jobs:
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
 
-    - name: Session information
-      run: |
-        python --version
+      - name: Session information
+        run: |
+          python --version
 
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        virtualenvs.prefer-active-python: true
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs.prefer-active-python: true
 
-    - name: 🔩 list Poetry settings
-      run: poetry config --list
+      - name: 🔩 list Poetry settings
+        run: poetry config --list
 
-    - name: 🔩 Install with Poetry
-      run: poetry install --all-extras --with docs
+      - name: 🔩 Install with Poetry
+        run: poetry install --all-extras --with docs
 
-    - name: Build documentation
-      run: |
-        cd docs
-        poetry run sphinx-apidoc --force --implicit-namespaces --module-first -o reference ../src/pydna
-        poetry run sphinx-build -n --keep-going -b html ./ ./_build/
+      - name: Build documentation
+        run: |
+          cd docs
+          poetry run sphinx-apidoc --force --implicit-namespaces --module-first -o reference ../src/pydna
+          poetry run sphinx-build -n --keep-going -b html ./ ./_build/
 
-    - name: Deploy to GitHub pages 🚀
-      # Deploy only when master changes
-      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-      uses: JamesIves/github-pages-deploy-action@v4.6.0
-      with:
-        clean: false
-        branch: gh-pages
-        folder: docs/_build/html
+      - name: Deploy to GitHub pages 🚀
+        # Deploy only when master changes
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        uses: JamesIves/github-pages-deploy-action@v4.6.0
+        with:
+          clean: false
+          branch: gh-pages
+          folder: docs/_build
