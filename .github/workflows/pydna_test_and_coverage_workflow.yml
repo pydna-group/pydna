@@ -41,8 +41,18 @@ jobs:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
 
-      - name: ⬇️ Checkout
-        uses: actions/checkout@v3
+      - name: ⬇️ Checkout PR HEAD (full history)
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: ⬇️ Checkout (push/tag) full history
+        if: github.event_name != 'pull_request'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: 🔩 Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
