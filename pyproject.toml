@@ -103,7 +103,7 @@ autopep8 = "^2.1.0"
 black = "^25.1.0"
 pre-commit = ">3.6"
 nbstripout = "^0.7.1"
-flake8-bugbear = "^24.12.12"
+flake8-bugbear = ">=24.12.12,<26.0.0"
 
 [tool.pytest.ini_options]
 minversion = "6.0.2"
