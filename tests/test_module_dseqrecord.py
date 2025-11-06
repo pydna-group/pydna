@@ -2081,32 +2081,38 @@ def test_looped():
     a = Dseqrecord(Dseq("caaa", "gttt", ovhg=-1))
     a.add_feature(0, 5)
     b = a.looped()
-    assert a.features == b.features
+    assert str(a.features[0].extract(a).seq) == str(b.features[0].extract(b).seq)
+    assert a.features != b.features
 
     a = Dseqrecord(Dseq("caaa", "gttt", ovhg=-1))
     a.add_feature(0, 5, strand=-1)
     b = a.looped()
-    assert a.features == b.features
+    assert str(a.features[0].extract(a).seq) == str(b.features[0].extract(b).seq)
+    assert a.features != b.features
 
     a = Dseqrecord(Dseq("aaac", "tttg", ovhg=1))
     a.add_feature(2, 4)
     b = a.looped()
+    assert str(a.features[0].extract(a).seq) == str(b.features[0].extract(b).seq)
     assert a.features == b.features
 
-    a = Dseqrecord(Dseq("aaaa", "tttt", ovhg=1))
+    a = Dseqrecord(Dseq("aaaa", "tttt", ovhg=1))  # here!
     a.add_feature(0, 5)
     b = a.looped()
-    assert a.features == b.features
+    assert str(a.features[0].extract(a).seq) == str(b.features[0].extract(b).seq)
+    assert a.features != b.features
 
     a = Dseqrecord(Dseq("aaaa", "tttt", ovhg=1))
     a.add_feature(0, 5, strand=-1)
     b = a.looped()
-    assert a.features == b.features
+    assert str(a.features[0].extract(a).seq) == str(b.features[0].extract(b).seq)
+    assert a.features != b.features
 
     a = Dseqrecord(Dseq("aaaa", "tttt", ovhg=-1))
     a.add_feature(0, 6)
     b = a.looped()
-    assert a.features == b.features
+    assert str(a.features[0].extract(a).seq) == str(b.features[0].extract(b).seq)
+    assert a.features != b.features
 
 
 def test_upper():
