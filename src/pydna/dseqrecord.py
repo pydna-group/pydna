@@ -36,7 +36,6 @@ import re as _re
 import time as _time
 import datetime as _datetime
 
-
 # import logging as _logging
 
 # _module_logger = _logging.getLogger("pydna." + __name__)
@@ -382,35 +381,25 @@ class Dseqrecord(_SeqRecord):
         --------
         pydna.dseq.Dseq.looped
         """
-        new = _copy.copy(self)
-        # for key, value in list(self.__dict__.items()):
-        #     setattr(new, key, value)
-        new._seq = self.seq.looped()
-        five_prime = self.seq.five_prime_end()
-        for fn, fo in zip(new.features, self.features):
-            if five_prime[0] == "5'":
-                pass
-                # fn.location = fn.location + self.seq.ovhg
-            elif five_prime[0] == "3'":
-                fn.location = fn.location + (-self.seq.ovhg)
-            if fn.location.start < 0:
-                loc1 = _SimpleLocation(
-                    len(new) + fn.location.start, len(new), strand=fn.location.strand
-                )
-                loc2 = _SimpleLocation(0, fn.location.end, strand=fn.location.strand)
-                fn.location = _CompoundLocation([loc1, loc2])
+        new = _copy.deepcopy(self)
+        new.seq = self.seq.looped()
 
-            if fn.location.end > len(new):
-                loc1 = _SimpleLocation(
-                    fn.location.start, len(new), strand=fn.location.strand
-                )
-                loc2 = _SimpleLocation(
-                    0, fn.location.end - len(new), strand=fn.location.strand
-                )
-                fn.location = _CompoundLocation([loc1, loc2])
+        old_length = len(self)  # Possibly longer, including sticky ends if any.
+        new_length = len(new)  # Possibly shorter, with blunt ends.
 
-            fn.qualifiers = fo.qualifiers
-
+        if old_length != new_length:  # Only False if self was blunt.
+            for fn in new.features:
+                if new_length in fn:  # Feature spans new end.
+                    strand = fn.location.strand
+                    # Split location oover new origin
+                    loc1 = _SimpleLocation(fn.location.start, new_length, strand=strand)
+                    loc2 = _SimpleLocation(0, old_length - new_length, strand=strand)
+                    fn.location = loc1 + loc2
+                    if strand == -1:
+                        fn.location = loc2 + loc1
+                elif new_length <= fn.location.start and fn.location.end <= old_length:
+                    # Feature contained within sequence folded to beginning.
+                    fn.location = fn.location - new_length
         return new
 
     def tolinear(self):  # pragma: no cover
@@ -773,9 +762,8 @@ class Dseqrecord(_SeqRecord):
         return [x.annotations["filename"] for x in matching_reads]
 
     def __repr__(self):
-        return "Dseqrecord({}{})".format(
-            {True: "-", False: "o"}[not self.circular], len(self)
-        )
+        top = {True: "-", False: "o"}[not self.circular]
+        return f"{self.__class__.__name__}({top}{len(self)})"
 
     def _repr_pretty_(self, p, cycle):
         p.text(
@@ -1416,3 +1404,32 @@ class Dseqrecord(_SeqRecord):
             features = self[left_edge:right_edge].features
 
         return Dseqrecord(dseq, features=features)
+
+    def join(self, fragments):
+        """
+        Join an iterable of Dseqrecords with this instance as the separator.
+
+        Example:
+
+        >>> sep = Dseqrecord("a")
+        >>> joined = sep.join([Dseqrecord("A"), Dseqrecord("B"), Dseqrecord("C")])
+        >>> joined
+        Dseqrecord(-5)
+        >>> joined.seq
+        Dseq(-5)
+        AaBaC
+        TtVtG
+
+        """
+        it = iter(fragments)
+        try:
+            result = next(it)  # first element (no leading separator)
+        except StopIteration:
+            # Empty iterable -> return empty Dseqrecord in analogy with
+            # str.join
+            return Dseqrecord("")
+
+        # Interleave: result = first + sep + x + sep + y + ...
+        for x in it:
+            result = result + self + x
+        return result
