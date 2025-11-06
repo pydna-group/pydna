@@ -35,13 +35,10 @@ from pydna.alphabet import basepair_dict
 from pydna.alphabet import dscode_to_watson_table
 from pydna.alphabet import dscode_to_crick_table
 
-# from pydna.alphabet import watson_tail_to_dscode_table
-# from pydna.alphabet import crick_tail_to_dscode_table
-
 from pydna.alphabet import dscode_to_full_sequence_table
 from pydna.alphabet import dscode_to_watson_tail_table
 from pydna.alphabet import dscode_to_crick_tail_table
-
+from pydna.alphabet import letters_not_in_dscode
 from pydna.alphabet import get_parts
 from pydna.alphabet import representation_tuple
 from pydna.alphabet import dsbreaks
@@ -52,6 +49,7 @@ from pydna.types import DseqType, EnzymesType, CutSiteType
 
 # Sequences larger than this gets a truncated representation.
 length_limit_for_repr = 30
+placeholder = letters_not_in_dscode[-1]
 
 
 class CircularBytes(bytes):
@@ -527,6 +525,7 @@ class Dseq(_Seq):
         obj.circular = circular
         obj.pos = pos
         obj._data = data
+
         return obj
 
     @classmethod
@@ -541,6 +540,7 @@ class Dseq(_Seq):
         obj.circular = circular
         obj.pos = 0
         obj._data = dna.encode("ascii")
+
         return obj
 
     @classmethod
@@ -563,18 +563,6 @@ class Dseq(_Seq):
         crick = crick.strip()[::-1]
 
         return Dseq(watson, crick, ovhg)
-
-        # watson = f"{watson:<{len(crick)}}"
-        # crick = f"{crick:<{len(watson)}}"
-        # data = bytearray()
-        # for w, c in zip(watson, crick):
-        #     try:
-        #         data.extend(basepair_dict[w, c])
-        #     except KeyError as err:
-        #         print(f"Base mismatch in representation {err}")
-        #         raise
-        # obj._data = bytes(data)
-        # return obj
 
     @classmethod
     def from_full_sequence_and_overhangs(
@@ -921,7 +909,9 @@ class Dseq(_Seq):
 
         type5, sticky5 = self.five_prime_end()
         type3, sticky3 = self.three_prime_end()
-        if type5 == type3 and str(sticky5) == str(_rc(sticky3)):
+        if type5 == type3 and str(sticky5) == str(
+            _rc(sticky3)
+        ):  # TODO: this will not work
             # This code makes makes shure that the sequence is not
             # shifted after looping.
             new = self.cast_to_ds_left()[: -len(sticky3)]
@@ -1111,10 +1101,19 @@ class Dseq(_Seq):
         self_type, self_tail = self.three_prime_end()
         other_type, other_tail = other.five_prime_end()
 
-        if self_type == other_type and str(self_tail) == str(_rc(other_tail)):
-            return self.__class__(
-                self.watson + other.watson, other.crick + self.crick, self.ovhg
+        if (self_type == other_type or ("single" in (self_type, other_type))) and len(
+            self_tail
+        ) == len(other_tail):
+
+            junction = "".join(
+                basepair_dict.get((w, c), placeholder)
+                for w, c in zip(self_tail, other_tail[::-1])
             )
+
+            if placeholder not in junction:
+                return self.__class__(
+                    self.watson + other.watson, other.crick + self.crick, self.ovhg
+                )
         raise TypeError("sticky ends not compatible!")
 
     def __mul__(self: DseqType, number: int) -> DseqType:
@@ -1217,6 +1216,8 @@ class Dseq(_Seq):
         crick, ovhg = self._fill_in_five_prime(nucleotides)
         watson = self._fill_in_three_prime(nucleotides)
         return Dseq(watson, crick, ovhg)
+
+    klenow = fill_in  # alias
 
     def transcribe(self) -> _Seq:
         return _Seq(self.watson).transcribe()
@@ -1359,14 +1360,16 @@ class Dseq(_Seq):
     def exo1_front(self: DseqType, n=1) -> DseqType:
         """5'-3' resection at the start (left side) of the molecule."""
         d = _copy.deepcopy(self)
-        d.ovhg += n
-        d.watson = d.watson[n:]
+        if n == 0:
+            return d
+        d._data = self[:n]._data.translate(dscode_to_watson_tail_table) + self._data[n:]
         return d
 
     def exo1_end(self: DseqType, n=1) -> DseqType:
         """5'-3' resection at the end (right side) of the molecule."""
         d = _copy.deepcopy(self)
-        d.crick = d.crick[n:]
+        n = len(self) - n
+        d._data = self._data[:n] + self._data[n:].translate(dscode_to_crick_tail_table)
         return d
 
     def no_cutters(
