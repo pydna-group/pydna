@@ -284,17 +284,28 @@ dscode_sense = ""
 dscode_compl = ""
 watson = ""
 crick = ""
+dscode_sense_lower = ""
+dscode_compl_lower = ""
+watson_lower = ""
+crick_lower = ""
 
-for (w, c), s in basepair_dict.items():
-    dscode_sense += s
+for (w, c), dscode in basepair_dict.items():
+    dscode_sense += dscode
     dscode_compl += basepair_dict[c, w]
     watson += w
     crick += c
+    dscode_lower = dscode.lower()
+    if dscode_lower in dscode_sense:
+        continue
+    dscode_sense_lower += dscode_lower
+    watson_lower += w.lower()
+    crick_lower += c.lower()
+    dscode_compl_lower += dscode_compl.lower()
 
-dscode_sense += dscode_sense.lower()
-dscode_compl += dscode_compl.lower()
-watson += watson.lower()
-crick += crick.lower()
+# dscode_sense += dscode_sense.lower()
+# dscode_compl += dscode_compl.lower()
+# watson += watson.lower()
+# crick += crick.lower()
 
 placeholder1 = "~"
 placeholder2 = "+"
@@ -305,13 +316,13 @@ assert placeholder2 in letters_not_in_dscode
 assert interval in letters_not_in_dscode
 
 dscode_to_watson_table = bytes.maketrans(
-    (dscode_sense + placeholder1 + placeholder2).encode("ascii"),
-    (watson + emptyspace + interval).encode("ascii"),
+    (dscode_sense + dscode_sense_lower + placeholder1 + placeholder2).encode("ascii"),
+    (watson + watson_lower + emptyspace + interval).encode("ascii"),
 )
 
 dscode_to_crick_table = bytes.maketrans(
-    (dscode_sense + placeholder1 + placeholder2).encode("ascii"),
-    (crick + interval + emptyspace).encode("ascii"),
+    (dscode_sense + dscode_sense_lower + placeholder1 + placeholder2).encode("ascii"),
+    (crick + crick_lower + interval + emptyspace).encode("ascii"),
 )
 
 
