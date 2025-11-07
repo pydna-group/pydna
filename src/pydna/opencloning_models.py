@@ -51,6 +51,8 @@ from opencloning_linkml.datamodel import (
     CreLoxRecombinationSource as _CreLoxRecombinationSource,
     PCRSource as _PCRSource,
     CRISPRSource as _CRISPRSource,
+    RepositoryIdSource as _RepositoryIdSource,  # here!
+    UploadedFileSource as _UploadedFileSource,
 )
 from Bio.SeqFeature import Location, LocationParserError
 from Bio.Restriction.Restriction import AbstractCut
@@ -348,6 +350,11 @@ class AssemblySource(Source):
 
 class UploadedFileSource(Source):
 
+    TARGET_MODEL: ClassVar[Type[_UploadedFileSource]] = _UploadedFileSource
+
+    file_name: str
+    index_in_file: int
+
     # "id": 1,
     # "type": "UploadedFileSource",
     # "output_name": null,
@@ -361,13 +368,19 @@ class UploadedFileSource(Source):
     # "output": 1
 
     def _kwargs(self, seq_id: int) -> dict:
-        return {**super()._kwargs(seq_id), "file_name": "?", "index_in_file": "?"}
-
-    def to_pydantic_model(self, seq_id: int):
-        return self._target_model()(**self._kwargs(seq_id))
+        return {
+            **super()._kwargs(seq_id),
+            "file_name": self.filename,
+            "index_in_file": self.index_in_file,
+        }
 
 
 class RepositoryIdSource(Source):
+
+    TARGET_MODEL: ClassVar[Type[_RepositoryIdSource]] = _RepositoryIdSource
+    repository_id: str
+    repository_name: str
+    location: Location
 
     # "id": 2,
     # "type": "RepositoryIdSource",
@@ -378,10 +391,11 @@ class RepositoryIdSource(Source):
     # "repository_name": "genbank"
 
     def _kwargs(self, seq_id: int) -> dict:
-        return {**super()._kwargs(seq_id), "repository_id": "?", "repository_name": "?"}
-
-    def to_pydantic_model(self, seq_id: int):
-        return self._target_model()(**self._kwargs(seq_id))
+        return {
+            **super()._kwargs(seq_id),
+            "repository_id": self.repository_id,
+            "repository_name": self.repository_name,
+        }
 
 
 class RestrictionAndLigationSource(AssemblySource):
