@@ -348,24 +348,20 @@ class AssemblySource(Source):
 
 class UploadedFileSource(Source):
 
-      # "id": 1,
-      # "type": "UploadedFileSource",
-      # "output_name": null,
-      # "database_id": null,
-      # "input": [],
-      # "sequence_file_format": "fasta",
-      # "file_name": "seq2.fasta",
-      # "index_in_file": 0,
-      # "circularize": false,
-      # "coordinates": null,
-      # "output": 1
+    # "id": 1,
+    # "type": "UploadedFileSource",
+    # "output_name": null,
+    # "database_id": null,
+    # "input": [],
+    # "sequence_file_format": "fasta",
+    # "file_name": "seq2.fasta",
+    # "index_in_file": 0,
+    # "circularize": false,
+    # "coordinates": null,
+    # "output": 1
 
     def _kwargs(self, seq_id: int) -> dict:
-        return {
-            **super()._kwargs(seq_id),
-            "file_name": ?,
-            "index_in_file": ?
-        }
+        return {**super()._kwargs(seq_id), "file_name": "?", "index_in_file": "?"}
 
     def to_pydantic_model(self, seq_id: int):
         return self._target_model()(**self._kwargs(seq_id))
@@ -382,11 +378,7 @@ class RepositoryIdSource(Source):
     # "repository_name": "genbank"
 
     def _kwargs(self, seq_id: int) -> dict:
-        return {
-            **super()._kwargs(seq_id),
-            "repository_id": ?,
-            "repository_name": ?
-        }
+        return {**super()._kwargs(seq_id), "repository_id": "?", "repository_name": "?"}
 
     def to_pydantic_model(self, seq_id: int):
         return self._target_model()(**self._kwargs(seq_id))
