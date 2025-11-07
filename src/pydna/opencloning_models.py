@@ -354,6 +354,7 @@ class UploadedFileSource(Source):
 
     file_name: str
     index_in_file: int
+    sequence_file_format: str
 
     # "id": 1,
     # "type": "UploadedFileSource",
@@ -370,8 +371,9 @@ class UploadedFileSource(Source):
     def _kwargs(self, seq_id: int) -> dict:
         return {
             **super()._kwargs(seq_id),
-            "file_name": self.filename,
+            "file_name": self.file_name,
             "index_in_file": self.index_in_file,
+            "sequence_file_format": self.sequence_file_format,
         }
 
 
