@@ -346,6 +346,32 @@ class AssemblySource(Source):
         return AssemblySource(input=input_list, circular=is_circular)
 
 
+class UploadedFileSource(Source):
+
+    def _kwargs(self, seq_id: int) -> dict:
+        return {
+            **super()._kwargs(seq_id),
+            "left_edge": self._cutsite_to_model(self.left_edge),
+            "right_edge": self._cutsite_to_model(self.right_edge),
+        }
+
+    def to_pydantic_model(self, seq_id: int):
+        return self._target_model()(**self._kwargs(seq_id))
+
+
+class RepositoryIdSource(Source):
+
+    def _kwargs(self, seq_id: int) -> dict:
+        return {
+            **super()._kwargs(seq_id),
+            "left_edge": self._cutsite_to_model(self.left_edge),
+            "right_edge": self._cutsite_to_model(self.right_edge),
+        }
+
+    def to_pydantic_model(self, seq_id: int):
+        return self._target_model()(**self._kwargs(seq_id))
+
+
 class RestrictionAndLigationSource(AssemblySource):
     restriction_enzymes: list[AbstractCut]
 
