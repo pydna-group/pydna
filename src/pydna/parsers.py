@@ -13,7 +13,8 @@ import io as _io
 import textwrap as _textwrap
 
 from Bio import SeqIO as _SeqIO
-from pydna.genbankfile import GenbankFile as _GenbankFile
+
+# from pydna.genbankfile import GenbankFile as _GenbankFile
 from pydna.dseqrecord import Dseqrecord as _Dseqrecord
 from pydna.primer import Primer as _Primer
 
@@ -197,7 +198,12 @@ def parse(data, ds=True):
             # parsed.features = nfs
             for s in newsequences:
                 if ds and path:
-                    sequences.append(_GenbankFile.from_SeqRecord(s, path=path))
+                    from pydna.opencloning_models import UploadedFileSource
+
+                    result = _Dseqrecord.from_SeqRecord(s)
+                    result.source = UploadedFileSource(file_name=path, index_in_file=0)
+                    sequences.append(result)
+                    # sequences.append(_GenbankFile.from_SeqRecord(s, path=path))
                 elif ds:
                     sequences.append(_Dseqrecord.from_SeqRecord(s))
                 else:
