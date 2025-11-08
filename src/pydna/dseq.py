@@ -912,7 +912,7 @@ class Dseq(_Seq):
         if type5 == type3 and str(sticky5) == str(
             _rc(sticky3)
         ):  # TODO: this will not work
-            # This code makes makes shure that the sequence is not
+            # This code makes makes sure that the sequence is not
             # shifted after looping.
             new = self.cast_to_ds_left()[: -len(sticky3)]
             new.circular = True
