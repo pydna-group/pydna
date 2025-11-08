@@ -528,20 +528,20 @@ class Dseq(_Seq):
 
         return obj
 
-    @classmethod
-    def from_string(
-        cls,
-        dna: str,
-        *args,
-        circular=False,
-        **kwargs,
-    ):
-        obj = cls.__new__(cls)
-        obj.circular = circular
-        obj.pos = 0
-        obj._data = dna.encode("ascii")
+    # @classmethod
+    # def from_string(
+    #     cls,
+    #     dna: str,
+    #     *args,
+    #     circular=False,
+    #     **kwargs,
+    # ):
+    #     obj = cls.__new__(cls)
+    #     obj.circular = circular
+    #     obj.pos = 0
+    #     obj._data = dna.encode("ascii")
 
-        return obj
+    #     return obj
 
     @classmethod
     def from_representation(cls, dsdna: str, *args, **kwargs):

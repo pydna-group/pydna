@@ -150,8 +150,8 @@ class Dseqrecord(_SeqRecord):
         if isinstance(record, str):
             #           _module_logger.info("record is a string")
             super().__init__(
-                _Dseq.from_string(
-                    record,
+                _Dseq.quick(
+                    record.encode("ascii"),
                     # linear=linear,
                     circular=bool(circular),
                 ),
