@@ -673,20 +673,35 @@ class Dseq(_Seq):
             return None
         return -len(parts.sticky_left5) or len(parts.sticky_left3)
 
-    def to_blunt_string(self):
+    def __str__(self) -> str:
         """
-        The sequence as a blunt ended string.
+        A string representation of the sequence. The returned string
+        is the watson strand of a blunt version of the sequence.
 
+        >>> ds = Dseq.from_representation('''
+                                          GAATTC
+                                            TAA
+                                          ''')
+
+        >>> str(ds)
+        'GAATTC'
+        >>> ds = Dseq.from_representation('''
+                                            ATT
+                                          CTTAAG
+                                          ''')
+
+        >>> str(ds)
+        'GAATTC'
 
         Returns
         -------
-        TYPE
-            DESCRIPTION.
+        str
+            A string representation of the sequence.
 
         """
         return self._data.decode("ascii").translate(dscode_to_full_sequence_table)
 
-    __str__ = to_blunt_string
+    to_blunt_string = __str__  # alias of __str__
 
     def mw(self) -> float:
         """This method returns the molecular weight of the DNA molecule
