@@ -122,6 +122,29 @@ class CircularBytes(bytes):
             out.append(self[(start + i) % n])
         return self.__class__(bytes(out))
 
+    def find(
+        self,
+        sub: bytes | bytearray | memoryview,
+        start: int = 0,
+        end: int | None = None,
+    ) -> int:
+        """
+        Find a subsequence in the circular sequence, possibly
+        wrapping across the origin.
+        Returns -1 if not found.
+        """
+        n = len(self)
+        if n == 0:
+            return -1
+
+        end = n if end is None else min(end, n)
+        doubled = self + self
+        pos = doubled.find(bytes(sub), start, n + len(sub) - 1)
+
+        if pos == -1 or pos >= n:
+            return -1
+        return pos
+
 
 class Dseq(_Seq):
     """Dseq describes a double stranded DNA fragment, linear or circular.
@@ -699,17 +722,24 @@ class Dseq(_Seq):
             A string representation of the sequence.
 
         """
-        return self._data.decode("ascii").translate(dscode_to_full_sequence_table)
+        return bytes(self).decode("ascii")
 
-    to_blunt_string = __str__  # alias of __str__
+    to_blunt_string = __str__  # alias of __str__ # TODO: consider removing
+
+    def __bytes__(self) -> bytes:
+        return self._data.translate(dscode_to_full_sequence_table)
 
     def mw(self) -> float:
-        """This method returns the molecular weight of the DNA molecule
-        in g/mol. The following formula is used::
+        """The molecular weight of the DNA molecule in g/mol.
+
+        The following formula is used:
+        ::
 
                MW = (A x 313.2) + (T x 304.2) +
                     (C x 289.2) + (G x 329.2) +
                     (N x 308.9) + 79.0
+
+        The 79.0 added in the end is the 5' phosphate group.
         """
         nts = (self.watson + self.crick).lower()
 
@@ -732,6 +762,8 @@ class Dseq(_Seq):
 
         Returns -1 if the subsequence is NOT found.
 
+        The search is case sensitive.
+
         Parameters
         ----------
 
@@ -747,54 +779,32 @@ class Dseq(_Seq):
         Examples
         --------
         >>> from pydna.dseq import Dseq
-        >>> seq = Dseq("atcgactgacgtgtt")
-        >>> seq
-        Dseq(-15)
-        atcgactgacgtgtt
-        tagctgactgcacaa
-        >>> seq.find("gac")
-        3
-        >>> seq = Dseq(watson="agt",crick="actta",ovhg=-2)
+        >>> seq = Dseq("agtaagt")
         >>> seq
         Dseq(-7)
-        agt
-          attca
+        agtaagt
+        tcattca
         >>> seq.find("taa")
         2
+        >>> seq = Dseq(watson="agta",crick="actta",ovhg=-2)
+        >>> seq
+        Dseq(-7)
+        agta
+          attca
+        >>> seq.find("taa")
+        -1
+        >>> seq = Dseq(watson="agta",crick="actta",ovhg=-2)
+        >>> seq
+        Dseq(-7)
+        agta
+          attca
+        >>> seq.find("ta")
+        2
         """
+        return super().find(sub, start, end)
 
-        if not self.circular:
-            return _Seq.find(self, sub, start, end)
-
-        return (_pretty_str(self) + _pretty_str(self)).find(sub, start, end)
-
-    def __contains__(self, item: [str, bytes]):
-        if isinstance(item, bytes):
-            item = item.decode("ascii")
-        return item in self.to_blunt_string()
-
-    # def __getitem__(self, sl: [slice, int]) -> "Dseq":
-    #     """Method is used by the slice notation"""
-    #     if isinstance(sl, int):
-    #         # slice(start, stop, step) where stop = start+1
-    #         sl = slice(sl, sl + 1, 1)
-    #     sl = slice(sl.start or 0, sl.stop or len(self), sl.step)
-    #     if self.circular:
-    #         if sl.start is None and sl.stop is None:
-    #             # Returns a linear copy using slice obj[:]
-    #             return self.quick(self._data[sl])
-    #         elif sl.start == sl.stop:
-    #             # Returns a shifted object
-    #             shift = sl.start % len(self)
-    #             return self.quick(self._data[shift:] + self._data[:shift])
-    #         elif (
-    #             sl.start > sl.stop
-    #             and 0 <= sl.start <= len(self)
-    #             and 0 <= sl.stop <= len(self)
-    #         ):
-    #             # Returns the circular slice spanning the origin
-    #             return self.quick(self._data[sl.start :] + self._data[: sl.stop])
-    #     return super().__getitem__(sl)
+    def __contains__(self, sub: [str, bytes]) -> bool:
+        return self.find(sub) != -1
 
     def __getitem__(self, sl: [slice, int]) -> "Dseq":
         if isinstance(sl, int):
@@ -807,8 +817,9 @@ class Dseq(_Seq):
 
     def __eq__(self, other: DseqType) -> bool:
         """Compare to another Dseq object OR an object that implements
-        watson, crick and ovhg properties. This comparison is case
-        insensitive.
+        watson, crick and ovhg properties.
+
+        This comparison is case insensitive.
 
         """
         try:
@@ -823,7 +834,7 @@ class Dseq(_Seq):
             same = False
         return same
 
-    def __repr__(self, lim: int = length_limit_for_repr):
+    def __repr__(self, lim: int = length_limit_for_repr) -> _pretty_str:
 
         header = f"{self.__class__.__name__}({({False: '-', True: 'o'}[self.circular])}{len(self)})"
 
@@ -859,7 +870,19 @@ class Dseq(_Seq):
     rc = reverse_complement  # alias for reverse_complement
 
     def shifted(self: DseqType, shift: int) -> DseqType:
-        """Shifted version of a circular Dseq object."""
+        """
+        Shifted copy of a circular Dseq object.
+
+        >>> ds = Dseq("TAAG", circular = True)
+        >>> ds.shifted(1) # First bp moved to right side:
+        Dseq(o4)
+        AAGT
+        TTCA
+        >>> ds.shifted(-1) # Last bp moved to left side:
+        Dseq(o4)
+        GTAA
+        CATT
+        """
         if not self.circular:
             raise TypeError("DNA is not circular.")
         shift = shift % len(self)
@@ -924,18 +947,23 @@ class Dseq(_Seq):
 
         type5, sticky5 = self.five_prime_end()
         type3, sticky3 = self.three_prime_end()
-        if type5 == type3 and str(sticky5) == str(
-            _rc(sticky3)
-        ):  # TODO: this will not work
-            # This code makes makes sure that the sequence is not
-            # shifted after looping.
-            new = self.cast_to_ds_left()[: -len(sticky3)]
-            new.circular = True
-            return new
-        else:
-            raise TypeError(
-                "DNA cannot be circularized.\n" "5' and 3' sticky ends not compatible!"
-            )
+
+        err = TypeError(
+            "DNA cannot be circularized.\n" "5' and 3' sticky ends not compatible!"
+        )
+
+        if type5 != type3:
+            raise err
+
+        try:
+            # Test if sticky ends are compatible
+            self + self
+        except TypeError:
+            raise err
+
+        new = self.cast_to_ds_left()[: -len(sticky3)]
+        new.circular = True
+        return new
 
     def tolinear(self: DseqType) -> DseqType:  # pragma: no cover
         """Returns a blunt, linear copy of a circular Dseq object. This can
