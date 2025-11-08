@@ -138,8 +138,8 @@ def test_initialization():
     assert Dseq("gt", circular=False) == lin_seq
     assert Dseq("gt", circular=True) == cir_seq
 
-    assert Dseq.from_string("A") == Dseq("A")
-    assert Dseq.from_string("A", circular=True) == Dseq("A", circular=True)
+    assert Dseq.quick(b"A") == Dseq("A")
+    assert Dseq.quick(b"A", circular=True) == Dseq("A", circular=True)
 
     obj3 = Dseq.from_representation(
         """
