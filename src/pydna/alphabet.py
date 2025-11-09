@@ -452,18 +452,99 @@ for (x, y), symbol in annealing_dict_w_holes.items():
 annealing_dict_w_holes.update(mixed_case_dict)
 
 
-def get_parts(datastring: str):
+def get_parts(datastring: str) -> namedtuple:
+    """
+    A namedtuple containing the parts of a dsDNA sequence.
+
+    The datastring should contain a string with dscode symbols.
+    A regex is used to capture the single stranded regions at the ends as
+    well as the regiond in the middle.
+
+    The figure below numbers the regex capture groups and what they capture
+    as well as the namedtuple field name.
+
+    ::
+
+         group 0 "sticky_left5"
+         |
+         |      group 3"sticky_right5"
+         |      |
+        ---    ---
+        GGGATCC
+           TAGGTCA
+           ----
+             |
+             group 2 "middle"
+
+
+
+         group 1 "sticky_left3"
+         |
+         |      group 4 "sticky_right3"
+         |      |
+        ---    ---
+           ATCCAGT
+        CCCTAGG
+           ----
+             |
+             group 2 "middle"
+
+
+
+           group 5 "single_watson" (only an upper strand)
+           |
+        -------
+        ATCCAGT
+        |||||||
+
+
+
+           group 6 "single_crick" (only a lower strand)
+           |
+        -------
+
+        |||||||
+        CCCTAGG
+
+
+    Up to seven groups (0..6) are captured, but some are mutually exclusive
+    which means that one of them is an empty string:
+
+    0 or 1, not both, a DNA fragment has either 5' or 3' sticky end.
+
+    2 or 5 or 6, a DNA molecule has a ds region or is single stranded.
+
+    3 or 4, not both, either 5' or 3' sticky end.
+
+    Note that internal single stranded regions are not identified and will
+    be contained in the middle part if they are present.
+
+    Parameters
+    ----------
+    datastring : str
+        A string with dscode.
+
+    Returns
+    -------
+    namedtuple
+        Seven string fields describing the DNA molecule.
+        fragment(sticky_left5='', sticky_left3='',
+                 middle='',
+                 sticky_right3='', sticky_right5='',
+                 single_watson='', single_crick='')
+
+    """
 
     m = _re.match(
         f"([{ss_letters_watson}]*)"  # capture group 0 ssDNA in watson strand
-        f"([{ss_letters_crick}]*)"  # capture group 1 ssDNA in crick strand
-        f"(?=[{ds_letters}])"  # no capture, positive lookahead for dsDNA
-        "(.*)"  # captures group 2 everything in the middle
-        f"(?<=[{ds_letters}])"  # no capture,positive look behind for dsDNA
+        f"([{ss_letters_crick}]*)"  # "             1 ssDNA in crick strand
+        f"(?=[{ds_letters}])"  # positive lookahead for dsDNA, no capture
+        "(.*)"  # capture group 2 everything in the middle
+        f"(?<=[{ds_letters}])"  # positive look behind for dsDNA, no capture
         f"([{ss_letters_watson}]*)"  # capture group 3 ssDNA in watson strand
-        f"([{ss_letters_crick}]*)|"  # capture group 4 ssDNA in crick strand
-        f"([{ss_letters_watson}]+)|"  # capture group 5 if data contains only upper strand
-        f"([{ss_letters_crick}]+)",  # capture group 6 if data contains only lower strand
+        f"([{ss_letters_crick}]*)|"  # "             4 ssDNA in crick strand
+        f"([{ss_letters_watson}]+)|"  # "             5 if data contains only upper strand
+        f"([{ss_letters_crick}]+)",  # "             6 if data contains only lower strand
         datastring,
     )
 
