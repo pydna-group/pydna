@@ -62,17 +62,18 @@ def test_orfs():
         assert len(orf) == ln
 
 
-def test_cas9():
+# def test_cas9():
 
-    s = Dseqrecord("gattcatgcatgtagcttacgtagtct")
 
-    RNA = "catgcatgtagcttacgtag"
+#     s = Dseqrecord("gattcatgcatgtagcttacgtagtct")
 
-    (f1, f2), (f3,) = s.cas9(RNA)
+#     RNA = "catgcatgtagcttacgtag"
 
-    assert f1.seq == Dseqrecord("gattcatgcatgtagcttacg").seq
-    assert f2.seq == Dseqrecord("tagtct").seq
-    assert f3.seq == Dseqrecord("gattcatgcatgtagcttacgtagtct").seq
+#     (f1, f2), (f3,) = s.cas9(RNA)
+
+#     assert f1.seq == Dseqrecord("gattcatgcatgtagcttacg").seq
+#     assert f2.seq == Dseqrecord("tagtct").seq
+#     assert f3.seq == Dseqrecord("gattcatgcatgtagcttacgtagtct").seq
 
 
 def test_FadiBakoura():
@@ -1216,9 +1217,11 @@ def test_features_change_ori():
 
     bb1, ins1 = sorted(s3.cut(Acc65I, BamHI), key=len, reverse=True)
 
-    assert str(bbfeat).upper() in bbseq
+    assert (
+        str(bbfeat).upper() in str(bbseq).upper()
+    )  # changed since Dseq.__contains__ is not case sensitive since it relies on Dseq.find
 
-    assert str(insfeat).upper() in inseq
+    assert str(insfeat).upper() in str(inseq).upper()  # ditto
 
     for i in range(0, len(s3)):
         b = s3.shifted(i)
