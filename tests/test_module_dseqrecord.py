@@ -1236,7 +1236,7 @@ def test_features_change_ori():
 
     bb1, ins1 = sorted(s3.cut(Acc65I, BamHI), key=len, reverse=True)
 
-    assert str(bbfeat).upper() in str(bbseq).upper()  # changed since Dseq.__contains__ is not case sensitive since it relies on Dseq.find
+    assert str(bbfeat).upper() in str(bbseq).upper()  # changed since Dseq.__contains__ is now case sensitive since it relies on Dseq.find
 
 
     assert str(insfeat).upper() in str(inseq).upper() # ditto
