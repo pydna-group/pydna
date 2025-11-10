@@ -403,9 +403,9 @@ def gibson_overlap(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=25):
     # This is only relevant for linear fragments, so we don't need to worry about
     # shifting locations for circular fragments.
     trim_x_left = -seqx.seq.ovhg if seqx.seq.ovhg < 0 else 0
-    trim_x_right = seqx.seq.watson_ovhg() if seqx.seq.watson_ovhg() < 0 else None
+    trim_x_right = seqx.seq.watson_ovhg if seqx.seq.watson_ovhg < 0 else None
     trim_y_left = -seqy.seq.ovhg if seqy.seq.ovhg < 0 else 0
-    trim_y_right = seqy.seq.watson_ovhg() if seqy.seq.watson_ovhg() < 0 else None
+    trim_y_right = seqy.seq.watson_ovhg if seqy.seq.watson_ovhg < 0 else None
 
     stringx = str(seqx.seq[trim_x_left:trim_x_right]).upper()
     stringy = str(seqy.seq[trim_y_left:trim_y_right]).upper()
@@ -686,7 +686,7 @@ def fill_right(seq: _Dseq) -> _Dseq:
     # new_crick = seq.crick
 
     # # Watson 3' overhang
-    # watson_ovhg = seq.watson_ovhg()
+    # watson_ovhg = seq.watson_ovhg
     # if watson_ovhg < 0:
     #     new_watson = new_watson + reverse_complement(seq.crick[:-watson_ovhg])
 
@@ -861,6 +861,8 @@ def assemble(
 
     # For circular assemblies, process the fragment and loop
     if is_circular:
+        out_dseqrecord.seq = out_dseqrecord.seq.cast_to_ds_left()
+        out_dseqrecord.seq = out_dseqrecord.seq.cast_to_ds_right()
         overlap = fragment_overlaps[-1]
         out_dseqrecord.seq = out_dseqrecord.seq.exo1_front(overlap)
         out_dseqrecord.seq = out_dseqrecord.seq.exo1_end(overlap)
