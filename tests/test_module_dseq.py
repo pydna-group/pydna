@@ -98,8 +98,6 @@ def test_cas9():
 
 def test_initialization():
 
-
-
     obj = Dseq(b"aaa")
     assert obj.crick == "ttt"
     assert obj.watson == "aaa"
@@ -1176,3 +1174,83 @@ def test_watson_ovhg():
     # Single strand
     assert Dseq("EEEE").watson_ovhg is None
     assert Dseq("FFFF").watson_ovhg is None
+
+
+
+
+
+def test_melt():
+    from pydna.seq import Seq
+    from pydna.dseq import Dseq
+
+    assert Dseq("AGJGaGEg").melt(2) == (Dseq("EP"), Dseq("FQJGaGEp"), Dseq("q"))
+    # assert Dseq("AGIGaGFg").melt(2) == (Dseq("FQ"), Dseq("EPIGaGFq"), Dseq("p"))
+    # assert Dseq("AGJGaGFg").melt(2) == (Dseq("EP"), Dseq("FQJGaGFq"), Dseq("p"))
+    assert Dseq("AGIGaGEg").melt(2) == (Dseq("FQ"), Dseq("EPIGaGEp"), Dseq("q"))
+    assert Dseq("GATPGCPGCA").melt(2) == (Seq("CG"), Dseq("GATPPIPGCA"))
+    assert Dseq("GATQGCQGCA").melt(2) == (Seq("CG"), Dseq("GATQQJQGCA"))
+    assert Dseq("PEXIGAQFZJ").melt(2) == (Dseq("PEXIPE"), Dseq("QFQFZJ"))
+    assert Dseq("QFZJGAPEXI").melt(2) == (Dseq("QFZJQF"), Dseq("PEPEXI"))
+    assert Dseq("AGJGaGEgGATC").melt(2) == (Dseq("EP"), Dseq("FQJGaGEgGATC"))
+    assert Dseq("AGIGaGFgGATC").melt(2) == (Dseq("FQ"), Dseq("EPIGaGFgGATC"))
+    assert Dseq("AGJGaGFgGATC").melt(2) == (Dseq("EP"), Dseq("FQJGaGFgGATC"))
+    assert Dseq("AGIGaGEgGATC").melt(2) == (Dseq("FQ"), Dseq("EPIGaGEgGATC"))
+    assert Dseq("GATPGGPGCAGATC").melt(2) == (Seq("CC"), Dseq("GATPPPPGCAGATC"))
+    assert Dseq("GATQGGQGCAGATC").melt(2) == (Seq("GG"), Dseq("GATQQQQGCAGATC"))
+    assert Dseq("PEXIGAQFZJGATC").melt(2) == (Dseq("PEXIPE"), Dseq("QFQFZJGATC"))
+    assert Dseq("QFZJGAPEXIGATC").melt(2) == (Dseq("QFZJQF"), Dseq("PEPEXIGATC"))
+    assert Dseq("GATCAGJGaGEg").melt(2) == (Dseq("GATCAGJGaGEp"), Dseq("q"))
+    assert Dseq("GATCAGIGaGFg").melt(2) == (Dseq("GATCAGIGaGFq"), Dseq("p"))
+    assert Dseq("GATCAGJGaGFg").melt(2) == (Dseq("GATCAGJGaGFq"), Dseq("p"))
+    assert Dseq("GATCAGIGaGEg").melt(2) == (Dseq("GATCAGIGaGEp"), Dseq("q"))
+    assert Dseq("GATCGATPGGPGCA").melt(2) == (Seq("CC"), Dseq("GATCGATPPPPGCA"))
+    assert Dseq("GATCGATQGGQGCA").melt(2) == (Seq("GG"), Dseq("GATCGATQQQQGCA"))
+    assert Dseq("GATCPEXIGAQFZJ").melt(2) == (Dseq("GATCPEXIPE"), Dseq("QFQFZJ"))
+    assert Dseq("GATCQFZJGAPEXI").melt(2) == (Dseq("GATCQFZJQF"), Dseq("PEPEXI"))
+    assert Dseq("GATCAGJGaGEgGATC").melt(2) == ()
+    assert Dseq("GATCAGIGaGFgGATC").melt(2) == ()
+    assert Dseq("GATCAGJGaGFgGATC").melt(2) == ()
+    assert Dseq("GATCAGIGaGEgGATC").melt(2) == ()
+    assert Dseq("GATCGATPGGPGCAGATC").melt(2) == (Seq("CC"), Dseq("GATCGATPPPPGCAGATC"))
+    assert Dseq("GATCGATQGGQGCAGATC").melt(2) == (Seq("GG"), Dseq("GATCGATQQQQGCAGATC"))
+    assert Dseq("GATCPEXIGAQFZJGATC").melt(2) == (Dseq("GATCPEXIPE"), Dseq("QFQFZJGATC"))
+    assert Dseq("GATCQFZJGAPEXIGATC").melt(2) == (Dseq("GATCQFZJQF"), Dseq("PEPEXIGATC"))
+    assert Dseq("GATCPEXIGAQFZJGATC").melt(2) == (Dseq("GATCPEXIPE"), Dseq("QFQFZJGATC"))
+    assert Dseq("GATCQFZJGAPEXIGATC").melt(2) == (Dseq("GATCQFZJQF"), Dseq("PEPEXIGATC"))
+
+
+def test__get_ds_meltsites():
+
+    from pydna.dseq import Dseq
+
+    assert Dseq("AGJGaGEg").get_ds_meltsites(2) == [((2, 2), None), ((8, 1), None)]
+    assert Dseq("AGIGaGFg").get_ds_meltsites(2) == [((0, -2), None), ((7, -1), None)]
+    assert Dseq("AGJGaGFg").get_ds_meltsites(2) == [((2, 2), None), ((7, -1), None)]
+    assert Dseq("AGIGaGEg").get_ds_meltsites(2) == [((0, -2), None), ((8, 1), None)]
+
+    assert Dseq("PEXIGAQFZJ").get_ds_meltsites(2) == [((6, 2), None)]
+    assert Dseq("QFZJGAPEXI").get_ds_meltsites(2) == [((4, -2), None)]
+
+    assert Dseq("GATCPEXIGAQFZJGATC").get_ds_meltsites(2) == [((10, 2), None)]
+    assert Dseq("GATCQFZJGAPEXIGATC").get_ds_meltsites(2) == [((8, -2), None)]
+
+    assert Dseq("AGCPAGQGAT", circular=True).get_ds_meltsites(2) == [((6, 2), None)]
+    assert Dseq("AGCQAGPGAT", circular=True).get_ds_meltsites(2) == [((4, -2), None)]
+
+def test__get_ds_meltsites():
+
+    from pydna.dseq import Dseq
+
+    assert Dseq("AGJGaGEg").get_ds_meltsites(2) == [((2, 2), None), ((8, 1), None)]
+    assert Dseq("AGIGaGFg").get_ds_meltsites(2) == [((0, -2), None), ((7, -1), None)]
+    assert Dseq("AGJGaGFg").get_ds_meltsites(2) == [((2, 2), None), ((7, -1), None)]
+    assert Dseq("AGIGaGEg").get_ds_meltsites(2) == [((0, -2), None), ((8, 1), None)]
+
+    assert Dseq("PEXIGAQFZJ").get_ds_meltsites(2) == [((6, 2), None)]
+    assert Dseq("QFZJGAPEXI").get_ds_meltsites(2) == [((4, -2), None)]
+
+    assert Dseq("GATCPEXIGAQFZJGATC").get_ds_meltsites(2) == [((10, 2), None)]
+    assert Dseq("GATCQFZJGAPEXIGATC").get_ds_meltsites(2) == [((8, -2), None)]
+
+    assert Dseq("AGCPAGQGAT", circular=True).get_ds_meltsites(2) == [((6, 2), None)]
+    assert Dseq("AGCQAGPGAT", circular=True).get_ds_meltsites(2) == [((4, -2), None)]
