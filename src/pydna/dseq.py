@@ -10,7 +10,7 @@ which can hold more meta data.
 The Dseq class support the notion of circular and linear DNA topology.
 """
 
-
+import itertools
 import copy as _copy
 import re as _re
 import sys as _sys
@@ -38,6 +38,7 @@ from pydna.alphabet import dscode_to_crick_table
 from pydna.alphabet import dscode_to_full_sequence_table
 from pydna.alphabet import dscode_to_watson_tail_table
 from pydna.alphabet import dscode_to_crick_tail_table
+from pydna.alphabet import complement_table_for_dscode
 from pydna.alphabet import letters_not_in_dscode
 from pydna.alphabet import get_parts
 from pydna.alphabet import representation_tuple
@@ -551,21 +552,6 @@ class Dseq(_Seq):
 
         return obj
 
-    # @classmethod
-    # def from_string(
-    #     cls,
-    #     dna: str,
-    #     *args,
-    #     circular=False,
-    #     **kwargs,
-    # ):
-    #     obj = cls.__new__(cls)
-    #     obj.circular = circular
-    #     obj.pos = 0
-    #     obj._data = dna.encode("ascii")
-
-    #     return obj
-
     @classmethod
     def from_representation(cls, dsdna: str, *args, **kwargs):
         obj = cls.__new__(cls)
@@ -679,7 +665,7 @@ class Dseq(_Seq):
         return self._data.decode("ascii").translate(dscode_to_crick_table).strip()[::-1]
 
     @property
-    def ovhg(self) -> int:
+    def left_ovhg(self) -> int:
         """
         The 5' overhang of the lower strand compared the the upper.
 
@@ -696,22 +682,36 @@ class Dseq(_Seq):
             return None
         return -len(parts.sticky_left5) or len(parts.sticky_left3)
 
+    ovhg = left_ovhg
+
+    @property
+    def right_ovhg(self) -> int:
+        """Overhang at the right side (end)."""
+        parts = get_parts(self._data.decode("ascii"))
+        if parts.single_watson or parts.single_crick:
+            return None
+        return -len(parts.sticky_right5) or len(parts.sticky_right3)
+
+    watson_ovhg = right_ovhg
+
     def __str__(self) -> str:
         """
         A string representation of the sequence. The returned string
         is the watson strand of a blunt version of the sequence.
 
-        >>> ds = Dseq.from_representation('''
-                                          GAATTC
-                                            TAA
-                                          ''')
+        >>> ds = Dseq.from_representation(
+        '''
+        GAATTC
+          TAA
+        ''')
 
         >>> str(ds)
         'GAATTC'
-        >>> ds = Dseq.from_representation('''
-                                            ATT
-                                          CTTAAG
-                                          ''')
+        >>> ds = Dseq.from_representation(
+        '''
+          ATT
+        CTTAAG
+        ''')
 
         >>> str(ds)
         'GAATTC'
@@ -806,7 +806,7 @@ class Dseq(_Seq):
     def __contains__(self, sub: [str, bytes]) -> bool:
         return self.find(sub) != -1
 
-    def __getitem__(self, sl: [slice, int]) -> "Dseq":
+    def __getitem__(self, sl: [slice, int]) -> DseqType:
         if isinstance(sl, int):
             sl = slice(sl, sl + 1, 1)
         sl = slice(sl.start or 0, sl.stop or len(self), sl.step)
@@ -1004,40 +1004,49 @@ class Dseq(_Seq):
         return selfcopy
 
     def five_prime_end(self) -> _Tuple[str, str]:
-        """Returns a tuple describing the structure of the 5' end of
-        the DNA fragment
+        """Returns a 2-tuple of trings describing the structure of the 5' end of
+        the DNA fragment.
+
+        The tuple contains (type , sticky) where type is eiter "5'" or "3'".
+        sticky is always in lower case and contains the sequence of the
+        protruding end in 5'-3' direction.
+
+        See examples below:
+
 
         Examples
         --------
         >>> from pydna.dseq import Dseq
-        >>> a=Dseq("aaa", "ttt")
+        >>> a = Dseq("aa", "tttg", ovhg=2)
+        >>> a
+        Dseq(-4)
+          aa
+        gttt
+        >>> a.five_prime_end()
+        ("3'", 'tg')
+        >>> a = Dseq("caaa", "tt", ovhg=-2)
+        >>> a
+        Dseq(-4)
+        caaa
+          tt
+        >>> a.five_prime_end()
+        ("5'", 'ca')
+        >>> a = Dseq("aa", "tt")
         >>> a
         Dseq(-3)
-        aaa
-        ttt
+        aa
+        tt
         >>> a.five_prime_end()
         ('blunt', '')
-        >>> a=Dseq("aaa", "ttt", ovhg=1)
-        >>> a
-        Dseq(-4)
-         aaa
-        ttt
-        >>> a.five_prime_end()
-        ("3'", 't')
-        >>> a=Dseq("aaa", "ttt", ovhg=-1)
-        >>> a
-        Dseq(-4)
-        aaa
-         ttt
-        >>> a.five_prime_end()
-        ("5'", 'a')
-        >>>
 
         See also
         --------
         pydna.dseq.Dseq.three_prime_end
 
         """
+
+        # See docstring for function pydna.utils.get_parts for details
+        # on what is contained in parts.
         parts = get_parts(self._data.decode("ascii"))
 
         sticky5 = parts.sticky_left5.translate(dscode_to_watson_table)
@@ -1048,6 +1057,8 @@ class Dseq(_Seq):
 
         single_crick = parts.single_crick.translate(dscode_to_crick_table)[::-1]
 
+        # The walrus operator returns the value being assigned, so
+        # we can test if it is empty or not.
         if sticky := single_watson:
             type_ = "single"
         elif sticky := single_crick:
@@ -1065,6 +1076,20 @@ class Dseq(_Seq):
         """Returns a tuple describing the structure of the 5' end of
         the DNA fragment
 
+        >>> a = Dseq("aa", "gttt", ovhg=0)
+        >>> a
+        Dseq(-4)
+        aa
+        tttg
+        >>> a.three_prime_end()
+        ("3'", 'gt')
+        >>> a = Dseq("aaac", "tt", ovhg=0)
+        >>> a
+        Dseq(-4)
+        aaac
+        tt
+        >>> a.three_prime_end()
+        ("5'", 'ac')
         >>> from pydna.dseq import Dseq
         >>> a=Dseq("aaa", "ttt")
         >>> a
@@ -1073,21 +1098,6 @@ class Dseq(_Seq):
         ttt
         >>> a.three_prime_end()
         ('blunt', '')
-        >>> a=Dseq("aaa", "ttt", ovhg=1)
-        >>> a
-        Dseq(-4)
-         aaa
-        ttt
-        >>> a.three_prime_end()
-        ("3'", 'a')
-        >>> a=Dseq("aaa", "ttt", ovhg=-1)
-        >>> a
-        Dseq(-4)
-        aaa
-         ttt
-        >>> a.three_prime_end()
-        ("5'", 't')
-        >>>
 
         See also
         --------
@@ -1095,6 +1105,8 @@ class Dseq(_Seq):
 
         """
 
+        # See docstring for function pydna.utils.get_parts for details
+        # on what is contained in parts.
         parts = get_parts(self._data.decode("ascii"))
 
         sticky5 = parts.sticky_right5.translate(dscode_to_crick_table)[::-1]
@@ -1105,6 +1117,8 @@ class Dseq(_Seq):
 
         single_crick = parts.single_crick.translate(dscode_to_crick_table)[::-1]
 
+        # The walrus operator returns the value being assigned, so
+        # we can test if it is empty or not.
         if sticky := single_watson:
             type_ = "single"
         elif sticky := single_crick:
@@ -1118,14 +1132,45 @@ class Dseq(_Seq):
 
         return type_, sticky.lower()
 
-    def watson_ovhg(self) -> int:
-        """Overhang of the watson strand at the right side."""
-        parts = get_parts(self._data.decode("ascii"))
-        if parts.single_watson or parts.single_crick:
-            return None
-        return -len(parts.sticky_right5) or len(parts.sticky_right3)
+    def __add__(self: DseqType, other: [DseqType, str, bytes]) -> DseqType:
+        """
+        Adding two Dseq objects together.
 
-    def __add__(self: DseqType, other: DseqType) -> DseqType:
+        >>> ds = Dseq("a", "t", ovhg=0)
+        >>> ds
+        Dseq(-1)
+        a
+        t
+        >>> ds + ds
+        Dseq(-2)
+        aa
+        tt
+        >>> "g" + ds # adding a string of left side returns a Dseq
+        Dseq(-2)
+        ga
+        ct
+        >>> ds + "c" # adding a string of right side returns a Dseq
+        Dseq(-2)
+        ac
+        tg
+
+
+        Parameters
+        ----------
+        other : [DseqType, str, bytes]
+            Object to be added.
+
+        Raises
+        ------
+        TypeError
+            Preventing adding to a circular sequence.
+
+        Returns
+        -------
+        DseqType
+            A new Dseq object.
+
+        """
 
         if self.circular:
             raise TypeError("circular DNA cannot be ligated!")
@@ -1135,45 +1180,57 @@ class Dseq(_Seq):
         except AttributeError:
             pass
 
+        # If other evaluates to False, return a copy of self.
         if not other:
             return _copy.deepcopy(self)
-
+        # If self evaluates to False, return a copy of other.
         elif not self:
             return _copy.deepcopy(other)
 
+        # get right side end properties for self.
         self_type, self_tail = self.three_prime_end()
-        other_type, other_tail = other.five_prime_end()
 
-        if (self_type == other_type or ("single" in (self_type, other_type))) and len(
-            self_tail
-        ) == len(other_tail):
+        try:
+            other_type, other_tail = other.five_prime_end()
+        except AttributeError:
+            # if other does not have the expected properties
+            # most likely it is a string that can be cast as
+            # a Dseq.
+            other_type, other_tail = "blunt", ""
+            other = Dseq(other)
 
-            junction = "".join(
-                basepair_dict.get((w, c), placeholder)
-                for w, c in zip(self_tail, other_tail[::-1])
-            )
+        err = TypeError("sticky ends not compatible!")
 
-            if placeholder not in junction:
-                return self.__class__(
-                    self.watson + other.watson, other.crick + self.crick, self.ovhg
-                )
-        raise TypeError("sticky ends not compatible!")
+        # The sticky ends has to be of the same type
+        # or
+        # one or both of is "single" indicating a stranded molecule.
+        if (self_type != other_type) and ("single" not in (self_type, other_type)):
+            raise err
+
+        # tail length has to be equal for two phosphdiester bonds to form
+        if len(self_tail) != len(other_tail):
+            raise err
+
+        # Each basepair is checked against the pydna.alphabet basepair_dict
+        # which contains the permitted base pairings.
+        for w, c in zip(self_tail, other_tail[::-1]):
+            try:
+                basepair_dict[(w, c)]
+            except KeyError:
+                raise err
+
+        return self.__class__(
+            self.watson + other.watson, other.crick + self.crick, self.ovhg
+        )
 
     def __mul__(self: DseqType, number: int) -> DseqType:
         if not isinstance(number, int):
             raise TypeError(
-                "TypeError: can't multiply Dseq by non-int of type {}".format(
-                    type(number)
-                )
+                "TypeError: can't multiply Dseq" f" by non-int of type {type(number)}"
             )
-        if number <= 0:
-            return self.__class__("")
-        new = _copy.deepcopy(self)
-        for i in range(number - 1):
-            new += self
-        return new
+        return Dseq("").join(list(itertools.repeat(self, number)))
 
-    def _fill_in_five_prime(self: DseqType, nucleotides: str) -> str:
+    def _fill_in_left(self: DseqType, nucleotides: str) -> str:
         stuffer = ""
         type, se = self.five_prime_end()
         if type == "5'":
@@ -1184,7 +1241,7 @@ class Dseq(_Seq):
                     break
         return self.crick + stuffer, self.ovhg + len(stuffer)
 
-    def _fill_in_three_prime(self: DseqType, nucleotides: str) -> str:
+    def _fill_in_right(self: DseqType, nucleotides: str) -> str:
         stuffer = ""
         type, se = self.three_prime_end()
         if type == "5'":
@@ -1195,9 +1252,13 @@ class Dseq(_Seq):
                     break
         return self.watson + stuffer
 
-    def fill_in(self, nucleotides: _Union[None, str] = None) -> "Dseq":
+    def fill_in(self, nucleotides: _Union[None, str] = None) -> DseqType:
         """Fill in of five prime protruding end with a DNA polymerase
-        that has only DNA polymerase activity (such as exo-klenow [#]_)
+        that has only DNA polymerase activity (such as Exo-Klenow [#]_).
+        Exo-Klenow is a modified version of the Klenow fragment of E.
+        coli DNA polymerase I, which has been engineered to lack both
+        3-5 proofreading and 5-3 exonuclease activities.
+
         and any combination of A, G, C or T. Default are all four
         nucleotides together.
 
@@ -1210,15 +1271,6 @@ class Dseq(_Seq):
         --------
 
         >>> from pydna.dseq import Dseq
-        >>> a=Dseq("aaa", "ttt")
-        >>> a
-        Dseq(-3)
-        aaa
-        ttt
-        >>> a.fill_in()
-        Dseq(-3)
-        aaa
-        ttt
         >>> b=Dseq("caaa", "cttt")
         >>> b
         Dseq(-5)
@@ -1245,7 +1297,15 @@ class Dseq(_Seq):
         Dseq(-5)
          aaac
         gttt
-        >>>
+        >>> a=Dseq("aaa", "ttt")
+        >>> a
+        Dseq(-3)
+        aaa
+        ttt
+        >>> a.fill_in()
+        Dseq(-3)
+        aaa
+        ttt
 
         References
         ----------
@@ -1256,34 +1316,116 @@ class Dseq(_Seq):
             nucleotides = "GATCRYWSMKHBVDN"
 
         nucleotides = set(nucleotides.lower() + nucleotides.upper())
-        crick, ovhg = self._fill_in_five_prime(nucleotides)
-        watson = self._fill_in_three_prime(nucleotides)
+        crick, ovhg = self._fill_in_left(nucleotides)
+        watson = self._fill_in_right(nucleotides)
         return Dseq(watson, crick, ovhg)
 
     klenow = fill_in  # alias
 
     def transcribe(self) -> _Seq:
+        """
+        Transcribe a DNA sequence into RNA and return the RNA sequence as a new Seq object.
+
+        Note that only the Watson strand is considered.
+        """
         return _Seq(self.watson).transcribe()
 
     def translate(
-        self, table="Standard", stop_symbol="*", to_stop=False, cds=False, gap="-"
+        self,
+        table: [str, int] = "Standard",
+        stop_symbol: [str] = "*",
+        to_stop: bool = False,
+        cds: bool = False,
+        gap: str = "-",
     ) -> _Seq:
+        """
+        Translate into protein.
+
+        The table argument is the name of a codon table (string). These names
+        can be for example "Standard" or "Alternative Yeast Nuclear" for the
+        yeast CUG clade where the CUG codon is translated as serine instead
+        of the standard leucine.
+
+        Over forty translation tables are available from the BioPython
+        Bio.Data.CodonTable module. Look at the keys of the dictionary
+        ´CodonTable.ambiguous_generic_by_name´.
+        These are based on tables in this file provided by NCBI:
+
+        https://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt
+
+        Standard table
+
+          |  T      |  C      |  A      |  G      |
+        --+---------+---------+---------+---------+--
+        T | TTT F   | TCT S   | TAT Y   | TGT C   | T
+        T | TTC F   | TCC S   | TAC Y   | TGC C   | C
+        T | TTA L   | TCA S   | TAA Stop| TGA Stop| A
+        T | TTG L(s)| TCG S   | TAG Stop| TGG W   | G
+        --+---------+---------+---------+---------+--
+        C | CTT L   | CCT P   | CAT H   | CGT R   | T
+        C | CTC L   | CCC P   | CAC H   | CGC R   | C
+        C | CTA L   | CCA P   | CAA Q   | CGA R   | A
+        C | CTG L(s)| CCG P   | CAG Q   | CGG R   | G
+        --+---------+---------+---------+---------+--
+        A | ATT I   | ACT T   | AAT N   | AGT S   | T
+        A | ATC I   | ACC T   | AAC N   | AGC S   | C
+        A | ATA I   | ACA T   | AAA K   | AGA R   | A
+        A | ATG M(s)| ACG T   | AAG K   | AGG R   | G
+        --+---------+---------+---------+---------+--
+        G | GTT V   | GCT A   | GAT D   | GGT G   | T
+        G | GTC V   | GCC A   | GAC D   | GGC G   | C
+        G | GTA V   | GCA A   | GAA E   | GGA G   | A
+        G | GTG V   | GCG A   | GAG E   | GGG G   | G
+        --+---------+---------+---------+---------+--
+
+
+        Parameters
+        ----------
+        table : [str, int], optional
+            The default is "Standard". Can be a table id integer, see here for table
+            numbering https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
+        stop_symbol : [str], optional
+            The default is "*". Single character string to indicate translation stop.
+        to_stop : bool, optional
+            The default is False. True means that translation terminates at the first
+              in frame stop codon. False translates to the end.
+        cds : bool, optional
+            The default is False. If True, checks that the sequence starts with a
+            valid alternative start codon sequence length is a multiple of three, and
+            that there is a single in frame stop codon at the end. If these tests fail,
+            an exception is raised.
+        gap : str, optional
+            The default is "-".
+
+        Returns
+        -------
+        Bio.Seq.Seq
+            A Biopython Seq object with the translated amino acid code.
+
+        """
         return _Seq(
             _translate_str(str(self), table, stop_symbol, to_stop, cds, gap=gap)
         )
 
-    def mung(self) -> "Dseq":
+    def nibble_to_blunt(self) -> DseqType:
         """
-        Simulates treatment a nuclease with 5'-3' and 3'-5' single
+        Simulates treatment a nuclease with both 5'-3' and 3'-5' single
         strand specific exonuclease activity (such as mung bean nuclease [#]_)
+
+        Mung bean nuclease is a nuclease enzyme derived from mung bean sprouts
+        that preferentially degrades single-stranded DNA and RNA into
+        5'-phosphate- and 3'-hydroxyl-containing nucleotides.
+
+        Treatment results in blunt DNA, regardless of wheter the protruding end
+        is 5' or 3'.
 
         ::
 
              ggatcc    ->     gatcc
               ctaggg          ctagg
 
-              ggatcc   ->      ggatc
-             tcctag            cctag
+              ggatcc   ->     ggatc
+             tcctag           cctag
 
          >>> from pydna.dseq import Dseq
          >>> b=Dseq("caaa", "cttt")
@@ -1313,19 +1455,60 @@ class Dseq(_Seq):
 
 
         """
-        return Dseq(
-            self.watson[
-                max(0, -self.ovhg) : min(len(self.watson), len(self.crick) - self.ovhg)
-            ]
-        )
+        parts = get_parts(self._data.decode("ascii"))
+        return self.__class__(parts.middle)
 
-    def T4(self, nucleotides=None) -> "Dseq":
-        """Fill in five prime protruding ends and chewing back
-        three prime protruding ends by a DNA polymerase providing both
-        5'-3' DNA polymerase activity and 3'-5' nuclease acitivty
-        (such as T4 DNA polymerase). This can be done in presence of any
-        combination of the four A, G, C or T. Removing one or more nucleotides
-        can facilitate engineering of sticky ends. Default are all four nucleotides together.
+    mung = nibble_to_blunt
+
+    def T4(self, nucleotides=None) -> DseqType:
+        """
+        Fill in 5' protruding ends and nibble 3' protruding ends.
+
+        This is done using a DNA polymerase providing 3'-5' nuclease activity
+        such as T4 DNA polymerase. This can be done in presence of any
+        combination of the four nucleotides A, G, C or T.
+
+        T4 DNA polymerase is widely used to “polish” DNA ends because of its
+        strong 3-5 exonuclease activity in the absence of dNTPs, it chews
+        back 3′ overhangs to create blunt ends; in the presence of limiting
+        dNTPs, it can fill in 5′ overhangs; and by carefully controlling
+        reaction time, temperature, and nucleotide supply, you can generate
+        defined recessed or blunt termini.
+
+        Tuning the nucleotide set can facilitate engineering of partial
+        sticky ends. Default are all four nucleotides together.
+
+        ::
+
+                  aaagatc-3        aaa      3' ends are always removed.
+                  |||       --->   |||      A and T needed or the molecule will
+            3-ctagttt              ttt      degrade completely.
+
+
+
+            5-gatcaaa              gatcaaaGATC      5' ends are filled in the
+                  |||       --->   |||||||||||      presence of GATC
+                  tttctag-5        CTAGtttctag
+
+
+
+            5-gatcaaa              gatcaaaGAT       5' ends are partially filled in the
+                  |||       --->    |||||||||       presence of GAT to produce a 1 nt
+                  tttctag-5         TAGtttctag      5' overhang
+
+
+
+            5-gatcaaa              gatcaaaGA       5' ends are partially filled in the
+                  |||       --->     |||||||       presence of GA to produce a 2 nt
+                  tttctag-5          AGtttctag     5' overhang
+
+
+
+            5-gatcaaa              gatcaaaG        5' ends are partially filled in the
+                  |||       --->      |||||        presence of G to produce a 3 nt
+                  tttctag-5           Gtttctag     5' overhang
+
+
 
         Parameters
         ----------
@@ -1336,29 +1519,31 @@ class Dseq(_Seq):
         --------
 
         >>> from pydna.dseq import Dseq
-        >>> a=Dseq("gatcgatc")
+        >>> a = Dseq.from_representation(
+            '''
+            gatcaaa
+                tttctag
+            ''')
         >>> a
-        Dseq(-8)
-        gatcgatc
-        ctagctag
+        Dseq(-11)
+        gatcaaa
+            tttctag
         >>> a.T4()
-        Dseq(-8)
-        gatcgatc
-        ctagctag
-        >>> a.T4("t")
-        Dseq(-8)
-        gatcgat
-         tagctag
-        >>> a.T4("a")
-        Dseq(-8)
-        gatcga
-          agctag
-        >>> a.T4("g")
-        Dseq(-8)
-        gatcg
-           gctag
-        >>>
-
+        Dseq(-11)
+        gatcaaagatc
+        ctagtttctag
+        >>> a.T4("GAT")
+        Dseq(-11)
+        gatcaaagat
+         tagtttctag
+        >>> a.T4("GA")
+        Dseq(-11)
+        gatcaaaga
+          agtttctag
+        >>> a.T4("G")
+        Dseq(-11)
+        gatcaaag
+           gtttctag
         """
 
         if not nucleotides:
@@ -1366,7 +1551,7 @@ class Dseq(_Seq):
         nucleotides = set(nucleotides.lower() + nucleotides.upper())
         type, se = self.five_prime_end()
         if type == "5'":
-            crick, ovhg = self._fill_in_five_prime(nucleotides)
+            crick, ovhg = self._fill_in_left(nucleotides)
         else:
             if type == "3'":
                 ovhg = 0
@@ -1386,7 +1571,7 @@ class Dseq(_Seq):
         watson = self.watson
         type, se = self.three_prime_end()
         if type == "5'":
-            watson = self._fill_in_three_prime(nucleotides)
+            watson = self._fill_in_right(nucleotides)
         else:
             if type == "3'":
                 watson = self.watson[: -len(se)]
@@ -1400,20 +1585,241 @@ class Dseq(_Seq):
 
     t4 = T4  # alias for the T4 method.
 
-    def exo1_front(self: DseqType, n=1) -> DseqType:
-        """5'-3' resection at the start (left side) of the molecule."""
-        d = _copy.deepcopy(self)
-        if n == 0:
-            return d
-        d._data = self[:n]._data.translate(dscode_to_watson_tail_table) + self._data[n:]
-        return d
+    def nibble_five_prime_left(self: DseqType, n: int = 1) -> DseqType:
+        """
+        5-3 resection at the left side (start) of the molecule.
 
-    def exo1_end(self: DseqType, n=1) -> DseqType:
-        """5'-3' resection at the end (right side) of the molecule."""
-        d = _copy.deepcopy(self)
+        The figure below indicates a recess of length two from a blunt DNA
+        fragment.
+
+        ::
+
+            gatc           tc
+            ||||   -->     ||
+            ctag         ctag
+
+
+        The figure below indicates a recess of length two from a DNA fragment
+        with a 5' sticky end resulting in a blunt sequence.
+
+        ::
+
+          ttgatc         gatc
+            ||||   -->   ||||
+            ctag         ctag
+
+
+        Note that the recess is always n nucleotides long, even if the
+        starting fragment is not blunt. This means that the molecule is
+        guaranteed to have a
+
+        >>> from pydna.dseq import Dseq
+        >>> ds = Dseq("gatc")
+        >>> ds
+        Dseq(-4)
+        gatc
+        ctag
+        >>> ds.nibble_five_prime_left(2)
+        Dseq(-4)
+          tc
+        ctag
+        >>> ds.nibble_five_prime_left(3)
+        Dseq(-4)
+           c
+        ctag
+        >>> ds.nibble_five_prime_left(4)
+        Dseq(-4)
+
+        ctag
+        >>> ds = Dseq.from_representation(
+        '''
+        GGgatc
+          ctag
+        ''')
+        >>> ds
+        Dseq(-6)
+        GGgatc
+          ctag
+        ds.nibble_five_prime_left(2)
+        Dseq(-4)
+        gatc
+        ctag
+
+        Parameters
+        ----------
+        n : int, optional
+            The default is 1. This is the length of the recess.
+
+        Returns
+        -------
+        DseqType
+            DESCRIPTION.
+
+        """
+        recessed = _copy.deepcopy(self)
+        n += max(0, self.ovhg)
+        recessed = Dseq(
+            self._data[:n]
+            .translate(dscode_to_crick_table)
+            .translate(complement_table_for_dscode)
+            .translate(dscode_to_watson_tail_table)
+            .lstrip()
+            + self._data[n:]
+        )
+        return recessed
+
+    def nibble_five_prime_right(self: DseqType, n: int = 1) -> DseqType:
+        """
+        5-3 resection at the right side (end) of the molecule.
+
+        The figure below indicates a recess of lenght two.
+
+        ::
+
+            gatc         gatc
+            ||||   -->   ||
+            ctag         ct
+
+        The figure below indicates a recess of length two from a DNA fragment
+        with a 5' sticky end resulting in a blunt sequence.
+
+        ::
+
+            gatc         gatc
+            ||||   -->   ||||
+            ctagtt       ctag
+
+
+        >>> from pydna.dseq import Dseq
+        >>> ds = Dseq("gatc")
+        >>> ds
+        Dseq(-4)
+        gatc
+        ctag
+        >>> ds.nibble_five_prime_right(2)
+        Dseq(-4)
+        gatc
+        ct
+        >>> ds.nibble_five_prime_right(4)
+        Dseq(-4)
+        gatc
+
+        >>> ds = Dseq.from_representation(
+        '''
+        gatc
+        ctagGG
+        ''')
+        >>> ds.nibble_five_prime_right(2)
+        Dseq(-4)
+        gatc
+        ctag
+        """
+        recessed = _copy.deepcopy(self)
         n = len(self) - n
-        d._data = self._data[:n] + self._data[n:].translate(dscode_to_crick_tail_table)
-        return d
+        n -= max(0, self.right_ovhg)
+        recessed = Dseq(
+            self._data[:n]
+            + self._data[n:]
+            .translate(dscode_to_watson_table)
+            .translate(dscode_to_crick_tail_table)
+            .lstrip()
+        )
+        return recessed
+
+    exo1_front = nibble_five_prime_left
+    exo1_end = nibble_five_prime_right
+
+    def nibble_three_prime_left(self: DseqType, n=1) -> DseqType:
+        """
+
+        ::
+
+            gatc         gatc
+            ||||   -->     ||
+            ctag           ag
+
+        >>> from pydna.dseq import Dseq
+        >>> ds = Dseq("gatc")
+        >>> ds
+        Dseq(-4)
+        gatc
+        ctag
+        >>> ds.nibble_three_prime_left(2)
+        Dseq(-4)
+        gatc
+          ag
+        >>> ds = Dseq.from_representation(
+        '''
+          gatc
+        CCctag
+        ''')
+        >>> ds
+        Dseq(-6)
+          gatc
+        CCctag
+        >>> ds.nibble_three_prime_left(2)
+        Dseq(-5)
+        gatc
+        ctag
+        """
+        n += min(0, self.ovhg)
+        recessed = Dseq(
+            self._data[:n]
+            .translate(dscode_to_watson_table)
+            .translate(dscode_to_crick_tail_table)
+            .lstrip()
+            + self._data[n:]
+        )
+        return recessed
+
+    def nibble_three_prime_right(self: DseqType, n=1) -> DseqType:
+        """
+        5-3 resection at the right side (end) of the molecule.
+
+        The figure below indicates a recess of lenght two.
+
+        ::
+
+            gatc         ga
+            ||||   -->   ||
+            ctag         ctag
+
+
+        >>> from pydna.dseq import Dseq
+        >>> ds = Dseq("gatc")
+        >>> ds
+        Dseq(-4)
+        gatc
+        ctag
+        >>> ds.nibble_three_prime_right(2)
+        Dseq(-4)
+        ga
+        ctag
+        >>> ds.nibble_three_prime_right(4)
+        Dseq(-4)
+
+        ctag
+        >>> ds = Dseq.from_representation(
+        '''
+        gatcCC
+        ctag
+        ''')
+        >>> ds.nibble_three_prime_right(2)
+        Dseq(-4)
+        gatc
+        ctag
+        """
+        n = len(self) - n
+        n += min(0, self.right_ovhg)
+        recessed = Dseq(
+            self._data[:n]
+            + self._data[n:]
+            .translate(dscode_to_crick_table)
+            .translate(complement_table_for_dscode)
+            .translate(dscode_to_watson_tail_table)
+            .lstrip()
+        )
+        return recessed
 
     def no_cutters(
         self, batch: _Union[_RestrictionBatch, None] = None
@@ -1526,34 +1932,95 @@ class Dseq(_Seq):
             )
         )
 
-    def cas9(self, RNA: str) -> _Tuple[slice, ...]:
-        """docstring."""
-        bRNA = RNA.encode("ascii")
-        slices = []
-        cuts = [0]
-        for m in _re.finditer(bRNA, self._data):
-            cuts.append(m.start() + 17)
-        cuts.append(len(self))
-        slices = tuple(slice(x, y, 1) for x, y in zip(cuts, cuts[1:]))
-        return slices
+    def terminal_transferase(self, nucleotides: str = "a") -> DseqType:
+        """
+        Terminal deoxynucleotidyl transferase (TdT) is a template-independent
+        DNA polymerase that adds nucleotides to the 3′-OH ends of DNA, typically
+        single-stranded or recessed 3′ ends. In cloning, it’s classically used
+        to create homopolymer tails (e.g. poly-dG on a vector and poly-dC on an insert)
+        so that fragments can anneal via complementary overhangs (“tailing” cloning).
 
-    def terminal_transferase(self, nucleotides="a") -> "Dseq":
-        """docstring."""
+        This activity ia also present in some DNA polymerases, such as Taq polymerase.
+        This property is used in the populat T/A cloning protocol ([#]_).
+
+        ::
+
+            gct          gcta
+            |||   -->    |||
+            cga         acga
+
+
+
+        >>> from pydna.dseq import Dseq
+        >>> a = Dseq("aa")
+        >>> a = Dseq("gct")
+        >>> a
+        Dseq(-3)
+        gct
+        cga
+        >>> a.terminal_transferase()
+        Dseq(-5)
+         gcta
+        acga
+        >>> a.terminal_transferase("G")
+        Dseq(-5)
+         gctG
+        Gcga
+
+        Parameters
+        ----------
+        nucleotides : str, optional
+            The default is "a".
+
+        Returns
+        -------
+        DseqType
+            DESCRIPTION.
+
+        References
+        ----------
+        .. [#] https://en.wikipedia.org/wiki/TA_cloning
+
+        """
         ovhg = self.ovhg
         if self.ovhg >= 0:
             ovhg += len(nucleotides)
         return Dseq(self.watson + nucleotides, self.crick + nucleotides, ovhg)
 
-    def user(self):
+    def user(self) -> DseqType:
         """
+        USER Enzyme treatment.
+
         USER Enzyme is a mixture of Uracil DNA glycosylase (UDG) and the
-        DNA glycosylase-lyase Endonuclease VIII. UDG catalyses the excision
-        of an uracil base, forming an abasic (apyrimidinic) site while leaving
-        the phosphodiester backbone intact (2,3).
+        DNA glycosylase-lyase Endonuclease VIII.
+
+        UDG catalyses the excision of an uracil base, forming an abasic
+        or apyrimidinic site (AP site). Endonuclease VIII removes the AP
+        site creating a DNA gap.
+
+        ::
+
+            tagaagtaggUat          tagaagtagg at
+            |||||||||||||  --->    |||||||||| ||
+            atcUtcatccata          atc tcatccata
+
+
+
+        >>> a = Dseq("tagaagtaggUat", "atcUtcatccata"[::-1], 0)
+        >>> a
+        Dseq(-13)
+        tagaagtaggUat
+        atcutcatccAta
+        >>> a.user()
+        Dseq(-13)
+        tagaagtagg at
+        atc tcatccAta
+
 
         Returns
         -------
-        None.
+        DseqType
+            DNA fragment with uracile bases removed.
 
         """
 
@@ -1610,11 +2077,73 @@ class Dseq(_Seq):
         return tuple(self.apply_cut(*cs) for cs in cutsite_pairs)
 
     def cutsite_is_valid(self, cutsite: CutSiteType) -> bool:
-        """Returns False if:
+        """
+        Check is a cutsite is valid.
+
+        A cutsite is a nested 2-tuple with this form:
+
+        ((cut_watson, ovhg), enz), for example ((396, -4), EcoRI)
+
+        The cut_watson (positive integer) is the cut position of the sequence as for example
+        returned by the Bio.Restriction module.
+
+        The ovhg (overhang, positive or negative integer or 0) has the same meaning as
+        for restriction enzymes in the Bio.Restriction module and for
+        pydna.dseq.Dseq objects (see docstring for this module and example below)
+
+        Enzyme can be None.
+
+        ::
+
+            Enzyme overhang
+
+            EcoRI  -4     --GAATTC--        --G       AATTC--
+                            ||||||     -->    |           |
+                          --CTTAAG--        --CTTAA       G--
+
+            KpnI    4     --GGTACC--        --GGTAC       C--
+                            ||||||     -->    |           |
+                          --CCATGG--        --C       CATGG--
+
+            SmaI    0     --CCCGGG--        --CCC       GGG--
+                            ||||||     -->    |||       |||
+                          --GGGCCC--        --GGG       CCC--
+
+
+        >>> from Bio.Restriction import EcoRI, KpnI, SmaI
+        >>> EcoRI.ovhg
+        -4
+        >>> KpnI.ovhg
+        4
+        >>> SmaI.ovhg
+        0
+
+        Returns False if:
+
         - Cut positions fall outside the sequence (could be moved to Biopython)
+        TODO: example
+
         - Overhang is not double stranded
+        TODO: example
+
         - Recognition site is not double stranded or is outside the sequence
+        TODO: example
+
         - For enzymes that cut twice, it checks that at least one possibility is valid
+        TODO: example
+
+
+
+        Parameters
+        ----------
+        cutsite : CutSiteType
+            DESCRIPTION.
+
+        Returns
+        -------
+        bool
+            True if cutsite can cut the DNA fragment.
+
         """
 
         assert cutsite is not None, "cutsite is None"
@@ -1624,7 +2153,7 @@ class Dseq(_Seq):
 
         # The overhang is double stranded
         overhang_dseq = self[watson:crick] if ovhg < 0 else self[crick:watson]
-        if overhang_dseq.ovhg != 0 or overhang_dseq.watson_ovhg() != 0:
+        if overhang_dseq.ovhg != 0 or overhang_dseq.watson_ovhg != 0:
             return False
 
         # The recognition site is double stranded and within the sequence
@@ -1638,7 +2167,7 @@ class Dseq(_Seq):
         if (
             len(recognition_site) == 0
             or recognition_site.ovhg != 0
-            or recognition_site.watson_ovhg() != 0
+            or recognition_site.watson_ovhg != 0
         ):
             if enz is None or enz.scd5 is None:
                 return False
@@ -1657,7 +2186,7 @@ class Dseq(_Seq):
                 if (
                     len(recognition_site) == 0
                     or recognition_site.ovhg != 0
-                    or recognition_site.watson_ovhg() != 0
+                    or recognition_site.watson_ovhg != 0
                 ):
                     return False
 
@@ -1669,8 +2198,10 @@ class Dseq(_Seq):
         - `cut_watson` is a positive integer contained in `[0,len(seq))`, where `seq` is the sequence
           that will be cut. It represents the position of the cut on the watson strand, using the full
           sequence as a reference. By "full sequence" I mean the one you would get from `str(Dseq)`.
+
         - `ovhg` is the overhang left after the cut. It has the same meaning as `ovhg` in
           the `Bio.Restriction` enzyme objects, or pydna's `Dseq` property.
+
         - `enz` is the enzyme object. It's not necessary to perform the cut, but can be
            used to keep track of which enzyme was used.
 
@@ -1760,11 +2291,25 @@ class Dseq(_Seq):
         ```
 
         """
-        if self.watson_ovhg() < 0:
-            return len(self) + self.watson_ovhg(), len(self)
-        return len(self), len(self) - self.watson_ovhg()
+        if self.watson_ovhg < 0:
+            return len(self) + self.watson_ovhg, len(self)
+        return len(self), len(self) - self.watson_ovhg
 
-    def get_ss_meltsites(self: DseqType, length) -> _List[CutSiteType]:
+    def get_ss_meltsites(self: DseqType, length: int) -> _List[CutSiteType]:
+        """
+
+
+        Parameters
+        ----------
+        length : int
+            DESCRIPTION.
+
+        Returns
+        -------
+        _List[CutSiteType]
+            DESCRIPTION.
+
+        """
 
         if length < 1:
             return ()
@@ -1779,13 +2324,11 @@ class Dseq(_Seq):
         if self.circular:
 
             spacer = length
-
             cutfrom = self._data[-length:] + self._data + self._data[:length]
 
         else:
 
             spacer = 0
-
             cutfrom = self._data
 
         watsoncuts = []
@@ -1809,8 +2352,8 @@ class Dseq(_Seq):
         """Double stranded DNA melt sites
 
         Returns a sorted list (by distance from the left) of tuples. Each tuple (`((cut_watson, ovhg), enz)`)
-        contains a tuple containing the cut position and the overhang value for the enzyme followed by the
-        an enzyme object.
+        contains cut position and the overhang value for the enzyme followed by the
+        an enzyme object if any.
 
         """
 
@@ -1929,7 +2472,7 @@ class Dseq(_Seq):
         if is_left:
             return *self.left_end_position(), self.ovhg
         # In the right end, the overhang does not matter
-        return *self.right_end_position(), self.watson_ovhg()
+        return *self.right_end_position(), self.watson_ovhg
 
     def melt(self, length):
         if not length or length < 1:
@@ -1989,78 +2532,7 @@ class Dseq(_Seq):
 
         return Dseq(new), tuple(strands), intervals
 
-    def apply_cut_old(self, left_cut: CutSiteType, right_cut: CutSiteType) -> "Dseq":
-        """Extracts a subfragment of the sequence between two cuts.
-
-        For more detail see the documentation of get_cutsite_pairs.
-
-        Parameters
-        ----------
-        left_cut : Union[tuple[tuple[int,int], _AbstractCut], None]
-        right_cut: Union[tuple[tuple[int,int], _AbstractCut], None]
-
-        Returns
-        -------
-        Dseq
-
-        Examples
-        --------
-        >>> from Bio.Restriction import EcoRI
-        >>> from pydna.dseq import Dseq
-        >>> dseq = Dseq('aaGAATTCaaGAATTCaa')
-        >>> cutsites = dseq.get_cutsites([EcoRI])
-        >>> cutsites
-        [((3, -4), EcoRI), ((11, -4), EcoRI)]
-        >>> p1, p2, p3 = dseq.get_cutsite_pairs(cutsites)
-        >>> p1
-        (None, ((3, -4), EcoRI))
-        >>> dseq.apply_cut(*p1)
-        Dseq(-7)
-        aaG
-        ttCTTAA
-        >>> p2
-        (((3, -4), EcoRI), ((11, -4), EcoRI))
-        >>> dseq.apply_cut(*p2)
-        Dseq(-12)
-        AATTCaaG
-            GttCTTAA
-        >>> p3
-        (((11, -4), EcoRI), None)
-        >>> dseq.apply_cut(*p3)
-        Dseq(-7)
-        AATTCaa
-            Gtt
-
-        >>> dseq = Dseq('TTCaaGAA', circular=True)
-        >>> cutsites = dseq.get_cutsites([EcoRI])
-        >>> cutsites
-        [((6, -4), EcoRI)]
-        >>> pair = dseq.get_cutsite_pairs(cutsites)[0]
-        >>> pair
-        (((6, -4), EcoRI), ((6, -4), EcoRI))
-        >>> dseq.apply_cut(*pair)
-        Dseq(-12)
-        AATTCaaG
-            GttCTTAA
-
-        """
-        if _cuts_overlap(left_cut, right_cut, len(self)):
-            raise ValueError("Cuts by {} {} overlap.".format(left_cut[1], right_cut[1]))
-
-        left_watson, left_crick, ovhg_left = self.get_cut_parameters(left_cut, True)
-        right_watson, right_crick, _ = self.get_cut_parameters(right_cut, False)
-        return Dseq(
-            self[left_watson:right_watson].watson,
-            # The line below could be easier to understand as _rc(str(self[left_crick:right_crick])), but it does not preserve the case
-            str(
-                self.reverse_complement()[
-                    len(self) - right_crick : len(self) - left_crick
-                ]
-            ),
-            ovhg=ovhg_left,
-        )
-
-    def apply_cut(self, left_cut: CutSiteType, right_cut: CutSiteType) -> "Dseq":
+    def apply_cut(self, left_cut: CutSiteType, right_cut: CutSiteType) -> DseqType:
         """Extracts a subfragment of the sequence between two cuts.
 
         For more detail see the documentation of get_cutsite_pairs.
