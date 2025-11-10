@@ -12,7 +12,6 @@ The Dseq class support the notion of circular and linear DNA topology.
 
 import itertools
 import copy as _copy
-import re as _re
 import sys as _sys
 import math as _math
 import inspect as _inspect
@@ -34,7 +33,8 @@ from pydna.utils import cuts_overlap as _cuts_overlap
 from pydna.alphabet import basepair_dict
 from pydna.alphabet import dscode_to_watson_table
 from pydna.alphabet import dscode_to_crick_table
-
+from pydna.alphabet import regex_ds_melt_factory
+from pydna.alphabet import regex_ss_melt_factory
 from pydna.alphabet import dscode_to_full_sequence_table
 from pydna.alphabet import dscode_to_watson_tail_table
 from pydna.alphabet import dscode_to_crick_tail_table
@@ -485,7 +485,7 @@ class Dseq(_Seq):
 
                 """
                 We see if there is another overlap of the same length
-                This means that annealing is ambigous. USer should provide
+                This means that annealing is ambigous. User should provide
                 and ovhg value.
                 """
                 if any(
@@ -2297,29 +2297,41 @@ class Dseq(_Seq):
 
     def get_ss_meltsites(self: DseqType, length: int) -> _List[CutSiteType]:
         """
+        Single stranded DNA melt sites
+
+        DNA molecules can fall apart by melting if they have internal single
+        stranded regions. In the example below, the molecule can melt
+        into two 8 bp double stranded molecules, each with 3 nt 3' overhangs.
+
+        ::
+
+            tagaagta gtatg        tagaagta          gtatg
+            ||||| || |||||  -->   |||||             |||||
+            atctt atccatac        atctt          atccatac
 
 
-        Parameters
-        ----------
-        length : int
-            DESCRIPTION.
+        A list of 2-tuples is returned. Each tuple (`((cut_watson, ovhg), None)`)
+        contains cut position and the overhang value in the same format as
+        returned by the get_cutsites method for restriction enzymes.
 
-        Returns
-        -------
-        _List[CutSiteType]
-            DESCRIPTION.
+        Note that this function deals with melting that results in two double
+        stranded DNA molecules. See get_ss_meltsites for melting away single
+        stranded regions.
 
-        """
-
+        >>> from pydna.dseq import Dseq
+        >>> ds = Dseq("tagaaptaqgtatg")
+        ds
+        Dseq(-14)
+        tagaagta gtatg
+        atctt atccatac
+        >>> cutsite = ds.get_ds_meltsites(2)
+        >>> cutsite
+        [((8, 2), None)]
         if length < 1:
             return ()
+        """
 
-        regex = (
-            f"(?P<watson>((?<=[PEXIpexi]))([GATCgatcUuOo]{{1,{length}}})((?=[^QFZJqfzjGATCgatcUuOo])))|"
-            f"(?P<crick>((?<=[QFZJqfzj]))([GATCgatcUuOo]{{1,{length}}})((?=[^PEXIpexiGATCgatcUuOo])))"
-        )
-
-        regex = _re.compile(regex.encode("ascii"))
+        regex = regex_ss_melt_factory(length)
 
         if self.circular:
 
@@ -2348,35 +2360,51 @@ class Dseq(_Seq):
 
         return watsoncuts, crickcuts
 
-    def get_ds_meltsites(self: DseqType, length) -> _List[CutSiteType]:
-        """Double stranded DNA melt sites
+    def get_ds_meltsites(self: DseqType, length: int) -> _List[CutSiteType]:
+        """
+        Double stranded DNA melt sites
 
-        Returns a sorted list (by distance from the left) of tuples. Each tuple (`((cut_watson, ovhg), enz)`)
-        contains cut position and the overhang value for the enzyme followed by the
-        an enzyme object if any.
+        DNA molecules can fall apart by melting if they have internal single
+        stranded regions. In the example below, the molecule can melt
+        into two 8 bp double stranded molecules, each with 3 nt 3' overhangs.
+
+        ::
+
+            tagaagta gtatg        tagaagta          gtatg
+            ||||| || |||||  -->   |||||             |||||
+            atctt atccatac        atctt          atccatac
+
+
+        A list of 2-tuples is returned. Each tuple (`((cut_watson, ovhg), None)`)
+        contains cut position and the overhang value in the same format as
+        returned by the get_cutsites method for restriction enzymes.
+
+        Note that this function deals with melting that results in two double
+        stranded DNA molecules. See get_ss_meltsites for melting away single
+        stranded regions.
+
+        >>> from pydna.dseq import Dseq
+        >>> ds = Dseq("tagaaptaqgtatg")
+        ds
+        Dseq(-14)
+        tagaagta gtatg
+        atctt atccatac
+        >>> cutsite = ds.get_ds_meltsites(2)
+        >>> cutsite
+        [((8, 2), None)]
 
         """
 
         if length < 1:
-            return ()
+            return tuple()
 
-        regex = (
-            f"(?P<watson>((?<=[PEXIpexi])|^)([GATCgatcUuOo]{{1,{length}}})((?=[^PEXIpexiGATCgatcUuOo])|$))|"
-            f"(?P<crick>((?<=[QFZJqfzj])|^)([GATCgatcUuOo]{{1,{length}}})((?=[^QFZJqfzjGATCgatcUuOo])|$))"
-        )
-
-        regex = _re.compile(regex.encode("ascii"))
+        regex = regex_ds_melt_factory(length)
 
         if self.circular:
-
             spacer = length
-
             cutfrom = self._data[-length:] + self._data + self._data[:length]
-
         else:
-
             spacer = 0
-
             cutfrom = self._data
 
         cuts = []
@@ -2395,18 +2423,14 @@ class Dseq(_Seq):
 
     def cast_to_ds_right(self):
         """
-        NNNN----
-        NNNNCTAG
+        NNNN               NNNNGATC
+        ||||       -->     ||||||||
+        NNNNCTAG           NNNNCTAG
 
-        NNNNGATC
-        NNNNCTAG
 
-        NNNNGATC
-        NNNN----
-
-        NNNNGATC
-        NNNNCTAG
-
+        NNNNGATC           NNNNGATC
+        ||||       -->     ||||||||
+        NNNN               NNNNCTAG
         """
 
         p = get_parts(self._data.decode("ascii"))
@@ -2421,18 +2445,13 @@ class Dseq(_Seq):
 
     def cast_to_ds_left(self):
         """
-        GATCNNNN
-            NNNN
+        GATCNNNN           GATCNNNN
+            ||||   -->     ||||||||
+            NNNN           CTAGNNNN
 
-        GATCNNNN
-        CTAGNNNN
-
-            NNNN
-        CTAGNNNN
-
-        GATCNNNN
-        CTAGNNNN
-
+            NNNN           GATCNNNN
+            ||||   -->     ||||||||
+        CTAGNNNN           CTAGNNNN
         """
 
         p = get_parts(self._data.decode("ascii"))

@@ -674,3 +674,31 @@ def representation_tuple(
     crick = processed_dscode.translate(dscode_to_crick_table).rstrip()
 
     return watson, crick
+
+
+def regex_ss_melt_factory(length: int):
+
+    regex = (
+        f"(?P<watson>((?<=[{ss_letters_watson}]))"
+        f"([{ds_letters}]{{1,{length}}})"
+        f"((?=[^{ss_letters_crick}{ds_letters}])))|"
+        f"(?P<crick>((?<=[{ss_letters_crick}]))"
+        f"([{ds_letters}]{{1,{length}}})"
+        f"((?=[^{ss_letters_watson}{ds_letters}])))"
+    )
+
+    return _re.compile(regex.encode("ascii"))
+
+
+def regex_ds_melt_factory(length: int):
+
+    regex = (
+        f"(?P<watson>((?<=[{ss_letters_watson}])|^)"
+        f"([{ds_letters}]{{1,{length}}})"
+        f"((?=[^{ss_letters_watson}{ds_letters}])|$))|"
+        f"(?P<crick>((?<=[{ss_letters_crick}])|^)"
+        f"([{ds_letters}]{{1,{length}}})"
+        f"((?=[^{ss_letters_crick}{ds_letters}])|$))"
+    )
+
+    return _re.compile(regex.encode("ascii"))
