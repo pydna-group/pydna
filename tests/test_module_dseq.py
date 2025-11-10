@@ -4,6 +4,7 @@
 import pytest
 import textwrap
 
+from pydna.seq import Seq
 from pydna.dseq import Dseq
 from pydna.utils import eq
 
@@ -1180,12 +1181,12 @@ def test_watson_ovhg():
 
 
 def test_melt():
-    from pydna.seq import Seq
-    from pydna.dseq import Dseq
 
     assert Dseq("AGJGaGEg").melt(2) == (Dseq("EP"), Dseq("FQJGaGEp"), Dseq("q"))
-    # assert Dseq("AGIGaGFg").melt(2) == (Dseq("FQ"), Dseq("EPIGaGFq"), Dseq("p"))
-    # assert Dseq("AGJGaGFg").melt(2) == (Dseq("EP"), Dseq("FQJGaGFq"), Dseq("p"))
+
+    assert Dseq("AGIGaGFg").melt(2) == (Dseq("FQ"), Dseq("EPIGaGFq"), Dseq("p"))
+    assert Dseq("AGJGaGFg").melt(2) == (Dseq("EP"), Dseq("FQJGaGFq"), Dseq("p"))
+
     assert Dseq("AGIGaGEg").melt(2) == (Dseq("FQ"), Dseq("EPIGaGEp"), Dseq("q"))
     assert Dseq("GATPGCPGCA").melt(2) == (Seq("CG"), Dseq("GATPPIPGCA"))
     assert Dseq("GATQGCQGCA").melt(2) == (Seq("CG"), Dseq("GATQQJQGCA"))
@@ -1221,8 +1222,6 @@ def test_melt():
 
 def test__get_ds_meltsites():
 
-    from pydna.dseq import Dseq
-
     assert Dseq("AGJGaGEg").get_ds_meltsites(2) == [((2, 2), None), ((8, 1), None)]
     assert Dseq("AGIGaGFg").get_ds_meltsites(2) == [((0, -2), None), ((7, -1), None)]
     assert Dseq("AGJGaGFg").get_ds_meltsites(2) == [((2, 2), None), ((7, -1), None)]
@@ -1238,8 +1237,6 @@ def test__get_ds_meltsites():
     assert Dseq("AGCQAGPGAT", circular=True).get_ds_meltsites(2) == [((4, -2), None)]
 
 def test__get_ds_meltsites():
-
-    from pydna.dseq import Dseq
 
     assert Dseq("AGJGaGEg").get_ds_meltsites(2) == [((2, 2), None), ((8, 1), None)]
     assert Dseq("AGIGaGFg").get_ds_meltsites(2) == [((0, -2), None), ((7, -1), None)]
