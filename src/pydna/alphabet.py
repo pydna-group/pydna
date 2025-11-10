@@ -676,7 +676,28 @@ def representation_tuple(
     return watson, crick
 
 
-def regex_ss_melt_factory(length: int):
+def regex_ss_melt_factory(length: int) -> _re.Pattern:
+    """
+    A regular expression for finding single strand regions in dscode.
+
+
+    ::
+
+
+
+
+
+    Parameters
+    ----------
+    length : int
+        Minimul length of double stranded region.
+
+    Returns
+    -------
+    TYPE
+        DESCRIPTION.
+
+    """
 
     regex = (
         f"(?P<watson>((?<=[{ss_letters_watson}]))"
@@ -690,7 +711,7 @@ def regex_ss_melt_factory(length: int):
     return _re.compile(regex.encode("ascii"))
 
 
-def regex_ds_melt_factory(length: int):
+def regex_ds_melt_factory(length: int) -> _re.Pattern:
 
     regex = (
         f"(?P<watson>((?<=[{ss_letters_watson}])|^)"
