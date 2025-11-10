@@ -707,6 +707,7 @@ def eq(*args, **kwargs):
 
 
 def cuts_overlap(left_cut, right_cut, seq_len):
+
     # Special cases:
     if left_cut is None or right_cut is None or left_cut == right_cut:
         return False
@@ -728,7 +729,9 @@ def cuts_overlap(left_cut, right_cut, seq_len):
     # Convert into ranges x and y and see if ranges overlap
     x = sorted([left_watson, left_crick])
     y = sorted([right_watson, right_crick])
-    return (x[1] > y[0]) != (y[1] < x[0])
+    # if (x[1] >= y[0]) != (y[1] <= x[0]):
+    #     breakpoint()
+    return (x[1] >= y[0]) != (y[1] <= x[0])  # (x[1] > y[0]) != (y[1] < x[0])
 
 
 def location_boundaries(loc: _Union[_sl, _cl]):
