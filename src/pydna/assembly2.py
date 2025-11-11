@@ -1884,6 +1884,10 @@ class PCRAssembly(Assembly):
     def assemble_linear(
         self, only_adjacent_edges: bool = False, max_assemblies: int = 50
     ) -> list[_Dseqrecord]:
+        """
+        Overrides the parent method to ensure that the 5' of the crick strand of the product matches the
+        sequence of the reverse primer. This is important when using primers with dUTP (for USER cloning).
+        """
         results = super().assemble_linear(only_adjacent_edges, max_assemblies)
         for result in results:
             rp = self.fragments[2]
