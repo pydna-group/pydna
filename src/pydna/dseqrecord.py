@@ -389,17 +389,7 @@ class Dseqrecord(_SeqRecord):
 
         if old_length != new_length:  # Only False if self was blunt.
             for fn in new.features:
-                if new_length in fn:  # Feature spans new end.
-                    strand = fn.location.strand
-                    # Split location oover new origin
-                    loc1 = _SimpleLocation(fn.location.start, new_length, strand=strand)
-                    loc2 = _SimpleLocation(0, old_length - new_length, strand=strand)
-                    fn.location = loc1 + loc2
-                    if strand == -1:
-                        fn.location = loc2 + loc1
-                elif new_length <= fn.location.start and fn.location.end <= old_length:
-                    # Feature contained within sequence folded to beginning.
-                    fn.location = fn.location - new_length
+                fn.location = _shift_location(fn.location, 0, new_length)
         return new
 
     def tolinear(self):  # pragma: no cover
