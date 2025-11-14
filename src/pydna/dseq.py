@@ -1587,10 +1587,14 @@ class Dseq(_Seq):
 
     def nibble_five_prime_left(self: DseqType, n: int = 1) -> DseqType:
         """
-        5-3 resection at the left side (start) of the molecule.
+        5' => 3'  resection at the left side (start) of the molecule.
+
+        The argument n indicate the number of nucleotides that are to be
+        removed. The outcome of this depend on the structure of the molecule.
+        See the two examples below:
 
         The figure below indicates a recess of length two from a blunt DNA
-        fragment.
+        fragment. The resulting DNA fragment has a 3' protruding single strand.
 
         ::
 
@@ -1608,10 +1612,6 @@ class Dseq(_Seq):
             ||||   -->   ||||
             ctag         ctag
 
-
-        Note that the recess is always n nucleotides long, even if the
-        starting fragment is not blunt. This means that the molecule is
-        guaranteed to have a
 
         >>> from pydna.dseq import Dseq
         >>> ds = Dseq("gatc")
@@ -1648,7 +1648,7 @@ class Dseq(_Seq):
         Parameters
         ----------
         n : int, optional
-            The default is 1. This is the length of the recess.
+            The default is 1. This is the number of nucleotides removed.
 
         Returns
         -------
@@ -1670,9 +1670,14 @@ class Dseq(_Seq):
 
     def nibble_five_prime_right(self: DseqType, n: int = 1) -> DseqType:
         """
-        5-3 resection at the right side (end) of the molecule.
+        5' => 3'  resection at the right side (end) of the molecule.
 
-        The figure below indicates a recess of lenght two.
+        The argument n indicate the number of nucleotides that are to be
+        removed. The outcome of this depend on the structure of the molecule.
+        See the two examples below:
+
+        The figure below indicates a recess of length two from a blunt DNA
+        fragment. The resulting DNA fragment has a 3' protruding single strand.
 
         ::
 
@@ -1731,12 +1736,30 @@ class Dseq(_Seq):
 
     def nibble_three_prime_left(self: DseqType, n=1) -> DseqType:
         """
+        3' => 5' resection at the left side (beginning) of the molecule.
+
+        The argument n indicate the number of nucleotides that are to be
+        removed. The outcome of this depend on the structure of the molecule.
+        See the two examples below:
+
+        The figure below indicates a recess of length two from a blunt DNA
+        fragment. The resulting DNA fragment has a 5' protruding single strand.
 
         ::
 
             gatc         gatc
             ||||   -->     ||
             ctag           ag
+
+        The figure below indicates a recess of length two from a DNA fragment
+        with a 3' sticky end resulting in a blunt sequence.
+
+        ::
+
+            gatc         gatc
+            ||||   -->   ||||
+          ttctag         ctag
+
 
         >>> from pydna.dseq import Dseq
         >>> ds = Dseq("gatc")
@@ -1774,14 +1797,28 @@ class Dseq(_Seq):
 
     def nibble_three_prime_right(self: DseqType, n=1) -> DseqType:
         """
-        5-3 resection at the right side (end) of the molecule.
+        3' => 5' resection at the right side (end) of the molecule.
 
-        The figure below indicates a recess of lenght two.
+        The argument n indicate the number of nucleotides that are to be
+        removed. The outcome of this depend on the structure of the molecule.
+        See the two examples below:
+
+        The figure below indicates a recess of length two from a blunt DNA
+        fragment. The resulting DNA fragment has a 5' protruding single strand.
 
         ::
 
             gatc         ga
             ||||   -->   ||
+            ctag         ctag
+
+        The figure below indicates a recess of length two from a DNA fragment
+        with a 3' sticky end resulting in a blunt sequence.
+
+        ::
+
+            gatctt       gatc
+            ||||   -->   ||||
             ctag         ctag
 
 
