@@ -395,10 +395,26 @@ class Dseqrecord(_SeqRecord):
 
         old_length = len(self)  # Possibly longer, including sticky ends if any.
         new_length = len(new)  # Possibly shorter, with blunt ends.
-
         if old_length != new_length:  # Only False if self was blunt.
+            new_features = []
             for fn in new.features:
+                if len(fn.location) > new_length:
+                    # Edge case: if the feature is longer than the sequence, it should be
+                    # dropped. This can happen in a sequence with overhangs, where the feature
+                    # spans both overhangs.
+                    #
+                    # Example:
+                    #  feature
+                    # <------>
+                    # aaACGT
+                    #   TGCAtt
+                    #
+                    # Circular sequence ACGTtt should not have that feature, so we drop it
+                    continue
                 fn.location = _shift_location(fn.location, 0, new_length)
+                new_features.append(fn)
+
+            new.features = new_features
         return new
 
     def tolinear(self):  # pragma: no cover

@@ -2040,7 +2040,7 @@ def test_looped():
     warnings.simplefilter("always")
 
     a = Dseqrecord("aAAa")
-    a.add_feature()
+    a.add_feature(1, 3)
     b = a.looped()
     assert a.features[0].extract(a).seq == b.features[0].extract(b).seq
     assert str(a.features[0].extract(a).seq) == str(b.features[0].extract(b).seq)
@@ -2081,41 +2081,37 @@ def test_looped():
     assert str(a.features[0].extract(a).seq) == str(b.features[0].extract(b).seq)
     assert a.features == b.features
 
+    # If the feature is longer than the sequence, it should be dropped
     a = Dseqrecord(Dseq("caaa", "gttt", ovhg=-1))
     a.add_feature(0, 5)
     b = a.looped()
-    assert str(a.features[0].extract(a).seq) == str(b.features[0].extract(b).seq)
-    assert a.features != b.features
+    assert len(b.features) == 0
 
     a = Dseqrecord(Dseq("caaa", "gttt", ovhg=-1))
     a.add_feature(0, 5, strand=-1)
     b = a.looped()
-    assert str(a.features[0].extract(a).seq) == str(b.features[0].extract(b).seq)
-    assert a.features != b.features
+    assert len(b.features) == 0
+
+    a = Dseqrecord(Dseq("aaaa", "tttt", ovhg=1))  # here!
+    a.add_feature(0, 5)
+    b = a.looped()
+    assert len(b.features) == 0
+
+    a = Dseqrecord(Dseq("aaaa", "tttt", ovhg=1))
+    a.add_feature(0, 5, strand=-1)
+    b = a.looped()
+    assert len(b.features) == 0
+
+    a = Dseqrecord(Dseq("aaaa", "tttt", ovhg=-1))
+    a.add_feature(0, 6)
+    b = a.looped()
+    assert len(b.features) == 0
 
     a = Dseqrecord(Dseq("aaac", "tttg", ovhg=1))
     a.add_feature(2, 4)
     b = a.looped()
     assert str(a.features[0].extract(a).seq) == str(b.features[0].extract(b).seq)
     assert a.features == b.features
-
-    a = Dseqrecord(Dseq("aaaa", "tttt", ovhg=1))  # here!
-    a.add_feature(0, 5)
-    b = a.looped()
-    assert str(a.features[0].extract(a).seq) == str(b.features[0].extract(b).seq)
-    assert a.features != b.features
-
-    a = Dseqrecord(Dseq("aaaa", "tttt", ovhg=1))
-    a.add_feature(0, 5, strand=-1)
-    b = a.looped()
-    assert str(a.features[0].extract(a).seq) == str(b.features[0].extract(b).seq)
-    assert a.features != b.features
-
-    a = Dseqrecord(Dseq("aaaa", "tttt", ovhg=-1))
-    a.add_feature(0, 6)
-    b = a.looped()
-    assert str(a.features[0].extract(a).seq) == str(b.features[0].extract(b).seq)
-    assert a.features != b.features
 
 
 def test_upper():
