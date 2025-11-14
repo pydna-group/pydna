@@ -11,7 +11,7 @@ import glob
 from importlib import reload
 from unittest.mock import patch, mock_open, MagicMock
 
-from pydna import dseqrecord
+from pydna.genbankfile import GenbankFile
 from pydna.dseq import Dseq
 from pydna.dseqrecord import Dseqrecord
 from pydna.readers import read
