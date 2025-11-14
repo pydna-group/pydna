@@ -22,3 +22,11 @@ The below examples use the extra dependency `teemi <https://github.com/hiyama341
 
 * `Example_HT_cazyme_primer_design <https://github.com/hiyama341/cazyme_primer_design/blob/main/notebooks/00-cazyme_primer_design.ipynb>`_: Design primers for a high-throughput CAZyme library.
 * `Example_designing_primers_for_kozak_library <https://github.com/hiyama341/teemi/blob/main/colab_notebooks/09_2_BUILD_Combinatorial_library.ipynb>`_: We explore the combinatorial space of the most abundant kozak sequences and make repair-primers for the experiments.
+
+
+Bioengineering/SynBio projects where you can apply pydna
+--------------------------------------------------------
+
+* `02 Primer directed mutagenesis with pydna <https://github.com/hiyama341/teemi/blob/main/teemi_cad_workflows/notebooks/02_primer_directed_mutagenesis.ipynb>`_
+* `03 Investigate plastic-degrading enzymes with pydna <https://github.com/hiyama341/teemi/blob/main/teemi_cad_workflows/notebooks/03_investigate_plastic_degrading_enzymes.ipynb>`_
+* `04 Promoter library design in *Saccharomyces cerevisiae* <https://github.com/hiyama341/teemi/blob/main/teemi_cad_workflows/notebooks/04_promoter_library_design_in_s_cerevisiae.ipynb>`_
