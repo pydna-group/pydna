@@ -965,44 +965,6 @@ class Dseq(_Seq):
         new.circular = True
         return new
 
-    def tolinear(self: DseqType) -> DseqType:  # pragma: no cover
-        """Returns a blunt, linear copy of a circular Dseq object. This can
-        only be done if the Dseq object is circular, otherwise a
-        TypeError is raised.
-
-        This method is deprecated, use slicing instead. See example below.
-
-        Examples
-        --------
-
-        >>> from pydna.dseq import Dseq
-        >>> a=Dseq("catcgatc", circular=True)
-        >>> a
-        Dseq(o8)
-        catcgatc
-        gtagctag
-        >>> a[:]
-        Dseq(-8)
-        catcgatc
-        gtagctag
-        >>>
-
-        """
-        import warnings as _warnings
-        from pydna import _PydnaDeprecationWarning
-
-        _warnings.warn(
-            "tolinear method is obsolete; "
-            "please use obj[:] "
-            "instead of obj.tolinear().",
-            _PydnaDeprecationWarning,
-        )
-        if not self.circular:
-            raise TypeError("DNA is not circular.\n")
-        selfcopy = _copy.deepcopy(self)
-        selfcopy.circular = False
-        return selfcopy
-
     def five_prime_end(self) -> _Tuple[str, str]:
         """Returns a 2-tuple of trings describing the structure of the 5' end of
         the DNA fragment.
@@ -1338,6 +1300,8 @@ class Dseq(_Seq):
         cds: bool = False,
         gap: str = "-",
     ) -> _Seq:
+
+        # TODO: is this method needed?
         """
         Translate into protein.
 
@@ -1731,8 +1695,8 @@ class Dseq(_Seq):
         )
         return recessed
 
-    exo1_front = nibble_five_prime_left
-    exo1_end = nibble_five_prime_right
+    exo1_front = nibble_five_prime_left  # TODO: consider using the new names
+    exo1_end = nibble_five_prime_right  # TODO: consider using the new names
 
     def nibble_three_prime_left(self: DseqType, n=1) -> DseqType:
         """
