@@ -2336,15 +2336,17 @@ class Dseq(_Seq):
         """
         Single stranded DNA melt sites
 
-        DNA molecules can fall apart by melting if they have internal single
-        stranded regions. In the example below, the molecule can melt
-        into two 8 bp double stranded molecules, each with 3 nt 3' overhangs.
+        Shingle stranded DNA molecules shed from a double stranded DNA molecule
+        without affecting the length of the molecule.
+
+        In the example below, the middle 2 nt part is released from the
+        molecule.
 
         ::
 
-            tagaagta gtatg        tagaagta          gtatg
-            ||||| || |||||  -->   |||||             |||||
-            atctt atccatac        atctt          atccatac
+            tagaa ta gtatg        tagaa    gtatg          ta
+            ||||| || |||||  -->   |||||    |||||     +    ||
+            atcttcatccatac        atcttcatccatac
 
 
         A list of 2-tuples is returned. Each tuple (`((cut_watson, ovhg), None)`)
@@ -2352,20 +2354,17 @@ class Dseq(_Seq):
         returned by the get_cutsites method for restriction enzymes.
 
         Note that this function deals with melting that results in two double
-        stranded DNA molecules. See get_ss_meltsites for melting away single
-        stranded regions.
+        stranded DNA molecules. See get_ds_meltsites for melting ds sequences.
 
         >>> from pydna.dseq import Dseq
-        >>> ds = Dseq("tagaaptaqgtatg")
+        >>> ds = Dseq("tagaaqtaqgtatg")
         ds
         Dseq(-14)
-        tagaagta gtatg
-        atctt atccatac
-        >>> cutsite = ds.get_ds_meltsites(2)
+        tagaa ta gtatg
+        atcttcatccatac
+        >>> cutsite = ds.get_ss_meltsites(2)
         >>> cutsite
-        [((8, 2), None)]
-        if length < 1:
-            return ()
+        ([], [(6, 8)])
         """
 
         regex = regex_ss_melt_factory(length)
@@ -2417,7 +2416,9 @@ class Dseq(_Seq):
         returned by the get_cutsites method for restriction enzymes.
 
         Note that this function deals with melting that results in two double
-        stranded DNA molecules. See get_ss_meltsites for melting away single
+        stranded DNA molecules.
+
+        See get_ss_meltsites for melting away single
         stranded regions.
 
         >>> from pydna.dseq import Dseq
@@ -2531,6 +2532,20 @@ class Dseq(_Seq):
         return *self.right_end_position(), self.watson_ovhg
 
     def melt(self, length):
+        """
+        TBD
+
+        Parameters
+        ----------
+        length : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        TYPE
+            DESCRIPTION.
+
+        """
         if not length or length < 1:
             return tuple()
 
@@ -2547,7 +2562,20 @@ class Dseq(_Seq):
         return strands + result
 
     def shed_ss_dna(self, length):
+        """
+        TBD
 
+        Parameters
+        ----------
+        length : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        TYPE
+            DESCRIPTION.
+
+        """
         new, strands, intervals = self._shed_ss_dna(length)
 
         return new, strands
