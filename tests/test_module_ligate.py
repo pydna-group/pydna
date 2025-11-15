@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import pytest
-
+from pydna.ligate import ligate
+from pydna.dseq import Dseq
+from pydna.dseqrecord import Dseqrecord
 
 def test_ligate():
-    from pydna.ligate import ligate
-    from pydna.dseq import Dseq
-    from pydna.dseqrecord import Dseqrecord
+
 
     a = Dseqrecord(
         Dseq.from_representation(
@@ -73,7 +73,3 @@ def test_ligate():
         for ss in lsequences:
             assert ss.seguid() == "ldseguid=vBQxmszgfR4b84O0wI7d_ya9uDA"
             assert len(ss) == 12
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-vv", "-s"])

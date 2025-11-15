@@ -2,14 +2,25 @@
 # -*- coding: utf-8 -*-
 
 import pytest
+# from importlib import reload
+from pydna import assembly
+from pydna.dseqrecord import Dseqrecord
+from pydna.parsers import parse
+from pydna.utils import eq
+from Bio.SeqFeature import SeqFeature
+from Bio.SeqFeature import FeatureLocation
+from Bio.SeqFeature import ExactPosition
+from pydna.amplify import pcr
+from pydna.readers import read
+from Bio.Restriction import EcoRV, ZraI
+from Bio.Restriction import AjiI, AgeI
+from Bio.Restriction import SalI
+from pydna.assembly import Assembly
+from Bio.Restriction import AatII
+from pydna._pretty import pretty_str
 
+def test_built():
 
-def test_built(monkeypatch):
-    monkeypatch.setenv("pydna_cached_funcs", "")
-    from importlib import reload
-    from pydna import assembly
-
-    reload(assembly)
     asm = assembly.Assembly(assembly.example_fragments, limit=5)
     lin = asm.assemble_linear()
     crc = asm.assemble_circular()
@@ -18,18 +29,10 @@ def test_built(monkeypatch):
     assert [c.seq for c in crc] == [c.seq for c in assembly.circular_results]
 
 
-def test_new_assembly(monkeypatch):
-    monkeypatch.setenv("pydna_cached_funcs", "")
-    from pydna.dseqrecord import Dseqrecord
-    from pydna import assembly
-    from pydna.parsers import parse
-    from pydna.utils import eq
-    from importlib import reload
-    from Bio.SeqFeature import SeqFeature
-    from Bio.SeqFeature import FeatureLocation
-    from Bio.SeqFeature import ExactPosition
+def test_new_assembly():
 
-    reload(assembly)
+
+
 
     #                   0000000000111111111222222222233333333334444444444555555555566
     #                   0123456780123456789012345678901234567890123456789012345678901
@@ -214,8 +217,6 @@ def test_new_assembly(monkeypatch):
     c3 = assembly.Assembly((a, b, c), limit=14)
     assert str(c3.assemble_circular()[0].seq) == "acgatgctatactggCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGT"
 
-    from pydna.parsers import parse
-    from pydna.utils import eq
 
     text1 = """
     >A_AgTEFp_b_631 NP+geg/4Ykv2pIwEqiLylYKPYOE
@@ -248,14 +249,10 @@ def test_new_assembly(monkeypatch):
     # [821] [713] [132] [51] [38]
 
 
-def test_assembly(monkeypatch):
-    monkeypatch.setenv("pydna_cached_funcs", "")
-    from pydna import assembly
-    from pydna.parsers import parse
-    from pydna.utils import eq
-    from importlib import reload
+def test_assembly():
 
-    reload(assembly)
+
+
 
     text1 = """
     >A_AgTEFp_b_631 NP+geg/4Ykv2pIwEqiLylYKPYOE
@@ -482,16 +479,10 @@ algorithm..: common_sub_strings"""
     assert candidate.seguid() == "cdseguid=-mVwekticpAYIT9C4JcXmOGFkRo"
 
 
-def test_MXblaster1(monkeypatch):
-    monkeypatch.setenv("pydna_cached_funcs", "")
-    from pydna import assembly
-    from pydna.parsers import parse
-    from pydna.amplify import pcr
-    from pydna.readers import read
-    from pydna.utils import eq
-    from importlib import reload
+def test_MXblaster1():
 
-    reload(assembly)
+
+
 
     """ test MXblaster1"""
 
@@ -517,7 +508,6 @@ def test_MXblaster1(monkeypatch):
     pCAPs_pSU0 = read("pCAPs-pSU0.gb")
 
     # cut the pCAPs vectors for cloning
-    from Bio.Restriction import EcoRV, ZraI
 
     pCAPs_ZraI = pCAPs.linearize(ZraI)
     pCAPs_PCR_prod = pcr(primer[492], primer[493], pCAPs)
@@ -585,7 +575,6 @@ def test_MXblaster1(monkeypatch):
 
     assert pCAPs_MX4blaster1.seguid() == "cdseguid=bUl04KTp5LpAulZX3UHdejwnuIQ"
 
-    from Bio.Restriction import AjiI, AgeI
 
     AX023560 = read("AX023560.gb")
 
@@ -639,16 +628,11 @@ def test_MXblaster1(monkeypatch):
     assert pCAPs_MX4blaster2.seguid() == "cdseguid=c48cBUb3wF-Sdhzh0Tlprp-0CEg"
 
 
-def test_assemble_pGUP1(monkeypatch):
-    monkeypatch.setenv("pydna_cached_funcs", "")
+def test_assemble_pGUP1():
 
-    from pydna.readers import read
-    from pydna import assembly
-    from pydna.utils import eq
-    from pydna.amplify import pcr
-    from importlib import reload
 
-    reload(assembly)
+
+
 
     GUP1rec1sens = read("GUP1rec1sens.txt")
     GUP1rec2AS = read("GUP1rec2AS.txt")
@@ -657,7 +641,6 @@ def test_assemble_pGUP1(monkeypatch):
 
     insert = pcr(GUP1rec1sens, GUP1rec2AS, GUP1_locus)
 
-    from Bio.Restriction import SalI
 
     his3, lin_vect = pGREG505.cut(SalI)
 
@@ -676,7 +659,7 @@ def test_assemble_pGUP1(monkeypatch):
     assert pGUP1.seguid() == "cdseguid=QiK2pH9yioTPfSobUTLz4CPiNzY"
 
 
-# def test_35_36(monkeypatch):
+# def test_35_36():
 #    import sys
 #    from pydna.assembly import _od
 #    if sys.version_info < (3, 6):
@@ -686,15 +669,12 @@ def test_assemble_pGUP1(monkeypatch):
 #        assert _od==dict
 
 
-def test_pYPK7_TDH3_GAL2_PGI1(monkeypatch):
-    from pydna.readers import read
-    from pydna.assembly import Assembly
+def test_pYPK7_TDH3_GAL2_PGI1():
 
     pMEC1142 = read("pYPK0_TDH3_GAL2_PGI1.gb")
 
     pYPKp7 = read("pYPKp7.gb")
 
-    from Bio.Restriction import AatII
 
     pYPKp7_AatII = pYPKp7.linearize(AatII)
 
@@ -703,9 +683,7 @@ def test_pYPK7_TDH3_GAL2_PGI1(monkeypatch):
     assert z.assemble_circular()[1].seguid() == "cdseguid=DeflrptvvS6m532WogvxQSgVKpk"
 
 
-def test_marker_replacement_on_plasmid(monkeypatch):
-    from pydna.assembly import Assembly
-    from pydna.parsers import parse
+def test_marker_replacement_on_plasmid():
 
     f, r, _, _ = parse(
         """
@@ -724,12 +702,10 @@ def test_marker_replacement_on_plasmid(monkeypatch):
     """
     )
 
-    from pydna.readers import read
 
     pAG32 = read("pAG32.gb")
     pMEC1135 = read("pMEC1135.gb")
 
-    from pydna.amplify import pcr
 
     hygromycin_product = pcr(f, r, pAG32)
 
@@ -741,12 +717,9 @@ def test_marker_replacement_on_plasmid(monkeypatch):
     assert pMEC1135.features[-1].extract(pMEC1135).seq == candidate.features[-1].extract(candidate).seq
 
 
-def test_linear_with_annotations2(monkeypatch):
+def test_linear_with_annotations2():
     # Thanks to James Bagley for finding this bug
     # https://github.com/JamesBagley
-    from pydna._pretty import pretty_str
-    from pydna.assembly import Assembly
-    from pydna.dseqrecord import Dseqrecord
 
     a = Dseqrecord("acgatgctatactgtgCCNCCtgtgctgtgctcta")
     a.add_feature(0, 10, label="a_feat")
@@ -790,8 +763,3 @@ def test_linear_with_annotations2(monkeypatch):
 #                      tgtgctgtgctctaTTTTTTTtattctggctgtatcCCCCCC
 #                                           TATTCTGGCTGTATC
 #                                          GtattctggctgtatcGGGGGtacgatgctatactgtg
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-x", "-vv", "-s"])
-    # pytest.main([__file__, "-x", "-vvv", "-s", "--profile"])

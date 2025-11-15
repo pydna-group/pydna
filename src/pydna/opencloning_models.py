@@ -199,7 +199,7 @@ class TextFileSequence(_TextFileSequence):
             id=get_id(dseqr),
             sequence_file_format="genbank",
             overhang_crick_3prime=dseqr.seq.ovhg,
-            overhang_watson_3prime=dseqr.seq.watson_ovhg(),
+            overhang_watson_3prime=dseqr.seq.watson_ovhg,
             file_content=dseqr.format("genbank"),
         )
 

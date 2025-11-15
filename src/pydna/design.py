@@ -24,12 +24,12 @@ from pydna.amplify import Anneal as _Anneal
 from pydna.amplify import pcr as _pcr
 from pydna.dseqrecord import Dseqrecord as _Dseqrecord
 from pydna.primer import Primer as _Primer
-
-# import logging as _logging
 import operator as _operator
 from typing import Tuple
-
-# _module_logger = _logging.getLogger("pydna." + __name__)
+from itertools import pairwise
+from pydna.dseqrecord import Dseqrecord
+import re
+from pydna.primer import Primer
 
 
 def _design_primer(
@@ -806,3 +806,75 @@ def circular_assembly_fragments(f, overlap=35, maxlink=40):
         stacklevel=2,
     )
     return assembly_fragments(f, overlap=overlap, maxlink=maxlink, circular=True)
+
+
+def user_assembly_design():
+    """
+    Work in progress
+
+
+
+
+                                                   overlap
+                                                 _____15______
+                                                |             |
+    TTAGAAGTAGGGATAGTCCCAAACCTCACTTACCACTGCCAATAAGGGG         |
+    AATCTTCATCCCTATCAGGGTTTGGAGTGAATGGTGACGGTTATTCCCC         |
+                                                |    aagccgaactgggccagacaacccggcgctaacgcactca
+                                                44   ttcggcttgacccggtctgttgggccgcgattgcgtgagt
+                                                              |
+                                                              9
+
+
+
+    TTAGAAGTAGGGATAGTCCCAAACCTCACTTACCACTGCCAATAAGGGG         9
+                                     ||||||||||||||||         |
+                                     GTGACGGTTATUCCCCTTCGGCTTGA
+
+    AATCTTCATCCCTATCAGGGTTTGGAGTGAATGGTGACGGTTATTCCCC
+
+                                                     aagccgaactgggccagacaacccggcgctaacgcactca
+    AGGGGAAGCCGAACUGGGC
+                                                AGGGGAAGCCGAACUGGGC
+                                                |    ||||||||||||||
+                                                44   ttcggcttgacccggtctgttgggccgcgattgcgtgagt
+
+    """
+
+    a1 = Dseqrecord("TTAGAAGTAGGGATAGTCCCAAACCTCACTTACCACTGCCAATAAGGGG")
+    b1 = Dseqrecord("AAGCCGAACTGGGCCAGACAACCCGGCGCTAACGCACTCA")
+    fragments = [a1, b1]
+    amplicons = []
+
+    for fragment in fragments:
+        amplicons.append(primer_design(fragment))
+
+    for ths, nxt in pairwise(amplicons):
+
+        A_positions = [m.start() for m in re.finditer("A|a", str(ths.seq))]
+        T_positions = [m.start() for m in re.finditer("T|t", str(nxt.seq))]
+
+        for x, y in zip(A_positions[::-1], T_positions):
+
+            sticky_length = y + len(ths) - x
+
+            rp = bytearray(nxt.seq[: y + 1].rc()._data + ths.reverse_primer.seq._data)
+            fp = bytearray(ths.seq[x:]._data + nxt.forward_primer.seq._data)
+
+            fp[sticky_length] = ord(b"U")
+            rp[sticky_length] = ord(b"U")
+
+            ths.reverse_primer = Primer(rp)
+            nxt.forward_primer = Primer(fp)
+
+            break
+
+    a2 = _pcr(ths).seq
+    a2_user = a2.user()
+    a2_sticky, stuffer = a2_user.melt(14)
+
+    b2 = _pcr(nxt).seq
+    b2_user = b2.user()
+    stuffer, b2_sticky = b2_user.melt(14)
+
+    assert (a1 + b1).seq == a2_sticky + b2_sticky

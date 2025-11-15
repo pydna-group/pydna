@@ -6,17 +6,7 @@
 # as part of this package.
 """Miscellaneous functions."""
 
-from Bio.Data.IUPACData import ambiguous_dna_complement as _ambiguous_dna_complement
-from Bio.Seq import _maketrans
-
-# import shelve as _shelve
-# import os as _os
 import re as _re
-
-# import logging as _logging
-# import base64 as _base64
-# import pickle as _pickle
-# import hashlib as _hashlib
 import keyword as _keyword
 import collections as _collections
 import itertools as _itertools
@@ -30,7 +20,8 @@ from math import ceil as _ceil
 
 from pydna.codon import weights as _weights
 from pydna.codon import rare_codons as _rare_codons
-
+from pydna.alphabet import basepair_dict
+from pydna.alphabet import complement_table_for_dscode
 from Bio.SeqFeature import SimpleLocation as _sl
 from Bio.SeqFeature import CompoundLocation as _cl
 from Bio.SeqFeature import Location as _Location
@@ -39,10 +30,6 @@ from typing import Union as _Union, TypeVar as _TypeVar, List as _List
 
 # For functions that take str or bytes as input and return str or bytes as output, matching the input type
 StrOrBytes = _TypeVar("StrOrBytes", str, bytes)
-
-# _module_logger = _logging.getLogger("pydna." + __name__)
-_ambiguous_dna_complement.update({"U": "A"})
-_complement_table = _maketrans(_ambiguous_dna_complement)
 
 
 def three_frame_orfs(
@@ -210,6 +197,29 @@ def smallest_rotation(s):
     return s[k:] + s[:k]
 
 
+def anneal_from_left(watson: str, crick: str) -> int:
+    """
+    The length of the common prefix shared by two strings.
+
+    Args:
+        str1 (str): The first string.
+        str2 (str): The second string.
+
+    Returns:
+        int: The length of the common prefix.
+    """
+
+    result = len(
+        list(
+            _itertools.takewhile(
+                lambda x: basepair_dict.get((x[0], x[1])), zip(watson, crick[::-1])
+            )
+        )
+    )
+
+    return result
+
+
 def cai(seq: str, organism: str = "sce", weights: dict = _weights):
     """docstring."""
     from cai2 import CAI as _CAI
@@ -276,15 +286,15 @@ def rc(sequence: StrOrBytes) -> StrOrBytes:
 
     accepts mixed DNA/RNA
     """
-    return sequence.translate(_complement_table)[::-1]
+    return complement(sequence)[::-1]
 
 
-def complement(sequence: str):
+def complement(sequence: StrOrBytes) -> StrOrBytes:
     """Complement.
 
     accepts mixed DNA/RNA
     """
-    return sequence.translate(_complement_table)
+    return sequence.translate(complement_table_for_dscode)
 
 
 # def memorize(filename):
@@ -697,6 +707,7 @@ def eq(*args, **kwargs):
 
 
 def cuts_overlap(left_cut, right_cut, seq_len):
+
     # Special cases:
     if left_cut is None or right_cut is None or left_cut == right_cut:
         return False
@@ -718,7 +729,9 @@ def cuts_overlap(left_cut, right_cut, seq_len):
     # Convert into ranges x and y and see if ranges overlap
     x = sorted([left_watson, left_crick])
     y = sorted([right_watson, right_crick])
-    return (x[1] > y[0]) != (y[1] < x[0])
+    # if (x[1] >= y[0]) != (y[1] <= x[0]):
+    #     breakpoint()
+    return (x[1] >= y[0]) != (y[1] <= x[0])  # (x[1] > y[0]) != (y[1] < x[0])
 
 
 def location_boundaries(loc: _Union[_sl, _cl]):
