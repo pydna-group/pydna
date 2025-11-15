@@ -10,7 +10,7 @@ from pydna.utils import eq
 
 from Bio.Restriction import (
     Acc65I, ApaI, BamHI, BglII, BsaI, Bsp120I, EcoRI, EcoRV,
-    KpnI, MaeII, NmeDI, NotI, PacI, PstI, RestrictionBatch, TaiI
+    KpnI, MaeII, NmeDI, NotI, PacI, PstI, RestrictionBatch, TaiI, BspLI
 )
 
 from seguid import ldseguid
@@ -85,6 +85,89 @@ def test_cut1():
 
     # TODO: remove
     # assert (first2.pos, second2.pos, third2.pos, fourth2.pos) == (0, 4, 13, 21)
+
+    # G      GTACC
+    # CCATG      G
+    first = Dseq.from_representation(
+    """
+    Dseq(-5)
+    G
+    CCATG
+    """)
+    second = Dseq.from_representation(
+    """
+    Dseq(-5)
+    GTACC
+        G
+    """)
+
+    assert (first, second) == Dseq("GGTACC").cut(Acc65I)
+
+
+    # GGTAC      C
+    # C      CATGG
+    first = Dseq.from_representation(
+    """
+    Dseq(-5)
+    GGTAC
+    C
+    """)
+    second = Dseq.from_representation(
+    """
+    Dseq(-5)
+        C
+    CATGG
+    """)
+    assert (first, second) == Dseq("GGTACC").cut(KpnI)
+
+
+    # GGT      ACC
+    # CCA      TGG
+    first = Dseq.from_representation(
+    """
+    Dseq(-3)
+    GGT
+    CCA
+    """)
+    second = Dseq.from_representation(
+    """
+    Dseq(-3)
+    ACC
+    TGG
+    """)
+    assert (first, second) == Dseq("GGTACC").cut(BspLI)
+
+    #  GTACCG
+    #      GCCATG
+    lin = Dseq.from_representation(
+    """
+    Dseq(-10)
+    GTACCG
+        GCCATG
+    """)
+    assert (lin,) == Dseq("GGTACC", circular=True).cut(Acc65I)
+
+    #      CGGTAC
+    #  CATGGC
+    lin = Dseq.from_representation(
+    """
+    Dseq(-10)
+        CGGTAC
+    CATGGC
+    """)
+    assert (lin,) == Dseq("GGTACC", circular=True).cut(KpnI)
+
+    # ACCGGT
+    # TGGCCA
+    lin = Dseq.from_representation(
+    """
+    Dseq(-6)
+    ACCGGT
+    TGGCCA
+    """)
+
+    assert (lin,) == Dseq("GGTACC", circular=True).cut(BspLI)
+
 
 
 def test_cas9():
@@ -163,6 +246,41 @@ def test_initialization():
                                    """
     )
     assert obj3.ovhg == 1
+
+    assert Dseq("g", "", 0) == Dseq("p")
+    assert Dseq("a", "", 0) == Dseq("e")
+    assert Dseq("t", "", 0) == Dseq("x")
+    assert Dseq("c", "", 0) == Dseq("i")
+
+    assert Dseq("", "g", 0) == Dseq("j")
+    assert Dseq("", "a", 0) == Dseq("z")
+    assert Dseq("", "t", 0) == Dseq("f")
+    assert Dseq("", "c", 0) == Dseq("q")
+
+    s = Dseq.from_representation(
+    """
+    Dseq(-6)
+    G A C
+    CcTaGg
+    """)
+    assert Dseq("G A C ", "CcTaGg"[::-1], 0) == s
+
+    s = Dseq.from_representation(
+    """
+    Dseq(-6)
+    G A C
+    C T G
+    """)
+    assert Dseq("G A C ", "C T G"[::-1], 0) == s # TODO: should probably give an error
+
+    s = Dseq.from_representation(
+    """
+    Dseq(-6)
+    GA T CC
+    CTAACGG
+    """)
+    assert Dseq("GA T CC", "CTAACGG"[::-1], 0) == s
+
 
 
 def test_cut_around_and_religate():
@@ -600,6 +718,15 @@ def test_Dseq_slicing2():
 
 def test_Dseq___getitem__():
     # test the slicing
+
+    assert str(Dseq("gatc")[1:3]) == "gatc"[1:3]
+    assert str(Dseq("gatc")[:]) == "gatc"[:]
+    assert str(Dseq("gatc")[0:0]) == "gatc"[0:0]
+    assert str(Dseq("gatc")[:0]) == "gatc"[:0]
+    assert str(Dseq("gatc")[0:]) == "gatc"[0:]
+    assert str(Dseq("gatc")[None:None]) == "gatc"[None:None]
+    assert str(Dseq("gatc")[None:0]) == "gatc"[None:0]
+    assert str(Dseq("gatc")[0:None]) == "gatc"[0:None]
 
     s = Dseq("GGATCC", circular=False)
     assert s[1:-1] == Dseq("GATC", circular=False)
@@ -1251,3 +1378,36 @@ def test__get_ds_meltsites():
 
     assert Dseq("AGCPAGQGAT", circular=True).get_ds_meltsites(2) == [((6, 2), None)]
     assert Dseq("AGCQAGPGAT", circular=True).get_ds_meltsites(2) == [((4, -2), None)]
+
+
+def test_nibble():
+
+    assert Dseq("pgatc").nibble_five_prime_left() == Dseq("gatc")
+    assert Dseq("pgatc").nibble_five_prime_left(2) == Dseq("qatc")
+    assert Dseq("pgatc").nibble_three_prime_left() == Dseq("ppatc")
+    assert Dseq("pgatc").nibble_five_prime_right() == Dseq("pgati")
+    assert Dseq("pgatc").nibble_three_prime_right() == Dseq("pgatj")
+
+    assert Dseq("qgatc").nibble_five_prime_left() == Dseq("qqatc")
+    assert Dseq("qgatc").nibble_five_prime_left(2) == Dseq("qqftc")
+    assert Dseq("qgatc").nibble_three_prime_left() == Dseq("gatc")
+    assert Dseq("qgatc").nibble_five_prime_right() == Dseq("qgati")
+    assert Dseq("qgatc").nibble_three_prime_right() == Dseq("qgatj")
+
+    # Dseq(-2)
+    # 5-gg-3
+    #   ||
+    # 3-  -5
+    assert Dseq("pp").nibble_five_prime_left() == Dseq("p")
+    assert Dseq("pp").nibble_three_prime_left() == Dseq("pp")
+    assert Dseq("pp").nibble_five_prime_right() == Dseq("pp")
+    assert Dseq("pp").nibble_three_prime_right() == Dseq("p")
+
+    # Dseq(-2)
+    # 5-  -3
+    #   ||
+    # 3-cc-5
+    assert Dseq("qq").nibble_five_prime_left() == Dseq("qq")
+    assert Dseq("qq").nibble_three_prime_left() == Dseq("q")
+    assert Dseq("qq").nibble_five_prime_right() == Dseq("q")
+    assert Dseq("qq").nibble_three_prime_right() == Dseq("qq")
