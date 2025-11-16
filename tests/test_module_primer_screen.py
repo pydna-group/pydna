@@ -1,12 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import pytest
 import tempfile
 import pickle
+import pathlib
 import ahocorasick
+
 from pydna.readers import read
 from pydna.amplify import pcr
+from pydna.parsers import parse_primers
 
 from pydna.primer_screen import make_automaton
 from pydna.primer_screen import forward_primers
@@ -15,22 +19,43 @@ from pydna.primer_screen import primer_pairs
 from pydna.primer_screen import flanking_primer_pairs
 from pydna.primer_screen import diff_primer_pairs
 from pydna.primer_screen import diff_primer_triplets
+from pydna.primer_screen import primer_tuple
+from pydna.primer_screen import amplicon_tuple
 
-from pydna.parsers import parse_primers
+
+test_files = pathlib.Path(os.path.join(os.path.dirname(__file__)))
 
 
 primers = parse_primers ("""
+>51_TefTermFwd A.gos 20-mer
+CAGATGCGAAGTTAAGTGCG
+
 >82_MSW_fwd this primer sits inside the loxP of pUG6
 TCCTTGACAGTCTTGACG
 
 >149_MX4rev (25-mer) Primer in the Ashbya gossypi TEF terminator in the reverse direction. NEW (2021-01-05)
 ACAAATGACAAGTTCTTGAAAACAA
 
+>255_kanC (22-mer)
+TGATTTTGATGACGAGCGTAAT
+
+>594_pRS306_rev 24-mer
+tcgctttcttcccttcctttctcg
+
+>595_pRS306_fwd
+taaagggagcccccgatttagagc
+
+>607_XDHcasrv (28-mer)
+aaacagctatgaccatgattacgccaag
+
 >700_sc_fas2-B1: (25-mer)
 ATTTCTCTATGTAAAGACAGAGCAG
 
 >701_sc_fas2-A1: (25-mer)
 CTATATTTCTATTCTATCCGAACTC
+
+>1215_URA3r 27-mer
+CGGTTTCTTTGAAATTTTTTTGATTCG
 
 >1564_KANMX_rev
 CACTCGCATCAACCAAACC
@@ -42,9 +67,13 @@ for primer in primers:
     number, rest = primer.id.split("_", maxsplit=1)
     pl[int(number)] = primer
 
-wt = read("FAS2_S288C_wild-type_locus.gb")
-nat = read("fas2::NatMX4_locus.gb")
-kan = read("fas2::KanMX4_locus.gb")
+wt = read(test_files/"FAS2_S288C_wild-type_locus.gb")
+nat = read(test_files/"fas2::NatMX4_locus.gb")
+kan = read(test_files/"fas2::KanMX4_locus.gb")
+
+pIL68 = read(test_files/"pIL68.gb")
+pIL75 = read(test_files/"pIL75.gb")
+
 
 atm = None
 
@@ -65,61 +94,68 @@ def test_automaton():
     assert [x for x in atm2.keys()] == [x for x in atm.keys()]
     assert [x for x in atm2.values()] == [x for x in atm.values()]
 
+def test_forward_primers():
+    result = forward_primers(kan, pl, automaton=atm)
+    assert result == {701: [534], 82: [1168], 255: [1979], 51: [2434]}
+
+def test_reverse_primers():
+    result = reverse_primers(wt, pl, automaton=atm)
+    assert result == {700: [1208]}
+
+def test_primer_pairs():
+    result = primer_pairs(kan, pl, automaton=atm, short=0)
+    answer = [amplicon_tuple(fp=701, rp=149, fposition=534, rposition=2306, size=1822),
+              amplicon_tuple(fp=701, rp=1564, fposition=534, rposition=1940, size=1450),
+              amplicon_tuple(fp=82, rp=149, fposition=1168, rposition=2306, size=1181),
+              amplicon_tuple(fp=82, rp=1564, fposition=1168, rposition=1940, size=809),
+              amplicon_tuple(fp=255, rp=149, fposition=1979, rposition=2306, size=374)]
+    assert result == answer
+
+def test_flanking_primer_pairs():
+    result = flanking_primer_pairs(kan, pl, target=(550, 1200), automaton=atm)
+
+    answer = (amplicon_tuple(fp=82, rp=1564, fposition=1168, rposition=1940, size=809),
+              amplicon_tuple(fp=82, rp=149, fposition=1168, rposition=2306, size=1181))
+    assert result == answer
 
 def test_diff_primer_pairs():
 
-    results1 = diff_primer_pairs((nat, kan), pl, automaton=atm)
+    results = diff_primer_pairs((nat, kan), pl, automaton=atm)
 
-    assert results1 == (
-        ((nat, 82, 149, 944), (kan, 82, 149, 1181)),
-        )
-
-
-def test_diff_primer_triplets():
-    results2 = diff_primer_triplets((wt, kan), pl, automaton=atm)
-
-    assert results2 == (
-        ((wt, 701, 700, 724), (kan, 701, 1564, 1450)),
-        )
+    assert results == (
+        (primer_tuple(seq=nat, fp=82, rp=149, size=944),
+         primer_tuple(seq=kan, fp=82, rp=149, size=1181)),)
 
 
-# result = flanking_primer_pairs(s, pl, (1001, 5661), automaton=atm)
+def test_diff_primer_triplets_1():
 
-# PCR products with primers 700 701 1564 sizes 724 bp (wt) 1450 (deletion locus)
-# from pydna.amplify import pcr
+    results = diff_primer_triplets((wt, kan), pl, automaton=atm)
 
-# for k, v in result.items():
-#     primers = [pl[p] for p in k]
-#     product1 = pcr(primers, s, limit=16)
-#     product2 = pcr(primers, ss, limit=16)
-#     assert {s: len(product1), ss: len(product2)} == v
-#     print(len(product1), len(product2))
+    assert results == (
+        (primer_tuple(seq=wt, fp=701, rp=700, size=724),
+         primer_tuple(seq=kan, fp=701, rp=1564, size=1450)),)
 
+def test_diff_primer_triplets_2():
 
-# print(forward_primers(s, pl, automaton=atm))
-# print(reverse_primers(s, pl, automaton=atm))
-# print(primer_pairs(s, pl, automaton=atm, short=79))
+    triplets = diff_primer_triplets([pIL68, pIL75], pl)
 
-# pl = [pl[700],pl[701], pl[1564]]
+    assert len(triplets) == 2
 
-# common_forward_primers([wt, nat, kan], pl, automaton=atm)
-# common_reverse_primers([wt, nat, kan], pl, automaton=atm)
+    answer = (
+    (primer_tuple(seq=pIL68, fp=1215, rp=594, size=1474),
+    primer_tuple(seq=pIL75, fp=51, rp=594, size=548)),
 
-# unique_forward_primers([wt, nat, kan], pl, automaton=atm)
-# unique_reverse_primers([wt, nat, kan], pl, automaton=atm)
+    (primer_tuple(seq=pIL68, fp=1215, rp=594, size=1474),
+    primer_tuple(seq=pIL75, fp=255, rp=594, size=1005))
+    )
 
+    assert triplets == answer
 
+    assert len(pcr(pl[1215], pl[594], pIL68)) == 1474
+    assert len(pcr(pl[51], pl[594], pIL75)) == 548
 
-# s = set()
+    with pytest.raises(ValueError, match="No PCR product!"):
+        pcr(pl[51], pl[594], pIL68)
 
-# for p1, p2, (size1, size2) in results:
-#     product1 = pcr(pl[p1], pl[p2], nat, limit=16)
-#     product2 = pcr(pl[p1], pl[p2], kan, limit=16)
-#     assert len(product1)==size1 and len(product2)==size2
-#     s.add((p1, p2))
-
-# assert len(s) == len(results)
-
-
-    # with pytest.raises(ValueError):
-    #     assembly_fragments(frags, 20)
+    with pytest.raises(ValueError, match="No PCR product!"):
+        pcr(pl[1215], pl[594], pIL75)
