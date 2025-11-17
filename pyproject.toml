@@ -59,7 +59,7 @@ scipy = [
   { version = ">=1.9.3", python = "<3.12", optional = true },
 ]
 seguid = ">=0.0.5"
-regex = "^2024.11.6"
+regex = ">=2024.11.6,<2026.0.0"
 opencloning-linkml = "0.4.5"
 [tool.poetry.extras]
 clipboard = ["pyperclip"]
