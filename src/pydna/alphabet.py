@@ -484,17 +484,29 @@ class DseqParts:
             )
         )
 
+    def __getitem__(self, index: int) -> str:
+        """
+        Allow indexing DseqParts instances.
+        >>> from pydna.alphabet import get_parts
+        >>> parts = get_parts("eeATCGuggCCGgg")
+        >>> parts[0]
+        'ee'
+        >>> parts[2]
+        'ATCGuggCCGgg'
+        """
+        return tuple(self)[index]
+
 
 def get_parts(datastring: str) -> DseqParts:
     """
-    A namedtuple containing the parts of a dsDNA sequence.
+    Returns a DseqParts instance containing the parts of a dsDNA sequence.
 
     The datastring should contain a string with dscode symbols.
     A regex is used to capture the single stranded regions at the ends as
     well as the regiond in the middle.
 
     The figure below numbers the regex capture groups and what they capture
-    as well as the namedtuple field name.
+    as well as the DseqParts instance field name.
 
     ::
 
