@@ -75,8 +75,8 @@ GATC UO RYMKSWHBVDN PEXIQFZJ$% 0123456789 !#{}&*()<>@:?[]=_; •
 
 """
 
-from collections import namedtuple
 import re as _re
+from dataclasses import dataclass
 
 # An alias for whitespace
 emptyspace = chr(32)
@@ -452,7 +452,40 @@ for (x, y), symbol in annealing_dict_w_holes.items():
 annealing_dict_w_holes.update(mixed_case_dict)
 
 
-def get_parts(datastring: str) -> namedtuple:
+@dataclass
+class DseqParts:
+    sticky_left5: str
+    sticky_left3: str
+    middle: str
+    sticky_right3: str
+    sticky_right5: str
+    single_watson: str
+    single_crick: str
+
+    def __iter__(self):
+        """
+        Allow unpacking DseqParts instances.
+        >>> from pydna.alphabet import get_parts
+        >>> sticky_left5, sticky_left3, middle, sticky_right3, sticky_right5, single_watson, single_crick = get_parts("eeATCGuggCCGgg")
+        >>> sticky_left5
+        'ee'
+        >>> middle
+        'ATCGuggCCGgg'
+        """
+        return iter(
+            (
+                self.sticky_left5,
+                self.sticky_left3,
+                self.middle,
+                self.sticky_right3,
+                self.sticky_right5,
+                self.single_watson,
+                self.single_crick,
+            )
+        )
+
+
+def get_parts(datastring: str) -> DseqParts:
     """
     A namedtuple containing the parts of a dsDNA sequence.
 
@@ -552,19 +585,15 @@ def get_parts(datastring: str) -> namedtuple:
 
     result = ["" if e is None else e for e in result]
 
-    field_names = (
-        "sticky_left5",
-        "sticky_left3",
-        "middle",
-        "sticky_right3",
-        "sticky_right5",
-        "single_watson",
-        "single_crick",
+    return DseqParts(
+        sticky_left5=result[0],
+        sticky_left3=result[1],
+        middle=result[2],
+        sticky_right3=result[3],
+        sticky_right5=result[4],
+        single_watson=result[5],
+        single_crick=result[6],
     )
-
-    fragment = namedtuple("fragment", field_names)
-
-    return fragment(*result)
 
 
 def dsbreaks(data: str):
