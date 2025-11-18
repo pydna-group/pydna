@@ -1868,7 +1868,7 @@ def test_assemble_function():
     assembly_plan = [
         (1, 2, loc_end, loc_start),
     ]
-    # FIXME: The assert below fails in the Sanity check on line 770 in assembly2, but gives the expected result.
+
     assert (fragments[0] + fragments[1]).seq == assembly.assemble(
         fragments, assembly_plan
     ).seq
@@ -1878,7 +1878,7 @@ def test_assemble_function():
         (1, 2, loc_end, loc_start),
         (2, 1, loc_end, loc_start),
     ]
-    # FIXME: The assert below fails in the Sanity check on line 770 in assembly2, but gives the expected result.
+
     assert (fragments[0] + fragments[1]).looped().seq == assembly.assemble(
         fragments, assembly_plan
     ).seq
@@ -2156,9 +2156,7 @@ def test_ligation_assembly():
 
     # Blunt ligation combined with sticky end
     fragments = Dseqrecord("AAAGAATTCAAA").cut(EcoRI)
-    result = assembly.ligation_assembly(
-        fragments, allow_blunt=True
-    )  # FIXME: The assert below fails in the Sanity check on line 770 in assembly2, but gives the expected result.
+    result = assembly.ligation_assembly(fragments, allow_blunt=True)
     result_str = [str(x.seq) for x in result]
     assert sorted(result_str) == sorted(["AAAGAATTCAAA"])
     assert result[0].circular
@@ -2180,9 +2178,7 @@ def test_blunt_assembly():
         use_fragment_order=False,
     )
 
-    assert dseqrecord_list_to_dseq_list(asm.assemble_linear()) == [
-        (b + a).seq
-    ]  # FIXME: The assert below fails in the Sanity check on line 770 in assembly2, but gives the expected result.
+    assert dseqrecord_list_to_dseq_list(asm.assemble_linear()) == [(b + a).seq]
     assert asm.assemble_circular() == []
 
     # Circular assembly
