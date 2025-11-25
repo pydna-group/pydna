@@ -24,7 +24,7 @@ from pydantic_core import core_schema
 from contextlib import contextmanager
 from threading import local
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_validator
 
 from opencloning_linkml.datamodel import (
     CloningStrategy as _BaseCloningStrategy,
@@ -272,6 +272,12 @@ class Source(ConfiguredBaseModel):
             "input": self.input_models(),
         }
 
+    @field_serializer("input")
+    def serialize_input(
+        self, input: list[Union[SourceInput, AssemblyFragment]]
+    ) -> list[_SourceInput | _AssemblyFragment]:
+        return [fragment.to_pydantic_model() for fragment in input]
+
     def to_pydantic_model(self, seq_id: int):
         kwargs = self._kwargs(seq_id)
         return self.TARGET_MODEL(**kwargs)
@@ -484,6 +490,12 @@ class SequenceCutSource(Source):
     ENZYME_MODEL: ClassVar[Type[_RestrictionEnzymeDigestionSource]] = (
         _RestrictionEnzymeDigestionSource
     )
+
+    @field_serializer("left_edge", "right_edge")
+    def serialize_cut_site(
+        self, cut_site: CutSiteType | None
+    ) -> _RestrictionSequenceCut | _SequenceCut | None:
+        return self._cutsite_to_model(cut_site)
 
     @staticmethod
     def _cutsite_to_model(cut_site: CutSiteType | None):
