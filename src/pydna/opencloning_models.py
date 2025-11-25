@@ -28,6 +28,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_valid
 
 from opencloning_linkml.datamodel import (
     CloningStrategy as _BaseCloningStrategy,
+    DatabaseSource as _DatabaseSource,
     Primer as _PrimerModel,
     Source as _Source,
     TextFileSequence as _TextFileSequence,
@@ -47,6 +48,7 @@ from opencloning_linkml.datamodel import (
     LigationSource as _LigationSource,
     GatewaySource as _GatewaySource,
     GatewayReactionType,
+    AnnotationTool,
     HomologousRecombinationSource as _HomologousRecombinationSource,
     CreLoxRecombinationSource as _CreLoxRecombinationSource,
     PCRSource as _PCRSource,
@@ -55,10 +57,20 @@ from opencloning_linkml.datamodel import (
     UploadedFileSource as _UploadedFileSource,
     AddgeneIdSource as _AddgeneIdSource,
     AddgeneSequenceType,
+    BenchlingUrlSource as _BenchlingUrlSource,
+    SnapGenePlasmidSource as _SnapGenePlasmidSource,
+    EuroscarfSource as _EuroscarfSource,
     WekWikGeneIdSource as _WekWikGeneIdSource,
     SEVASource as _SEVASource,
     IGEMSource as _IGEMSource,
     OpenDNACollectionsSource as _OpenDNACollectionsSource,
+    GenomeCoordinatesSource as _GenomeCoordinatesSource,
+    OligoHybridizationSource as _OligoHybridizationSource,
+    PolymeraseExtensionSource as _PolymeraseExtensionSource,
+    AnnotationSource as _AnnotationSource,
+    AnnotationReport as _AnnotationReport,
+    PlannotateAnnotationReport as _PlannotateAnnotationReport,
+    ReverseComplementSource as _ReverseComplementSource,
 )
 from Bio.SeqFeature import Location, LocationParserError
 from Bio.Restriction.Restriction import AbstractCut
@@ -86,8 +98,9 @@ def id_mode(use_python_internal_id: bool = True):
     mapping them to the OpenCloning data model. If ``use_python_internal_id`` is True,
     the built-in python ``id()`` function is used to assign ids to objects. That function
     produces a unique integer for each object in python, so it's guaranteed to be unique.
-    If ``use_python_internal_id`` is False, the object's ``.id`` attribute (must be a string integer)
-    is used to assign ids to objects. This is useful when the objects already have meaningful ids,
+    If ``use_python_internal_id`` is False, the object's ``.id`` attribute
+    (must be a string integer) is used to assign ids to objects. This is useful
+    when the objects already have meaningful ids,
     and you want to keep references to them in ``SourceInput`` objects (which sequences and
     primers are used in a particular source).
 
@@ -282,7 +295,8 @@ class Source(ConfiguredBaseModel):
 
     def to_unserialized_dict(self):
         """
-        Converts into a dictionary without serializing the fields, this is used to be able to recast.
+        Converts into a dictionary without serializing the fields.
+        This is used to be able to recast.
         """
         return {field: getattr(self, field) for field in self.__pydantic_fields__}
 
@@ -349,6 +363,12 @@ class AssemblySource(Source):
         return AssemblySource(input=input_list, circular=is_circular)
 
 
+class DatabaseSource(Source):
+    TARGET_MODEL: ClassVar[Type[_DatabaseSource]] = _DatabaseSource
+
+    database_id: int
+
+
 class UploadedFileSource(Source):
 
     TARGET_MODEL: ClassVar[Type[_UploadedFileSource]] = _UploadedFileSource
@@ -368,7 +388,10 @@ class RepositoryIdSource(Source):
 
 
 class RepositoryIdSourceWithSequenceFileUrl(RepositoryIdSource):
-    """Auxiliary class to avoid code duplication in the sources that have a sequence file url."""
+    """
+    Auxiliary class to avoid code duplication in the sources that have
+    a sequence file url.
+    """
 
     sequence_file_url: Optional[str] = None
 
@@ -378,6 +401,24 @@ class AddgeneIdSource(RepositoryIdSourceWithSequenceFileUrl):
 
     addgene_sequence_type: Optional[AddgeneSequenceType] = None
     repository_name: str = "addgene"
+
+
+class BenchlingUrlSource(RepositoryIdSource):
+    TARGET_MODEL: ClassVar[Type[_BenchlingUrlSource]] = _BenchlingUrlSource
+
+    repository_name: str = "benchling"
+
+
+class SnapGenePlasmidSource(RepositoryIdSource):
+    TARGET_MODEL: ClassVar[Type[_SnapGenePlasmidSource]] = _SnapGenePlasmidSource
+
+    repository_name: str = "snapgene"
+
+
+class EuroscarfSource(RepositoryIdSource):
+    TARGET_MODEL: ClassVar[Type[_EuroscarfSource]] = _EuroscarfSource
+
+    repository_name: str = "euroscarf"
 
 
 class WekWikGeneIdSource(RepositoryIdSourceWithSequenceFileUrl):
@@ -398,6 +439,18 @@ class IGEMSource(RepositoryIdSourceWithSequenceFileUrl):
 class OpenDNACollectionsSource(RepositoryIdSourceWithSequenceFileUrl):
     TARGET_MODEL: ClassVar[Type[_OpenDNACollectionsSource]] = _OpenDNACollectionsSource
     repository_name: str = "open_dna_collections"
+
+
+class GenomeCoordinatesSource(Source):
+    TARGET_MODEL: ClassVar[Type[_GenomeCoordinatesSource]] = _GenomeCoordinatesSource
+
+    assembly_accession: Optional[str] = None
+    sequence_accession: str
+    locus_tag: Optional[str] = None
+    gene_id: Optional[int] = None
+    start: int
+    end: int
+    strand: int
 
 
 class RestrictionAndLigationSource(AssemblySource):
@@ -510,6 +563,32 @@ class SequenceCutSource(Source):
             return edge is not None and isinstance(edge[1], AbstractCut)
 
         return has_enzyme(self.left_edge) or has_enzyme(self.right_edge)
+
+
+class OligoHybridizationSource(Source):
+    TARGET_MODEL: ClassVar[Type[_OligoHybridizationSource]] = _OligoHybridizationSource
+
+    overhang_crick_3prime: Optional[int] = None
+
+
+class PolymeraseExtensionSource(Source):
+    TARGET_MODEL: ClassVar[Type[_PolymeraseExtensionSource]] = (
+        _PolymeraseExtensionSource
+    )
+
+
+class AnnotationSource(Source):
+    TARGET_MODEL: ClassVar[Type[_AnnotationSource]] = _AnnotationSource
+
+    annotation_tool: AnnotationTool
+    annotation_tool_version: Optional[str] = None
+    annotation_report: Optional[
+        list[_AnnotationReport | _PlannotateAnnotationReport]
+    ] = None
+
+
+class ReverseComplementSource(Source):
+    TARGET_MODEL: ClassVar[Type[_ReverseComplementSource]] = _ReverseComplementSource
 
 
 class CloningStrategy(_BaseCloningStrategy):
