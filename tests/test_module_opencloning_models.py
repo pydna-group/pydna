@@ -284,13 +284,13 @@ class SourceTest(TestCase):
             ╙── product (Dseqrecord(-18))
                 └─╼ LigationSource
                     ├─╼ c (Dseqrecord(-7))
-                    │   └─╼ Source
-                    │       └─╼ a (Dseqrecord(-18)) ╾ Source, Source
+                    │   └─╼ RestrictionEnzymeDigestionSource
+                    │       └─╼ a (Dseqrecord(-18)) ╾ RestrictionEnzymeDigestionSource, RestrictionEnzymeDigestionSource
                     ├─╼ d (Dseqrecord(-12))
-                    │   └─╼ Source
+                    │   └─╼ RestrictionEnzymeDigestionSource
                     │       └─╼  ...
                     └─╼ e (Dseqrecord(-7))
-                        └─╼ Source
+                        └─╼ RestrictionEnzymeDigestionSource
                             └─╼  ...
             """
             ).strip(),
@@ -313,7 +313,7 @@ class SourceTest(TestCase):
             textwrap.dedent(
                 """
             ╙── custom_cut_product (Dseqrecord(-7))
-                └─╼ Source
+                └─╼ SequenceCutSource
                     └─╼ name (Dseqrecord(-18))
             """
             ).strip(),
