@@ -51,8 +51,14 @@ from opencloning_linkml.datamodel import (
     CreLoxRecombinationSource as _CreLoxRecombinationSource,
     PCRSource as _PCRSource,
     CRISPRSource as _CRISPRSource,
-    RepositoryIdSource as _RepositoryIdSource,  # here!
+    RepositoryIdSource as _RepositoryIdSource,
     UploadedFileSource as _UploadedFileSource,
+    AddgeneIdSource as _AddgeneIdSource,
+    AddgeneSequenceType,
+    WekWikGeneIdSource as _WekWikGeneIdSource,
+    SEVASource as _SEVASource,
+    IGEMSource as _IGEMSource,
+    OpenDNACollectionsSource as _OpenDNACollectionsSource,
 )
 from Bio.SeqFeature import Location, LocationParserError
 from Bio.Restriction.Restriction import AbstractCut
@@ -355,9 +361,43 @@ class UploadedFileSource(Source):
 class RepositoryIdSource(Source):
 
     TARGET_MODEL: ClassVar[Type[_RepositoryIdSource]] = _RepositoryIdSource
+
     repository_id: str
     repository_name: str
     location: Location
+
+
+class RepositoryIdSourceWithSequenceFileUrl(RepositoryIdSource):
+    """Auxiliary class to avoid code duplication in the sources that have a sequence file url."""
+
+    sequence_file_url: Optional[str] = None
+
+
+class AddgeneIdSource(RepositoryIdSourceWithSequenceFileUrl):
+    TARGET_MODEL: ClassVar[Type[_AddgeneIdSource]] = _AddgeneIdSource
+
+    addgene_sequence_type: Optional[AddgeneSequenceType] = None
+    repository_name: str = "addgene"
+
+
+class WekWikGeneIdSource(RepositoryIdSourceWithSequenceFileUrl):
+    TARGET_MODEL: ClassVar[Type[_WekWikGeneIdSource]] = _WekWikGeneIdSource
+    repository_name: str = "wekwikgene"
+
+
+class SEVASource(RepositoryIdSourceWithSequenceFileUrl):
+    TARGET_MODEL: ClassVar[Type[_SEVASource]] = _SEVASource
+    repository_name: str = "seva"
+
+
+class IGEMSource(RepositoryIdSourceWithSequenceFileUrl):
+    TARGET_MODEL: ClassVar[Type[_IGEMSource]] = _IGEMSource
+    repository_name: str = "igem"
+
+
+class OpenDNACollectionsSource(RepositoryIdSourceWithSequenceFileUrl):
+    TARGET_MODEL: ClassVar[Type[_OpenDNACollectionsSource]] = _OpenDNACollectionsSource
+    repository_name: str = "open_dna_collections"
 
 
 class RestrictionAndLigationSource(AssemblySource):
