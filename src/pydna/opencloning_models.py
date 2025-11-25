@@ -384,7 +384,7 @@ class RepositoryIdSource(Source):
 
     repository_id: str
     repository_name: str
-    location: Location
+    # location: Location
 
 
 class RepositoryIdSourceWithSequenceFileUrl(RepositoryIdSource):

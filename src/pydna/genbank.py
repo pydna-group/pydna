@@ -17,7 +17,8 @@ from pydna.genbankrecord import GenbankRecord as _GenbankRecord
 from pydna.readers import read as _read
 
 from Bio import Entrez as _Entrez
-from Bio.SeqFeature import SimpleLocation
+
+# from Bio.SeqFeature import SimpleLocation
 from typing import Literal as _Literal, Optional as _Optional
 import re as _re
 import os as _os
@@ -179,7 +180,7 @@ class Genbank:
         result.source = RepositoryIdSource(
             repository_id=item,
             repository_name="genbank",
-            location=SimpleLocation(seq_start, seq_stop, strand),
+            # location=SimpleLocation(seq_start, seq_stop, strand),
         )
         return result
 
