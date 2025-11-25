@@ -16,6 +16,7 @@ from pydna.opencloning_models import (
     get_id,
 )
 from pydna.primer import Primer
+from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization
 from opencloning_linkml.datamodel import (
     AssemblySource as _AssemblySource,
     AssemblyFragment as _AssemblyFragment,
@@ -135,6 +136,17 @@ seq2 = Dseqrecord("aaa" + attP1 + "ccc")
 
 product_gateway_BP, *_ = gateway_assembly([seq1, seq2], "BP")
 product_gateway_BP.name = "product_gateway_BP"
+
+## Oligo hybridization
+
+fwd_primer = Primer("ATGGC", name="fwd_primer")
+rvs_primer = Primer("GCCAT", name="rvs_primer")
+product_oligo_hybridization, *rest = oligonucleotide_hybridization(
+    fwd_primer, rvs_primer, 3
+)
+
+product_oligo_hybridization.name = "product_oligo_hybridization"
+
 
 # ========================================================================================
 
@@ -326,6 +338,17 @@ class SourceTest(TestCase):
                 └─╼ GatewaySource
                     ├─╼ name (Dseqrecord(-31))
                     └─╼ name (Dseqrecord(-238))
+            """
+            ).strip(),
+        )
+        self.assertEqual(
+            product_oligo_hybridization.history(),
+            textwrap.dedent(
+                """
+            ╙── product_oligo_hybridization (Dseqrecord(-5))
+                └─╼ OligoHybridizationSource
+                    ├─╼ fwd_primer (id 5-mer:5'-ATGGC-3')
+                    └─╼ rvs_primer (id 5-mer:5'-GCCAT-3')
             """
             ).strip(),
         )
