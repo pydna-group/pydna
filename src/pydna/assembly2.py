@@ -2012,7 +2012,7 @@ def _recast_sources(
     """
     for prod in products:
         prod.source = source_cls(
-            **prod.source.model_dump(),
+            **prod.source.to_unserialized_dict(),
             **extra_fields,
         )
     return products

@@ -263,15 +263,6 @@ class Source(ConfiguredBaseModel):
     input: list[Union[SourceInput, AssemblyFragment]] = Field(default_factory=list)
     TARGET_MODEL: ClassVar[Type[_Source]] = _Source
 
-    def input_models(self):
-        return [fragment.to_pydantic_model() for fragment in self.input]
-
-    def _kwargs(self, seq_id: int) -> dict:
-        return {
-            "id": seq_id,
-            "input": self.input_models(),
-        }
-
     @field_serializer("input")
     def serialize_input(
         self, input: list[Union[SourceInput, AssemblyFragment]]
@@ -279,8 +270,15 @@ class Source(ConfiguredBaseModel):
         return [fragment.to_pydantic_model() for fragment in input]
 
     def to_pydantic_model(self, seq_id: int):
-        kwargs = self._kwargs(seq_id)
-        return self.TARGET_MODEL(**kwargs)
+        model_dict = self.model_dump()
+        model_dict["id"] = seq_id
+        return self.TARGET_MODEL(**model_dict)
+
+    def to_unserialized_dict(self):
+        """
+        Converts into a dictionary without serializing the fields, this is used to be able to recast.
+        """
+        return {field: getattr(self, field) for field in self.__pydantic_fields__}
 
     def add_to_history_graph(self, history_graph: nx.DiGraph, seq: "Dseqrecord"):
         """
@@ -323,15 +321,6 @@ class AssemblySource(Source):
 
     TARGET_MODEL: ClassVar[Type[_AssemblySource]] = _AssemblySource
 
-    def _kwargs(self, seq_id: int) -> dict:
-        return {
-            **super()._kwargs(seq_id),
-            "circular": self.circular,
-        }
-
-    def to_pydantic_model(self, seq_id: int):
-        return self.TARGET_MODEL(**self._kwargs(seq_id))
-
     @classmethod
     def from_subfragment_representation(
         cls,
@@ -362,26 +351,6 @@ class UploadedFileSource(Source):
     index_in_file: int
     sequence_file_format: str
 
-    # "id": 1,
-    # "type": "UploadedFileSource",
-    # "output_name": null,
-    # "database_id": null,
-    # "input": [],
-    # "sequence_file_format": "fasta",
-    # "file_name": "seq2.fasta",
-    # "index_in_file": 0,
-    # "circularize": false,
-    # "coordinates": null,
-    # "output": 1
-
-    def _kwargs(self, seq_id: int) -> dict:
-        return {
-            **super()._kwargs(seq_id),
-            "file_name": self.file_name,
-            "index_in_file": self.index_in_file,
-            "sequence_file_format": self.sequence_file_format,
-        }
-
 
 class RepositoryIdSource(Source):
 
@@ -389,21 +358,6 @@ class RepositoryIdSource(Source):
     repository_id: str
     repository_name: str
     location: Location
-
-    # "id": 2,
-    # "type": "RepositoryIdSource",
-    # "output_name": null,
-    # "database_id": null,
-    # "input": [],
-    # "repository_id": "NM_001018957.2",
-    # "repository_name": "genbank"
-
-    def _kwargs(self, seq_id: int) -> dict:
-        return {
-            **super()._kwargs(seq_id),
-            "repository_id": self.repository_id,
-            "repository_name": self.repository_name,
-        }
 
 
 class RestrictionAndLigationSource(AssemblySource):
@@ -413,11 +367,11 @@ class RestrictionAndLigationSource(AssemblySource):
         _RestrictionAndLigationSource
     )
 
-    def _kwargs(self, seq_id: int) -> dict:
-        return {
-            **super()._kwargs(seq_id),
-            "restriction_enzymes": [str(enzyme) for enzyme in self.restriction_enzymes],
-        }
+    @field_serializer("restriction_enzymes")
+    def serialize_restriction_enzymes(
+        self, restriction_enzymes: list[AbstractCut]
+    ) -> list[str]:
+        return [str(enzyme) for enzyme in restriction_enzymes]
 
 
 class GibsonAssemblySource(AssemblySource):
@@ -447,13 +401,6 @@ class GatewaySource(AssemblySource):
     reaction_type: GatewayReactionType
     greedy: bool = Field(default=False)
 
-    def _kwargs(self, seq_id: int) -> dict:
-        return {
-            **super()._kwargs(seq_id),
-            "reaction_type": self.reaction_type,
-            "greedy": self.greedy,
-        }
-
 
 class HomologousRecombinationSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_HomologousRecombinationSource]] = (
@@ -475,21 +422,18 @@ class PCRSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_PCRSource]] = _PCRSource
     add_primer_features: bool = Field(default=False)
 
-    def _kwargs(self, seq_id: int) -> dict:
-        return {
-            **super()._kwargs(seq_id),
-            "add_primer_features": self.add_primer_features,
-        }
-
 
 class SequenceCutSource(Source):
     left_edge: CutSiteType | None
     right_edge: CutSiteType | None
 
-    BASE_MODEL: ClassVar[Type[_SequenceCutSource]] = _SequenceCutSource
-    ENZYME_MODEL: ClassVar[Type[_RestrictionEnzymeDigestionSource]] = (
-        _RestrictionEnzymeDigestionSource
-    )
+    @property
+    def TARGET_MODEL(self):
+        return (
+            _RestrictionEnzymeDigestionSource
+            if self._has_enzyme()
+            else _SequenceCutSource
+        )
 
     @field_serializer("left_edge", "right_edge")
     def serialize_cut_site(
@@ -526,19 +470,6 @@ class SequenceCutSource(Source):
             return edge is not None and isinstance(edge[1], AbstractCut)
 
         return has_enzyme(self.left_edge) or has_enzyme(self.right_edge)
-
-    def _target_model(self):
-        return self.ENZYME_MODEL if self._has_enzyme() else self.BASE_MODEL
-
-    def _kwargs(self, seq_id: int) -> dict:
-        return {
-            **super()._kwargs(seq_id),
-            "left_edge": self._cutsite_to_model(self.left_edge),
-            "right_edge": self._cutsite_to_model(self.right_edge),
-        }
-
-    def to_pydantic_model(self, seq_id: int):
-        return self._target_model()(**self._kwargs(seq_id))
 
 
 class CloningStrategy(_BaseCloningStrategy):
