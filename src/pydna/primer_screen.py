@@ -4,18 +4,18 @@
 Fast primer screening
 ---------------------
 
-This module is useful for PCR diagnostic purposes provided a list of primers.
-This list can be a list of Primer objects returned by the pydna.parsers.parse_primers
-function or any list of objects with a seq property such as pydna.seqrecord.SeqRecord
-or Bio.SeqRecord.SeqRecord.
+This module provides fast primer screening using the Aho–Corasick string-search
+algorithm. It is useful for PCR diagnostic purposes when given a list of primers.
+and a single sequence or list of sequences to analyze.
 
-This module use the Aho–Corasick algorithm which is an efficient string-searching
-algorithm for simultaneously finding all occurrences of a finite set of substrings
-in a text.
+The primer list can consist of `Primer` objects returned by :func:`pydna.parsers.parse_primers`
+or any objects with a ``seq`` attribute, such as :class:`pydna.seqrecord.SeqRecord`
+or :class:`Bio.SeqRecord.SeqRecord`.
 
-If the same primer list is searched repeatedly, making an automaton for the
-list leads to faster searches. See :func:`make_automaton` for how to make, save
-and load an automaton.
+The Aho–Corasick algorithm efficiently finds all occurrences of a set of sequences
+within a larger text. If the same primer list is used repeatedly, creating an
+automaton greatly speeds up repeated searches. See :func:`make_automaton` for
+information on creating, saving, and loading such automatons.
 
 Functions
 ---------
@@ -27,16 +27,18 @@ Functions
 - :func:`diff_primer_pairs`
 - :func:`diff_primer_triplets`
 
+References
+----------
 
-https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm
+Aho–Corasick algorithm:
+    https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm
 
-This module uses the module pyahocorasick.
-
-- Documantation https://pyahocorasick.readthedocs.io/en/latest/
-- GitHub https://github.com/WojciechMula/pyahocorasick/
-- Pypi https://pypi.python.org/pypi/pyahocorasick/
-
+This module uses `pyahocorasick`:
+    Documentation: https://pyahocorasick.readthedocs.io/en/latest
+    GitHub: https://github.com/WojciechMula/pyahocorasick
+    PyPI: https://pypi.python.org/pypi/pyahocorasick
 """
+
 
 # TODO: circular templates
 
@@ -44,37 +46,40 @@ from itertools import product
 from itertools import combinations
 from itertools import pairwise
 from collections import defaultdict
+from collections import Counter
+from collections import namedtuple
 from collections.abc import Callable
+from collections.abc import Sequence
 
 from pydna.dseqrecord import Dseqrecord
 from pydna.primer import Primer
 
 import ahocorasick
 
-_IUPAC_TO_DNA = {
-    "A": "A",
-    "C": "C",
-    "G": "G",
-    "T": "T",
-    "U": "T",
-    "R": "AG",  # puRine
-    "Y": "CT",  # pYrimidine
-    "S": "GC",  # Strong (3 H-bonds)
-    "W": "AT",  # Weak (2 H-bonds)
-    "K": "GT",  # Keto
-    "M": "AC",  # aMino
-    "B": "CGT",  # not A
-    "D": "AGT",  # not C
-    "H": "ACT",  # not G
-    "V": "ACG",  # not T
-    "N": "ACGT",  # any
-    "X": "",
-}
+import warnings
+
+warnings.warn(
+    "The primer_screen module is experimental "
+    "and not yet extensively tested. "
+    "api may change in future versions.",
+    category=FutureWarning,
+)
+
+amplicon_tuple = namedtuple(
+    typename="amplicon_tuple", field_names="fp, rp, fposition, rposition, size"
+)
+primer_tuple = namedtuple(typename="primer_tuple", field_names="seq, fp, rp, size")
 
 
 def closest_diff(nums: list[int]) -> int:
     """
-    The smallest difference bweteen two integers in a list.
+    Smallest difference between two consecitive integers in a sorted list.
+
+    Given a list of integers ex. 1, 5, 7, 11, 19, return the smallest
+    absolute difference, in this case 7-5 = 2.
+
+    >>> closest_diff([1, 5, 7, 11, 19])
+    2
 
 
     Parameters
@@ -110,46 +115,79 @@ def closest_diff(nums: list[int]) -> int:
 
 def expand_iupac_to_dna(seq: str) -> list[str]:
     """
-    Expand an extended-IUPAC DNA string.
+    Expand an extended IUPAC DNA string to unambiguous IUPAC nucleotide alphabet.
 
-    Expamds a string containing extended-IUPAC code (ACGTURYSWKMBDHVN)
-    into all possibla DNA strings using only AGCT. Returns a list of strings.
+    Expands a string containing extended-IUPAC code (ACGTURYSWKMBDHVN) including
+    U for uracil into all possibla DNA strings using only AGCT.
+
+    Returns a list of strings.
 
     Example:
-        expand_iupac_to_dna("ATNG") -> ["ATAG","ATCG","ATGG","ATTG"]
+
+    >>> expand_iupac_to_dna("ATNG")
+    ['ATAG', 'ATCG', 'ATGG', 'ATTG']
+    >>> expand_iupac_to_dna("ACGTURYSWKMBDHVN")
+    >>> len(x)
+    20736
+
 
     Parameters
     ----------
     seq : str
-        DESCRIPTION.
+        String containing extended IUPAC DNA.
 
     Returns
     -------
     list[str]
-        DESCRIPTION.
+        List of strings in unambiguous IUPAC nucleotide alphabet.
 
     """
-
+    _IUPAC_TO_DNA = {
+        "A": "A",
+        "C": "C",
+        "G": "G",
+        "T": "T",
+        "U": "T",
+        "R": "AG",  # puRine
+        "Y": "CT",  # pYrimidine
+        "S": "GC",  # Strong (3 H-bonds)
+        "W": "AT",  # Weak (2 H-bonds)
+        "K": "GT",  # Keto
+        "M": "AC",  # aMino
+        "B": "CGT",  # not A
+        "D": "AGT",  # not C
+        "H": "ACT",  # not G
+        "V": "ACG",  # not T
+        "N": "ACGT",  # any
+        "X": "",
+    }
     choices_per_pos = [_IUPAC_TO_DNA[ch] for ch in seq.upper()]
     # Cartesian product of all position choices
     return ["".join(tup) for tup in product(*choices_per_pos)]
 
 
 def make_automaton(
-    primer_list: tuple[Primer] | list[Primer], limit: str = 16
+    primer_list: Sequence[Primer | None], limit: str = 16
 ) -> ahocorasick.Automaton:
     """
-    An Aho-Corasick automaton for a list of primers.
+    Aho-Corasick automaton for a list of primers.
 
     An automaton `here <https://github.com/WojciechMula/pyahocorasick>`__ can
     be made prior to primer screening for a list of Primer
     objects for faster primer search.
 
     The automaton can be used as an optional argument for most functions
-    on this list to speed up primer search.
+    in this module.
 
-    The automaton processes the 3' part of each primer up to `limit`. It
-    has to be rebuilt if a different limit is needed.
+    The primer list can contain None, this can be used to remove primers
+    from the primer_list for the automaton, while keeping the original index
+    for each primer.
+
+    The limit is the part of the primer used to find annealing positions.
+    The automaton processes the uppercase 3' part of each primer up to `limit`.
+    It has to be rebuilt if a different limit is needed.
+
+    The primers can contain ambigous bases from the extended IUPAC DNA alphabet.
 
     The automaton can be saved and loaded like this (from the pyahocorasick docs):
 
@@ -192,9 +230,12 @@ def make_automaton(
     suffix_dict = defaultdict(list)
 
     for i, s in enumerate(primer_list):
-        # filter for primers that evaluate to False such as None or ""
+        # filter for primers that evaluate to False such as None
+        # or primers that are too short.
         if not s or (len(s) < limit):
             continue
+        # Primers may share suffix, so primer indices pertaining to a
+        # certain suffix are collected together.
         for footprint in expand_iupac_to_dna(str(s.seq)[-limit:].upper()):
             suffix_dict[footprint].append(i)
 
@@ -227,13 +268,14 @@ def callback(a: int, b: int) -> bool:
         True if successful, False otherwise.
 
     """
-    # The difference has to be 20% of the size of the larger fragment
+    # The lenght difference has to be 20%
+    # of the size of the larger fragment
     return abs(a - b) >= 0.2 * max((a, b))
 
 
 def forward_primers(
     seq: Dseqrecord,
-    primer_list: list[Primer] | tuple[Primer],
+    primer_list: Sequence[Primer | None],
     limit: int = 16,
     automaton: ahocorasick.Automaton = None,
 ) -> dict[int, list[int]]:
@@ -251,24 +293,26 @@ def forward_primers(
         { primer_A_index : [location1, location2, ...]
           primer_B_index : [location1, location2, ...] }
 
-    Where a key is the index for a primer in `primer_list` and the
-    value is a list of locations where the primer binds.
+    Where a key such as primer_A_index (integer) is the index for a primer
+    in `primer_list` and the value is a list of locations (integers) where
+    the primer binds.
 
     The concept of location is the same as used in :mod:`pydna.primer`.
-    The forward primer below anneals at position 14 on the template.
+    The forward primer in the figure below anneals at position 14 on the
+    template.
 
     ::
 
-                        location = 14
-                        |
-                        |
-        primer = 5-tagtcg-3
-                   ||||||
-        5-gtcatgatctagtcgatgtta-3 = seq
-        3-cagtactagatcagctacaat-5
+         5-gtcatgatctagtcgatgtta-3
+          |||||||||||||||||||||
 
-          012345678911111111112 position
-                    01234567890
+                 5'-tagtcg-3' = forward primer, location = 14
+                    ||||||
+          |||||||||||||||||||||
+         3-cagtactagatcagctacaat-5
+                         |
+           012345678911111111112 position
+                     01234567890
 
 
 
@@ -330,23 +374,24 @@ def reverse_primers(
         { primer_A_index : [location1, location2, ...]
           primer_B_index : [location1, location2, ...] }
 
-    Where a key is the index for a primer in `primer_list` and the
-    value is a list of locations where the primer binds.
+    Where a key such as primer_A_index (integer) is the index for a primer
+    in `primer_list` and the value is a list of locations (integers) where
+    the primer binds.
 
     The concept of location is the same as used in :mod:`pydna.primer`.
     The reverse primer below anneals at position 9.
 
     ::
 
-                   location = 9
-                   |
-                   |
-                 3-atcagc-5 = primer
+        5-gtcatgatctagtcgatgtta-3
+          |||||||||||||||||||||
                    ||||||
-        5-gtcatgatctagtcgatgtta-3 = seq
-        3-cagtactagatcagctacaat-5
+                 3-atcagc-5 = reverse primer, location = 9
 
-          012345678911111111112 p   osition
+          |||||||||||||||||||||
+        3-cagtactagatcagctacaat-5
+                   |
+          012345678911111111112 position
                     01234567890
 
 
@@ -398,9 +443,9 @@ def primer_pairs(
     long: int = 2000,
     limit: int = 16,
     automaton: ahocorasick.Automaton = None,
-) -> list[tuple[int, int, int, int, int]]:
+) -> list[amplicon_tuple[int, int, int, int, int]]:
     """
-    Primer pairs that might form PCR products larger than `short` and smaller
+    Primer pairs that form PCR products larger than `short` and smaller
     than `long`.
 
     The PCR product size includes the PCR primers. Only unique primer pairs
@@ -408,21 +453,23 @@ def primer_pairs(
     bind in one position on the template each.
 
     If you suspect that primers binds on multiple locations, use the
-    forward_primer or reverse_primer functions.
+    :func:forward_primer or :func:reverse_primer functions.
 
-    The function returns a list of 5-tuples of integers and and integers with
-    this form:
+    The function returns a list of a named flat 5-tuples of integers and
+    and integers with this form:
 
     ::
 
         [
          ((index_fp1, index_rp1, position_fp1, position_rp1, size1),
-         ((index_fp2, index_rp2, position_fp2, position_rp2, size2),]
+         ((index_fp2, index_rp2, position_fp2, position_rp2, size2),
+          ]
 
 
-    The indices are the primer_list indices and positions are the positions of
-    the prinmers as described in forward_primer and reverse_primer functions.
-    The size includes the length of each primer, so it is the true total lenght
+    The indices are the `primer_list` indices and positions are the positions of
+    the prinmers as described in :func:forward_primer and :func:reverse_primer
+    functions.
+    The size includes the length of each primer, so it is the true total length
     of the PCR product.
 
     Parameters
@@ -472,9 +519,11 @@ def primer_pairs(
 
     for fp, fposition in fps.items():
         for rp, rposition in rps.items():
+            # We calulate the size of a potential PCR product
             size = len(primer_list[fp]) + rposition - fposition + len(primer_list[rp])
+            # If the size falls within long and short, the data is kept.
             if short <= size <= long and fposition <= rposition:
-                products.append((fp, rp, fposition, rposition, size))
+                products.append(amplicon_tuple(fp, rp, fposition, rposition, size))
     return products
 
 
@@ -484,20 +533,21 @@ def flanking_primer_pairs(
     target: tuple[int, int],
     limit: int = 16,
     automaton: ahocorasick.Automaton = None,
-) -> tuple[tuple[int, int, int, int, int]]:
+) -> list[amplicon_tuple[int, int, int, int, int]]:
     """
-    Primer pairs that flank a target position (begin - end). This means that
+    Primer pairs that flank a target position (begin..end). This means that
     forward primers have to bind before begin and reverse primers have to bind
     after end.
 
-    The function returns a tuple of 5-tuples of integers identical to the ones
-    returned from the primer_pair function.
+    The function returns a list of the same named flat 5-tuples of integers returned
+    from the :func:primer_pair function.
 
     ::
 
         [
          (index_fp1, position_fp1, index_rp1, position_rp1, size1),
-         (index_fp2, position_fp2, index_rp2, position_rp2, size2), ]
+         (index_fp2, position_fp2, index_rp2, position_rp2, size2),
+         ]
 
 
     Parameters
@@ -528,31 +578,23 @@ def flanking_primer_pairs(
 
     begin, end = target
 
-    # Unique forward primers before target are collected
-    fps = {
-        fp: pos[0]
-        for fp, pos in forward_primers(
-            seq, primer_list, limit=limit, automaton=automaton
-        ).items()
-        if len(pos) == 1 and pos[0] < begin
-    }
+    assert begin < end, "begin has to be smaller than end."
 
-    # Unique reverse primers after target are collected
-    rps = {
-        rp: pos[0]
-        for rp, pos in reverse_primers(
-            seq, primer_list, limit=limit, automaton=automaton
-        ).items()
-        if len(pos) == 1 and pos[0] > end
-    }
-
+    amplicons = primer_pairs(
+        seq,
+        primer_list,
+        short=end - begin,
+        long=len(seq),
+        limit=limit,
+        automaton=automaton,
+    )
     products = []
 
-    for fp, fposition in fps.items():
-        for rp, rposition in rps.items():
-            size = len(primer_list[fp]) + rposition - fposition + len(primer_list[rp])
-            products.append(((fp, fposition), (rp, rposition), size))
-    return tuple(products[::-1])
+    for amplicon in amplicons:
+        if amplicon.fposition >= begin and end <= amplicon.rposition:
+            products.append(amplicon)
+
+    return products[::-1]
 
 
 def diff_primer_pairs(
@@ -565,12 +607,14 @@ def diff_primer_pairs(
     callback: Callable[[list], bool] = callback,
 ) -> tuple[tuple[Dseqrecord, int, int, int]]:
     """
-    Primer pairs for diagnostic PCR to distinguish between sequences.
+    Primer pairs for diagnostic PCR.
 
-    Given a list of sequences and a primer list, primers are selected that result in
-    PCR unique products of different sizes from each of the input sequences. Primers 1 and 2
-    both form PCR products from sequenceA and B below, but of different sizes. Primers 1
-    and 2 could be used to verify genetic modifications.
+    Given an iterable of sequences and a primer list, primers are selected that result in
+    unique products sizes from each of the input sequences.
+
+    Primers 1 and 2 both form PCR products from sequenceA and B below, but of
+    different sizes. Primers 1 and 2 could be used to verify genetic modifications such
+    as cloning a an insert into a plasmid vector.
 
     ::
 
@@ -584,25 +628,22 @@ def diff_primer_pairs(
 
     The callback function is used return true or false for the PCR products. This score can
     be used to decide if a collection of PCR products are likely to migrate to distinct
-    locations on a typical agarose gel. Only products larger than `short` and smaller than
-    `long` are returned.
+    locations on a typical agarose gel.
 
-
-
-
-
+    Only products larger than `short` and smaller than `long` are returned.
 
     An example of the output for two sequences (Dseqrecord(-3308), Dseqrecord(-3613)).
-    Primers 501 and 1806 would yield a 933 bp product with the first sequence and the same
-    primer pair would give 1212 bp with the second sequence. A tuple of tuples, where each
-    inner tuple has one entry for each sequence in the input argument.
+    Primers 501 and 1806 would yield a 933 bp product with the 3308 bp sequence and the same
+    primer pair would give 1212 bp with the 3613 bp sequence.
+
+    A list of named 4-tuples is returned (Sequence, forward_primer, reverse_primer, size_bp),
+    where each tuple has one entry for each sequence in the input argument.
 
     ::
 
-        (
-            (Dseqrecord(-3308), 501, 1806, 933), (Dseqrecord(-3613), 501, 1806, 1212))
-        )
-
+        [
+            ((Dseqrecord(-3308), 501, 1806, 933), (Dseqrecord(-3613), 501, 1806, 1212)),
+        ]
 
 
     Parameters
@@ -627,7 +668,7 @@ def diff_primer_pairs(
 
     Returns
     -------
-    tuple[tuple[Dseqrecord, int, int, int]]
+    list[tuple[Dseqrecord, int, int, int]]
         (Sequence, forward_primer, reverse_primer, size_bp)
 
     """
@@ -661,13 +702,15 @@ def diff_primer_pairs(
         result.append(
             (
                 closest_diff(seqd.keys()),
-                tuple((s, fp, rp, size) for size, (fp, rp, s) in seqd.items()),
+                tuple(
+                    primer_tuple(s, fp, rp, size) for size, (fp, rp, s) in seqd.items()
+                ),
             )
         )
 
     result.sort(reverse=True)
 
-    return tuple(b for a, b in result)
+    return [b for a, b in result]
 
 
 def diff_primer_triplets(
@@ -680,14 +723,15 @@ def diff_primer_triplets(
     callback: Callable[[list], bool] = callback,
 ) -> tuple[tuple[tuple[Dseqrecord, int, int, int]]]:
     """
-    Primer triplets for diagnostic PCR to distinguish between sequences.
+    Primer triplets for diagnostic PCR.
 
     Given a list of sequences and a primer list, primer triplets are selected that result in
-    PCR products of different lengths from each of the input sequences.
+    PCR products of different sizes from each of the input sequences.
 
-    Primers 1, 2 and 3 form PCR products from sequenceA and B below, but of different sizes. Primers 1
-    binds both sequences while 2 and 3 bind one sequence each. This primer triplet could be used to
-    verify genetic modifications.
+    Primers 1, 2 and 3 form PCR products from sequenceA and B below, but of
+    different sizes. Primers 1 binds both sequences while 2 and 3 bind one
+    sequence each. This primer triplet could be used to verify genetic
+    modifications.
 
     ::
 
@@ -701,18 +745,19 @@ def diff_primer_triplets(
 
     The callback function is used to give a score for the PCR products. This score can
     be used to decide if a collection of PCR products are likely to migrate to distinct
-    locations on a typical agarose gel. Only products larger than `short` and smaller than
-    `long` are returned.
+    locations on a typical agarose gel.
+
+    Only products larger than `short` and smaller than `long` are returned.
 
     An example of the output for two sequences = [Dseqrecord(-7664), Dseqrecord(-3613)].
-    Primer pair 701, 700 would produce a 724 bp product with the first sequence while
-    the primer pair 701, 1564 would give a 1450 bp product with the second sequence.
+    Primer pair 701, 700 would produce a 724 bp product with the 7664 bp sequence while
+    the primer pair 701, 1564 would give a 1450 bp product with the 3613 bp sequence.
 
     ::
 
-    (
-     ((Dseqrecord(-7664), 701, 700, 724), (Dseqrecord(-3613), 701, 1564, 1450)),
-     )
+        [
+            ((Dseqrecord(-7664), 701, 700, 724), (Dseqrecord(-3613), 701, 1564, 1450)),
+         ]
 
     Parameters
     ----------
@@ -736,7 +781,7 @@ def diff_primer_triplets(
 
     Returns
     -------
-    tuple[tuple[Dseqrecord, int, int, int]]
+    list[tuple[Dseqrecord, int, int, int]]
         (Sequence, forward_primer, reverse_primer, size_bp)
 
     """
@@ -745,10 +790,28 @@ def diff_primer_triplets(
     limit = automaton.get_stats()["longest_word"]
     number_of_sequences = len(sequences)
     pp = {}
+    # pp = { seq1: [(a,b,c,d,e), ...], seq2: [(i,j,k,l,m), ... ]}
+
+    # All primer pairs for each sequence are collected.
     for seq in sequences:
         pp[seq] = primer_pairs(
             seq, primer_list, short=short, long=long, limit=limit, automaton=automaton
         )
+
+    # We count all the times a specific pair occurs
+    pair_counter = Counter()
+
+    for seq, tuples in pp.items():
+        for t in tuples:
+            pair = frozenset(t[:2])  # first two integers, unordered
+            pair_counter[pair] += 1
+
+    # Pick pairs that appear more than once.
+    pairs_to_remove = {pair for pair, count in pair_counter.items() if count > 1}
+
+    # Remove pairs that appear more than once.
+    for seq in pp:
+        pp[seq] = [t for t in pp[seq] if frozenset(t[:2]) not in pairs_to_remove]
 
     primertrios = defaultdict(dict)
 
@@ -771,9 +834,12 @@ def diff_primer_triplets(
             result.append(
                 (
                     closest_diff(seqd.keys()),
-                    tuple((s, fp, rp, size) for size, (fp, rp, s) in seqd.items()),
+                    tuple(
+                        primer_tuple(s, fp, rp, size)
+                        for size, (fp, rp, s) in seqd.items()
+                    ),
                 )
             )
 
     result.sort(key=lambda item: item[0], reverse=True)
-    return tuple(b for a, b in result)
+    return [b for a, b in result]
