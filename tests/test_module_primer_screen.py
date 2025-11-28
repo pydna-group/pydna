@@ -21,6 +21,7 @@ from pydna.primer_screen import diff_primer_pairs
 from pydna.primer_screen import diff_primer_triplets
 from pydna.primer_screen import primer_tuple
 from pydna.primer_screen import amplicon_tuple
+from pydna.primer_screen import expand_iupac_to_dna
 
 
 test_files = pathlib.Path(os.path.join(os.path.dirname(__file__)))
@@ -114,26 +115,26 @@ def test_primer_pairs():
 def test_flanking_primer_pairs():
     result = flanking_primer_pairs(kan, pl, target=(550, 1200), automaton=atm)
 
-    answer = (amplicon_tuple(fp=82, rp=1564, fposition=1168, rposition=1940, size=809),
-              amplicon_tuple(fp=82, rp=149, fposition=1168, rposition=2306, size=1181))
+    answer = [amplicon_tuple(fp=82, rp=1564, fposition=1168, rposition=1940, size=809),
+              amplicon_tuple(fp=82, rp=149, fposition=1168, rposition=2306, size=1181)]
     assert result == answer
 
 def test_diff_primer_pairs():
 
     results = diff_primer_pairs((nat, kan), pl, automaton=atm)
 
-    assert results == (
+    assert results == [
         (primer_tuple(seq=nat, fp=82, rp=149, size=944),
-         primer_tuple(seq=kan, fp=82, rp=149, size=1181)),)
+         primer_tuple(seq=kan, fp=82, rp=149, size=1181)),]
 
 
 def test_diff_primer_triplets_1():
 
     results = diff_primer_triplets((wt, kan), pl, automaton=atm)
 
-    assert results == (
+    assert results == [
         (primer_tuple(seq=wt, fp=701, rp=700, size=724),
-         primer_tuple(seq=kan, fp=701, rp=1564, size=1450)),)
+         primer_tuple(seq=kan, fp=701, rp=1564, size=1450)),]
 
 def test_diff_primer_triplets_2():
 
@@ -141,13 +142,13 @@ def test_diff_primer_triplets_2():
 
     assert len(triplets) == 2
 
-    answer = (
+    answer = [
     (primer_tuple(seq=pIL68, fp=1215, rp=594, size=1474),
     primer_tuple(seq=pIL75, fp=51, rp=594, size=548)),
 
     (primer_tuple(seq=pIL68, fp=1215, rp=594, size=1474),
     primer_tuple(seq=pIL75, fp=255, rp=594, size=1005))
-    )
+    ]
 
     assert triplets == answer
 
@@ -159,3 +160,7 @@ def test_diff_primer_triplets_2():
 
     with pytest.raises(ValueError, match="No PCR product!"):
         pcr(pl[1215], pl[594], pIL75)
+
+
+def test_expand_iupac_to_dna():
+    assert expand_iupac_to_dna("ATNG") == ['ATAG', 'ATCG', 'ATGG', 'ATTG']
