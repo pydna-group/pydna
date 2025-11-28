@@ -126,7 +126,7 @@ def expand_iupac_to_dna(seq: str) -> list[str]:
 
     >>> expand_iupac_to_dna("ATNG")
     ['ATAG', 'ATCG', 'ATGG', 'ATTG']
-    >>> expand_iupac_to_dna("ACGTURYSWKMBDHVN")
+    >>> x = expand_iupac_to_dna("ACGTURYSWKMBDHVN")
     >>> len(x)
     20736
 

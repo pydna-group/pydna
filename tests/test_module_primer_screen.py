@@ -69,8 +69,8 @@ for primer in primers:
     pl[int(number)] = primer
 
 wt = read(test_files/"FAS2_S288C_wild-type_locus.gb")
-nat = read(test_files/"fas2::NatMX4_locus.gb")
-kan = read(test_files/"fas2::KanMX4_locus.gb")
+nat = read(test_files/"fas2__NatMX4_locus.gb")
+kan = read(test_files/"fas2__KanMX4_locus.gb")
 
 pIL68 = read(test_files/"pIL68.gb")
 pIL75 = read(test_files/"pIL75.gb")
