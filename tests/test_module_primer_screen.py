@@ -81,11 +81,12 @@ atm = None
 def test_automaton():
 
     atm = make_automaton(pl)
-
-    with tempfile.NamedTemporaryFile() as tmp:
+    # The NamedTemporaryFile(delete=False) may be necessary for the tests
+    # to pass on windows.
+    with tempfile.NamedTemporaryFile(delete=False) as tmp:
         # Save automaton to temporary file
         atm.save(tmp.name, pickle.dumps)
-        tmp.flush()
+        # tmp.flush()
 
         # Load it back from the same file
         atm2 = ahocorasick.load(tmp.name, pickle.loads)
