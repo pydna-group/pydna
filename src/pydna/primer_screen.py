@@ -5,7 +5,7 @@ Fast primer screening
 ---------------------
 
 This module provides fast primer screening using the Aho–Corasick string-search
-algorithm. It is useful for PCR diagnostic purposes when given a list of primers.
+algorithm. It is useful for PCR diagnostic purposes when given a list of primers
 and a single sequence or list of sequences to analyze.
 
 The primer list can consist of `Primer` objects returned by :func:`pydna.parsers.parse_primers`
@@ -15,7 +15,7 @@ or :class:`Bio.SeqRecord.SeqRecord`.
 The Aho–Corasick algorithm efficiently finds all occurrences of a set of sequences
 within a larger text. If the same primer list is used repeatedly, creating an
 automaton greatly speeds up repeated searches. See :func:`make_automaton` for
-information on creating, saving, and loading such automatons.
+information on creating, saving, and loading such automata.
 
 Functions
 ---------
@@ -73,9 +73,9 @@ primer_tuple = namedtuple(typename="primer_tuple", field_names="seq, fp, rp, siz
 
 def closest_diff(nums: list[int]) -> int:
     """
-    Smallest difference between two consecitive integers in a sorted list.
+    Smallest difference between two consecutive integers in a sorted list.
 
-    Given a list of integers ex. 1, 5, 7, 11, 19, return the smallest
+    Given a list of integers eg. 1, 5, 7, 11, 19, return the smallest
     absolute difference, in this case 7-5 = 2.
 
     >>> closest_diff([1, 5, 7, 11, 19])
@@ -90,7 +90,7 @@ def closest_diff(nums: list[int]) -> int:
     Raises
     ------
     ValueError
-        At least two numbers are requred.
+        At least two numbers are required.
 
     Returns
     -------
@@ -117,8 +117,8 @@ def expand_iupac_to_dna(seq: str) -> list[str]:
     """
     Expand an extended IUPAC DNA string to unambiguous IUPAC nucleotide alphabet.
 
-    Expands a string containing extended-IUPAC code (ACGTURYSWKMBDHVN) including
-    U for uracil into all possibla DNA strings using only AGCT.
+    Expands a string containing extended IUPAC code (ACGTURYSWKMBDHVN) including
+    U for uracil into all possible DNA strings using only AGCT.
 
     Returns a list of strings.
 
@@ -176,8 +176,10 @@ def make_automaton(
     be made prior to primer screening for a list of Primer
     objects for faster primer search.
 
-    The automaton can be used as an optional argument for most functions
-    in this module.
+
+    This automaton can be reused as an optional argument across calls to :func:`forward_primers`,
+    :func:`reverse_primers`, :func:`primer_pairs`, :func:`flanking_primer_pairs`,
+    :func:`diff_primer_pairs`, and :func:`diff_primer_triplets`.
 
     The primer list can contain None, this can be used to remove primers
     from the primer_list for the automaton, while keeping the original index
@@ -187,7 +189,7 @@ def make_automaton(
     The automaton processes the uppercase 3' part of each primer up to `limit`.
     It has to be rebuilt if a different limit is needed.
 
-    The primers can contain ambigous bases from the extended IUPAC DNA alphabet.
+    The primers can contain ambiguous bases from the extended IUPAC DNA alphabet.
 
     The automaton can be saved and loaded like this (from the pyahocorasick docs):
 
@@ -213,10 +215,10 @@ def make_automaton(
     Parameters
     ----------
     primer_list : list[Primer] | tuple[Primer]
-        This is a list of Pydna.primer.Primer objects or
-        Any object with a seq property such as Bio.SeqRecord.SeqRecord.
+        This is a list of pydna.primer.Primer objects or
+        any object with a seq property such as Bio.SeqRecord.SeqRecord.
     limit : str, optional
-        This is the primer part in  the 3' end that has to
+        This is the primer part in  the 3'-end that has to
         anneal. The default is 16.
 
     Returns
@@ -268,7 +270,7 @@ def callback(a: int, b: int) -> bool:
         True if successful, False otherwise.
 
     """
-    # The lenght difference has to be 20%
+    # The length difference has to be 20%
     # of the size of the larger fragment
     return abs(a - b) >= 0.2 * max((a, b))
 
@@ -319,12 +321,12 @@ def forward_primers(
     Parameters
     ----------
     seq : Dseqrecord
-        Target sequence to find primer annealing positicons.
+        Target sequence to find primer annealing positions.
     primer_list : list[Primer] | tuple[Primer]
-        This is a list of Pydna.primer.Primer objects or any object
+        This is a list of pydna.primer.Primer objects or any object
         with a seq property such as Bio.SeqRecord.SeqRecord.
     limit : str, optional
-        This is the part in the 3' end of each primer that has to
+        This is the part at the 3'-end of each primer that has to
         anneal. The default is 16.
     automaton : ahocorasick.Automaton, optional
         Automaton made with the :func:`make_automaton`. The default is None.
@@ -398,12 +400,12 @@ def reverse_primers(
     Parameters
     ----------
     seq : Dseqrecord
-        Target sequence to find primer annealing positicons.
+        Target sequence to find primer annealing positions.
     primer_list : list[Primer] | tuple[Primer]
-        This is a list of Pydna.primer.Primer objects or any object
+        This is a list of pydna.primer.Primer objects or any object
         with a seq property such as Bio.SeqRecord.SeqRecord.
     limit : str, optional
-        This is the part in the 3' end of each primer that has to
+        This is the part in the 3'-end of each primer that has to
         anneal. The default is 16.
     automaton : ahocorasick.Automaton, optional
         Automaton made with the :func:`make_automaton`. The default is None.
@@ -427,7 +429,7 @@ def reverse_primers(
     rps = defaultdict(list)
     ln = len(seq)
 
-    # We use the reverse complement of the sequence instead taking the
+    # We use the reverse complement of the sequence instead of taking the
     # reverse complement of each primer.
     for end_index, ids in automaton.iter(str(seq.seq.reverse_complement()).upper()):
         for i in ids:
@@ -452,11 +454,11 @@ def primer_pairs(
     are returned. This means that the forward and reverse primers can only
     bind in one position on the template each.
 
-    If you suspect that primers binds on multiple locations, use the
-    :func:forward_primer or :func:reverse_primer functions.
+    If you suspect that primers bind on multiple locations, use the
+    :func:`forward_primers` and :func:`reverse_primers` functions.
 
-    The function returns a list of a named flat 5-tuples of integers and
-    and integers with this form:
+    The function returns a list of flat 5-namedtuples of integers and
+    integers with this form:
 
     ::
 
@@ -467,7 +469,7 @@ def primer_pairs(
 
 
     The indices are the `primer_list` indices and positions are the positions of
-    the prinmers as described in :func:forward_primer and :func:reverse_primer
+    the primers as described in :func:`forward_primers` and :func:`reverse_primers`
     functions.
     The size includes the length of each primer, so it is the true total length
     of the PCR product.
@@ -475,17 +477,17 @@ def primer_pairs(
     Parameters
     ----------
     seq : Dseqrecord
-        Target sequence to find primer annealing positicons.
+        Target sequence to find primer annealing positions.
     primer_list : list[Primer] | tuple[Primer]
-        This is a list of Pydna.primer.Primer objects or any object
+        This is a list of pydna.primer.Primer objects or any object
         with a seq property such as Bio.SeqRecord.SeqRecord.
     limit : str, optional
-        This is the part in the 3' end of each primer that has to
+        This is the part in the 3'-end of each primer that has to
         anneal. The default is 16.
     short : int, optional
         Lower limit for the size of the PCR products. The default is 500.
     long : int, optional
-        Upper limit for the size of the PCR products. The default is 2000.
+        Upper limit for the size of the PCR products. The default is 1500.
     automaton : ahocorasick.Automaton, optional
         Automaton made with the :func:`make_automaton`. The default is None.
 
@@ -519,7 +521,7 @@ def primer_pairs(
 
     for fp, fposition in fps.items():
         for rp, rposition in rps.items():
-            # We calulate the size of a potential PCR product
+            # We calculate the size of a potential PCR product
             size = len(primer_list[fp]) + rposition - fposition + len(primer_list[rp])
             # If the size falls within long and short, the data is kept.
             if short <= size <= long and fposition <= rposition:
@@ -536,11 +538,11 @@ def flanking_primer_pairs(
 ) -> list[amplicon_tuple[int, int, int, int, int]]:
     """
     Primer pairs that flank a target position (begin..end). This means that
-    forward primers have to bind before begin and reverse primers have to bind
-    after end.
+    forward primers have to bind before or at the begin position and reverse primers
+    have to bind at or after the end position.
 
-    The function returns a list of the same named flat 5-tuples of integers returned
-    from the :func:primer_pair function.
+    The function returns a list of the same flat 5-namedtuples of integers returned
+    from the :func:`primer_pairs` function.
 
     ::
 
@@ -553,14 +555,14 @@ def flanking_primer_pairs(
     Parameters
     ----------
     seq : Dseqrecord
-        Target sequence to find primer annealing positicons.
+        Target sequence to find primer annealing positions.
     primer_list : list[Primer] | tuple[Primer]
-        This is a list of Pydna.primer.Primer objects or any object
+        This is a list of pydna.primer.Primer objects or any object
         with a seq property such as Bio.SeqRecord.SeqRecord.
     target : tuple[int, int]
         Start and stop position for target sequence.
     limit : str, optional
-        This is the part in the 3' end of each primer that has to
+        This is the part in the 3'-end of each primer that has to
         anneal. The default is 16.
     automaton : ahocorasick.Automaton, optional
         Automaton made with the :func:`make_automaton`. The default is None.
@@ -610,11 +612,11 @@ def diff_primer_pairs(
     Primer pairs for diagnostic PCR.
 
     Given an iterable of sequences and a primer list, primers are selected that result in
-    unique products sizes from each of the input sequences.
+    unique product sizes from each of the input sequences.
 
     Primers 1 and 2 both form PCR products from sequenceA and B below, but of
     different sizes. Primers 1 and 2 could be used to verify genetic modifications such
-    as cloning a an insert into a plasmid vector.
+    as cloning an insert into a plasmid vector.
 
     ::
 
@@ -626,9 +628,9 @@ def diff_primer_pairs(
         -------XXXXX--------  sequenceB
 
 
-    The callback function is used return true or false for the PCR products. This score can
-    be used to decide if a collection of PCR products are likely to migrate to distinct
-    locations on a typical agarose gel.
+    The callback function is used to return true or false for the PCR products. This score is
+    meant to filter for PCR products that are likely to migrate to
+    sufficiently distinct locations to be distinguishable on a typical agarose gel.
 
     Only products larger than `short` and smaller than `long` are returned.
 
@@ -649,17 +651,17 @@ def diff_primer_pairs(
     Parameters
     ----------
     sequences : list[Dseqrecord] | tuple[Dseqrecord]
-        Target sequence to find primer annealing positicons.
+        Target sequence to find primer annealing positions.
     primer_list : list[Primer] | tuple[Primer]
-        This is a list of Pydna.primer.Primer objects or any object
+        This is a list of pydna.primer.Primer objects or any object
         with a seq property such as Bio.SeqRecord.SeqRecord.
     limit : str, optional
-        This is the part in the 3' end of each primer that has to
+        This is the part in the 3'-end of each primer that has to
         anneal. The default is 16.
     short : int, optional
         Lower limit for the size of the PCR products. The default is 500.
     long : int, optional
-        Upper limit for the size of the PCR products. The default is 2000.
+        Upper limit for the size of the PCR products. The default is 1500.
     automaton : ahocorasick.Automaton, optional
         Automaton made with the :func:`make_automaton`. The default is None.
     callback : callable[[list], bool], optional
@@ -729,7 +731,7 @@ def diff_primer_triplets(
     PCR products of different sizes from each of the input sequences.
 
     Primers 1, 2 and 3 form PCR products from sequenceA and B below, but of
-    different sizes. Primers 1 binds both sequences while 2 and 3 bind one
+    different sizes. Primer 1 binds both sequences while primers 2 and 3 bind one
     sequence each. This primer triplet could be used to verify genetic
     modifications.
 
@@ -762,12 +764,12 @@ def diff_primer_triplets(
     Parameters
     ----------
     sequences : list[Dseqrecord] | tuple[Dseqrecord]
-        Target sequence to find primer annealing positicons.
+        Target sequence to find primer annealing positions.
     primer_list : list[Primer] | tuple[Primer]
-        This is a list of Pydna.primer.Primer objects or any object
+        This is a list of pydna.primer.Primer objects or any object
         with a seq property such as Bio.SeqRecord.SeqRecord.
     limit : str, optional
-        This is the part in the 3' end of each primer that has to
+        This is the part in the 3'-end of each primer that has to
         anneal. The default is 16.
     short : int, optional
         Lower limit for the size of the PCR products. The default is 500.
