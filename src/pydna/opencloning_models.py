@@ -71,8 +71,9 @@ from opencloning_linkml.datamodel import (
     AnnotationReport as _AnnotationReport,
     PlannotateAnnotationReport as _PlannotateAnnotationReport,
     ReverseComplementSource as _ReverseComplementSource,
+    NCBISequenceSource as _NCBISequenceSource,
 )
-from Bio.SeqFeature import Location, LocationParserError
+from Bio.SeqFeature import Location, LocationParserError, SimpleLocation
 from Bio.Restriction.Restriction import AbstractCut
 import networkx as nx
 from typing import List
@@ -441,16 +442,19 @@ class OpenDNACollectionsSource(RepositoryIdSourceWithSequenceFileUrl):
     repository_name: str = "open_dna_collections"
 
 
-class GenomeCoordinatesSource(Source):
+class NCBISequenceSource(RepositoryIdSource):
+    TARGET_MODEL: ClassVar[Type[_NCBISequenceSource]] = _NCBISequenceSource
+    repository_name: str = "genbank"
+    coordinates: SimpleLocation | None = None
+
+
+class GenomeCoordinatesSource(NCBISequenceSource):
     TARGET_MODEL: ClassVar[Type[_GenomeCoordinatesSource]] = _GenomeCoordinatesSource
 
     assembly_accession: Optional[str] = None
-    sequence_accession: str
     locus_tag: Optional[str] = None
     gene_id: Optional[int] = None
-    start: int
-    end: int
-    strand: int
+    coordinates: SimpleLocation
 
 
 class RestrictionAndLigationSource(AssemblySource):
@@ -626,9 +630,7 @@ class CloningStrategy(_BaseCloningStrategy):
                 else:
                     self.add_primer(source_input.sequence)
         else:
-            self.sources.append(
-                _ManuallyTypedSource(id=get_id(dseqr), input=[], user_input="A")
-            )
+            self.sources.append(_ManuallyTypedSource(id=get_id(dseqr), input=[]))
 
     def reassign_ids(self):
         all_ids = (

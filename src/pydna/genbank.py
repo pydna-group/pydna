@@ -12,13 +12,13 @@ been set to a valid email address. The easiest way to do this permanantly is to 
 `pydna.ini` file. See the documentation of :func:`pydna.open_config_folder`"""
 
 # from pydna.utils import memorize as _memorize
-from pydna.opencloning_models import RepositoryIdSource
+from pydna.opencloning_models import NCBISequenceSource
 from pydna.genbankrecord import GenbankRecord as _GenbankRecord
 from pydna.readers import read as _read
 
 from Bio import Entrez as _Entrez
+from Bio.SeqFeature import SimpleLocation
 
-# from Bio.SeqFeature import SimpleLocation
 from typing import Literal as _Literal, Optional as _Optional
 import re as _re
 import os as _os
@@ -176,11 +176,18 @@ class Genbank:
         # _module_logger.info("text[:160]  %s", text[:160])
 
         result = _read(text)
+        # TODO: Address this for cases where only one is defined
+        if seq_start is not None and seq_stop is not None:
+            location = SimpleLocation(
+                int(seq_start) - 1, int(seq_stop), -1 if strand == 2 else strand
+            )
+        else:
+            location = None
 
-        result.source = RepositoryIdSource(
+        result.source = NCBISequenceSource(
             repository_id=item,
             repository_name="genbank",
-            # location=SimpleLocation(seq_start, seq_stop, strand),
+            coordinates=location,
         )
         return result
 

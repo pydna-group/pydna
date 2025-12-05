@@ -14,6 +14,8 @@ from pydna.opencloning_models import (
     CloningStrategy,
     id_mode,
     get_id,
+    NCBISequenceSource,
+    GenomeCoordinatesSource,
 )
 from pydna.primer import Primer
 from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization
@@ -569,3 +571,34 @@ class IdModeTest(TestCase):
             self.assertEqual(get_id(dseqrecord), 456)
             self.assertRaises(ValueError, get_id, primer_wrong)
             self.assertRaises(ValueError, get_id, dseqrecord_wrong)
+
+
+class GenomeCoordinatesSourceTest(TestCase):
+    def test_coordinates_required(self):
+        with self.assertRaises(ValidationError):
+            GenomeCoordinatesSource(
+                coordinates=None,
+                repository_id="1234567890",
+                assembly_accession="1234567890",
+                locus_tag="1234567890",
+                gene_id=1234567890,
+            )
+        GenomeCoordinatesSource(
+            coordinates=SimpleLocation(1, 10),
+            repository_id="1234567890",
+            assembly_accession="1234567890",
+            locus_tag="1234567890",
+            gene_id=1234567890,
+        )
+
+
+class NCBISequenceSourceTest(TestCase):
+    def test_coordinates_not_required(self):
+        NCBISequenceSource(
+            coordinates=None,
+            repository_id="1234567890",
+        )
+        NCBISequenceSource(
+            coordinates=SimpleLocation(1, 10),
+            repository_id="1234567890",
+        )
