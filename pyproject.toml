@@ -60,7 +60,7 @@ scipy = [
 ]
 seguid = ">=0.0.5"
 regex = "^2024.11.6"
-opencloning-linkml = {git = "https://github.com/OpenCloning/OpenCloning_LinkML", rev = "357d34453346ca5db7fa2c5895edc0fadd92f80a"}
+opencloning-linkml = {git = "https://github.com/OpenCloning/OpenCloning_LinkML", rev = "75b4da253be0b9d62f17661c4ecf5fa1602cbf76"}
 [tool.poetry.extras]
 clipboard = ["pyperclip"]
 download = ["pyparsing", "requests"]
