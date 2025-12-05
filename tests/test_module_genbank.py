@@ -5,6 +5,7 @@
 
 import pytest
 from unittest import mock
+from Bio.SeqFeature import SimpleLocation
 
 
 def test_set_email():
@@ -105,6 +106,7 @@ def test_pydna_Genbank_fresh_part(monkeypatch):
     monkeypatch.setenv("pydna_cached_funcs", "")
     import pytest
     from unittest import mock
+    from Bio import SeqIO
 
     mock_efetch = mock.MagicMock(name="mock_efetch1")
     mock_efetch().read.side_effect = open("X60065-100-110.gb", "r").read
@@ -113,8 +115,11 @@ def test_pydna_Genbank_fresh_part(monkeypatch):
     from pydna.genbank import Genbank
 
     gb = Genbank("bjornjobb@gmail.com")
-    result = gb.nucleotide("X60065.1", seq_start=1, seq_stop=10)
+    result = gb.nucleotide("X60065.1", seq_start=100, seq_stop=110)
     assert str(result.seq).lower() == "ctgaaacggac"
+    assert result.source.coordinates == SimpleLocation(99, 110, 1)
+    full_sequence = SeqIO.read("X60065.gb", "genbank")
+    assert str(result.source.coordinates.extract(full_sequence.seq)) == str(result.seq)
 
 
 def test_pydna_Genbank_fresh_partII(monkeypatch):

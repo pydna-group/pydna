@@ -59,8 +59,8 @@ scipy = [
   { version = ">=1.9.3", python = "<3.12", optional = true },
 ]
 seguid = ">=0.0.5"
-regex = ">=2024.11.6,<2026.0.0"
-opencloning-linkml = "0.4.5"
+regex = "^2024.11.6"
+opencloning-linkml = {git = "https://github.com/OpenCloning/OpenCloning_LinkML", rev = "357d34453346ca5db7fa2c5895edc0fadd92f80a"}
 [tool.poetry.extras]
 clipboard = ["pyperclip"]
 download = ["pyparsing", "requests"]
