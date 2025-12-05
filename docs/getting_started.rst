@@ -27,20 +27,20 @@ First steps
 
 We recommend that you first go through the following notebooks, which cover the basics of how sequences are handled in pydna:
 
-1. `Dseq <./notebooks/Dseq.ipynb>`_: Basic introduction to how sequences are handled in pydna.
-2. `Dseq_Features <./notebooks/Dseq_Features.ipynb>`_: How to work with sequence features, which are often present in genbank or dna files to mark regions of interest (coding sequences, resistance markers, etc.)
-3. `Importing_Seqs <./notebooks/Importing_Seqs.ipynb>`_: How to import sequences from various sources.
+1. `Dseq <./notebooks/Dseq.html>`_: Basic introduction to how sequences are handled in pydna.
+2. `Dseq_Features <./notebooks/Dseq_Features.html>`_: How to work with sequence features, which are often present in genbank or dna files to mark regions of interest (coding sequences, resistance markers, etc.)
+3. `Importing_Seqs <./notebooks/Importing_Seqs.html>`_: How to import sequences from various sources.
 
 Getting started with cloning
 ----------------------------
 
 Next, you can learn how specific cloning techniques are handled.
 
-* `Restrict_Ligate_Cloning <./notebooks/Restrict_Ligate_Cloning.ipynb>`_: How to perform restriction and ligation.
-* `PCR <./notebooks/PCR.ipynb>`_: How to perform PCR.
-* `primer_design <./notebooks/primer_design.ipynb>`_: How to design primers for Gibson assembly and restriction-ligation cloning.
-* `Gibson <./notebooks/Gibson.ipynb>`_: How to perform Gibson assembly.
-* `CRISPR <./notebooks/CRISPR.ipynb>`_: How to perform CRISPR-Cas9 cutting.
+* `Restrict_Ligate_Cloning <./notebooks/Restrict_Ligate_Cloning.html>`_: How to perform restriction and ligation.
+* `PCR <./notebooks/PCR.html>`_: How to perform PCR.
+* `primer_design <./notebooks/primer_design.html>`_: How to design primers for Gibson assembly and restriction-ligation cloning.
+* `Gibson <./notebooks/Gibson.html>`_: How to perform Gibson assembly.
+* `CRISPR <./notebooks/CRISPR.html>`_: How to perform CRISPR-Cas9 cutting.
 
 Cloning history using OpenCloning
 ---------------------------------

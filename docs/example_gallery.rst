@@ -11,9 +11,9 @@ Example gallery
 
 Below are some examples that show the functionality of pydna in real-world scenarios.
 
-* `Example_Restriction <./markdown_notebooks/Example_Restriction.md>`_: PCRing a gene out of the genome, and cloning into a vector using restriction and ligation.
-* `Example_Gibson <./markdown_notebooks/Example_Gibson.md>`_: Gibson assembly of *R. cellulolyticum* genomic fragments into a plasmid, from the original Gibson assembly paper `doi: 10.1038/nmeth.1318 <https://www.nature.com/articles/nmeth.1318>`_.
-* `Example_CRISPR <./markdown_notebooks/Example_CRISPR.md>`_: Using CRISPR with homologous recombination to delete genes by making two cuts in the genome, and repair it with an oligo. Used in the industrially relevant *K. phaffi*.
+* `Example_Restriction <./notebooks/Example_Restriction.html>`_: PCRing a gene out of the genome, and cloning into a vector using restriction and ligation.
+* `Example_Gibson <./notebooks/Example_Gibson.html>`_: Gibson assembly of *R. cellulolyticum* genomic fragments into a plasmid, from the original Gibson assembly paper `doi: 10.1038/nmeth.1318 <https://www.nature.com/articles/nmeth.1318>`_.
+* `Example_CRISPR <./notebooks/Example_CRISPR.html>`_: Using CRISPR with homologous recombination to delete genes by making two cuts in the genome, and repair it with an oligo. Used in the industrially relevant *K. phaffi*.
 
 External examples
 -----------------
