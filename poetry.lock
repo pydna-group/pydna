@@ -2127,7 +2127,7 @@ tomli = {version = ">=1.1.0", markers = "python_version < \"3.11\""}
 
 [[package]]
 name = "opencloning-linkml"
-version = "0.4.8.post8.dev0+75b4da2"
+version = "0.4.8.post11.dev0+51cb847"
 description = "A LinkML data model for OpenCloning"
 optional = false
 python-versions = "^3.10"
@@ -2144,8 +2144,8 @@ docs = ["linkml (>=1.9.2,<2.0.0)"]
 [package.source]
 type = "git"
 url = "https://github.com/OpenCloning/OpenCloning_LinkML"
-reference = "75b4da253be0b9d62f17661c4ecf5fa1602cbf76"
-resolved_reference = "75b4da253be0b9d62f17661c4ecf5fa1602cbf76"
+reference = "51cb847cda2ffc7eebbc9d3e7b5595969463b465"
+resolved_reference = "51cb847cda2ffc7eebbc9d3e7b5595969463b465"
 
 [[package]]
 name = "packaging"
@@ -4190,4 +4190,4 @@ gel = ["matplotlib", "pillow", "scipy", "scipy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "8aa1b31a211fbb38b97dcb0f91c42aaab3c9bcd4c950c556f4a8120d3f6eeb56"
+content-hash = "e802a0f307a0e2e7bce549a3b1ca124f438545f01ba040ebdd41b67b80b51806"
