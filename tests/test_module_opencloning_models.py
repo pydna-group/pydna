@@ -591,6 +591,16 @@ class GenomeCoordinatesSourceTest(TestCase):
             gene_id=1234567890,
         )
 
+    def test_serialize_coordinates(self):
+        source = GenomeCoordinatesSource(
+            coordinates=SimpleLocation(0, 10),
+            repository_id="1234567890",
+            assembly_accession="1234567890",
+            locus_tag="1234567890",
+            gene_id=1234567890,
+        )
+        self.assertEqual(source.model_dump()["coordinates"], "1..10")
+
 
 class NCBISequenceSourceTest(TestCase):
     def test_coordinates_not_required(self):
