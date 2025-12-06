@@ -443,6 +443,10 @@ class GenomeCoordinatesSource(NCBISequenceSource):
     gene_id: Optional[int] = None
     coordinates: SimpleLocation
 
+    @field_serializer("coordinates")
+    def serialize_coordinates(self, coordinates: SimpleLocation) -> str:
+        return SequenceLocationStr.from_biopython_location(coordinates)
+
 
 class RestrictionAndLigationSource(AssemblySource):
     restriction_enzymes: list[AbstractCut]
