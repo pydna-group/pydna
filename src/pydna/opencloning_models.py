@@ -384,7 +384,6 @@ class RepositoryIdSource(Source):
     TARGET_MODEL: ClassVar[Type[_RepositoryIdSource]] = _RepositoryIdSource
 
     repository_id: str
-    repository_name: str
     # location: Location
 
 
@@ -401,50 +400,38 @@ class AddgeneIdSource(RepositoryIdSourceWithSequenceFileUrl):
     TARGET_MODEL: ClassVar[Type[_AddgeneIdSource]] = _AddgeneIdSource
 
     addgene_sequence_type: Optional[AddgeneSequenceType] = None
-    repository_name: str = "addgene"
 
 
 class BenchlingUrlSource(RepositoryIdSource):
     TARGET_MODEL: ClassVar[Type[_BenchlingUrlSource]] = _BenchlingUrlSource
 
-    repository_name: str = "benchling"
-
 
 class SnapGenePlasmidSource(RepositoryIdSource):
     TARGET_MODEL: ClassVar[Type[_SnapGenePlasmidSource]] = _SnapGenePlasmidSource
-
-    repository_name: str = "snapgene"
 
 
 class EuroscarfSource(RepositoryIdSource):
     TARGET_MODEL: ClassVar[Type[_EuroscarfSource]] = _EuroscarfSource
 
-    repository_name: str = "euroscarf"
-
 
 class WekWikGeneIdSource(RepositoryIdSourceWithSequenceFileUrl):
     TARGET_MODEL: ClassVar[Type[_WekWikGeneIdSource]] = _WekWikGeneIdSource
-    repository_name: str = "wekwikgene"
 
 
 class SEVASource(RepositoryIdSourceWithSequenceFileUrl):
     TARGET_MODEL: ClassVar[Type[_SEVASource]] = _SEVASource
-    repository_name: str = "seva"
 
 
 class IGEMSource(RepositoryIdSourceWithSequenceFileUrl):
     TARGET_MODEL: ClassVar[Type[_IGEMSource]] = _IGEMSource
-    repository_name: str = "igem"
 
 
 class OpenDNACollectionsSource(RepositoryIdSourceWithSequenceFileUrl):
     TARGET_MODEL: ClassVar[Type[_OpenDNACollectionsSource]] = _OpenDNACollectionsSource
-    repository_name: str = "open_dna_collections"
 
 
 class NCBISequenceSource(RepositoryIdSource):
     TARGET_MODEL: ClassVar[Type[_NCBISequenceSource]] = _NCBISequenceSource
-    repository_name: str = "genbank"
     coordinates: SimpleLocation | None = None
 
 

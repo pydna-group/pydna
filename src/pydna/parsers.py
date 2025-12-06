@@ -202,7 +202,9 @@ def parse(data, ds=True):
 
                     result = _Dseqrecord.from_SeqRecord(s)
                     result.source = UploadedFileSource(
-                        file_name=path, sequence_file_format="genbank", index_in_file=0
+                        file_name=str(path),  # we use str to handle PosixPath
+                        sequence_file_format="genbank",
+                        index_in_file=0,
                     )
                     sequences.append(result)
                     # sequences.append(_GenbankFile.from_SeqRecord(s, path=path))
