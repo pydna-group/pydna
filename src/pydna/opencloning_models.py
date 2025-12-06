@@ -24,10 +24,11 @@ from pydantic_core import core_schema
 from contextlib import contextmanager
 from threading import local
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_validator
 
 from opencloning_linkml.datamodel import (
     CloningStrategy as _BaseCloningStrategy,
+    DatabaseSource as _DatabaseSource,
     Primer as _PrimerModel,
     Source as _Source,
     TextFileSequence as _TextFileSequence,
@@ -47,12 +48,32 @@ from opencloning_linkml.datamodel import (
     LigationSource as _LigationSource,
     GatewaySource as _GatewaySource,
     GatewayReactionType,
+    AnnotationTool,
     HomologousRecombinationSource as _HomologousRecombinationSource,
     CreLoxRecombinationSource as _CreLoxRecombinationSource,
     PCRSource as _PCRSource,
     CRISPRSource as _CRISPRSource,
+    RepositoryIdSource as _RepositoryIdSource,
+    UploadedFileSource as _UploadedFileSource,
+    AddgeneIdSource as _AddgeneIdSource,
+    AddgeneSequenceType,
+    BenchlingUrlSource as _BenchlingUrlSource,
+    SnapGenePlasmidSource as _SnapGenePlasmidSource,
+    EuroscarfSource as _EuroscarfSource,
+    WekWikGeneIdSource as _WekWikGeneIdSource,
+    SEVASource as _SEVASource,
+    IGEMSource as _IGEMSource,
+    OpenDNACollectionsSource as _OpenDNACollectionsSource,
+    GenomeCoordinatesSource as _GenomeCoordinatesSource,
+    OligoHybridizationSource as _OligoHybridizationSource,
+    PolymeraseExtensionSource as _PolymeraseExtensionSource,
+    AnnotationSource as _AnnotationSource,
+    AnnotationReport as _AnnotationReport,
+    PlannotateAnnotationReport as _PlannotateAnnotationReport,
+    ReverseComplementSource as _ReverseComplementSource,
+    NCBISequenceSource as _NCBISequenceSource,
 )
-from Bio.SeqFeature import Location, LocationParserError
+from Bio.SeqFeature import Location, LocationParserError, SimpleLocation
 from Bio.Restriction.Restriction import AbstractCut
 import networkx as nx
 from typing import List
@@ -78,8 +99,9 @@ def id_mode(use_python_internal_id: bool = True):
     mapping them to the OpenCloning data model. If ``use_python_internal_id`` is True,
     the built-in python ``id()`` function is used to assign ids to objects. That function
     produces a unique integer for each object in python, so it's guaranteed to be unique.
-    If ``use_python_internal_id`` is False, the object's ``.id`` attribute (must be a string integer)
-    is used to assign ids to objects. This is useful when the objects already have meaningful ids,
+    If ``use_python_internal_id`` is False, the object's ``.id`` attribute
+    (must be a string integer) is used to assign ids to objects. This is useful
+    when the objects already have meaningful ids,
     and you want to keep references to them in ``SourceInput`` objects (which sequences and
     primers are used in a particular source).
 
@@ -178,6 +200,14 @@ class SequenceLocationStr(str):
     ):
         return cls.from_biopython_location(create_location(start, end, seq_len, strand))
 
+    def get_ncbi_format_coordinates(self) -> str:
+        """Return start, end, strand in the same format as the NCBI eutils API (1-based, inclusive)"""
+        return (
+            self.to_biopython_location().start + 1,
+            self.to_biopython_location().end,
+            self.to_biopython_location().strand,
+        )
+
 
 class ConfiguredBaseModel(BaseModel):
     model_config = ConfigDict(
@@ -261,18 +291,23 @@ class Source(ConfiguredBaseModel):
     input: list[Union[SourceInput, AssemblyFragment]] = Field(default_factory=list)
     TARGET_MODEL: ClassVar[Type[_Source]] = _Source
 
-    def input_models(self):
-        return [fragment.to_pydantic_model() for fragment in self.input]
-
-    def _kwargs(self, seq_id: int) -> dict:
-        return {
-            "id": seq_id,
-            "input": self.input_models(),
-        }
+    @field_serializer("input")
+    def serialize_input(
+        self, input: list[Union[SourceInput, AssemblyFragment]]
+    ) -> list[_SourceInput | _AssemblyFragment]:
+        return [fragment.to_pydantic_model() for fragment in input]
 
     def to_pydantic_model(self, seq_id: int):
-        kwargs = self._kwargs(seq_id)
-        return self.TARGET_MODEL(**kwargs)
+        model_dict = self.model_dump()
+        model_dict["id"] = seq_id
+        return self.TARGET_MODEL(**model_dict)
+
+    def to_unserialized_dict(self):
+        """
+        Converts into a dictionary without serializing the fields.
+        This is used to be able to recast.
+        """
+        return {field: getattr(self, field) for field in self.__pydantic_fields__}
 
     def add_to_history_graph(self, history_graph: nx.DiGraph, seq: "Dseqrecord"):
         """
@@ -315,15 +350,6 @@ class AssemblySource(Source):
 
     TARGET_MODEL: ClassVar[Type[_AssemblySource]] = _AssemblySource
 
-    def _kwargs(self, seq_id: int) -> dict:
-        return {
-            **super()._kwargs(seq_id),
-            "circular": self.circular,
-        }
-
-    def to_pydantic_model(self, seq_id: int):
-        return self.TARGET_MODEL(**self._kwargs(seq_id))
-
     @classmethod
     def from_subfragment_representation(
         cls,
@@ -346,6 +372,90 @@ class AssemblySource(Source):
         return AssemblySource(input=input_list, circular=is_circular)
 
 
+class DatabaseSource(Source):
+    TARGET_MODEL: ClassVar[Type[_DatabaseSource]] = _DatabaseSource
+
+    database_id: int
+
+
+class UploadedFileSource(Source):
+
+    TARGET_MODEL: ClassVar[Type[_UploadedFileSource]] = _UploadedFileSource
+
+    file_name: str
+    index_in_file: int
+    sequence_file_format: str
+
+
+class RepositoryIdSource(Source):
+
+    TARGET_MODEL: ClassVar[Type[_RepositoryIdSource]] = _RepositoryIdSource
+
+    repository_id: str
+    # location: Location
+
+
+class RepositoryIdSourceWithSequenceFileUrl(RepositoryIdSource):
+    """
+    Auxiliary class to avoid code duplication in the sources that have
+    a sequence file url.
+    """
+
+    sequence_file_url: Optional[str] = None
+
+
+class AddgeneIdSource(RepositoryIdSourceWithSequenceFileUrl):
+    TARGET_MODEL: ClassVar[Type[_AddgeneIdSource]] = _AddgeneIdSource
+
+    addgene_sequence_type: Optional[AddgeneSequenceType] = None
+
+
+class BenchlingUrlSource(RepositoryIdSource):
+    TARGET_MODEL: ClassVar[Type[_BenchlingUrlSource]] = _BenchlingUrlSource
+
+
+class SnapGenePlasmidSource(RepositoryIdSource):
+    TARGET_MODEL: ClassVar[Type[_SnapGenePlasmidSource]] = _SnapGenePlasmidSource
+
+
+class EuroscarfSource(RepositoryIdSource):
+    TARGET_MODEL: ClassVar[Type[_EuroscarfSource]] = _EuroscarfSource
+
+
+class WekWikGeneIdSource(RepositoryIdSourceWithSequenceFileUrl):
+    TARGET_MODEL: ClassVar[Type[_WekWikGeneIdSource]] = _WekWikGeneIdSource
+
+
+class SEVASource(RepositoryIdSourceWithSequenceFileUrl):
+    TARGET_MODEL: ClassVar[Type[_SEVASource]] = _SEVASource
+
+
+class IGEMSource(RepositoryIdSourceWithSequenceFileUrl):
+    TARGET_MODEL: ClassVar[Type[_IGEMSource]] = _IGEMSource
+
+
+class OpenDNACollectionsSource(RepositoryIdSourceWithSequenceFileUrl):
+    TARGET_MODEL: ClassVar[Type[_OpenDNACollectionsSource]] = _OpenDNACollectionsSource
+
+
+class NCBISequenceSource(RepositoryIdSource):
+    TARGET_MODEL: ClassVar[Type[_NCBISequenceSource]] = _NCBISequenceSource
+    coordinates: SimpleLocation | None = None
+
+
+class GenomeCoordinatesSource(NCBISequenceSource):
+    TARGET_MODEL: ClassVar[Type[_GenomeCoordinatesSource]] = _GenomeCoordinatesSource
+
+    assembly_accession: Optional[str] = None
+    locus_tag: Optional[str] = None
+    gene_id: Optional[int] = None
+    coordinates: SimpleLocation
+
+    @field_serializer("coordinates")
+    def serialize_coordinates(self, coordinates: SimpleLocation) -> str:
+        return SequenceLocationStr.from_biopython_location(coordinates)
+
+
 class RestrictionAndLigationSource(AssemblySource):
     restriction_enzymes: list[AbstractCut]
 
@@ -353,11 +463,11 @@ class RestrictionAndLigationSource(AssemblySource):
         _RestrictionAndLigationSource
     )
 
-    def _kwargs(self, seq_id: int) -> dict:
-        return {
-            **super()._kwargs(seq_id),
-            "restriction_enzymes": [str(enzyme) for enzyme in self.restriction_enzymes],
-        }
+    @field_serializer("restriction_enzymes")
+    def serialize_restriction_enzymes(
+        self, restriction_enzymes: list[AbstractCut]
+    ) -> list[str]:
+        return [str(enzyme) for enzyme in restriction_enzymes]
 
 
 class GibsonAssemblySource(AssemblySource):
@@ -387,13 +497,6 @@ class GatewaySource(AssemblySource):
     reaction_type: GatewayReactionType
     greedy: bool = Field(default=False)
 
-    def _kwargs(self, seq_id: int) -> dict:
-        return {
-            **super()._kwargs(seq_id),
-            "reaction_type": self.reaction_type,
-            "greedy": self.greedy,
-        }
-
 
 class HomologousRecombinationSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_HomologousRecombinationSource]] = (
@@ -415,21 +518,24 @@ class PCRSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_PCRSource]] = _PCRSource
     add_primer_features: bool = Field(default=False)
 
-    def _kwargs(self, seq_id: int) -> dict:
-        return {
-            **super()._kwargs(seq_id),
-            "add_primer_features": self.add_primer_features,
-        }
-
 
 class SequenceCutSource(Source):
     left_edge: CutSiteType | None
     right_edge: CutSiteType | None
 
-    BASE_MODEL: ClassVar[Type[_SequenceCutSource]] = _SequenceCutSource
-    ENZYME_MODEL: ClassVar[Type[_RestrictionEnzymeDigestionSource]] = (
-        _RestrictionEnzymeDigestionSource
-    )
+    @property
+    def TARGET_MODEL(self):
+        return (
+            _RestrictionEnzymeDigestionSource
+            if self._has_enzyme()
+            else _SequenceCutSource
+        )
+
+    @field_serializer("left_edge", "right_edge")
+    def serialize_cut_site(
+        self, cut_site: CutSiteType | None
+    ) -> _RestrictionSequenceCut | _SequenceCut | None:
+        return self._cutsite_to_model(cut_site)
 
     @staticmethod
     def _cutsite_to_model(cut_site: CutSiteType | None):
@@ -461,18 +567,31 @@ class SequenceCutSource(Source):
 
         return has_enzyme(self.left_edge) or has_enzyme(self.right_edge)
 
-    def _target_model(self):
-        return self.ENZYME_MODEL if self._has_enzyme() else self.BASE_MODEL
 
-    def _kwargs(self, seq_id: int) -> dict:
-        return {
-            **super()._kwargs(seq_id),
-            "left_edge": self._cutsite_to_model(self.left_edge),
-            "right_edge": self._cutsite_to_model(self.right_edge),
-        }
+class OligoHybridizationSource(Source):
+    TARGET_MODEL: ClassVar[Type[_OligoHybridizationSource]] = _OligoHybridizationSource
 
-    def to_pydantic_model(self, seq_id: int):
-        return self._target_model()(**self._kwargs(seq_id))
+    overhang_crick_3prime: Optional[int] = None
+
+
+class PolymeraseExtensionSource(Source):
+    TARGET_MODEL: ClassVar[Type[_PolymeraseExtensionSource]] = (
+        _PolymeraseExtensionSource
+    )
+
+
+class AnnotationSource(Source):
+    TARGET_MODEL: ClassVar[Type[_AnnotationSource]] = _AnnotationSource
+
+    annotation_tool: AnnotationTool
+    annotation_tool_version: Optional[str] = None
+    annotation_report: Optional[
+        list[_AnnotationReport | _PlannotateAnnotationReport]
+    ] = None
+
+
+class ReverseComplementSource(Source):
+    TARGET_MODEL: ClassVar[Type[_ReverseComplementSource]] = _ReverseComplementSource
 
 
 class CloningStrategy(_BaseCloningStrategy):
@@ -510,9 +629,7 @@ class CloningStrategy(_BaseCloningStrategy):
                 else:
                     self.add_primer(source_input.sequence)
         else:
-            self.sources.append(
-                _ManuallyTypedSource(id=get_id(dseqr), input=[], user_input="A")
-            )
+            self.sources.append(_ManuallyTypedSource(id=get_id(dseqr), input=[]))
 
     def reassign_ids(self):
         all_ids = (
