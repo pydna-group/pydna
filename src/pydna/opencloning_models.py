@@ -200,6 +200,14 @@ class SequenceLocationStr(str):
     ):
         return cls.from_biopython_location(create_location(start, end, seq_len, strand))
 
+    def get_ncbi_format_coordinates(self) -> str:
+        """Return start, end, strand in the same format as the NCBI eutils API (1-based, inclusive)"""
+        return (
+            self.to_biopython_location().start + 1,
+            self.to_biopython_location().end,
+            self.to_biopython_location().strand,
+        )
+
 
 class ConfiguredBaseModel(BaseModel):
     model_config = ConfigDict(
