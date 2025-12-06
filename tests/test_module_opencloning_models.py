@@ -224,6 +224,15 @@ class SequenceLocationStrTest(TestCase):
         DummyModel(location="1..3")
         DummyModel(location=SequenceLocationStr("1..3"))
 
+    def test_get_ncbi_format_coordinates(self):
+        self.assertEqual(
+            SequenceLocationStr("1..3").get_ncbi_format_coordinates(), (1, 3, 1)
+        )
+        self.assertEqual(
+            SequenceLocationStr("complement(1..3)").get_ncbi_format_coordinates(),
+            (1, 3, -1),
+        )
+
 
 class SourceTest(TestCase):
     def test_to_pydantic_model(self):
