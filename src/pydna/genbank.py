@@ -186,7 +186,6 @@ class Genbank:
 
         result.source = NCBISequenceSource(
             repository_id=item,
-            repository_name="genbank",
             coordinates=location,
         )
         return result
