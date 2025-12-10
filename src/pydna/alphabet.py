@@ -764,3 +764,48 @@ def regex_ds_melt_factory(length: int) -> _re.Pattern:
     )
 
     return _re.compile(regex.encode("ascii"))
+
+
+def anneal_strands(strand_a: str, strand_b: str) -> bool:
+    """
+    Test if two DNA strands containing dscode anneal or not.
+
+    Both strands are assumed to be given in 5' -> 3' direction.
+
+    >>> from pydna.alphabet import anneal_strands
+    >>> a = "TTA"
+    >>> b = "AAT"[::-1]
+    >>> anneal_strands(a, b)
+    True
+    >>> anneal_strands(b, a)
+    >>> c = "UUA"
+    >>> anneal_strands(c, b)
+    True
+    >>> anneal_strands(a.lower(), b)
+    True
+    >>> anneal_strands("TG", "AA")
+    False
+
+    Parameters
+    ----------
+    watson : str
+        DESCRIPTION.
+    crick : str
+        DESCRIPTION.
+
+    Returns
+    -------
+    bool
+        DESCRIPTION.
+
+    """
+    w = strand_a.translate(dscode_to_watson_table)
+    c = strand_b.translate(complement_table_for_dscode).translate(
+        dscode_to_crick_table
+    )[::-1]
+    for x, y in zip(w, c):
+        try:
+            basepair_dict[(x, y)]
+        except KeyError:
+            return False
+    return True
