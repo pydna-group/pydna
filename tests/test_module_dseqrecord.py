@@ -3,7 +3,6 @@
 
 import pytest
 import IPython
-import copy
 import warnings
 import glob
 
