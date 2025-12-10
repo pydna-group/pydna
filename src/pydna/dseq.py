@@ -275,10 +275,9 @@ class Dseq(_Seq):
 
     >>> Dseq(watson="agt", ovhg=2)
     Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-      File "/usr/local/lib/python2.7/dist-packages/pydna_/dsdna.py", line 169, in __init__
-        else:
-    ValueError: ovhg defined without crick strand!
+        ...
+    ValueError: ovhg (overhang) defined without a crick strand.
+
 
     The shape or topology of the fragment is set by the circular parameter, True or False (default).
 
@@ -294,7 +293,7 @@ class Dseq(_Seq):
     Dseq(o3)
     aaa
     ttt
-    >>> Dseq("aaa", "ttt", ovhg=1, circular = True)
+    >>> Dseq("aaa", "ttt", ovhg=1, circular = False)
     Dseq(-4)
      aaa
     ttt
@@ -700,18 +699,18 @@ class Dseq(_Seq):
         is the watson strand of a blunt version of the sequence.
 
         >>> ds = Dseq.from_representation(
-        '''
-        GAATTC
-          TAA
-        ''')
+        ... '''
+        ... GAATTC
+        ...   TAA
+        ... ''')
 
         >>> str(ds)
         'GAATTC'
         >>> ds = Dseq.from_representation(
-        '''
-          ATT
-        CTTAAG
-        ''')
+        ... '''
+        ...   ATT
+        ... CTTAAG
+        ... ''')
 
         >>> str(ds)
         'GAATTC'
@@ -996,7 +995,7 @@ class Dseq(_Seq):
         ("5'", 'ca')
         >>> a = Dseq("aa", "tt")
         >>> a
-        Dseq(-3)
+        Dseq(-2)
         aa
         tt
         >>> a.five_prime_end()
@@ -1045,14 +1044,14 @@ class Dseq(_Seq):
         aa
         tttg
         >>> a.three_prime_end()
-        ("3'", 'gt')
+        ("5'", 'gt')
         >>> a = Dseq("aaac", "tt", ovhg=0)
         >>> a
         Dseq(-4)
         aaac
         tt
         >>> a.three_prime_end()
-        ("5'", 'ac')
+        ("3'", 'ac')
         >>> from pydna.dseq import Dseq
         >>> a=Dseq("aaa", "ttt")
         >>> a
@@ -1485,10 +1484,10 @@ class Dseq(_Seq):
 
         >>> from pydna.dseq import Dseq
         >>> a = Dseq.from_representation(
-            '''
-            gatcaaa
-                tttctag
-            ''')
+        ... '''
+        ... gatcaaa
+        ...     tttctag
+        ... ''')
         >>> a
         Dseq(-11)
         gatcaaa
@@ -1594,18 +1593,18 @@ class Dseq(_Seq):
         ctag
         >>> ds.nibble_five_prime_left(4)
         Dseq(-4)
-
+        <BLANKLINE>
         ctag
         >>> ds = Dseq.from_representation(
-        '''
-        GGgatc
-          ctag
-        ''')
+        ... '''
+        ... GGgatc
+        ...   ctag
+        ... ''')
         >>> ds
         Dseq(-6)
         GGgatc
           ctag
-        ds.nibble_five_prime_left(2)
+        >>> ds.nibble_five_prime_left(2)
         Dseq(-4)
         gatc
         ctag
@@ -1675,10 +1674,10 @@ class Dseq(_Seq):
         gatc
 
         >>> ds = Dseq.from_representation(
-        '''
-        gatc
-        ctagGG
-        ''')
+        ... '''
+        ... gatc
+        ... ctagGG
+        ... ''')
         >>> ds.nibble_five_prime_right(2)
         Dseq(-4)
         gatc
@@ -1738,16 +1737,16 @@ class Dseq(_Seq):
         gatc
           ag
         >>> ds = Dseq.from_representation(
-        '''
-          gatc
-        CCctag
-        ''')
+        ... '''
+        ...   gatc
+        ... CCctag
+        ... ''')
         >>> ds
         Dseq(-6)
           gatc
         CCctag
         >>> ds.nibble_three_prime_left(2)
-        Dseq(-5)
+        Dseq(-4)
         gatc
         ctag
         """
@@ -1801,13 +1800,13 @@ class Dseq(_Seq):
         ctag
         >>> ds.nibble_three_prime_right(4)
         Dseq(-4)
-
+        <BLANKLINE>
         ctag
         >>> ds = Dseq.from_representation(
-        '''
-        gatcCC
-        ctag
-        ''')
+        ... '''
+        ... gatcCC
+        ... ctag
+        ... ''')
         >>> ds.nibble_three_prime_right(2)
         Dseq(-4)
         gatc
@@ -2326,7 +2325,7 @@ class Dseq(_Seq):
 
         >>> from pydna.dseq import Dseq
         >>> ds = Dseq("tagaaqtaqgtatg")
-        ds
+        >>> ds
         Dseq(-14)
         tagaa ta gtatg
         atcttcatccatac
@@ -2391,7 +2390,7 @@ class Dseq(_Seq):
 
         >>> from pydna.dseq import Dseq
         >>> ds = Dseq("tagaaptaqgtatg")
-        ds
+        >>> ds
         Dseq(-14)
         tagaagta gtatg
         atctt atccatac

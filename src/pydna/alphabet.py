@@ -778,6 +778,7 @@ def anneal_strands(strand_a: str, strand_b: str) -> bool:
     >>> anneal_strands(a, b)
     True
     >>> anneal_strands(b, a)
+        True
     >>> c = "UUA"
     >>> anneal_strands(c, b)
     True
