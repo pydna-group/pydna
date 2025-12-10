@@ -939,14 +939,6 @@ class Dseqrecord(_SeqRecord):
         contained in the iterable."""
         return sum([len(enzyme.search(self.seq)) for enzyme in _flatten(enzymes)])
 
-    # def cas9(self, RNA: str):
-    #     """docstring."""
-    #     fragments = []
-    #     result = []
-    #     for target in (self.seq, self.seq.rc()):
-    #         fragments = [self[sl.start : sl.stop] for sl in target.cas9(RNA)]
-    #         result.append(fragments)
-    #     return result
 
     def reverse_complement(self):
         """Reverse complement.
