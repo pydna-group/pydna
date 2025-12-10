@@ -271,7 +271,7 @@ def test_initialization():
     G A C
     C T G
     """)
-    assert Dseq("G A C ", "C T G"[::-1], 0) == s # TODO: should probably give an error
+    assert Dseq("G A C ", "C T G"[::-1], 0) == s # TODO: Discuss if this should raise an exeption.
 
     s = Dseq.from_representation(
     """

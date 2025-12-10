@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
 from pydna.dseq import Dseq
 
-def dseq():
+def test_dseq():
 
     x = Dseq( "gGGATCC",
              "  CCTAGG"[::-1], 1)
