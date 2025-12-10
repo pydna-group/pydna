@@ -4,7 +4,6 @@
 import pytest
 import IPython
 import warnings
-import glob
 
 from importlib import reload
 from unittest.mock import patch, mock_open, MagicMock
