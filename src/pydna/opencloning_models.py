@@ -524,6 +524,10 @@ class CreLoxRecombinationSource(AssemblySource):
     )
 
 
+class RecombinaseSource(AssemblySource):
+    pass
+
+
 class PCRSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_PCRSource]] = _PCRSource
     add_primer_features: bool = Field(default=False)

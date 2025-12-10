@@ -39,6 +39,7 @@ from pydna.types import (
 from pydna.gateway import gateway_overlap, find_gateway_sites
 from pydna.cre_lox import cre_loxP_overlap
 from pydna.alphabet import anneal_strands
+from pydna.recombinase import Recombinase
 
 from typing import TYPE_CHECKING, Callable, Literal
 from pydna.opencloning_models import (
@@ -52,6 +53,7 @@ from pydna.opencloning_models import (
     GatewaySource,
     HomologousRecombinationSource,
     CreLoxRecombinationSource,
+    RecombinaseSource,
     PCRSource,
     SourceInput,
     CRISPRSource,
@@ -2799,6 +2801,74 @@ def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
     """
     products = common_function_excision_products(genome, None, cre_loxP_overlap)
     return _recast_sources(products, CreLoxRecombinationSource)
+
+
+def recombinase_excision(
+    genome: Dseqrecord,
+    site1: str,
+    site2: str,
+) -> list[Dseqrecord]:
+    """Returns the products for recombinase-mediated excision.
+
+    Parameters
+    ----------
+    genome : Dseqrecord
+        Target genome sequence containing two recombinase sites.
+    site1 : str
+        First recombinase recognition site (lowercase = overlap core).
+    site2 : str
+        Second recombinase recognition site (lowercase = overlap core).
+
+    Returns
+    -------
+    list[Dseqrecord]
+        List containing excised plasmid and remaining genome sequence.
+    """
+    rec = Recombinase(site1, site2)
+    products = common_function_excision_products(genome, None, rec.overlap)
+    return _recast_sources(products, RecombinaseSource)
+
+
+def recombinase_integration(
+    genome: Dseqrecord,
+    inserts: list[Dseqrecord],
+    site1: str,
+    site2: str,
+) -> list[Dseqrecord]:
+    """Returns the products resulting from recombinase-mediated integration.
+
+    Parameters
+    ----------
+    genome : Dseqrecord
+        Target genome sequence.
+    inserts : list[Dseqrecord]
+        DNA fragment(s) to insert.
+    site1 : str
+        First recombinase recognition site (lowercase = overlap core).
+    site2 : str
+        Second recombinase recognition site (lowercase = overlap core).
+
+    Returns
+    -------
+    list[Dseqrecord]
+        List of integrated DNA molecules.
+
+    Examples
+    --------
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.assembly2 import recombinase_integration, recombinase_excision
+    >>> site1 = "ATGCCCTAAaaTT"
+    >>> site2 = "AAaaTTTTTTTCCCT"
+    >>> genome = Dseqrecord(f"cccccc{site1.upper()}aaaaa")
+    >>> insert = Dseqrecord(f"{site2.upper()}bbbbb", circular=True)
+    >>> products = recombinase_integration(genome, [insert], site1, site2)
+    >>> len(products) >= 1
+    True
+    """
+    fragments = common_handle_insertion_fragments(genome, inserts)
+    rec = Recombinase(site1, site2)
+    products = common_function_integration_products(fragments, None, rec.overlap)
+    return _recast_sources(products, RecombinaseSource)
 
 
 def crispr_integration(
