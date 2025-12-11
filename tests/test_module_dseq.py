@@ -16,6 +16,30 @@ from Bio.Restriction import (
 from seguid import ldseguid
 from seguid import cdseguid
 
+def test_dseq():
+
+    x = Dseq( "gGGATCC",
+             "  CCTAGG"[::-1], 1)
+
+    y = Dseq(" gGGATCC",
+             "  CCTAGG"[::-1], 0)
+
+    z = Dseq("  gGGATCC",
+              "  CCTAGG"[::-1], -1)
+
+    assert x == y == z
+
+    x = Dseq( " GGATCC",
+             " gCCTAGG"[::-1], 1)
+
+    y = Dseq("  GGATCC",
+             " gCCTAGG"[::-1], 0)
+
+    z = Dseq("   GGATCC",
+              " gCCTAGG"[::-1], -1)
+
+    assert x == y == z
+
 def test_cut1():
 
 
