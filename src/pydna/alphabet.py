@@ -608,16 +608,43 @@ def get_parts(datastring: str) -> DseqParts:
     )
 
 
-def dsbreaks(data: str):
+def dsbreaks(data: str) -> list[str]:
+    """
+    Find double strand breaks in DNA in dscode format.
+
+    An empty watson position next to an empty crick position in the dsDNA
+    leads to a discontinuous DNA. This function is used to show breaks in
+    DNA in Dseq.__init__.
+
+    >>> from pydna.alphabet import dsbreaks
+    >>> x, = dsbreaks("GATPFTAA")
+    >>> print(x)
+    [0:8]
+    GATG TAA
+    CTA TATT
+    >>> dsbreaks("GATC")
+    []
+
+    Parameters
+    ----------
+    data : str
+        A string representing DNA in dscode format.
+
+    Returns
+    -------
+    list[str]
+        A list of 3-line
+
+    """
 
     wl = _re.escape(five_prime_ss_letters)
     cl = _re.escape(three_prime_ss_letters)
 
     breaks = []
     regex = (
-        "(.{0,3})"  # context if present
-        f"([{wl}][{cl}]|[{cl}][{wl}])"  # ss chars next to each other
-        "(.{0,3})"  # context if present
+        "(.{0,3})"  # return context if present.
+        f"([{wl}][{cl}]|[{cl}][{wl}])"  # find adjacent single strand chars.
+        "(.{0,3})"  # return context if present.
     )
     for mobj in _re.finditer(regex, data):
         chunk = mobj.group()
@@ -721,22 +748,49 @@ def regex_ss_melt_factory(length: int) -> _re.Pattern:
     """
     A regular expression for finding single strand regions in dscode.
 
+    This function creates a regular expression to find single strand regions
+    in double stranded DNA in dscode format.
+
+    Regions shorter or equal to length are found. This function is used in
+    the Dseq.get_ss_meltsites method.
+
+    The regular expression finds double stranded patches flanked by empty
+    positions on the same side (see figure below). Melting of this kind of
+    sites leads to the shedding of a single stranded fragment.
 
     ::
 
+        GFTTAJA   <-- dscode
+
+        G TTA A   <-- "TTA" is found by the regex for length <= 3
+        CTAATGT
 
 
+    Examples
+    --------
+
+    >>> from pydna.dseq import Dseq
+    >>> regex = regex_ss_melt_factory(3)
+    >>> s = Dseq("GFTTAJA")
+    >>> s
+    Dseq(-7)
+    G TTA A
+    CTAATGT
+    >>> mobj = regex.search(s._data)
+    >>> mobj.groupdict()
+    {'watson': None, 'crick': b'TTA'}
 
 
     Parameters
     ----------
     length : int
-        Minimul length of double stranded region.
+        Max length of double stranded region flanked by single stranded
+        regions.
 
     Returns
     -------
     TYPE
-        DESCRIPTION.
+        regular expression object.
 
     """
 
@@ -753,6 +807,51 @@ def regex_ss_melt_factory(length: int) -> _re.Pattern:
 
 
 def regex_ds_melt_factory(length: int) -> _re.Pattern:
+    """
+    A regular expression for finding single strand regions in dscode.
+
+    This function creates a regular expression to find single strand regions
+    in double stranded DNA in dscode format.
+
+    Regions shorter or equal to length are found. This function is used in
+    the Dseq.get_ds_meltsites method.
+
+    The regular expression finds double stranded patches flanked by empty
+    positions on opposite sides(see figure below). Melting of this kind of
+    sites leads to separation into multiple double stranded fragments.
+
+    ::
+        aaaGFTTAIAttt   <-- dscode
+
+        aaaG TTACAttt   <-- "TTA" is found by the regex for length <= 3
+        tttCTAAT Taaa
+
+    Examples
+    --------
+
+    >>> from pydna.dseq import Dseq
+    >>> regex = regex_ds_melt_factory(3)
+    >>> s = Dseq("aaaGFTTAIAttt")
+    >>> s
+    Dseq(-13)
+    aaaG TTACAttt
+    tttCTAAT Taaa
+    >>> mobj = regex.search(s._data)
+    >>> mobj.groupdict()
+    {'watson': None, 'crick': b'TTA'}
+
+    Parameters
+    ----------
+    length : int
+        Max length of double stranded region flanked by single stranded
+        regions.
+
+    Returns
+    -------
+    TYPE
+        regular expression object.
+
+    """
 
     regex = (
         f"(?P<watson>((?<=[{ss_letters_watson}])|^)"
@@ -772,13 +871,16 @@ def anneal_strands(strand_a: str, strand_b: str) -> bool:
 
     Both strands are assumed to be given in 5' -> 3' direction.
 
+    Examples
+    --------
+
     >>> from pydna.alphabet import anneal_strands
     >>> a = "TTA"
     >>> b = "AAT"[::-1]
     >>> anneal_strands(a, b)
     True
     >>> anneal_strands(b, a)
-        True
+    True
     >>> c = "UUA"
     >>> anneal_strands(c, b)
     True
@@ -790,14 +892,14 @@ def anneal_strands(strand_a: str, strand_b: str) -> bool:
     Parameters
     ----------
     watson : str
-        DESCRIPTION.
+        A single DNA strand.
     crick : str
-        DESCRIPTION.
+        A single DNA strand.
 
     Returns
     -------
     bool
-        DESCRIPTION.
+        True if annealing is perfect.
 
     """
     w = strand_a.translate(dscode_to_watson_table)
