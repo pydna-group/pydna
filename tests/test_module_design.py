@@ -8,10 +8,12 @@ from pydna.amplify import pcr
 from pydna.assembly import Assembly
 from pydna.dseqrecord import Dseqrecord
 from pydna.design import primer_design
+from pydna.design import user_assembly_design
 from pydna.design import assembly_fragments
 from pydna.design import circular_assembly_fragments
 from pydna.parsers import parse
 from pydna.primer import Primer
+
 
 frags = parse(
     """
@@ -368,5 +370,143 @@ def test_primer_design_correct_value():
             assert str(rvs.seq) == str(correct_rvs.seq)
 
 
-# if __name__ == "__main__":
-#     pytest.cmdline.main([__file__, "-v", "-s"])
+def test_user_assembly_design_across():
+
+    """
+
+
+    ::
+
+                                         overlap
+                                      _____15______
+                                     |             |
+        CCCAAACCGGTCACTTACCACTGCCAATAAGGGG         |
+        CAGGGTTTGGAGTGAATGGTGACGGTTATTCCCC         |
+                                     |    aagccgaactgggccagacaacccggcgctaaca
+                                     44   ttcggcttgacccggtctgttgggccgcgattgt
+                                                   |
+                                                   9
+
+
+        CCCAAACCGGTCACTTACCACTGCCAATAAGGGG         9
+                          ||||||||||||||||         |
+                        3-GTGACGGTTATUCCCCTTCGGCTTGA-5
+
+                                   5-AGGGGAAGCCGAACUGGGC-3
+                                     |    ||||||||||||||
+                                     44   ttcggcttgacccggtctgttgggccgcgattgt
+
+
+    """
+
+    a = Dseqrecord("CCCAAACCGGTCACTTACCACTGCCAATAAGGGG")
+    b = Dseqrecord("AAGCCGAACtGGGCCAGACAACCCGGCGCTAACA")
+
+    ths, nxt = user_assembly_design((a, b))
+
+    a_user = pcr(ths).seq.user()
+    a_sticky, stuffer = a_user.melt(14)
+
+    b_user = pcr(nxt).seq.user()
+    stuffer, b_sticky = b_user.melt(14)
+
+    assert (a + b).seq == a_sticky + b_sticky
+
+def test_user_assembly_design_left_side():
+
+    """
+
+
+    ::
+                            TGCCAAT
+                            overlap
+                            ____7__
+                           |       |
+
+        CCCAAACCGGTCACAAGCGCTTACCACTGCCAATAAGGGG                ____14_______
+        GGGTTTGGCCAGTGTTCGCGAATGGTGACGGTTATTCCCC               |             |
+                           |       |            AAGCCGAACAGGGCCAGACAACCCGGCGCTAACG
+                          19      27            TTCGGCTTGTCCCGGTCTGTTGGGCCGCGATTGC
+                                                               |             |
+                                                              15            29
+
+
+        CCCAAACCGGTCACAAGCGCTTACCACTGCCAATAAGGGG
+                          ||||||||||||||||
+                        3-CGAATGGUGACGGTTA
+
+                                 ACTGCCAAUAAGGGGAAGCCGAACAGGGC-3
+                                                ||||||||||||||
+                                                TTCGGCTTGTCCCGGTCTGTTGGGCCGCGATTGC
+
+        CCCAAACCGGTCACAAGCGCTTACCACTGCCAAT
+        GGGTTTGGCCAGTGTTCGCGAATGGUGACGGTTA
+
+                                 ACTGCCAAUAAGGGGAAGCCGAACaGGGCCAGACAACCCGGCGCTAACG
+                                 TGACGGTTATTCCCCTTCGGCTTGTCCCGGTCTGTTGGGCCGCGATTGC
+
+
+
+        CCCAAACCGGTCACAAGCGCTTACCACTGCCAAT
+        GGGTTTGGCCAGTGTTCGCGAATGG GACGGTTA
+
+                                 ACTGCCAA AAGGGGAAGCCGAACaGGGCCAGACAACCCGGCGCTAACG
+                                 TGACGGTTATTCCCCTTCGGCTTGTCCCGGTCTGTTGGGCCGCGATTGC
+
+        CCCAAACCGGTCACAAGCGCTTACCACTGCCAAT
+        GGGTTTGGCCAGTGTTCGCGAATGG|||||||||AAGGGGAAGCCGAACaGGGCCAGACAACCCGGCGCTAACG
+                                 TGACGGTTATTCCCCTTCGGCTTGTCCCGGTCTGTTGGGCCGCGATTGC
+
+    """
+
+    a = Dseqrecord("CCCAAACCGGTCACAAGCGCTTACCACTGCCAATAAGGGG")
+    b = Dseqrecord("AAGCCGAACaGGGCCAGACAACCCGGCGCTAACG")
+
+    ths, nxt = user_assembly_design((a, b))
+
+    a_user = pcr(ths).seq.user()
+    a_sticky, stuffer = a_user.melt(8)
+
+    b_user = pcr(nxt).seq.user()
+    stuffer, b_sticky = b_user.melt(8)
+
+    assert (a + b).seq == a_sticky + b_sticky
+
+def test_user_assembly_design_right_side():
+    """
+
+
+    ::
+
+
+
+        GTCCCCGCGCCTCGGCCTTGGCGGCCTCCGTCATCTGGGG                ____14_______
+        CAGGGGCGCGGAGCCGGAACCGCCGGAGGCAGTAGACCCC               |             |
+                                                AAGCCGAACAGGGCCAGACAACCCGGCGCTAACGCCGGGGCGCGCCGCCCCGCG
+                                                TTCGGCTTGTCCCGGTCTGTTGGGCCGCGATTGCGGCCCCGCGCGGCGGGGCGC
+                                                               |             |
+                                                              15            29
+
+
+        GTCCCCGCGCCTCGGCCTTGGCGGCCTCCGTCATCTGGGG
+                                ||||||||||||||||
+                              3-GGAGGCAGTAGACCCCTTCGGCTTGTCCCGGUCTGTTGGGCCGCGA
+
+                                                               AGACAACCCGGCGCU-3
+                                                               |||||||||||||||
+                                                TTCGGCTTGTCCCGGTCTGTTGGGCCGCGATTGCGGCCCCGCGCGGCGGGGCGC
+
+
+    """
+    a = Dseqrecord("GTCCCCGCGCCTCGGCCTTGGCGGCCTCCGTCATCTGGGG")
+    b = Dseqrecord("AAGCCGAACAGGGCCAGACAACCCGGCGCTAACGCCGGGGCGCGCCGCCCCGCG")
+
+    ths, nxt = user_assembly_design((a, b))
+
+    a_user = pcr(ths).seq.user()
+    a_sticky, stuffer = a_user.melt(14)
+
+    b_user = pcr(nxt).seq.user()
+    stuffer, b_sticky = b_user.melt(14)
+
+    assert (a + b).seq == a_sticky + b_sticky

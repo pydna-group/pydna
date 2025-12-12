@@ -16,8 +16,6 @@
 
 from pydna.tm import tm_default as _tm_default
 import math as _math
-
-# import os as _os
 import copy as _copy
 from pydna.amplicon import Amplicon as _Amplicon
 from pydna.amplify import Anneal as _Anneal
@@ -26,8 +24,7 @@ from pydna.dseqrecord import Dseqrecord as _Dseqrecord
 from pydna.primer import Primer as _Primer
 import operator as _operator
 from typing import Tuple
-from itertools import pairwise
-from pydna.dseqrecord import Dseqrecord
+from itertools import pairwise, product
 import re
 from pydna.primer import Primer
 
@@ -808,58 +805,51 @@ def circular_assembly_fragments(f, overlap=35, maxlink=40):
     return assembly_fragments(f, overlap=overlap, maxlink=maxlink, circular=True)
 
 
-def user_assembly_design():
-    """
-    Work in progress
+def user_assembly_design(
+    f: list[_Amplicon], max_overlap: int = 15, min_overlap: int = 4, max_tail=50
+) -> list[_Amplicon]:
 
+    import warnings
 
+    warnings.warn(
+        "The user_assembly_design function is experimental and "
+        "may change in future versions.",
+        category=FutureWarning,
+        stacklevel=2,
+    )
 
-
-                                                   overlap
-                                                 _____15______
-                                                |             |
-    TTAGAAGTAGGGATAGTCCCAAACCTCACTTACCACTGCCAATAAGGGG         |
-    AATCTTCATCCCTATCAGGGTTTGGAGTGAATGGTGACGGTTATTCCCC         |
-                                                |    aagccgaactgggccagacaacccggcgctaacgcactca
-                                                44   ttcggcttgacccggtctgttgggccgcgattgcgtgagt
-                                                              |
-                                                              9
-
-
-
-    TTAGAAGTAGGGATAGTCCCAAACCTCACTTACCACTGCCAATAAGGGG         9
-                                     ||||||||||||||||         |
-                                     GTGACGGTTATUCCCCTTCGGCTTGA
-
-    AATCTTCATCCCTATCAGGGTTTGGAGTGAATGGTGACGGTTATTCCCC
-
-                                                     aagccgaactgggccagacaacccggcgctaacgcactca
-    AGGGGAAGCCGAACUGGGC
-                                                AGGGGAAGCCGAACUGGGC
-                                                |    ||||||||||||||
-                                                44   ttcggcttgacccggtctgttgggccgcgattgcgtgagt
-
-    """
-
-    a1 = Dseqrecord("TTAGAAGTAGGGATAGTCCCAAACCTCACTTACCACTGCCAATAAGGGG")
-    b1 = Dseqrecord("AAGCCGAACTGGGCCAGACAACCCGGCGCTAACGCACTCA")
-    fragments = [a1, b1]
+    assert max_overlap > min_overlap, (
+        f"max_overlap ({max_overlap}) "
+        "has to be larger than min_overlap "
+        f"({min_overlap})"
+    )
     amplicons = []
 
-    for fragment in fragments:
+    for fragment in f:
         amplicons.append(primer_design(fragment))
+
+    flag = True
 
     for ths, nxt in pairwise(amplicons):
 
-        A_positions = [m.start() for m in re.finditer("A|a", str(ths.seq))]
-        T_positions = [m.start() for m in re.finditer("T|t", str(nxt.seq))]
+        A_positions_in_ths = [m.start() for m in re.finditer("A|a", str(ths.seq))]
+        T_positions_in_nxt = [m.start() for m in re.finditer("T|t", str(nxt.seq))]
 
-        for x, y in zip(A_positions[::-1], T_positions):
+        for ths_a, ths_t in zip(A_positions_in_ths[::-1], T_positions_in_nxt):
 
-            sticky_length = y + len(ths) - x
+            sticky_length = ths_t + len(ths) - ths_a
 
-            rp = bytearray(nxt.seq[: y + 1].rc()._data + ths.reverse_primer.seq._data)
-            fp = bytearray(ths.seq[x:]._data + nxt.forward_primer.seq._data)
+            if sticky_length < min_overlap:
+                continue
+
+            if sticky_length > max_overlap:
+                flag = False
+                break
+
+            rp = bytearray(
+                nxt.seq[: ths_t + 1].rc()._data + ths.reverse_primer.seq._data
+            )
+            fp = bytearray(ths.seq[ths_a:]._data + nxt.forward_primer.seq._data)
 
             fp[sticky_length] = ord(b"U")
             rp[sticky_length] = ord(b"U")
@@ -867,14 +857,84 @@ def user_assembly_design():
             ths.reverse_primer = Primer(rp)
             nxt.forward_primer = Primer(fp)
 
+            break  # Primers were designed.
+        else:
+            flag = False
+
+        if flag:
+            continue
+
+        # No suitable T-A pair was found on opposite sides of both fragments
+        # Look for T-A pairs contained in either sequence
+        # Distance between the T-A and proximity to the junction are important
+        # factors
+        T_positions_in_ths = [m.start() for m in re.finditer("T|t", str(ths.seq))]
+        pairs_ths = product(A_positions_in_ths[::-1], T_positions_in_ths[::-1])
+
+        for ths_a, ths_t in pairs_ths:
+            if ths_a > ths_t:
+                continue
+            sticky_length = ths_t - ths_a
+            if sticky_length < min_overlap:
+                continue
+            if sticky_length > max_overlap:
+                continue
+            pair_ths = ths_a, ths_t
             break
+        else:
+            pair_ths = tuple()
+            ths_a, ths_t = 0, 0
 
-    a2 = _pcr(ths).seq
-    a2_user = a2.user()
-    a2_sticky, stuffer = a2_user.melt(14)
+        A_positions_in_nxt = [m.start() for m in re.finditer("A|a", str(nxt.seq))]
+        pairs_nxt = product(A_positions_in_nxt, T_positions_in_nxt)
 
-    b2 = _pcr(nxt).seq
-    b2_user = b2.user()
-    stuffer, b2_sticky = b2_user.melt(14)
+        for nxt_a, nxt_t in pairs_nxt:
+            if nxt_a > nxt_t:
+                continue
+            sticky_length = nxt_t - nxt_a
+            if sticky_length < min_overlap:
+                continue
+            if sticky_length > max_overlap:
+                continue
+            pair_nxt = nxt_a, nxt_t
+            break
+        else:
+            pair_nxt = tuple()
+            nxt_a, nxt_t = 0, 0
 
-    assert (a1 + b1).seq == a2_sticky + b2_sticky
+        if (pair_ths and not pair_nxt) or len(ths) - ths_a <= nxt_t:
+            # T-A pair in ths;
+            # Move ths reverse primer downstream
+            # Extend nxt foward primer tail
+
+            fp = bytearray(ths.seq[ths_a:]._data + nxt.forward_primer.seq._data)
+            fp[ths_t - ths_a] = ord(b"U")
+            nxt.forward_primer = Primer(fp)
+            shorter_ths = ths[: ths_t + 1]
+            rp = bytearray(
+                primer_design(
+                    shorter_ths, limit=ths_t - ths_a + 1
+                ).reverse_primer.seq._data
+            )
+            rp[ths_t - ths_a] = ord(b"U")
+            ths.reverse_primer = Primer(rp)
+
+        elif (not pair_ths and pair_nxt) or len(ths) - ths_a >= nxt_t:
+            # T-A pair in nxt; modify ths reverse primer
+            # Move nxt forward primer upstream
+            # Extend ths reverse primer tail
+            rp = bytearray(
+                nxt.seq[: nxt_t + 1].rc()._data + ths.reverse_primer.seq._data
+            )
+            rp[nxt_t - nxt_a] = ord(b"U")
+            ths.reverse_primer = Primer(rp)
+            shorter_nxt = nxt[nxt_a:]
+            fp = bytearray(
+                primer_design(
+                    shorter_nxt, limit=nxt_t - nxt_a + 1
+                ).forward_primer.seq._data
+            )
+            fp[nxt_t - nxt_a] = ord(b"U")
+            nxt.forward_primer = Primer(fp)
+
+    return amplicons

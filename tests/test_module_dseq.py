@@ -1435,3 +1435,58 @@ def test_nibble():
     assert Dseq("qq").nibble_three_prime_left() == Dseq("q")
     assert Dseq("qq").nibble_five_prime_right() == Dseq("q")
     assert Dseq("qq").nibble_three_prime_right() == Dseq("qq")
+
+def NO_test_anneal():
+
+    # Dseq(-9)
+    # GGATC   G
+    # C   GTAGC
+
+    assert Dseq("GPEXI") / Dseq("JFZJG") == Dseq("GPEXCFZJG")
+
+    with pytest.raises(TypeError):
+        Dseq("GPEXI") + Dseq("JFZJG")
+
+    # Dseq(-9)
+    # GGATC   G
+    # C   GTAGC
+    assert Dseq("GPEXI") / Dseq("JFZJG") == Dseq("GPEXCFZJG")
+
+    # GGACT       G
+    # C       GTAGC
+    assert Dseq("GPEIX") / Dseq("JFZJG") == None
+
+    # Dseq(-8)
+    # GGACT  G
+    # C  GATGC
+    assert Dseq("GPEIX") / Dseq("JZFJG") == Dseq("GPECTFJG")
+
+    # Dseq(-8)
+    # GGACTA G
+    # C  GATGC
+    Dseq("GPEIXE") / Dseq("JZFJG") == Dseq("GPECTAJG")
+
+    # Dseq(-8)
+    # GGACTA G
+    # C TGATGC
+    assert Dseq("GPEIXE") / Dseq("FJZFJG") == Dseq("GPACTAJG")
+
+    # Dseq(-8)
+    # GGACTA G
+    # C  GATGC
+    assert Dseq("GPEIXE") / Dseq("JZFJG") == Dseq("GPECTAJG")
+
+    # Dseq(-8)
+    # GGACTA G
+    # C TGATGC
+    assert Dseq("GPEIXE") / Dseq("FJZFJG") == Dseq("GPACTAJG")
+
+    # Dseq(-8)
+    # GGACTACG
+    # C TGATGC
+    assert Dseq("GPEIXEI") / Dseq("FJZFJG") == Dseq("GPACTACG")
+
+    # Dseq(-8)
+    # GGACTACG
+    # CCTGATGC
+    assert Dseq("GPEIXEI") / Dseq("QFJZFJG") == Dseq("GGACTACG")
