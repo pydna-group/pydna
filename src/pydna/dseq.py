@@ -729,16 +729,16 @@ class Dseq(_Seq):
         return self._data.translate(dscode_to_full_sequence_table)
 
     def mw(self) -> float:
-        """The molecular weight of the DNA molecule in g/mol.
+        """The molecular weight of the DNA/RNA molecule in g/mol.
 
         The following formula is used:
         ::
 
                MW = (A x 313.2) + (T x 304.2) +
                     (C x 289.2) + (G x 329.2) +
-                    (N x 308.9) + 79.0
+                    (U x 290.2) + (N x 308.9) + 79.0
 
-        The 79.0 added in the end is the 5' phosphate group.
+        The 79.0 added at the end is the 5' phosphate group.
         """
         nts = (self.watson + self.crick).lower()
 
@@ -747,6 +747,7 @@ class Dseq(_Seq):
             + 304.2 * nts.count("t")
             + 289.2 * nts.count("c")
             + 329.2 * nts.count("g")
+            + 290.2 * nts.count("u")
             + 308.9 * nts.count("n")
             + 79.0
         )
