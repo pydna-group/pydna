@@ -658,13 +658,13 @@ class Dseqrecord(_SeqRecord):
         >>> from pydna.dseqrecord import Dseqrecord
         >>> s=Dseqrecord("atgtacgatcgtatgctggttatattttag")
         >>> s.seq.translate()
-        Seq('MYDRMLVIF*')
+        ProteinSeq('MYDRMLVIF*')
         >>> "RML" in s
         True
         >>> "MMM" in s
         False
         >>> s.seq.rc().translate()
-        Seq('LKYNQHTIVH')
+        ProteinSeq('LKYNQHTIVH')
         >>> "QHT" in s.rc()
         True
         >>> "QHT" in s
@@ -680,7 +680,7 @@ class Dseqrecord(_SeqRecord):
         cgtatgctg
         gcatacgac
         >>> code.translate()
-        Seq('RML')
+        ProteinSeq('RML')
         """
         other = str(other).lower()
         assert self.seq.watson == "".join(self.seq.watson.split())
@@ -938,7 +938,6 @@ class Dseqrecord(_SeqRecord):
         """The number of cuts by digestion with the Restriction enzymes
         contained in the iterable."""
         return sum([len(enzyme.search(self.seq)) for enzyme in _flatten(enzymes)])
-
 
     def reverse_complement(self):
         """Reverse complement.
