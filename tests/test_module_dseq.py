@@ -666,6 +666,8 @@ def test_dseq():
 
     assert obj1.find("tgtagta") == 9
 
+    assert obj1.find("gtcta" "tag") == 25 # find substring over origin
+
     assert Dseq("tagcgtagctgtagtatgtgatctggtcta", "tagaccagatcacatactacagctacgcta").looped() == obj1
 
 
