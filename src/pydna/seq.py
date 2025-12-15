@@ -38,20 +38,109 @@ class Seq(_Seq):
     # def full_sequence(self):
     #     return self
 
+    # def translate(
+    #     self,
+    #     *args,
+    #     stop_symbol: str = "*",
+    #     to_stop: bool = False,
+    #     cds: bool = False,
+    #     gap: str = "-",
+    #     **kwargs,
+    # ) -> "ProteinSeq":
+    #     """Translate.."""
+    #     p = super().translate(
+    #         *args, stop_symbol=stop_symbol, to_stop=to_stop, cds=cds, gap=gap, **kwargs
+    #     )
+    #     return ProteinSeq(p._data)
+
     def translate(
         self,
-        *args,
-        stop_symbol: str = "*",
+        table: [str, int] = "Standard",
+        stop_symbol: [str] = "*",
         to_stop: bool = False,
         cds: bool = False,
         gap: str = "-",
-        **kwargs,
-    ) -> "ProteinSeq":
-        """Translate.."""
-        p = super().translate(
-            *args, stop_symbol=stop_symbol, to_stop=to_stop, cds=cds, gap=gap, **kwargs
+    ) -> _Seq:
+
+        # TODO: is this method needed?
+        """
+        Translate into protein.
+
+        The table argument is the name of a codon table (string). These names
+        can be for example "Standard" or "Alternative Yeast Nuclear" for the
+        yeast CUG clade where the CUG codon is translated as serine instead
+        of the standard leucine.
+
+        Over forty translation tables are available from the BioPython
+        Bio.Data.CodonTable module. Look at the keys of the dictionary
+        ´CodonTable.ambiguous_generic_by_name´.
+        These are based on tables in this file provided by NCBI:
+
+        https://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt
+
+        Standard table
+
+          |  T      |  C      |  A      |  G      |
+        --+---------+---------+---------+---------+--
+        T | TTT F   | TCT S   | TAT Y   | TGT C   | T
+        T | TTC F   | TCC S   | TAC Y   | TGC C   | C
+        T | TTA L   | TCA S   | TAA Stop| TGA Stop| A
+        T | TTG L(s)| TCG S   | TAG Stop| TGG W   | G
+        --+---------+---------+---------+---------+--
+        C | CTT L   | CCT P   | CAT H   | CGT R   | T
+        C | CTC L   | CCC P   | CAC H   | CGC R   | C
+        C | CTA L   | CCA P   | CAA Q   | CGA R   | A
+        C | CTG L(s)| CCG P   | CAG Q   | CGG R   | G
+        --+---------+---------+---------+---------+--
+        A | ATT I   | ACT T   | AAT N   | AGT S   | T
+        A | ATC I   | ACC T   | AAC N   | AGC S   | C
+        A | ATA I   | ACA T   | AAA K   | AGA R   | A
+        A | ATG M(s)| ACG T   | AAG K   | AGG R   | G
+        --+---------+---------+---------+---------+--
+        G | GTT V   | GCT A   | GAT D   | GGT G   | T
+        G | GTC V   | GCC A   | GAC D   | GGC G   | C
+        G | GTA V   | GCA A   | GAA E   | GGA G   | A
+        G | GTG V   | GCG A   | GAG E   | GGG G   | G
+        --+---------+---------+---------+---------+--
+
+
+        Parameters
+        ----------
+        table : [str, int], optional
+            The default is "Standard". Can be a table id integer, see here for table
+            numbering https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
+        stop_symbol : [str], optional
+            The default is "*". Single character string to indicate translation stop.
+        to_stop : bool, optional
+            The default is False. True means that translation terminates at the first
+              in frame stop codon. False translates to the end.
+        cds : bool, optional
+            The default is False. If True, checks that the sequence starts with a
+            valid alternative start codon sequence length is a multiple of three, and
+            that there is a single in frame stop codon at the end. If these tests fail,
+            an exception is raised.
+        gap : str, optional
+            The default is "-".
+
+        Returns
+        -------
+        Bio.Seq.Seq
+            A Biopython Seq object with the translated amino acid code.
+
+        """
+
+        p = _Seq(self._data).translate(
+            stop_symbol=stop_symbol, to_stop=to_stop, cds=cds, gap=gap
         )
         return ProteinSeq(p._data)
+
+    def transcribe(self) -> _Seq:
+        """
+        Transcribe a DNA sequence into RNA and return the RNA sequence
+        as a new Seq object.
+
+        """
+        return Seq(_Seq(self._data).transcribe()._data)
 
     def gc(self) -> float:
         """Return GC content."""
