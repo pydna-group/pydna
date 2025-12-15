@@ -24,7 +24,7 @@ from seguid import ldseguid as _ldseguid
 from seguid import cdseguid as _cdseguid
 
 from pydna.seq import Seq as _Seq
-from Bio.Seq import _translate_str, _SeqAbstractBaseClass
+from Bio.Seq import _SeqAbstractBaseClass
 from pydna._pretty import pretty_str as _pretty_str
 from pydna.utils import rc as _rc
 from pydna.utils import flatten as _flatten
@@ -125,7 +125,7 @@ class CircularBytes(bytes):
 
     def find(
         self,
-        sub: bytes | bytearray | memoryview,
+        sub: bytes | bytearray | memoryview | str,
         start: int = 0,
         end: int | None = None,
     ) -> int:
@@ -140,6 +140,11 @@ class CircularBytes(bytes):
 
         end = n if end is None else min(end, n)
         doubled = self + self
+        try:
+            sub = sub.encode("ascii")
+        except AttributeError:
+            pass
+
         pos = doubled.find(bytes(sub), start, n + len(sub) - 1)
 
         if pos == -1 or pos >= n:
@@ -676,7 +681,7 @@ class Dseq(_Seq):
             DESCRIPTION.
 
         """
-        parts = get_parts(self._data.decode("ascii"))
+        parts = self.get_parts()
         if parts.single_watson or parts.single_crick:
             return None
         return -len(parts.sticky_left5) or len(parts.sticky_left3)
@@ -686,7 +691,7 @@ class Dseq(_Seq):
     @property
     def right_ovhg(self) -> int:
         """Overhang at the right side (end)."""
-        parts = get_parts(self._data.decode("ascii"))
+        parts = self.get_parts()
         if parts.single_watson or parts.single_crick:
             return None
         return -len(parts.sticky_right5) or len(parts.sticky_right3)
@@ -801,7 +806,11 @@ class Dseq(_Seq):
         >>> seq.find("ta")
         2
         """
-        return super().find(sub, start, end)
+        if self.circular:
+            result = CircularBytes(self._data).find(sub, start, end)
+        else:
+            result = super().find(sub, start, end)
+        return result
 
     def __contains__(self, sub: [str, bytes]) -> bool:
         return self.find(sub) != -1
@@ -1010,7 +1019,7 @@ class Dseq(_Seq):
 
         # See docstring for function pydna.utils.get_parts for details
         # on what is contained in parts.
-        parts = get_parts(self._data.decode("ascii"))
+        parts = self.get_parts()
 
         sticky5 = parts.sticky_left5.translate(dscode_to_watson_table)
 
@@ -1070,7 +1079,7 @@ class Dseq(_Seq):
 
         # See docstring for function pydna.utils.get_parts for details
         # on what is contained in parts.
-        parts = get_parts(self._data.decode("ascii"))
+        parts = self.get_parts()
 
         sticky5 = parts.sticky_right5.translate(dscode_to_crick_table)[::-1]
 
@@ -1285,93 +1294,6 @@ class Dseq(_Seq):
 
     klenow = fill_in  # alias
 
-    def transcribe(self) -> _Seq:
-        """
-        Transcribe a DNA sequence into RNA and return the RNA sequence as a new Seq object.
-
-        Note that only the Watson strand is considered.
-        """
-        return _Seq(self.watson).transcribe()
-
-    def translate(
-        self,
-        table: [str, int] = "Standard",
-        stop_symbol: [str] = "*",
-        to_stop: bool = False,
-        cds: bool = False,
-        gap: str = "-",
-    ) -> _Seq:
-
-        # TODO: is this method needed?
-        """
-        Translate into protein.
-
-        The table argument is the name of a codon table (string). These names
-        can be for example "Standard" or "Alternative Yeast Nuclear" for the
-        yeast CUG clade where the CUG codon is translated as serine instead
-        of the standard leucine.
-
-        Over forty translation tables are available from the BioPython
-        Bio.Data.CodonTable module. Look at the keys of the dictionary
-        ´CodonTable.ambiguous_generic_by_name´.
-        These are based on tables in this file provided by NCBI:
-
-        https://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt
-
-        Standard table
-
-          |  T      |  C      |  A      |  G      |
-        --+---------+---------+---------+---------+--
-        T | TTT F   | TCT S   | TAT Y   | TGT C   | T
-        T | TTC F   | TCC S   | TAC Y   | TGC C   | C
-        T | TTA L   | TCA S   | TAA Stop| TGA Stop| A
-        T | TTG L(s)| TCG S   | TAG Stop| TGG W   | G
-        --+---------+---------+---------+---------+--
-        C | CTT L   | CCT P   | CAT H   | CGT R   | T
-        C | CTC L   | CCC P   | CAC H   | CGC R   | C
-        C | CTA L   | CCA P   | CAA Q   | CGA R   | A
-        C | CTG L(s)| CCG P   | CAG Q   | CGG R   | G
-        --+---------+---------+---------+---------+--
-        A | ATT I   | ACT T   | AAT N   | AGT S   | T
-        A | ATC I   | ACC T   | AAC N   | AGC S   | C
-        A | ATA I   | ACA T   | AAA K   | AGA R   | A
-        A | ATG M(s)| ACG T   | AAG K   | AGG R   | G
-        --+---------+---------+---------+---------+--
-        G | GTT V   | GCT A   | GAT D   | GGT G   | T
-        G | GTC V   | GCC A   | GAC D   | GGC G   | C
-        G | GTA V   | GCA A   | GAA E   | GGA G   | A
-        G | GTG V   | GCG A   | GAG E   | GGG G   | G
-        --+---------+---------+---------+---------+--
-
-
-        Parameters
-        ----------
-        table : [str, int], optional
-            The default is "Standard". Can be a table id integer, see here for table
-            numbering https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
-        stop_symbol : [str], optional
-            The default is "*". Single character string to indicate translation stop.
-        to_stop : bool, optional
-            The default is False. True means that translation terminates at the first
-              in frame stop codon. False translates to the end.
-        cds : bool, optional
-            The default is False. If True, checks that the sequence starts with a
-            valid alternative start codon sequence length is a multiple of three, and
-            that there is a single in frame stop codon at the end. If these tests fail,
-            an exception is raised.
-        gap : str, optional
-            The default is "-".
-
-        Returns
-        -------
-        Bio.Seq.Seq
-            A Biopython Seq object with the translated amino acid code.
-
-        """
-        return _Seq(
-            _translate_str(str(self), table, stop_symbol, to_stop, cds, gap=gap)
-        )
-
     def nibble_to_blunt(self) -> DseqType:
         """
         Simulates treatment a nuclease with both 5'-3' and 3'-5' single
@@ -1420,7 +1342,7 @@ class Dseq(_Seq):
 
 
         """
-        parts = get_parts(self._data.decode("ascii"))
+        parts = self.get_parts()
         return self.__class__(parts.middle)
 
     mung = nibble_to_blunt
@@ -1925,7 +1847,7 @@ class Dseq(_Seq):
         >>> a.isblunt()
         False
         """
-        parts = get_parts(self._data.decode("ascii"))
+        parts = self.get_parts()
 
         return not any(
             (
@@ -2439,7 +2361,7 @@ class Dseq(_Seq):
         NNNN               NNNNCTAG
         """
 
-        p = get_parts(self._data.decode("ascii"))
+        p = self.get_parts()
 
         ds_stuffer = (p.sticky_right5 or p.sticky_right3).translate(
             dscode_to_full_sequence_table
@@ -2460,7 +2382,7 @@ class Dseq(_Seq):
         CTAGNNNN           CTAGNNNN
         """
 
-        p = get_parts(self._data.decode("ascii"))
+        p = self.get_parts()
 
         ds_stuffer = (p.sticky_left5 or p.sticky_left3).translate(
             dscode_to_full_sequence_table
@@ -2848,3 +2770,6 @@ class Dseq(_Seq):
             cutsites.append(cutsites[0])
 
         return list(zip(cutsites, cutsites[1:]))
+
+    def get_parts(self):
+        return get_parts(self._data.decode("ascii"))
