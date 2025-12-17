@@ -2263,8 +2263,8 @@ class Dseq(_Seq):
 
 
 
-        The output of this method is used in the `shed_ss_dna` method in order
-        to determin the start and end positions of single stranded regions.
+        The output of this method is used in the `melt_ss_dna` method in order
+        to determine the start and end positions of single stranded regions.
 
         See get_ds_meltsites for melting ds sequences.
 
