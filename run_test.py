@@ -2,78 +2,94 @@
 # -*- coding: utf-8 -*-
 
 import sys
-
-# import os
-# import logging
-# import tempfile
-import pathlib
-import pytest
-
-pathlib.Path("coverage.xml").unlink(missing_ok=True)
-pathlib.Path(".coverage").unlink(missing_ok=True)
+import os
+from pathlib import Path
+import subprocess
+import pstats
 
 
-def main():
-    """docstring."""
-    # os.environ["pydna_data_dir"] = tempfile.mkdtemp(prefix="pydna_data_dir_")
-    # os.environ["pydna_log_dir"] = tempfile.mkdtemp(prefix="pydna_log_dir_")
-    # os.environ["pydna_config_dir"] = tempfile.mkdtemp(prefix="pydna_config_dir_")
-    # os.environ["pydna_loglevel"] = str(logging.DEBUG)
+def run_pytest(args):
+    """
+    Run pytest in a fresh Python subprocess.
+    Returns the pytest exit code.
+    """
+    cmd = [sys.executable, "-m", "pytest", *args]
+    print("\n>>>", " ".join(cmd), "\n")
+    return subprocess.run(cmd, check=False).returncode
 
-    args = [
-        "src",  # doctestdir
+
+def main() -> int:
+
+    # ------------------------------------------------------------------
+    # Anchor execution to project root
+    # ------------------------------------------------------------------
+    ROOT = Path(__file__).resolve().parent
+    os.chdir(ROOT)
+
+    # ------------------------------------------------------------------
+    # Clean previous coverage artifacts
+    # ------------------------------------------------------------------
+    Path("coverage.xml").unlink(missing_ok=True)
+    Path(".coverage").unlink(missing_ok=True)
+
+    prof_path = ROOT / Path("prof/combined.prof")
+    prof_path.parent.mkdir(parents=True, exist_ok=True)
+    prof_path.write_bytes(b"")
+
+    # ------------------------------------------------------------------
+    # 1) Doctests (source code)
+    # ------------------------------------------------------------------
+    doctest_args = [
+        "src/pydna",
+        "--doctest-modules",
         "--cov=pydna",
-        "--cov-append",
         "--cov-report=html",
         "--cov-report=xml",
-        "--capture=no",
+        "--cov-append",
         "--durations=10",
-        # "--import-mode=importlib",
-        "--nbval",
-        "--current-env",
-        "--doctest-modules",
         "-vvv",
     ]
 
-    return_value_doc_tests = pytest.main(args)
+    rc_doctests = run_pytest(doctest_args)
 
-    args = [
-        "tests",  # test suite
+    # ------------------------------------------------------------------
+    # 2) Unit tests (test suite)
+    # ------------------------------------------------------------------
+    unit_test_args = [
+        "tests",
         "--cov=pydna",
-        "--cov-append",
         "--cov-report=html",
         "--cov-report=xml",
-        "--capture=no",
+        "--cov-append",
         "--durations=10",
-        # "--import-mode=importlib",
-        "--nbval",
-        "--nbval-current-env",
-        "--doctest-modules",
-        "--capture=no",
         "-vvv",
-        "--profile",  # profiling
+        "--profile",
     ]
 
-    pth = pathlib.Path("prof/combined.prof")
-    pth.parent.mkdir(parents=True, exist_ok=True)
-    pth.write_bytes(b"")
-    return_value_unit_tests = pytest.main(args)
+    rc_unit_tests = run_pytest(unit_test_args)
 
-    import pstats
+    # ------------------------------------------------------------------
+    # Optional: profile summary
+    # ------------------------------------------------------------------
+    if prof_path.exists() and prof_path.stat().st_size > 0:
+        print("\n=== Profiling summary (top cumulative) ===\n")
+        stats = pstats.Stats(str(prof_path))
+        SRC = (Path(ROOT) / "src" / "pydna").resolve()
+        stats.stats = {
+            k: v
+            for k, v in stats.stats.items()
+            if Path(k[0]).resolve().is_relative_to(SRC)
+        }
+        stats.sort_stats("tottime")
+        stats.print_stats()
 
-    stats = pstats.Stats("./prof/combined.prof")
-    stats.sort_stats("cumulative")
-    stats.print_stats("pydna/src", 0.1)
+    # ------------------------------------------------------------------
+    # Final report
+    # ------------------------------------------------------------------
+    print(f"\nrun_test.py return code for doctests   : {rc_doctests}")
+    print(f"run_test.py return code for unit tests: {rc_unit_tests}")
 
-    # Or alternatively
-    # stats.print_stats("local_path", 20) # Only show 20 of the listings
-    # stats.sort_stats('cumulative').print_stats('dir_name', 20) # Sort by cumulative time
-
-    return_value = return_value_doc_tests + return_value_unit_tests
-
-    print("run_test.py return code:", return_value)
-
-    return return_value
+    return rc_doctests + rc_unit_tests
 
 
 if __name__ == "__main__":
