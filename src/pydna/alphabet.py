@@ -4,33 +4,13 @@
 """
 dscode - The nucleic acid alphabet used in pydna
 
-This file serves to define the DNA alphabet used in pydna. Each symbol usually
-represents a basepair (two opposing bases in the two antiparalell DNA strands).
+This file serves to define dscode, the DNA alphabet used in pydna.
+Each symbol represents a basepair (two opposing bases in the two antiparalell
+DNA strands).
 
-The alphabet is defined in this docstring which serve as the single source of
-thruth for the alphabet.
-
-A series of dictionaries:
-
-- basepair_dict
-- annealing_dict
-- annealing_dict_w_holes
-- complement_dict_for_dscode
-- watson_tail_letter_dict
-- crick_tail_letter_dict
-
-The following bytestring translation tables are constructed from the
-content in this docstring:
-
-- complement_table_for_dscode
-- dscode_to_watson_table
-- dscode_to_crick_table
-- dscode_to_crick_tail_table
-- dscode_to_watson_tail_table
-- dscode_to_full_sequence_table
-
-The codestrings dictionary has the following keys (strings) in the order
-indicated:
+The alphabet is defined in the end of this docstring which serve as the single
+source of thruth. The alphabet is used to construct the codestrings dictionary
+with has the following keys (strings) in the order indicated:
 
 1. un_ambiguous_ds_dna
 2. ds_rna
@@ -40,24 +20,27 @@ indicated:
 6. mismatched_dna_rna
 7. gap
 
-Each value of the codestrings dictionary is also a string. This string has five
-lines following this form:
+Each value of the codestrings dictionary is a multiline string. This string
+has five lines following this form:
 
-W             1   Watson symbol
-|             2   Pipe
-C             3   Crick symbol
-<empty line>  4
-S             5   dscode symbol
+::
+
+    W             1   Watson symbol
+    |             2   Pipe
+    C             3   Crick symbol
+    <empty line>  4
+    S             5   dscode symbol
 
 W (line 1) and C (line 2) are complementary bases in a double stranded DNA
-molecule and S (line 5) are the symbols of the alphabet (dscode) used to
+molecule and S (line 5) are the symbols of the alphabet used to
 describe the base pair above the symbol.
 
 Line 2 must contain only the pipe character, indicating basepairing and
 line 4 must be empty. The lines must be of equal length and a series ot
-tests are performed to ensure the integrity of the alphabet. The string
-definition follows this line and is contained in the last 13 lines of the
-docstring:
+tests are performed to ensure the integrity of the alphabet.
+
+The string definition as well as the keys for the codestrings dict follow this
+line and is contained in the last 13 lines of the docstring:
 
 un_ambiguous_ds_dna
 |    ds_rna
@@ -74,46 +57,95 @@ CTAG AU YRKMSWDVBHN ••••CTAG•U AGCTU----- ACGACTAGTCGTGCTUUU •
 GATC UO RYMKSWHBVDN PEXIQFZJ$% 0123456789 !#{}&*()<>@:?[]=_; •
 
 """
-
-import re as _re
+import re
 from dataclasses import dataclass
+
+__all__ = [
+    # Core alphabet dictionaries
+    "basepair_dict",
+    "annealing_dict",
+    "annealing_dict_w_holes",
+    "complement_dict_for_dscode",
+    # Translation tables (str.translate, bytes.translate)
+    "complement_table_for_dscode",
+    "dscode_to_watson_table",
+    "dscode_to_crick_table",
+    "dscode_to_watson_tail_table",
+    "dscode_to_crick_tail_table",
+    "dscode_to_full_sequence_table",
+    # Alphabet subsets
+    "ds_letters",
+    "ss_letters_watson",
+    "ss_letters_crick",
+    # Regex helpers and factories
+    "iupac_compl_regex",
+    "regex_ss_melt_factory",
+    "regex_ds_melt_factory",
+    # Data structures
+    "DseqParts",
+    # Public helper functions
+    "get_parts",
+    "dsbreaks",
+    "representation_tuple",
+    "anneal_strands",
+]
+
 
 # An alias for whitespace
 emptyspace = chr(32)
 
-lines = __doc__.rstrip().splitlines()[-13:]
+# ============================================================================
+# Alphabet definition extracted from module docstring
+# ============================================================================
 
-assert not lines[-2]
-assert set(lines[-4]) == {" ", "|"}
+lines = __doc__.rstrip().splitlines()[-13:]  # last 13 docstring lines are read
+
+assert not lines[-2]  # line 4 has to be empty
+assert set(lines[-4]) == {" ", "|"}  # line 2 has to have pipes only.
 
 uppers = lines[-5]
 pipes = lines[-4]
 lowers = lines[-3]
-codes = lines[-1]
+dscode = lines[-1]
 
+# Make sure all lineas are equal in length
 assert (
     len(uppers.split())
     == len(lowers.split())
     == len(pipes.split())
-    == len(codes.split())
+    == len(dscode.split())
 )
 
-names = [x.strip("| ") for x in lines[: len(codes.split())]]
+# Extract the keys from the docstring
+names = [x.strip("| ") for x in lines[: len(dscode.split())]]
+
+# ============================================================================
+# Construct the codestrings dict
+# ============================================================================
 
 codestrings = {}
+
 for upper, pipe, lower, code, name in zip(
-    uppers.split(), pipes.split(), lowers.split(), codes.split(), names
+    uppers.split(), pipes.split(), lowers.split(), dscode.split(), names
 ):
     codestrings[name.strip()] = f"{upper}\n{pipe}\n{lower}\n\n{code}\n".replace(
         "•", emptyspace
     )
 
-# This string contains ascii letters not used in the alphabet
+
+# ============================================================================
+# Define ascii letters not used in the alphabet
+# ============================================================================
+
 letters_not_in_dscode = "lL\"',-./\\^`|+~"
+
+
+# ============================================================================
+# for loop below carries out a series of consistency checks
+# ============================================================================
 
 for name, codestring in codestrings.items():
 
-    # This loops all codestrings and checks for consistency of format.
     lines = codestring.splitlines()
 
     assert len(lines) == 5, f'codestring["{name}"] does not have 5 lines'
@@ -123,10 +155,12 @@ for name, codestring in codestrings.items():
 
     watsn, pipes, crick, empty, symbl = lines
 
+    # Check so that all letters are ascii symbols.
     assert all(
         ln.isascii() for ln in (watsn, crick, symbl)
     ), f'codestring["{name}"] has non-ascii letters'
 
+    # Verify so that all chars that have uppercase are uppercase.
     assert all(
         ln.isupper() for ln in (watsn, crick, symbl) if ln.isalpha()
     ), f'codestring["{name}"] has non-uppercase letters'
@@ -141,16 +175,20 @@ for name, codestring in codestrings.items():
         len(ln) == len(watsn) for ln in (watsn, pipes, crick, symbl)
     ), f'codestring["{name}"] has lines of unequal length'
 
-    # These characters are not used.
+    # Check that the the letters in the letters_not_in_dscode string
+    # are not used.
     assert not any(
         [letter in letters_not_in_dscode for letter in symbl]
     ), f'codestring["{name}"] has chars outside alphabet'
 
-"""
-The `codes` dictionary is a dict of dicts containing the information of the
-code strings in the form if a dict with string names as keys, each containing a
-dict with this structure: (Watson letter, Crick letter): dscode symbol
-"""
+
+# ============================================================================
+# The `codes` dictionary is a dict of dicts containing the information of the
+# code strings in the form if a dict with string names as keys, each containing
+# a {tuple: string} dict with this structure:
+#
+#                                  (Watson letter, Crick letter): dscode symbol
+# ============================================================================
 
 codes = dict()
 
@@ -166,7 +204,11 @@ for name, codestring in codestrings.items():
     for watson, crick, symbol in zip(watsons, cricks, symbols):
         d[watson, crick] = symbol
 
-del d
+del d  # delete alias
+
+# ============================================================================
+# The `basepair_dict` dictionary is a merge of a subset of the `codes`dict.
+# ============================================================================
 
 basepair_dict = (
     codes["un_ambiguous_ds_dna"]
@@ -178,40 +220,47 @@ basepair_dict = (
     | codes["gap"]
 )
 
+
+# ============================================================================
+# The `annealing_dict` dictionary contain letters for single stranded
+# DNA and their dscode after annealing
+# ============================================================================
+
+# The annealing_dict_of_str is constructed below. It contains the information
+# needed to tell if two DNA fragments (like a and b below) can anneal.
+
+# This of course only concerns single stranded regions.
+
+# The dict has the form (x, y): s
+
+# Where x and y are bases in a and b and the symbol s is the resulting dscode
+# symbol for the base pair that is formed.
+
+# The letters x and y are from the values in the
+# codes["single_stranded_dna_rna"] dictionary.
+
+# For, example: One key-value pair is ('P', 'Q'): 'G' which matches the first
+# of the four new base pairings formed between a and b in the example below.
+
+#   (a)
+#   gggPEXI    (dscode for a)
+
+#   gggGATC
+#   ccc
+#           aaa (b)
+#       CTAGttt
+
+#       QFZJaaa (dscode for b)
+
+
+#   gggGATCaaa  (annealing product between a and b)
+#   cccCTAGttt
+
+# This loops through the base pairs where the upper or lower
+# positions are empty. (w, c), s would be ("G", " "), "P"
+# in the first iteration.
+
 annealing_dict = dict()
-
-"""
-The annealing_dict_of_str is constructed below. It contains the information needed
-to tell if two DNA fragments (like a and b below) can anneal. This of cource only concerns
-single stranded regions.
-
-The dict has the form (x, y): s
-Where x and y are bases in a and b and the symbol s is the resulting symbol for the base pair
-that is formed. The letters x and y are from the values of the codes["single_stranded_dna_rna"]
-dictionary.
-
-For, example: One key-value pair is ('P', 'Q'): 'G' which matches the first
-of the four new base pairings formed between a and b in the example below.
-
-
-(a)
-gggPEXI    (dscode for a)
-
-gggGATC
-ccc
-       aaa (b)
-   CTAGttt
-
-   QFZJaaa (dscode for b)
-
-
-gggGATCaaa (annealing product between a and b)
-cccCTAGttt
-
-This loops through the base pairs where the upper or lower
-positions are empty. (w, c), s would be ("G", " "), "P"
-in the first iteration.
-"""
 
 temp = codes["un_ambiguous_ds_dna"] | codes["ds_rna"]
 
@@ -234,6 +283,11 @@ for (x, y), symbol in d.items():
 
 del d, temp
 
+# ============================================================================
+# The `annealing_dict_w_holes`contains the `annealing_dict`
+# and additional key pairs where one position is empty
+# ============================================================================
+
 temp = {}
 
 for (x, y), symbol in annealing_dict.items():
@@ -245,16 +299,21 @@ annealing_dict_w_holes = annealing_dict | temp
 
 del temp
 
-"""
-A collection of translation tables are a practical way to obtain Watson and Crick
-from dscode or the reverse complement strands when needed.
 
-These are meant to be used by the bytes.translate method.
+# ============================================================================
+# translation tables
+# ============================================================================
+
+# A collection of translation tables are a practical way to obtain Watson and Crick
+# from dscode or the reverse complement strands when needed.
+
+# These are meant to be used by the str.translate or bytes.translate methods.
 
 
-The translation table "complement_table_for_dscode" is used to obtain the
-complement of a DNA sequence in dscode format.
-"""
+# ============================================================================
+# The translation table "complement_table_for_dscode" is used to obtain the
+# complement of a DNA sequence in dscode format.
+# ============================================================================
 
 complement_dict_for_dscode = {
     s: basepair_dict[c, w] for (w, c), s in basepair_dict.items()
@@ -270,15 +329,18 @@ complement_table_for_dscode = bytes.maketrans(
     from_letters.encode("ascii"), to_letters.encode("ascii")
 )
 
-"""
-dscode_to_watson_table and dscode_to_crick_table are used to obtain the Watson
-and (reverse) Crick strands from dscode. Four extra letters are added to the
-table and used in the pydna.dseq.representation function. These are used
-to add range indicators ("..") in the watson or crick strings for
-representation of long sequences.
 
-The four letters are placeholder1, placeholder2, interval, empty_bs
-"""
+# ============================================================================
+# dscode_to_watson_table and dscode_to_crick_table
+# ============================================================================
+
+# dscode_to_watson_table and dscode_to_crick_table are used to obtain the Watson
+# and (reverse) Crick strands from dscode.
+
+# Three extra letters (placeholder1, placeholder2, interval) are added to the
+# table and used in the representation_tuple function to
+# add range indicators ("..") in the watson or crick strings for
+# representation of long sequences.
 
 dscode_sense = ""
 dscode_compl = ""
@@ -326,6 +388,11 @@ dscode_to_crick_table = bytes.maketrans(
 )
 
 
+# ============================================================================
+# dscode_to_watson_tail_table
+# ============================================================================
+
+
 watson_tail_letter_dict = {
     w: s for (w, c), s in codes["single_stranded_dna_rna"].items() if c.isspace()
 }
@@ -336,21 +403,22 @@ to_letters = "".join(watson_tail_letter_dict.values())
 from_letters += from_letters.lower()
 to_letters += to_letters.lower()
 
-dscode_to_crick_tail_table = bytes.maketrans(
+dscode_to_watson_tail_table = bytes.maketrans(
     from_letters.encode("ascii"), to_letters.encode("ascii")
 )
 
 from_letters_full = five_prime_ss_letters = to_letters
 to_letters_full = from_letters
 
-
-d = codes["single_stranded_dna_rna"]
+# ============================================================================
+# dscode_to_crick_tail_table
+# ============================================================================
 
 crick_tail_letter_dict = {
-    complement_dict_for_dscode[c]: s for (w, c), s in d.items() if w.isspace()
+    complement_dict_for_dscode[c]: s
+    for (w, c), s in codes["single_stranded_dna_rna"].items()
+    if w.isspace()
 }
-
-del d
 
 from_letters = "".join(crick_tail_letter_dict.keys())
 to_letters = "".join(crick_tail_letter_dict.values())
@@ -358,13 +426,19 @@ to_letters = "".join(crick_tail_letter_dict.values())
 from_letters += from_letters.lower()
 to_letters += to_letters.lower()
 
-dscode_to_watson_tail_table = bytes.maketrans(
+dscode_to_crick_tail_table = bytes.maketrans(
     from_letters.encode("ascii"), to_letters.encode("ascii")
 )
 
 three_prime_ss_letters = to_letters
 from_letters_full += to_letters
 to_letters_full += from_letters
+
+
+# ============================================================================
+# dscode_to_full_sequence_table
+# ============================================================================
+
 
 dscode_to_full_sequence_table = bytes.maketrans(
     from_letters_full.encode("ascii"), to_letters_full.encode("ascii")
@@ -389,13 +463,14 @@ for (x, y), symbol in basepair_dict.items():
 # Add mixed case entries to the dict
 basepair_dict.update(mixed_case_dict)
 
-# This loop adds upper and lower case symbols
 mixed_case_dict = {}
 
+# This loop adds upper and lower case symbols
 for (x, y), symbol in annealing_dict.items():
     mixed_case_dict[x.lower(), y.lower()] = symbol.lower()
     mixed_case_dict[x.lower(), y.upper()] = symbol.lower()
     mixed_case_dict[x.upper(), y.lower()] = symbol.upper()
+
 # Add mixed case entries to the dict
 annealing_dict.update(mixed_case_dict)
 
@@ -417,10 +492,11 @@ ss_letters_watson += ss_letters_watson.lower()
 ss_letters_crick += ss_letters_crick.lower()
 
 
-"""
-The dict of regexes below cover IUPAC Ambiguity Code complements
-and is used in the amplify module.
-"""
+# ============================================================================
+# iupac_compl_regex dict of regexes below cover IUPAC Ambiguity Code
+# complements and is used in the amplify module.
+# ============================================================================
+
 iupac_compl_regex = {
     "A": "(?:T|U)",
     "C": "(?:G)",
@@ -440,7 +516,6 @@ iupac_compl_regex = {
     "N": "(?:A|G|C|T|N)",
 }
 
-
 # This loop adds upper and lower case symbols
 # mixed_case_dict = {}
 
@@ -450,6 +525,10 @@ for (x, y), symbol in annealing_dict_w_holes.items():
     mixed_case_dict[x.upper(), y.lower()] = symbol.upper()
 # Add mixed case entries to the dict
 annealing_dict_w_holes.update(mixed_case_dict)
+
+# ============================================================================
+# DseqParts dataclass
+# ============================================================================
 
 
 @dataclass
@@ -501,12 +580,13 @@ def get_parts(datastring: str) -> DseqParts:
     """
     Returns a DseqParts instance containing the parts of a dsDNA sequence.
 
-    The datastring should contain a string with dscode symbols.
-    A regex is used to capture the single stranded regions at the ends as
-    well as the regiond in the middle.
+    The datastring argument should contain a string with dscode symbols.
+
+    A regular expression is used to capture the single stranded regions at
+    the ends as well as the ds region in the middle, if any.
 
     The figure below numbers the regex capture groups and what they capture
-    as well as the DseqParts instance field name.
+    as well as the DseqParts instance field name for each group.
 
     ::
 
@@ -551,13 +631,16 @@ def get_parts(datastring: str) -> DseqParts:
         |||||||
         CCCTAGG
 
+    Examples
+    --------
+    >>>
 
-    Up to seven groups (0..6) are captured, but some are mutually exclusive
+    Up to seven groups (0..6) are captured.s ome are mutually exclusive
     which means that one of them is an empty string:
 
     0 or 1, not both, a DNA fragment has either 5' or 3' sticky end.
 
-    2 or 5 or 6, a DNA molecule has a ds region or is single stranded.
+    2 or 5 or 6, a DNA molecule has a ds region or is entirely single stranded.
 
     3 or 4, not both, either 5' or 3' sticky end.
 
@@ -571,16 +654,16 @@ def get_parts(datastring: str) -> DseqParts:
 
     Returns
     -------
-    namedtuple
+    DseqParts
         Seven string fields describing the DNA molecule.
-        fragment(sticky_left5='', sticky_left3='',
-                 middle='',
-                 sticky_right3='', sticky_right5='',
-                 single_watson='', single_crick='')
+        DseqParts(sticky_left5='', sticky_left3='',
+                  middle='',
+                  sticky_right3='', sticky_right5='',
+                  single_watson='', single_crick='')
 
     """
 
-    m = _re.match(
+    m = re.match(
         f"([{ss_letters_watson}]*)"  # capture group 0 ssDNA in watson strand
         f"([{ss_letters_crick}]*)"  # "             1 ssDNA in crick strand
         f"(?=[{ds_letters}])"  # positive lookahead for dsDNA, no capture
@@ -608,7 +691,7 @@ def get_parts(datastring: str) -> DseqParts:
     )
 
 
-def dsbreaks(data: str) -> list[str]:
+def dsbreaks(datastring: str) -> list[str]:
     """
     Find double strand breaks in DNA in dscode format.
 
@@ -637,8 +720,8 @@ def dsbreaks(data: str) -> list[str]:
 
     """
 
-    wl = _re.escape(five_prime_ss_letters)
-    cl = _re.escape(three_prime_ss_letters)
+    wl = re.escape(five_prime_ss_letters)
+    cl = re.escape(three_prime_ss_letters)
 
     breaks = []
     regex = (
@@ -646,7 +729,7 @@ def dsbreaks(data: str) -> list[str]:
         f"([{wl}][{cl}]|[{cl}][{wl}])"  # find adjacent single strand chars.
         "(.{0,3})"  # return context if present.
     )
-    for mobj in _re.finditer(regex, data):
+    for mobj in re.finditer(regex, datastring):
         chunk = mobj.group()
         w, c = representation_tuple(chunk)
         breaks.append(f"[{mobj.start()}:{mobj.end()}]\n{w}\n{c}\n")
@@ -731,9 +814,8 @@ def representation_tuple(
                 sticky_right3[:chunk] + placeholder1 * 2 + sticky_right3[-chunk:]
             )
 
-    """
-    The processed string contains
-    """
+    # The processed string that will be used to
+    # obtain a watson and crick strand
     processed_dscode = (sticky_left5 or sticky_left3) + middle + (
         sticky_right5 or sticky_right3
     ) or single_watson + single_crick
@@ -744,15 +826,15 @@ def representation_tuple(
     return watson, crick
 
 
-def regex_ss_melt_factory(length: int) -> _re.Pattern:
+def regex_ss_melt_factory(length: int) -> re.Pattern:
     """
     A regular expression for finding single strand regions in dscode.
 
-    This function creates a regular expression to find single strand regions
-    in double stranded DNA in dscode format.
+    This function returns a regular expression useful to find single strand
+    regions in double stranded DNA in dscode format.
 
     Regions shorter or equal to length are found. This function is used in
-    the Dseq.get_ss_meltsites method.
+    the `Dseq.get_ss_meltsites` method.
 
     The regular expression finds double stranded patches flanked by empty
     positions on the same side (see figure below). Melting of this kind of
@@ -760,7 +842,7 @@ def regex_ss_melt_factory(length: int) -> _re.Pattern:
 
     ::
 
-        GFTTAJA   <-- dscode
+        GFTTAJA   <-- dscode representing the ds DNA below.
 
         G TTA A   <-- "TTA" is found by the regex for length <= 3
         CTAATGT
@@ -768,7 +850,6 @@ def regex_ss_melt_factory(length: int) -> _re.Pattern:
 
     Examples
     --------
-
     >>> from pydna.dseq import Dseq
     >>> regex = regex_ss_melt_factory(3)
     >>> s = Dseq("GFTTAJA")
@@ -778,7 +859,7 @@ def regex_ss_melt_factory(length: int) -> _re.Pattern:
     CTAATGT
     >>> mobj = regex.search(s._data)
     >>> mobj.groupdict()
-    {'watson': None, 'crick': b'TTA'}
+    {'watson': b'TTA', 'crick': None}
 
 
     Parameters
@@ -795,18 +876,18 @@ def regex_ss_melt_factory(length: int) -> _re.Pattern:
     """
 
     regex = (
-        f"(?P<watson>((?<=[{ss_letters_watson}]))"
+        f"(?P<watson>((?<=[{ss_letters_crick}]))"
         f"([{ds_letters}]{{1,{length}}})"
-        f"((?=[^{ss_letters_crick}{ds_letters}])))|"
-        f"(?P<crick>((?<=[{ss_letters_crick}]))"
+        f"((?=[^{ss_letters_watson}{ds_letters}])))|"
+        f"(?P<crick>((?<=[{ss_letters_watson}]))"
         f"([{ds_letters}]{{1,{length}}})"
-        f"((?=[^{ss_letters_watson}{ds_letters}])))"
+        f"((?=[^{ss_letters_crick}{ds_letters}])))"
     )
 
-    return _re.compile(regex.encode("ascii"))
+    return re.compile(regex.encode("ascii"))
 
 
-def regex_ds_melt_factory(length: int) -> _re.Pattern:
+def regex_ds_melt_factory(length: int) -> re.Pattern:
     """
     A regular expression for finding single strand regions in dscode.
 
@@ -862,7 +943,7 @@ def regex_ds_melt_factory(length: int) -> _re.Pattern:
         f"((?=[^{ss_letters_crick}{ds_letters}])|$))"
     )
 
-    return _re.compile(regex.encode("ascii"))
+    return re.compile(regex.encode("ascii"))
 
 
 def anneal_strands(strand_a: str, strand_b: str) -> bool:
