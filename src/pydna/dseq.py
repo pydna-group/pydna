@@ -433,10 +433,10 @@ class Dseq(_Seq):
         circular=False,
         pos=0,
     ):
-        if isinstance(watson, bytes):
+        if isinstance(watson, (bytes, bytearray)):
             # watson is decoded to a string if needed.
             watson = watson.decode("ascii")
-        if isinstance(crick, bytes):
+        if isinstance(crick, (bytes, bytearray)):
             # crick is decoded to a string if needed.
             crick = crick.decode("ascii")
 
@@ -1549,7 +1549,7 @@ class Dseq(_Seq):
             self._data[:n]
             .translate(dscode_to_crick_table)
             .translate(complement_table_for_dscode)
-            .translate(dscode_to_watson_tail_table)
+            .translate(dscode_to_crick_tail_table)
             .lstrip()
             + self._data[n:]
         )
@@ -1592,10 +1592,14 @@ class Dseq(_Seq):
         Dseq(-4)
         gatc
         ct
+        >>> ds.nibble_five_prime_right(3)
+        Dseq(-4)
+        gatc
+        c
         >>> ds.nibble_five_prime_right(4)
         Dseq(-4)
         gatc
-
+        <BLANKLINE>
         >>> ds = Dseq.from_representation(
         ... '''
         ... gatc
@@ -1614,7 +1618,7 @@ class Dseq(_Seq):
             self._data[:n]
             + self._data[n:]
             .translate(dscode_to_watson_table)
-            .translate(dscode_to_crick_tail_table)
+            .translate(dscode_to_watson_tail_table)
             .lstrip()
         )
         return recessed
@@ -1659,6 +1663,14 @@ class Dseq(_Seq):
         Dseq(-4)
         gatc
           ag
+        >>> ds.nibble_three_prime_left(3)
+        Dseq(-4)
+        gatc
+           g
+        >>> ds.nibble_three_prime_left(4)
+        Dseq(-4)
+        gatc
+        <BLANKLINE>
         >>> ds = Dseq.from_representation(
         ... '''
         ...   gatc
@@ -1678,7 +1690,7 @@ class Dseq(_Seq):
         recessed = Dseq(
             self._data[:n]
             .translate(dscode_to_watson_table)
-            .translate(dscode_to_crick_tail_table)
+            .translate(dscode_to_watson_tail_table)
             .lstrip()
             + self._data[n:]
         )
@@ -1721,6 +1733,10 @@ class Dseq(_Seq):
         Dseq(-4)
         ga
         ctag
+        >>> ds.nibble_three_prime_right(3)
+        Dseq(-4)
+        g
+        ctag
         >>> ds.nibble_three_prime_right(4)
         Dseq(-4)
         <BLANKLINE>
@@ -1743,7 +1759,7 @@ class Dseq(_Seq):
             + self._data[n:]
             .translate(dscode_to_crick_table)
             .translate(complement_table_for_dscode)
-            .translate(dscode_to_watson_tail_table)
+            .translate(dscode_to_crick_tail_table)
             .lstrip()
         )
         return recessed
@@ -2222,77 +2238,98 @@ class Dseq(_Seq):
             return len(self) + self.watson_ovhg, len(self)
         return len(self), len(self) - self.watson_ovhg
 
-    def get_ss_meltsites(self: DseqType, length: int) -> _List[CutSiteType]:
+    def get_ss_meltsites(self: DseqType, length: int) -> tuple[int, int]:
         """
         Single stranded DNA melt sites
 
-        Shingle stranded DNA molecules shed from a double stranded DNA molecule
-        without affecting the length of the molecule.
+        Two lists of 2-tuples of integers are returned. Each tuple
+        (`((from, to))`) contains the start and end positions of a single
+        stranded region, shorter or equal to `length`.
 
         In the example below, the middle 2 nt part is released from the
         molecule.
 
         ::
 
-            tagaa ta gtatg        tagaa    gtatg          ta
-            ||||| || |||||  -->   |||||    |||||     +    ||
-            atcttcatccatac        atcttcatccatac
+
+            tagaa ta gtatg
+            ||||| || |||||  -->   [(6,8)], []
+            atcttcatccatac
+
+            tagaagtaggtatg
+            ||||| || |||||  -->   [], [(6,8)]
+            atctt at catac
 
 
-        A list of 2-tuples is returned. Each tuple (`((cut_watson, ovhg), None)`)
-        contains cut position and the overhang value in the same format as
-        returned by the get_cutsites method for restriction enzymes.
 
-        Note that this function deals with melting that results in two double
-        stranded DNA molecules. See get_ds_meltsites for melting ds sequences.
 
+        The output of this method is used in the `shed_ss_dna` method in order
+        to determin the start and end positions of single stranded regions.
+
+        See get_ds_meltsites for melting ds sequences.
+
+        Examples
+        --------
         >>> from pydna.dseq import Dseq
         >>> ds = Dseq("tagaaqtaqgtatg")
         >>> ds
         Dseq(-14)
         tagaa ta gtatg
         atcttcatccatac
-        >>> cutsite = ds.get_ss_meltsites(2)
-        >>> cutsite
+        >>> cutsites = ds.get_ss_meltsites(2)
+        >>> cutsites
+        ([(6, 8)], [])
+        >>> ds[6:8]
+        Dseq(-2)
+        ta
+        at
+        >>> ds = Dseq("tagaaptapgtatg")
+        >>> ds
+        Dseq(-14)
+        tagaagtaggtatg
+        atctt at catac
+        >>> cutsites = ds.get_ss_meltsites(2)
+        >>> cutsites
         ([], [(6, 8)])
         """
 
         regex = regex_ss_melt_factory(length)
 
         if self.circular:
-
             spacer = length
             cutfrom = self._data[-length:] + self._data + self._data[:length]
-
         else:
-
             spacer = 0
             cutfrom = self._data
 
-        watsoncuts = []
-        crickcuts = []
+        watson_cuts = []
+        crick_cuts = []
 
         for m in regex.finditer(cutfrom):
 
             if m.lastgroup == "watson":
                 cut1 = m.start() + spacer
                 cut2 = m.end() + spacer
-                watsoncuts.append((cut1, cut2))
+                watson_cuts.append((cut1, cut2))
             else:
                 assert m.lastgroup == "crick"
                 cut1 = m.start() + spacer
                 cut2 = m.end() + spacer
-                crickcuts.append((cut1, cut2))
+                crick_cuts.append((cut1, cut2))
 
-        return watsoncuts, crickcuts
+        return watson_cuts, crick_cuts
 
     def get_ds_meltsites(self: DseqType, length: int) -> _List[CutSiteType]:
         """
         Double stranded DNA melt sites
 
         DNA molecules can fall apart by melting if they have internal single
-        stranded regions. In the example below, the molecule can melt
-        into two 8 bp double stranded molecules, each with 3 nt 3' overhangs.
+        stranded regions. In the example below, the molecule has two gaps
+        on opposite sides, two nucleotides apart, which means that it hangs
+        together by two basepairs.
+
+        This molecule can melt into two separate 8 bp double stranded
+        molecules, each with 3 nt 3' overhangs a depicted below.
 
         ::
 
@@ -2308,9 +2345,11 @@ class Dseq(_Seq):
         Note that this function deals with melting that results in two double
         stranded DNA molecules.
 
-        See get_ss_meltsites for melting away single
-        stranded regions.
+        See get_ss_meltsites for melting of single stranded regions from
+        molecules.
 
+        Examples
+        --------
         >>> from pydna.dseq import Dseq
         >>> ds = Dseq("tagaaptaqgtatg")
         >>> ds
@@ -2439,7 +2478,8 @@ class Dseq(_Seq):
         if not length or length < 1:
             return tuple()
 
-        new, strands = self.shed_ss_dna(length)
+        # First we need to get rid of single stranded sequences
+        new, strands = self.melt_ss_dna(length)
 
         cutsites = new.get_ds_meltsites(length)
 
@@ -2449,205 +2489,138 @@ class Dseq(_Seq):
 
         result = tuple([new]) if strands and not result else result
 
-        return strands + result
+        return tuple(strands) + tuple(result)
 
-    def shed_ss_dna(self, length):
+    def melt_ss_dna(self, length) -> tuple["Dseq", list["Dseq"]]:
         """
-        TBD
+        Melt to separate single stranded DNA
 
-        Parameters
-        ----------
-        length : TYPE
-            DESCRIPTION.
+        Single stranded DNA molecules shorter or equal to `length` shed from
+        a double stranded DNA molecule without affecting the length of the
+        remaining molecule.
 
-        Returns
-        -------
-        TYPE
-            DESCRIPTION.
+        In the examples below, the middle 2 nt part is released from the
+        molecule.
 
-        """
-        new, strands, intervals = self._shed_ss_dna(length)
+        ::
 
-        return new, strands
+            tagaa ta gtatg        tagaa    gtatg          ta
+            ||||| || |||||  -->   |||||    |||||     +    ||
+            atcttcatccatac        atcttcatccatac
 
-    def _shed_ss_dna(self, length):
+            tagaagtaggtatg        tagaagtaggtatg
+            ||||| || |||||  -->   |||||    |||||     +    ||
+            atctt at catac        atctt    catac          at
 
-        watsonnicks, cricknicks = self.get_ss_meltsites(length)
-
-        watsonstrands = []
-        crickstrands = []
-
-        new = self._data
-
-        for x, y in watsonnicks:
-            stuffer = new[x:y]
-            ss = Dseq.quick(stuffer.translate(dscode_to_watson_tail_table))
-            new = new[:x] + stuffer.translate(dscode_to_crick_tail_table) + new[y:]
-            watsonstrands.append((x, y, ss))
-
-        for x, y in cricknicks:
-            stuffer = new[x:y]
-            ss = Dseq.quick(stuffer.translate(dscode_to_crick_tail_table))
-            new = new[:x] + stuffer.translate(dscode_to_watson_tail_table) + new[y:]
-            crickstrands.append((x, y, ss))
-
-        ordered_strands = sorted(watsonstrands + crickstrands)
-
-        strands = []
-
-        for x, y, ss in ordered_strands:
-            seq = (
-                ss._data[::-1].translate(dscode_to_watson_table).strip()
-                or ss._data.translate(dscode_to_crick_table).strip()
-            )
-            strands.append(_Seq(seq))
-
-        intervals = tuple((x, y) for x, y, ss in ordered_strands)
-
-        return Dseq(new), tuple(strands), intervals
-
-    def apply_cut_new(self, left_cut: CutSiteType, right_cut: CutSiteType) -> DseqType:
-        """Extracts a subfragment of the sequence between two cuts.
-
-        For more detail see the documentation of get_cutsite_pairs.
-
-        Parameters
-        ----------
-        left_cut : Union[tuple[tuple[int,int], _AbstractCut], None]
-        right_cut: Union[tuple[tuple[int,int], _AbstractCut], None]
-
-        Returns
-        -------
-        Dseq
 
         Examples
         --------
-        >>> from Bio.Restriction import EcoRI
         >>> from pydna.dseq import Dseq
-        >>> dseq = Dseq('aaGAATTCaaGAATTCaa')
-        >>> cutsites = dseq.get_cutsites([EcoRI])
-        >>> cutsites
-        [((3, -4), EcoRI), ((11, -4), EcoRI)]
-        >>> p1, p2, p3 = dseq.get_cutsite_pairs(cutsites)
-        >>> p1
-        (None, ((3, -4), EcoRI))
-        >>> dseq.apply_cut(*p1)
-        Dseq(-7)
-        aaG
-        ttCTTAA
-        >>> p2
-        (((3, -4), EcoRI), ((11, -4), EcoRI))
-        >>> dseq.apply_cut(*p2)
-        Dseq(-12)
-        AATTCaaG
-            GttCTTAA
-        >>> p3
-        (((11, -4), EcoRI), None)
-        >>> dseq.apply_cut(*p3)
-        Dseq(-7)
-        AATTCaa
-            Gtt
-
-        >>> dseq = Dseq('TTCaaGAA', circular=True)
-        >>> cutsites = dseq.get_cutsites([EcoRI])
-        >>> cutsites
-        [((6, -4), EcoRI)]
-        >>> pair = dseq.get_cutsite_pairs(cutsites)[0]
-        >>> pair
-        (((6, -4), EcoRI), ((6, -4), EcoRI))
-        >>> dseq.apply_cut(*pair)
-        Dseq(-12)
-        AATTCaaG
-            GttCTTAA
-
+        >>> ds = Dseq("tagaaqtaqgtatg")
+        >>> ds
+        Dseq(-14)
+        tagaa ta gtatg
+        atcttcatccatac
+        >>> new, strands  = ds.melt_ss_dna(2)
+        >>> new
+        Dseq(-14)
+        tagaa    gtatg
+        atcttcatccatac
+        >>> strands[0]
+        Dseq(-2)
+        ta
+        <BLANKLINE>
+        >>> ds = Dseq("tagaaptapgtatg")
+        >>> ds
+        Dseq(-14)
+        tagaagtaggtatg
+        atctt at catac
+        >>> new, strands = ds.melt_ss_dna(2)
+        >>> new
+        Dseq(-14)
+        tagaagtaggtatg
+        atctt    catac
+        >>> strands[0]
+        Dseq(-2)
+        <BLANKLINE>
+        at
         """
-        if _cuts_overlap(left_cut, right_cut, len(self)):
-            raise ValueError("Cuts by {} {} overlap.".format(left_cut[1], right_cut[1]))
 
-        # left_cut is None if start of the sequence
-        left_cut = left_cut or ((0, 0), None)
-        # right_cut is None if end of the sequence
-        right_cut = right_cut or ((len(self), 0), None)
+        watsonnicks, cricknicks = self.get_ss_meltsites(length)
 
-        # extract (position, overhang), enzyme). Enzyme is not used
-        (x, xovhg), _ = left_cut
-        (y, yovhg), _ = right_cut
+        new, strands = self.shed_ss_dna(watsonnicks, cricknicks)
 
-        begin = min(x, x - xovhg)
-        end = max(y, y - yovhg)
+        return new, strands
 
-        cutfrom = _copy.deepcopy(self)
+    def shed_ss_dna(
+        self,
+        watson_cutpairs: list[tuple[int, int]] = None,
+        crick_cutpairs: list[tuple[int, int]] = None,
+    ):
+        """
+        Separate parts of one of the DNA strands
 
-        if self.circular:
-            # A circular byte string class (CircularBytes) is used to
-            # handle slices across the origin of the sequence when
-            # begin > end
-            # also, the slice [x:x] results in a copy of the sequence
-            # and not an empty slice
-            cutfrom._data = CircularBytes(self._data)
+        Examples
+        --------
+        >>> from pydna.dseq import Dseq
+        >>> ds = Dseq("tagaagtaggtatg")
+        >>> ds
+        Dseq(-14)
+        tagaagtaggtatg
+        atcttcatccatac
+        >>> new, strands = ds.shed_ss_dna([(6, 8)],[])
+        >>> new
+        Dseq(-14)
+        tagaag  ggtatg
+        atcttcatccatac
+        >>> strands[0]
+        Dseq(-2)
+        ta
+        <BLANKLINE>
+        >>> new, strands = ds.shed_ss_dna([],[(6, 8)])
+        >>> new
+        Dseq(-14)
+        tagaagtaggtatg
+        atcttc  ccatac
+        >>> strands[0]
+        Dseq(-2)
+        <BLANKLINE>
+        at
+        >>> ds = Dseq("tagaagtaggtatg")
+        >>> new, (strand1, strand2) = ds.shed_ss_dna([(6, 8), (9, 11)],[])
+        >>> new
+        Dseq(-14)
+        tagaag  g  atg
+        atcttcatccatac
+        >>> strand1
+        Dseq(-2)
+        ta
+        <BLANKLINE>
+        >>> strand2
+        Dseq(-2)
+        gt
+        <BLANKLINE>
+        """
 
-            if left_cut == right_cut and begin < end:
-                # The edge case below happens when a circular fragment
-                # is cut in the same place, but the length of the sticky
-                # ends leads to begin < end although we want a slice
-                # over the origin.
-                #
-                # In the example below, begin is 1 and end is
-                # 4 which would give us "GATC", to solve this
-                # the fragment length is added to the end
-                # which gives us 1 and 4 + 6 = 10 which gives us
-                # "GATCCGGATC"
-                # The CircularBytes handles slices that are longer than the
-                # sequence itself
+        watson_cutpairs = watson_cutpairs or list()
+        crick_cutpairs = crick_cutpairs or list()
+        strands = []
 
-                # Dseq(o6)
-                # GGATCC      <= cut w BamHI   G^GATC-C
-                # CCTAGG                       C-CTAG^G
+        new = bytearray(self._data)
 
-                # Dseq(o6)
-                # GATCCG
-                #     GCCTAG
-                end += len(self)
+        for x, y in watson_cutpairs:
+            stuffer = new[x:y]
+            ss = Dseq.quick(new[x:y].translate(dscode_to_watson_tail_table))
+            new[x:y] = stuffer.translate(dscode_to_crick_tail_table)
+            strands.append(ss)
 
-        # cutfrom contains the desired slice including sticky ends
-        # regardless of type. The blunt slice below contains all needed
-        # to form any of the four potential fragments below
-        #
-        #      GATCgggGATC
-        #      CTAGcccCTAG
-        #
-        #
-        #      GATCggg        This could be what we need
-        #          cccCTAG
-        #
-        #          gggGATC    or this
-        #      CTAGccc
-        #
-        #      GATCgggGATC    or this
-        #          ccc
-        #
-        #          ggg        or this
-        #      CTAGcccCTAG
-        cutfrom = cutfrom[begin:end]
-        # in case the _data property was a CircularBytes instance, we
-        # we replace it with a bytestring with the same content.
-        cutfrom._data = bytes(cutfrom._data)
+        for x, y in crick_cutpairs:
+            stuffer = new[x:y]
+            ss = Dseq.quick(stuffer.translate(dscode_to_crick_tail_table))
+            new[x:y] = stuffer.translate(dscode_to_watson_tail_table)
+            strands.append(ss)
 
-        # The left sticky end is formed by removing bases on one strand
-        # if needed.
-        if xovhg > 0:
-            cutfrom = cutfrom.nibble_five_prime_left(xovhg)
-        elif xovhg < 0:
-            cutfrom = cutfrom.nibble_three_prime_left(-xovhg)
-
-        # The right sticky end is formed by removing bases on one strand
-        # if needed.
-        if yovhg < 0:
-            cutfrom = cutfrom.nibble_three_prime_right(-yovhg)
-        elif yovhg > 0:
-            cutfrom = cutfrom.nibble_five_prime_right(yovhg)
-
-        return cutfrom
+        return Dseq.quick(new), strands
 
     def apply_cut(self, left_cut: CutSiteType, right_cut: CutSiteType) -> "Dseq":
         """Extracts a subfragment of the sequence between two cuts.
@@ -2772,4 +2745,106 @@ class Dseq(_Seq):
         return list(zip(cutsites, cutsites[1:]))
 
     def get_parts(self):
+        """
+        Returns a DseqParts instance containing the parts (strings) of a dsDNA
+        sequence. DseqParts instance field names:
+
+        ::
+
+             "sticky_left5"
+             |
+             |      "sticky_right5"
+             |      |
+            ---    ---
+            GGGATCC
+               TAGGTCA
+               ----
+                 |
+                 "middle"
+
+
+
+             "sticky_left3"
+             |
+             |      "sticky_right3"
+             |      |
+            ---    ---
+               ATCCAGT
+            CCCTAGG
+               ----
+                 |
+                 "middle"
+
+
+
+               "single_watson" (only an upper strand)
+               |
+            -------
+            ATCCAGT
+            |||||||
+
+
+
+               "single_crick" (only a lower strand)
+               |
+            -------
+
+            |||||||
+            CCCTAGG
+
+
+        Up to seven groups (0..6) are captured, but some are mutually exclusive
+        which means that one of them is an empty string:
+
+        0 or 1, not both, a DNA fragment has either 5' or 3' sticky end.
+
+        2 or 5 or 6, a DNA molecule has a ds region or is single stranded.
+
+        3 or 4, not both, either 5' or 3' sticky end.
+
+        Note that internal single stranded regions are not identified and will
+        be contained in the middle part if they are present.
+
+        Examples
+        --------
+        >>> from pydna.dseq import Dseq
+        >>> ds = Dseq("PPPATCFQZ")
+        >>> ds
+        Dseq(-9)
+        GGGATC
+           TAGTCA
+        >>> parts = ds.get_parts()
+        >>> parts
+        DseqParts(sticky_left5='PPP', sticky_left3='',
+                  middle='ATC',
+                  sticky_right3='', sticky_right5='FQZ',
+                  single_watson='', single_crick='')
+        >>> Dseq(parts.sticky_left5)
+        Dseq(-3)
+        GGG
+        <BLANKLINE>
+        >>> Dseq(parts.middle)
+        Dseq(-3)
+        ATC
+        TAG
+        >>> Dseq(parts.sticky_right5)
+        Dseq(-3)
+        <BLANKLINE>
+        TCA
+
+        Parameters
+        ----------
+        datastring : str
+            A string with dscode.
+
+        Returns
+        -------
+        namedtuple
+            Seven string fields describing the DNA molecule.
+            fragment(sticky_left5='', sticky_left3='',
+                     middle='',
+                     sticky_right3='', sticky_right5='',
+                     single_watson='', single_crick='')
+
+        """
         return get_parts(self._data.decode("ascii"))
