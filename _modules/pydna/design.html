@@ -342,20 +342,17 @@ document.write(`
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.tm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tm_default</span> <span class="k">as</span> <span class="n">_tm_default</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_math</span>
-
-<span class="c1"># import os as _os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_copy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplicon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Amplicon</span> <span class="k">as</span> <span class="n">_Amplicon</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplify</span><span class="w"> </span><span class="kn">import</span> <span class="n">Anneal</span> <span class="k">as</span> <span class="n">_Anneal</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplify</span><span class="w"> </span><span class="kn">import</span> <span class="n">pcr</span> <span class="k">as</span> <span class="n">_pcr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span> <span class="k">as</span> <span class="n">_Primer</span>
-
-<span class="c1"># import logging as _logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_operator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span>
-
-<span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">pairwise</span><span class="p">,</span> <span class="n">product</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_design_primer</span><span class="p">(</span>
@@ -1140,6 +1137,144 @@ document.write(`
         <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">assembly_fragments</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">overlap</span><span class="o">=</span><span class="n">overlap</span><span class="p">,</span> <span class="n">maxlink</span><span class="o">=</span><span class="n">maxlink</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="user_assembly_design">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.user_assembly_design">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">user_assembly_design</span><span class="p">(</span>
+    <span class="n">f</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Amplicon</span><span class="p">],</span> <span class="n">max_overlap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">min_overlap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">max_tail</span><span class="o">=</span><span class="mi">50</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Amplicon</span><span class="p">]:</span>
+
+    <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="s2">&quot;The user_assembly_design function is experimental and &quot;</span>
+        <span class="s2">&quot;may change in future versions.&quot;</span><span class="p">,</span>
+        <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">,</span>
+        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">max_overlap</span> <span class="o">&gt;</span> <span class="n">min_overlap</span><span class="p">,</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;max_overlap (</span><span class="si">{</span><span class="n">max_overlap</span><span class="si">}</span><span class="s2">) &quot;</span>
+        <span class="s2">&quot;has to be larger than min_overlap &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">min_overlap</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="p">)</span>
+    <span class="n">amplicons</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">amplicons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">primer_design</span><span class="p">(</span><span class="n">fragment</span><span class="p">))</span>
+
+    <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">for</span> <span class="n">ths</span><span class="p">,</span> <span class="n">nxt</span> <span class="ow">in</span> <span class="n">pairwise</span><span class="p">(</span><span class="n">amplicons</span><span class="p">):</span>
+
+        <span class="n">A_positions_in_ths</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="s2">&quot;A|a&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ths</span><span class="o">.</span><span class="n">seq</span><span class="p">))]</span>
+        <span class="n">T_positions_in_nxt</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="s2">&quot;T|t&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">nxt</span><span class="o">.</span><span class="n">seq</span><span class="p">))]</span>
+
+        <span class="k">for</span> <span class="n">ths_a</span><span class="p">,</span> <span class="n">ths_t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">A_positions_in_ths</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">T_positions_in_nxt</span><span class="p">):</span>
+
+            <span class="n">sticky_length</span> <span class="o">=</span> <span class="n">ths_t</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">ths</span><span class="p">)</span> <span class="o">-</span> <span class="n">ths_a</span>
+
+            <span class="k">if</span> <span class="n">sticky_length</span> <span class="o">&lt;</span> <span class="n">min_overlap</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">sticky_length</span> <span class="o">&gt;</span> <span class="n">max_overlap</span><span class="p">:</span>
+                <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">break</span>
+
+            <span class="n">rp</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span>
+                <span class="n">nxt</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span> <span class="n">ths_t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">rc</span><span class="p">()</span><span class="o">.</span><span class="n">_data</span> <span class="o">+</span> <span class="n">ths</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">_data</span>
+            <span class="p">)</span>
+            <span class="n">fp</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">ths</span><span class="o">.</span><span class="n">seq</span><span class="p">[</span><span class="n">ths_a</span><span class="p">:]</span><span class="o">.</span><span class="n">_data</span> <span class="o">+</span> <span class="n">nxt</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
+
+            <span class="n">fp</span><span class="p">[</span><span class="n">sticky_length</span><span class="p">]</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;U&quot;</span><span class="p">)</span>
+            <span class="n">rp</span><span class="p">[</span><span class="n">sticky_length</span><span class="p">]</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;U&quot;</span><span class="p">)</span>
+
+            <span class="n">ths</span><span class="o">.</span><span class="n">reverse_primer</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="n">rp</span><span class="p">)</span>
+            <span class="n">nxt</span><span class="o">.</span><span class="n">forward_primer</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+
+            <span class="k">break</span>  <span class="c1"># Primers were designed.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">flag</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># No suitable T-A pair was found on opposite sides of both fragments</span>
+        <span class="c1"># Look for T-A pairs contained in either sequence</span>
+        <span class="c1"># Distance between the T-A and proximity to the junction are important</span>
+        <span class="c1"># factors</span>
+        <span class="n">T_positions_in_ths</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="s2">&quot;T|t&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ths</span><span class="o">.</span><span class="n">seq</span><span class="p">))]</span>
+        <span class="n">pairs_ths</span> <span class="o">=</span> <span class="n">product</span><span class="p">(</span><span class="n">A_positions_in_ths</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">T_positions_in_ths</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">ths_a</span><span class="p">,</span> <span class="n">ths_t</span> <span class="ow">in</span> <span class="n">pairs_ths</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ths_a</span> <span class="o">&gt;</span> <span class="n">ths_t</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">sticky_length</span> <span class="o">=</span> <span class="n">ths_t</span> <span class="o">-</span> <span class="n">ths_a</span>
+            <span class="k">if</span> <span class="n">sticky_length</span> <span class="o">&lt;</span> <span class="n">min_overlap</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">sticky_length</span> <span class="o">&gt;</span> <span class="n">max_overlap</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">pair_ths</span> <span class="o">=</span> <span class="n">ths_a</span><span class="p">,</span> <span class="n">ths_t</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pair_ths</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+            <span class="n">ths_a</span><span class="p">,</span> <span class="n">ths_t</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+
+        <span class="n">A_positions_in_nxt</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="s2">&quot;A|a&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">nxt</span><span class="o">.</span><span class="n">seq</span><span class="p">))]</span>
+        <span class="n">pairs_nxt</span> <span class="o">=</span> <span class="n">product</span><span class="p">(</span><span class="n">A_positions_in_nxt</span><span class="p">,</span> <span class="n">T_positions_in_nxt</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">nxt_a</span><span class="p">,</span> <span class="n">nxt_t</span> <span class="ow">in</span> <span class="n">pairs_nxt</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">nxt_a</span> <span class="o">&gt;</span> <span class="n">nxt_t</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">sticky_length</span> <span class="o">=</span> <span class="n">nxt_t</span> <span class="o">-</span> <span class="n">nxt_a</span>
+            <span class="k">if</span> <span class="n">sticky_length</span> <span class="o">&lt;</span> <span class="n">min_overlap</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">sticky_length</span> <span class="o">&gt;</span> <span class="n">max_overlap</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">pair_nxt</span> <span class="o">=</span> <span class="n">nxt_a</span><span class="p">,</span> <span class="n">nxt_t</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pair_nxt</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+            <span class="n">nxt_a</span><span class="p">,</span> <span class="n">nxt_t</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">pair_ths</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pair_nxt</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">ths</span><span class="p">)</span> <span class="o">-</span> <span class="n">ths_a</span> <span class="o">&lt;=</span> <span class="n">nxt_t</span><span class="p">:</span>
+            <span class="c1"># T-A pair in ths;</span>
+            <span class="c1"># Move ths reverse primer downstream</span>
+            <span class="c1"># Extend nxt foward primer tail</span>
+
+            <span class="n">fp</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">ths</span><span class="o">.</span><span class="n">seq</span><span class="p">[</span><span class="n">ths_a</span><span class="p">:]</span><span class="o">.</span><span class="n">_data</span> <span class="o">+</span> <span class="n">nxt</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
+            <span class="n">fp</span><span class="p">[</span><span class="n">ths_t</span> <span class="o">-</span> <span class="n">ths_a</span><span class="p">]</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;U&quot;</span><span class="p">)</span>
+            <span class="n">nxt</span><span class="o">.</span><span class="n">forward_primer</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+            <span class="n">shorter_ths</span> <span class="o">=</span> <span class="n">ths</span><span class="p">[:</span> <span class="n">ths_t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">rp</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span>
+                <span class="n">primer_design</span><span class="p">(</span>
+                    <span class="n">shorter_ths</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">ths_t</span> <span class="o">-</span> <span class="n">ths_a</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">_data</span>
+            <span class="p">)</span>
+            <span class="n">rp</span><span class="p">[</span><span class="n">ths_t</span> <span class="o">-</span> <span class="n">ths_a</span><span class="p">]</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;U&quot;</span><span class="p">)</span>
+            <span class="n">ths</span><span class="o">.</span><span class="n">reverse_primer</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="n">rp</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="p">(</span><span class="ow">not</span> <span class="n">pair_ths</span> <span class="ow">and</span> <span class="n">pair_nxt</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">ths</span><span class="p">)</span> <span class="o">-</span> <span class="n">ths_a</span> <span class="o">&gt;=</span> <span class="n">nxt_t</span><span class="p">:</span>
+            <span class="c1"># T-A pair in nxt; modify ths reverse primer</span>
+            <span class="c1"># Move nxt forward primer upstream</span>
+            <span class="c1"># Extend ths reverse primer tail</span>
+            <span class="n">rp</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span>
+                <span class="n">nxt</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span> <span class="n">nxt_t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">rc</span><span class="p">()</span><span class="o">.</span><span class="n">_data</span> <span class="o">+</span> <span class="n">ths</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">_data</span>
+            <span class="p">)</span>
+            <span class="n">rp</span><span class="p">[</span><span class="n">nxt_t</span> <span class="o">-</span> <span class="n">nxt_a</span><span class="p">]</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;U&quot;</span><span class="p">)</span>
+            <span class="n">ths</span><span class="o">.</span><span class="n">reverse_primer</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="n">rp</span><span class="p">)</span>
+            <span class="n">shorter_nxt</span> <span class="o">=</span> <span class="n">nxt</span><span class="p">[</span><span class="n">nxt_a</span><span class="p">:]</span>
+            <span class="n">fp</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span>
+                <span class="n">primer_design</span><span class="p">(</span>
+                    <span class="n">shorter_nxt</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">nxt_t</span> <span class="o">-</span> <span class="n">nxt_a</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">_data</span>
+            <span class="p">)</span>
+            <span class="n">fp</span><span class="p">[</span><span class="n">nxt_t</span> <span class="o">-</span> <span class="n">nxt_a</span><span class="p">]</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;U&quot;</span><span class="p">)</span>
+            <span class="n">nxt</span><span class="o">.</span><span class="n">forward_primer</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">amplicons</span></div>
 
 </pre></div>
 

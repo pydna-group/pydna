@@ -359,7 +359,7 @@ document.write(`
         <span class="k">try</span><span class="p">:</span>
             <span class="n">seq1</span> <span class="o">+</span> <span class="n">seq2</span>
         <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;sticky ends not compatible!&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;sticky ends not compatible&quot;</span><span class="p">):</span>
                 <span class="k">raise</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">seq1</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">three_prime_end</span><span class="p">()</span> <span class="o">!=</span> <span class="p">(</span>

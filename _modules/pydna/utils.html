@@ -332,17 +332,7 @@ document.write(`
 <span class="c1"># as part of this package.</span>
 <span class="sd">&quot;&quot;&quot;Miscellaneous functions.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Data.IUPACData</span><span class="w"> </span><span class="kn">import</span> <span class="n">ambiguous_dna_complement</span> <span class="k">as</span> <span class="n">_ambiguous_dna_complement</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">_maketrans</span>
-
-<span class="c1"># import shelve as _shelve</span>
-<span class="c1"># import os as _os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_re</span>
-
-<span class="c1"># import logging as _logging</span>
-<span class="c1"># import base64 as _base64</span>
-<span class="c1"># import pickle as _pickle</span>
-<span class="c1"># import hashlib as _hashlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">keyword</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_keyword</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_collections</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_itertools</span>
@@ -356,7 +346,8 @@ document.write(`
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.codon</span><span class="w"> </span><span class="kn">import</span> <span class="n">weights</span> <span class="k">as</span> <span class="n">_weights</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.codon</span><span class="w"> </span><span class="kn">import</span> <span class="n">rare_codons</span> <span class="k">as</span> <span class="n">_rare_codons</span>
-
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">basepair_dict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">complement_table_for_dscode</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span> <span class="k">as</span> <span class="n">_sl</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompoundLocation</span> <span class="k">as</span> <span class="n">_cl</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">Location</span> <span class="k">as</span> <span class="n">_Location</span>
@@ -365,10 +356,6 @@ document.write(`
 
 <span class="c1"># For functions that take str or bytes as input and return str or bytes as output, matching the input type</span>
 <span class="n">StrOrBytes</span> <span class="o">=</span> <span class="n">_TypeVar</span><span class="p">(</span><span class="s2">&quot;StrOrBytes&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span>
-
-<span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
-<span class="n">_ambiguous_dna_complement</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;U&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">})</span>
-<span class="n">_complement_table</span> <span class="o">=</span> <span class="n">_maketrans</span><span class="p">(</span><span class="n">_ambiguous_dna_complement</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="three_frame_orfs">
@@ -548,6 +535,32 @@ document.write(`
 
 
 
+<div class="viewcode-block" id="anneal_from_left">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.anneal_from_left">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">anneal_from_left</span><span class="p">(</span><span class="n">watson</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">crick</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The length of the common prefix shared by two strings.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        str1 (str): The first string.</span>
+<span class="sd">        str2 (str): The second string.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: The length of the common prefix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+        <span class="nb">list</span><span class="p">(</span>
+            <span class="n">_itertools</span><span class="o">.</span><span class="n">takewhile</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">basepair_dict</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span> <span class="nb">zip</span><span class="p">(</span><span class="n">watson</span><span class="p">,</span> <span class="n">crick</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+
 <div class="viewcode-block" id="cai">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.cai">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cai</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">organism</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sce&quot;</span><span class="p">,</span> <span class="n">weights</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">_weights</span><span class="p">):</span>
@@ -628,18 +641,18 @@ document.write(`
 
 <span class="sd">    accepts mixed DNA/RNA</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">sequence</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">_complement_table</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
 
 
 <div class="viewcode-block" id="complement">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.complement">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">complement</span><span class="p">(</span><span class="n">sequence</span><span class="p">:</span> <span class="n">StrOrBytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StrOrBytes</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Complement.</span>
 
 <span class="sd">    accepts mixed DNA/RNA</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">sequence</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">_complement_table</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">sequence</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">complement_table_for_dscode</span><span class="p">)</span></div>
 
 
 
@@ -1079,6 +1092,7 @@ document.write(`
 <div class="viewcode-block" id="cuts_overlap">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.cuts_overlap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cuts_overlap</span><span class="p">(</span><span class="n">left_cut</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">):</span>
+
     <span class="c1"># Special cases:</span>
     <span class="k">if</span> <span class="n">left_cut</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">right_cut</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">left_cut</span> <span class="o">==</span> <span class="n">right_cut</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
@@ -1100,7 +1114,9 @@ document.write(`
     <span class="c1"># Convert into ranges x and y and see if ranges overlap</span>
     <span class="n">x</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">left_watson</span><span class="p">,</span> <span class="n">left_crick</span><span class="p">])</span>
     <span class="n">y</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">right_watson</span><span class="p">,</span> <span class="n">right_crick</span><span class="p">])</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+    <span class="c1"># if (x[1] &gt;= y[0]) != (y[1] &lt;= x[0]):</span>
+    <span class="c1">#     breakpoint()</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># (x[1] &gt; y[0]) != (y[1] &lt; x[0])</span></div>
 
 
 

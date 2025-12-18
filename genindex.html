@@ -336,6 +336,8 @@ document.write(`
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
+ | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
@@ -385,6 +387,10 @@ document.write(`
         <li><a href="reference/pydna.html#pydna.amplify.Anneal">(class in pydna.amplify)</a>
 </li>
       </ul></li>
+      <li><a href="reference/pydna.html#pydna.utils.anneal_from_left">anneal_from_left() (in module pydna.utils)</a>
+</li>
+      <li><a href="reference/pydna.html#pydna.alphabet.anneal_strands">anneal_strands() (in module pydna.alphabet)</a>
+</li>
       <li><a href="reference/pydna.html#pydna.gateway.annotate_gateway_sites">annotate_gateway_sites() (in module pydna.gateway)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.cre_lox.annotate_loxP_sites">annotate_loxP_sites() (in module pydna.cre_lox)</a>
@@ -423,6 +429,8 @@ document.write(`
         <li><a href="reference/pydna.html#pydna.assembly.Assembly.assemble_linear">(pydna.assembly.Assembly method)</a>
 </li>
         <li><a href="reference/pydna.html#pydna.assembly2.Assembly.assemble_linear">(pydna.assembly2.Assembly method)</a>
+</li>
+        <li><a href="reference/pydna.html#pydna.assembly2.PCRAssembly.assemble_linear">(pydna.assembly2.PCRAssembly method)</a>
 </li>
       </ul></li>
       <li><a href="reference/pydna.html#pydna.all.Assembly">Assembly (class in pydna.all)</a>
@@ -495,14 +503,16 @@ document.write(`
       </ul></li>
       <li><a href="reference/pydna.html#pydna.crispr.cas9">cas9 (class in pydna.crispr)</a>
 </li>
-      <li><a href="reference/pydna.html#pydna.all.Dseq.cas9">cas9() (pydna.all.Dseq method)</a>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.cast_to_ds_left">cast_to_ds_left() (pydna.all.Dseq method)</a>
 
       <ul>
-        <li><a href="reference/pydna.html#pydna.all.Dseqrecord.cas9">(pydna.all.Dseqrecord method)</a>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.cast_to_ds_left">(pydna.dseq.Dseq method)</a>
 </li>
-        <li><a href="reference/pydna.html#pydna.dseq.Dseq.cas9">(pydna.dseq.Dseq method)</a>
-</li>
-        <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.cas9">(pydna.dseqrecord.Dseqrecord method)</a>
+      </ul></li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.cast_to_ds_right">cast_to_ds_right() (pydna.all.Dseq method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.cast_to_ds_right">(pydna.dseq.Dseq method)</a>
 </li>
       </ul></li>
       <li><a href="reference/pydna.html#pydna.threading_timer_decorator_exit.cdquit">cdquit() (in module pydna.threading_timer_decorator_exit)</a>
@@ -518,6 +528,8 @@ document.write(`
       <li><a href="reference/pydna.html#pydna.design.circular_assembly_fragments">circular_assembly_fragments() (in module pydna.design)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.assembly2.circular_permutation_min_abs">circular_permutation_min_abs() (in module pydna.assembly2)</a>
+</li>
+      <li><a href="reference/pydna.html#pydna.dseq.CircularBytes">CircularBytes (class in pydna.dseq)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.CloningStrategy">CloningStrategy (class in pydna.opencloning_models)</a>
 </li>
@@ -547,10 +559,10 @@ document.write(`
       </ul></li>
       <li><a href="reference/pydna.html#pydna.seq.ProteinSeq.complement_rna">complement_rna() (pydna.seq.ProteinSeq method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/pydna.html#pydna.sequence_regex.compute_regex_site">compute_regex_site() (in module pydna.sequence_regex)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/pydna.html#pydna.genbankfixer.concat_dict">concat_dict() (in module pydna.genbankfixer)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.ConfiguredBaseModel">ConfiguredBaseModel (class in pydna.opencloning_models)</a>
@@ -583,6 +595,12 @@ document.write(`
 </li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.CreLoxRecombinationSource">CreLoxRecombinationSource (class in pydna.opencloning_models)</a>
 </li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.crick">crick (pydna.all.Dseq property)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.crick">(pydna.dseq.Dseq property)</a>
+</li>
+      </ul></li>
       <li><a href="reference/pydna.html#pydna.assembly2.crispr_integration">crispr_integration() (in module pydna.assembly2)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.CRISPRSource">CRISPRSource (class in pydna.opencloning_models)</a>
@@ -597,6 +615,8 @@ document.write(`
         <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.cut">(pydna.dseqrecord.Dseqrecord method)</a>
 </li>
       </ul></li>
+      <li><a href="reference/pydna.html#pydna.dseq.CircularBytes.cutaround">cutaround() (pydna.dseq.CircularBytes method)</a>
+</li>
       <li><a href="reference/pydna.html#pydna.utils.cuts_overlap">cuts_overlap() (in module pydna.utils)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.all.Dseq.cutsite_is_valid">cutsite_is_valid() (pydna.all.Dseq method)</a>
@@ -637,20 +657,24 @@ document.write(`
 </li>
       <li><a href="reference/pydna.html#pydna.contig.Contig.detailed_figure">detailed_figure() (pydna.contig.Contig method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/pydna.html#pydna.all.download_text">download_text() (in module pydna.all)</a>
 
       <ul>
         <li><a href="reference/pydna.html#pydna.download.download_text">(in module pydna.download)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/pydna.html#pydna.alphabet.dsbreaks">dsbreaks() (in module pydna.alphabet)</a>
+</li>
       <li><a href="reference/pydna.html#pydna.all.Dseq">Dseq (class in pydna.all)</a>
 
       <ul>
         <li><a href="reference/pydna.html#pydna.dseq.Dseq">(class in pydna.dseq)</a>
 </li>
       </ul></li>
+      <li><a href="reference/pydna.html#pydna.alphabet.DseqParts">DseqParts (class in pydna.alphabet)</a>
+</li>
       <li><a href="reference/pydna.html#pydna.all.Dseqrecord">Dseqrecord (class in pydna.all)</a>
 
       <ul>
@@ -758,6 +782,8 @@ document.write(`
       <ul>
         <li><a href="reference/pydna.html#pydna.all.Dseqrecord.find">(pydna.all.Dseqrecord method)</a>
 </li>
+        <li><a href="reference/pydna.html#pydna.dseq.CircularBytes.find">(pydna.dseq.CircularBytes method)</a>
+</li>
         <li><a href="reference/pydna.html#pydna.dseq.Dseq.find">(pydna.dseq.Dseq method)</a>
 </li>
         <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.find">(pydna.dseqrecord.Dseqrecord method)</a>
@@ -797,12 +823,12 @@ document.write(`
       </ul></li>
       <li><a href="reference/pydna.html#pydna.assembly2.Assembly.format_assembly_edge">format_assembly_edge() (pydna.assembly2.Assembly method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/pydna.html#pydna.assembly2.Assembly.format_insertion_assembly">format_insertion_assembly() (pydna.assembly2.Assembly method)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.assembly2.Assembly.format_insertion_assembly_edge_case">format_insertion_assembly_edge_case() (pydna.assembly2.Assembly method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/pydna.html#pydna.all.Anneal.forward_primers">forward_primers (pydna.all.Anneal attribute)</a>
 
       <ul>
@@ -853,14 +879,10 @@ document.write(`
       </ul></li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.SequenceLocationStr.from_start_and_end">from_start_and_end() (pydna.opencloning_models.SequenceLocationStr class method)</a>
 </li>
-      <li><a href="reference/pydna.html#pydna.all.Dseq.from_string">from_string() (pydna.all.Dseq class method)</a>
+      <li><a href="reference/pydna.html#pydna.all.Dseqrecord.from_string">from_string() (pydna.all.Dseqrecord class method)</a>
 
       <ul>
-        <li><a href="reference/pydna.html#pydna.all.Dseqrecord.from_string">(pydna.all.Dseqrecord class method)</a>
-</li>
         <li><a href="reference/pydna.html#pydna.contig.Contig.from_string">(pydna.contig.Contig class method)</a>
-</li>
-        <li><a href="reference/pydna.html#pydna.dseq.Dseq.from_string">(pydna.dseq.Dseq class method)</a>
 </li>
         <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.from_string">(pydna.dseqrecord.Dseqrecord class method)</a>
 </li>
@@ -941,18 +963,24 @@ document.write(`
         <li><a href="reference/pydna.html#pydna.dseq.Dseq.get_cut_parameters">(pydna.dseq.Dseq method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/pydna.html#pydna.all.Dseq.get_cutsite_pairs">get_cutsite_pairs() (pydna.all.Dseq method)</a>
 
       <ul>
         <li><a href="reference/pydna.html#pydna.dseq.Dseq.get_cutsite_pairs">(pydna.dseq.Dseq method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/pydna.html#pydna.all.Dseq.get_cutsites">get_cutsites() (pydna.all.Dseq method)</a>
 
       <ul>
         <li><a href="reference/pydna.html#pydna.dseq.Dseq.get_cutsites">(pydna.dseq.Dseq method)</a>
+</li>
+      </ul></li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.get_ds_meltsites">get_ds_meltsites() (pydna.all.Dseq method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.get_ds_meltsites">(pydna.dseq.Dseq method)</a>
 </li>
       </ul></li>
       <li><a href="reference/pydna.html#pydna.get_env">get_env() (in module pydna)</a>
@@ -977,10 +1005,24 @@ document.write(`
       </ul></li>
       <li><a href="reference/pydna.html#pydna.assembly2.Assembly.get_locations_on_fragments">get_locations_on_fragments() (pydna.assembly2.Assembly method)</a>
 </li>
+      <li><a href="reference/pydna.html#pydna.alphabet.get_parts">get_parts() (in module pydna.alphabet)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.all.Dseq.get_parts">(pydna.all.Dseq method)</a>
+</li>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.get_parts">(pydna.dseq.Dseq method)</a>
+</li>
+      </ul></li>
       <li><a href="reference/pydna.html#pydna.assembly2.Assembly.get_possible_assembly_number">get_possible_assembly_number() (pydna.assembly2.Assembly method)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.cre_lox.get_regex_dict">get_regex_dict() (in module pydna.cre_lox)</a>
 </li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.get_ss_meltsites">get_ss_meltsites() (pydna.all.Dseq method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.get_ss_meltsites">(pydna.dseq.Dseq method)</a>
+</li>
+      </ul></li>
       <li><a href="reference/pydna.html#pydna.assembly2.Assembly.get_unique_linear_paths">get_unique_linear_paths() (pydna.assembly2.Assembly method)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.assembly2.gibson_assembly">gibson_assembly() (in module pydna.assembly2)</a>
@@ -1060,6 +1102,30 @@ document.write(`
   </ul></td>
 </tr></table>
 
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/pydna.html#pydna.all.Dseqrecord.join">join() (pydna.all.Dseqrecord method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.join">(pydna.dseqrecord.Dseqrecord method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.klenow">klenow() (pydna.all.Dseq method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.klenow">(pydna.dseq.Dseq method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -1075,6 +1141,12 @@ document.write(`
       </ul></li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.AssemblyFragment.left_location">left_location (pydna.opencloning_models.AssemblyFragment attribute)</a>
 </li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.left_ovhg">left_ovhg (pydna.all.Dseq property)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.left_ovhg">(pydna.dseq.Dseq property)</a>
+</li>
+      </ul></li>
       <li><a href="reference/pydna.html#pydna.ligate.ligate">ligate() (in module pydna.ligate)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.assembly2.ligation_assembly">ligation_assembly() (in module pydna.assembly2)</a>
@@ -1095,10 +1167,10 @@ document.write(`
         <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.linearize">(pydna.dseqrecord.Dseqrecord method)</a>
 </li>
       </ul></li>
-      <li><a href="reference/pydna.html#pydna.seqrecord.SeqRecord.list_features">list_features() (pydna.seqrecord.SeqRecord method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/pydna.html#pydna.seqrecord.SeqRecord.list_features">list_features() (pydna.seqrecord.SeqRecord method)</a>
+</li>
       <li><a href="reference/pydna.html#pydna.fusionpcr.list_parts">list_parts() (in module pydna.fusionpcr)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.utils.location_boundaries">location_boundaries() (in module pydna.utils)</a>
@@ -1121,13 +1193,9 @@ document.write(`
         <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.looped">(pydna.dseqrecord.Dseqrecord method)</a>
 </li>
       </ul></li>
-      <li><a href="reference/pydna.html#pydna.all.Dseq.lower">lower() (pydna.all.Dseq method)</a>
+      <li><a href="reference/pydna.html#pydna.all.Dseqrecord.lower">lower() (pydna.all.Dseqrecord method)</a>
 
       <ul>
-        <li><a href="reference/pydna.html#pydna.all.Dseqrecord.lower">(pydna.all.Dseqrecord method)</a>
-</li>
-        <li><a href="reference/pydna.html#pydna.dseq.Dseq.lower">(pydna.dseq.Dseq method)</a>
-</li>
         <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.lower">(pydna.dseqrecord.Dseqrecord method)</a>
 </li>
       </ul></li>
@@ -1155,6 +1223,20 @@ document.write(`
         <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.map_trace_files">(pydna.dseqrecord.Dseqrecord method)</a>
 </li>
       </ul></li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.melt">melt() (pydna.all.Dseq method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.melt">(pydna.dseq.Dseq method)</a>
+</li>
+      </ul></li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.melt_ss_dna">melt_ss_dna() (pydna.all.Dseq method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.melt_ss_dna">(pydna.dseq.Dseq method)</a>
+</li>
+      </ul></li>
+      <li><a href="reference/pydna.html#pydna.alphabet.DseqParts.middle">middle (pydna.alphabet.DseqParts attribute)</a>
+</li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.AssemblyFragment.model_config">model_config (pydna.opencloning_models.AssemblyFragment attribute)</a>
 
       <ul>
@@ -1208,6 +1290,8 @@ document.write(`
         <li><a href="reference/pydna.html#module-pydna">pydna</a>
 </li>
         <li><a href="reference/pydna.html#module-pydna.all">pydna.all</a>
+</li>
+        <li><a href="reference/pydna.html#module-pydna.alphabet">pydna.alphabet</a>
 </li>
         <li><a href="reference/pydna.html#module-pydna.amplicon">pydna.amplicon</a>
 </li>
@@ -1281,8 +1365,6 @@ document.write(`
 </li>
         <li><a href="reference/pydna.html#module-pydna.types">pydna.types</a>
 </li>
-        <li><a href="reference/pydna.html#module-pydna.user_cloning">pydna.user_cloning</a>
-</li>
         <li><a href="reference/pydna.html#module-pydna.utils">pydna.utils</a>
 </li>
       </ul></li>
@@ -1318,6 +1400,38 @@ document.write(`
         <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.n_cutters">(pydna.dseqrecord.Dseqrecord method)</a>
 </li>
       </ul></li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.nibble_five_prime_left">nibble_five_prime_left() (pydna.all.Dseq method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.nibble_five_prime_left">(pydna.dseq.Dseq method)</a>
+</li>
+      </ul></li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.nibble_five_prime_right">nibble_five_prime_right() (pydna.all.Dseq method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.nibble_five_prime_right">(pydna.dseq.Dseq method)</a>
+</li>
+      </ul></li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.nibble_three_prime_left">nibble_three_prime_left() (pydna.all.Dseq method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.nibble_three_prime_left">(pydna.dseq.Dseq method)</a>
+</li>
+      </ul></li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.nibble_three_prime_right">nibble_three_prime_right() (pydna.all.Dseq method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.nibble_three_prime_right">(pydna.dseq.Dseq method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.nibble_to_blunt">nibble_to_blunt() (pydna.all.Dseq method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.nibble_to_blunt">(pydna.dseq.Dseq method)</a>
+</li>
+      </ul></li>
       <li><a href="reference/pydna.html#pydna.all.Dseq.no_cutters">no_cutters() (pydna.all.Dseq method)</a>
 
       <ul>
@@ -1328,8 +1442,6 @@ document.write(`
         <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.no_cutters">(pydna.dseqrecord.Dseqrecord method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/pydna.html#pydna.assembly2.Assembly.node_path2assembly_list">node_path2assembly_list() (pydna.assembly2.Assembly method)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.all.Genbank.nucleotide">nucleotide() (pydna.all.Genbank method)</a>
@@ -1384,8 +1496,14 @@ document.write(`
 </li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.OverlapExtensionPCRLigationSource">OverlapExtensionPCRLigationSource (class in pydna.opencloning_models)</a>
 </li>
-      <li><a href="reference/pydna.html#pydna.crispr.cas9.ovhg">ovhg (pydna.crispr.cas9 attribute)</a>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.ovhg">ovhg (pydna.all.Dseq property)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.crispr.cas9.ovhg">(pydna.crispr.cas9 attribute)</a>
 </li>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.ovhg">(pydna.dseq.Dseq property)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -1475,6 +1593,13 @@ document.write(`
 </li>
       </ul></li>
       <li>
+    pydna.alphabet
+
+      <ul>
+        <li><a href="reference/pydna.html#module-pydna.alphabet">module</a>
+</li>
+      </ul></li>
+      <li>
     pydna.amplicon
 
       <ul>
@@ -1544,6 +1669,8 @@ document.write(`
         <li><a href="reference/pydna.html#module-pydna.crispr">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     pydna.design
 
@@ -1551,8 +1678,6 @@ document.write(`
         <li><a href="reference/pydna.html#module-pydna.design">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     pydna.download
 
@@ -1729,13 +1854,6 @@ document.write(`
 </li>
       </ul></li>
       <li>
-    pydna.user_cloning
-
-      <ul>
-        <li><a href="reference/pydna.html#module-pydna.user_cloning">module</a>
-</li>
-      </ul></li>
-      <li>
     pydna.utils
 
       <ul>
@@ -1828,6 +1946,10 @@ document.write(`
       </ul></li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.CloningStrategy.reassign_ids">reassign_ids() (pydna.opencloning_models.CloningStrategy method)</a>
 </li>
+      <li><a href="reference/pydna.html#pydna.alphabet.regex_ds_melt_factory">regex_ds_melt_factory() (in module pydna.alphabet)</a>
+</li>
+      <li><a href="reference/pydna.html#pydna.alphabet.regex_ss_melt_factory">regex_ss_melt_factory() (in module pydna.alphabet)</a>
+</li>
       <li><a href="reference/pydna.html#pydna.assembly2.remove_subassemblies">remove_subassemblies() (in module pydna.assembly2)</a>
 </li>
   </ul></td>
@@ -1838,6 +1960,8 @@ document.write(`
         <li><a href="reference/pydna.html#pydna.amplify.Anneal.report">(pydna.amplify.Anneal method)</a>
 </li>
       </ul></li>
+      <li><a href="reference/pydna.html#pydna.alphabet.representation_tuple">representation_tuple() (in module pydna.alphabet)</a>
+</li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.RestrictionAndLigationSource.restriction_enzymes">restriction_enzymes (pydna.opencloning_models.RestrictionAndLigationSource attribute)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.assembly2.restriction_ligation_assembly">restriction_ligation_assembly() (in module pydna.assembly2)</a>
@@ -1896,6 +2020,12 @@ document.write(`
       </ul></li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.AssemblyFragment.right_location">right_location (pydna.opencloning_models.AssemblyFragment attribute)</a>
 </li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.right_ovhg">right_ovhg (pydna.all.Dseq property)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.right_ovhg">(pydna.dseq.Dseq property)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -1940,6 +2070,12 @@ document.write(`
 </li>
       <li><a href="reference/pydna.html#pydna.amplicon.Amplicon.set_reverse_primer_footprint">set_reverse_primer_footprint() (pydna.amplicon.Amplicon method)</a>
 </li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.shed_ss_dna">shed_ss_dna() (pydna.all.Dseq method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.shed_ss_dna">(pydna.dseq.Dseq method)</a>
+</li>
+      </ul></li>
       <li><a href="reference/pydna.html#pydna.utils.shift_feature">shift_feature() (in module pydna.utils)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.utils.shift_location">shift_location() (in module pydna.utils)</a>
@@ -1954,8 +2090,12 @@ document.write(`
         <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.shifted">(pydna.dseqrecord.Dseqrecord method)</a>
 </li>
       </ul></li>
+      <li><a href="reference/pydna.html#pydna.alphabet.DseqParts.single_crick">single_crick (pydna.alphabet.DseqParts attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/pydna.html#pydna.alphabet.DseqParts.single_watson">single_watson (pydna.alphabet.DseqParts attribute)</a>
+</li>
       <li><a href="reference/pydna.html#pydna.assembly2.SingleFragmentAssembly">SingleFragmentAssembly (class in pydna.assembly2)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.crispr.cas9.size">size (pydna.crispr.cas9 attribute)</a>
@@ -1985,6 +2125,14 @@ document.write(`
 </li>
       </ul></li>
       <li><a href="reference/pydna.html#pydna.assembly2.sticky_end_sub_strings">sticky_end_sub_strings() (in module pydna.assembly2)</a>
+</li>
+      <li><a href="reference/pydna.html#pydna.alphabet.DseqParts.sticky_left3">sticky_left3 (pydna.alphabet.DseqParts attribute)</a>
+</li>
+      <li><a href="reference/pydna.html#pydna.alphabet.DseqParts.sticky_left5">sticky_left5 (pydna.alphabet.DseqParts attribute)</a>
+</li>
+      <li><a href="reference/pydna.html#pydna.alphabet.DseqParts.sticky_right3">sticky_right3 (pydna.alphabet.DseqParts attribute)</a>
+</li>
+      <li><a href="reference/pydna.html#pydna.alphabet.DseqParts.sticky_right5">sticky_right5 (pydna.alphabet.DseqParts attribute)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.seq.Seq.stopcodon">stopcodon() (pydna.seq.Seq method)</a>
 
@@ -2078,6 +2226,8 @@ document.write(`
       </ul></li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.TextFileSequence">TextFileSequence (class in pydna.opencloning_models)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/pydna.html#pydna.utils.three_frame_orfs">three_frame_orfs() (in module pydna.utils)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.all.Dseq.three_prime_end">three_prime_end() (pydna.all.Dseq method)</a>
@@ -2086,8 +2236,6 @@ document.write(`
         <li><a href="reference/pydna.html#pydna.dseq.Dseq.three_prime_end">(pydna.dseq.Dseq method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/pydna.html#pydna.tm.tm_dbd">tm_dbd() (in module pydna.tm)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.tm.tm_default">tm_default() (in module pydna.tm)</a>
@@ -2100,6 +2248,12 @@ document.write(`
 </li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.SequenceLocationStr.to_biopython_location">to_biopython_location() (pydna.opencloning_models.SequenceLocationStr method)</a>
 </li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.to_blunt_string">to_blunt_string() (pydna.all.Dseq method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.to_blunt_string">(pydna.dseq.Dseq method)</a>
+</li>
+      </ul></li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.AssemblyFragment.to_pydantic_model">to_pydantic_model() (pydna.opencloning_models.AssemblyFragment method)</a>
 
       <ul>
@@ -2118,40 +2272,24 @@ document.write(`
 </li>
       <li><a href="reference/pydna.html#pydna.genbankfixer.toJSON">toJSON() (in module pydna.genbankfixer)</a>
 </li>
-      <li><a href="reference/pydna.html#pydna.all.Dseq.tolinear">tolinear() (pydna.all.Dseq method)</a>
+      <li><a href="reference/pydna.html#pydna.all.Dseqrecord.tolinear">tolinear() (pydna.all.Dseqrecord method)</a>
 
       <ul>
-        <li><a href="reference/pydna.html#pydna.all.Dseqrecord.tolinear">(pydna.all.Dseqrecord method)</a>
-</li>
-        <li><a href="reference/pydna.html#pydna.dseq.Dseq.tolinear">(pydna.dseq.Dseq method)</a>
-</li>
         <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.tolinear">(pydna.dseqrecord.Dseqrecord method)</a>
 </li>
       </ul></li>
-      <li><a href="reference/pydna.html#pydna.all.Dseq.transcribe">transcribe() (pydna.all.Dseq method)</a>
+      <li><a href="reference/pydna.html#pydna.seq.ProteinSeq.transcribe">transcribe() (pydna.seq.ProteinSeq method)</a>
 
       <ul>
-        <li><a href="reference/pydna.html#pydna.dseq.Dseq.transcribe">(pydna.dseq.Dseq method)</a>
-</li>
-        <li><a href="reference/pydna.html#pydna.seq.ProteinSeq.transcribe">(pydna.seq.ProteinSeq method)</a>
+        <li><a href="reference/pydna.html#pydna.seq.Seq.transcribe">(pydna.seq.Seq method)</a>
 </li>
       </ul></li>
-      <li><a href="reference/pydna.html#pydna.all.Dseq.translate">translate() (pydna.all.Dseq method)</a>
+      <li><a href="reference/pydna.html#pydna.seq.ProteinSeq.translate">translate() (pydna.seq.ProteinSeq method)</a>
 
       <ul>
-        <li><a href="reference/pydna.html#pydna.dseq.Dseq.translate">(pydna.dseq.Dseq method)</a>
-</li>
-        <li><a href="reference/pydna.html#pydna.seq.ProteinSeq.translate">(pydna.seq.ProteinSeq method)</a>
-</li>
         <li><a href="reference/pydna.html#pydna.seq.Seq.translate">(pydna.seq.Seq method)</a>
 </li>
         <li><a href="reference/pydna.html#pydna.seqrecord.SeqRecord.translate">(pydna.seqrecord.SeqRecord method)</a>
-</li>
-      </ul></li>
-      <li><a href="reference/pydna.html#pydna.all.Dseq.trunc">trunc (pydna.all.Dseq attribute)</a>
-
-      <ul>
-        <li><a href="reference/pydna.html#pydna.dseq.Dseq.trunc">(pydna.dseq.Dseq attribute)</a>
 </li>
       </ul></li>
       <li><a href="reference/pydna.html#pydna.all.Dseq.twice_cutters">twice_cutters() (pydna.all.Dseq method)</a>
@@ -2182,26 +2320,36 @@ document.write(`
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="reference/pydna.html#pydna.all.Dseq.upper">upper() (pydna.all.Dseq method)</a>
+      <li><a href="reference/pydna.html#pydna.all.Dseqrecord.upper">upper() (pydna.all.Dseqrecord method)</a>
 
       <ul>
-        <li><a href="reference/pydna.html#pydna.all.Dseqrecord.upper">(pydna.all.Dseqrecord method)</a>
-</li>
-        <li><a href="reference/pydna.html#pydna.dseq.Dseq.upper">(pydna.dseq.Dseq method)</a>
-</li>
         <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.upper">(pydna.dseqrecord.Dseqrecord method)</a>
 </li>
       </ul></li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.user">user() (pydna.all.Dseq method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.user">(pydna.dseq.Dseq method)</a>
+</li>
+      </ul></li>
+      <li><a href="reference/pydna.html#pydna.design.user_assembly_design">user_assembly_design() (in module pydna.design)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="reference/pydna.html#pydna.all.Dseq.watson_ovhg">watson_ovhg() (pydna.all.Dseq method)</a>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.watson">watson (pydna.all.Dseq property)</a>
 
       <ul>
-        <li><a href="reference/pydna.html#pydna.dseq.Dseq.watson_ovhg">(pydna.dseq.Dseq method)</a>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.watson">(pydna.dseq.Dseq property)</a>
+</li>
+      </ul></li>
+      <li><a href="reference/pydna.html#pydna.all.Dseq.watson_ovhg">watson_ovhg (pydna.all.Dseq property)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.dseq.Dseq.watson_ovhg">(pydna.dseq.Dseq property)</a>
 </li>
       </ul></li>
   </ul></td>

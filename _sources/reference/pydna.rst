@@ -17,6 +17,14 @@ pydna.all module
    :show-inheritance:
    :undoc-members:
 
+pydna.alphabet module
+---------------------
+
+.. automodule:: pydna.alphabet
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 pydna.amplicon module
 ---------------------
 
@@ -301,14 +309,6 @@ pydna.types module
 ------------------
 
 .. automodule:: pydna.types
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
-pydna.user\_cloning module
---------------------------
-
-.. automodule:: pydna.user_cloning
    :members:
    :show-inheritance:
    :undoc-members:

@@ -333,7 +333,7 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_nx</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_itertools</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span><span class="p">,</span> <span class="n">Location</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse_complement</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">RestrictionBatch</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">regex</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
@@ -364,6 +364,7 @@ document.write(`
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.gateway</span><span class="w"> </span><span class="kn">import</span> <span class="n">gateway_overlap</span><span class="p">,</span> <span class="n">find_gateway_sites</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.cre_lox</span><span class="w"> </span><span class="kn">import</span> <span class="n">cre_loxP_overlap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">anneal_strands</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Literal</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -748,9 +749,9 @@ document.write(`
     <span class="c1"># This is only relevant for linear fragments, so we don&#39;t need to worry about</span>
     <span class="c1"># shifting locations for circular fragments.</span>
     <span class="n">trim_x_left</span> <span class="o">=</span> <span class="o">-</span><span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span> <span class="k">if</span> <span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
-    <span class="n">trim_x_right</span> <span class="o">=</span> <span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">watson_ovhg</span><span class="p">()</span> <span class="k">if</span> <span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">watson_ovhg</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">trim_x_right</span> <span class="o">=</span> <span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">watson_ovhg</span> <span class="k">if</span> <span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">watson_ovhg</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="n">trim_y_left</span> <span class="o">=</span> <span class="o">-</span><span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span> <span class="k">if</span> <span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
-    <span class="n">trim_y_right</span> <span class="o">=</span> <span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">watson_ovhg</span><span class="p">()</span> <span class="k">if</span> <span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">watson_ovhg</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">trim_y_right</span> <span class="o">=</span> <span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">watson_ovhg</span> <span class="k">if</span> <span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">watson_ovhg</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="n">stringx</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="p">[</span><span class="n">trim_x_left</span><span class="p">:</span><span class="n">trim_x_right</span><span class="p">])</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
     <span class="n">stringy</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="p">[</span><span class="n">trim_y_left</span><span class="p">:</span><span class="n">trim_y_right</span><span class="p">])</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
@@ -815,6 +816,7 @@ document.write(`
 <span class="sd">    [(4, 0, 2)]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">overlap</span> <span class="o">=</span> <span class="n">sum_is_sticky</span><span class="p">(</span>
         <span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">three_prime_end</span><span class="p">(),</span> <span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">five_prime_end</span><span class="p">(),</span> <span class="n">limit</span>
     <span class="p">)</span>
@@ -1028,17 +1030,7 @@ document.write(`
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.fill_left">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fill_left</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">_Dseq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseq</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill the left overhang of a sequence with the complementary sequence.&quot;&quot;&quot;</span>
-    <span class="n">new_watson</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">watson</span>
-    <span class="n">new_crick</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">crick</span>
-
-    <span class="c1"># Watson 5&#39; overhang</span>
-    <span class="k">if</span> <span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">new_crick</span> <span class="o">=</span> <span class="n">new_crick</span> <span class="o">+</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">seq</span><span class="o">.</span><span class="n">watson</span><span class="p">[:</span> <span class="o">-</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span><span class="p">])</span>
-    <span class="c1"># Crick 5&#39; overhang</span>
-    <span class="k">elif</span> <span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">new_watson</span> <span class="o">=</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">seq</span><span class="o">.</span><span class="n">crick</span><span class="p">[</span><span class="o">-</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span> <span class="p">:])</span> <span class="o">+</span> <span class="n">new_watson</span>
-
-    <span class="k">return</span> <span class="n">_Dseq</span><span class="p">(</span><span class="n">new_watson</span><span class="p">,</span> <span class="n">new_crick</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">seq</span><span class="o">.</span><span class="n">cast_to_ds_left</span><span class="p">()</span></div>
 
 
 
@@ -1046,19 +1038,7 @@ document.write(`
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.fill_right">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fill_right</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">_Dseq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseq</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill the right overhang of a sequence with the complementary sequence.&quot;&quot;&quot;</span>
-    <span class="n">new_watson</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">watson</span>
-    <span class="n">new_crick</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">crick</span>
-
-    <span class="c1"># Watson 3&#39; overhang</span>
-    <span class="n">watson_ovhg</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">watson_ovhg</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">watson_ovhg</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">new_watson</span> <span class="o">=</span> <span class="n">new_watson</span> <span class="o">+</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">seq</span><span class="o">.</span><span class="n">crick</span><span class="p">[:</span><span class="o">-</span><span class="n">watson_ovhg</span><span class="p">])</span>
-
-    <span class="c1"># Crick 3&#39; overhang</span>
-    <span class="k">elif</span> <span class="n">watson_ovhg</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">new_crick</span> <span class="o">=</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">seq</span><span class="o">.</span><span class="n">watson</span><span class="p">[</span><span class="o">-</span><span class="n">watson_ovhg</span><span class="p">:])</span> <span class="o">+</span> <span class="n">new_crick</span>
-
-    <span class="k">return</span> <span class="n">_Dseq</span><span class="p">(</span><span class="n">new_watson</span><span class="p">,</span> <span class="n">new_crick</span><span class="p">,</span> <span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">seq</span><span class="o">.</span><span class="n">cast_to_ds_right</span><span class="p">()</span>  <span class="c1"># _Dseq(new_watson, new_crick, seq.ovhg)</span></div>
 
 
 
@@ -1224,9 +1204,10 @@ document.write(`
         <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">loc_u</span><span class="p">,</span> <span class="n">loc_v</span> <span class="o">=</span> <span class="n">asm_edge</span>
         <span class="n">f_u</span> <span class="o">=</span> <span class="n">fragments</span><span class="p">[</span><span class="n">u</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">u</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">fragments</span><span class="p">[</span><span class="o">-</span><span class="n">u</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
         <span class="n">f_v</span> <span class="o">=</span> <span class="n">fragments</span><span class="p">[</span><span class="n">v</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">fragments</span><span class="p">[</span><span class="o">-</span><span class="n">v</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
-        <span class="n">seq_u</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">loc_u</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">f_u</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-        <span class="n">seq_v</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">loc_v</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">f_v</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">seq_u</span> <span class="o">!=</span> <span class="n">seq_v</span><span class="p">:</span>
+        <span class="n">seq_u</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">loc_u</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">f_u</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+        <span class="n">seq_v</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">loc_v</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">f_v</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">rc</span><span class="p">())</span>
+        <span class="c1"># Test if seq_u and seq_v anneal</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">anneal_strands</span><span class="p">(</span><span class="n">seq_u</span><span class="p">,</span> <span class="n">seq_v</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Mismatch in assembly&quot;</span><span class="p">)</span>
 
     <span class="c1"># We transform into Dseqrecords (for primers)</span>
@@ -1239,42 +1220,23 @@ document.write(`
 
     <span class="c1"># Length of the overlaps between consecutive assembly fragments</span>
     <span class="n">fragment_overlaps</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">assembly</span><span class="p">]</span>
+    <span class="n">out_dseqrecord</span> <span class="o">=</span> <span class="n">subfragments</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="n">out_dseqrecord</span> <span class="o">=</span> <span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">subfragments</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">fragment</span><span class="p">,</span> <span class="n">overlap</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">subfragments</span><span class="p">,</span> <span class="n">fragment_overlaps</span><span class="p">):</span>
+        <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">cast_to_ds_right</span><span class="p">()</span>
+        <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">exo1_end</span><span class="p">(</span><span class="n">overlap</span><span class="p">)</span>
+        <span class="n">fragment</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">fragment</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">cast_to_ds_left</span><span class="p">()</span>
+        <span class="n">fragment</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">fragment</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">exo1_front</span><span class="p">(</span><span class="n">overlap</span><span class="p">)</span>
+        <span class="n">out_dseqrecord</span> <span class="o">+=</span> <span class="n">fragment</span>
 
-    <span class="k">for</span> <span class="n">fragment</span><span class="p">,</span> <span class="n">overlap</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">subfragments</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">fragment_overlaps</span><span class="p">):</span>
-        <span class="c1"># Shift the features of the right fragment to the left by ``overlap``</span>
-        <span class="n">new_features</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">_shift</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out_dseqrecord</span><span class="p">)</span> <span class="o">-</span> <span class="n">overlap</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fragment</span><span class="o">.</span><span class="n">features</span>
-        <span class="p">]</span>
-        <span class="c1"># Join the left sequence including the overlap with the right sequence without the overlap</span>
-        <span class="c1"># we use fill_right / fill_left so that it works for ligation of sticky ends</span>
-        <span class="n">out_dseqrecord</span> <span class="o">=</span> <span class="n">_Dseqrecord</span><span class="p">(</span>
-            <span class="n">fill_right</span><span class="p">(</span><span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span> <span class="o">+</span> <span class="n">fill_left</span><span class="p">(</span><span class="n">fragment</span><span class="o">.</span><span class="n">seq</span><span class="p">)[</span><span class="n">overlap</span><span class="p">:],</span>
-            <span class="n">features</span><span class="o">=</span><span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">features</span> <span class="o">+</span> <span class="n">new_features</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="c1"># For circular assemblies, close the loop and wrap origin-spanning features</span>
+    <span class="c1"># For circular assemblies, process the fragment and loop</span>
     <span class="k">if</span> <span class="n">is_circular</span><span class="p">:</span>
+        <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">cast_to_ds_left</span><span class="p">()</span>
+        <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">cast_to_ds_right</span><span class="p">()</span>
         <span class="n">overlap</span> <span class="o">=</span> <span class="n">fragment_overlaps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-        <span class="c1"># Special case for blunt circularisation</span>
-        <span class="k">if</span> <span class="n">overlap</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">out_dseqrecord</span> <span class="o">=</span> <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">looped</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Remove trailing overlap</span>
-            <span class="n">out_dseqrecord</span> <span class="o">=</span> <span class="n">_Dseqrecord</span><span class="p">(</span>
-                <span class="n">fill_dseq</span><span class="p">(</span><span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span><span class="p">)[:</span><span class="o">-</span><span class="n">overlap</span><span class="p">],</span>
-                <span class="n">features</span><span class="o">=</span><span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">features</span><span class="p">,</span>
-                <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
-                <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_dseqrecord</span><span class="p">)</span> <span class="ow">or</span> <span class="n">end</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_dseqrecord</span><span class="p">):</span>
-                    <span class="c1"># Wrap around the origin</span>
-                    <span class="n">feature</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">_shift_location</span><span class="p">(</span>
-                        <span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_dseqrecord</span><span class="p">)</span>
-                    <span class="p">)</span>
+        <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">exo1_front</span><span class="p">(</span><span class="n">overlap</span><span class="p">)</span>
+        <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">exo1_end</span><span class="p">(</span><span class="n">overlap</span><span class="p">)</span>
+        <span class="n">out_dseqrecord</span> <span class="o">=</span> <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">looped</span><span class="p">()</span>
 
     <span class="n">out_dseqrecord</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">AssemblySource</span><span class="o">.</span><span class="n">from_subfragment_representation</span><span class="p">(</span>
         <span class="n">subfragment_representation</span><span class="p">,</span> <span class="n">fragments</span><span class="p">,</span> <span class="n">is_circular</span>
@@ -1602,6 +1564,7 @@ document.write(`
         <span class="n">use_fragment_order</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">use_all_fragments</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
+
         <span class="c1"># TODO: allow for the same fragment to be included more than once?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">_nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">()</span>
         <span class="c1"># Add positive and negative nodes for forward and reverse fragments</span>
@@ -2370,6 +2333,22 @@ document.write(`
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
             <span class="s2">&quot;get_insertion_assemblies not implemented for PCR assemblies&quot;</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PCRAssembly.assemble_linear">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.PCRAssembly.assemble_linear">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">assemble_linear</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overrides the parent method to ensure that the 5&#39; of the crick strand of the product matches the</span>
+<span class="sd">        sequence of the reverse primer. This is important when using primers with dUTP (for USER cloning).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">assemble_linear</span><span class="p">(</span><span class="n">only_adjacent_edges</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+            <span class="n">rp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">rp</span><span class="p">)]</span> <span class="o">+</span> <span class="n">_Dseq</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">rp</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">rc</span><span class="p">()))</span>
+        <span class="k">return</span> <span class="n">results</span></div>
 </div>
 
 

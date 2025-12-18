@@ -341,9 +341,7 @@ document.write(`
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">flatten</span> <span class="k">as</span> <span class="n">_flatten</span>
-
-<span class="c1"># from pydna.utils import memorize as _memorize</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rc</span> <span class="k">as</span> <span class="n">_rc</span><span class="p">,</span> <span class="n">shift_feature</span> <span class="k">as</span> <span class="n">_shift_feature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shift_feature</span> <span class="k">as</span> <span class="n">_shift_feature</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplicon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Amplicon</span> <span class="k">as</span> <span class="n">_Amplicon</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span> <span class="k">as</span> <span class="n">_Primer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span> <span class="k">as</span> <span class="n">_SeqRecord</span>
@@ -352,35 +350,17 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span> <span class="k">as</span> <span class="n">_SimpleLocation</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompoundLocation</span> <span class="k">as</span> <span class="n">_CompoundLocation</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq</span> <span class="k">as</span> <span class="n">_Seq</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_itertools</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_copy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_operator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">iupac_compl_regex</span> <span class="k">as</span> <span class="n">_iupac_compl_regex</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">anneal_from_left</span> <span class="k">as</span> <span class="n">_anneal_from_left</span>
 
 <span class="c1"># import os as _os</span>
 
 <span class="c1"># import logging as _logging</span>
 
 <span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
-
-<span class="n">_table</span> <span class="o">=</span> <span class="p">{</span>  <span class="c1"># IUPAC Ambiguity Codes for Nucleotide Degeneracy and U for Uracile</span>
-    <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;U&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>  <span class="c1"># XXX</span>
-    <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="s2">&quot;(A|G)&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="s2">&quot;(C|T)&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;(G|C)&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="s2">&quot;(A|T)&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="s2">&quot;(G|T)&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="s2">&quot;(A|C)&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="s2">&quot;(C|G|T)&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="s2">&quot;(A|G|T)&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;H&quot;</span><span class="p">:</span> <span class="s2">&quot;(A|C|T)&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="s2">&quot;(A|C|G)&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;(A|G|C|T)&quot;</span><span class="p">,</span>
-<span class="p">}</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_annealing_positions</span><span class="p">(</span><span class="n">primer</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
@@ -396,12 +376,13 @@ document.write(`
 
 <span class="sd">        &lt;- - - - - - - - - - template - - - - - - - - - - - - - &gt;</span>
 
-<span class="sd">        &lt;------- start (int) ------&gt;</span>
-<span class="sd">     5&#39;-...gctactacacacgtactgactgcctccaagatagagtcagtaaccacactcgat...3&#39;</span>
+<span class="sd">           &lt; ----- start = 26 ------&gt;</span>
+<span class="sd">       5&#39;- gctactacacacgtactgactgcctccaagatagagtcagtaaccacactcgatag...3&#39;</span>
 <span class="sd">           ||||||||||||||||||||||||||||||||||||||||||||||||</span>
 <span class="sd">                                  3&#39;-gttctatctcagtcattggtgtATAGTG-5&#39;</span>
 
 <span class="sd">                                     &lt;-footprint length --&gt;</span>
+
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -411,7 +392,7 @@ document.write(`
 <span class="sd">    template : string</span>
 <span class="sd">        The template sequence 5&#39;-3&#39;</span>
 
-<span class="sd">    limit : int = 15, optional</span>
+<span class="sd">    limit : int</span>
 <span class="sd">        footprint needs to be at least of length limit.</span>
 
 <span class="sd">    Returns</span>
@@ -420,32 +401,37 @@ document.write(`
 <span class="sd">        [ (start1, footprint1), (start2, footprint2) ,..., ]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c1">#                            under_tail</span>
+    <span class="c1">#           anchor         AACCACACTCGAT</span>
+    <span class="c1">#           CAAGATAGAGTCAGT</span>
+    <span class="c1">#           |||||||||||||||</span>
+    <span class="c1">#           gttctatctcagtca</span>
+    <span class="c1">#                          ttggtgtATAGTG    revprimer</span>
+    <span class="c1">#                              tail</span>
+    <span class="c1">#</span>
+    <span class="c1">#           | &lt;- limit -&gt; |</span>
+
     <span class="c1"># return empty list if primer too short</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">primer</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[]</span>
 
-    <span class="n">prc</span> <span class="o">=</span> <span class="n">_rc</span><span class="p">(</span><span class="n">primer</span><span class="p">)</span>
+    <span class="n">revprimer</span> <span class="o">=</span> <span class="n">primer</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="c1"># head is minimum part of primer that must anneal</span>
-    <span class="n">head</span> <span class="o">=</span> <span class="n">prc</span><span class="p">[:</span><span class="n">limit</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="n">revprimer</span><span class="p">[:</span><span class="n">limit</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="n">tail</span> <span class="o">=</span> <span class="n">revprimer</span><span class="p">[</span><span class="n">limit</span><span class="p">:]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
 
     <span class="c1"># Make regex pattern that reflects extended IUPAC DNA code</span>
-    <span class="n">head</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">head</span><span class="p">)</span>
+    <span class="n">head_regex</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_iupac_compl_regex</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">head</span><span class="p">)</span>
+    <span class="n">primer_regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(?:(</span><span class="si">{</span><span class="n">head_regex</span><span class="si">}</span><span class="s2">)(.</span><span class="se">{{</span><span class="s2">0,</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">primer</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">limit</span><span class="si">}</span><span class="se">}}</span><span class="s2">))&quot;</span>
 
-    <span class="n">positions</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">_re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(?=</span><span class="si">{</span><span class="n">head</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">_re</span><span class="o">.</span><span class="n">I</span><span class="p">)]</span>
-
-    <span class="k">if</span> <span class="n">positions</span><span class="p">:</span>
-        <span class="n">tail</span> <span class="o">=</span> <span class="n">prc</span><span class="p">[</span><span class="n">limit</span><span class="p">:]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tail</span><span class="p">)</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">match_start</span> <span class="ow">in</span> <span class="n">positions</span><span class="p">:</span>
-            <span class="n">tm</span> <span class="o">=</span> <span class="n">template</span><span class="p">[</span><span class="n">match_start</span> <span class="o">+</span> <span class="n">limit</span> <span class="p">:</span> <span class="n">match_start</span> <span class="o">+</span> <span class="n">limit</span> <span class="o">+</span> <span class="n">length</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-            <span class="n">footprint</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
-                <span class="nb">list</span><span class="p">(</span><span class="n">_itertools</span><span class="o">.</span><span class="n">takewhile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">zip</span><span class="p">(</span><span class="n">tail</span><span class="p">,</span> <span class="n">tm</span><span class="p">)))</span>
-            <span class="p">)</span>
-            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">match_start</span><span class="p">,</span> <span class="n">footprint</span> <span class="o">+</span> <span class="n">limit</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">results</span>
-    <span class="k">return</span> <span class="p">[]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">_re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">primer_regex</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">upper</span><span class="p">()):</span>
+        <span class="n">anchor</span><span class="p">,</span> <span class="n">under_tail</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="n">match_start</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">match_extension</span> <span class="o">=</span> <span class="n">_anneal_from_left</span><span class="p">(</span><span class="n">tail</span><span class="p">,</span> <span class="n">under_tail</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">match_start</span><span class="p">,</span> <span class="n">limit</span> <span class="o">+</span> <span class="n">match_extension</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">results</span>
 
 
 <span class="c1"># class _Memoize(type):</span>

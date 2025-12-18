@@ -331,6 +331,7 @@ document.write(`
 <span class="c1"># license.  Please see the LICENSE.txt file that should have been included</span>
 <span class="c1"># as part of this package.</span>
 
+
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">:copyright: Copyright 2013-2023 by Björn Johansson. All rights reserved.</span>
 <span class="sd">:license:   This code is part of the pydna package, governed by the</span>
@@ -468,7 +469,7 @@ document.write(`
 <span class="c1"># import configparser as _configparser</span>
 <span class="c1"># import tempfile as _tempfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">PrettyTable</span> <span class="k">as</span> <span class="n">_PrettyTable</span>
-
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">FormattedSeq</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Björn Johansson&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2013 - 2023 Björn Johansson&quot;</span>
@@ -728,6 +729,21 @@ document.write(`
         <span class="n">message</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">renderText</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
+
+
+<span class="c1">## Override Bio.Restriction.FormattedSeq._table</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_FormattedSeq_table</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span>
+    <span class="n">upper_to_lower</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="sa">b</span><span class="s2">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span><span class="p">:</span>  <span class="c1"># Only allow IUPAC letters</span>
+        <span class="n">table</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span>  <span class="c1"># map uppercase to uppercase</span>
+        <span class="n">table</span><span class="p">[</span><span class="n">c</span> <span class="o">-</span> <span class="n">upper_to_lower</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span>  <span class="c1"># map lowercase to uppercase</span>
+    <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+
+<span class="n">FormattedSeq</span><span class="o">.</span><span class="n">_table</span> <span class="o">=</span> <span class="n">_make_FormattedSeq_table</span><span class="p">()</span>
 </pre></div>
 
                 </article>

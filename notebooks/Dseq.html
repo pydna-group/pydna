@@ -442,7 +442,6 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#printing-sequences-to-the-console-repr-and-str">Printing sequences to the console: <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> and <code class="docutils literal notranslate"><span class="pre">__str__</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#edge-cases">Edge cases</a></li>
 </ul>
             </nav>
         </div>
@@ -598,7 +597,7 @@ actag
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-5)
 Actag
- gatC
+ gatc
 </pre></div>
 </div>
 </div>
@@ -898,24 +897,6 @@ aaatta
 <p>Note that on the string representation, the bases correspond to the entire sequence provided, even when they are only present on either the <code class="docutils literal notranslate"><span class="pre">watson</span></code> or <code class="docutils literal notranslate"><span class="pre">crick</span></code> strand. In the example above, the last two <code class="docutils literal notranslate"><span class="pre">aa</span></code> bases are missing from the <code class="docutils literal notranslate"><span class="pre">watson</span></code> strand,  and that only the <code class="docutils literal notranslate"><span class="pre">crick</span></code> strand has them.</p>
 </section>
 </section>
-<section id="edge-cases">
-<h2>Edge cases<a class="headerlink" href="#edge-cases" title="Link to this heading">#</a></h2>
-<p>You can create arbitrary double-stranded sequences that are not complementary if you specify both strands and an overhang, but you won’t be able to use them for molecular biology simulations. For example:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;xxxx&quot;</span><span class="p">,</span> <span class="s2">&quot;atat&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dseq(-6)
-  xxxx
-tata
-</pre></div>
-</div>
-</div>
-</div>
-</section>
 </section>
 
 
@@ -972,7 +953,6 @@ tata
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#printing-sequences-to-the-console-repr-and-str">Printing sequences to the console: <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> and <code class="docutils literal notranslate"><span class="pre">__str__</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#edge-cases">Edge cases</a></li>
 </ul>
   </nav></div>
 

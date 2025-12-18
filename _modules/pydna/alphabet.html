@@ -1,0 +1,1411 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pydna.alphabet &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydna/alphabet';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../getting_started.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../reference/pydna.html">pydna package</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pydna.alphabet</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">dscode - The nucleic acid alphabet used in pydna</span>
+
+<span class="sd">This file serves to define dscode, the DNA alphabet used in pydna.</span>
+<span class="sd">Each symbol represents a basepair (two opposing bases in the two antiparalell</span>
+<span class="sd">DNA strands).</span>
+
+<span class="sd">The alphabet is defined in the end of this docstring which serve as the single</span>
+<span class="sd">source of thruth. The alphabet is used to construct the codestrings dictionary</span>
+<span class="sd">with has the following keys (strings) in the order indicated:</span>
+
+<span class="sd">1. un_ambiguous_ds_dna</span>
+<span class="sd">2. ds_rna</span>
+<span class="sd">3. ambiguous_ds_dna</span>
+<span class="sd">4. single_stranded_dna_rna</span>
+<span class="sd">5. loops_dna_rna</span>
+<span class="sd">6. mismatched_dna_rna</span>
+<span class="sd">7. gap</span>
+
+<span class="sd">Each value of the codestrings dictionary is a multiline string. This string</span>
+<span class="sd">has five lines following this form:</span>
+
+<span class="sd">::</span>
+
+<span class="sd">    W             1   Watson symbol</span>
+<span class="sd">    |             2   Pipe</span>
+<span class="sd">    C             3   Crick symbol</span>
+<span class="sd">    &lt;empty line&gt;  4</span>
+<span class="sd">    S             5   dscode symbol</span>
+
+<span class="sd">W (line 1) and C (line 2) are complementary bases in a double stranded DNA</span>
+<span class="sd">molecule and S (line 5) are the symbols of the alphabet used to</span>
+<span class="sd">describe the base pair above the symbol.</span>
+
+<span class="sd">Line 2 must contain only the pipe character, indicating basepairing and</span>
+<span class="sd">line 4 must be empty. The lines must be of equal length and a series ot</span>
+<span class="sd">tests are performed to ensure the integrity of the alphabet.</span>
+
+<span class="sd">The string definition as well as the keys for the codestrings dict follow this</span>
+<span class="sd">line and is contained in the last 13 lines of the docstring:</span>
+
+<span class="sd">un_ambiguous_ds_dna</span>
+<span class="sd">|    ds_rna</span>
+<span class="sd">|    |  ambiguous_ds_dna</span>
+<span class="sd">|    |  |           single_stranded_dna_rna</span>
+<span class="sd">|    |  |           |          loops_dna_rna</span>
+<span class="sd">|    |  |           |          |          mismatched_dna_rna</span>
+<span class="sd">|    |  |           |          |          |                  gap</span>
+<span class="sd">|    |  |           |          |          |                  |</span>
+<span class="sd">GATC UA RYMKSWHBVDN GATC••••U• -----AGCTU AAACCCGGGTTTUUUGCT •</span>
+<span class="sd">|||| || ||||||||||| |||||||||| |||||||||| |||||||||||||||||| |</span>
+<span class="sd">CTAG AU YRKMSWDVBHN ••••CTAG•U AGCTU----- ACGACTAGTCGTGCTUUU •</span>
+
+<span class="sd">GATC UO RYMKSWHBVDN PEXIQFZJ$% 0123456789 !#{}&amp;*()&lt;&gt;@:?[]=_; •</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1"># Core alphabet dictionaries</span>
+    <span class="s2">&quot;basepair_dict&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;annealing_dict&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;annealing_dict_w_holes&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;complement_dict_for_dscode&quot;</span><span class="p">,</span>
+    <span class="c1"># Translation tables (str.translate, bytes.translate)</span>
+    <span class="s2">&quot;complement_table_for_dscode&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dscode_to_watson_table&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dscode_to_crick_table&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dscode_to_watson_tail_table&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dscode_to_crick_tail_table&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dscode_to_full_sequence_table&quot;</span><span class="p">,</span>
+    <span class="c1"># Alphabet subsets</span>
+    <span class="s2">&quot;ds_letters&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ss_letters_watson&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ss_letters_crick&quot;</span><span class="p">,</span>
+    <span class="c1"># Regex helpers and factories</span>
+    <span class="s2">&quot;iupac_compl_regex&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;regex_ss_melt_factory&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;regex_ds_melt_factory&quot;</span><span class="p">,</span>
+    <span class="c1"># Data structures</span>
+    <span class="s2">&quot;DseqParts&quot;</span><span class="p">,</span>
+    <span class="c1"># Public helper functions</span>
+    <span class="s2">&quot;get_parts&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dsbreaks&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;representation_tuple&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;anneal_strands&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="c1"># An alias for whitespace</span>
+<span class="n">emptyspace</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Alphabet definition extracted from module docstring</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">lines</span> <span class="o">=</span> <span class="vm">__doc__</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="o">-</span><span class="mi">13</span><span class="p">:]</span>  <span class="c1"># last 13 docstring lines are read</span>
+
+<span class="k">assert</span> <span class="ow">not</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>  <span class="c1"># line 4 has to be empty</span>
+<span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span> <span class="o">==</span> <span class="p">{</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;|&quot;</span><span class="p">}</span>  <span class="c1"># line 2 has to have pipes only.</span>
+
+<span class="n">uppers</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">pipes</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">lowers</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">dscode</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Make sure all lineas are equal in length</span>
+<span class="k">assert</span> <span class="p">(</span>
+    <span class="nb">len</span><span class="p">(</span><span class="n">uppers</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">lowers</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">pipes</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">dscode</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+<span class="p">)</span>
+
+<span class="c1"># Extract the keys from the docstring</span>
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;| &quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">dscode</span><span class="o">.</span><span class="n">split</span><span class="p">())]]</span>
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Construct the codestrings dict</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">codestrings</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">upper</span><span class="p">,</span> <span class="n">pipe</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">uppers</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">pipes</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">lowers</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">dscode</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">names</span>
+<span class="p">):</span>
+    <span class="n">codestrings</span><span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">upper</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">pipe</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">lower</span><span class="si">}</span><span class="se">\n\n</span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+        <span class="s2">&quot;•&quot;</span><span class="p">,</span> <span class="n">emptyspace</span>
+    <span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Define ascii letters not used in the alphabet</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">letters_not_in_dscode</span> <span class="o">=</span> <span class="s2">&quot;lL</span><span class="se">\&quot;</span><span class="s2">&#39;,-./</span><span class="se">\\</span><span class="s2">^`|+~&quot;</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># for loop below carries out a series of consistency checks</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">codestring</span> <span class="ow">in</span> <span class="n">codestrings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">codestring</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;codestring[&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot;] does not have 5 lines&#39;</span>
+
+    <span class="c1"># We want the Watson, Crick and Symbol lines only</span>
+    <span class="c1"># Second line has to be pipes (&quot;|&quot;) and fourth has to be empty</span>
+
+    <span class="n">watsn</span><span class="p">,</span> <span class="n">pipes</span><span class="p">,</span> <span class="n">crick</span><span class="p">,</span> <span class="n">empty</span><span class="p">,</span> <span class="n">symbl</span> <span class="o">=</span> <span class="n">lines</span>
+
+    <span class="c1"># Check so that all letters are ascii symbols.</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
+        <span class="n">ln</span><span class="o">.</span><span class="n">isascii</span><span class="p">()</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="p">(</span><span class="n">watsn</span><span class="p">,</span> <span class="n">crick</span><span class="p">,</span> <span class="n">symbl</span><span class="p">)</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;codestring[&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot;] has non-ascii letters&#39;</span>
+
+    <span class="c1"># Verify so that all chars that have uppercase are uppercase.</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
+        <span class="n">ln</span><span class="o">.</span><span class="n">isupper</span><span class="p">()</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="p">(</span><span class="n">watsn</span><span class="p">,</span> <span class="n">crick</span><span class="p">,</span> <span class="n">symbl</span><span class="p">)</span> <span class="k">if</span> <span class="n">ln</span><span class="o">.</span><span class="n">isalpha</span><span class="p">()</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;codestring[&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot;] has non-uppercase letters&#39;</span>
+
+    <span class="c1"># check so that pipes contain only &quot;|&quot;</span>
+    <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">pipes</span><span class="p">)</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span>
+        <span class="s2">&quot;|&quot;</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;codestring[&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot;] has non-pipe character(s) in line 2&#39;</span>
+
+    <span class="c1"># check so strings are the same length</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">ln</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">watsn</span><span class="p">)</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="p">(</span><span class="n">watsn</span><span class="p">,</span> <span class="n">pipes</span><span class="p">,</span> <span class="n">crick</span><span class="p">,</span> <span class="n">symbl</span><span class="p">)</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;codestring[&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot;] has lines of unequal length&#39;</span>
+
+    <span class="c1"># Check that the the letters in the letters_not_in_dscode string</span>
+    <span class="c1"># are not used.</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">letter</span> <span class="ow">in</span> <span class="n">letters_not_in_dscode</span> <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">symbl</span><span class="p">]</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;codestring[&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot;] has chars outside alphabet&#39;</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># The `codes` dictionary is a dict of dicts containing the information of the</span>
+<span class="c1"># code strings in the form if a dict with string names as keys, each containing</span>
+<span class="c1"># a {tuple: string} dict with this structure:</span>
+<span class="c1">#</span>
+<span class="c1">#                                  (Watson letter, Crick letter): dscode symbol</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">codes</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">codestring</span> <span class="ow">in</span> <span class="n">codestrings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">codestring</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+
+    <span class="n">watsons</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">cricks</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">symbols</span> <span class="o">=</span> <span class="n">lines</span>
+
+    <span class="c1"># d is an alias of codes[name] used in this loop for code clarity.</span>
+    <span class="n">codes</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">watson</span><span class="p">,</span> <span class="n">crick</span><span class="p">,</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">watsons</span><span class="p">,</span> <span class="n">cricks</span><span class="p">,</span> <span class="n">symbols</span><span class="p">):</span>
+        <span class="n">d</span><span class="p">[</span><span class="n">watson</span><span class="p">,</span> <span class="n">crick</span><span class="p">]</span> <span class="o">=</span> <span class="n">symbol</span>
+
+<span class="k">del</span> <span class="n">d</span>  <span class="c1"># delete alias</span>
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># The `basepair_dict` dictionary is a merge of a subset of the `codes`dict.</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">basepair_dict</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">codes</span><span class="p">[</span><span class="s2">&quot;un_ambiguous_ds_dna&quot;</span><span class="p">]</span>
+    <span class="o">|</span> <span class="n">codes</span><span class="p">[</span><span class="s2">&quot;ambiguous_ds_dna&quot;</span><span class="p">]</span>
+    <span class="o">|</span> <span class="n">codes</span><span class="p">[</span><span class="s2">&quot;ds_rna&quot;</span><span class="p">]</span>
+    <span class="o">|</span> <span class="n">codes</span><span class="p">[</span><span class="s2">&quot;single_stranded_dna_rna&quot;</span><span class="p">]</span>
+    <span class="c1"># | codes[&quot;mismatched_dna_rna&quot;]</span>
+    <span class="c1"># | codes[&quot;loops_dna_rna&quot;]</span>
+    <span class="o">|</span> <span class="n">codes</span><span class="p">[</span><span class="s2">&quot;gap&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># The `annealing_dict` dictionary contain letters for single stranded</span>
+<span class="c1"># DNA and their dscode after annealing</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="c1"># The annealing_dict_of_str is constructed below. It contains the information</span>
+<span class="c1"># needed to tell if two DNA fragments (like a and b below) can anneal.</span>
+
+<span class="c1"># This of course only concerns single stranded regions.</span>
+
+<span class="c1"># The dict has the form (x, y): s</span>
+
+<span class="c1"># Where x and y are bases in a and b and the symbol s is the resulting dscode</span>
+<span class="c1"># symbol for the base pair that is formed.</span>
+
+<span class="c1"># The letters x and y are from the values in the</span>
+<span class="c1"># codes[&quot;single_stranded_dna_rna&quot;] dictionary.</span>
+
+<span class="c1"># For, example: One key-value pair is (&#39;P&#39;, &#39;Q&#39;): &#39;G&#39; which matches the first</span>
+<span class="c1"># of the four new base pairings formed between a and b in the example below.</span>
+
+<span class="c1">#   (a)</span>
+<span class="c1">#   gggPEXI    (dscode for a)</span>
+
+<span class="c1">#   gggGATC</span>
+<span class="c1">#   ccc</span>
+<span class="c1">#           aaa (b)</span>
+<span class="c1">#       CTAGttt</span>
+
+<span class="c1">#       QFZJaaa (dscode for b)</span>
+
+
+<span class="c1">#   gggGATCaaa  (annealing product between a and b)</span>
+<span class="c1">#   cccCTAGttt</span>
+
+<span class="c1"># This loops through the base pairs where the upper or lower</span>
+<span class="c1"># positions are empty. (w, c), s would be (&quot;G&quot;, &quot; &quot;), &quot;P&quot;</span>
+<span class="c1"># in the first iteration.</span>
+
+<span class="n">annealing_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+<span class="n">temp</span> <span class="o">=</span> <span class="n">codes</span><span class="p">[</span><span class="s2">&quot;un_ambiguous_ds_dna&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="n">codes</span><span class="p">[</span><span class="s2">&quot;ds_rna&quot;</span><span class="p">]</span>
+
+<span class="c1"># Alias to make the code below more readable.</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">codes</span><span class="p">[</span><span class="s2">&quot;single_stranded_dna_rna&quot;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="n">emptyspace</span><span class="p">:</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">temp</span> <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">symbol_other</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">emptyspace</span><span class="p">,</span> <span class="n">other</span><span class="p">]</span>
+        <span class="n">annealing_dict</span><span class="p">[</span><span class="n">symbol</span><span class="p">,</span> <span class="n">symbol_other</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">other</span><span class="p">]</span>
+        <span class="n">annealing_dict</span><span class="p">[</span><span class="n">symbol_other</span><span class="p">,</span> <span class="n">symbol</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">other</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="o">==</span> <span class="n">emptyspace</span><span class="p">:</span>
+        <span class="n">other</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">temp</span> <span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">symbol_other</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">other</span><span class="p">,</span> <span class="n">emptyspace</span><span class="p">]</span>
+        <span class="n">annealing_dict</span><span class="p">[</span><span class="n">symbol</span><span class="p">,</span> <span class="n">symbol_other</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="n">other</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
+        <span class="n">annealing_dict</span><span class="p">[</span><span class="n">symbol_other</span><span class="p">,</span> <span class="n">symbol</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="n">other</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;This should not happen&quot;</span><span class="p">)</span>
+
+<span class="k">del</span> <span class="n">d</span><span class="p">,</span> <span class="n">temp</span>
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># The `annealing_dict_w_holes`contains the `annealing_dict`</span>
+<span class="c1"># and additional key pairs where one position is empty</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">temp</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">annealing_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+    <span class="n">temp</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">emptyspace</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="n">temp</span><span class="p">[</span><span class="n">emptyspace</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+
+<span class="n">annealing_dict_w_holes</span> <span class="o">=</span> <span class="n">annealing_dict</span> <span class="o">|</span> <span class="n">temp</span>
+
+<span class="k">del</span> <span class="n">temp</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># translation tables</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="c1"># A collection of translation tables are a practical way to obtain Watson and Crick</span>
+<span class="c1"># from dscode or the reverse complement strands when needed.</span>
+
+<span class="c1"># These are meant to be used by the str.translate or bytes.translate methods.</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># The translation table &quot;complement_table_for_dscode&quot; is used to obtain the</span>
+<span class="c1"># complement of a DNA sequence in dscode format.</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">complement_dict_for_dscode</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">s</span><span class="p">:</span> <span class="n">basepair_dict</span><span class="p">[</span><span class="n">c</span><span class="p">,</span> <span class="n">w</span><span class="p">]</span> <span class="k">for</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">basepair_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="n">from_letters</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">complement_dict_for_dscode</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">to_letters</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">complement_dict_for_dscode</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+<span class="n">from_letters</span> <span class="o">+=</span> <span class="n">from_letters</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="n">to_letters</span> <span class="o">+=</span> <span class="n">to_letters</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+<span class="n">complement_table_for_dscode</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span>
+    <span class="n">from_letters</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span> <span class="n">to_letters</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># dscode_to_watson_table and dscode_to_crick_table</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="c1"># dscode_to_watson_table and dscode_to_crick_table are used to obtain the Watson</span>
+<span class="c1"># and (reverse) Crick strands from dscode.</span>
+
+<span class="c1"># Three extra letters (placeholder1, placeholder2, interval) are added to the</span>
+<span class="c1"># table and used in the representation_tuple function to</span>
+<span class="c1"># add range indicators (&quot;..&quot;) in the watson or crick strings for</span>
+<span class="c1"># representation of long sequences.</span>
+
+<span class="n">dscode_sense</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">dscode_compl</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">watson</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">crick</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">dscode_sense_lower</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">dscode_compl_lower</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">watson_lower</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">crick_lower</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span> <span class="n">dscode</span> <span class="ow">in</span> <span class="n">basepair_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">dscode_sense</span> <span class="o">+=</span> <span class="n">dscode</span>
+    <span class="n">dscode_compl</span> <span class="o">+=</span> <span class="n">basepair_dict</span><span class="p">[</span><span class="n">c</span><span class="p">,</span> <span class="n">w</span><span class="p">]</span>
+    <span class="n">watson</span> <span class="o">+=</span> <span class="n">w</span>
+    <span class="n">crick</span> <span class="o">+=</span> <span class="n">c</span>
+    <span class="n">dscode_lower</span> <span class="o">=</span> <span class="n">dscode</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">dscode_lower</span> <span class="ow">in</span> <span class="n">dscode_sense</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="n">dscode_sense_lower</span> <span class="o">+=</span> <span class="n">dscode_lower</span>
+    <span class="n">watson_lower</span> <span class="o">+=</span> <span class="n">w</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">crick_lower</span> <span class="o">+=</span> <span class="n">c</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">dscode_compl_lower</span> <span class="o">+=</span> <span class="n">dscode_compl</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+<span class="c1"># dscode_sense += dscode_sense.lower()</span>
+<span class="c1"># dscode_compl += dscode_compl.lower()</span>
+<span class="c1"># watson += watson.lower()</span>
+<span class="c1"># crick += crick.lower()</span>
+
+<span class="n">placeholder1</span> <span class="o">=</span> <span class="s2">&quot;~&quot;</span>
+<span class="n">placeholder2</span> <span class="o">=</span> <span class="s2">&quot;+&quot;</span>
+<span class="n">interval</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
+
+<span class="k">assert</span> <span class="n">placeholder1</span> <span class="ow">in</span> <span class="n">letters_not_in_dscode</span>
+<span class="k">assert</span> <span class="n">placeholder2</span> <span class="ow">in</span> <span class="n">letters_not_in_dscode</span>
+<span class="k">assert</span> <span class="n">interval</span> <span class="ow">in</span> <span class="n">letters_not_in_dscode</span>
+
+<span class="n">dscode_to_watson_table</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">dscode_sense</span> <span class="o">+</span> <span class="n">dscode_sense_lower</span> <span class="o">+</span> <span class="n">placeholder1</span> <span class="o">+</span> <span class="n">placeholder2</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">watson</span> <span class="o">+</span> <span class="n">watson_lower</span> <span class="o">+</span> <span class="n">emptyspace</span> <span class="o">+</span> <span class="n">interval</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">dscode_to_crick_table</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">dscode_sense</span> <span class="o">+</span> <span class="n">dscode_sense_lower</span> <span class="o">+</span> <span class="n">placeholder1</span> <span class="o">+</span> <span class="n">placeholder2</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">crick</span> <span class="o">+</span> <span class="n">crick_lower</span> <span class="o">+</span> <span class="n">interval</span> <span class="o">+</span> <span class="n">emptyspace</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># dscode_to_watson_tail_table</span>
+<span class="c1"># ============================================================================</span>
+
+
+<span class="n">watson_tail_letter_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">w</span><span class="p">:</span> <span class="n">s</span> <span class="k">for</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">codes</span><span class="p">[</span><span class="s2">&quot;single_stranded_dna_rna&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">isspace</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="n">from_letters</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">watson_tail_letter_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">to_letters</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">watson_tail_letter_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+<span class="n">from_letters</span> <span class="o">+=</span> <span class="n">from_letters</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="n">to_letters</span> <span class="o">+=</span> <span class="n">to_letters</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+<span class="n">dscode_to_watson_tail_table</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span>
+    <span class="n">from_letters</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span> <span class="n">to_letters</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">from_letters_full</span> <span class="o">=</span> <span class="n">five_prime_ss_letters</span> <span class="o">=</span> <span class="n">to_letters</span>
+<span class="n">to_letters_full</span> <span class="o">=</span> <span class="n">from_letters</span>
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># dscode_to_crick_tail_table</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">crick_tail_letter_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">complement_dict_for_dscode</span><span class="p">[</span><span class="n">c</span><span class="p">]:</span> <span class="n">s</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">codes</span><span class="p">[</span><span class="s2">&quot;single_stranded_dna_rna&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">isspace</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="n">from_letters</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">crick_tail_letter_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">to_letters</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">crick_tail_letter_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+<span class="n">from_letters</span> <span class="o">+=</span> <span class="n">from_letters</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="n">to_letters</span> <span class="o">+=</span> <span class="n">to_letters</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+<span class="n">dscode_to_crick_tail_table</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span>
+    <span class="n">from_letters</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span> <span class="n">to_letters</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">three_prime_ss_letters</span> <span class="o">=</span> <span class="n">to_letters</span>
+<span class="n">from_letters_full</span> <span class="o">+=</span> <span class="n">to_letters</span>
+<span class="n">to_letters_full</span> <span class="o">+=</span> <span class="n">from_letters</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># dscode_to_full_sequence_table</span>
+<span class="c1"># ============================================================================</span>
+
+
+<span class="n">dscode_to_full_sequence_table</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span>
+    <span class="n">from_letters_full</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span> <span class="n">to_letters_full</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+
+<span class="c1"># This loop adds upper and lower case symbols</span>
+<span class="n">mixed_case_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">basepair_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">mixed_case_dict</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">mixed_case_dict</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">mixed_case_dict</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">emptyspace</span><span class="p">:</span>
+        <span class="n">mixed_case_dict</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">mixed_case_dict</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="n">emptyspace</span><span class="p">:</span>
+        <span class="n">mixed_case_dict</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">mixed_case_dict</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+<span class="c1"># Add mixed case entries to the dict</span>
+<span class="n">basepair_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">mixed_case_dict</span><span class="p">)</span>
+
+<span class="n">mixed_case_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># This loop adds upper and lower case symbols</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">annealing_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">mixed_case_dict</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">mixed_case_dict</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">mixed_case_dict</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+<span class="c1"># Add mixed case entries to the dict</span>
+<span class="n">annealing_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">mixed_case_dict</span><span class="p">)</span>
+
+<span class="n">ds_letters</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">codes</span><span class="p">[</span><span class="s2">&quot;un_ambiguous_ds_dna&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">codes</span><span class="p">[</span><span class="s2">&quot;ds_rna&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">codes</span><span class="p">[</span><span class="s2">&quot;ambiguous_ds_dna&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+<span class="p">)</span>
+
+<span class="n">ss_letters_watson</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">s</span> <span class="k">for</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">codes</span><span class="p">[</span><span class="s2">&quot;single_stranded_dna_rna&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">emptyspace</span>
+<span class="p">)</span>
+<span class="n">ss_letters_crick</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">s</span> <span class="k">for</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">codes</span><span class="p">[</span><span class="s2">&quot;single_stranded_dna_rna&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">w</span> <span class="o">==</span> <span class="n">emptyspace</span>
+<span class="p">)</span>
+
+<span class="n">ds_letters</span> <span class="o">+=</span> <span class="n">ds_letters</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="n">ss_letters_watson</span> <span class="o">+=</span> <span class="n">ss_letters_watson</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="n">ss_letters_crick</span> <span class="o">+=</span> <span class="n">ss_letters_crick</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># iupac_compl_regex dict of regexes below cover IUPAC Ambiguity Code</span>
+<span class="c1"># complements and is used in the amplify module.</span>
+<span class="c1"># ============================================================================</span>
+
+<span class="n">iupac_compl_regex</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:T|U)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:G)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:C)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:A)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;U&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:A)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:T|C|Y)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:G|A|R)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:G|C|S)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:A|T|W)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;K&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:C|AM)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:T|G|K)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:C|G|A|V)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:A|C|T|H)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;H&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:A|G|T|D)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:T|C|G|B)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;(?:A|G|C|T|N)&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1"># This loop adds upper and lower case symbols</span>
+<span class="c1"># mixed_case_dict = {}</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">annealing_dict_w_holes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">mixed_case_dict</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">mixed_case_dict</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">mixed_case_dict</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">symbol</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="c1"># Add mixed case entries to the dict</span>
+<span class="n">annealing_dict_w_holes</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">mixed_case_dict</span><span class="p">)</span>
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># DseqParts dataclass</span>
+<span class="c1"># ============================================================================</span>
+
+
+<div class="viewcode-block" id="DseqParts">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.alphabet.DseqParts">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DseqParts</span><span class="p">:</span>
+    <span class="n">sticky_left5</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">sticky_left3</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">middle</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">sticky_right3</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">sticky_right5</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">single_watson</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">single_crick</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Allow unpacking DseqParts instances.</span>
+<span class="sd">        &gt;&gt;&gt; from pydna.alphabet import get_parts</span>
+<span class="sd">        &gt;&gt;&gt; sticky_left5, sticky_left3, middle, sticky_right3, sticky_right5, single_watson, single_crick = get_parts(&quot;eeATCGuggCCGgg&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; sticky_left5</span>
+<span class="sd">        &#39;ee&#39;</span>
+<span class="sd">        &gt;&gt;&gt; middle</span>
+<span class="sd">        &#39;ATCGuggCCGgg&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sticky_left5</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sticky_left3</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">middle</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sticky_right3</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sticky_right5</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">single_watson</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">single_crick</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Allow indexing DseqParts instances.</span>
+<span class="sd">        &gt;&gt;&gt; from pydna.alphabet import get_parts</span>
+<span class="sd">        &gt;&gt;&gt; parts = get_parts(&quot;eeATCGuggCCGgg&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; parts[0]</span>
+<span class="sd">        &#39;ee&#39;</span>
+<span class="sd">        &gt;&gt;&gt; parts[2]</span>
+<span class="sd">        &#39;ATCGuggCCGgg&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">)[</span><span class="n">index</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="get_parts">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.alphabet.get_parts">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_parts</span><span class="p">(</span><span class="n">datastring</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DseqParts</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a DseqParts instance containing the parts of a dsDNA sequence.</span>
+
+<span class="sd">    The datastring argument should contain a string with dscode symbols.</span>
+
+<span class="sd">    A regular expression is used to capture the single stranded regions at</span>
+<span class="sd">    the ends as well as the ds region in the middle, if any.</span>
+
+<span class="sd">    The figure below numbers the regex capture groups and what they capture</span>
+<span class="sd">    as well as the DseqParts instance field name for each group.</span>
+
+<span class="sd">    ::</span>
+
+<span class="sd">         group 0 &quot;sticky_left5&quot;</span>
+<span class="sd">         |</span>
+<span class="sd">         |      group 3&quot;sticky_right5&quot;</span>
+<span class="sd">         |      |</span>
+<span class="sd">        ---    ---</span>
+<span class="sd">        GGGATCC</span>
+<span class="sd">           TAGGTCA</span>
+<span class="sd">           ----</span>
+<span class="sd">             |</span>
+<span class="sd">             group 2 &quot;middle&quot;</span>
+
+
+
+<span class="sd">         group 1 &quot;sticky_left3&quot;</span>
+<span class="sd">         |</span>
+<span class="sd">         |      group 4 &quot;sticky_right3&quot;</span>
+<span class="sd">         |      |</span>
+<span class="sd">        ---    ---</span>
+<span class="sd">           ATCCAGT</span>
+<span class="sd">        CCCTAGG</span>
+<span class="sd">           ----</span>
+<span class="sd">             |</span>
+<span class="sd">             group 2 &quot;middle&quot;</span>
+
+
+
+<span class="sd">           group 5 &quot;single_watson&quot; (only an upper strand)</span>
+<span class="sd">           |</span>
+<span class="sd">        -------</span>
+<span class="sd">        ATCCAGT</span>
+<span class="sd">        |||||||</span>
+
+
+
+<span class="sd">           group 6 &quot;single_crick&quot; (only a lower strand)</span>
+<span class="sd">           |</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        |||||||</span>
+<span class="sd">        CCCTAGG</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+
+<span class="sd">    Up to seven groups (0..6) are captured.s ome are mutually exclusive</span>
+<span class="sd">    which means that one of them is an empty string:</span>
+
+<span class="sd">    0 or 1, not both, a DNA fragment has either 5&#39; or 3&#39; sticky end.</span>
+
+<span class="sd">    2 or 5 or 6, a DNA molecule has a ds region or is entirely single stranded.</span>
+
+<span class="sd">    3 or 4, not both, either 5&#39; or 3&#39; sticky end.</span>
+
+<span class="sd">    Note that internal single stranded regions are not identified and will</span>
+<span class="sd">    be contained in the middle part if they are present.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    datastring : str</span>
+<span class="sd">        A string with dscode.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    DseqParts</span>
+<span class="sd">        Seven string fields describing the DNA molecule.</span>
+<span class="sd">        DseqParts(sticky_left5=&#39;&#39;, sticky_left3=&#39;&#39;,</span>
+<span class="sd">                  middle=&#39;&#39;,</span>
+<span class="sd">                  sticky_right3=&#39;&#39;, sticky_right5=&#39;&#39;,</span>
+<span class="sd">                  single_watson=&#39;&#39;, single_crick=&#39;&#39;)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;([</span><span class="si">{</span><span class="n">ss_letters_watson</span><span class="si">}</span><span class="s2">]*)&quot;</span>  <span class="c1"># capture group 0 ssDNA in watson strand</span>
+        <span class="sa">f</span><span class="s2">&quot;([</span><span class="si">{</span><span class="n">ss_letters_crick</span><span class="si">}</span><span class="s2">]*)&quot;</span>  <span class="c1"># &quot;             1 ssDNA in crick strand</span>
+        <span class="sa">f</span><span class="s2">&quot;(?=[</span><span class="si">{</span><span class="n">ds_letters</span><span class="si">}</span><span class="s2">])&quot;</span>  <span class="c1"># positive lookahead for dsDNA, no capture</span>
+        <span class="s2">&quot;(.*)&quot;</span>  <span class="c1"># capture group 2 everything in the middle</span>
+        <span class="sa">f</span><span class="s2">&quot;(?&lt;=[</span><span class="si">{</span><span class="n">ds_letters</span><span class="si">}</span><span class="s2">])&quot;</span>  <span class="c1"># positive look behind for dsDNA, no capture</span>
+        <span class="sa">f</span><span class="s2">&quot;([</span><span class="si">{</span><span class="n">ss_letters_watson</span><span class="si">}</span><span class="s2">]*)&quot;</span>  <span class="c1"># capture group 3 ssDNA in watson strand</span>
+        <span class="sa">f</span><span class="s2">&quot;([</span><span class="si">{</span><span class="n">ss_letters_crick</span><span class="si">}</span><span class="s2">]*)|&quot;</span>  <span class="c1"># &quot;             4 ssDNA in crick strand</span>
+        <span class="sa">f</span><span class="s2">&quot;([</span><span class="si">{</span><span class="n">ss_letters_watson</span><span class="si">}</span><span class="s2">]+)|&quot;</span>  <span class="c1"># &quot;             5 if data contains only upper strand</span>
+        <span class="sa">f</span><span class="s2">&quot;([</span><span class="si">{</span><span class="n">ss_letters_crick</span><span class="si">}</span><span class="s2">]+)&quot;</span><span class="p">,</span>  <span class="c1"># &quot;             6 if data contains only lower strand</span>
+        <span class="n">datastring</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span> <span class="k">if</span> <span class="n">m</span> <span class="k">else</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">e</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">DseqParts</span><span class="p">(</span>
+        <span class="n">sticky_left5</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">sticky_left3</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">middle</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+        <span class="n">sticky_right3</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+        <span class="n">sticky_right5</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+        <span class="n">single_watson</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+        <span class="n">single_crick</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="dsbreaks">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.alphabet.dsbreaks">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">dsbreaks</span><span class="p">(</span><span class="n">datastring</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find double strand breaks in DNA in dscode format.</span>
+
+<span class="sd">    An empty watson position next to an empty crick position in the dsDNA</span>
+<span class="sd">    leads to a discontinuous DNA. This function is used to show breaks in</span>
+<span class="sd">    DNA in Dseq.__init__.</span>
+
+<span class="sd">    &gt;&gt;&gt; from pydna.alphabet import dsbreaks</span>
+<span class="sd">    &gt;&gt;&gt; x, = dsbreaks(&quot;GATPFTAA&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; print(x)</span>
+<span class="sd">    [0:8]</span>
+<span class="sd">    GATG TAA</span>
+<span class="sd">    CTA TATT</span>
+<span class="sd">    &gt;&gt;&gt; dsbreaks(&quot;GATC&quot;)</span>
+<span class="sd">    []</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : str</span>
+<span class="sd">        A string representing DNA in dscode format.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[str]</span>
+<span class="sd">        A list of 3-line</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">wl</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">five_prime_ss_letters</span><span class="p">)</span>
+    <span class="n">cl</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">three_prime_ss_letters</span><span class="p">)</span>
+
+    <span class="n">breaks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;(.{0,3})&quot;</span>  <span class="c1"># return context if present.</span>
+        <span class="sa">f</span><span class="s2">&quot;([</span><span class="si">{</span><span class="n">wl</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">cl</span><span class="si">}</span><span class="s2">]|[</span><span class="si">{</span><span class="n">cl</span><span class="si">}</span><span class="s2">][</span><span class="si">{</span><span class="n">wl</span><span class="si">}</span><span class="s2">])&quot;</span>  <span class="c1"># find adjacent single strand chars.</span>
+        <span class="s2">&quot;(.{0,3})&quot;</span>  <span class="c1"># return context if present.</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">mobj</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">datastring</span><span class="p">):</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="n">mobj</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+        <span class="n">w</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">representation_tuple</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+        <span class="n">breaks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">mobj</span><span class="o">.</span><span class="n">start</span><span class="p">()</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">mobj</span><span class="o">.</span><span class="n">end</span><span class="p">()</span><span class="si">}</span><span class="s2">]</span><span class="se">\n</span><span class="si">{</span><span class="n">w</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">breaks</span></div>
+
+
+
+<div class="viewcode-block" id="representation_tuple">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.alphabet.representation_tuple">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">representation_tuple</span><span class="p">(</span>
+    <span class="n">datastring</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">length_limit_for_repr</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">chunk</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Two line string representation of a sequence of dscode symbols.</span>
+
+<span class="sd">    See pydna.alphabet module for the definition of the pydna dscode</span>
+<span class="sd">    alphabet. The dscode has a symbol (ascii) character for base pairs</span>
+<span class="sd">    and single stranded DNA.</span>
+
+<span class="sd">    This function is used by the Dseq.__repr__() method.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : TYPE, optional</span>
+<span class="sd">        DESCRIPTION. The default is &quot;&quot;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        A two line string containing The Watson and Crick strands.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="p">(</span>
+        <span class="n">sticky_left5</span><span class="p">,</span>
+        <span class="n">sticky_left3</span><span class="p">,</span>
+        <span class="n">middle</span><span class="p">,</span>
+        <span class="n">sticky_right5</span><span class="p">,</span>
+        <span class="n">sticky_right3</span><span class="p">,</span>
+        <span class="n">single_watson</span><span class="p">,</span>
+        <span class="n">single_crick</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="n">get_parts</span><span class="p">(</span><span class="n">datastring</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">datastring</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">length_limit_for_repr</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        We need to shorten the repr if the sequence is longer than</span>
+<span class="sd">        limit imposed by length_limit_for_repr.</span>
+
+<span class="sd">        The representation has three parts, so we divide by three for each part.</span>
+
+<span class="sd">        Long DNA strands are interrupted by interval notation, like agc..att</span>
+<span class="sd">        where the two dots indicate intervening hidden sequence.</span>
+
+
+<span class="sd">        Dseq(-71)</span>
+<span class="sd">        GAAA..AATCaaaa..aaaa</span>
+<span class="sd">                  tttt..ttttCTAA..AAAG</span>
+
+<span class="sd">        placeholder1, placeholder2 are two letters that are replaced by</span>
+<span class="sd">        interval characters in the upper or lower strands by the translation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">part_limit</span> <span class="o">=</span> <span class="n">length_limit_for_repr</span> <span class="o">//</span> <span class="mi">3</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sticky_left5</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">part_limit</span><span class="p">:</span>
+            <span class="n">sticky_left5</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">sticky_left5</span><span class="p">[:</span><span class="n">chunk</span><span class="p">]</span> <span class="o">+</span> <span class="n">placeholder2</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">sticky_left5</span><span class="p">[</span><span class="o">-</span><span class="n">chunk</span><span class="p">:]</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sticky_left3</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">part_limit</span><span class="p">:</span>
+            <span class="n">sticky_left3</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">sticky_left3</span><span class="p">[:</span><span class="n">chunk</span><span class="p">]</span> <span class="o">+</span> <span class="n">placeholder1</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">sticky_left3</span><span class="p">[</span><span class="o">-</span><span class="n">chunk</span><span class="p">:]</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">middle</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">part_limit</span><span class="p">:</span>
+            <span class="n">middle</span> <span class="o">=</span> <span class="n">middle</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="n">interval</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">middle</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sticky_right5</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">part_limit</span><span class="p">:</span>
+            <span class="n">sticky_right5</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">sticky_right5</span><span class="p">[:</span><span class="n">chunk</span><span class="p">]</span> <span class="o">+</span> <span class="n">placeholder2</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">sticky_right5</span><span class="p">[</span><span class="o">-</span><span class="n">chunk</span><span class="p">:]</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sticky_right3</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">part_limit</span><span class="p">:</span>
+            <span class="n">sticky_right3</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">sticky_right3</span><span class="p">[:</span><span class="n">chunk</span><span class="p">]</span> <span class="o">+</span> <span class="n">placeholder1</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">sticky_right3</span><span class="p">[</span><span class="o">-</span><span class="n">chunk</span><span class="p">:]</span>
+            <span class="p">)</span>
+
+    <span class="c1"># The processed string that will be used to</span>
+    <span class="c1"># obtain a watson and crick strand</span>
+    <span class="n">processed_dscode</span> <span class="o">=</span> <span class="p">(</span><span class="n">sticky_left5</span> <span class="ow">or</span> <span class="n">sticky_left3</span><span class="p">)</span> <span class="o">+</span> <span class="n">middle</span> <span class="o">+</span> <span class="p">(</span>
+        <span class="n">sticky_right5</span> <span class="ow">or</span> <span class="n">sticky_right3</span>
+    <span class="p">)</span> <span class="ow">or</span> <span class="n">single_watson</span> <span class="o">+</span> <span class="n">single_crick</span>
+
+    <span class="n">watson</span> <span class="o">=</span> <span class="n">processed_dscode</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_watson_table</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+    <span class="n">crick</span> <span class="o">=</span> <span class="n">processed_dscode</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_crick_table</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">watson</span><span class="p">,</span> <span class="n">crick</span></div>
+
+
+
+<div class="viewcode-block" id="regex_ss_melt_factory">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.alphabet.regex_ss_melt_factory">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">regex_ss_melt_factory</span><span class="p">(</span><span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A regular expression for finding double-stranded regions flanked by single-stranded DNA</span>
+<span class="sd">    that can be melted to shed a single-stranded fragment.</span>
+
+<span class="sd">    This function returns a regular expression that finds double-stranded regions</span>
+<span class="sd">    (of length &lt;= length) that are flanked by single-stranded regions on the same</span>
+<span class="sd">    side in dscode format. These regions are useful to identify as potential melt</span>
+<span class="sd">    sites, since melting them leads to the shedding of a single-stranded fragment.</span>
+
+<span class="sd">    The regular expression finds double stranded patches flanked by empty</span>
+<span class="sd">    positions on the same side (see figure below). Melting of this kind of</span>
+<span class="sd">    sites leads to the shedding of a single stranded fragment.</span>
+
+<span class="sd">    ::</span>
+
+<span class="sd">        GFTTAJA   &lt;-- dscode representing the ds DNA below.</span>
+
+<span class="sd">        G TTA A   &lt;-- &quot;TTA&quot; is found by the regex for length &lt;= 3</span>
+<span class="sd">        CTAATGT</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.dseq import Dseq</span>
+<span class="sd">    &gt;&gt;&gt; regex = regex_ss_melt_factory(3)</span>
+<span class="sd">    &gt;&gt;&gt; s = Dseq(&quot;GFTTAJA&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; s</span>
+<span class="sd">    Dseq(-7)</span>
+<span class="sd">    G TTA A</span>
+<span class="sd">    CTAATGT</span>
+<span class="sd">    &gt;&gt;&gt; mobj = regex.search(s._data)</span>
+<span class="sd">    &gt;&gt;&gt; mobj.groupdict()</span>
+<span class="sd">    {&#39;watson&#39;: b&#39;TTA&#39;, &#39;crick&#39;: None}</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    length : int</span>
+<span class="sd">        Max length of double stranded region flanked by single stranded</span>
+<span class="sd">        regions.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    TYPE</span>
+<span class="sd">        regular expression object.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">regex</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;(?P&lt;watson&gt;((?&lt;=[</span><span class="si">{</span><span class="n">ss_letters_crick</span><span class="si">}</span><span class="s2">]))&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;([</span><span class="si">{</span><span class="n">ds_letters</span><span class="si">}</span><span class="s2">]</span><span class="se">{{</span><span class="s2">1,</span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="se">}}</span><span class="s2">)&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;((?=[^</span><span class="si">{</span><span class="n">ss_letters_watson</span><span class="si">}{</span><span class="n">ds_letters</span><span class="si">}</span><span class="s2">])))|&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;(?P&lt;crick&gt;((?&lt;=[</span><span class="si">{</span><span class="n">ss_letters_watson</span><span class="si">}</span><span class="s2">]))&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;([</span><span class="si">{</span><span class="n">ds_letters</span><span class="si">}</span><span class="s2">]</span><span class="se">{{</span><span class="s2">1,</span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="se">}}</span><span class="s2">)&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;((?=[^</span><span class="si">{</span><span class="n">ss_letters_crick</span><span class="si">}{</span><span class="n">ds_letters</span><span class="si">}</span><span class="s2">])))&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="regex_ds_melt_factory">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.alphabet.regex_ds_melt_factory">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">regex_ds_melt_factory</span><span class="p">(</span><span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A regular expression for finding double-stranded regions flanked by single-stranded DNA</span>
+<span class="sd">    that can be melted to shed multiple double stranded fragments.</span>
+
+<span class="sd">    This function returns a regular expression that finds double-stranded regions</span>
+<span class="sd">    (of length &lt;= length) that are flanked by single-stranded regions on opposite</span>
+<span class="sd">    sides in dscode format. These regions are useful to identify as potential melt</span>
+<span class="sd">    sites, since melting them leads to separation into multiple double stranded fragments.</span>
+
+<span class="sd">    The regular expression finds double stranded patches flanked by empty</span>
+<span class="sd">    positions on opposite sides(see figure below). Melting of this kind of</span>
+<span class="sd">    sites leads to separation into multiple double stranded fragments.</span>
+
+<span class="sd">    ::</span>
+<span class="sd">        aaaGFTTAIAttt   &lt;-- dscode</span>
+
+<span class="sd">        aaaG TTACAttt   &lt;-- &quot;TTA&quot; is found by the regex for length &lt;= 3</span>
+<span class="sd">        tttCTAAT Taaa</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; from pydna.dseq import Dseq</span>
+<span class="sd">    &gt;&gt;&gt; regex = regex_ds_melt_factory(3)</span>
+<span class="sd">    &gt;&gt;&gt; s = Dseq(&quot;aaaGFTTAIAttt&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; s</span>
+<span class="sd">    Dseq(-13)</span>
+<span class="sd">    aaaG TTACAttt</span>
+<span class="sd">    tttCTAAT Taaa</span>
+<span class="sd">    &gt;&gt;&gt; mobj = regex.search(s._data)</span>
+<span class="sd">    &gt;&gt;&gt; mobj.groupdict()</span>
+<span class="sd">    {&#39;watson&#39;: None, &#39;crick&#39;: b&#39;TTA&#39;}</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    length : int</span>
+<span class="sd">        Max length of double stranded region flanked by single stranded</span>
+<span class="sd">        regions.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    TYPE</span>
+<span class="sd">        regular expression object.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">regex</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;(?P&lt;watson&gt;((?&lt;=[</span><span class="si">{</span><span class="n">ss_letters_watson</span><span class="si">}</span><span class="s2">])|^)&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;([</span><span class="si">{</span><span class="n">ds_letters</span><span class="si">}</span><span class="s2">]</span><span class="se">{{</span><span class="s2">1,</span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="se">}}</span><span class="s2">)&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;((?=[^</span><span class="si">{</span><span class="n">ss_letters_watson</span><span class="si">}{</span><span class="n">ds_letters</span><span class="si">}</span><span class="s2">])|$))|&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;(?P&lt;crick&gt;((?&lt;=[</span><span class="si">{</span><span class="n">ss_letters_crick</span><span class="si">}</span><span class="s2">])|^)&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;([</span><span class="si">{</span><span class="n">ds_letters</span><span class="si">}</span><span class="s2">]</span><span class="se">{{</span><span class="s2">1,</span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="se">}}</span><span class="s2">)&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;((?=[^</span><span class="si">{</span><span class="n">ss_letters_crick</span><span class="si">}{</span><span class="n">ds_letters</span><span class="si">}</span><span class="s2">])|$))&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="anneal_strands">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.alphabet.anneal_strands">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">anneal_strands</span><span class="p">(</span><span class="n">strand_a</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">strand_b</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test if two DNA strands containing dscode anneal or not.</span>
+
+<span class="sd">    Both strands are assumed to be given in 5&#39; -&gt; 3&#39; direction.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; from pydna.alphabet import anneal_strands</span>
+<span class="sd">    &gt;&gt;&gt; a = &quot;TTA&quot;</span>
+<span class="sd">    &gt;&gt;&gt; b = &quot;AAT&quot;[::-1]</span>
+<span class="sd">    &gt;&gt;&gt; anneal_strands(a, b)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; anneal_strands(b, a)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; c = &quot;UUA&quot;</span>
+<span class="sd">    &gt;&gt;&gt; anneal_strands(c, b)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; anneal_strands(a.lower(), b)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; anneal_strands(&quot;TG&quot;, &quot;AA&quot;)</span>
+<span class="sd">    False</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    watson : str</span>
+<span class="sd">        A single DNA strand.</span>
+<span class="sd">    crick : str</span>
+<span class="sd">        A single DNA strand.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if annealing is perfect.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">strand_a</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_watson_table</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">strand_b</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">complement_table_for_dscode</span><span class="p">)</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span>
+        <span class="n">dscode_to_crick_table</span>
+    <span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">basepair_dict</span><span class="p">[(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
