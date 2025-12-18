@@ -828,13 +828,13 @@ def representation_tuple(
 
 def regex_ss_melt_factory(length: int) -> re.Pattern:
     """
-    A regular expression for finding single strand regions in dscode.
+    A regular expression for finding double-stranded regions flanked by single-stranded DNA
+    that can be melted to shed a single-stranded fragment.
 
-    This function returns a regular expression useful to find single strand
-    regions in double stranded DNA in dscode format.
-
-    Regions shorter or equal to length are found. This function is used in
-    the `Dseq.get_ss_meltsites` method.
+    This function returns a regular expression that finds double-stranded regions
+    (of length <= length) that are flanked by single-stranded regions on the same
+    side in dscode format. These regions are useful to identify as potential melt
+    sites, since melting them leads to the shedding of a single-stranded fragment.
 
     The regular expression finds double stranded patches flanked by empty
     positions on the same side (see figure below). Melting of this kind of
@@ -889,13 +889,13 @@ def regex_ss_melt_factory(length: int) -> re.Pattern:
 
 def regex_ds_melt_factory(length: int) -> re.Pattern:
     """
-    A regular expression for finding single strand regions in dscode.
+    A regular expression for finding double-stranded regions flanked by single-stranded DNA
+    that can be melted to shed multiple double stranded fragments.
 
-    This function creates a regular expression to find single strand regions
-    in double stranded DNA in dscode format.
-
-    Regions shorter or equal to length are found. This function is used in
-    the Dseq.get_ds_meltsites method.
+    This function returns a regular expression that finds double-stranded regions
+    (of length <= length) that are flanked by single-stranded regions on opposite
+    sides in dscode format. These regions are useful to identify as potential melt
+    sites, since melting them leads to separation into multiple double stranded fragments.
 
     The regular expression finds double stranded patches flanked by empty
     positions on opposite sides(see figure below). Melting of this kind of

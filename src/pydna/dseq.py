@@ -2684,10 +2684,9 @@ class Dseq(_Seq):
         right_watson, right_crick, _ = self.get_cut_parameters(right_cut, False)
         return Dseq(
             self[left_watson:right_watson]._data.translate(dscode_to_watson_table),
-            # The line below could be easier to understand as _rc(str(self[left_crick:right_crick])), but it does not preserve the case
-            self.reverse_complement()[
-                len(self) - right_crick : len(self) - left_crick
-            ]._data.translate(dscode_to_watson_table),
+            self[left_crick:right_crick]
+            .reverse_complement()
+            ._data.translate(dscode_to_watson_table),
             ovhg=ovhg_left,
         )
 

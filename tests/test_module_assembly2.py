@@ -1062,7 +1062,6 @@ def test_pcr_assembly_normal():
     assert str(prods[0].seq) == "TTTACGTACGTAAAAAAGCGCGCGCTTT"
 
 
-# @pytest.mark.xfail(reason="U in primers not handled")
 def test_pcr_assembly_uracil():
 
     primer1 = Primer("AUUA")
@@ -1080,6 +1079,7 @@ def test_pcr_assembly_uracil():
     primer2 = Primer("ATUUAA")
     asm = assembly.PCRAssembly([primer1, seq, primer2], limit=6, mismatches=1)
     assert str(asm.assemble_linear()[0].seq) == "ATAUUAggccggTTOOAT"
+
 
 def test_pcr_with_mistmaches():
     primer1 = Primer("atcttGagacgtgtattt")
