@@ -108,7 +108,8 @@ flake8-bugbear = "^24.12.12"
 [tool.pytest.ini_options]
 minversion = "6.0.2"
 python_files = "test_*.py"
-testpaths = ["tests", "src"]
+testpaths = ["tests", "src/pydna"]
+norecursedirs = ["*"]
 [tool.black]
 include = '\.pyi?$'
 line-length = 88

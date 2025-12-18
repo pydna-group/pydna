@@ -7,7 +7,7 @@ see [issues tagged with fixed-with-new-assembly-model](https://github.com/pydna-
 import networkx as _nx
 import itertools as _itertools
 from Bio.SeqFeature import SimpleLocation, Location
-from Bio.Seq import reverse_complement
+
 from Bio.Restriction.Restriction import RestrictionBatch
 import regex
 import copy
@@ -38,6 +38,7 @@ from pydna.types import (
 )
 from pydna.gateway import gateway_overlap, find_gateway_sites
 from pydna.cre_lox import cre_loxP_overlap
+from pydna.alphabet import anneal_strands
 
 from typing import TYPE_CHECKING, Callable, Literal
 from pydna.opencloning_models import (
@@ -402,9 +403,9 @@ def gibson_overlap(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=25):
     # This is only relevant for linear fragments, so we don't need to worry about
     # shifting locations for circular fragments.
     trim_x_left = -seqx.seq.ovhg if seqx.seq.ovhg < 0 else 0
-    trim_x_right = seqx.seq.watson_ovhg() if seqx.seq.watson_ovhg() < 0 else None
+    trim_x_right = seqx.seq.watson_ovhg if seqx.seq.watson_ovhg < 0 else None
     trim_y_left = -seqy.seq.ovhg if seqy.seq.ovhg < 0 else 0
-    trim_y_right = seqy.seq.watson_ovhg() if seqy.seq.watson_ovhg() < 0 else None
+    trim_y_right = seqy.seq.watson_ovhg if seqy.seq.watson_ovhg < 0 else None
 
     stringx = str(seqx.seq[trim_x_left:trim_x_right]).upper()
     stringy = str(seqy.seq[trim_y_left:trim_y_right]).upper()
@@ -466,6 +467,7 @@ def sticky_end_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit: bool = F
     [(4, 0, 2)]
 
     """
+
     overlap = sum_is_sticky(
         seqx.seq.three_prime_end(), seqy.seq.five_prime_end(), limit
     )
@@ -664,34 +666,12 @@ def primer_template_overlap(
 
 def fill_left(seq: _Dseq) -> _Dseq:
     """Fill the left overhang of a sequence with the complementary sequence."""
-    new_watson = seq.watson
-    new_crick = seq.crick
-
-    # Watson 5' overhang
-    if seq.ovhg < 0:
-        new_crick = new_crick + reverse_complement(seq.watson[: -seq.ovhg])
-    # Crick 5' overhang
-    elif seq.ovhg > 0:
-        new_watson = reverse_complement(seq.crick[-seq.ovhg :]) + new_watson
-
-    return _Dseq(new_watson, new_crick, 0)
+    return seq.cast_to_ds_left()
 
 
 def fill_right(seq: _Dseq) -> _Dseq:
     """Fill the right overhang of a sequence with the complementary sequence."""
-    new_watson = seq.watson
-    new_crick = seq.crick
-
-    # Watson 3' overhang
-    watson_ovhg = seq.watson_ovhg()
-    if watson_ovhg < 0:
-        new_watson = new_watson + reverse_complement(seq.crick[:-watson_ovhg])
-
-    # Crick 3' overhang
-    elif watson_ovhg > 0:
-        new_crick = reverse_complement(seq.watson[-watson_ovhg:]) + new_crick
-
-    return _Dseq(new_watson, new_crick, seq.ovhg)
+    return seq.cast_to_ds_right()  # _Dseq(new_watson, new_crick, seq.ovhg)
 
 
 def fill_dseq(seq: _Dseq) -> _Dseq:
@@ -830,9 +810,10 @@ def assemble(
         u, v, loc_u, loc_v = asm_edge
         f_u = fragments[u - 1] if u > 0 else fragments[-u - 1].reverse_complement()
         f_v = fragments[v - 1] if v > 0 else fragments[-v - 1].reverse_complement()
-        seq_u = str(loc_u.extract(f_u).seq).upper()
-        seq_v = str(loc_v.extract(f_v).seq).upper()
-        if seq_u != seq_v:
+        seq_u = str(loc_u.extract(f_u).seq)
+        seq_v = str(loc_v.extract(f_v).seq.rc())
+        # Test if seq_u and seq_v anneal
+        if not anneal_strands(seq_u, seq_v):
             raise ValueError("Mismatch in assembly")
 
     # We transform into Dseqrecords (for primers)
@@ -845,42 +826,23 @@ def assemble(
 
     # Length of the overlaps between consecutive assembly fragments
     fragment_overlaps = [len(e[-1]) for e in assembly]
+    out_dseqrecord = subfragments.pop(0)
 
-    out_dseqrecord = _Dseqrecord(subfragments[0])
+    for fragment, overlap in zip(subfragments, fragment_overlaps):
+        out_dseqrecord.seq = out_dseqrecord.seq.cast_to_ds_right()
+        out_dseqrecord.seq = out_dseqrecord.seq.exo1_end(overlap)
+        fragment.seq = fragment.seq.cast_to_ds_left()
+        fragment.seq = fragment.seq.exo1_front(overlap)
+        out_dseqrecord += fragment
 
-    for fragment, overlap in zip(subfragments[1:], fragment_overlaps):
-        # Shift the features of the right fragment to the left by ``overlap``
-        new_features = [
-            f._shift(len(out_dseqrecord) - overlap) for f in fragment.features
-        ]
-        # Join the left sequence including the overlap with the right sequence without the overlap
-        # we use fill_right / fill_left so that it works for ligation of sticky ends
-        out_dseqrecord = _Dseqrecord(
-            fill_right(out_dseqrecord.seq) + fill_left(fragment.seq)[overlap:],
-            features=out_dseqrecord.features + new_features,
-        )
-
-    # For circular assemblies, close the loop and wrap origin-spanning features
+    # For circular assemblies, process the fragment and loop
     if is_circular:
+        out_dseqrecord.seq = out_dseqrecord.seq.cast_to_ds_left()
+        out_dseqrecord.seq = out_dseqrecord.seq.cast_to_ds_right()
         overlap = fragment_overlaps[-1]
-
-        # Special case for blunt circularisation
-        if overlap == 0:
-            out_dseqrecord = out_dseqrecord.looped()
-        else:
-            # Remove trailing overlap
-            out_dseqrecord = _Dseqrecord(
-                fill_dseq(out_dseqrecord.seq)[:-overlap],
-                features=out_dseqrecord.features,
-                circular=True,
-            )
-            for feature in out_dseqrecord.features:
-                start, end = _location_boundaries(feature.location)
-                if start >= len(out_dseqrecord) or end > len(out_dseqrecord):
-                    # Wrap around the origin
-                    feature.location = _shift_location(
-                        feature.location, 0, len(out_dseqrecord)
-                    )
+        out_dseqrecord.seq = out_dseqrecord.seq.exo1_front(overlap)
+        out_dseqrecord.seq = out_dseqrecord.seq.exo1_end(overlap)
+        out_dseqrecord = out_dseqrecord.looped()
 
     out_dseqrecord.source = AssemblySource.from_subfragment_representation(
         subfragment_representation, fragments, is_circular
@@ -1184,6 +1146,7 @@ class Assembly:
         use_fragment_order: bool = True,
         use_all_fragments: bool = False,
     ):
+
         # TODO: allow for the same fragment to be included more than once?
         self.G = _nx.MultiDiGraph()
         # Add positive and negative nodes for forward and reverse fragments
@@ -1893,6 +1856,19 @@ class PCRAssembly(Assembly):
         raise NotImplementedError(
             "get_insertion_assemblies not implemented for PCR assemblies"
         )
+
+    def assemble_linear(
+        self, only_adjacent_edges: bool = False, max_assemblies: int = 50
+    ) -> list[_Dseqrecord]:
+        """
+        Overrides the parent method to ensure that the 5' of the crick strand of the product matches the
+        sequence of the reverse primer. This is important when using primers with dUTP (for USER cloning).
+        """
+        results = super().assemble_linear(only_adjacent_edges, max_assemblies)
+        for result in results:
+            rp = self.fragments[2]
+            result.seq = result.seq[: -len(rp)] + _Dseq(str(rp.seq.rc()))
+        return results
 
 
 class SingleFragmentAssembly(Assembly):

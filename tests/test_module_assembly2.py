@@ -216,64 +216,64 @@ def test_new_assembly():
     # acgatgctatactgg 15
     a.features = [
         SeqFeature(
-            FeatureLocation(ExactPosition(0), ExactPosition(34), strand=1), type="misc"
+            FeatureLocation(ExactPosition(0), ExactPosition(34), strand=1), type="misc1"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(1), ExactPosition(33), strand=1), type="misc"
+            FeatureLocation(ExactPosition(1), ExactPosition(33), strand=1), type="misc2"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc"
+            FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc3"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(20), ExactPosition(34), strand=1), type="misc"
+            FeatureLocation(ExactPosition(20), ExactPosition(34), strand=1), type="misc4"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(0), ExactPosition(21), strand=1), type="misc"
+            FeatureLocation(ExactPosition(0), ExactPosition(21), strand=1), type="misc5"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(19), ExactPosition(34), strand=1), type="misc"
+            FeatureLocation(ExactPosition(19), ExactPosition(34), strand=1), type="misc6"
         ),
     ]
 
     b.features = [
         SeqFeature(
-            FeatureLocation(ExactPosition(0), ExactPosition(35), strand=1), type="misc"
+            FeatureLocation(ExactPosition(0), ExactPosition(35), strand=1), type="misc7"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(1), ExactPosition(34), strand=1), type="misc"
+            FeatureLocation(ExactPosition(1), ExactPosition(34), strand=1), type="misc8"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(0), ExactPosition(19), strand=1), type="misc"
+            FeatureLocation(ExactPosition(0), ExactPosition(19), strand=1), type="misc9"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(19), ExactPosition(35), strand=1), type="misc"
+            FeatureLocation(ExactPosition(19), ExactPosition(35), strand=1), type="misc10"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc"
+            FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc11"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(18), ExactPosition(35), strand=1), type="misc"
+            FeatureLocation(ExactPosition(18), ExactPosition(35), strand=1), type="misc12"
         ),
     ]
 
     c.features = [
         SeqFeature(
-            FeatureLocation(ExactPosition(0), ExactPosition(37), strand=1), type="misc"
+            FeatureLocation(ExactPosition(0), ExactPosition(37), strand=1), type="misc13"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(1), ExactPosition(36), strand=1), type="misc"
+            FeatureLocation(ExactPosition(1), ExactPosition(36), strand=1), type="misc14"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(0), ExactPosition(16), strand=1), type="misc"
+            FeatureLocation(ExactPosition(0), ExactPosition(16), strand=1), type="misc15"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(16), ExactPosition(37), strand=1), type="misc"
+            FeatureLocation(ExactPosition(16), ExactPosition(37), strand=1), type="misc16"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(0), ExactPosition(17), strand=1), type="misc"
+            FeatureLocation(ExactPosition(0), ExactPosition(17), strand=1), type="misc17"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(15), ExactPosition(37), strand=1), type="misc"
+            FeatureLocation(ExactPosition(15), ExactPosition(37), strand=1), type="misc18"
         ),
     ]
     c1 = assembly.Assembly((a, b, c), limit=14)
@@ -1062,7 +1062,6 @@ def test_pcr_assembly_normal():
     assert str(prods[0].seq) == "TTTACGTACGTAAAAAAGCGCGCGCTTT"
 
 
-@pytest.mark.xfail(reason="U in primers not handled")
 def test_pcr_assembly_uracil():
 
     primer1 = Primer("AUUA")
@@ -1071,13 +1070,15 @@ def test_pcr_assembly_uracil():
     seq = Dseqrecord(Dseq("aaATTAggccggTTAAaa"))
     asm = assembly.PCRAssembly([primer1, seq, primer2], limit=4)
 
-    assert str(asm.assemble_linear()[0].seq) == "AUUAggccggTTAA"
+    assert (
+        str(asm.assemble_linear()[0].seq) == "AUUAggccggTTOO"
+    )  # FIXME: This is the expected result, see def in utils
     assert asm.assemble_linear()[0].seq.crick.startswith("UUAA")
 
     primer1 = Primer("ATAUUA")
     primer2 = Primer("ATUUAA")
     asm = assembly.PCRAssembly([primer1, seq, primer2], limit=6, mismatches=1)
-    assert asm.assemble_linear()[0].seq == "ATAUUAggccggTTAAAT"
+    assert str(asm.assemble_linear()[0].seq) == "ATAUUAggccggTTOOAT"
 
 
 def test_pcr_with_mistmaches():
@@ -1101,18 +1102,27 @@ def test_pcr_with_mistmaches():
     prods = asm.assemble_linear()
     assert len(prods) == 0
 
-
+# @pytest.mark.xfail(reason="This should not work.")
 def test_pcrs_with_overlapping_primers_circular_templates():
+
+    # ACGTTCGTGCGTTTTGC
+    # |||||||||||||||||
+    #       CACGCAAAACG
+    #
+    # ACGTTCGTGC
+    # |||||||||||||||||
+    # TGCAAGCACGCAAAACG
 
     seq = Dseqrecord(Dseq("ACGTTCGTGCGTTTTGC", circular=True))
 
     # Overlapping 5', edge case for circular extract_subfragment
     primer1 = Primer("ACGTTCGTGC")
-    primer2 = Primer(reverse_complement("GTGCGTTTTGC"))
+    primer2 = Primer(reverse_complement("GTGCGTTTTGC"))  # CACGCAAAACG
 
     for shift in range(len(seq)):
         seq_shifted = seq.shifted(shift)
         asm = assembly.PCRAssembly([primer1, seq_shifted, primer2], limit=8)
+        asm.assemble_linear()
         assert str(asm.assemble_linear()[0].seq) == "ACGTTCGTGCGTTTTGC"
 
     # Overlapping 5' and 3'
@@ -1122,13 +1132,22 @@ def test_pcrs_with_overlapping_primers_circular_templates():
         asm = assembly.PCRAssembly([primer1, seq_shifted, primer2], limit=8)
         assert str(asm.assemble_linear()[0].seq) == "GCACGTTCGTGCGTTTTGC"
 
-
+# @pytest.mark.xfail(reason="This should not work.")
 def test_pcrs_with_overlapping_primers_linear_templates():
+
+    # ACGTTCGTGCGTTTTGC
+    # |||||||||||||||||
+    #       CACGCAAAACG
+    #
+    # ACGTTCGTGC
+    # |||||||||||||||||
+    # TGCAAGCACGCAAAACG
+
     seq = Dseqrecord(Dseq("ACGTTCGTGCGTTTTGC", circular=False))
 
     # Overlapping 5', do as normal
     primer1 = Primer("ACGTTCGTGC")
-    primer2 = Primer(reverse_complement("GTGCGTTTTGC"))
+    primer2 = Primer(reverse_complement("GTGCGTTTTGC")) # CACGCAAAACG
 
     asm = assembly.PCRAssembly([primer1, seq, primer2], limit=8)
     assert str(asm.assemble_linear()[0].seq) == "ACGTTCGTGCGTTTTGC"
@@ -1155,6 +1174,15 @@ def test_pcr_assembly_invalid():
     assert len(prods) == 0
 
     # Clashing primers
+
+    # ACGTTCGTGCGTTTTGC
+    # |||||||||||||||||
+    #       CACGCAAAACG
+    #
+    # ACGTTCGTGC
+    # |||||||||||||||||
+    # TGCAAGCACGCAAAACG
+
     seq = Dseqrecord(Dseq("ACGTTCGTGCGTTTTGC"))
     primer1 = Primer("ACGTTCGTGC")
     primer2 = Primer(reverse_complement("GTGCGTTTTGC"))
@@ -1603,19 +1631,19 @@ def test_insertion_assembly():
 
     # Insertion of linear sequence into linear sequence (like
     # homologous recombination of PCR product with homology arms in genome)
-    a = Dseqrecord("1CGTACGCACAxxxxCGTACGCACAC2")
-    b = Dseqrecord("3CGTACGCACAyyyyCGTACGCACAT4")
+    a = Dseqrecord("CGTACGCACAbbbbCGTACGCACAC")
+    b = Dseqrecord("CGTACGCACArrrrCGTACGCACAT")
 
     f = assembly.Assembly([a, b], use_fragment_order=False, limit=10)
 
     # All possibilities, including the single insertions
     results = [
-        "1CGTACGCACAyyyyCGTACGCACAxxxxCGTACGCACAC2",
-        "1CGTACGCACAyyyyCGTACGCACAC2",
-        "3CGTACGCACAxxxxCGTACGCACAyyyyCGTACGCACAT4",
-        "1CGTACGCACAxxxxCGTACGCACAyyyyCGTACGCACAC2",
-        "3CGTACGCACAxxxxCGTACGCACAT4",
-        "3CGTACGCACAyyyyCGTACGCACAxxxxCGTACGCACAT4",
+        "CGTACGCACArrrrCGTACGCACAbbbbCGTACGCACAC",
+        "CGTACGCACArrrrCGTACGCACAC",
+        "CGTACGCACAbbbbCGTACGCACArrrrCGTACGCACAT",
+        "CGTACGCACAbbbbCGTACGCACArrrrCGTACGCACAC",
+        "CGTACGCACAbbbbCGTACGCACAT",
+        "CGTACGCACArrrrCGTACGCACAbbbbCGTACGCACAT",
     ]
 
     assembly_products = [
@@ -1627,21 +1655,21 @@ def test_insertion_assembly():
     # TODO: debatable whether this kind of homologous recombination should happen, or how
     # the overlap restrictions should be applied.
 
-    a = Dseqrecord("1CGTACGCACAxxxxC2")
-    b = Dseqrecord("3CGTACGCACAyyyyCGTACGCACAT4")
+    a = Dseqrecord("CGTACGCACAbbbbC")
+    b = Dseqrecord("CGTACGCACArrrrCGTACGCACAT")
     f = assembly.Assembly([a, b], use_fragment_order=False, limit=10)
-    results = ["1CGTACGCACAyyyyCGTACGCACAxxxxC2"]
+    results = ["CGTACGCACArrrrCGTACGCACAbbbbC"]
     for assem, result in zip(f.get_insertion_assemblies(), results):
         assert result == str(assembly.assemble([a, b], assem).seq)
 
-    a = Dseqrecord("1CGTACGCACAxxxxC2")
-    b = Dseqrecord("3CGTACGCACAyyyyT4")
+    a = Dseqrecord("CGTACGCACAbbbbC")
+    b = Dseqrecord("CGTACGCACArrrrT")
     f = assembly.Assembly([a, b], use_fragment_order=False, limit=10)
     assert len(f.get_insertion_assemblies()) == 0
 
     # Does not work for circular molecules
-    a = Dseqrecord("1CGTACGCACAxxxxCGTACGCACAC2", circular=True)
-    b = Dseqrecord("3CGTACGCACAyyyyCGTACGCACAT4", circular=True)
+    a = Dseqrecord("CGTACGCACAbbbbCGTACGCACAC", circular=True)
+    b = Dseqrecord("CGTACGCACArrrrCGTACGCACAT", circular=True)
     assert (
         assembly.Assembly(
             [a, b], use_fragment_order=False, limit=10
@@ -1649,8 +1677,8 @@ def test_insertion_assembly():
         == []
     )
 
-    a = Dseqrecord("1CGTACGCACAxxxxC2", circular=True)
-    b = Dseqrecord("3CGTACGCACAyyyyCGTACGCACAT4", circular=True)
+    a = Dseqrecord("CGTACGCACAbbbbC", circular=True)
+    b = Dseqrecord("CGTACGCACArrrrCGTACGCACAT", circular=True)
     assert (
         assembly.Assembly(
             [a, b], use_fragment_order=False, limit=10
@@ -1658,8 +1686,8 @@ def test_insertion_assembly():
         == []
     )
 
-    a = Dseqrecord("1CGTACGCACAxxxxC2", circular=True)
-    b = Dseqrecord("3CGTACGCACAyyyyT4", circular=True)
+    a = Dseqrecord("CGTACGCACAbbbbC", circular=True)
+    b = Dseqrecord("CGTACGCACArrrrT", circular=True)
     assert (
         assembly.Assembly(
             [a, b], use_fragment_order=False, limit=10
@@ -1752,6 +1780,7 @@ def test_assemble_function():
     f2.features = [f2_feat1, f2_feat2]
 
     for shift in range(len(f1)):
+
         f1_shifted = f1.shifted(shift)
 
         # Re-order the features so that TTT is first
@@ -1839,6 +1868,7 @@ def test_assemble_function():
     assembly_plan = [
         (1, 2, loc_end, loc_start),
     ]
+
     assert (fragments[0] + fragments[1]).seq == assembly.assemble(
         fragments, assembly_plan
     ).seq
@@ -1848,6 +1878,7 @@ def test_assemble_function():
         (1, 2, loc_end, loc_start),
         (2, 1, loc_end, loc_start),
     ]
+
     assert (fragments[0] + fragments[1]).looped().seq == assembly.assemble(
         fragments, assembly_plan
     ).seq
@@ -2092,10 +2123,10 @@ def test_blunt_overlap():
 def test_ligation_assembly():
 
     fragments = Dseqrecord("AAAGAATTCAAA").cut(EcoRI)
-    assert assembly.ligation_assembly(fragments) == [Dseqrecord("AAAGAATTCAAA")]
+    assert assembly.ligation_assembly(fragments)[0].seq == Dseq("AAAGAATTCAAA")
 
     fragments = Dseqrecord("TTGCGATCGCTT").cut(RgaI)
-    assert assembly.ligation_assembly(fragments) == [Dseqrecord("TTGCGATCGCTT")]
+    assert assembly.ligation_assembly(fragments)[0].seq == Dseq("TTGCGATCGCTT")
 
     # Circular ligation
     fragments = Dseqrecord("AAGAATTCTTGAATTCCC", circular=True).cut(EcoRI)
@@ -2448,7 +2479,7 @@ def test_insertion_edge_case():
 
 def test_common_sub_strings():
 
-    a = Dseqrecord("012345", circular=True)
+    a = Dseqrecord("RYBDKM", circular=True)
     for shift_1 in range(len(a)):
         a_shifted = a.shifted(shift_1)
         for shift_2 in range(len(a)):

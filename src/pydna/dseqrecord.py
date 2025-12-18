@@ -18,7 +18,7 @@ from pydna._pretty import pretty_str as _pretty_str
 from pydna.utils import flatten as _flatten, location_boundaries as _location_boundaries
 
 # from pydna.utils import memorize as _memorize
-from pydna.utils import rc as _rc
+# from pydna.utils import rc as _rc
 from pydna.utils import shift_location as _shift_location
 from pydna.utils import shift_feature as _shift_feature
 from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
@@ -40,7 +40,6 @@ from pydna.opencloning_models import SequenceCutSource
 
 if TYPE_CHECKING:  # pragma: no cover
     from pydna.opencloning_models import Source
-
 
 # import logging as _logging
 
@@ -151,8 +150,8 @@ class Dseqrecord(_SeqRecord):
         if isinstance(record, str):
             #           _module_logger.info("record is a string")
             super().__init__(
-                _Dseq.from_string(
-                    record,
+                _Dseq.quick(
+                    record.encode("ascii"),
                     # linear=linear,
                     circular=bool(circular),
                 ),
@@ -227,9 +226,7 @@ class Dseqrecord(_SeqRecord):
         obj = cls.__new__(cls)  # Does not call __init__
         obj._per_letter_annotations = {}
         obj.seq = _Dseq.quick(
-            record,
-            _rc(record),
-            ovhg=0,
+            record.encode("ascii"),
             # linear=linear,
             circular=circular,
         )
@@ -267,9 +264,7 @@ class Dseqrecord(_SeqRecord):
         obj.source = None
         if circular is None:
             circular = record.annotations.get("topology") == "circular"
-        obj.seq = _Dseq.quick(
-            str(record.seq), _rc(str(record.seq)), ovhg=0, circular=circular
-        )
+        obj.seq = _Dseq.quick(record.seq._data, ovhg=0, circular=circular)
         return obj
 
     @property
@@ -341,7 +336,7 @@ class Dseqrecord(_SeqRecord):
 
         location = _CompoundLocation(
             (
-                _SimpleLocation(x, self.seq.length, strand=strand),
+                _SimpleLocation(x, len(self.seq), strand=strand),
                 _SimpleLocation(0, y, strand=strand),
             )
         )
@@ -395,35 +390,31 @@ class Dseqrecord(_SeqRecord):
         --------
         pydna.dseq.Dseq.looped
         """
-        new = _copy.copy(self)
-        # for key, value in list(self.__dict__.items()):
-        #     setattr(new, key, value)
-        new._seq = self.seq.looped()
-        five_prime = self.seq.five_prime_end()
-        for fn, fo in zip(new.features, self.features):
-            if five_prime[0] == "5'":
-                pass
-                # fn.location = fn.location + self.seq.ovhg
-            elif five_prime[0] == "3'":
-                fn.location = fn.location + (-self.seq.ovhg)
-            if fn.location.start < 0:
-                loc1 = _SimpleLocation(
-                    len(new) + fn.location.start, len(new), strand=fn.location.strand
-                )
-                loc2 = _SimpleLocation(0, fn.location.end, strand=fn.location.strand)
-                fn.location = _CompoundLocation([loc1, loc2])
+        new = _copy.deepcopy(self)
+        new.seq = self.seq.looped()
 
-            if fn.location.end > len(new):
-                loc1 = _SimpleLocation(
-                    fn.location.start, len(new), strand=fn.location.strand
-                )
-                loc2 = _SimpleLocation(
-                    0, fn.location.end - len(new), strand=fn.location.strand
-                )
-                fn.location = _CompoundLocation([loc1, loc2])
+        old_length = len(self)  # Possibly longer, including sticky ends if any.
+        new_length = len(new)  # Possibly shorter, with blunt ends.
+        if old_length != new_length:  # Only False if self was blunt.
+            new_features = []
+            for fn in new.features:
+                if len(fn.location) > new_length:
+                    # Edge case: if the feature is longer than the sequence, it should be
+                    # dropped. This can happen in a sequence with overhangs, where the feature
+                    # spans both overhangs.
+                    #
+                    # Example:
+                    #  feature
+                    # <------>
+                    # aaACGT
+                    #   TGCAtt
+                    #
+                    # Circular sequence ACGTtt should not have that feature, so we drop it
+                    continue
+                fn.location = _shift_location(fn.location, 0, new_length)
+                new_features.append(fn)
 
-            fn.qualifiers = fo.qualifiers
-
+            new.features = new_features
         return new
 
     def tolinear(self):  # pragma: no cover
@@ -667,13 +658,13 @@ class Dseqrecord(_SeqRecord):
         >>> from pydna.dseqrecord import Dseqrecord
         >>> s=Dseqrecord("atgtacgatcgtatgctggttatattttag")
         >>> s.seq.translate()
-        Seq('MYDRMLVIF*')
+        ProteinSeq('MYDRMLVIF*')
         >>> "RML" in s
         True
         >>> "MMM" in s
         False
         >>> s.seq.rc().translate()
-        Seq('LKYNQHTIVH')
+        ProteinSeq('LKYNQHTIVH')
         >>> "QHT" in s.rc()
         True
         >>> "QHT" in s
@@ -689,7 +680,7 @@ class Dseqrecord(_SeqRecord):
         cgtatgctg
         gcatacgac
         >>> code.translate()
-        Seq('RML')
+        ProteinSeq('RML')
         """
         other = str(other).lower()
         assert self.seq.watson == "".join(self.seq.watson.split())
@@ -786,9 +777,8 @@ class Dseqrecord(_SeqRecord):
         return [x.annotations["filename"] for x in matching_reads]
 
     def __repr__(self):
-        return "Dseqrecord({}{})".format(
-            {True: "-", False: "o"}[not self.circular], len(self)
-        )
+        top = {True: "-", False: "o"}[not self.circular]
+        return f"{self.__class__.__name__}({top}{len(self)})"
 
     def _repr_pretty_(self, p, cycle):
         p.text(
@@ -859,7 +849,7 @@ class Dseqrecord(_SeqRecord):
                 f
                 for f in answer.features
                 if (
-                    _location_boundaries(f.location)[1] <= answer.seq.length
+                    _location_boundaries(f.location)[1] <= len(answer.seq)
                     and _location_boundaries(f.location)[0]
                     < _location_boundaries(f.location)[1]
                 )
@@ -948,15 +938,6 @@ class Dseqrecord(_SeqRecord):
         """The number of cuts by digestion with the Restriction enzymes
         contained in the iterable."""
         return sum([len(enzyme.search(self.seq)) for enzyme in _flatten(enzymes)])
-
-    def cas9(self, RNA: str):
-        """docstring."""
-        fragments = []
-        result = []
-        for target in (self.seq, self.seq.rc()):
-            fragments = [self[sl.start : sl.stop] for sl in target.cas9(RNA)]
-            result.append(fragments)
-        return result
 
     def reverse_complement(self):
         """Reverse complement.
@@ -1468,3 +1449,32 @@ class Dseqrecord(_SeqRecord):
         if self.source is None:
             return ""
         return self.source.history_string(self)
+
+    def join(self, fragments):
+        """
+        Join an iterable of Dseqrecords with this instance as the separator.
+
+        Example:
+
+        >>> sep = Dseqrecord("a")
+        >>> joined = sep.join([Dseqrecord("A"), Dseqrecord("B"), Dseqrecord("C")])
+        >>> joined
+        Dseqrecord(-5)
+        >>> joined.seq
+        Dseq(-5)
+        AaBaC
+        TtVtG
+
+        """
+        it = iter(fragments)
+        try:
+            result = next(it)  # first element (no leading separator)
+        except StopIteration:
+            # Empty iterable -> return empty Dseqrecord in analogy with
+            # str.join
+            return Dseqrecord("")
+
+        # Interleave: result = first + sep + x + sep + y + ...
+        for x in it:
+            result = result + self + x
+        return result

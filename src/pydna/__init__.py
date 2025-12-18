@@ -5,6 +5,7 @@
 # license.  Please see the LICENSE.txt file that should have been included
 # as part of this package.
 
+
 """
 :copyright: Copyright 2013-2023 by Björn Johansson. All rights reserved.
 :license:   This code is part of the pydna package, governed by the
@@ -142,7 +143,7 @@ import os as _os
 # import configparser as _configparser
 # import tempfile as _tempfile
 from pydna._pretty import PrettyTable as _PrettyTable
-
+from Bio.Restriction import FormattedSeq
 
 __author__ = "Björn Johansson"
 __copyright__ = "Copyright 2013 - 2023 Björn Johansson"
@@ -396,3 +397,18 @@ def logo():
         f = Figlet()
         message = f.renderText(message)
     return _pretty_str(message)
+
+
+## Override Bio.Restriction.FormattedSeq._table
+
+
+def _make_FormattedSeq_table() -> bytes:
+    table = bytearray(256)
+    upper_to_lower = ord("A") - ord("a")
+    for c in b"ABCDEFGHIJKLMNOPQRSTUVWXYZ":  # Only allow IUPAC letters
+        table[c] = c  # map uppercase to uppercase
+        table[c - upper_to_lower] = c  # map lowercase to uppercase
+    return bytes(table)
+
+
+FormattedSeq._table = _make_FormattedSeq_table()
