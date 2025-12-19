@@ -736,7 +736,8 @@ class Dseq(_Seq):
     def mw(self) -> float:
         """The molecular weight of the DNA/RNA molecule in g/mol.
 
-        The following formula is used:
+        The following formula is used for each strand:
+
         ::
 
                MW = (A x 313.2) + (T x 304.2) +
@@ -744,18 +745,51 @@ class Dseq(_Seq):
                     (U x 290.2) + (N x 308.9) + 79.0
 
         The 79.0 added at the end is the 5' phosphate group.
-        """
-        nts = (self.watson + self.crick).lower()
+        The weight of the phosphate group is only added if the strand
+        is present.
 
-        return (
-            313.2 * nts.count("a")
-            + 304.2 * nts.count("t")
-            + 289.2 * nts.count("c")
-            + 329.2 * nts.count("g")
-            + 290.2 * nts.count("u")
-            + 308.9 * nts.count("n")
-            + 79.0
-        )
+        4,359.81 Da
+
+        Examples
+        --------
+        >>> from pydna.dseq import Dseq
+        >>> ds_lin_obj = Dseq("GATTACA")
+        >>> ds_lin_obj
+        Dseq(-7)
+        GATTACA
+        CTAATGT
+        >>> ds_lin_obj.mw()
+        4481.77556
+        >>> ds_circ_obj = Dseq("GATTACA", circular = True)
+        >>> ds_circ_obj.mw()
+        4323.77556
+        >>> ssobj = Dseq("PEXXEIE")
+        >>> ssobj
+        Dseq(-7)
+        GATTACA
+        <BLANKLINE>
+        >>> ssobj.mw()
+        2245.3945400000002
+        """
+
+        nt_weights = {
+            "a": 313.20674,
+            "t": 304.19322,
+            "c": 289.18196,
+            "g": 329.20592,
+            "u": 306.16608,
+            "n": 308.94696,
+        }
+
+        watsn_weight = sum(nt_weights[nt] for nt in self.watson.lower())
+        crick_weight = sum(nt_weights[nt] for nt in self.crick.lower())
+
+        if watsn_weight and not self.circular:
+            watsn_weight += 79.0
+        if crick_weight and not self.circular:
+            crick_weight += 79.0
+
+        return watsn_weight + crick_weight
 
     def find(
         self, sub: _Union[_SeqAbstractBaseClass, str, bytes], start=0, end=_sys.maxsize

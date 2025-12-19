@@ -642,8 +642,6 @@ def test_dseq():
 
     assert repr(obj) == "Dseq(-32)\n tagc..ctaa\ntatcg..gatt"
 
-    assert round(obj.mw(), 1) == 19535.6
-
     obj1 = Dseq(
         "tagcgtagctgtagtatgtgatctggtcta",
         "tagaccagatcacatactacagctacgcta",
@@ -1492,3 +1490,24 @@ def NO_test_anneal():
     # GGACTACG
     # CCTGATGC
     assert Dseq("GPEIXEI") / Dseq("QFJZFJG") == Dseq("GGACTACG")
+
+
+def test_mw():
+
+    # results from https://molbiotools.com/dnacalculator.ph
+
+    ds_lin_obj = Dseq("GATTACA")
+
+    assert ds_lin_obj.mw() == 4481.77556 # 4359.81 Da (+122)
+
+    ds_circ_obj = Dseq("GATTACA", circular = True)
+
+    assert ds_circ_obj.mw() == 4323.77556 # 4323.78 Da
+
+    ss_lin_obj = Dseq("PEXXEIE")
+
+    ss_lin_obj.mw() == 2245.3945400000002 # 2184.41 Da  (+61)
+
+    ss_circ_obj = Dseq("PEXXEIE", circular = True)
+
+    ss_circ_obj.mw() == 2166.3945400000002 # 2166.39 Da
