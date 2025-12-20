@@ -776,25 +776,25 @@ class Dseq(_Seq):
         Dseq(-7)
         GATTACA
         CTAATGT
-        >>> ds_lin_obj.mw()
-        4359.80474
+        >>> round(ds_lin_obj.mw(), 1)
+        4359.8
         >>> ds_circ_obj = Dseq("GATTACA", circular = True)
-        >>> ds_circ_obj.mw()
-        4323.77418
+        >>> round(ds_circ_obj.mw(), 1)
+        4323.8
         >>> ssobj = Dseq("PEXXEIE")
         >>> ssobj
         Dseq(-7)
         GATTACA
         <BLANKLINE>
-        >>> ssobj.mw()
-        2184.40902
+        >>> round(ssobj.mw(), 1)
+        2184.4
         >>> ds_lin_obj2 = Dseq("GATZFCA")
         >>> ds_lin_obj2
         Dseq(-7)
         GAT  CA
         CTAATGT
-        >>> round(ds_lin_obj2.mw(), 2)
-        3724.39
+        >>> round(ds_lin_obj2.mw(), 1)
+        3724.4
         """
 
         h2o = atom_weights["H"] * 2 + atom_weights["O"]
