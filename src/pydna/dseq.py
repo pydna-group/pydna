@@ -11,6 +11,7 @@ The Dseq class support the notion of circular and linear DNA topology.
 """
 
 import itertools
+import re
 import copy as _copy
 import sys as _sys
 import math as _math
@@ -25,6 +26,9 @@ from seguid import cdseguid as _cdseguid
 
 from pydna.seq import Seq as _Seq
 from Bio.Seq import _SeqAbstractBaseClass
+from Bio.Data.IUPACData import unambiguous_dna_weights
+from Bio.Data.IUPACData import unambiguous_rna_weights
+from Bio.Data.IUPACData import atom_weights
 from pydna._pretty import pretty_str as _pretty_str
 from pydna.utils import rc as _rc
 from pydna.utils import flatten as _flatten
@@ -736,19 +740,33 @@ class Dseq(_Seq):
     def mw(self) -> float:
         """The molecular weight of the DNA/RNA molecule in g/mol.
 
-        The following formula is used for each strand:
+        The molecular weight data in Biopython Bio.Data.IUPACData
+        is used. The DNA is assumed to have a 5'-phosphate as many
+        DNA fragments from restriction digestion do:
 
         ::
 
-               MW = (A x 313.2) + (T x 304.2) +
-                    (C x 289.2) + (G x 329.2) +
-                    (U x 290.2) + (N x 308.9) + 79.0
+             P - G-A-T-T-A-C-A - OH
+                 | | | | | | |
+            OH - C-T-A-A-T-G-T - P
 
-        The 79.0 added at the end is the 5' phosphate group.
-        The weight of the phosphate group is only added if the strand
-        is present.
+        The molecular weights listed in the unambiguous_dna_weights
+        dictionary refers to free monophosphate nucleotides.
+        One water molecule is removed for every phopshodiester bond
+        formed between nucleotides. For linear molecules, the weight
+        of one water molecule is added to account for the terminal
+        hydroxyl group and a hydrogen on the 5' terminal phosphate
+        group.
 
-        4,359.81 Da
+        ::
+
+             P - G---A---T - OH  P - C---A - OH
+                 |   |   |           |   |
+            OH - C---T---A---A---T---G---T - P
+
+        If the DNA is discontinuous, the internal 5'- end is assumed
+        to have a phosphate and the 3'- a hydroxyl group:
+
 
         Examples
         --------
@@ -759,35 +777,41 @@ class Dseq(_Seq):
         GATTACA
         CTAATGT
         >>> ds_lin_obj.mw()
-        4481.77556
+        4359.80474
         >>> ds_circ_obj = Dseq("GATTACA", circular = True)
         >>> ds_circ_obj.mw()
-        4323.77556
+        4323.77418
         >>> ssobj = Dseq("PEXXEIE")
         >>> ssobj
         Dseq(-7)
         GATTACA
         <BLANKLINE>
         >>> ssobj.mw()
-        2245.3945400000002
+        2184.40902
+        >>> ds_lin_obj2 = Dseq("GATZFCA")
+        >>> ds_lin_obj2
+        Dseq(-7)
+        GAT  CA
+        CTAATGT
+        >>> round(ds_lin_obj2.mw(), 2)
+        3724.39
         """
 
-        nt_weights = {
-            "a": 313.20674,
-            "t": 304.19322,
-            "c": 289.18196,
-            "g": 329.20592,
-            "u": 306.16608,
-            "n": 308.94696,
-        }
+        h2o = atom_weights["H"] * 2 + atom_weights["O"]
 
-        watsn_weight = sum(nt_weights[nt] for nt in self.watson.lower())
-        crick_weight = sum(nt_weights[nt] for nt in self.crick.lower())
+        mwd = unambiguous_rna_weights | unambiguous_dna_weights | {" ": 0}
+
+        watsn_weight = sum(mwd[nt] - h2o for nt in self.watson.upper())
+        crick_weight = sum(mwd[nt] - h2o for nt in self.crick.upper())
+
+        watsn_weight += h2o * len(re.findall(r" +", self.watson))
+        crick_weight += h2o * len(re.findall(r" +", self.crick))
 
         if watsn_weight and not self.circular:
-            watsn_weight += 79.0
+            watsn_weight += h2o
+
         if crick_weight and not self.circular:
-            crick_weight += 79.0
+            crick_weight += h2o
 
         return watsn_weight + crick_weight
 

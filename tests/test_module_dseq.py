@@ -1494,20 +1494,41 @@ def NO_test_anneal():
 
 def test_mw():
 
-    # results from https://molbiotools.com/dnacalculator.ph
+    from Bio.Data.IUPACData import unambiguous_dna_weights
+    from Bio.Data.IUPACData import unambiguous_rna_weights
+    from Bio.Data.IUPACData import atom_weights
 
-    ds_lin_obj = Dseq("GATTACA")
+    # The molecular weight values for a short DNA molecule agrees very well
+    # with a the online tool https://molbiotools.com/dnacalculator.php (*)
+    # accessed December 20, 2025
 
-    assert ds_lin_obj.mw() == 4481.77556 # 4359.81 Da (+122)
+    double_strand_linear = Dseq("GATTACA")
 
-    ds_circ_obj = Dseq("GATTACA", circular = True)
+    assert round(double_strand_linear.mw(), 1) == 4359.8 # 4359.81 Da (*)
 
-    assert ds_circ_obj.mw() == 4323.77556 # 4323.78 Da
+    double_strand_circular = Dseq("GATTACA", circular = True)
 
-    ss_lin_obj = Dseq("PEXXEIE")
+    assert round(double_strand_circular.mw(), 1) == 4323.8 # 4323.78 Da (*)
 
-    ss_lin_obj.mw() == 2245.3945400000002 # 2184.41 Da  (+61)
+    single_strand_linear = Dseq("PEXXEIE")
 
-    ss_circ_obj = Dseq("PEXXEIE", circular = True)
+    assert round(single_strand_linear.mw(), 1) == 2184.4 # 2184.41 Da (*)
 
-    ss_circ_obj.mw() == 2166.3945400000002 # 2166.39 Da
+    single_strand_circular = Dseq("PEXXEIE", circular = True)
+
+    assert round(single_strand_circular.mw(), 1) == 2166.4 # 2166.39 Da (*)
+
+    ds_lin_obj2 = Dseq("GATZFCA")
+    assert repr(ds_lin_obj2) == textwrap.dedent("""\
+                                Dseq(-7)
+                                GAT  CA
+                                CTAATGT""")
+    # ds_lin_obj2 is missing a T and an A compared to double_strand_linear
+    mw = round(ds_lin_obj2.mw(), 1)
+
+    h2o = atom_weights["H"]*2 + atom_weights["O"]
+
+    T = unambiguous_dna_weights["T"]
+    A = unambiguous_dna_weights["A"]
+
+    assert round(double_strand_linear.mw() - A - T + h2o, 1) == round(mw, 1)
