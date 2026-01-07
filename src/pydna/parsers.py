@@ -16,6 +16,8 @@ from Bio import SeqIO as _SeqIO
 
 # from pydna.genbankfile import GenbankFile as _GenbankFile
 from pydna.dseqrecord import Dseqrecord as _Dseqrecord
+from Bio.SeqRecord import SeqRecord as _SeqRecord
+from pydna.opencloning_models import UploadedFileSource
 from pydna.primer import Primer as _Primer
 
 # from pydna.amplify import pcr as _pcr
@@ -91,14 +93,17 @@ def embl_gb_fasta(text):
         first_line = chunk.splitlines()[0].lower().split()
         try:
             parsed = _SeqIO.read(handle, "embl")
+            parsed.annotations["sequence_file_format"] = "embl"
         except ValueError:
             handle.seek(0)
             try:
                 parsed = _SeqIO.read(handle, "genbank")
+                parsed.annotations["sequence_file_format"] = "genbank"
             except ValueError:
                 handle.seek(0)
                 try:
                     parsed = _SeqIO.read(handle, "fasta-blast")
+                    parsed.annotations["sequence_file_format"] = "fasta"
                 except ValueError:
                     handle.close()
                     continue
@@ -127,7 +132,7 @@ def embl_gb_fasta(text):
     return tuple(result_list)
 
 
-def parse(data, ds=True):
+def parse(data, ds=True) -> list[_Dseqrecord | _SeqRecord]:
     """Return *all* DNA sequences found in data.
 
     If no sequences are found, an empty list is returned. This is a greedy
@@ -203,7 +208,7 @@ def parse(data, ds=True):
                     result = _Dseqrecord.from_SeqRecord(s)
                     result.source = UploadedFileSource(
                         file_name=str(path),  # we use str to handle PosixPath
-                        sequence_file_format="genbank",
+                        sequence_file_format=s.annotations["sequence_file_format"],
                         index_in_file=0,
                     )
                     sequences.append(result)
@@ -240,4 +245,10 @@ def parse_snapgene(file_path: str) -> list[_Dseqrecord]:
             "topology" in parsed_seq.annotations.keys()
             and parsed_seq.annotations["topology"] == "circular"
         )
-        return [_Dseqrecord(parsed_seq, circular=circular)]
+
+        source = UploadedFileSource(
+            file_name=str(file_path),
+            sequence_file_format="snapgene",
+            index_in_file=0,
+        )
+        return [_Dseqrecord(parsed_seq, circular=circular, source=source)]
