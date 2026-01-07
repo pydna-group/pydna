@@ -16,6 +16,17 @@ sequence. You can also use the ``CloningStrategy`` class to create a JSON repres
 the cloning strategy. That ``CloningStrategy`` can be loaded in the OpenCloning web interface
 to see a representation of the cloning strategy.
 
+
+Contributing
+============
+
+Not all fields can be readily serialized to be converted to regular types in pydantic. For
+instance, the ``coordinates`` field of the ``GenomeCoordinatesSource`` class is a
+``SimpleLocation`` object, or the ``input`` field of ``Source`` is a list of ``SourceInput``
+objects, which can be ``Dseqrecord`` or ``Primer`` objects, or ``AssemblyFragment`` objects.
+For these type of fields, you have to define a ``field_serializer`` method to serialize them
+to the correct type.
+
 """
 from __future__ import annotations
 
@@ -158,7 +169,6 @@ def get_id(obj: "Primer" | "Dseqrecord") -> int:
 class SequenceLocationStr(str):
     """A string representation of a sequence location, genbank-like."""
 
-    # TODO: this should handle origin-spanning simple locations (splitted)
     @classmethod
     def from_biopython_location(cls, location: Location):
         return cls(format_feature_location(location, None))
