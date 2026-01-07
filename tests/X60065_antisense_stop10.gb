@@ -1,0 +1,54 @@
+LOCUS       X60065                    10 bp    mRNA    linear   MAM 26-JUL-2016
+DEFINITION  B.bovis beta-2-gpI mRNA for beta-2-glycoprotein I.
+ACCESSION   X60065
+VERSION     X60065.1
+KEYWORDS    beta-2 glycoprotein I.
+SOURCE      Bos taurus (domestic cattle)
+  ORGANISM  Bos taurus
+            Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi;
+            Mammalia; Eutheria; Laurasiatheria; Artiodactyla; Ruminantia;
+            Pecora; Bovidae; Bovinae; Bos.
+REFERENCE   1
+  AUTHORS   Bendixen,E., Halkier,T., Magnusson,S., Sottrup-Jensen,L. and
+            Kristensen,T.
+  TITLE     Complete primary structure of bovine beta 2-glycoprotein I:
+            localization of the disulfide bridges
+  JOURNAL   Biochemistry 31 (14), 3611-3617 (1992)
+   PUBMED   1567819
+REFERENCE   2  (bases 1 to 10)
+  AUTHORS   Kristensen,T.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (11-JUN-1991) T. Kristensen, Dept of Mol Biology,
+            University of Aarhus, C F Mollers Alle 130, DK-8000 Aarhus C,
+            DENMARK
+FEATURES             Location/Qualifiers
+     source          1..10
+                     /organism="Bos taurus"
+                     /mol_type="mRNA"
+                     /db_xref="taxon:9913"
+                     /clone="pBB2I"
+                     /tissue_type="liver"
+     gene            complement(<1..>10)
+                     /gene="beta-2-gpI"
+     CDS             complement(<1..>10)
+                     /gene="beta-2-gpI"
+                     /codon_start=1
+                     /product="beta-2-glycoprotein I"
+                     /protein_id="CAA42669.1"
+                     /db_xref="GOA:P17690"
+                     /db_xref="InterPro:IPR000436"
+                     /db_xref="InterPro:IPR015104"
+                     /db_xref="InterPro:IPR016060"
+                     /db_xref="UniProtKB/Swiss-Prot:P17690"
+                     /translation="PALVLLLGFLCHVAIAGRTCPKPDELPFSTVVPLKRTYEPGEQIV
+                     FSCQPGYVSRGGIRRFTCPLTGLWPINTLKCMPRVCPFAGILENGTVRYTTFEYPNTIS
+                     FSCHTGFYLKGASSAKCTEEGKWSPDLPVCAPITCPPPPIPKFASLSVYKPLAGNNSFY
+                     GSKAVFKCLPHHAMFGNDTVTCTEHGNWTQLPECREVRCPFPSRPDNGFVNHPANPVLY
+                     YKDTATFGCHETYSLDGPEEVECSKFGNWSAQPSCKASCKLSIKRATVIYEGERVAIQN
+                     KFKNGMLHGQKVSFFCKHKEKKCSYTEDAQCIDGTIEIPKCFKEHSSLAFWKTDASDVK
+                     PC"
+     sig_peptide     complement(<1..>10)
+                     /gene="beta-2-gpI"
+ORIGIN
+        1 cgagcgctgg
+//
