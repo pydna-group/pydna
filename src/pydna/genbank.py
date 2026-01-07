@@ -181,8 +181,15 @@ class Genbank:
             location = SimpleLocation(
                 int(seq_start) - 1, int(seq_stop), -1 if strand == 2 else strand
             )
-        else:
+        elif seq_start is None and seq_stop is None:
             location = None
+        elif seq_stop is not None:
+            location = SimpleLocation(0, int(seq_stop), -1 if strand == 2 else strand)
+        else:
+            st = int(seq_start) - 1
+            location = SimpleLocation(
+                st, st + len(result), -1 if strand == 2 else strand
+            )
 
         result.source = NCBISequenceSource(
             repository_id=item,
