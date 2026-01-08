@@ -2071,6 +2071,12 @@ def test_extract_subfragment():
     # Here we compare the seq because getitem changes the id of the sequence
     assert f1.seq == assembly.extract_subfragment(f1, loc_start, loc_end).seq
 
+    f1 = Dseqrecord("ATTTA", circular=True)
+    # Returns error if start or end location is None in circular sequences
+    pytest.raises(ValueError, assembly.extract_subfragment, f1, None, None)
+    pytest.raises(ValueError, assembly.extract_subfragment, f1, None, SimpleLocation(0, 5))
+    pytest.raises(ValueError, assembly.extract_subfragment, f1, SimpleLocation(0, 5), None)
+
 
 def test_sticky_end_sub_strings():
 
