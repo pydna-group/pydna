@@ -825,14 +825,12 @@ def test_marker_replacement_on_plasmid():
 
     hygromycin_product = pcr(f, r, pAG32)
     # This is an homologous recombination, so constrains should be applied
-    asm_hyg = assembly.Assembly((pMEC1135, hygromycin_product, pMEC1135), limit=50)
-    candidate = asm_hyg.assemble_linear()[0]
+    asm_hyg = assembly.Assembly((hygromycin_product, pMEC1135), limit=50)
+    candidate = asm_hyg.assemble_circular()[0]
 
-    # AmpR feature
-    assert (
-        pMEC1135.features[-1].extract(pMEC1135).seq
-        == candidate.features[-1].extract(candidate).seq
-    )
+    plasmid_feat = next(f for f in pMEC1135.features if "label" in f.qualifiers and f.qualifiers["label"][0] == "AmpR")
+    candidate_feat = next(f for f in candidate.features if "label" in f.qualifiers and f.qualifiers["label"][0] == "AmpR")
+    assert plasmid_feat.extract(pMEC1135).seq == candidate_feat.extract(candidate).seq
 
 
 @pytest.mark.xfail(reason="contig not implemented")
@@ -2010,6 +2008,11 @@ def test_assembly_is_valid():
     # In a circular assembly, first and last fragment must be the same
     assembly_plan[0] = (1, 2, SimpleLocation(0, 3), SimpleLocation(0, 3))
     assert not assembly.Assembly.assembly_is_valid(fragments, assembly_plan, True, True)
+
+    # In a linear assembly, the first and last fragments cannot be circular
+    fragments = [Dseqrecord("", circular=True), Dseqrecord("")]
+    assembly_plan = [(1, 2, SimpleLocation(0, 3), SimpleLocation(0, 3))]
+    assert not assembly.Assembly.assembly_is_valid(fragments, assembly_plan, False, True)
 
 
 def test_extract_subfragment():
