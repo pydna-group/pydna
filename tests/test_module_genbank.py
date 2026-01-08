@@ -3,8 +3,9 @@
 # https://www.ncbi.nlm.nih.gov/nuccore/5
 
 
-import pytest
 from unittest import mock
+from Bio.SeqFeature import SimpleLocation
+import pytest
 
 
 def test_set_email():
@@ -62,7 +63,6 @@ def test_pydna_Genbank_fresh(urlopenMock, monkeypatch):
     from pydna.genbank import Genbank
 
     urlopenMock.return_value = make_mock_response("X60065.gb")
-    monkeypatch.setenv("pydna_cached_funcs", "")
     gb = Genbank("bjornjobb@gmail.com")
     result = gb.nucleotide("X60065.1")
     from Bio import SeqIO
@@ -76,7 +76,6 @@ def test_pydna_Genbank_fresh(urlopenMock, monkeypatch):
 #    from pydna.genbank import Genbank
 #
 #    urlopenMock.return_value = make_mock_response("X60065.gb")
-#    monkeypatch.setenv("pydna_cached_funcs", "pydna.genbank.Genbank.nucleotide")
 #    gb = Genbank("bjornjobb@gmail.com")
 #    result = gb.nucleotide("X60065.1")
 #    from Bio import SeqIO
@@ -92,7 +91,6 @@ def test_genbank_function_set_email(monkeypatch):
     from pydna.genbank import Genbank
 
     mock_Gb = mock.MagicMock()
-    monkeypatch.setenv("pydna_cached_funcs", "")
     monkeypatch.setenv("pydna_email", "someoneelse@example.com")
     monkeypatch.setattr("pydna.genbank.Genbank", mock_Gb)
     from pydna.genbank import genbank
@@ -102,9 +100,8 @@ def test_genbank_function_set_email(monkeypatch):
 
 
 def test_pydna_Genbank_fresh_part(monkeypatch):
-    monkeypatch.setenv("pydna_cached_funcs", "")
-    import pytest
     from unittest import mock
+    from Bio import SeqIO
 
     mock_efetch = mock.MagicMock(name="mock_efetch1")
     mock_efetch().read.side_effect = open("X60065-100-110.gb", "r").read
@@ -113,13 +110,14 @@ def test_pydna_Genbank_fresh_part(monkeypatch):
     from pydna.genbank import Genbank
 
     gb = Genbank("bjornjobb@gmail.com")
-    result = gb.nucleotide("X60065.1", seq_start=1, seq_stop=10)
+    result = gb.nucleotide("X60065.1", seq_start=100, seq_stop=110)
     assert str(result.seq).lower() == "ctgaaacggac"
+    assert result.source.coordinates == SimpleLocation(99, 110, 1)
+    full_sequence = SeqIO.read("X60065.gb", "genbank")
+    assert str(result.source.coordinates.extract(full_sequence.seq)) == str(result.seq)
 
 
 def test_pydna_Genbank_fresh_partII(monkeypatch):
-    monkeypatch.setenv("pydna_cached_funcs", "")
-    import pytest
     from unittest import mock
 
     mock_efetch = mock.MagicMock(name="mock_efetch1")
@@ -140,7 +138,6 @@ def test_pydna_Genbank_fresh_circular(urlopenMock, monkeypatch):
 
     urlopenMock.return_value = make_mock_response("pUC19.gb")
     Entrez.urlopen = urlopenMock
-    monkeypatch.setenv("pydna_cached_funcs", "")
     gb = Genbank("bjornjobb@gmail.com")
     result = gb.nucleotide("L09137.2")
     from Bio import SeqIO
@@ -157,7 +154,6 @@ def test_pydna_Genbank_set_strand(urlopenMock, monkeypatch):
 
     urlopenMock.return_value = make_mock_response("X60065.gb")
     Entrez.urlopen = urlopenMock
-    monkeypatch.setenv("pydna_cached_funcs", "")
     gb = Genbank("bjornjobb@gmail.com")
     result = gb.nucleotide("X60065.1", strand=1)
     from Bio import SeqIO
@@ -173,7 +169,6 @@ def test_pydna_Genbank_set_strand_not_valid(urlopenMock, monkeypatch):
 
     urlopenMock.return_value = make_mock_response("X60065.gb")
     Entrez.urlopen = urlopenMock
-    monkeypatch.setenv("pydna_cached_funcs", "")
     gb = Genbank("bjornjobb@gmail.com")
     result = gb.nucleotide("X60065.1", strand="notvalid")
     from Bio import SeqIO
@@ -189,13 +184,53 @@ def test_pydna_Genbank_set_strand_antisense(urlopenMock, monkeypatch):
 
     urlopenMock.return_value = make_mock_response("X60065.gb")
     Entrez.urlopen = urlopenMock
-    monkeypatch.setenv("pydna_cached_funcs", "")
     gb = Genbank("bjornjobb@gmail.com")
     result = gb.nucleotide("X60065.1", strand="antisense")
     from Bio import SeqIO
 
     canned = SeqIO.read("X60065.gb", "genbank")
     assert str(result.seq) == str(canned.seq)
+
+
+@mock.patch("Bio.Entrez.urlopen")
+def test_pydna_Genbank_set_strand_start1100(urlopenMock, monkeypatch):
+
+    from Bio import Entrez
+    from pydna.genbank import Genbank
+
+    urlopenMock.return_value = make_mock_response("X60065_start1100.gb")
+    Entrez.urlopen = urlopenMock
+    gb = Genbank("bjornjobb@gmail.com")
+    result = gb.nucleotide("X60065.1", seq_start=1100)
+    from Bio import SeqIO
+
+    canned = SeqIO.read("X60065_start1100.gb", "genbank")
+    full_sequence = SeqIO.read("X60065.gb", "genbank")
+    assert str(result.seq) == str(canned.seq)
+
+    loc = SimpleLocation(1099, 1136, 1)
+    assert result.source.coordinates == loc
+    assert str(loc.extract(full_sequence.seq)) == str(result.seq)
+
+
+@mock.patch("Bio.Entrez.urlopen")
+def test_pydna_Genbank_set_strand_antisense_stop10(urlopenMock, monkeypatch):
+    from Bio import Entrez
+    from pydna.genbank import Genbank
+    from Bio import SeqIO
+
+    urlopenMock.return_value = make_mock_response("X60065_antisense_stop10.gb")
+    Entrez.urlopen = urlopenMock
+    gb = Genbank("bjornjobb@gmail.com")
+    result = gb.nucleotide("X60065.1", seq_stop=10, strand="antisense")
+
+    canned = SeqIO.read("X60065_antisense_stop10.gb", "genbank")
+    full_sequence = SeqIO.read("X60065.gb", "genbank")
+    assert str(result.seq) == str(canned.seq)
+
+    loc = SimpleLocation(0, 10, -1)
+    assert result.source.coordinates == loc
+    assert str(loc.extract(full_sequence.seq)) == str(result.seq)
 
 
 if __name__ == "__main__":

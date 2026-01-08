@@ -12,20 +12,16 @@ been set to a valid email address. The easiest way to do this permanantly is to 
 `pydna.ini` file. See the documentation of :func:`pydna.open_config_folder`"""
 
 # from pydna.utils import memorize as _memorize
+from pydna.opencloning_models import NCBISequenceSource
 from pydna.genbankrecord import GenbankRecord as _GenbankRecord
 from pydna.readers import read as _read
 
 from Bio import Entrez as _Entrez
+from Bio.SeqFeature import SimpleLocation
+
 from typing import Literal as _Literal, Optional as _Optional
 import re as _re
 import os as _os
-
-# import logging as _logging
-
-# _module_logger = _logging.getLogger("pydna." + __name__)
-
-
-# TODO http://httpbin.org/ use for testing?
 
 
 class Genbank:
@@ -179,12 +175,36 @@ class Genbank:
 
         # _module_logger.info("text[:160]  %s", text[:160])
 
-        return _GenbankRecord(
-            _read(text), item=item, start=seq_start, stop=seq_stop, strand=strand
+        result = _read(text)
+        # TODO: Address this for cases where only one is defined
+        if seq_start is not None and seq_stop is not None:
+            location = SimpleLocation(
+                int(seq_start) - 1, int(seq_stop), -1 if strand == 2 else strand
+            )
+        elif seq_start is None and seq_stop is None:
+            location = None
+        elif seq_stop is not None:
+            location = SimpleLocation(0, int(seq_stop), -1 if strand == 2 else strand)
+        else:
+            st = int(seq_start) - 1
+            location = SimpleLocation(
+                st, st + len(result), -1 if strand == 2 else strand
+            )
+
+        result.source = NCBISequenceSource(
+            repository_id=item,
+            coordinates=location,
         )
+        return result
+
+        # return _GenbankRecord(
+        #     _read(text), item=item, start=seq_start, stop=seq_stop, strand=strand
+        # )
 
 
-def genbank(accession: str = "CS570233.1", *args, **kwargs) -> _GenbankRecord:
+def genbank(
+    accession: str = "CS570233.1", *args, email=None, **kwargs
+) -> _GenbankRecord:
     """
     Download a genbank nuclotide record.
 
@@ -229,9 +249,6 @@ def genbank(accession: str = "CS570233.1", *args, **kwargs) -> _GenbankRecord:
         //
 
     """
-    email = _os.getenv("pydna_email")
-    # _module_logger.info("#### genbank function called ####")
-    # _module_logger.info("email      %s", email)
-    # _module_logger.info("accession  %s", email)
+    email = email or _os.getenv("pydna_email")
     gb = Genbank(email)
     return gb.nucleotide(accession, *args, **kwargs)
