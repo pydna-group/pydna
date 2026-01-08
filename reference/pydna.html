@@ -3847,13 +3847,56 @@ is 5’ or 3’.</p>
 <dt class="sig sig-object py" id="pydna.all.Dseq.mw">
 <span class="sig-name descname"><span class="pre">mw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/pydna/dseq.html#Dseq.mw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.Dseq.mw" title="Link to this definition">#</a></dt>
 <dd><p>The molecular weight of the DNA/RNA molecule in g/mol.</p>
-<p>The following formula is used:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MW</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span> <span class="n">x</span> <span class="mf">313.2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">T</span> <span class="n">x</span> <span class="mf">304.2</span><span class="p">)</span> <span class="o">+</span>
-     <span class="p">(</span><span class="n">C</span> <span class="n">x</span> <span class="mf">289.2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">G</span> <span class="n">x</span> <span class="mf">329.2</span><span class="p">)</span> <span class="o">+</span>
-     <span class="p">(</span><span class="n">U</span> <span class="n">x</span> <span class="mf">290.2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">N</span> <span class="n">x</span> <span class="mf">308.9</span><span class="p">)</span> <span class="o">+</span> <span class="mf">79.0</span>
+<p>The molecular weight data in Biopython Bio.Data.IUPACData
+is used. The DNA is assumed to have a 5’-phosphate as many
+DNA fragments from restriction digestion do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">P</span> <span class="o">-</span> <span class="n">G</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="n">T</span><span class="o">-</span><span class="n">T</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="n">C</span><span class="o">-</span><span class="n">A</span> <span class="o">-</span> <span class="n">OH</span>
+     <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span>
+<span class="n">OH</span> <span class="o">-</span> <span class="n">C</span><span class="o">-</span><span class="n">T</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="n">T</span><span class="o">-</span><span class="n">G</span><span class="o">-</span><span class="n">T</span> <span class="o">-</span> <span class="n">P</span>
 </pre></div>
 </div>
-<p>The 79.0 added at the end is the 5’ phosphate group.</p>
+<p>The molecular weights listed in the unambiguous_dna_weights
+dictionary refers to free monophosphate nucleotides.
+One water molecule is removed for every phopshodiester bond
+formed between nucleotides. For linear molecules, the weight
+of one water molecule is added to account for the terminal
+hydroxyl group and a hydrogen on the 5’ terminal phosphate
+group.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">P</span> <span class="o">-</span> <span class="n">G</span><span class="o">---</span><span class="n">A</span><span class="o">---</span><span class="n">T</span> <span class="o">-</span> <span class="n">OH</span>  <span class="n">P</span> <span class="o">-</span> <span class="n">C</span><span class="o">---</span><span class="n">A</span> <span class="o">-</span> <span class="n">OH</span>
+     <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>           <span class="o">|</span>   <span class="o">|</span>
+<span class="n">OH</span> <span class="o">-</span> <span class="n">C</span><span class="o">---</span><span class="n">T</span><span class="o">---</span><span class="n">A</span><span class="o">---</span><span class="n">A</span><span class="o">---</span><span class="n">T</span><span class="o">---</span><span class="n">G</span><span class="o">---</span><span class="n">T</span> <span class="o">-</span> <span class="n">P</span>
+</pre></div>
+</div>
+<p>If the DNA is discontinuous, the internal 5’- end is assumed
+to have a phosphate and the 3’- a hydroxyl group:</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds_lin_obj</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;GATTACA&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds_lin_obj</span>
+<span class="go">Dseq(-7)</span>
+<span class="go">GATTACA</span>
+<span class="go">CTAATGT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">ds_lin_obj</span><span class="o">.</span><span class="n">mw</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">4359.8</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds_circ_obj</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;GATTACA&quot;</span><span class="p">,</span> <span class="n">circular</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">ds_circ_obj</span><span class="o">.</span><span class="n">mw</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">4323.8</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ssobj</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;PEXXEIE&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ssobj</span>
+<span class="go">Dseq(-7)</span>
+<span class="go">GATTACA</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">ssobj</span><span class="o">.</span><span class="n">mw</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">2184.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds_lin_obj2</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;GATZFCA&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds_lin_obj2</span>
+<span class="go">Dseq(-7)</span>
+<span class="go">GAT  CA</span>
+<span class="go">CTAATGT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">ds_lin_obj2</span><span class="o">.</span><span class="n">mw</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">3724.4</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -8561,13 +8604,56 @@ is the watson strand of a blunt version of the sequence.</p>
 <dt class="sig sig-object py" id="pydna.dseq.Dseq.mw">
 <span class="sig-name descname"><span class="pre">mw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/pydna/dseq.html#Dseq.mw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.dseq.Dseq.mw" title="Link to this definition">#</a></dt>
 <dd><p>The molecular weight of the DNA/RNA molecule in g/mol.</p>
-<p>The following formula is used:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MW</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span> <span class="n">x</span> <span class="mf">313.2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">T</span> <span class="n">x</span> <span class="mf">304.2</span><span class="p">)</span> <span class="o">+</span>
-     <span class="p">(</span><span class="n">C</span> <span class="n">x</span> <span class="mf">289.2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">G</span> <span class="n">x</span> <span class="mf">329.2</span><span class="p">)</span> <span class="o">+</span>
-     <span class="p">(</span><span class="n">U</span> <span class="n">x</span> <span class="mf">290.2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">N</span> <span class="n">x</span> <span class="mf">308.9</span><span class="p">)</span> <span class="o">+</span> <span class="mf">79.0</span>
+<p>The molecular weight data in Biopython Bio.Data.IUPACData
+is used. The DNA is assumed to have a 5’-phosphate as many
+DNA fragments from restriction digestion do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">P</span> <span class="o">-</span> <span class="n">G</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="n">T</span><span class="o">-</span><span class="n">T</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="n">C</span><span class="o">-</span><span class="n">A</span> <span class="o">-</span> <span class="n">OH</span>
+     <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span>
+<span class="n">OH</span> <span class="o">-</span> <span class="n">C</span><span class="o">-</span><span class="n">T</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="n">T</span><span class="o">-</span><span class="n">G</span><span class="o">-</span><span class="n">T</span> <span class="o">-</span> <span class="n">P</span>
 </pre></div>
 </div>
-<p>The 79.0 added at the end is the 5’ phosphate group.</p>
+<p>The molecular weights listed in the unambiguous_dna_weights
+dictionary refers to free monophosphate nucleotides.
+One water molecule is removed for every phopshodiester bond
+formed between nucleotides. For linear molecules, the weight
+of one water molecule is added to account for the terminal
+hydroxyl group and a hydrogen on the 5’ terminal phosphate
+group.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">P</span> <span class="o">-</span> <span class="n">G</span><span class="o">---</span><span class="n">A</span><span class="o">---</span><span class="n">T</span> <span class="o">-</span> <span class="n">OH</span>  <span class="n">P</span> <span class="o">-</span> <span class="n">C</span><span class="o">---</span><span class="n">A</span> <span class="o">-</span> <span class="n">OH</span>
+     <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>           <span class="o">|</span>   <span class="o">|</span>
+<span class="n">OH</span> <span class="o">-</span> <span class="n">C</span><span class="o">---</span><span class="n">T</span><span class="o">---</span><span class="n">A</span><span class="o">---</span><span class="n">A</span><span class="o">---</span><span class="n">T</span><span class="o">---</span><span class="n">G</span><span class="o">---</span><span class="n">T</span> <span class="o">-</span> <span class="n">P</span>
+</pre></div>
+</div>
+<p>If the DNA is discontinuous, the internal 5’- end is assumed
+to have a phosphate and the 3’- a hydroxyl group:</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds_lin_obj</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;GATTACA&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds_lin_obj</span>
+<span class="go">Dseq(-7)</span>
+<span class="go">GATTACA</span>
+<span class="go">CTAATGT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">ds_lin_obj</span><span class="o">.</span><span class="n">mw</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">4359.8</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds_circ_obj</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;GATTACA&quot;</span><span class="p">,</span> <span class="n">circular</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">ds_circ_obj</span><span class="o">.</span><span class="n">mw</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">4323.8</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ssobj</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;PEXXEIE&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ssobj</span>
+<span class="go">Dseq(-7)</span>
+<span class="go">GATTACA</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">ssobj</span><span class="o">.</span><span class="n">mw</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">2184.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds_lin_obj2</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;GATZFCA&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ds_lin_obj2</span>
+<span class="go">Dseq(-7)</span>
+<span class="go">GAT  CA</span>
+<span class="go">CTAATGT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">round</span><span class="p">(</span><span class="n">ds_lin_obj2</span><span class="o">.</span><span class="n">mw</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">3724.4</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">

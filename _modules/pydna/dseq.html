@@ -337,6 +337,7 @@ document.write(`
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_copy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_sys</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_math</span>
@@ -351,6 +352,9 @@ document.write(`
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq</span> <span class="k">as</span> <span class="n">_Seq</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">_SeqAbstractBaseClass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Data.IUPACData</span><span class="w"> </span><span class="kn">import</span> <span class="n">unambiguous_dna_weights</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Data.IUPACData</span><span class="w"> </span><span class="kn">import</span> <span class="n">unambiguous_rna_weights</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Data.IUPACData</span><span class="w"> </span><span class="kn">import</span> <span class="n">atom_weights</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rc</span> <span class="k">as</span> <span class="n">_rc</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">flatten</span> <span class="k">as</span> <span class="n">_flatten</span>
@@ -1084,26 +1088,80 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="nf">mw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The molecular weight of the DNA/RNA molecule in g/mol.</span>
 
-<span class="sd">        The following formula is used:</span>
+<span class="sd">        The molecular weight data in Biopython Bio.Data.IUPACData</span>
+<span class="sd">        is used. The DNA is assumed to have a 5&#39;-phosphate as many</span>
+<span class="sd">        DNA fragments from restriction digestion do:</span>
+
 <span class="sd">        ::</span>
 
-<span class="sd">               MW = (A x 313.2) + (T x 304.2) +</span>
-<span class="sd">                    (C x 289.2) + (G x 329.2) +</span>
-<span class="sd">                    (U x 290.2) + (N x 308.9) + 79.0</span>
+<span class="sd">             P - G-A-T-T-A-C-A - OH</span>
+<span class="sd">                 | | | | | | |</span>
+<span class="sd">            OH - C-T-A-A-T-G-T - P</span>
 
-<span class="sd">        The 79.0 added at the end is the 5&#39; phosphate group.</span>
+<span class="sd">        The molecular weights listed in the unambiguous_dna_weights</span>
+<span class="sd">        dictionary refers to free monophosphate nucleotides.</span>
+<span class="sd">        One water molecule is removed for every phopshodiester bond</span>
+<span class="sd">        formed between nucleotides. For linear molecules, the weight</span>
+<span class="sd">        of one water molecule is added to account for the terminal</span>
+<span class="sd">        hydroxyl group and a hydrogen on the 5&#39; terminal phosphate</span>
+<span class="sd">        group.</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">             P - G---A---T - OH  P - C---A - OH</span>
+<span class="sd">                 |   |   |           |   |</span>
+<span class="sd">            OH - C---T---A---A---T---G---T - P</span>
+
+<span class="sd">        If the DNA is discontinuous, the internal 5&#39;- end is assumed</span>
+<span class="sd">        to have a phosphate and the 3&#39;- a hydroxyl group:</span>
+
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pydna.dseq import Dseq</span>
+<span class="sd">        &gt;&gt;&gt; ds_lin_obj = Dseq(&quot;GATTACA&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; ds_lin_obj</span>
+<span class="sd">        Dseq(-7)</span>
+<span class="sd">        GATTACA</span>
+<span class="sd">        CTAATGT</span>
+<span class="sd">        &gt;&gt;&gt; round(ds_lin_obj.mw(), 1)</span>
+<span class="sd">        4359.8</span>
+<span class="sd">        &gt;&gt;&gt; ds_circ_obj = Dseq(&quot;GATTACA&quot;, circular = True)</span>
+<span class="sd">        &gt;&gt;&gt; round(ds_circ_obj.mw(), 1)</span>
+<span class="sd">        4323.8</span>
+<span class="sd">        &gt;&gt;&gt; ssobj = Dseq(&quot;PEXXEIE&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; ssobj</span>
+<span class="sd">        Dseq(-7)</span>
+<span class="sd">        GATTACA</span>
+<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        &gt;&gt;&gt; round(ssobj.mw(), 1)</span>
+<span class="sd">        2184.4</span>
+<span class="sd">        &gt;&gt;&gt; ds_lin_obj2 = Dseq(&quot;GATZFCA&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; ds_lin_obj2</span>
+<span class="sd">        Dseq(-7)</span>
+<span class="sd">        GAT  CA</span>
+<span class="sd">        CTAATGT</span>
+<span class="sd">        &gt;&gt;&gt; round(ds_lin_obj2.mw(), 1)</span>
+<span class="sd">        3724.4</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">nts</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">watson</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="mf">313.2</span> <span class="o">*</span> <span class="n">nts</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
-            <span class="o">+</span> <span class="mf">304.2</span> <span class="o">*</span> <span class="n">nts</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
-            <span class="o">+</span> <span class="mf">289.2</span> <span class="o">*</span> <span class="n">nts</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">)</span>
-            <span class="o">+</span> <span class="mf">329.2</span> <span class="o">*</span> <span class="n">nts</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;g&quot;</span><span class="p">)</span>
-            <span class="o">+</span> <span class="mf">290.2</span> <span class="o">*</span> <span class="n">nts</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;u&quot;</span><span class="p">)</span>
-            <span class="o">+</span> <span class="mf">308.9</span> <span class="o">*</span> <span class="n">nts</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
-            <span class="o">+</span> <span class="mf">79.0</span>
-        <span class="p">)</span></div>
+        <span class="n">h2o</span> <span class="o">=</span> <span class="n">atom_weights</span><span class="p">[</span><span class="s2">&quot;H&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">atom_weights</span><span class="p">[</span><span class="s2">&quot;O&quot;</span><span class="p">]</span>
+
+        <span class="n">mwd</span> <span class="o">=</span> <span class="n">unambiguous_rna_weights</span> <span class="o">|</span> <span class="n">unambiguous_dna_weights</span> <span class="o">|</span> <span class="p">{</span><span class="s2">&quot; &quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+        <span class="n">watsn_weight</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">mwd</span><span class="p">[</span><span class="n">nt</span><span class="p">]</span> <span class="o">-</span> <span class="n">h2o</span> <span class="k">for</span> <span class="n">nt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+        <span class="n">crick_weight</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">mwd</span><span class="p">[</span><span class="n">nt</span><span class="p">]</span> <span class="o">-</span> <span class="n">h2o</span> <span class="k">for</span> <span class="n">nt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+
+        <span class="n">watsn_weight</span> <span class="o">+=</span> <span class="n">h2o</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot; +&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="p">))</span>
+        <span class="n">crick_weight</span> <span class="o">+=</span> <span class="n">h2o</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot; +&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">watsn_weight</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
+            <span class="n">watsn_weight</span> <span class="o">+=</span> <span class="n">h2o</span>
+
+        <span class="k">if</span> <span class="n">crick_weight</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
+            <span class="n">crick_weight</span> <span class="o">+=</span> <span class="n">h2o</span>
+
+        <span class="k">return</span> <span class="n">watsn_weight</span> <span class="o">+</span> <span class="n">crick_weight</span></div>
 
 
 <div class="viewcode-block" id="Dseq.find">
