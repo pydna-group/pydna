@@ -906,7 +906,7 @@ sequence: ACGTACGTtataGCATGCAT
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt;&gt; Restriction:&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_circular_assemblies</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;assembly:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assembly2str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sequence:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sequence:&#39;</span><span class="p">,</span><span class="n">assembly</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -918,10 +918,10 @@ sequence: aaaaACGAACGTtatatataACGAACGTtttt
 
 &gt;&gt; Restriction:
 assembly: (&#39;1[5:9]:2[5:9]&#39;, &#39;2[5:9]:1[5:9]&#39;)
-sequence: aaaaGAATTCccccccccGAATTCaaaa
+sequence: AATTCaaaaaaaaGAATTCccccccccG
 
 assembly: (&#39;1[5:9]:-2[5:9]&#39;, &#39;-2[5:9]:1[5:9]&#39;)
-sequence: aaaaGAATTCggggggggGAATTCaaaa
+sequence: AATTCaaaaaaaaGAATTCggggggggG
 </pre></div>
 </div>
 </div>

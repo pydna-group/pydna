@@ -1384,19 +1384,26 @@ document.write(`
 <div class="viewcode-block" id="extract_subfragment">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.extract_subfragment">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">extract_subfragment</span><span class="p">(</span>
-    <span class="n">seq</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">start_location</span><span class="p">:</span> <span class="n">Location</span><span class="p">,</span> <span class="n">end_location</span><span class="p">:</span> <span class="n">Location</span>
+    <span class="n">seq</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">start_location</span><span class="p">:</span> <span class="n">Location</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">end_location</span><span class="p">:</span> <span class="n">Location</span> <span class="o">|</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseqrecord</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract a subfragment from a sequence for an assembly, given the start and end locations of the subfragment.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">seq</span><span class="o">.</span><span class="n">circular</span> <span class="ow">and</span> <span class="p">(</span><span class="n">start_location</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">end_location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Start and end locations cannot be None for circular sequences&quot;</span>
+        <span class="p">)</span>
+        <span class="c1"># This could be used to have consistent behaviour for circular sequences, where the start is arbitrary. However,</span>
+        <span class="c1"># they should never get None, so this is not used.</span>
+        <span class="c1"># if start_location is None:</span>
+        <span class="c1">#     start_location = end_location</span>
+        <span class="c1"># elif end_location is None:</span>
+        <span class="c1">#     end_location = start_location</span>
+
     <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">start_location</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">start_location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">end</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">end_location</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">end_location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="c1"># Special case, some of it could be handled by better Dseqrecord slicing in the future</span>
-    <span class="k">if</span> <span class="p">(</span>
-        <span class="n">seq</span><span class="o">.</span><span class="n">circular</span>
-        <span class="ow">and</span> <span class="n">start_location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="ow">and</span> <span class="n">end_location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="ow">and</span> <span class="n">_locations_overlap</span><span class="p">(</span><span class="n">start_location</span><span class="p">,</span> <span class="n">end_location</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
-    <span class="p">):</span>
+    <span class="k">if</span> <span class="n">seq</span><span class="o">.</span><span class="n">circular</span> <span class="ow">and</span> <span class="n">_locations_overlap</span><span class="p">(</span><span class="n">start_location</span><span class="p">,</span> <span class="n">end_location</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)):</span>
         <span class="c1"># The overhang is different for origin-spanning features, for instance</span>
         <span class="c1"># for a feature join{[12:13], [0:3]} in a sequence of length 13, the overhang</span>
         <span class="c1"># is -4, not 9</span>
@@ -1613,6 +1620,23 @@ document.write(`
 
         <span class="c1"># Linear assemblies may get begin-1-end, begin-2-end, these are removed here.</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">assembly</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Topology check -&gt; Circular sequences cannot be first or last in a linear assembly.</span>
+        <span class="c1"># For example, let&#39;s imagine aACGTc (linear) and gACGTc (circular).</span>
+        <span class="c1"># It should not be possible to join them into a linear assembly. It&#39;s similar if we</span>
+        <span class="c1"># think of a restriction-ligation assembly, example: aGAATTCc (linear) and gGAATTCc</span>
+        <span class="c1"># (circular).</span>
+        <span class="c1"># A linear product can be generated where the circular molecule is cut open, and one end</span>
+        <span class="c1"># it joins the linear molecule and on the other it&#39;s free, but for now it&#39;s not a</span>
+        <span class="c1"># relevant product and it&#39;s excluded.</span>
+        <span class="n">first_fragment</span> <span class="o">=</span> <span class="n">fragments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">assembly</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">last_fragment</span> <span class="o">=</span> <span class="n">fragments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">assembly</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_circular</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_fragment</span><span class="p">,</span> <span class="n">_Dseqrecord</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">first_fragment</span><span class="o">.</span><span class="n">circular</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">last_fragment</span><span class="p">,</span> <span class="n">_Dseqrecord</span><span class="p">)</span> <span class="ow">and</span> <span class="n">last_fragment</span><span class="o">.</span><span class="n">circular</span><span class="p">)</span>
+        <span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="n">use_all_fragments</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">fragments</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span>
