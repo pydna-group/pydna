@@ -975,19 +975,26 @@ def get_assembly_subfragments(
 
 
 def extract_subfragment(
-    seq: _Dseqrecord, start_location: Location, end_location: Location
+    seq: _Dseqrecord, start_location: Location | None, end_location: Location | None
 ) -> _Dseqrecord:
     """Extract a subfragment from a sequence for an assembly, given the start and end locations of the subfragment."""
+
+    if seq.circular and (start_location is None or end_location is None):
+        raise ValueError(
+            "Start and end locations cannot be None for circular sequences"
+        )
+        # This could be used to have consistent behaviour for circular sequences, where the start is arbitrary. However,
+        # they should never get None, so this is not used.
+        # if start_location is None:
+        #     start_location = end_location
+        # elif end_location is None:
+        #     end_location = start_location
+
     start = 0 if start_location is None else _location_boundaries(start_location)[0]
     end = None if end_location is None else _location_boundaries(end_location)[1]
 
     # Special case, some of it could be handled by better Dseqrecord slicing in the future
-    if (
-        seq.circular
-        and start_location is not None
-        and end_location is not None
-        and _locations_overlap(start_location, end_location, len(seq))
-    ):
+    if seq.circular and _locations_overlap(start_location, end_location, len(seq)):
         # The overhang is different for origin-spanning features, for instance
         # for a feature join{[12:13], [0:3]} in a sequence of length 13, the overhang
         # is -4, not 9
@@ -1193,6 +1200,23 @@ class Assembly:
 
         # Linear assemblies may get begin-1-end, begin-2-end, these are removed here.
         if len(assembly) == 0:
+            return False
+
+        # Topology check -> Circular sequences cannot be first or last in a linear assembly.
+        # For example, let's imagine aACGTc (linear) and gACGTc (circular).
+        # It should not be possible to join them into a linear assembly. It's similar if we
+        # think of a restriction-ligation assembly, example: aGAATTCc (linear) and gGAATTCc
+        # (circular).
+        # A linear product can be generated where the circular molecule is cut open, and one end
+        # it joins the linear molecule and on the other it's free, but for now it's not a
+        # relevant product and it's excluded.
+        first_fragment = fragments[abs(assembly[0][0]) - 1]
+        last_fragment = fragments[abs(assembly[-1][1]) - 1]
+        if not is_circular and (
+            isinstance(first_fragment, _Dseqrecord)
+            and first_fragment.circular
+            or (isinstance(last_fragment, _Dseqrecord) and last_fragment.circular)
+        ):
             return False
 
         if use_all_fragments and len(fragments) != len(
