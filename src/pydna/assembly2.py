@@ -1963,6 +1963,7 @@ def common_function_assembly_products(
     algorithm: Callable,
     circular_only: bool,
     filter_results_function: Callable | None = None,
+    only_adjacent_edges: bool = False,
 ) -> list[_Dseqrecord]:
     """Common function to avoid code duplication. Could be simplified further
     once SingleFragmentAssembly and Assembly are merged.
@@ -1977,6 +1978,10 @@ def common_function_assembly_products(
         Function that determines valid overlaps between fragments
     circular_only : bool
         If True, only return circular assemblies
+    filter_results_function : Callable or None
+        Function that filters the results
+    only_adjacent_edges : bool
+        If True, only return assemblies that use only adjacent edges
 
     Returns
     -------
@@ -1989,10 +1994,10 @@ def common_function_assembly_products(
         asm = Assembly(
             frags, limit, algorithm, use_fragment_order=False, use_all_fragments=True
         )
-    output_assemblies = asm.get_circular_assemblies()
+    output_assemblies = asm.get_circular_assemblies(only_adjacent_edges)
     if not circular_only and len(frags) > 1:
         output_assemblies += filter_linear_subassemblies(
-            asm.get_linear_assemblies(), output_assemblies, frags
+            asm.get_linear_assemblies(only_adjacent_edges), output_assemblies, frags
         )
     if not circular_only and len(frags) == 1:
         output_assemblies += asm.get_insertion_assemblies()
@@ -2190,7 +2195,7 @@ def restriction_ligation_assembly(
         return restriction_ligation_overlap(x, y, enzymes, False, allow_blunt)
 
     products = common_function_assembly_products(
-        frags, None, algorithm_fn, circular_only
+        frags, None, algorithm_fn, circular_only, only_adjacent_edges=True
     )
     return _recast_sources(
         products, RestrictionAndLigationSource, restriction_enzymes=enzymes
