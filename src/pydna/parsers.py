@@ -93,17 +93,17 @@ def embl_gb_fasta(text):
         first_line = chunk.splitlines()[0].lower().split()
         try:
             parsed = _SeqIO.read(handle, "embl")
-            parsed.annotations["sequence_file_format"] = "embl"
+            parsed.annotations["pydna_parse_sequence_file_format"] = "embl"
         except ValueError:
             handle.seek(0)
             try:
                 parsed = _SeqIO.read(handle, "genbank")
-                parsed.annotations["sequence_file_format"] = "genbank"
+                parsed.annotations["pydna_parse_sequence_file_format"] = "genbank"
             except ValueError:
                 handle.seek(0)
                 try:
                     parsed = _SeqIO.read(handle, "fasta-blast")
-                    parsed.annotations["sequence_file_format"] = "fasta"
+                    parsed.annotations["pydna_parse_sequence_file_format"] = "fasta"
                 except ValueError:
                     handle.close()
                     continue
@@ -208,7 +208,9 @@ def parse(data, ds=True) -> list[_Dseqrecord | _SeqRecord]:
                     result = _Dseqrecord.from_SeqRecord(s)
                     result.source = UploadedFileSource(
                         file_name=str(path),  # we use str to handle PosixPath
-                        sequence_file_format=s.annotations["sequence_file_format"],
+                        sequence_file_format=s.annotations[
+                            "pydna_parse_sequence_file_format"
+                        ],
                         index_in_file=0,
                     )
                     sequences.append(result)
