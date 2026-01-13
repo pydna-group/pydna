@@ -409,6 +409,21 @@ document.write(`
                 <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^(</span><span class="se">\\</span><span class="s2">d+)</span><span class="se">\\</span><span class="s2">.</span><span class="se">\\</span><span class="s2">.(</span><span class="se">\\</span><span class="s2">d+)$&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;typeof&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
             <span class="p">},</span>
+            <span class="s2">&quot;simple_sequence_location&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;A simple sequence &quot;</span>
+                <span class="s2">&quot;location defined using &quot;</span>
+                <span class="s2">&quot;genbank syntax (e.g. &quot;</span>
+                <span class="s2">&quot;1..100 or &quot;</span>
+                <span class="s2">&quot;complement(1..100)), &quot;</span>
+                <span class="s2">&quot;note that 1..100 in &quot;</span>
+                <span class="s2">&quot;genbank is equivalent &quot;</span>
+                <span class="s2">&quot;to 0:100 in python&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;exact_mappings&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;GENO:0000965&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;from_schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://opencloning.github.io/OpenCloning_LinkML&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;simple_sequence_location&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^((</span><span class="se">\\</span><span class="s2">d+)</span><span class="se">\\</span><span class="s2">.</span><span class="se">\\</span><span class="s2">.(</span><span class="se">\\</span><span class="s2">d+)|complement</span><span class="se">\\</span><span class="s2">((</span><span class="se">\\</span><span class="s2">d+)</span><span class="se">\\</span><span class="s2">.</span><span class="se">\\</span><span class="s2">.(</span><span class="se">\\</span><span class="s2">d+)</span><span class="se">\\</span><span class="s2">))$&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;typeof&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
             <span class="s2">&quot;version_number&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;A version number&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;exact_mappings&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;IAO:0000129&quot;</span><span class="p">],</span>
@@ -419,45 +434,6 @@ document.write(`
         <span class="p">},</span>
     <span class="p">}</span>
 <span class="p">)</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">RepositoryName</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-    <span class="n">addgene</span> <span class="o">=</span> <span class="s2">&quot;addgene&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Addgene</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">genbank</span> <span class="o">=</span> <span class="s2">&quot;genbank&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    GenBank</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">benchling</span> <span class="o">=</span> <span class="s2">&quot;benchling&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Benchling</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">snapgene</span> <span class="o">=</span> <span class="s2">&quot;snapgene&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    SnapGene plasmid library</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">euroscarf</span> <span class="o">=</span> <span class="s2">&quot;euroscarf&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Euroscarf (plasmids only)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">igem</span> <span class="o">=</span> <span class="s2">&quot;igem&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    iGEM collection</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">wekwikgene</span> <span class="o">=</span> <span class="s2">&quot;wekwikgene&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    WekWikGene</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">seva</span> <span class="o">=</span> <span class="s2">&quot;seva&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    SEVA (Standard European Vector Architecture)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">open_dna_collections</span> <span class="o">=</span> <span class="s2">&quot;open_dna_collections&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Open DNA collections</span>
-<span class="sd">    &quot;&quot;&quot;</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Collection</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
@@ -589,7 +565,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
@@ -654,7 +630,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;overhang_crick_3prime&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TextFileSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;OligoHybridizationSource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TextFileSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;OligoHybridizationSource&quot;</span><span class="p">],</span>
                 <span class="s2">&quot;ifabsent&quot;</span><span class="p">:</span> <span class="s2">&quot;int(0)&quot;</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">},</span>
@@ -665,7 +641,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;overhang_watson_3prime&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TextFileSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TextFileSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">],</span>
                 <span class="s2">&quot;ifabsent&quot;</span><span class="p">:</span> <span class="s2">&quot;int(0)&quot;</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">},</span>
@@ -700,6 +676,104 @@ document.write(`
     <span class="p">)</span>
 
 
+<span class="k">class</span><span class="w"> </span><span class="nc">ManuallyTypedSequence</span><span class="p">(</span><span class="n">Sequence</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a sequence that is manually typed by the user</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">linkml_meta</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">LinkMLMeta</span><span class="p">]</span> <span class="o">=</span> <span class="n">LinkMLMeta</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;from_schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://opencloning.github.io/OpenCloning_LinkML&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;slot_usage&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;overhang_crick_3prime&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ifabsent&quot;</span><span class="p">:</span> <span class="s2">&quot;int(0)&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;overhang_crick_3prime&quot;</span><span class="p">},</span>
+                <span class="s2">&quot;overhang_watson_3prime&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ifabsent&quot;</span><span class="p">:</span> <span class="s2">&quot;int(0)&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;overhang_watson_3prime&quot;</span><span class="p">},</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="n">overhang_crick_3prime</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Taken from pydna&#39;s `dseq::ovhg`An integer describing the length of the crick strand overhang in the 5&#39; of the molecule, or 3&#39; of the crick strand&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;overhang_crick_3prime&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TextFileSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;OligoHybridizationSource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;ifabsent&quot;</span><span class="p">:</span> <span class="s2">&quot;int(0)&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">overhang_watson_3prime</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The equivalent of `overhang_crick_3prime` but for the watson strand&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;overhang_watson_3prime&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TextFileSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;ifabsent&quot;</span><span class="p">:</span> <span class="s2">&quot;int(0)&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">sequence</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The sequence of the manually typed sequence&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sequence&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;Primer&quot;</span><span class="p">,</span> <span class="s2">&quot;SourceInput&quot;</span><span class="p">,</span> <span class="s2">&quot;PlannotateAnnotationReport&quot;</span><span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">circular</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Whether the sequence is circular or linear&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;ifabsent&quot;</span><span class="p">:</span> <span class="s2">&quot;boolean(false)&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;A unique identifier for a thing&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NamedThing&quot;</span><span class="p">,</span> <span class="s2">&quot;Sequence&quot;</span><span class="p">],</span> <span class="s2">&quot;slot_uri&quot;</span><span class="p">:</span> <span class="s2">&quot;schema:identifier&quot;</span><span class="p">}</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Designates the class&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;type&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;designates_type&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">&quot;Sequence&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;SourceInput&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Source&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;CollectionOptionInfo&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;AnnotationReport&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;AssociatedFile&quot;</span><span class="p">,</span>
+                <span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">&quot;sequence&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pattern_sequence</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[acgtACGT]+$&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
+                    <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Invalid sequence format: </span><span class="si">{</span><span class="n">element</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+            <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Invalid sequence format: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span>
+
+
 <span class="k">class</span><span class="w"> </span><span class="nc">Primer</span><span class="p">(</span><span class="n">Sequence</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An oligonucleotide or primer</span>
@@ -732,7 +806,10 @@ document.write(`
     <span class="n">sequence</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sequence&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Primer&quot;</span><span class="p">,</span> <span class="s2">&quot;SourceInput&quot;</span><span class="p">,</span> <span class="s2">&quot;PlannotateAnnotationReport&quot;</span><span class="p">]}</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sequence&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;Primer&quot;</span><span class="p">,</span> <span class="s2">&quot;SourceInput&quot;</span><span class="p">,</span> <span class="s2">&quot;PlannotateAnnotationReport&quot;</span><span class="p">],</span>
+            <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
@@ -810,7 +887,10 @@ document.write(`
         <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The input sequence&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sequence&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Primer&quot;</span><span class="p">,</span> <span class="s2">&quot;SourceInput&quot;</span><span class="p">,</span> <span class="s2">&quot;PlannotateAnnotationReport&quot;</span><span class="p">]}</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sequence&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;Primer&quot;</span><span class="p">,</span> <span class="s2">&quot;SourceInput&quot;</span><span class="p">,</span> <span class="s2">&quot;PlannotateAnnotationReport&quot;</span><span class="p">],</span>
+            <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
 
@@ -1104,7 +1184,6 @@ document.write(`
         <span class="n">ManuallyTypedSource</span><span class="p">,</span>
         <span class="n">UploadedFileSource</span><span class="p">,</span>
         <span class="n">RepositoryIdSource</span><span class="p">,</span>
-        <span class="n">GenomeCoordinatesSource</span><span class="p">,</span>
         <span class="n">SequenceCutSource</span><span class="p">,</span>
         <span class="n">AssemblySource</span><span class="p">,</span>
         <span class="n">OligoHybridizationSource</span><span class="p">,</span>
@@ -1131,6 +1210,8 @@ document.write(`
         <span class="n">EuroscarfSource</span><span class="p">,</span>
         <span class="n">IGEMSource</span><span class="p">,</span>
         <span class="n">OpenDNACollectionsSource</span><span class="p">,</span>
+        <span class="n">NCBISequenceSource</span><span class="p">,</span>
+        <span class="n">GenomeCoordinatesSource</span><span class="p">,</span>
     <span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The source of the sequence for this option&quot;&quot;&quot;</span><span class="p">,</span>
@@ -1210,51 +1291,8 @@ document.write(`
 <span class="sd">    Represents the source of a sequence that is manually typed by the user</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">linkml_meta</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">LinkMLMeta</span><span class="p">]</span> <span class="o">=</span> <span class="n">LinkMLMeta</span><span class="p">(</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;from_schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://opencloning.github.io/OpenCloning_LinkML&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;slot_usage&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;overhang_crick_3prime&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ifabsent&quot;</span><span class="p">:</span> <span class="s2">&quot;int(0)&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;overhang_crick_3prime&quot;</span><span class="p">},</span>
-                <span class="s2">&quot;overhang_watson_3prime&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ifabsent&quot;</span><span class="p">:</span> <span class="s2">&quot;int(0)&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;overhang_watson_3prime&quot;</span><span class="p">},</span>
-            <span class="p">},</span>
-        <span class="p">}</span>
-    <span class="p">)</span>
+    <span class="n">linkml_meta</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">LinkMLMeta</span><span class="p">]</span> <span class="o">=</span> <span class="n">LinkMLMeta</span><span class="p">({</span><span class="s2">&quot;from_schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://opencloning.github.io/OpenCloning_LinkML&quot;</span><span class="p">})</span>
 
-    <span class="n">overhang_crick_3prime</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Taken from pydna&#39;s `dseq::ovhg`An integer describing the length of the crick strand overhang in the 5&#39; of the molecule, or 3&#39; of the crick strand&quot;&quot;&quot;</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;overhang_crick_3prime&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TextFileSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;OligoHybridizationSource&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;ifabsent&quot;</span><span class="p">:</span> <span class="s2">&quot;int(0)&quot;</span><span class="p">,</span>
-            <span class="p">}</span>
-        <span class="p">},</span>
-    <span class="p">)</span>
-    <span class="n">overhang_watson_3prime</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The equivalent of `overhang_crick_3prime` but for the watson strand&quot;&quot;&quot;</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;overhang_watson_3prime&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TextFileSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;ifabsent&quot;</span><span class="p">:</span> <span class="s2">&quot;int(0)&quot;</span><span class="p">,</span>
-            <span class="p">}</span>
-        <span class="p">},</span>
-    <span class="p">)</span>
-    <span class="n">user_input</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=...</span><span class="p">,</span> <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;user_input&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">]}}</span>
-    <span class="p">)</span>
-    <span class="n">circular</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Whether the sequence is circular or not&quot;&quot;&quot;</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
-            <span class="p">}</span>
-        <span class="p">},</span>
-    <span class="p">)</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Designates the class&quot;&quot;&quot;</span><span class="p">,</span>
@@ -1302,19 +1340,6 @@ document.write(`
         <span class="p">},</span>
     <span class="p">)</span>
 
-    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">&quot;user_input&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">pattern_user_input</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-        <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[acgtACGT]+$&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
-                    <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Invalid user_input format: </span><span class="si">{</span><span class="n">element</span><span class="si">}</span><span class="s2">&quot;</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-            <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Invalid user_input format: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">v</span>
-
 
 <span class="k">class</span><span class="w"> </span><span class="nc">UploadedFileSource</span><span class="p">(</span><span class="n">Source</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1355,7 +1380,9 @@ document.write(`
     <span class="n">coordinates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;If provided, coordinates within the sequence of the file to extract a subsequence&quot;&quot;&quot;</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;coordinates&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;UploadedFileSource&quot;</span><span class="p">]}},</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;coordinates&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;UploadedFileSource&quot;</span><span class="p">,</span> <span class="s2">&quot;NCBISequenceSource&quot;</span><span class="p">]}</span>
+        <span class="p">},</span>
     <span class="p">)</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;UploadedFileSource&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;UploadedFileSource&quot;</span><span class="p">,</span>
@@ -1416,10 +1443,6 @@ document.write(`
         <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The id of the sequence in the repository&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_id&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
-    <span class="p">)</span>
-    <span class="n">repository_name</span><span class="p">:</span> <span class="n">RepositoryName</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_name&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
     <span class="p">)</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">,</span>
@@ -1500,10 +1523,6 @@ document.write(`
         <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The id of the sequence in the repository&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_id&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
-    <span class="p">)</span>
-    <span class="n">repository_name</span><span class="p">:</span> <span class="n">RepositoryName</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_name&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
     <span class="p">)</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;AddgeneIdSource&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;AddgeneIdSource&quot;</span><span class="p">,</span>
@@ -1607,10 +1626,6 @@ document.write(`
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The id of the gene in the WeKwikGene database&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_id&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
     <span class="p">)</span>
-    <span class="n">repository_name</span><span class="p">:</span> <span class="n">RepositoryName</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_name&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
-    <span class="p">)</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;WekWikGeneIdSource&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;WekWikGeneIdSource&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Designates the class&quot;&quot;&quot;</span><span class="p">,</span>
@@ -1708,14 +1723,13 @@ document.write(`
                     <span class="s2">&quot;the SEVA website or an &quot;</span>
                     <span class="s2">&quot;entry in the NCBI.&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;sequence_file_url&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="p">},</span>
             <span class="p">},</span>
         <span class="p">}</span>
     <span class="p">)</span>
 
-    <span class="n">sequence_file_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
+    <span class="n">sequence_file_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The URL of the sequence file, which can refer to a a gb file hosted on the SEVA website or an entry in the NCBI.&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -1734,10 +1748,6 @@ document.write(`
         <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The SEVA plasmid name&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_id&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
-    <span class="p">)</span>
-    <span class="n">repository_name</span><span class="p">:</span> <span class="n">RepositoryName</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_name&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
     <span class="p">)</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;SEVASource&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;SEVASource&quot;</span><span class="p">,</span>
@@ -1838,10 +1848,6 @@ document.write(`
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The url of the gb file associated with the sequence&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_id&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
     <span class="p">)</span>
-    <span class="n">repository_name</span><span class="p">:</span> <span class="n">RepositoryName</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_name&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
-    <span class="p">)</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;BenchlingUrlSource&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;BenchlingUrlSource&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Designates the class&quot;&quot;&quot;</span><span class="p">,</span>
@@ -1924,7 +1930,7 @@ document.write(`
                     <span class="s2">&quot;plasmid is the subpath after &quot;</span>
                     <span class="s2">&quot;the /.&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_id&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^.+</span><span class="se">\\</span><span class="s2">/.+$&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[^</span><span class="se">\\</span><span class="s2">/]+</span><span class="se">\\</span><span class="s2">/[^</span><span class="se">\\</span><span class="s2">/]+$&quot;</span><span class="p">,</span>
                 <span class="p">}</span>
             <span class="p">},</span>
         <span class="p">}</span>
@@ -1934,10 +1940,6 @@ document.write(`
         <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The subpath of the plasmid in the SnapGene plasmid library. Requesting the plasmid is possible with https://www.snapgene.com/local/fetch.php?set=</span><span class="si">{category_path}</span><span class="s2">&amp;plasmid=</span><span class="si">{plasmid[&#39;subpath&#39;]}</span><span class="s2"> where category_path is the left part of the subpath before the first / and plasmid is the subpath after the /.&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_id&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
-    <span class="p">)</span>
-    <span class="n">repository_name</span><span class="p">:</span> <span class="n">RepositoryName</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_name&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
     <span class="p">)</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;SnapGenePlasmidSource&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;SnapGenePlasmidSource&quot;</span><span class="p">,</span>
@@ -1988,7 +1990,7 @@ document.write(`
 
     <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">&quot;repository_id&quot;</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">pattern_repository_id</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-        <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^.+\/.+$&quot;</span><span class="p">)</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[^\/]+\/[^\/]+$&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
@@ -2022,10 +2024,6 @@ document.write(`
         <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The id of the plasmid in the Euroscarf plasmid library&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_id&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
-    <span class="p">)</span>
-    <span class="n">repository_name</span><span class="p">:</span> <span class="n">RepositoryName</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_name&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
     <span class="p">)</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;EuroscarfSource&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;EuroscarfSource&quot;</span><span class="p">,</span>
@@ -2101,12 +2099,14 @@ document.write(`
                     <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The unique identifier of the &quot;</span>
                     <span class="s2">&quot;sequence in the iGEM &quot;</span>
                     <span class="s2">&quot;collection (for now, &quot;</span>
-                    <span class="s2">&quot;</span><span class="si">{part_id}</span><span class="s2">-</span><span class="si">{plasmid_backbone}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;</span><span class="si">{part_id}</span><span class="s2">-</span><span class="si">{plasmid_backbone}</span><span class="s2">) &quot;</span>
+                    <span class="s2">&quot;pattern: ^[^-]+-[^-]+$&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_id&quot;</span><span class="p">,</span>
                 <span class="p">},</span>
                 <span class="s2">&quot;sequence_file_url&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The URL of the sequence &quot;</span> <span class="s2">&quot;file, for now github &quot;</span> <span class="s2">&quot;repository&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;sequence_file_url&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^.*.gb$&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="p">},</span>
             <span class="p">},</span>
@@ -2131,12 +2131,8 @@ document.write(`
     <span class="p">)</span>
     <span class="n">repository_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The unique identifier of the sequence in the iGEM collection (for now, </span><span class="si">{part_id}</span><span class="s2">-</span><span class="si">{plasmid_backbone}</span><span class="s2">)&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The unique identifier of the sequence in the iGEM collection (for now, </span><span class="si">{part_id}</span><span class="s2">-</span><span class="si">{plasmid_backbone}</span><span class="s2">) pattern: ^[^-]+-[^-]+$&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_id&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
-    <span class="p">)</span>
-    <span class="n">repository_name</span><span class="p">:</span> <span class="n">RepositoryName</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_name&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
     <span class="p">)</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;IGEMSource&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;IGEMSource&quot;</span><span class="p">,</span>
@@ -2187,9 +2183,7 @@ document.write(`
 
     <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">&quot;sequence_file_url&quot;</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">pattern_sequence_file_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-        <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-            <span class="sa">r</span><span class="s2">&quot;^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&amp;//=]*)$&quot;</span>
-        <span class="p">)</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^.*.gb$&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
@@ -2213,6 +2207,7 @@ document.write(`
                 <span class="s2">&quot;repository_id&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Subpath of the sequence in &quot;</span> <span class="s2">&quot;the Open DNA collections &quot;</span> <span class="s2">&quot;repository&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_id&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;^[^</span><span class="se">\\</span><span class="s2">/]+</span><span class="se">\\</span><span class="s2">/[^</span><span class="se">\\</span><span class="s2">/]+$&quot;</span><span class="p">,</span>
                 <span class="p">}</span>
             <span class="p">},</span>
         <span class="p">}</span>
@@ -2238,10 +2233,6 @@ document.write(`
         <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Subpath of the sequence in the Open DNA collections repository&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_id&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
-    <span class="p">)</span>
-    <span class="n">repository_name</span><span class="p">:</span> <span class="n">RepositoryName</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_name&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
     <span class="p">)</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;OpenDNACollectionsSource&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;OpenDNACollectionsSource&quot;</span><span class="p">,</span>
@@ -2305,23 +2296,110 @@ document.write(`
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">v</span>
 
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">&quot;repository_id&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pattern_repository_id</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[^\/]+\/[^\/]+$&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
+                    <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Invalid repository_id format: </span><span class="si">{</span><span class="n">element</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+            <span class="n">err_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Invalid repository_id format: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">err_msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">GenomeCoordinatesSource</span><span class="p">(</span><span class="n">Source</span><span class="p">):</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NCBISequenceSource</span><span class="p">(</span><span class="n">RepositoryIdSource</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents the source of a sequence that is identified by an NCBI sequence accession</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">linkml_meta</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">LinkMLMeta</span><span class="p">]</span> <span class="o">=</span> <span class="n">LinkMLMeta</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;from_schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://opencloning.github.io/OpenCloning_LinkML&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;slot_usage&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;repository_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;The sequence accession (e.g. &quot;</span> <span class="s2">&quot;X60065.1)&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_id&quot;</span><span class="p">}</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="n">coordinates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;If provided, represents the location of a subsequence within the sequence identified by the sequence accession.&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;coordinates&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;UploadedFileSource&quot;</span><span class="p">,</span> <span class="s2">&quot;NCBISequenceSource&quot;</span><span class="p">]}</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">repository_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The sequence accession (e.g. X60065.1)&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_id&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
+    <span class="p">)</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;NCBISequenceSource&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;NCBISequenceSource&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Designates the class&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;type&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;designates_type&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">&quot;Sequence&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;SourceInput&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Source&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;CollectionOptionInfo&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;AnnotationReport&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;AssociatedFile&quot;</span><span class="p">,</span>
+                <span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">output_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Used to specify the name of the output sequence&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;output_name&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Source&quot;</span><span class="p">]}},</span>
+    <span class="p">)</span>
+    <span class="n">database_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The id of an entity in a database&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;database_id&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Primer&quot;</span><span class="p">,</span> <span class="s2">&quot;Source&quot;</span><span class="p">,</span> <span class="s2">&quot;DatabaseSource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;slot_uri&quot;</span><span class="p">:</span> <span class="s2">&quot;schema:identifier&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="nb">input</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">SourceInput</span><span class="p">,</span> <span class="n">AssemblyFragment</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The inputs to this source. If the source represents external import of a sequence, it&#39;s empty.&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Source&quot;</span><span class="p">],</span> <span class="s2">&quot;slot_uri&quot;</span><span class="p">:</span> <span class="s2">&quot;schema:object&quot;</span><span class="p">}},</span>
+    <span class="p">)</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;A unique identifier for a thing&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NamedThing&quot;</span><span class="p">,</span> <span class="s2">&quot;Sequence&quot;</span><span class="p">],</span> <span class="s2">&quot;slot_uri&quot;</span><span class="p">:</span> <span class="s2">&quot;schema:identifier&quot;</span><span class="p">}</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GenomeCoordinatesSource</span><span class="p">(</span><span class="n">NCBISequenceSource</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents the source of a sequence that is identified by genome coordinates, requested from NCBI</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">linkml_meta</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">LinkMLMeta</span><span class="p">]</span> <span class="o">=</span> <span class="n">LinkMLMeta</span><span class="p">({</span><span class="s2">&quot;from_schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://opencloning.github.io/OpenCloning_LinkML&quot;</span><span class="p">})</span>
+    <span class="n">linkml_meta</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">LinkMLMeta</span><span class="p">]</span> <span class="o">=</span> <span class="n">LinkMLMeta</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;from_schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://opencloning.github.io/OpenCloning_LinkML&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;slot_usage&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}},</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
 
     <span class="n">assembly_accession</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The accession of the assembly&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;assembly_accession&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;GenomeCoordinatesSource&quot;</span><span class="p">]}},</span>
-    <span class="p">)</span>
-    <span class="n">sequence_accession</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The accession of the sequence&quot;&quot;&quot;</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sequence_accession&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;GenomeCoordinatesSource&quot;</span><span class="p">]}},</span>
     <span class="p">)</span>
     <span class="n">locus_tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -2333,22 +2411,17 @@ document.write(`
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The gene id of the sequence&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;gene_id&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;GenomeCoordinatesSource&quot;</span><span class="p">]}},</span>
     <span class="p">)</span>
-    <span class="n">start</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The starting coordinate (1-based) of the sequence in the sequence accession&quot;&quot;&quot;</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;GenomeCoordinatesSource&quot;</span><span class="p">]}},</span>
-    <span class="p">)</span>
-    <span class="n">end</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The ending coordinate (1-based) of the sequence in the sequence accession&quot;&quot;&quot;</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;GenomeCoordinatesSource&quot;</span><span class="p">]}},</span>
-    <span class="p">)</span>
-    <span class="n">strand</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The strand of the sequence in the sequence accession, should be 1 or -1&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">coordinates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;If provided, represents the location of a subsequence within the sequence identified by the sequence accession.&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;strand&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;GenomeCoordinatesSource&quot;</span><span class="p">,</span> <span class="s2">&quot;PlannotateAnnotationReport&quot;</span><span class="p">]}</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;coordinates&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;UploadedFileSource&quot;</span><span class="p">,</span> <span class="s2">&quot;NCBISequenceSource&quot;</span><span class="p">]}</span>
         <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">repository_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The sequence accession (e.g. X60065.1)&quot;&quot;&quot;</span><span class="p">,</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;repository_id&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;RepositoryIdSource&quot;</span><span class="p">]}},</span>
     <span class="p">)</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;GenomeCoordinatesSource&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;GenomeCoordinatesSource&quot;</span><span class="p">,</span>
@@ -2584,7 +2657,10 @@ document.write(`
         <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The input sequence&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sequence&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Primer&quot;</span><span class="p">,</span> <span class="s2">&quot;SourceInput&quot;</span><span class="p">,</span> <span class="s2">&quot;PlannotateAnnotationReport&quot;</span><span class="p">]}</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sequence&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;Primer&quot;</span><span class="p">,</span> <span class="s2">&quot;SourceInput&quot;</span><span class="p">,</span> <span class="s2">&quot;PlannotateAnnotationReport&quot;</span><span class="p">],</span>
+            <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
 
@@ -2602,7 +2678,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
@@ -2674,7 +2750,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
@@ -2739,7 +2815,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
@@ -2804,7 +2880,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
@@ -2869,7 +2945,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
@@ -2934,7 +3010,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
@@ -2999,7 +3075,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
@@ -3064,7 +3140,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
@@ -3144,7 +3220,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
@@ -3219,7 +3295,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
@@ -3284,7 +3360,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
@@ -3349,7 +3425,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;circular&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TemplateSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;AssemblySource&quot;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
@@ -3414,7 +3490,7 @@ document.write(`
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;overhang_crick_3prime&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TextFileSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSource&quot;</span><span class="p">,</span> <span class="s2">&quot;OligoHybridizationSource&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TextFileSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;OligoHybridizationSource&quot;</span><span class="p">],</span>
             <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
@@ -3528,7 +3604,7 @@ document.write(`
 
     <span class="n">linkml_meta</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">LinkMLMeta</span><span class="p">]</span> <span class="o">=</span> <span class="n">LinkMLMeta</span><span class="p">({</span><span class="s2">&quot;from_schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://opencloning.github.io/OpenCloning_LinkML&quot;</span><span class="p">})</span>
 
-    <span class="n">sequences</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">,</span> <span class="n">TemplateSequence</span><span class="p">,</span> <span class="n">TextFileSequence</span><span class="p">,</span> <span class="n">Primer</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+    <span class="n">sequences</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">,</span> <span class="n">TemplateSequence</span><span class="p">,</span> <span class="n">TextFileSequence</span><span class="p">,</span> <span class="n">ManuallyTypedSequence</span><span class="p">,</span> <span class="n">Primer</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The sequences that are used in the cloning strategy&quot;&quot;&quot;</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sequences&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CloningStrategy&quot;</span><span class="p">]}},</span>
@@ -3541,7 +3617,6 @@ document.write(`
             <span class="n">ManuallyTypedSource</span><span class="p">,</span>
             <span class="n">UploadedFileSource</span><span class="p">,</span>
             <span class="n">RepositoryIdSource</span><span class="p">,</span>
-            <span class="n">GenomeCoordinatesSource</span><span class="p">,</span>
             <span class="n">SequenceCutSource</span><span class="p">,</span>
             <span class="n">AssemblySource</span><span class="p">,</span>
             <span class="n">OligoHybridizationSource</span><span class="p">,</span>
@@ -3568,6 +3643,8 @@ document.write(`
             <span class="n">EuroscarfSource</span><span class="p">,</span>
             <span class="n">IGEMSource</span><span class="p">,</span>
             <span class="n">OpenDNACollectionsSource</span><span class="p">,</span>
+            <span class="n">NCBISequenceSource</span><span class="p">,</span>
+            <span class="n">GenomeCoordinatesSource</span><span class="p">,</span>
         <span class="p">]</span>
     <span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=...</span><span class="p">,</span>
@@ -3659,9 +3736,7 @@ document.write(`
     <span class="p">)</span>
     <span class="n">strand</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;strand&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;GenomeCoordinatesSource&quot;</span><span class="p">,</span> <span class="s2">&quot;PlannotateAnnotationReport&quot;</span><span class="p">]}</span>
-        <span class="p">},</span>
+        <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;strand&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PlannotateAnnotationReport&quot;</span><span class="p">]}},</span>
     <span class="p">)</span>
     <span class="n">percent_identity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -3707,7 +3782,10 @@ document.write(`
     <span class="n">sequence</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sequence&quot;</span><span class="p">,</span> <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Primer&quot;</span><span class="p">,</span> <span class="s2">&quot;SourceInput&quot;</span><span class="p">,</span> <span class="s2">&quot;PlannotateAnnotationReport&quot;</span><span class="p">]}</span>
+            <span class="s2">&quot;linkml_meta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sequence&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;domain_of&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ManuallyTypedSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;Primer&quot;</span><span class="p">,</span> <span class="s2">&quot;SourceInput&quot;</span><span class="p">,</span> <span class="s2">&quot;PlannotateAnnotationReport&quot;</span><span class="p">],</span>
+            <span class="p">}</span>
         <span class="p">},</span>
     <span class="p">)</span>
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;PlannotateAnnotationReport&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
@@ -3951,6 +4029,7 @@ document.write(`
 <span class="n">Sequence</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>
 <span class="n">TemplateSequence</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>
 <span class="n">TextFileSequence</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>
+<span class="n">ManuallyTypedSequence</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>
 <span class="n">Primer</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>
 <span class="n">SourceInput</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>
 <span class="n">SequenceCut</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>
@@ -3971,6 +4050,7 @@ document.write(`
 <span class="n">EuroscarfSource</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>
 <span class="n">IGEMSource</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>
 <span class="n">OpenDNACollectionsSource</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>
+<span class="n">NCBISequenceSource</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>
 <span class="n">GenomeCoordinatesSource</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>
 <span class="n">SequenceCutSource</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>
 <span class="n">RestrictionEnzymeDigestionSource</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>

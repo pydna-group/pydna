@@ -339,8 +339,11 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_textwrap</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqIO</span> <span class="k">as</span> <span class="n">_SeqIO</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.genbankfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenbankFile</span> <span class="k">as</span> <span class="n">_GenbankFile</span>
+
+<span class="c1"># from pydna.genbankfile import GenbankFile as _GenbankFile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqRecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span> <span class="k">as</span> <span class="n">_SeqRecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">UploadedFileSource</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span> <span class="k">as</span> <span class="n">_Primer</span>
 
 <span class="c1"># from pydna.amplify import pcr as _pcr</span>
@@ -421,14 +424,17 @@ document.write(`
         <span class="n">first_line</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">parsed</span> <span class="o">=</span> <span class="n">_SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s2">&quot;embl&quot;</span><span class="p">)</span>
+            <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;pydna_parse_sequence_file_format&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;embl&quot;</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="n">handle</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">parsed</span> <span class="o">=</span> <span class="n">_SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s2">&quot;genbank&quot;</span><span class="p">)</span>
+                <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;pydna_parse_sequence_file_format&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;genbank&quot;</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="n">handle</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">parsed</span> <span class="o">=</span> <span class="n">_SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s2">&quot;fasta-blast&quot;</span><span class="p">)</span>
+                    <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;pydna_parse_sequence_file_format&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;fasta&quot;</span>
                 <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                     <span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
                     <span class="k">continue</span>
@@ -460,7 +466,7 @@ document.write(`
 
 <div class="viewcode-block" id="parse">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.parse">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span> <span class="o">|</span> <span class="n">_SeqRecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return *all* DNA sequences found in data.</span>
 
 <span class="sd">    If no sequences are found, an empty list is returned. This is a greedy</span>
@@ -531,7 +537,18 @@ document.write(`
             <span class="c1"># parsed.features = nfs</span>
             <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">newsequences</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ds</span> <span class="ow">and</span> <span class="n">path</span><span class="p">:</span>
-                    <span class="n">sequences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_GenbankFile</span><span class="o">.</span><span class="n">from_SeqRecord</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">))</span>
+                    <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">UploadedFileSource</span>
+
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">_Dseqrecord</span><span class="o">.</span><span class="n">from_SeqRecord</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">UploadedFileSource</span><span class="p">(</span>
+                        <span class="n">file_name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>  <span class="c1"># we use str to handle PosixPath</span>
+                        <span class="n">sequence_file_format</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span>
+                            <span class="s2">&quot;pydna_parse_sequence_file_format&quot;</span>
+                        <span class="p">],</span>
+                        <span class="n">index_in_file</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">sequences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                    <span class="c1"># sequences.append(_GenbankFile.from_SeqRecord(s, path=path))</span>
                 <span class="k">elif</span> <span class="n">ds</span><span class="p">:</span>
                     <span class="n">sequences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_Dseqrecord</span><span class="o">.</span><span class="n">from_SeqRecord</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -570,7 +587,13 @@ document.write(`
             <span class="s2">&quot;topology&quot;</span> <span class="ow">in</span> <span class="n">parsed_seq</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
             <span class="ow">and</span> <span class="n">parsed_seq</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;topology&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;circular&quot;</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">parsed_seq</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="n">circular</span><span class="p">)]</span></div>
+
+        <span class="n">source</span> <span class="o">=</span> <span class="n">UploadedFileSource</span><span class="p">(</span>
+            <span class="n">file_name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span>
+            <span class="n">sequence_file_format</span><span class="o">=</span><span class="s2">&quot;snapgene&quot;</span><span class="p">,</span>
+            <span class="n">index_in_file</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">parsed_seq</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="n">circular</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">)]</span></div>
 
 </pre></div>
 

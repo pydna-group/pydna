@@ -338,20 +338,16 @@ document.write(`
 <span class="sd">`pydna.ini` file. See the documentation of :func:`pydna.open_config_folder`&quot;&quot;&quot;</span>
 
 <span class="c1"># from pydna.utils import memorize as _memorize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">NCBISequenceSource</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.genbankrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenbankRecord</span> <span class="k">as</span> <span class="n">_GenbankRecord</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.readers</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span> <span class="k">as</span> <span class="n">_read</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio</span><span class="w"> </span><span class="kn">import</span> <span class="n">Entrez</span> <span class="k">as</span> <span class="n">_Entrez</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span> <span class="k">as</span> <span class="n">_Literal</span><span class="p">,</span> <span class="n">Optional</span> <span class="k">as</span> <span class="n">_Optional</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
-
-<span class="c1"># import logging as _logging</span>
-
-<span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
-
-
-<span class="c1"># TODO http://httpbin.org/ use for testing?</span>
 
 
 <div class="viewcode-block" id="Genbank">
@@ -509,16 +505,40 @@ document.write(`
 
         <span class="c1"># _module_logger.info(&quot;text[:160]  %s&quot;, text[:160])</span>
 
-        <span class="k">return</span> <span class="n">_GenbankRecord</span><span class="p">(</span>
-            <span class="n">_read</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">item</span><span class="o">=</span><span class="n">item</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">seq_start</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">seq_stop</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="n">strand</span>
-        <span class="p">)</span></div>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">_read</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="c1"># TODO: Address this for cases where only one is defined</span>
+        <span class="k">if</span> <span class="n">seq_start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">seq_stop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="n">SimpleLocation</span><span class="p">(</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">seq_start</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">seq_stop</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">strand</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">strand</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">seq_start</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">seq_stop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="n">seq_stop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="n">SimpleLocation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">seq_stop</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">strand</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">strand</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">st</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seq_start</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="n">SimpleLocation</span><span class="p">(</span>
+                <span class="n">st</span><span class="p">,</span> <span class="n">st</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">strand</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">strand</span>
+            <span class="p">)</span>
+
+        <span class="n">result</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">NCBISequenceSource</span><span class="p">(</span>
+            <span class="n">repository_id</span><span class="o">=</span><span class="n">item</span><span class="p">,</span>
+            <span class="n">coordinates</span><span class="o">=</span><span class="n">location</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 </div>
 
+
+        <span class="c1"># return _GenbankRecord(</span>
+        <span class="c1">#     _read(text), item=item, start=seq_start, stop=seq_stop, strand=strand</span>
+        <span class="c1"># )</span>
 
 
 <div class="viewcode-block" id="genbank">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.genbank">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">genbank</span><span class="p">(</span><span class="n">accession</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;CS570233.1&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_GenbankRecord</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">genbank</span><span class="p">(</span>
+    <span class="n">accession</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;CS570233.1&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_GenbankRecord</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Download a genbank nuclotide record.</span>
 
@@ -563,10 +583,7 @@ document.write(`
 <span class="sd">        //</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">email</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_email&quot;</span><span class="p">)</span>
-    <span class="c1"># _module_logger.info(&quot;#### genbank function called ####&quot;)</span>
-    <span class="c1"># _module_logger.info(&quot;email      %s&quot;, email)</span>
-    <span class="c1"># _module_logger.info(&quot;accession  %s&quot;, email)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">email</span> <span class="ow">or</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_email&quot;</span><span class="p">)</span>
     <span class="n">gb</span> <span class="o">=</span> <span class="n">Genbank</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">gb</span><span class="o">.</span><span class="n">nucleotide</span><span class="p">(</span><span class="n">accession</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 

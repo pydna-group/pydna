@@ -1,0 +1,525 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pydna.oligonucleotide_hybridization &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydna/oligonucleotide_hybridization';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../getting_started.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../reference/pydna.html">pydna package</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pydna.oligonucleotide_hybridization</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains the functions for oligonucleotide hybridization.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.common_sub_strings</span><span class="w"> </span><span class="kn">import</span> <span class="n">common_sub_strings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse_complement</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">OligoHybridizationSource</span><span class="p">,</span> <span class="n">SourceInput</span>
+
+
+<div class="viewcode-block" id="oligonucleotide_hybridization_overhangs">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.oligonucleotide_hybridization.oligonucleotide_hybridization_overhangs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">oligonucleotide_hybridization_overhangs</span><span class="p">(</span>
+    <span class="n">fwd_oligo_seq</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rvs_oligo_seq</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">minimal_annealing</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns possible overhangs between two oligos given a minimal annealing length, and</span>
+<span class="sd">    returns an error if mismatches are found.</span>
+
+<span class="sd">    see https://github.com/manulera/OpenCloning_backend/issues/302 for notation</span>
+
+<span class="sd">    &gt;&gt;&gt; from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization_overhangs</span>
+<span class="sd">    &gt;&gt;&gt; oligonucleotide_hybridization_overhangs(&quot;ATGGC&quot;, &quot;GCCAT&quot;, 3)</span>
+<span class="sd">    [0]</span>
+<span class="sd">    &gt;&gt;&gt; oligonucleotide_hybridization_overhangs(&quot;aATGGC&quot;, &quot;GCCAT&quot;, 5)</span>
+<span class="sd">    [-1]</span>
+<span class="sd">    &gt;&gt;&gt; oligonucleotide_hybridization_overhangs(&quot;ATGGC&quot;, &quot;GCCATa&quot;, 5)</span>
+<span class="sd">    [1]</span>
+<span class="sd">    &gt;&gt;&gt; oligonucleotide_hybridization_overhangs(&quot;ATGGC&quot;, &quot;GCCATaaGCCAT&quot;, 5)</span>
+<span class="sd">    [0, 7]</span>
+
+<span class="sd">    If the minimal annealing length is longer than the length of the shortest oligo, it returns an empty list.</span>
+
+<span class="sd">    &gt;&gt;&gt; oligonucleotide_hybridization_overhangs(&quot;ATGGC&quot;, &quot;GCCATaaGCCAT&quot;, 100)</span>
+<span class="sd">    []</span>
+
+<span class="sd">    If it&#39;s possible to anneal for ``minimal_annealing`` length, but with mismatches, it raises an error.</span>
+
+<span class="sd">    &gt;&gt;&gt; oligonucleotide_hybridization_overhangs(&quot;cATGGC&quot;, &quot;GCCATa&quot;, 5)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    ValueError: The oligonucleotides can anneal with mismatches</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="n">common_sub_strings</span><span class="p">(</span>
+        <span class="n">fwd_oligo_seq</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+        <span class="n">reverse_complement</span><span class="p">(</span><span class="n">rvs_oligo_seq</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span>
+        <span class="n">minimal_annealing</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">pos_fwd</span><span class="p">,</span> <span class="n">pos_rvs</span><span class="p">,</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">pos_fwd</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">pos_rvs</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="n">pos_fwd</span> <span class="o">+</span> <span class="n">length</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">fwd_oligo_seq</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">pos_rvs</span> <span class="o">+</span> <span class="n">length</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">rvs_oligo_seq</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The oligonucleotides can anneal with mismatches&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Return possible overhangs</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">pos_rvs</span> <span class="o">-</span> <span class="n">pos_fwd</span> <span class="k">for</span> <span class="n">pos_fwd</span><span class="p">,</span> <span class="n">pos_rvs</span><span class="p">,</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="oligonucleotide_hybridization">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.oligonucleotide_hybridization.oligonucleotide_hybridization">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">oligonucleotide_hybridization</span><span class="p">(</span>
+    <span class="n">fwd_primer</span><span class="p">:</span> <span class="n">Primer</span><span class="p">,</span> <span class="n">rvs_primer</span><span class="p">:</span> <span class="n">Primer</span><span class="p">,</span> <span class="n">minimal_annealing</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of Dseqrecord objects representing the hybridization of two primers.</span>
+
+<span class="sd">    &gt;&gt;&gt; from pydna.primer import Primer</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization</span>
+<span class="sd">    &gt;&gt;&gt; fwd_primer = Primer(&quot;ATGGC&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; rvs_primer = Primer(&quot;GCCA&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; oligonucleotide_hybridization(fwd_primer, rvs_primer, 3)[0].seq</span>
+<span class="sd">    Dseq(-5)</span>
+<span class="sd">    ATGGC</span>
+<span class="sd">     ACCG</span>
+
+<span class="sd">    Multiple values can be returned:</span>
+
+<span class="sd">    &gt;&gt;&gt; rvs_primer2 = Primer(&quot;GCCATaaGCCAT&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; oligonucleotide_hybridization(fwd_primer, rvs_primer2, 3)[0].seq</span>
+<span class="sd">    Dseq(-12)</span>
+<span class="sd">    ATGGC</span>
+<span class="sd">    TACCGaaTACCG</span>
+<span class="sd">    &gt;&gt;&gt; oligonucleotide_hybridization(fwd_primer, rvs_primer2, 3)[1].seq</span>
+<span class="sd">    Dseq(-12)</span>
+<span class="sd">           ATGGC</span>
+<span class="sd">    TACCGaaTACCG</span>
+
+<span class="sd">    If no possible overhangs are found, it returns an empty list.</span>
+
+<span class="sd">    &gt;&gt;&gt; oligonucleotide_hybridization(fwd_primer, rvs_primer, 100)</span>
+<span class="sd">    []</span>
+
+<span class="sd">    If there are mismatches given the minimal annealing length, it raises an error.</span>
+
+<span class="sd">    &gt;&gt;&gt; fwd_primer3 = Primer(&quot;cATGGC&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; rvs_primer3 = Primer(&quot;GCCATa&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; oligonucleotide_hybridization(fwd_primer3, rvs_primer3, 5)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    ValueError: The oligonucleotides can anneal with mismatches</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">possible_overhangs</span> <span class="o">=</span> <span class="n">oligonucleotide_hybridization_overhangs</span><span class="p">(</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">fwd_primer</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">rvs_primer</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="n">minimal_annealing</span>
+    <span class="p">)</span>
+    <span class="n">sources</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">OligoHybridizationSource</span><span class="p">(</span>
+            <span class="n">overhang_crick_3prime</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span>
+            <span class="nb">input</span><span class="o">=</span><span class="p">[</span><span class="n">SourceInput</span><span class="p">(</span><span class="n">sequence</span><span class="o">=</span><span class="n">fwd_primer</span><span class="p">),</span> <span class="n">SourceInput</span><span class="p">(</span><span class="n">sequence</span><span class="o">=</span><span class="n">rvs_primer</span><span class="p">)],</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">possible_overhangs</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">Dseqrecord</span><span class="p">(</span>
+            <span class="n">Dseq</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">fwd_primer</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">rvs_primer</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span>
+                <span class="n">ovhg</span><span class="o">=</span><span class="n">source</span><span class="o">.</span><span class="n">overhang_crick_3prime</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span>
+    <span class="p">]</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

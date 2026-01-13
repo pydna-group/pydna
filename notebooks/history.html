@@ -610,13 +610,13 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>╙── product (Dseqrecord(-18))
     └─╼ LigationSource
         ├─╼ c (Dseqrecord(-7))
-        │   └─╼ Source
-        │       └─╼ a (Dseqrecord(-18)) ╾ Source, Source
+        │   └─╼ RestrictionEnzymeDigestionSource
+        │       └─╼ a (Dseqrecord(-18)) ╾ RestrictionEnzymeDigestionSource, RestrictionEnzymeDigestionSource
         ├─╼ d (Dseqrecord(-12))
-        │   └─╼ Source
+        │   └─╼ RestrictionEnzymeDigestionSource
         │       └─╼  ...
         └─╼ e (Dseqrecord(-7))
-            └─╼ Source
+            └─╼ RestrictionEnzymeDigestionSource
                 └─╼  ...
 </pre></div>
 </div>
@@ -667,10 +667,13 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>╙── expression_clone (Dseqrecord(o7423))
     └─╼ GatewaySource
         ├─╼ backbone_expression (Dseqrecord(o6832))
+        │   └─╼ UploadedFileSource
         └─╼ entry_vector (Dseqrecord(o4790))
             └─╼ GatewaySource
                 ├─╼ backbone (Dseqrecord(o4761))
+                │   └─╼ UploadedFileSource
                 └─╼ pcr_product (Dseqrecord(-2304))
+                    └─╼ UploadedFileSource
 </pre></div>
 </div>
 </div>

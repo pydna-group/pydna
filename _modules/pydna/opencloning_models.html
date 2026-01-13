@@ -342,6 +342,17 @@ document.write(`
 <span class="sd">the cloning strategy. That ``CloningStrategy`` can be loaded in the OpenCloning web interface</span>
 <span class="sd">to see a representation of the cloning strategy.</span>
 
+
+<span class="sd">Contributing</span>
+<span class="sd">============</span>
+
+<span class="sd">Not all fields can be readily serialized to be converted to regular types in pydantic. For</span>
+<span class="sd">instance, the ``coordinates`` field of the ``GenomeCoordinatesSource`` class is a</span>
+<span class="sd">``SimpleLocation`` object, or the ``input`` field of ``Source`` is a list of ``SourceInput``</span>
+<span class="sd">objects, which can be ``Dseqrecord`` or ``Primer`` objects, or ``AssemblyFragment`` objects.</span>
+<span class="sd">For these type of fields, you have to define a ``field_serializer`` method to serialize them</span>
+<span class="sd">to the correct type.</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -350,10 +361,11 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">threading</span><span class="w"> </span><span class="kn">import</span> <span class="n">local</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">field_validator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">field_serializer</span><span class="p">,</span> <span class="n">field_validator</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">opencloning_linkml.datamodel</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">CloningStrategy</span> <span class="k">as</span> <span class="n">_BaseCloningStrategy</span><span class="p">,</span>
+    <span class="n">DatabaseSource</span> <span class="k">as</span> <span class="n">_DatabaseSource</span><span class="p">,</span>
     <span class="n">Primer</span> <span class="k">as</span> <span class="n">_PrimerModel</span><span class="p">,</span>
     <span class="n">Source</span> <span class="k">as</span> <span class="n">_Source</span><span class="p">,</span>
     <span class="n">TextFileSequence</span> <span class="k">as</span> <span class="n">_TextFileSequence</span><span class="p">,</span>
@@ -373,12 +385,32 @@ document.write(`
     <span class="n">LigationSource</span> <span class="k">as</span> <span class="n">_LigationSource</span><span class="p">,</span>
     <span class="n">GatewaySource</span> <span class="k">as</span> <span class="n">_GatewaySource</span><span class="p">,</span>
     <span class="n">GatewayReactionType</span><span class="p">,</span>
+    <span class="n">AnnotationTool</span><span class="p">,</span>
     <span class="n">HomologousRecombinationSource</span> <span class="k">as</span> <span class="n">_HomologousRecombinationSource</span><span class="p">,</span>
     <span class="n">CreLoxRecombinationSource</span> <span class="k">as</span> <span class="n">_CreLoxRecombinationSource</span><span class="p">,</span>
     <span class="n">PCRSource</span> <span class="k">as</span> <span class="n">_PCRSource</span><span class="p">,</span>
     <span class="n">CRISPRSource</span> <span class="k">as</span> <span class="n">_CRISPRSource</span><span class="p">,</span>
+    <span class="n">RepositoryIdSource</span> <span class="k">as</span> <span class="n">_RepositoryIdSource</span><span class="p">,</span>
+    <span class="n">UploadedFileSource</span> <span class="k">as</span> <span class="n">_UploadedFileSource</span><span class="p">,</span>
+    <span class="n">AddgeneIdSource</span> <span class="k">as</span> <span class="n">_AddgeneIdSource</span><span class="p">,</span>
+    <span class="n">AddgeneSequenceType</span><span class="p">,</span>
+    <span class="n">BenchlingUrlSource</span> <span class="k">as</span> <span class="n">_BenchlingUrlSource</span><span class="p">,</span>
+    <span class="n">SnapGenePlasmidSource</span> <span class="k">as</span> <span class="n">_SnapGenePlasmidSource</span><span class="p">,</span>
+    <span class="n">EuroscarfSource</span> <span class="k">as</span> <span class="n">_EuroscarfSource</span><span class="p">,</span>
+    <span class="n">WekWikGeneIdSource</span> <span class="k">as</span> <span class="n">_WekWikGeneIdSource</span><span class="p">,</span>
+    <span class="n">SEVASource</span> <span class="k">as</span> <span class="n">_SEVASource</span><span class="p">,</span>
+    <span class="n">IGEMSource</span> <span class="k">as</span> <span class="n">_IGEMSource</span><span class="p">,</span>
+    <span class="n">OpenDNACollectionsSource</span> <span class="k">as</span> <span class="n">_OpenDNACollectionsSource</span><span class="p">,</span>
+    <span class="n">GenomeCoordinatesSource</span> <span class="k">as</span> <span class="n">_GenomeCoordinatesSource</span><span class="p">,</span>
+    <span class="n">OligoHybridizationSource</span> <span class="k">as</span> <span class="n">_OligoHybridizationSource</span><span class="p">,</span>
+    <span class="n">PolymeraseExtensionSource</span> <span class="k">as</span> <span class="n">_PolymeraseExtensionSource</span><span class="p">,</span>
+    <span class="n">AnnotationSource</span> <span class="k">as</span> <span class="n">_AnnotationSource</span><span class="p">,</span>
+    <span class="n">AnnotationReport</span> <span class="k">as</span> <span class="n">_AnnotationReport</span><span class="p">,</span>
+    <span class="n">PlannotateAnnotationReport</span> <span class="k">as</span> <span class="n">_PlannotateAnnotationReport</span><span class="p">,</span>
+    <span class="n">ReverseComplementSource</span> <span class="k">as</span> <span class="n">_ReverseComplementSource</span><span class="p">,</span>
+    <span class="n">NCBISequenceSource</span> <span class="k">as</span> <span class="n">_NCBISequenceSource</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">Location</span><span class="p">,</span> <span class="n">LocationParserError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">Location</span><span class="p">,</span> <span class="n">LocationParserError</span><span class="p">,</span> <span class="n">SimpleLocation</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractCut</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
@@ -406,8 +438,9 @@ document.write(`
 <span class="sd">    mapping them to the OpenCloning data model. If ``use_python_internal_id`` is True,</span>
 <span class="sd">    the built-in python ``id()`` function is used to assign ids to objects. That function</span>
 <span class="sd">    produces a unique integer for each object in python, so it&#39;s guaranteed to be unique.</span>
-<span class="sd">    If ``use_python_internal_id`` is False, the object&#39;s ``.id`` attribute (must be a string integer)</span>
-<span class="sd">    is used to assign ids to objects. This is useful when the objects already have meaningful ids,</span>
+<span class="sd">    If ``use_python_internal_id`` is False, the object&#39;s ``.id`` attribute</span>
+<span class="sd">    (must be a string integer) is used to assign ids to objects. This is useful</span>
+<span class="sd">    when the objects already have meaningful ids,</span>
 <span class="sd">    and you want to keep references to them in ``SourceInput`` objects (which sequences and</span>
 <span class="sd">    primers are used in a particular source).</span>
 
@@ -470,7 +503,6 @@ document.write(`
 <span class="k">class</span><span class="w"> </span><span class="nc">SequenceLocationStr</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A string representation of a sequence location, genbank-like.&quot;&quot;&quot;</span>
 
-    <span class="c1"># TODO: this should handle origin-spanning simple locations (splitted)</span>
 <div class="viewcode-block" id="SequenceLocationStr.from_biopython_location">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.SequenceLocationStr.from_biopython_location">[docs]</a>
     <span class="nd">@classmethod</span>
@@ -522,6 +554,17 @@ document.write(`
         <span class="bp">cls</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">strand</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="p">):</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_biopython_location</span><span class="p">(</span><span class="n">create_location</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">strand</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="SequenceLocationStr.get_ncbi_format_coordinates">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.SequenceLocationStr.get_ncbi_format_coordinates">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_ncbi_format_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return start, end, strand in the same format as the NCBI eutils API (1-based, inclusive)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">to_biopython_location</span><span class="p">()</span><span class="o">.</span><span class="n">start</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">to_biopython_location</span><span class="p">()</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">to_biopython_location</span><span class="p">()</span><span class="o">.</span><span class="n">strand</span><span class="p">,</span>
+        <span class="p">)</span></div>
 </div>
 
 
@@ -640,23 +683,31 @@ document.write(`
     <span class="nb">input</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">SourceInput</span><span class="p">,</span> <span class="n">AssemblyFragment</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
     <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_Source</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_Source</span>
 
-<div class="viewcode-block" id="Source.input_models">
-<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.Source.input_models">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">input_models</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">fragment</span><span class="o">.</span><span class="n">to_pydantic_model</span><span class="p">()</span> <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">]</span></div>
+<div class="viewcode-block" id="Source.serialize_input">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.Source.serialize_input">[docs]</a>
+    <span class="nd">@field_serializer</span><span class="p">(</span><span class="s2">&quot;input&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_input</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">SourceInput</span><span class="p">,</span> <span class="n">AssemblyFragment</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_SourceInput</span> <span class="o">|</span> <span class="n">_AssemblyFragment</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">fragment</span><span class="o">.</span><span class="n">to_pydantic_model</span><span class="p">()</span> <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="nb">input</span><span class="p">]</span></div>
 
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">seq_id</span><span class="p">,</span>
-            <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_models</span><span class="p">(),</span>
-        <span class="p">}</span>
 
 <div class="viewcode-block" id="Source.to_pydantic_model">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.Source.to_pydantic_model">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_pydantic_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">(</span><span class="n">seq_id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">TARGET_MODEL</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="n">model_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+        <span class="n">model_dict</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seq_id</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">TARGET_MODEL</span><span class="p">(</span><span class="o">**</span><span class="n">model_dict</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Source.to_unserialized_dict">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.Source.to_unserialized_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_unserialized_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts into a dictionary without serializing the fields.</span>
+<span class="sd">        This is used to be able to recast.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">field</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pydantic_fields__</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="Source.add_to_history_graph">
@@ -709,18 +760,6 @@ document.write(`
 
     <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_AssemblySource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_AssemblySource</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="o">**</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">(</span><span class="n">seq_id</span><span class="p">),</span>
-            <span class="s2">&quot;circular&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">,</span>
-        <span class="p">}</span>
-
-<div class="viewcode-block" id="AssemblySource.to_pydantic_model">
-<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.AssemblySource.to_pydantic_model">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">to_pydantic_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">TARGET_MODEL</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">(</span><span class="n">seq_id</span><span class="p">))</span></div>
-
-
 <div class="viewcode-block" id="AssemblySource.from_subfragment_representation">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.AssemblySource.from_subfragment_representation">[docs]</a>
     <span class="nd">@classmethod</span>
@@ -747,6 +786,135 @@ document.write(`
 
 
 
+<div class="viewcode-block" id="DatabaseSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.DatabaseSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DatabaseSource</span><span class="p">(</span><span class="n">Source</span><span class="p">):</span>
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_DatabaseSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_DatabaseSource</span>
+
+    <span class="n">database_id</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+
+<div class="viewcode-block" id="UploadedFileSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.UploadedFileSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UploadedFileSource</span><span class="p">(</span><span class="n">Source</span><span class="p">):</span>
+
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_UploadedFileSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_UploadedFileSource</span>
+
+    <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">index_in_file</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">sequence_file_format</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+
+<div class="viewcode-block" id="RepositoryIdSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.RepositoryIdSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RepositoryIdSource</span><span class="p">(</span><span class="n">Source</span><span class="p">):</span>
+
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_RepositoryIdSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_RepositoryIdSource</span>
+
+    <span class="n">repository_id</span><span class="p">:</span> <span class="nb">str</span></div>
+
+    <span class="c1"># location: Location</span>
+
+
+<div class="viewcode-block" id="RepositoryIdSourceWithSequenceFileUrl">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.RepositoryIdSourceWithSequenceFileUrl">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RepositoryIdSourceWithSequenceFileUrl</span><span class="p">(</span><span class="n">RepositoryIdSource</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Auxiliary class to avoid code duplication in the sources that have</span>
+<span class="sd">    a sequence file url.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sequence_file_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="AddgeneIdSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.AddgeneIdSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AddgeneIdSource</span><span class="p">(</span><span class="n">RepositoryIdSourceWithSequenceFileUrl</span><span class="p">):</span>
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_AddgeneIdSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_AddgeneIdSource</span>
+
+    <span class="n">addgene_sequence_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AddgeneSequenceType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="BenchlingUrlSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.BenchlingUrlSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BenchlingUrlSource</span><span class="p">(</span><span class="n">RepositoryIdSource</span><span class="p">):</span>
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_BenchlingUrlSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_BenchlingUrlSource</span></div>
+
+
+
+<div class="viewcode-block" id="SnapGenePlasmidSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.SnapGenePlasmidSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SnapGenePlasmidSource</span><span class="p">(</span><span class="n">RepositoryIdSource</span><span class="p">):</span>
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_SnapGenePlasmidSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_SnapGenePlasmidSource</span></div>
+
+
+
+<div class="viewcode-block" id="EuroscarfSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.EuroscarfSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EuroscarfSource</span><span class="p">(</span><span class="n">RepositoryIdSource</span><span class="p">):</span>
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_EuroscarfSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_EuroscarfSource</span></div>
+
+
+
+<div class="viewcode-block" id="WekWikGeneIdSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.WekWikGeneIdSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">WekWikGeneIdSource</span><span class="p">(</span><span class="n">RepositoryIdSourceWithSequenceFileUrl</span><span class="p">):</span>
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_WekWikGeneIdSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_WekWikGeneIdSource</span></div>
+
+
+
+<div class="viewcode-block" id="SEVASource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.SEVASource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SEVASource</span><span class="p">(</span><span class="n">RepositoryIdSourceWithSequenceFileUrl</span><span class="p">):</span>
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_SEVASource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_SEVASource</span></div>
+
+
+
+<div class="viewcode-block" id="IGEMSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.IGEMSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">IGEMSource</span><span class="p">(</span><span class="n">RepositoryIdSourceWithSequenceFileUrl</span><span class="p">):</span>
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_IGEMSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_IGEMSource</span></div>
+
+
+
+<div class="viewcode-block" id="OpenDNACollectionsSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.OpenDNACollectionsSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OpenDNACollectionsSource</span><span class="p">(</span><span class="n">RepositoryIdSourceWithSequenceFileUrl</span><span class="p">):</span>
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_OpenDNACollectionsSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_OpenDNACollectionsSource</span></div>
+
+
+
+<div class="viewcode-block" id="NCBISequenceSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.NCBISequenceSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NCBISequenceSource</span><span class="p">(</span><span class="n">RepositoryIdSource</span><span class="p">):</span>
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_NCBISequenceSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_NCBISequenceSource</span>
+    <span class="n">coordinates</span><span class="p">:</span> <span class="n">SimpleLocation</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="GenomeCoordinatesSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.GenomeCoordinatesSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GenomeCoordinatesSource</span><span class="p">(</span><span class="n">NCBISequenceSource</span><span class="p">):</span>
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_GenomeCoordinatesSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_GenomeCoordinatesSource</span>
+
+    <span class="n">assembly_accession</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">locus_tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">gene_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">coordinates</span><span class="p">:</span> <span class="n">SimpleLocation</span>
+
+<div class="viewcode-block" id="GenomeCoordinatesSource.serialize_coordinates">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.GenomeCoordinatesSource.serialize_coordinates">[docs]</a>
+    <span class="nd">@field_serializer</span><span class="p">(</span><span class="s2">&quot;coordinates&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">:</span> <span class="n">SimpleLocation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">SequenceLocationStr</span><span class="o">.</span><span class="n">from_biopython_location</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span></div>
+</div>
+
+
+
 <div class="viewcode-block" id="RestrictionAndLigationSource">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.RestrictionAndLigationSource">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RestrictionAndLigationSource</span><span class="p">(</span><span class="n">AssemblySource</span><span class="p">):</span>
@@ -756,11 +924,14 @@ document.write(`
         <span class="n">_RestrictionAndLigationSource</span>
     <span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="o">**</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">(</span><span class="n">seq_id</span><span class="p">),</span>
-            <span class="s2">&quot;restriction_enzymes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">enzyme</span><span class="p">)</span> <span class="k">for</span> <span class="n">enzyme</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">restriction_enzymes</span><span class="p">],</span>
-        <span class="p">}</span></div>
+<div class="viewcode-block" id="RestrictionAndLigationSource.serialize_restriction_enzymes">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.RestrictionAndLigationSource.serialize_restriction_enzymes">[docs]</a>
+    <span class="nd">@field_serializer</span><span class="p">(</span><span class="s2">&quot;restriction_enzymes&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_restriction_enzymes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">restriction_enzymes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AbstractCut</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">enzyme</span><span class="p">)</span> <span class="k">for</span> <span class="n">enzyme</span> <span class="ow">in</span> <span class="n">restriction_enzymes</span><span class="p">]</span></div>
+</div>
 
 
 
@@ -806,14 +977,7 @@ document.write(`
 <span class="k">class</span><span class="w"> </span><span class="nc">GatewaySource</span><span class="p">(</span><span class="n">AssemblySource</span><span class="p">):</span>
     <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_GatewaySource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_GatewaySource</span>
     <span class="n">reaction_type</span><span class="p">:</span> <span class="n">GatewayReactionType</span>
-    <span class="n">greedy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="o">**</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">(</span><span class="n">seq_id</span><span class="p">),</span>
-            <span class="s2">&quot;reaction_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">reaction_type</span><span class="p">,</span>
-            <span class="s2">&quot;greedy&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">greedy</span><span class="p">,</span>
-        <span class="p">}</span></div>
+    <span class="n">greedy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
 
@@ -846,13 +1010,7 @@ document.write(`
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.PCRSource">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PCRSource</span><span class="p">(</span><span class="n">AssemblySource</span><span class="p">):</span>
     <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_PCRSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_PCRSource</span>
-    <span class="n">add_primer_features</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="o">**</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">(</span><span class="n">seq_id</span><span class="p">),</span>
-            <span class="s2">&quot;add_primer_features&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_primer_features</span><span class="p">,</span>
-        <span class="p">}</span></div>
+    <span class="n">add_primer_features</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
 
@@ -862,10 +1020,22 @@ document.write(`
     <span class="n">left_edge</span><span class="p">:</span> <span class="n">CutSiteType</span> <span class="o">|</span> <span class="kc">None</span>
     <span class="n">right_edge</span><span class="p">:</span> <span class="n">CutSiteType</span> <span class="o">|</span> <span class="kc">None</span>
 
-    <span class="n">BASE_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_SequenceCutSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_SequenceCutSource</span>
-    <span class="n">ENZYME_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_RestrictionEnzymeDigestionSource</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">_RestrictionEnzymeDigestionSource</span>
-    <span class="p">)</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">TARGET_MODEL</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">_RestrictionEnzymeDigestionSource</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_enzyme</span><span class="p">()</span>
+            <span class="k">else</span> <span class="n">_SequenceCutSource</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="SequenceCutSource.serialize_cut_site">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.SequenceCutSource.serialize_cut_site">[docs]</a>
+    <span class="nd">@field_serializer</span><span class="p">(</span><span class="s2">&quot;left_edge&quot;</span><span class="p">,</span> <span class="s2">&quot;right_edge&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_cut_site</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">cut_site</span><span class="p">:</span> <span class="n">CutSiteType</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionSequenceCut</span> <span class="o">|</span> <span class="n">_SequenceCut</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cutsite_to_model</span><span class="p">(</span><span class="n">cut_site</span><span class="p">)</span></div>
+
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_cutsite_to_model</span><span class="p">(</span><span class="n">cut_site</span><span class="p">:</span> <span class="n">CutSiteType</span> <span class="o">|</span> <span class="kc">None</span><span class="p">):</span>
@@ -898,23 +1068,45 @@ document.write(`
         <span class="k">def</span><span class="w"> </span><span class="nf">has_enzyme</span><span class="p">(</span><span class="n">edge</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">edge</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">AbstractCut</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">has_enzyme</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_edge</span><span class="p">)</span> <span class="ow">or</span> <span class="n">has_enzyme</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right_edge</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">has_enzyme</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_edge</span><span class="p">)</span> <span class="ow">or</span> <span class="n">has_enzyme</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right_edge</span><span class="p">)</span></div>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_target_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ENZYME_MODEL</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_enzyme</span><span class="p">()</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">BASE_MODEL</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="o">**</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">(</span><span class="n">seq_id</span><span class="p">),</span>
-            <span class="s2">&quot;left_edge&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cutsite_to_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_edge</span><span class="p">),</span>
-            <span class="s2">&quot;right_edge&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cutsite_to_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right_edge</span><span class="p">),</span>
-        <span class="p">}</span>
 
-<div class="viewcode-block" id="SequenceCutSource.to_pydantic_model">
-<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.SequenceCutSource.to_pydantic_model">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">to_pydantic_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_target_model</span><span class="p">()(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">(</span><span class="n">seq_id</span><span class="p">))</span></div>
-</div>
+<div class="viewcode-block" id="OligoHybridizationSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.OligoHybridizationSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OligoHybridizationSource</span><span class="p">(</span><span class="n">Source</span><span class="p">):</span>
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_OligoHybridizationSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_OligoHybridizationSource</span>
+
+    <span class="n">overhang_crick_3prime</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="PolymeraseExtensionSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.PolymeraseExtensionSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PolymeraseExtensionSource</span><span class="p">(</span><span class="n">Source</span><span class="p">):</span>
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_PolymeraseExtensionSource</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">_PolymeraseExtensionSource</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="AnnotationSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.AnnotationSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnnotationSource</span><span class="p">(</span><span class="n">Source</span><span class="p">):</span>
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_AnnotationSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_AnnotationSource</span>
+
+    <span class="n">annotation_tool</span><span class="p">:</span> <span class="n">AnnotationTool</span>
+    <span class="n">annotation_tool_version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">annotation_report</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+        <span class="nb">list</span><span class="p">[</span><span class="n">_AnnotationReport</span> <span class="o">|</span> <span class="n">_PlannotateAnnotationReport</span><span class="p">]</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="ReverseComplementSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.ReverseComplementSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReverseComplementSource</span><span class="p">(</span><span class="n">Source</span><span class="p">):</span>
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_ReverseComplementSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_ReverseComplementSource</span></div>
 
 
 
@@ -960,9 +1152,7 @@ document.write(`
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_primer</span><span class="p">(</span><span class="n">source_input</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">_ManuallyTypedSource</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">get_id</span><span class="p">(</span><span class="n">dseqr</span><span class="p">),</span> <span class="nb">input</span><span class="o">=</span><span class="p">[],</span> <span class="n">user_input</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
-            <span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_ManuallyTypedSource</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">get_id</span><span class="p">(</span><span class="n">dseqr</span><span class="p">),</span> <span class="nb">input</span><span class="o">=</span><span class="p">[]))</span></div>
 
 
 <div class="viewcode-block" id="CloningStrategy.reassign_ids">

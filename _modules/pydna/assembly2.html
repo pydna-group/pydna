@@ -2533,7 +2533,7 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">prod</span> <span class="ow">in</span> <span class="n">products</span><span class="p">:</span>
         <span class="n">prod</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source_cls</span><span class="p">(</span>
-            <span class="o">**</span><span class="n">prod</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(),</span>
+            <span class="o">**</span><span class="n">prod</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">to_unserialized_dict</span><span class="p">(),</span>
             <span class="o">**</span><span class="n">extra_fields</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">products</span>
@@ -3352,7 +3352,8 @@ document.write(`
         <span class="c1"># The second element of product.source.input is conventionally the insert/repair fragment</span>
         <span class="c1"># The other two (first and third) are the two bits of the genome</span>
         <span class="n">repair_start</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">right_location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">repair_end</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">left_location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Here we do +1 because the position of the cut marks the boundary (e.g. 0:10, 10:20 if a cut is at pos 10)</span>
+        <span class="n">repair_end</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">left_location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">repair_location</span> <span class="o">=</span> <span class="n">create_location</span><span class="p">(</span><span class="n">repair_start</span><span class="p">,</span> <span class="n">repair_end</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">genome</span><span class="p">))</span>
         <span class="n">some_cuts_inside_repair</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">all_cuts_inside_repair</span> <span class="o">=</span> <span class="p">[]</span>
