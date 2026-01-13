@@ -2036,7 +2036,7 @@ def _recast_sources(
     """
     for prod in products:
         prod.source = source_cls(
-            **prod.source.model_dump(),
+            **prod.source.to_unserialized_dict(),
             **extra_fields,
         )
     return products
@@ -2805,7 +2805,8 @@ def crispr_integration(
         # The second element of product.source.input is conventionally the insert/repair fragment
         # The other two (first and third) are the two bits of the genome
         repair_start = _location_boundaries(product.source.input[0].right_location)[0]
-        repair_end = _location_boundaries(product.source.input[2].left_location)[1]
+        # Here we do +1 because the position of the cut marks the boundary (e.g. 0:10, 10:20 if a cut is at pos 10)
+        repair_end = _location_boundaries(product.source.input[2].left_location)[1] + 1
         repair_location = create_location(repair_start, repair_end, len(genome))
         some_cuts_inside_repair = []
         all_cuts_inside_repair = []

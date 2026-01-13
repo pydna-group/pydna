@@ -14,8 +14,11 @@ from pydna.opencloning_models import (
     CloningStrategy,
     id_mode,
     get_id,
+    NCBISequenceSource,
+    GenomeCoordinatesSource,
 )
 from pydna.primer import Primer
+from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization
 from opencloning_linkml.datamodel import (
     AssemblySource as _AssemblySource,
     AssemblyFragment as _AssemblyFragment,
@@ -136,6 +139,17 @@ seq2 = Dseqrecord("aaa" + attP1 + "ccc")
 product_gateway_BP, *_ = gateway_assembly([seq1, seq2], "BP")
 product_gateway_BP.name = "product_gateway_BP"
 
+## Oligo hybridization
+
+fwd_primer = Primer("ATGGC", name="fwd_primer")
+rvs_primer = Primer("GCCAT", name="rvs_primer")
+product_oligo_hybridization, *rest = oligonucleotide_hybridization(
+    fwd_primer, rvs_primer, 3
+)
+
+product_oligo_hybridization.name = "product_oligo_hybridization"
+
+
 # ========================================================================================
 
 
@@ -209,6 +223,15 @@ class SequenceLocationStrTest(TestCase):
 
         DummyModel(location="1..3")
         DummyModel(location=SequenceLocationStr("1..3"))
+
+    def test_get_ncbi_format_coordinates(self):
+        self.assertEqual(
+            SequenceLocationStr("1..3").get_ncbi_format_coordinates(), (1, 3, 1)
+        )
+        self.assertEqual(
+            SequenceLocationStr("complement(1..3)").get_ncbi_format_coordinates(),
+            (1, 3, -1),
+        )
 
 
 class SourceTest(TestCase):
@@ -284,13 +307,13 @@ class SourceTest(TestCase):
             ╙── product (Dseqrecord(-18))
                 └─╼ LigationSource
                     ├─╼ c (Dseqrecord(-7))
-                    │   └─╼ Source
-                    │       └─╼ a (Dseqrecord(-18)) ╾ Source, Source
+                    │   └─╼ RestrictionEnzymeDigestionSource
+                    │       └─╼ a (Dseqrecord(-18)) ╾ RestrictionEnzymeDigestionSource, RestrictionEnzymeDigestionSource
                     ├─╼ d (Dseqrecord(-12))
-                    │   └─╼ Source
+                    │   └─╼ RestrictionEnzymeDigestionSource
                     │       └─╼  ...
                     └─╼ e (Dseqrecord(-7))
-                        └─╼ Source
+                        └─╼ RestrictionEnzymeDigestionSource
                             └─╼  ...
             """
             ).strip(),
@@ -313,7 +336,7 @@ class SourceTest(TestCase):
             textwrap.dedent(
                 """
             ╙── custom_cut_product (Dseqrecord(-7))
-                └─╼ Source
+                └─╼ SequenceCutSource
                     └─╼ name (Dseqrecord(-18))
             """
             ).strip(),
@@ -326,6 +349,17 @@ class SourceTest(TestCase):
                 └─╼ GatewaySource
                     ├─╼ name (Dseqrecord(-31))
                     └─╼ name (Dseqrecord(-238))
+            """
+            ).strip(),
+        )
+        self.assertEqual(
+            product_oligo_hybridization.history(),
+            textwrap.dedent(
+                """
+            ╙── product_oligo_hybridization (Dseqrecord(-5))
+                └─╼ OligoHybridizationSource
+                    ├─╼ fwd_primer (id 5-mer:5'-ATGGC-3')
+                    └─╼ rvs_primer (id 5-mer:5'-GCCAT-3')
             """
             ).strip(),
         )
@@ -546,3 +580,44 @@ class IdModeTest(TestCase):
             self.assertEqual(get_id(dseqrecord), 456)
             self.assertRaises(ValueError, get_id, primer_wrong)
             self.assertRaises(ValueError, get_id, dseqrecord_wrong)
+
+
+class GenomeCoordinatesSourceTest(TestCase):
+    def test_coordinates_required(self):
+        with self.assertRaises(ValidationError):
+            GenomeCoordinatesSource(
+                coordinates=None,
+                repository_id="1234567890",
+                assembly_accession="1234567890",
+                locus_tag="1234567890",
+                gene_id=1234567890,
+            )
+        GenomeCoordinatesSource(
+            coordinates=SimpleLocation(1, 10),
+            repository_id="1234567890",
+            assembly_accession="1234567890",
+            locus_tag="1234567890",
+            gene_id=1234567890,
+        )
+
+    def test_serialize_coordinates(self):
+        source = GenomeCoordinatesSource(
+            coordinates=SimpleLocation(0, 10),
+            repository_id="1234567890",
+            assembly_accession="1234567890",
+            locus_tag="1234567890",
+            gene_id=1234567890,
+        )
+        self.assertEqual(source.model_dump()["coordinates"], "1..10")
+
+
+class NCBISequenceSourceTest(TestCase):
+    def test_coordinates_not_required(self):
+        NCBISequenceSource(
+            coordinates=None,
+            repository_id="1234567890",
+        )
+        NCBISequenceSource(
+            coordinates=SimpleLocation(1, 10),
+            repository_id="1234567890",
+        )

@@ -258,6 +258,8 @@ def test_parse2():
     assert len(seqs) == 771
     assert list(set([len(a) for a in seqs])) == [901]
 
+    assert seqs[0].source.sequence_file_format == "fasta"
+
     for i, s in enumerate(seqs):
         a = s.description
         b = a.split()
@@ -352,6 +354,7 @@ def test_dna2949():
     seqlist = parse("dna2943.gb", ds=True)
     assert len(seqlist) == 1
     assert seqlist[0].seguid() == "ldseguid=ScLoSddUf2c0GIAGpvIi33nLvFY"
+    assert seqlist[0].source.sequence_file_format == "genbank"
 
 
 def proteins():
@@ -414,6 +417,7 @@ def test_parse_snapgene():
     )[0]
     assert seq.circular
     assert len(seq) == 4470
+    assert seq.source.sequence_file_format == "snapgene"
 
     # Parse linear snapgene file
     seq = parse_snapgene(

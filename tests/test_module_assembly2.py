@@ -2678,6 +2678,17 @@ def test_crispr_integration():
     assert len(products) == 1
 
 
+def test_crispr_integration_edge_case():
+    homology1 = "ATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATT"
+    guide = Primer("CATTCAAAGCACTGATTaat")
+    genome = Dseqrecord(f"aaaaaa{homology1}aattggaa{homology1}tttttttt")
+
+    insert = Dseqrecord(f"{homology1}acaa{homology1}")
+
+    products = assembly.crispr_integration(genome, [insert], [guide], 40)
+    assert len(products) == 2
+
+
 def test_pcr_assembly():
 
     template = Dseqrecord("TTTTACGTACGTAAAAAAGCGCGCGCTTTTT")
