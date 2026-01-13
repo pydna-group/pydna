@@ -1550,6 +1550,19 @@ def test_restriction_ligation_assembly():
     assert str(products[0].seq) == "ATCccGAATTCtatGAT"
 
 
+@pytest.mark.xfail(reason="See https://github.com/pydna-group/pydna/issues/426")
+def test_restriction_ligation_partial_overlaps():
+
+    # Partial overlaps
+    fragments = [Dseqrecord("GGTCTCCCCAATT"), Dseqrecord("GGTCTCCAACCAA")]
+    products = assembly.restriction_ligation_assembly(fragments, [BsaI], allow_partial_overlap=True)
+
+    assert len(products) == 2
+    assert str(products[0].seq) == "GGTCTCCCCAACCAA"
+    assert str(products[1].seq) == "GGTCTCCAACCAATT"
+
+
+
 def test_only_adjacent_edges():
     """Tests that partially digested fragments are not used in the assembly"""
     # Partial overlaps -> enzyme with negative overhang
