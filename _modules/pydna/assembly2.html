@@ -2483,6 +2483,7 @@ document.write(`
     <span class="n">algorithm</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
     <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">filter_results_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Common function to avoid code duplication. Could be simplified further</span>
 <span class="sd">    once SingleFragmentAssembly and Assembly are merged.</span>
@@ -2497,6 +2498,10 @@ document.write(`
 <span class="sd">        Function that determines valid overlaps between fragments</span>
 <span class="sd">    circular_only : bool</span>
 <span class="sd">        If True, only return circular assemblies</span>
+<span class="sd">    filter_results_function : Callable or None</span>
+<span class="sd">        Function that filters the results</span>
+<span class="sd">    only_adjacent_edges : bool</span>
+<span class="sd">        If True, only return assemblies that use only adjacent edges</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -2509,10 +2514,10 @@ document.write(`
         <span class="n">asm</span> <span class="o">=</span> <span class="n">Assembly</span><span class="p">(</span>
             <span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">,</span> <span class="n">use_fragment_order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_all_fragments</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
-    <span class="n">output_assemblies</span> <span class="o">=</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_circular_assemblies</span><span class="p">()</span>
+    <span class="n">output_assemblies</span> <span class="o">=</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_circular_assemblies</span><span class="p">(</span><span class="n">only_adjacent_edges</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">circular_only</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">frags</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">output_assemblies</span> <span class="o">+=</span> <span class="n">filter_linear_subassemblies</span><span class="p">(</span>
-            <span class="n">asm</span><span class="o">.</span><span class="n">get_linear_assemblies</span><span class="p">(),</span> <span class="n">output_assemblies</span><span class="p">,</span> <span class="n">frags</span>
+            <span class="n">asm</span><span class="o">.</span><span class="n">get_linear_assemblies</span><span class="p">(</span><span class="n">only_adjacent_edges</span><span class="p">),</span> <span class="n">output_assemblies</span><span class="p">,</span> <span class="n">frags</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">circular_only</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">frags</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">output_assemblies</span> <span class="o">+=</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_insertion_assemblies</span><span class="p">()</span>
@@ -2725,7 +2730,7 @@ document.write(`
         <span class="k">return</span> <span class="n">restriction_ligation_overlap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">enzymes</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">allow_blunt</span><span class="p">)</span>
 
     <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_assembly_products</span><span class="p">(</span>
-        <span class="n">frags</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algorithm_fn</span><span class="p">,</span> <span class="n">circular_only</span>
+        <span class="n">frags</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algorithm_fn</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span>
         <span class="n">products</span><span class="p">,</span> <span class="n">RestrictionAndLigationSource</span><span class="p">,</span> <span class="n">restriction_enzymes</span><span class="o">=</span><span class="n">enzymes</span>
