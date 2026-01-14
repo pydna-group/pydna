@@ -197,10 +197,6 @@ def parse(data, ds=True) -> list[_Dseqrecord | _SeqRecord]:
             path = item
         finally:
             newsequences = embl_gb_fasta(raw)
-            # nfs = [_SeqFeature() for f in parsed.features]
-            # for f, nf in zip(parsed.features, nfs):
-            #     nf.__dict__ = _deepcopy(f.__dict__)
-            # parsed.features = nfs
             for s in newsequences:
                 if ds and path:
                     from pydna.opencloning_models import UploadedFileSource
