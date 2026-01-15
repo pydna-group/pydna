@@ -41,11 +41,16 @@ def read(data, ds=True):
     try:
         (result,) = _parse(data, ds)
     except ValueError as err:
-        if "too many" in str(err):
-            print(f"More than one sequence found in data:\n({str(data)[:79]})")
-        elif "not enough" in str(err):
-            print(f"No sequence found in data:\n({str(data)[:79]})")
-        raise
+        msg = str(err)
+
+        if "too many" in msg:
+            raise ValueError(
+                f"More than one sequence found in data ({str(data)[:79]})"
+            ) from err
+        elif "not enough" in msg:
+            raise ValueError(f"No sequence found in data ({str(data)[:79]})") from err
+        else:  # pragma: no cover
+            raise err  # re-raises the same ValueError with original traceback
     return result
 
 
