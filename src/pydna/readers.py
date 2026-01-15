@@ -49,9 +49,8 @@ def read(data, ds=True):
             ) from err
         elif "not enough" in msg:
             raise ValueError(f"No sequence found in data ({str(data)[:79]})") from err
-        # print(str(data)[:79])
-
-        raise  # re-raises the same ValueError with original traceback
+        else:  # pragma: no cover
+            raise err  # re-raises the same ValueError with original traceback
     return result
 
 
