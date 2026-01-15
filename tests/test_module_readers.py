@@ -2,24 +2,38 @@
 # -*- coding: utf-8 -*-
 
 import pytest
-import sys
+from pydna.readers import read
+from pydna.readers import read_primer
+from pydna.parsers import parse
+from pathlib import Path
+from Bio.SeqIO import read as BPread
+from Bio.SeqIO import parse as BPparse
 
-
-def test_read():
-    from pydna.readers import read
-
+def test_read_no_data():
     data = ""
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError) as err:
         read(data)
+    assert err.match("No sequence found in data")
     with pytest.raises(ValueError):
         read(data, ds=False)
+    assert err.match("No sequence found in data")
     with pytest.raises(ValueError):
         read(data, ds=True)
+    assert err.match("No sequence found in data")
 
+def test_read_too_many_sequences():
+    data = ">a\na\n>g\ng"
+    with pytest.raises(ValueError) as err:
+        read(data)
+    assert err.match("More than one sequence found in data")
+    with pytest.raises(ValueError) as err:
+        read(data, ds=False)
+    assert err.match("More than one sequence found in data")
+    with pytest.raises(ValueError) as err:
+        read(data, ds=True)
+    assert err.match("More than one sequence found in data")
 
-def test_read_primer():
-    from pydna.readers import read_primer
-
+def test_read_primer_no_data():
     data = ""
     with pytest.raises(ValueError):
         read_primer(data)
@@ -28,27 +42,15 @@ def test_read_primer():
     with pytest.raises(ValueError):
         read_primer(data)
 
+def test_read_primer():
     data = ">pr\ngatc"
     pr = read_primer(data)
     assert str(pr.seq) == "gatc"
 
-
 def test_pydna_read_test():
-    from pydna.readers import read
-
-    # print("sys.getdefaultencoding()", sys.getdefaultencoding())
-    import locale
-
-    # print("locale.getpreferredencoding()", locale.getpreferredencoding())
     assert read("pydna_read_test.txt").format("gb")[349:368] == '/label="2micron 2µ"'
 
-
 def test_parse_and_read_with_biopython_and_pydna():
-    from pydna.readers import read
-    from pydna.parsers import parse
-
-    from Bio.SeqIO import read as BPread
-    from Bio.SeqIO import parse as BPparse
 
     q = BPread("read1.gb", "gb")
     w = BPread("read2.gb", "gb")
@@ -72,7 +74,6 @@ def test_parse_and_read_with_biopython_and_pydna():
 
 
 def test_read_from_string():
-    from pydna.readers import read
 
     input_ = """
             LOCUS       New_DNA                    4 bp ds-DNA     linear       30-MAR-2013
@@ -159,8 +160,6 @@ def test_read_from_string():
 
 
 def test_read_from_unicode():
-    from pydna.readers import read
-    from pydna.parsers import parse
 
     with open("pth1.txt", "r", encoding="utf-8") as f:
         text = f.read()
@@ -168,11 +167,7 @@ def test_read_from_unicode():
     x, y = parse(text)
     assert x.format()[3268:3278] == "2micron 2µ"
 
-
 def test_read_from_file():
-    from pydna.readers import read
-    from pydna.parsers import parse
-    from pathlib import Path
 
     a = read("read1.gb")
     b = read("read2.gb")
@@ -188,9 +183,7 @@ def test_read_from_file():
 
     assert str(a.seq).lower() == str(b.seq).lower() == str(c.seq).lower() == str(d.seq).lower()
 
-
 def test_read_with_feature_spanning_ori():
-    from pydna.readers import read
 
     test = """
     LOCUS       New_DNA                   10 bp ds-DNA     circular     23-AUG-2018
@@ -223,7 +216,3 @@ def test_read_with_feature_spanning_ori():
 
     assert str(b.seq).lower() == "aaaacccggt"
     assert str(b.features[0].extract(a).seq) == "GTAA"
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])
