@@ -1,0 +1,472 @@
+LOCUS       SYNPBR322               4361 bp    DNA     circular SYN 30-SEP-2008
+DEFINITION  Cloning vector pBR322, complete sequence.
+ACCESSION   J01749
+VERSION     J01749.1
+KEYWORDS    ampicillin resistance; beta-lactamase; cloning vector; drug
+            resistance protein; origin of replication; plasmid; tetracycline
+            resistance.
+SOURCE      Cloning vector pBR322
+  ORGANISM  Cloning vector pBR322
+            other sequences; artificial sequences; vectors.
+REFERENCE   1
+  AUTHORS   Sutcliffe,J.G.
+  TITLE     Nucleotide sequence of the ampicillin resistance gene of Escherichia
+            coli plasmid pBR322
+  JOURNAL   Proc. Natl. Acad. Sci. U.S.A. 75 (8), 3737-3741 (1978)
+   PUBMED   358200
+REFERENCE   2  (bases 1 to 4361)
+  AUTHORS   Sutcliffe,J.G.
+  TITLE     Complete nucleotide sequence of the Escherichia coli plasmid pBR322
+  JOURNAL   Cold Spring Harb. Symp. Quant. Biol. 43 (Pt 1), 77-90 (1979)
+   PUBMED   383387
+REFERENCE   3  (bases 1500 to 2300)
+  AUTHORS   Reed,R.R., Young,R.A., Steitz,J.A., Grindley,N.D. and Guyer,M.S.
+  TITLE     Transposition of the Escherichia coli insertion element gamma
+            generates a five-base-pair repeat
+  JOURNAL   Proc. Natl. Acad. Sci. U.S.A. 76 (10), 4882-4886 (1979)
+   PUBMED   388421
+REFERENCE   4  (bases 2207 to 2265)
+  AUTHORS   Covarrubias,L., Cervantes,L., Covarrubias,A., Soberon,X.,
+            Vichido,I., Blanco,A., Kupersztoch-Portnoy,Y.M. and Bolivar,F.
+  TITLE     Construction and characterization of new cloning vehicles. V.
+            Mobilization and coding properties of pBR322 and several deletion
+            derivatives including pBR327 and pBR328
+  JOURNAL   Gene 13 (1), 25-35 (1981)
+   PUBMED   6263753
+REFERENCE   5  (bases 2000 to 2500)
+  AUTHORS   Marians,K.J., Soeller,W. and Zipursky,S.L.
+  TITLE     Maximal limits of the Escherichia coli replication factor Y effector
+            site sequences in pBR322 DNA
+  JOURNAL   J. Biol. Chem. 257 (10), 5656-5662 (1982)
+   PUBMED   6279609
+REFERENCE   6
+  AUTHORS   Brosius,J., Cate,R.L. and Perlmutter,A.P.
+  TITLE     Precise location of two promoters for the beta-lactamase gene of
+            pBR322. S1 mapping of ribonucleic acid isolated from Escherichia
+            coli or synthesized in vitro
+  JOURNAL   J. Biol. Chem. 257 (15), 9205-9210 (1982)
+   PUBMED   6178738
+REFERENCE   7  (bases 4241 to 4343)
+  AUTHORS   Van Dyke,M.W., Hertzberg,R.P. and Dervan,P.B.
+  TITLE     Map of distamycin, netropsin, and actinomycin binding sites on
+            heterogeneous DNA: DNA cleavage-inhibition patterns with
+            methidiumpropyl-EDTA.Fe(II)
+  JOURNAL   Proc. Natl. Acad. Sci. U.S.A. 79 (18), 5470-5474 (1982)
+   PUBMED   6291045
+REFERENCE   8  (bases 584 to 709)
+  AUTHORS   Peden,K.W. and Nathans,D.
+  TITLE     Local mutagenesis within deletion loops of DNA heteroduplexes
+  JOURNAL   Proc. Natl. Acad. Sci. U.S.A. 79 (23), 7214-7217 (1982)
+   PUBMED   6760191
+REFERENCE   9  (bases 373 to 649)
+  AUTHORS   Peden,K.W.
+  TITLE     Revised sequence of the tetracycline-resistance gene of pBR322
+  JOURNAL   Gene 22 (2-3), 277-280 (1983)
+   PUBMED   6307828
+REFERENCE   10  (bases 132 to 181)
+  AUTHORS   Watabe,H., Iino,T., Kaneko,T., Shibata,T. and Ando,T.
+  TITLE     A new class of site-specific endodeoxyribonucleases. Endo.Sce I
+            isolated from a eukaryote, Saccharomyces cerevisiae
+  JOURNAL   J. Biol. Chem. 258 (8), 4663-4665 (1983)
+   PUBMED   6300094
+REFERENCE   11  (bases 368 to 581)
+  AUTHORS   Livneh,Z.
+  TITLE     Directed mutagenesis method for analysis of mutagen specificity:
+            application to ultraviolet-induced mutagenesis
+  JOURNAL   Proc. Natl. Acad. Sci. U.S.A. 80 (1), 237-241 (1983)
+   PUBMED   6337373
+REFERENCE   12
+  AUTHORS   Mascharak,P.K., Sugiura,Y., Kuwahara,J., Suzuki,T. and Lippard,S.J.
+  TITLE     Alteration and activation of sequence-specific cleavage of DNA by
+            bleomycin in the presence of the antitumor drug
+            cis-diamminedichloroplatinum(II)
+  JOURNAL   Proc. Natl. Acad. Sci. U.S.A. 80 (22), 6795-6798 (1983)
+   PUBMED   6196777
+REFERENCE   13  (bases 4276 to 4336)
+  AUTHORS   Schultz,P.G. and Dervan,P.B.
+  TITLE     Sequence-specific double-strand cleavage of DNA by
+            penta-N-methylpyrrolecarboxamide-EDTA X Fe(II)
+  JOURNAL   Proc. Natl. Acad. Sci. U.S.A. 80 (22), 6834-6837 (1983)
+   PUBMED   6417654
+REFERENCE   14  (bases 518 to 528)
+  AUTHORS   Sutcliffe,J.G.
+  JOURNAL   Unpublished
+REFERENCE   15  (bases 2395 to 2495)
+  AUTHORS   Fuller,R.S., Funnell,B.E. and Kornberg,A.
+  TITLE     The dnaA protein complex with the E. coli chromosomal replication
+            origin (oriC) and other DNA sites
+  JOURNAL   Cell 38 (3), 889-900 (1984)
+   PUBMED   6091903
+REFERENCE   16  (bases 2729 to 2731)
+  AUTHORS   Lathe,R., Kieny,M.P., Skory,S. and Lecocq,J.P.
+  TITLE     Linker tailing: unphosphorylated linker oligonucleotides for joining
+            DNA termini
+  JOURNAL   DNA 3 (2), 173-182 (1984)
+   PUBMED   6327214
+REFERENCE   17  (bases 2729 to 2730)
+  AUTHORS   Heusterspreute,M. and Davison,J.
+  TITLE     Restriction site bank vectors. II. DNA sequence analysis of plasmid
+            pJRD158
+  JOURNAL   DNA 3 (3), 259-268 (1984)
+   PUBMED   6086259
+REFERENCE   18
+  AUTHORS   Abarzua,P., Soeller,W. and Marians,K.J.
+  TITLE     Mutational analysis of primosome assembly sites. I. Distinct classes
+            of mutants in the pBR322 Escherichia coli factor Y DNA effector
+            sequences
+  JOURNAL   J. Biol. Chem. 259 (22), 14286-14292 (1984)
+   PUBMED   6209275
+REFERENCE   19  (bases 2348 to 2415)
+  AUTHORS   Soeller,W., Abarzua,P. and Marians,K.J.
+  TITLE     Mutational analysis of primosome assembly sites. II. Role of
+            secondary structure in the formation of active sites
+  JOURNAL   J. Biol. Chem. 259 (22), 14293-14300 (1984)
+   PUBMED   6150042
+REFERENCE   20  (bases 1 to 4361)
+  AUTHORS   Van Dyke,M.M. and Dervan,P.B.
+  TITLE     Echinomycin binding sites on DNA
+  JOURNAL   Science 225 (4667), 1122-1127 (1984)
+   PUBMED   6089341
+REFERENCE   21
+  AUTHORS   Pouwels,P.H., Enger-Valk,B.E. and Brammar,W.J.
+  JOURNAL   (in) CLONING VECTORS. Elsevier Scientific Publishing, Amsterdam
+            (1985)
+  REMARK    Vector I-A-iv-1
+REFERENCE   22  (bases 1 to 4361)
+  AUTHORS   Watson,N.
+  TITLE     A new revision of the sequence of plasmid pBR322
+  JOURNAL   Gene 70 (2), 399-403 (1988)
+   PUBMED   3063608
+REFERENCE   23
+  AUTHORS   Gilbert,W.
+  TITLE     Obtained from VecBase 3.0
+  JOURNAL   Unpublished
+COMMENT     On or before Apr 4, 2002 this sequence version replaced L08654.1,
+            gi:58257.
+            The circular sequence is numbered such that 0 is the middle of the
+            unique EcoRI site and the count increases first through the tet
+            genes, the pMB1 material, and finally through the Tn3 region.
+            Plasmid pBR322 contains ampicillin and tetracycline resistance
+            genes.  The ampicillin resistance gene (amp-r) is a penicillin
+            beta-lactamase. Promoters P1 and P3 are for the beta-lactamase
+            gene. P3 is the natural promoter, and P1 is artificially created by
+            the ligation of two different DNA fragments to create pBR322. P2 is
+            in the same region as P1, but it is on the opposite strand and
+            initiates transcription in the direction of the tetracycline
+            resistance gene.
+            Mutational studies in the primosome assembly sites indicate four
+            types of mutations:  Class I having no effect on the activities
+            elicited by the DNA site and the bases involved are probably
+            spacers; Class II requiring higher Mg-2+ concentrations than the
+            wild-type to be fully activated as factor Y ATPase effectors; Class
+            III co-inactivating both the ATPase effector and DNA replication
+            template activity of the site, indicating that they probably
+            represent essential contact points between factor Y and the DNA;
+            Class IV having a replication template activity intermediate that
+            of class III and class II mutant DNAs.
+            Specific sites within or near the origins of replication are
+            recognized by dnaA protein.  Without dnaA binding to the origin of
+            replication chromosomal replication is not possible (15). pBR322
+            DNA contains two separate regions on opposite strands and close to
+            the origin of replication which, when in single-stranded form, can
+            act as effectors for the ATPase activity of E.coli replication
+            factor Y (5).  Small fragments of DNA containing these sites when
+            cloned in an f1 phage vector act as origins of DNA replication
+            allowing the formation of complementary double-stranded DNA in
+            rifampicin-resistant, dna(B,G,C)-dependent fashion in vitro (5).
+            The biological activity of echinomycin is thought to be related to
+            the formation of complexes by intercalating with cellular DNA (20).
+            Complete source information:
+            Plasmid pBR322 from E.coli (2),(1),(3),(6),(11),(8),(5),(7),(12),
+            (13),(10),(9),(14),(18),(19),(15),(20),(16); pBR322 DNA in pXf3
+            (4).
+            The following data and their annotation were supplied by Will
+            Gilbert under the auspices of the Curator Program.
+            CROSSREFERENCE
+            #parent
+            GenBank(50):pSC101C, GenBank(50):Trn3
+            #offspring
+            VecBase(3):pBR325, VecBase(3):pBR327,
+            VecBase(3):pBR328,
+            VecBase(3):pAT153, VecBase(3):pUC7,
+            VecBase(3):pJRD158,
+            VecBase(3):PiVX, VecBase(3):PiAN7,
+            VecBase(3):pSP64,
+            VecBase(3):pSP65, VecBase(3):pGEM1,
+            VecBase(3):pGEM2,
+            VecBase(3):pGEM3, VecBase(3):pGEM4,
+            VecBase(3):pKK223,
+            VecBase(3):pLBU3, VecBase(3):pTrS3,
+            VecBase(3):pRSVNeo,
+            VecBase(3):pSV2Cat, VecBase(3):M13mp9,
+            VecBase(3):pHC79,
+            VecBase(3):pV34, VecBase(3):pKTH601,
+            VecBase(3):pKTH604,
+            VecBase(3):pKTH605, VecBase(3):pKTH606,
+            VecBase(3):YEp24,
+            VecBase(3):YIp5, VecBase(3):YRp17,
+            VecBase(3):pSP18,
+            VecBase(3):pSP19,
+            VecBase(3):pSP6T3, VecBase(3):pSP6T719,
+            VecBase(3):pT712,
+            VecBase(3):pT713, VecBase(3):pT7T318,
+            VecBase(3):pT7T319,
+            VecBase(3):pT7T3A18, VecBase(3):pT7T3A19,
+            VecBase(3):pEX1,
+            VecBase(3):pEX2, VecBase(3):pEX3,
+            VecBase(3):pCKSP6,
+            VecBase(3):pACYC177, VecBase(3):pKO1,
+            VecBase(3):pKO2,
+            VecBase(3):pKM1,
+            VecBase(3):pKM2, VecBase(3):pMBL1,
+            VecBase(3):pMBL604,
+            VecBase(3):pMC1511, VecBase(3):pMC1871,
+            VecBase(3):pAA37X,
+            VecBase(3):pUR278, VecBase(3):pUR288,
+            VecBase(3):pUR289,
+            VecBase(3):pUR290, VecBase(3):pUR291,
+            VecBase(3):pUR292,
+            VecBase(3):pUR222.
+            pydna cdseguid=H-FY2ZzvKeazrRW2dNeSeMikjoc 2024-06-11T18:53:45
+FEATURES             Location/Qualifiers
+     source          1..4361
+                     /organism="Cloning vector pBR322"
+                     /mol_type="other DNA"
+                     /db_xref="taxon:47470"
+                     /tissue_lib="ATCC 31344, ATCC 37017"
+                     /focus=""
+     source          1..1762
+                     /organism="Plasmid pSC101"
+                     /mol_type="other DNA"
+                     /db_xref="taxon:2625"
+     misc_binding    24..27
+                     /bound_moiety="echinomycin"
+     regulatory      complement(27..33)
+                     /regulatory_class="promoter"
+                     /note="promoter P1 (6)"
+     misc_binding    39..42
+                     /bound_moiety="echinomycin"
+     regulatory      43..49
+                     /regulatory_class="promoter"
+                     /note="promoter P2 (6)"
+     misc_binding    53..56
+                     /bound_moiety="echinomycin"
+     misc_binding    67..70
+                     /bound_moiety="echinomycin"
+     misc_binding    80..83
+                     /bound_moiety="echinomycin"
+     gene            86..1276
+                     /gene="tet"
+     CDS             86..1276
+                     /gene="tet"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="tetracycline resistance protein"
+                     /protein_id="AAB59735.1"
+                     /translation="MKSNNALIVILGTVTLDAVGIGLVMPVLPGLLRDIVHSDSIASHY
+                     GVLLALYALMQFLCAPVLGALSDRFGRRPVLLASLLGATIDYAIMATTPVLWILYAGRI
+                     VAGITGATGAVAGAYIADITDGEDRARHFGLMSACFGVGMVAGPVAGGLLGAISLHAPF
+                     LAAAVLNGLNLLLGCFLMQESHKGERRPMPLRAFNPVSSFRWARGMTIVAALMTVFFIM
+                     QLVGQVPAALWVIFGEDRFRWSATMIGLSLAVFGILHALAQAFVTGPATKRFGEKQAII
+                     AGMAADALGYVLLAFATRGWMAFPIMILLASGGIGMPALQAMLSRQVDDDHQGQLQGSL
+                     AALTSLTSITGPLIVTAIYAASASTWNGLAWIVGAALYLVCLPALRRGAWSRATST"
+     misc_feature    complement(141..142)
+                     /note="Endo.Sce I cleavage site coordinated with site at
+                     base 146 (10)"
+     misc_feature    146..147
+                     /gene="tet"
+                     /note="Endo.Sce I cleavage site coordinated with site at
+                     base 142 (10)"
+     misc_binding    411..414
+                     /gene="tet"
+                     /bound_moiety="echinomycin"
+     misc_difference 426
+                     /gene="tet"
+                     /note="conflict"
+                     /citation=[11]
+                     /replace=""
+     misc_binding    469..472
+                     /gene="tet"
+                     /bound_moiety="echinomycin"
+     old_sequence    526..528
+                     /gene="tet"
+                     /citation=[17]
+     repeat_region   complement(1515..1519)
+                     /note="gamma-delta insertion target sequence"
+                     /rpt_type=direct
+     misc_feature    1636..1762
+                     /note="from pSC101 (bp 1860-1986)"
+     repeat_region   complement(1788..1792)
+                     /note="gamma-delta insertion target sequence"
+                     /rpt_type=direct
+     misc_difference 1891..1892
+                     /note="conflict"
+                     /citation=[23]
+                     /replace="att"
+     old_sequence    1892..1893
+                     /citation=[2]
+                     /citation=[22]
+     regulatory      1905..1910
+                     /regulatory_class="ribosome_binding_site"
+     regulatory      1905..1909
+                     /regulatory_class="ribosome_binding_site"
+                     /note="Shine-Dalgarno sequence"
+     misc_difference 1913..1914
+                     /note="conflict"
+                     /citation=[23]
+                     /replace="caa"
+     old_sequence    1914..1915
+                     /citation=[17]
+     CDS             1915..2106
+                     /codon_start=1
+                     /transl_table=11
+                     /product="ROP protein"
+                     /protein_id="AAB59736.1"
+                     /translation="MTKQEKTALNMARFIRSQTLTLLEKLNELDADEQADICESLHDHA
+                     DELYRSCLARFGDDGENL"
+     misc_feature    2011..2167
+                     /note="H-strand Y effector site"
+                     /citation=[5]
+     repeat_region   complement(2245..2249)
+                     /note="gamma-delta insertion target sequence"
+                     /rpt_type=direct
+     misc_feature    complement(2351..2414)
+                     /note="L-strand Y effector site"
+                     /citation=[5]
+     misc_binding    2439..2447
+                     /bound_moiety="dnaA"
+     rep_origin      2535
+     old_sequence    2729..2730
+                     /note="revision according to (17)"
+                     /citation=[2]
+                     /citation=[17]
+                     /replace="at"
+     old_sequence    2729
+                     /citation=[17]
+     old_sequence    2730
+                     /note="revision according to (16)"
+                     /citation=[2]
+                     /citation=[16]
+                     /citation=[17]
+                     /replace="t"
+     mobile_element  3148..4361
+                     /mobile_element_type="transposon:Tn3"
+     repeat_region   3148..3185
+                     /note="corresponds to one of the 38bp repeats found in Tn3
+                     (bp 1-38 and complement (4920-4957))"
+                     /rpt_type=inverted
+     gene            complement(3293..4153)
+                     /gene="bla"
+     CDS             complement(3293..4153)
+                     /gene="bla"
+                     /note="E-286"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="beta-lactamase"
+                     /protein_id="AAB59737.1"
+                     /translation="MSIQHFRVALIPFFAAFCLPVFAHPETLVKVKDAEDQLGARVGYI
+                     ELDLNSGKILESFRPEERFPMMSTFKVLLCGAVLSRVDAGQEQLGRRIHYSQNDLVEYS
+                     PVTEKHLTDGMTVRELCSAAITMSDNTAANLLLTTIGGPKELTAFLHNMGDHVTRLDRW
+                     EPELNEAIPNDERDTTMPAAMATTLRKLLTGELLTLASRQQLIDWMEADKVAGPLLRSA
+                     LPAGWFIADKSGAGERGSRGIIAALGPDGKPSRIVVIYTTGSQATMDERNRQIAEIGAS
+                     LIKHW"
+     sig_peptide     complement(4085..4153)
+                     /gene="bla"
+     mat_peptide     complement(3296..4084)
+                     /gene="bla"
+                     /product="beta-lactamase"
+     regulatory      complement(4161..4165)
+                     /regulatory_class="ribosome_binding_site"
+                     /note="Shine-Dalgarno sequence"
+     regulatory      complement(4188..4194)
+                     /regulatory_class="promoter"
+                     /note="promoter P3 (6)"
+     misc_binding    complement(4268..4271)
+                     /bound_moiety="echinomycin"
+     misc_binding    complement(4280..4283)
+                     /bound_moiety="echinomycin"
+     misc_binding    complement(4285..4288)
+                     /bound_moiety="echinomycin"
+     misc_binding    complement(4296..4299)
+                     /bound_moiety="echinomycin"
+     misc_binding    complement(4311..4314)
+                     /bound_moiety="echinomycin"
+     misc_binding    complement(4317..4320)
+                     /bound_moiety="echinomycin"
+     misc_binding    complement(4331..4334)
+                     /bound_moiety="echinomycin"
+ORIGIN
+        1 ttctcatgtt tgacagctta tcatcgataa gctttaatgc ggtagtttat cacagttaaa
+       61 ttgctaacgc agtcaggcac cgtgtatgaa atctaacaat gcgctcatcg tcatcctcgg
+      121 caccgtcacc ctggatgctg taggcatagg cttggttatg ccggtactgc cgggcctctt
+      181 gcgggatatc gtccattccg acagcatcgc cagtcactat ggcgtgctgc tagcgctata
+      241 tgcgttgatg caatttctat gcgcacccgt tctcggagca ctgtccgacc gctttggccg
+      301 ccgcccagtc ctgctcgctt cgctacttgg agccactatc gactacgcga tcatggcgac
+      361 cacacccgtc ctgtggatcc tctacgccgg acgcatcgtg gccggcatca ccggcgccac
+      421 aggtgcggtt gctggcgcct atatcgccga catcaccgat ggggaagatc gggctcgcca
+      481 cttcgggctc atgagcgctt gtttcggcgt gggtatggtg gcaggccccg tggccggggg
+      541 actgttgggc gccatctcct tgcatgcacc attccttgcg gcggcggtgc tcaacggcct
+      601 caacctacta ctgggctgct tcctaatgca ggagtcgcat aagggagagc gtcgaccgat
+      661 gcccttgaga gccttcaacc cagtcagctc cttccggtgg gcgcggggca tgactatcgt
+      721 cgccgcactt atgactgtct tctttatcat gcaactcgta ggacaggtgc cggcagcgct
+      781 ctgggtcatt ttcggcgagg accgctttcg ctggagcgcg acgatgatcg gcctgtcgct
+      841 tgcggtattc ggaatcttgc acgccctcgc tcaagccttc gtcactggtc ccgccaccaa
+      901 acgtttcggc gagaagcagg ccattatcgc cggcatggcg gccgacgcgc tgggctacgt
+      961 cttgctggcg ttcgcgacgc gaggctggat ggccttcccc attatgattc ttctcgcttc
+     1021 cggcggcatc gggatgcccg cgttgcaggc catgctgtcc aggcaggtag atgacgacca
+     1081 tcagggacag cttcaaggat cgctcgcggc tcttaccagc ctaacttcga tcactggacc
+     1141 gctgatcgtc acggcgattt atgccgcctc ggcgagcaca tggaacgggt tggcatggat
+     1201 tgtaggcgcc gccctatacc ttgtctgcct ccccgcgttg cgtcgcggtg catggagccg
+     1261 ggccacctcg acctgaatgg aagccggcgg cacctcgcta acggattcac cactccaaga
+     1321 attggagcca atcaattctt gcggagaact gtgaatgcgc aaaccaaccc ttggcagaac
+     1381 atatccatcg cgtccgccat ctccagcagc cgcacgcggc gcatctcggg cagcgttggg
+     1441 tcctggccac gggtgcgcat gatcgtgctc ctgtcgttga ggacccggct aggctggcgg
+     1501 ggttgcctta ctggttagca gaatgaatca ccgatacgcg agcgaacgtg aagcgactgc
+     1561 tgctgcaaaa cgtctgcgac ctgagcaaca acatgaatgg tcttcggttt ccgtgtttcg
+     1621 taaagtctgg aaacgcggaa gtcagcgccc tgcaccatta tgttccggat ctgcatcgca
+     1681 ggatgctgct ggctaccctg tggaacacct acatctgtat taacgaagcg ctggcattga
+     1741 ccctgagtga tttttctctg gtcccgccgc atccataccg ccagttgttt accctcacaa
+     1801 cgttccagta accgggcatg ttcatcatca gtaacccgta tcgtgagcat cctctctcgt
+     1861 ttcatcggta tcattacccc catgaacaga aatccccctt acacggaggc atcagtgacc
+     1921 aaacaggaaa aaaccgccct taacatggcc cgctttatca gaagccagac attaacgctt
+     1981 ctggagaaac tcaacgagct ggacgcggat gaacaggcag acatctgtga atcgcttcac
+     2041 gaccacgctg atgagcttta ccgcagctgc ctcgcgcgtt tcggtgatga cggtgaaaac
+     2101 ctctgacaca tgcagctccc ggagacggtc acagcttgtc tgtaagcgga tgccgggagc
+     2161 agacaagccc gtcagggcgc gtcagcgggt gttggcgggt gtcggggcgc agccatgacc
+     2221 cagtcacgta gcgatagcgg agtgtatact ggcttaacta tgcggcatca gagcagattg
+     2281 tactgagagt gcaccatatg cggtgtgaaa taccgcacag atgcgtaagg agaaaatacc
+     2341 gcatcaggcg ctcttccgct tcctcgctca ctgactcgct gcgctcggtc gttcggctgc
+     2401 ggcgagcggt atcagctcac tcaaaggcgg taatacggtt atccacagaa tcaggggata
+     2461 acgcaggaaa gaacatgtga gcaaaaggcc agcaaaaggc caggaaccgt aaaaaggccg
+     2521 cgttgctggc gtttttccat aggctccgcc cccctgacga gcatcacaaa aatcgacgct
+     2581 caagtcagag gtggcgaaac ccgacaggac tataaagata ccaggcgttt ccccctggaa
+     2641 gctccctcgt gcgctctcct gttccgaccc tgccgcttac cggatacctg tccgcctttc
+     2701 tcccttcggg aagcgtggcg ctttctcata gctcacgctg taggtatctc agttcggtgt
+     2761 aggtcgttcg ctccaagctg ggctgtgtgc acgaaccccc cgttcagccc gaccgctgcg
+     2821 ccttatccgg taactatcgt cttgagtcca acccggtaag acacgactta tcgccactgg
+     2881 cagcagccac tggtaacagg attagcagag cgaggtatgt aggcggtgct acagagttct
+     2941 tgaagtggtg gcctaactac ggctacacta gaaggacagt atttggtatc tgcgctctgc
+     3001 tgaagccagt taccttcgga aaaagagttg gtagctcttg atccggcaaa caaaccaccg
+     3061 ctggtagcgg tggttttttt gtttgcaagc agcagattac gcgcagaaaa aaaggatctc
+     3121 aagaagatcc tttgatcttt tctacggggt ctgacgctca gtggaacgaa aactcacgtt
+     3181 aagggatttt ggtcatgaga ttatcaaaaa ggatcttcac ctagatcctt ttaaattaaa
+     3241 aatgaagttt taaatcaatc taaagtatat atgagtaaac ttggtctgac agttaccaat
+     3301 gcttaatcag tgaggcacct atctcagcga tctgtctatt tcgttcatcc atagttgcct
+     3361 gactccccgt cgtgtagata actacgatac gggagggctt accatctggc cccagtgctg
+     3421 caatgatacc gcgagaccca cgctcaccgg ctccagattt atcagcaata aaccagccag
+     3481 ccggaagggc cgagcgcaga agtggtcctg caactttatc cgcctccatc cagtctatta
+     3541 attgttgccg ggaagctaga gtaagtagtt cgccagttaa tagtttgcgc aacgttgttg
+     3601 ccattgctgc aggcatcgtg gtgtcacgct cgtcgtttgg tatggcttca ttcagctccg
+     3661 gttcccaacg atcaaggcga gttacatgat cccccatgtt gtgcaaaaaa gcggttagct
+     3721 ccttcggtcc tccgatcgtt gtcagaagta agttggccgc agtgttatca ctcatggtta
+     3781 tggcagcact gcataattct cttactgtca tgccatccgt aagatgcttt tctgtgactg
+     3841 gtgagtactc aaccaagtca ttctgagaat agtgtatgcg gcgaccgagt tgctcttgcc
+     3901 cggcgtcaac acgggataat accgcgccac atagcagaac tttaaaagtg ctcatcattg
+     3961 gaaaacgttc ttcggggcga aaactctcaa ggatcttacc gctgttgaga tccagttcga
+     4021 tgtaacccac tcgtgcaccc aactgatctt cagcatcttt tactttcacc agcgtttctg
+     4081 ggtgagcaaa aacaggaagg caaaatgccg caaaaaaggg aataagggcg acacggaaat
+     4141 gttgaatact catactcttc ctttttcaat attattgaag catttatcag ggttattgtc
+     4201 tcatgagcgg atacatattt gaatgtattt agaaaaataa acaaataggg gttccgcgca
+     4261 catttccccg aaaagtgcca cctgacgtct aagaaaccat tattatcatg acattaacct
+     4321 ataaaaatag gcgtatcacg aggccctttc gtcttcaaga a
+//
