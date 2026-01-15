@@ -531,10 +531,6 @@ document.write(`
             <span class="n">path</span> <span class="o">=</span> <span class="n">item</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="n">newsequences</span> <span class="o">=</span> <span class="n">embl_gb_fasta</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
-            <span class="c1"># nfs = [_SeqFeature() for f in parsed.features]</span>
-            <span class="c1"># for f, nf in zip(parsed.features, nfs):</span>
-            <span class="c1">#     nf.__dict__ = _deepcopy(f.__dict__)</span>
-            <span class="c1"># parsed.features = nfs</span>
             <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">newsequences</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ds</span> <span class="ow">and</span> <span class="n">path</span><span class="p">:</span>
                     <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">UploadedFileSource</span>
