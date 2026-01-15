@@ -37,11 +37,7 @@ To avoid having to maintain the same text in multiple files, fragments of the `R
 
 All notebooks in the `docs/notebooks` folder will automatically be converted to markdown in the `docs/markdown_notebooks` folder. So if you have a notebook `docs/notebooks/Example_Gibson.ipynb`, it will be converted to `docs/markdown_notebooks/Example_Gibson.md` and you can use that file path to make a link to it.
 
-You can see the example of how to do this in the `getting_started.rst` file.
-
-
-
-Note that the notebooks present in the `docs/notebooks` folder will automatically be converted to markdown in the `docs/markdown_notebooks` folder. So if you have a notebook `docs/notebooks/Example_Gibson.ipynb`, it will be converted to `docs/markdown_notebooks/Example_Gibson.md` and you can use that file path to make a link to it.
+You can see the example of how to do this in the `getting_started.rst` file. Note that when making a link, you should use the path with an `.html` extension, not `.ipynb` or `.md`.
 
 ## Custom CSS
 
