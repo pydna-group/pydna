@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# flake8: noqa: B950
 
 import pytest
 
@@ -23,10 +24,14 @@ def test_tms():
     # There were corrections in the biopython DNA_NN4 table
     # https://github.com/biopython/biopython/pull/4240/commits/9772fcbd38dbed125fc34dd0820f3395bc613917
 
-    assert tm.tm_default(primer) == pytest.approx(66.17116877436496)  #  67.78918110181166
+    assert tm.tm_default(primer) == pytest.approx(
+        66.17116877436496
+    )  #  67.78918110181166
     assert tm.tm_dbd(primer) == pytest.approx(62.74633103079093)
     assert tm.tm_product(primer * 20) == pytest.approx(76.27411419319003)
-    assert tm.ta_default(primer, primer, primer * 20) == pytest.approx(58.34323056754251)  # 58.82863426577652
+    assert tm.ta_default(primer, primer, primer * 20) == pytest.approx(
+        58.34323056754251
+    )  # 58.82863426577652
     assert tm.ta_dbd(primer, primer, primer * 20) == pytest.approx(65.74633103079093)
     assert tm.tmbresluc(primer) == pytest.approx(63.38496307044147)
 

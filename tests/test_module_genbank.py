@@ -88,14 +88,12 @@ def test_pydna_Genbank_fresh(urlopenMock, monkeypatch):
 
 
 def test_genbank_function_set_email(monkeypatch):
-    from pydna.genbank import Genbank
-
     mock_Gb = mock.MagicMock()
     monkeypatch.setenv("pydna_email", "someoneelse@example.com")
     monkeypatch.setattr("pydna.genbank.Genbank", mock_Gb)
     from pydna.genbank import genbank
 
-    s = genbank("X60065")
+    genbank("X60065")
     mock_Gb.assert_called_with("someoneelse@example.com")
 
 

@@ -1,5 +1,4 @@
 default_stages: [pre-commit]
-exclude: ^(tests/)
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -23,7 +22,6 @@ repos:
     rev: 25.1.0
     hooks:
       - id: black
-        files: ^src/
 
   # Further linting (e.g. module imported but not used)
   - repo: https://github.com/PyCQA/flake8

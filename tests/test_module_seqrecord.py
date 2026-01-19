@@ -65,13 +65,8 @@ def test_add_feature():
 
 
 def test_stamp():
-    from pydna.seq import Seq
     from pydna.seqrecord import SeqRecord
-    from pydna.readers import read
-    from pydna.utils import eq
-
     from Bio.Seq import Seq as bpSeq
-    from Bio.SeqRecord import SeqRecord as bpSecRecord
 
     a = SeqRecord("attt")
     assert a.stamp() == "lsseguid=ot6JPLeAeMmfztW1736Kc6DAqlo"
@@ -115,9 +110,9 @@ def test___hash__():
     assert not s > u
 
     with pytest.raises(TypeError):
-        s > "3"
+        assert s > "3"
     with pytest.raises(TypeError):
-        s < "3"
+        assert s < "3"
 
 
 def test_lcs():
@@ -152,10 +147,19 @@ def test_lcs():
     }
     assert s.lcs("GGATCC", limit=4).__dict__ == expected.__dict__
     assert s.lcs(Seq("GGATCC"), limit=4).__dict__ == expected.__dict__
-    assert s.lcs(BSeqRecord(Seq("GGATCC"), name="sequence"), limit=4).__dict__ == expected.__dict__
+    assert (
+        s.lcs(BSeqRecord(Seq("GGATCC"), name="sequence"), limit=4).__dict__
+        == expected.__dict__
+    )
     assert s.lcs(Dseq("GGATCC"), limit=4).__dict__ == expected.__dict__
-    assert s.lcs(Dseqrecord(Dseq("GGATCC"), name="sequence"), limit=4).__dict__ == expected.__dict__
-    assert s.lcs(Dseqrecord("GGATCC", name="sequence"), limit=4).__dict__ == expected.__dict__
+    assert (
+        s.lcs(Dseqrecord(Dseq("GGATCC"), name="sequence"), limit=4).__dict__
+        == expected.__dict__
+    )
+    assert (
+        s.lcs(Dseqrecord("GGATCC", name="sequence"), limit=4).__dict__
+        == expected.__dict__
+    )
 
 
 def test_format():
@@ -169,7 +173,6 @@ def test_format():
 
 
 def test_seqrecord():
-    import pydna
     from pydna import seqrecord
     from pydna.seq import Seq
 
@@ -236,7 +239,8 @@ def test_seqrecord():
     assert obj.gc() == 0.067
 
     assert repr(obj) == (
-        "SeqRecord(seq=Seq('aaaATGAAATAAttt'), id='id', " "name='name', description='description', dbxrefs=[])"
+        "SeqRecord(seq=Seq('aaaATGAAATAAttt'), id='id', "
+        "name='name', description='description', dbxrefs=[])"
     )
 
     obj.annotations = {"date": "24-DEC-1970"}
@@ -267,7 +271,7 @@ def test_seqrecord():
     obj.description = "new456"
     assert obj.definition == obj.description == "new456"
 
-    with pytest.warns(_PydnaWarning, match="truncated") as pdw:
+    with pytest.warns(_PydnaWarning, match="truncated"):
         obj.locus = "12345678901234567"
 
     lf = str(
@@ -285,7 +289,7 @@ def test_seqrecord():
     assert str(exft.seq) == "ATGAAATAA"
     import textwrap
 
-    gbf = textwrap.dedent(
+    textwrap.dedent(
         """LOCUS       1234567890123456          15 bp    DNA              UNK 24-DEC-1970
     DEFINITION  new456.
     ACCESSION   new456
@@ -305,18 +309,13 @@ def test_seqrecord():
     )
 
     # print()
-    # print(gbf)
+    # print(textwrap.dedent(...))
 
     # print(str(obj.format("gb")))
 
     # assert gbf+"\n" == str(obj.format("gb"))
 
     # print(obj.__hash__())
-
-    rare_codons = {
-        "sce": ["CGA", "CGG", "CGC", "CCG", "CTC", "GCG"],
-        "eco": ["AGG", "AGA", "ATA", "CTA", "CGA", "CGG", "CCC", "TCG"],
-    }
 
     s = Seq("atgCGACGGCGCCCGCTCGCGtaa")
 
@@ -335,7 +334,6 @@ def test_seqrecord():
 
 def test_cai():
     pytest.importorskip("cai2")
-    import pydna
     from pydna import seqrecord
     from pydna.seq import Seq
     from pydna.codon import rare_codons

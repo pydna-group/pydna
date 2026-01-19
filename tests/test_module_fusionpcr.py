@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import pytest
 
 from pydna.dseq import Dseq
 from pydna.dseqrecord import Dseqrecord
@@ -9,10 +8,17 @@ from pydna.fusionpcr import fuse_by_pcr
 
 
 x = Dseqrecord(
-    Dseq("tctggtcaagctgaagggtattc"), features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")]
+    Dseq("tctggtcaagctgaagggtattc"),
+    features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")],
 )
-y = Dseqrecord(Dseq("tattcgtacacagatg"), features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")])
-z = Dseqrecord(Dseq("acagatgacgtgt"), features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")])
+y = Dseqrecord(
+    Dseq("tattcgtacacagatg"),
+    features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")],
+)
+z = Dseqrecord(
+    Dseq("acagatgacgtgt"),
+    features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")],
+)
 n = Dseqrecord(Dseq("cgatcaaaaaaacc"))
 r = Dseqrecord(Dseq("tctggtcaagctgaagggtattcgtacacagatgacgtgt"))
 
@@ -79,13 +85,18 @@ def test_fusionpcr3():
         assert eq(result, r)
 
 
-
-
 x = Dseqrecord(
-    Dseq("tctggtcaagctgaagggtattc"), features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")]
+    Dseq("tctggtcaagctgaagggtattc"),
+    features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")],
 )
-y = Dseqrecord(Dseq("tattcgtacacagatg"), features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")])
-z = Dseqrecord(Dseq("acagatgacgtgt"), features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")])
+y = Dseqrecord(
+    Dseq("tattcgtacacagatg"),
+    features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")],
+)
+z = Dseqrecord(
+    Dseq("acagatgacgtgt"),
+    features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")],
+)
 
 
 seqtuples = [(x, y, z)]

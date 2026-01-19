@@ -22,7 +22,13 @@ def test_contig_linear():
     cont = asm.assemble_linear()[0]
 
     fig = (
-        "one|14\n" "    \\/\n" "    /\\\n" "    14|two|15\n" "           \\/\n" "           /\\\n" "           15|three"
+        "one|14\n"
+        "    \\/\n"
+        "    /\\\n"
+        "    14|two|15\n"
+        "           \\/\n"
+        "           /\\\n"
+        "           15|three"
     )
 
     assert fig == cont.figure()
@@ -96,7 +102,7 @@ def test_contig_circular():
 
     import networkx as nx
 
-    x = contig.Contig.from_SeqRecord(arg, graph=nx.MultiDiGraph())
+    contig.Contig.from_SeqRecord(arg, graph=nx.MultiDiGraph())
 
 
 def test_reverse_complement():
@@ -202,9 +208,13 @@ def test_linear():
 @pytest.mark.mpl_image_compare
 def test_mpl1():
 
-    a = Dseqrecord("GCCGATTCTCATCCGGGCCT" "CACTATAGGACCATTCCGTT" "GCCCTGCGCTGCGCTGTATA", name="1")
+    a = Dseqrecord(
+        "GCCGATTCTCATCCGGGCCT" "CACTATAGGACCATTCCGTT" "GCCCTGCGCTGCGCTGTATA", name="1"
+    )
 
-    b = Dseqrecord("GCCCTGCGCTGCGCTGTATA" "TCCCCAGGAACAGACTTCCT" "GCCGATTCTCATCCGGGCCT", name="2")
+    b = Dseqrecord(
+        "GCCCTGCGCTGCGCTGTATA" "TCCCCAGGAACAGACTTCCT" "GCCGATTCTCATCCGGGCCT", name="2"
+    )
 
     asm = Assembly((a, b), limit=20)
     cps = asm.assemble_circular()
@@ -215,11 +225,17 @@ def test_mpl1():
 @pytest.mark.mpl_image_compare
 def test_mpl2():
 
-    x = Dseqrecord("CTAAGATATTCTTACGTGTA" "CACTATAGGACCATTCCGTT" "GCCCTGCGCTGCGCTGTATA", name="x")
+    x = Dseqrecord(
+        "CTAAGATATTCTTACGTGTA" "CACTATAGGACCATTCCGTT" "GCCCTGCGCTGCGCTGTATA", name="x"
+    )
 
-    y = Dseqrecord("GCCCTGCGCTGCGCTGTATA" "TCCCCAGGAACAGACTTCCT" "GCCGATTCTCATCCGGGCCT", name="y")
+    y = Dseqrecord(
+        "GCCCTGCGCTGCGCTGTATA" "TCCCCAGGAACAGACTTCCT" "GCCGATTCTCATCCGGGCCT", name="y"
+    )
 
-    z = Dseqrecord("GCCGATTCTCATCCGGGCCT" "GGATGCAATGCGATCCTCCG" "CTAAGATATTCTTACGTGTA", name="z")
+    z = Dseqrecord(
+        "GCCGATTCTCATCCGGGCCT" "GGATGCAATGCGATCCTCCG" "CTAAGATATTCTTACGTGTA", name="z"
+    )
 
     asm2 = Assembly((x, y, z), limit=20)
     cps2 = asm2.assemble_circular()
@@ -232,8 +248,19 @@ def test_mpl3():
 
     p = {}
 
-    p[1113], p[987], p[1196], p[1195], p[978], p[977], p[984], p[983], p[1804], p[1347] = parse_primers(
-        '''
+    (
+        p[1113],
+        p[987],
+        p[1196],
+        p[1195],
+        p[978],
+        p[977],
+        p[984],
+        p[983],
+        p[1804],
+        p[1347],
+    ) = parse_primers(
+        """
 
     >1113_Amp.fw.nw 55-mer
     GAAAAGCGTTTACCTCGGAACTCTATTGTAGAACCCCTATTTGTTTATTTTTCTA
@@ -265,15 +292,15 @@ def test_mpl3():
     >1347_TRP1rp_pTA 51-mer
     ACGGACTACGAGATACCTGATTTTACAGTTGATCTTTTATGCTTGCTTTTC
 
-    '''
+    """
     )
 
     lol = [
-        ['pBR322.gb', 1113, 987, 'amp'],
-        ['pBR322.gb', 1196, 1195, 'pBR'],
-        ['pYPKpw.gb', 978, 977, 'Δcrp'],
-        ['YEplac195_snapgene.gb', 984, 983, '2µ'],
-        ['YIplac204_snapgene.gb', 1804, 1347, 'TRP1'],
+        ["pBR322.gb", 1113, 987, "amp"],
+        ["pBR322.gb", 1196, 1195, "pBR"],
+        ["pYPKpw.gb", 978, 977, "Δcrp"],
+        ["YEplac195_snapgene.gb", 984, 983, "2µ"],
+        ["YIplac204_snapgene.gb", 1804, 1347, "TRP1"],
     ]
 
     fragments = []

@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import pytest
-import sys
 
 from pydna.readers import read
 
@@ -12,7 +11,6 @@ def test_mark_budde():
     a = read("pGREG505.gb")
     assert a.name == "pGREG505"
     assert a.looped().name == "pGREG505"
-    # assert a.annotations == "pGREG505"
     assert a.id == "pGREG505"
     assert a.looped().id == "pGREG505"
 

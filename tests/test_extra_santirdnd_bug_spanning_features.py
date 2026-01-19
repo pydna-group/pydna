@@ -5,7 +5,6 @@ test parse
 """
 
 import pytest
-from pydna.readers import read
 
 
 def test_spanning_features():

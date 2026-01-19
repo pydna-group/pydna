@@ -4,45 +4,53 @@
 import pytest
 import textwrap
 
-from pydna.seq import Seq
 from pydna.dseq import Dseq
 from pydna.utils import eq
 
 from Bio.Restriction import (
-    Acc65I, ApaI, BamHI, BglII, BsaI, Bsp120I, EcoRI, EcoRV,
-    KpnI, MaeII, NmeDI, NotI, PacI, PstI, RestrictionBatch, TaiI, BspLI
+    Acc65I,
+    ApaI,
+    BamHI,
+    BglII,
+    BsaI,
+    Bsp120I,
+    EcoRI,
+    EcoRV,
+    KpnI,
+    MaeII,
+    NmeDI,
+    NotI,
+    PacI,
+    PstI,
+    RestrictionBatch,
+    TaiI,
+    BspLI,
 )
 
 from seguid import ldseguid
 from seguid import cdseguid
 
+
 def test_dseq():
 
-    x = Dseq( "gGGATCC",
-             "  CCTAGG"[::-1], 1)
+    x = Dseq("gGGATCC", "  CCTAGG"[::-1], 1)
 
-    y = Dseq(" gGGATCC",
-             "  CCTAGG"[::-1], 0)
+    y = Dseq(" gGGATCC", "  CCTAGG"[::-1], 0)
 
-    z = Dseq("  gGGATCC",
-              "  CCTAGG"[::-1], -1)
+    z = Dseq("  gGGATCC", "  CCTAGG"[::-1], -1)
 
     assert x == y == z
 
-    x = Dseq( " GGATCC",
-             " gCCTAGG"[::-1], 1)
+    x = Dseq(" GGATCC", " gCCTAGG"[::-1], 1)
 
-    y = Dseq("  GGATCC",
-             " gCCTAGG"[::-1], 0)
+    y = Dseq("  GGATCC", " gCCTAGG"[::-1], 0)
 
-    z = Dseq("   GGATCC",
-              " gCCTAGG"[::-1], -1)
+    z = Dseq("   GGATCC", " gCCTAGG"[::-1], -1)
 
     assert x == y == z
+
 
 def test_cut1():
-
-
     """
     Acc65I.search(_Seq("GGTACC"))
     Out  [11]: [2]
@@ -56,8 +64,6 @@ def test_cut1():
     KpnI.search(_Seq("GGTACC"))
     Out  [12]: [6]
     """
-
-
 
     """
 
@@ -113,89 +119,94 @@ def test_cut1():
     # G      GTACC
     # CCATG      G
     first = Dseq.from_representation(
-    """
+        """
     Dseq(-5)
     G
     CCATG
-    """)
-    second = Dseq.from_representation(
     """
+    )
+    second = Dseq.from_representation(
+        """
     Dseq(-5)
     GTACC
         G
-    """)
+    """
+    )
 
     assert (first, second) == Dseq("GGTACC").cut(Acc65I)
-
 
     # GGTAC      C
     # C      CATGG
     first = Dseq.from_representation(
-    """
+        """
     Dseq(-5)
     GGTAC
     C
-    """)
-    second = Dseq.from_representation(
     """
+    )
+    second = Dseq.from_representation(
+        """
     Dseq(-5)
         C
     CATGG
-    """)
+    """
+    )
     assert (first, second) == Dseq("GGTACC").cut(KpnI)
-
 
     # GGT      ACC
     # CCA      TGG
     first = Dseq.from_representation(
-    """
+        """
     Dseq(-3)
     GGT
     CCA
-    """)
-    second = Dseq.from_representation(
     """
+    )
+    second = Dseq.from_representation(
+        """
     Dseq(-3)
     ACC
     TGG
-    """)
+    """
+    )
     assert (first, second) == Dseq("GGTACC").cut(BspLI)
 
     #  GTACCG
     #      GCCATG
     lin = Dseq.from_representation(
-    """
+        """
     Dseq(-10)
     GTACCG
         GCCATG
-    """)
+    """
+    )
     assert (lin,) == Dseq("GGTACC", circular=True).cut(Acc65I)
 
     #      CGGTAC
     #  CATGGC
     lin = Dseq.from_representation(
-    """
+        """
     Dseq(-10)
         CGGTAC
     CATGGC
-    """)
+    """
+    )
     assert (lin,) == Dseq("GGTACC", circular=True).cut(KpnI)
 
     # ACCGGT
     # TGGCCA
     lin = Dseq.from_representation(
-    """
+        """
     Dseq(-6)
     ACCGGT
     TGGCCA
-    """)
+    """
+    )
 
     assert (lin,) == Dseq("GGTACC", circular=True).cut(BspLI)
 
 
-
 def test_cas9():
-
 
     s = Dseq("gattcatgcatgtagcttacgtagtct")
 
@@ -282,29 +293,33 @@ def test_initialization():
     assert Dseq("", "c", 0) == Dseq("q")
 
     s = Dseq.from_representation(
-    """
+        """
     Dseq(-6)
     G A C
     CcTaGg
-    """)
+    """
+    )
     assert Dseq("G A C ", "CcTaGg"[::-1], 0) == s
 
     s = Dseq.from_representation(
-    """
+        """
     Dseq(-6)
     G A C
     C T G
-    """)
-    assert Dseq("G A C ", "C T G"[::-1], 0) == s # TODO: Discuss if this should raise an exeption.
+    """
+    )
+    assert (
+        Dseq("G A C ", "C T G"[::-1], 0) == s
+    )  # TODO: Discuss if this should raise an exeption.
 
     s = Dseq.from_representation(
-    """
+        """
     Dseq(-6)
     GA T CC
     CTAACGG
-    """)
+    """
+    )
     assert Dseq("GA T CC", "CTAACGG"[::-1], 0) == s
-
 
 
 def test_cut_around_and_religate():
@@ -349,39 +364,62 @@ def test_Dseq_cutting_adding():
 
     a = Dseq(
         "GGATCCtcatctactatcatcgtagcgtactgatctattctgctgctcatcatcggtactctctataattatatatatatgcgcgtGGATCC",
-        "CCTAGGagtagatgatagtagcatcgcatgactagataagacgacgagtagtagccatgagagatattaatatatatatacgcgcaCCTAGG"[::-1],
+        "CCTAGGagtagatgatagtagcatcgcatgactagataagacgacgagtagtagccatgagagatattaatatatatatacgcgcaCCTAGG"[
+            ::-1
+        ],
         ovhg=0,
     )
 
     b = a.cut(BamHI)[1]
 
-    assert b.watson == "GATCCtcatctactatcatcgtagcgtactgatctattctgctgctcatcatcggtactctctataattatatatatatgcgcgtG"
-    assert b.crick == "GATCCacgcgcatatatatataattatagagagtaccgatgatgagcagcagaatagatcagtacgctacgatgatagtagatgaG"
+    assert (
+        b.watson
+        == "GATCCtcatctactatcatcgtagcgtactgatctattctgctgctcatcatcggtactctctataattatatatatatgcgcgtG"
+    )
+    assert (
+        b.crick
+        == "GATCCacgcgcatatatatataattatagagagtaccgatgatgagcagcagaatagatcagtacgctacgatgatagtagatgaG"
+    )
     c = Dseq(
         "nCTGCAGtcatctactatcatcgtagcgtactgatctattctgctgctcatcatcggtactctctataattatatatatatgcgcgtGAATTCn",
-        "nGACGTCagtagatgatagtagcatcgcatgactagataagacgacgagtagtagccatgagagatattaatatatatatacgcgcaCTTAAGn"[::-1],
+        "nGACGTCagtagatgatagtagcatcgcatgactagataagacgacgagtagtagccatgagagatattaatatatatatacgcgcaCTTAAGn"[
+            ::-1
+        ],
         ovhg=0,
     )
 
     f, d, _ = c.cut((EcoRI, PstI))
 
-    assert d.watson == "GtcatctactatcatcgtagcgtactgatctattctgctgctcatcatcggtactctctataattatatatatatgcgcgtG"
-    assert d.crick == "AATTCacgcgcatatatatataattatagagagtaccgatgatgagcagcagaatagatcagtacgctacgatgatagtagatgaCTGCA"
+    assert (
+        d.watson
+        == "GtcatctactatcatcgtagcgtactgatctattctgctgctcatcatcggtactctctataattatatatatatgcgcgtG"
+    )
+    assert (
+        d.crick
+        == "AATTCacgcgcatatatatataattatagagagtaccgatgatgagcagcagaatagatcagtacgctacgatgatagtagatgaCTGCA"
+    )
 
     e = Dseq(
         "nGAATTCtcatctactatcatcgtagcgtactgatctattctgctgctcatcatcggtactctctataattatatatatatgcgcgtCTGCAGn",
-        "nCTTAAGagtagatgatagtagcatcgcatgactagataagacgacgagtagtagccatgagagatattaatatatatatacgcgcaGACGTCn"[::-1],
+        "nCTTAAGagtagatgatagtagcatcgcatgactagataagacgacgagtagtagccatgagagatattaatatatatatacgcgcaGACGTCn"[
+            ::-1
+        ],
         ovhg=0,
     )
 
     f = e.cut((EcoRI, PstI))[1]
 
-    assert f.watson == "AATTCtcatctactatcatcgtagcgtactgatctattctgctgctcatcatcggtactctctataattatatatatatgcgcgtCTGCA"
-    assert f.crick == "GacgcgcatatatatataattatagagagtaccgatgatgagcagcagaatagatcagtacgctacgatgatagtagatgaG"
+    assert (
+        f.watson
+        == "AATTCtcatctactatcatcgtagcgtactgatctattctgctgctcatcatcggtactctctataattatatatatatgcgcgtCTGCA"
+    )
+    assert (
+        f.crick
+        == "GacgcgcatatatatataattatagagagtaccgatgatgagcagcagaatagatcagtacgctacgatgatagtagatgaG"
+    )
 
 
-def test_dseq():
-
+def test_dseq_circular_linear():
     obj1 = Dseq("a", "t", circular=True)
     obj2 = Dseq("a", "t")
 
@@ -393,7 +431,6 @@ def test_dseq():
 
     with pytest.raises(TypeError):
         obj1 + ""
-
 
     # with pytest.raises(AttributeError):
     #     obj2 + ""
@@ -437,9 +474,6 @@ def test_dseq():
     assert obj.five_prime_end() == ("single", "c")
     assert obj.three_prime_end() == ("single", "c")
 
-
-
-
     obj = Dseq("ccGGATCC", "aaggatcc", -2)
     # assert obj._data == b"ccGGATCCtt"
     assert obj._data == b"iiGGATCCzz"
@@ -451,7 +485,6 @@ def test_dseq():
       CCTAGGaa
     """
     ).strip()
-
 
     assert repr(obj) == rpr
 
@@ -593,7 +626,6 @@ def test_dseq():
 
     obj = Dseq("GGATCCaaa", "ggatcc", 0)
 
-
     frag1 = Dseq("G", "gatcc", 0)
     frag2 = Dseq("GATCCaaa", "g", -4)
 
@@ -610,11 +642,16 @@ def test_dseq():
     assert frag2.rc().seguid() == "ldseguid=SO1HxaZPDpcj-QffzS-mfF6_eag"
 
     obj = Dseq("tagcgtagctgtagtatgtgatctggtcta", "tagaccagatcacatactacagctacgcta")
-    assert repr(obj) == "Dseq(-30)\ntagcgtagctgtagtatgtgatctggtcta\natcgcatcgacatcatacactagaccagat"
+    assert (
+        repr(obj)
+        == "Dseq(-30)\ntagcgtagctgtagtatgtgatctggtcta\natcgcatcgacatcatacactagaccagat"
+    )
 
     obj2 = Dseq("tagcgtagctgtagtatgtgatctggtcta")
 
-    obj3 = obj = Dseq("tagcgtagctgtagtatgtgatctggtcta", "tagaccagatcacatactacagctacgcta", 0)
+    obj3 = obj = Dseq(
+        "tagcgtagctgtagtatgtgatctggtcta", "tagaccagatcacatactacagctacgcta", 0
+    )
 
     assert obj == obj2 == obj3
 
@@ -638,7 +675,9 @@ def test_dseq():
     obj = Dseq("Atagcgtagctgtagtatgtgatctggtctaa", "ttagaccagatcacatactacagctacgcta")
     assert repr(obj) == "Dseq(-32)\nAtagc..ctaa\n atcg..gatt"
 
-    obj = Dseq("tagcgtagctgtagtatgtgatctggtctaa", "tatcgcatcgacatcatacactagaccagatt"[::-1])
+    obj = Dseq(
+        "tagcgtagctgtagtatgtgatctggtctaa", "tatcgcatcgacatcatacactagaccagatt"[::-1]
+    )
 
     assert repr(obj) == "Dseq(-32)\n tagc..ctaa\ntatcg..gatt"
 
@@ -664,11 +703,14 @@ def test_dseq():
 
     assert obj1.find("tgtagta") == 9
 
-    assert obj1.find("gtcta" "tag") == 25 # find substring over origin
+    assert obj1.find("gtcta" "tag") == 25  # find substring over origin
 
-    assert Dseq("tagcgtagctgtagtatgtgatctggtcta", "tagaccagatcacatactacagctacgcta").looped() == obj1
-
-
+    assert (
+        Dseq(
+            "tagcgtagctgtagtatgtgatctggtcta", "tagaccagatcacatactacagctacgcta"
+        ).looped()
+        == obj1
+    )
 
     obj = Dseq("ggatcc")
 
@@ -684,8 +726,6 @@ def test_dseq():
 
     assert BamHI in obj.n_cutters(1)
     assert BamHI in obj.cutters()
-
-
 
     rb = RestrictionBatch((BamHI, BglII))
 
@@ -723,8 +763,6 @@ def test_Dseq_slicing():
 
 
 def test_Dseq_slicing2():
-
-
 
     a = Dseq("aaGGATCCnnnnnnnnnGAATTCccc", circular=True)
     # TODO: address this test change Related to https://github.com/pydna-group/pydna/issues/78
@@ -766,7 +804,6 @@ def test_Dseq___getitem__():
     assert t[9:1] == Dseq("TCCG")  # XXX: This is important!
     assert t[1:9] == Dseq("GATCCGGA")  # XXX: This is important!
 
-
     # Indexing of full circular molecule (https://github.com/pydna-group/pydna/issues/161)
     s = Dseq("GGATCC", circular=True)
     str_seq = str(s)
@@ -799,7 +836,6 @@ def test_cut_circular():
 
 
 def test_repr():
-
 
     a = Dseq("gattcgtatgctgatcgtacgtactgaaaac")
 
@@ -847,19 +883,27 @@ def test_repr():
 
     x = Dseq("gattcgtatgctgatcgtacgtactgaaaa")
 
-    assert repr(x) == "Dseq(-30)\ngattcgtatgctgatcgtacgtactgaaaa\nctaagcatacgactagcatgcatgactttt"
+    assert (
+        repr(x)
+        == "Dseq(-30)\ngattcgtatgctgatcgtacgtactgaaaa\nctaagcatacgactagcatgcatgactttt"
+    )
 
     y = Dseq("gattcgtatgctgatcgtacgtactgaaaa", "gactagcatgcatgactttt"[::-1])
 
-    assert repr(y) == "Dseq(-30)\ngattcgtatgctgatcgtacgtactgaaaa\n          gactagcatgcatgactttt"
+    assert (
+        repr(y)
+        == "Dseq(-30)\ngattcgtatgctgatcgtacgtactgaaaa\n          gactagcatgcatgactttt"
+    )
 
     z = Dseq("gattcgtatgctgatcgtacgtactgaaaa", "actagcatgcatgactttt"[::-1])
 
-    assert repr(z) == "Dseq(-30)\ngattcgtatgctgatcgtacgtactgaaaa\n           actagcatgcatgactttt"
+    assert (
+        repr(z)
+        == "Dseq(-30)\ngattcgtatgctgatcgtacgtactgaaaa\n           actagcatgcatgactttt"
+    )
 
 
 def test_shifted():
-
 
     a = Dseq("gatc", circular=True)
 
@@ -881,8 +925,6 @@ def test_looped():
     # Looping a circular sequence should return a copy of the sequence
     # not the same sequence
 
-
-
     a = Dseq("gatc", circular=True)
 
     assert a.looped() == a
@@ -891,10 +933,7 @@ def test_looped():
 
 def test_misc():
 
-
     x = Dseq("ctcgGCGGCCGCcagcggccg", circular=True)
-
-
 
     a, b = x.cut(NotI)
 
@@ -905,10 +944,7 @@ def test_misc():
 
 def test_cut_missing_enzyme():
 
-
     x = Dseq("ctcgGCGGCCGCcagcggccg")
-
-
 
     assert x.cut(PstI) == ()
 
@@ -918,7 +954,6 @@ def test_cut_missing_enzyme():
 
 
 def test_cut_with_no_enzymes():
-
 
     x = Dseq("ctcgGCGGCCGCcagcggccg")
 
@@ -931,7 +966,6 @@ def test_cut_with_no_enzymes():
 
 def test_transcribe():
 
-
     x = Dseq("ATGAAATAA")
 
     assert str(x.transcribe()) == "AUGAAAUAA"
@@ -940,7 +974,6 @@ def test_transcribe():
 
 
 def test_translate():
-
 
     x = Dseq("ATGAAATAA")
 
@@ -951,7 +984,6 @@ def test_translate():
 
 def test_from_full_sequence_and_overhangs():
 
-
     test_cases = [
         (2, 2, "AAAA", "TTTT"),
         (-2, 2, "AAAAAA", "TT"),
@@ -960,7 +992,9 @@ def test_from_full_sequence_and_overhangs():
         (0, 0, "AAAAAA", "TTTTTT"),
     ]
     for crick_ovhg, watson_ovhg, watson, crick in test_cases:
-        dseq_1 = Dseq.from_full_sequence_and_overhangs("AAAAAA", crick_ovhg=crick_ovhg, watson_ovhg=watson_ovhg)
+        dseq_1 = Dseq.from_full_sequence_and_overhangs(
+            "AAAAAA", crick_ovhg=crick_ovhg, watson_ovhg=watson_ovhg
+        )
         dseq_2 = Dseq(watson, crick, ovhg=crick_ovhg, circular=False)
 
         assert dseq_1 == dseq_2
@@ -968,8 +1002,6 @@ def test_from_full_sequence_and_overhangs():
 
 
 def test_right_end_position():
-
-
 
     test_cases = [
         ("AAA", "TT", (3, 2)),
@@ -983,8 +1015,6 @@ def test_right_end_position():
 
 def test_left_end_position():
 
-
-
     test_cases = [
         ("AAA", "TT", (0, 1), -1),
         ("AA", "TTT", (1, 0), 1),
@@ -996,8 +1026,6 @@ def test_left_end_position():
 
 
 def test_apply_cut():
-
-
 
     seq = Dseq("aaGAATTCaa", circular=False)
 
@@ -1015,7 +1043,9 @@ def test_apply_cut():
     )
 
     # It respects the original overhang
-    seq = Dseq.from_full_sequence_and_overhangs("aaGAATTCaa", watson_ovhg=1, crick_ovhg=1)
+    seq = Dseq.from_full_sequence_and_overhangs(
+        "aaGAATTCaa", watson_ovhg=1, crick_ovhg=1
+    )
     assert seq.apply_cut(None, EcoRI_cut) == Dseq.from_full_sequence_and_overhangs(
         "aaGAATT", watson_ovhg=-4, crick_ovhg=1
     )
@@ -1023,7 +1053,9 @@ def test_apply_cut():
         "AATTCaa", watson_ovhg=1, crick_ovhg=-4
     )
 
-    seq = Dseq.from_full_sequence_and_overhangs("aaGAATTCaa", watson_ovhg=-1, crick_ovhg=-1)
+    seq = Dseq.from_full_sequence_and_overhangs(
+        "aaGAATTCaa", watson_ovhg=-1, crick_ovhg=-1
+    )
     assert seq.apply_cut(None, EcoRI_cut) == Dseq.from_full_sequence_and_overhangs(
         "aaGAATT", watson_ovhg=-4, crick_ovhg=-1
     )
@@ -1040,7 +1072,9 @@ def test_apply_cut():
     # Two cuts extract a subsequence
     seq = Dseq("aaGAATTCaaGAATTCaa", circular=True)
     EcoRI_cut_2 = ((11, -4), None)
-    assert seq.apply_cut(EcoRI_cut, EcoRI_cut_2) == Dseq.from_full_sequence_and_overhangs(
+    assert seq.apply_cut(
+        EcoRI_cut, EcoRI_cut_2
+    ) == Dseq.from_full_sequence_and_overhangs(
         "AATTCaaGAATT", watson_ovhg=-4, crick_ovhg=-4
     )
 
@@ -1074,7 +1108,7 @@ def test_apply_cut():
                 assert e.args[0] == "Cuts by BamHI EcoRI overlap."
             else:
                 print(first_cut, second_cut)
-                assert False, "Expected ValueError"
+                raise AssertionError("Expected ValueError")
 
     # Rotating the sequence, apply the same cut
     seq = Dseq("acgtATGaatt", circular=True)
@@ -1133,7 +1167,9 @@ def test_cutsite_is_valid():
                 assert len(dseq.get_cutsites([enz])) == 1
 
     # Special cases:
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 0, 0)
+    dseq = Dseq.from_full_sequence_and_overhangs(
+        "AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 0, 0
+    )
     assert len(dseq.get_cutsites([NmeDI])) == 2
     # Remove left cutting place
     assert len(dseq[2:].get_cutsites([NmeDI])) == 1
@@ -1143,32 +1179,47 @@ def test_cutsite_is_valid():
     assert len(dseq[2:-2].get_cutsites([NmeDI])) == 0
 
     # overhang left side
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", -2, 0)
+    dseq = Dseq.from_full_sequence_and_overhangs(
+        "AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", -2, 0
+    )
     assert len(dseq.get_cutsites([NmeDI])) == 1
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 2, 0)
+    dseq = Dseq.from_full_sequence_and_overhangs(
+        "AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 2, 0
+    )
     assert len(dseq.get_cutsites([NmeDI])) == 1
 
     # overhang right side
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 0, 2)
+    dseq = Dseq.from_full_sequence_and_overhangs(
+        "AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 0, 2
+    )
     assert len(dseq.get_cutsites([NmeDI])) == 1
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 0, -2)
+    dseq = Dseq.from_full_sequence_and_overhangs(
+        "AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 0, -2
+    )
     assert len(dseq.get_cutsites([NmeDI])) == 1
 
     # overhang both sides
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 2, 2)
+    dseq = Dseq.from_full_sequence_and_overhangs(
+        "AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 2, 2
+    )
     assert len(dseq.get_cutsites([NmeDI])) == 0
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", -2, -2)
+    dseq = Dseq.from_full_sequence_and_overhangs(
+        "AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", -2, -2
+    )
     assert len(dseq.get_cutsites([NmeDI])) == 0
 
     # overhang on recognition site removes both cutting places
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 16, 0)
+    dseq = Dseq.from_full_sequence_and_overhangs(
+        "AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 16, 0
+    )
     assert len(dseq.get_cutsites([NmeDI])) == 0
-    dseq = Dseq.from_full_sequence_and_overhangs("AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 0, 16)
+    dseq = Dseq.from_full_sequence_and_overhangs(
+        "AAAAAATTTTTTTGCCGGCAAAAAAAATTTTT", 0, 16
+    )
     assert len(dseq.get_cutsites([NmeDI])) == 0
 
 
 def test_get_cutsite_pairs():
-
 
     # in the test, we replace cuts by integers for clarity.
 
@@ -1197,11 +1248,12 @@ def test_get_cutsite_pairs():
 
 def test_get_cut_parameters():
 
-
-
     dseq = Dseq.from_full_sequence_and_overhangs("aaaACGTaaa", 3, 3)
     assert dseq.get_cut_parameters(None, True) == (*dseq.left_end_position(), dseq.ovhg)
-    assert dseq.get_cut_parameters(None, False) == (*dseq.right_end_position(), dseq.watson_ovhg)
+    assert dseq.get_cut_parameters(None, False) == (
+        *dseq.right_end_position(),
+        dseq.watson_ovhg,
+    )
 
     assert dseq.get_cut_parameters(((4, -2), None), True) == (4, 6, -2)
     assert dseq.get_cut_parameters(((4, -2), None), False) == (4, 6, -2)
@@ -1212,18 +1264,24 @@ def test_get_cut_parameters():
 
     # None cannot be used on circular molecules
     try:
-        assert dseq.get_cut_parameters(None, True) == (*dseq.left_end_position(), dseq.ovhg)
+        assert dseq.get_cut_parameters(None, True) == (
+            *dseq.left_end_position(),
+            dseq.ovhg,
+        )
     except AssertionError as e:
         assert e.args[0] == "Circular sequences should not have None cuts"
     else:
-        assert False, "Expected AssertionError"
+        raise AssertionError("Expected AssertionError")
 
     try:
-        assert dseq.get_cut_parameters(None, False) == (*dseq.right_end_position(), dseq.watson_ovhg)
+        assert dseq.get_cut_parameters(None, False) == (
+            *dseq.right_end_position(),
+            dseq.watson_ovhg,
+        )
     except AssertionError as e:
         assert e.args[0] == "Circular sequences should not have None cuts"
     else:
-        assert False, "Expected AssertionError"
+        raise AssertionError("Expected AssertionError")
 
     # "Normal" cuts
     assert dseq.get_cut_parameters(((4, -2), None), True) == (4, 6, -2)
@@ -1239,9 +1297,6 @@ def test_get_cut_parameters():
 
 
 def test_checksums():
-
-
-
 
     # AT
     # TA
@@ -1278,8 +1333,16 @@ def test_checksums():
     assert ldseguid("--AT--", "CTATAG") == truth == Dseq("AT", "CTATAG", 2).seguid()
 
     truth = "cdseguid=5fHMG19IbYxn7Yr7_sOCkvaaw7U"
-    assert cdseguid("ACGTT", "AACGT") == truth == Dseq("ACGTT", "AACGT", circular=True).seguid()
-    assert cdseguid("AACGT", "ACGTT") == truth == Dseq("AACGT", "ACGTT", circular=True).seguid()
+    assert (
+        cdseguid("ACGTT", "AACGT")
+        == truth
+        == Dseq("ACGTT", "AACGT", circular=True).seguid()
+    )
+    assert (
+        cdseguid("AACGT", "ACGTT")
+        == truth
+        == Dseq("AACGT", "ACGTT", circular=True).seguid()
+    )
 
 
 def test_ovhg():
@@ -1328,9 +1391,6 @@ def test_watson_ovhg():
     assert Dseq("FFFF").watson_ovhg is None
 
 
-
-
-
 def test_melt():
 
     assert Dseq("AGJGaGEg").melt(2) == (Dseq("EP"), Dseq("FQJGaGEp"), Dseq("q"))
@@ -1363,12 +1423,30 @@ def test_melt():
     assert Dseq("GATCAGIGaGFgGATC").melt(2) == ()
     assert Dseq("GATCAGJGaGFgGATC").melt(2) == ()
     assert Dseq("GATCAGIGaGEgGATC").melt(2) == ()
-    assert Dseq("GATCGATPGGPGCAGATC").melt(2) == (Dseq("QQ"), Dseq("GATCGATPPPPGCAGATC"))
-    assert Dseq("GATCGATQGGQGCAGATC").melt(2) == (Dseq("PP"), Dseq("GATCGATQQQQGCAGATC"))
-    assert Dseq("GATCPEXIGAQFZJGATC").melt(2) == (Dseq("GATCPEXIPE"), Dseq("QFQFZJGATC"))
-    assert Dseq("GATCQFZJGAPEXIGATC").melt(2) == (Dseq("GATCQFZJQF"), Dseq("PEPEXIGATC"))
-    assert Dseq("GATCPEXIGAQFZJGATC").melt(2) == (Dseq("GATCPEXIPE"), Dseq("QFQFZJGATC"))
-    assert Dseq("GATCQFZJGAPEXIGATC").melt(2) == (Dseq("GATCQFZJQF"), Dseq("PEPEXIGATC"))
+    assert Dseq("GATCGATPGGPGCAGATC").melt(2) == (
+        Dseq("QQ"),
+        Dseq("GATCGATPPPPGCAGATC"),
+    )
+    assert Dseq("GATCGATQGGQGCAGATC").melt(2) == (
+        Dseq("PP"),
+        Dseq("GATCGATQQQQGCAGATC"),
+    )
+    assert Dseq("GATCPEXIGAQFZJGATC").melt(2) == (
+        Dseq("GATCPEXIPE"),
+        Dseq("QFQFZJGATC"),
+    )
+    assert Dseq("GATCQFZJGAPEXIGATC").melt(2) == (
+        Dseq("GATCQFZJQF"),
+        Dseq("PEPEXIGATC"),
+    )
+    assert Dseq("GATCPEXIGAQFZJGATC").melt(2) == (
+        Dseq("GATCPEXIPE"),
+        Dseq("QFQFZJGATC"),
+    )
+    assert Dseq("GATCQFZJGAPEXIGATC").melt(2) == (
+        Dseq("GATCQFZJQF"),
+        Dseq("PEPEXIGATC"),
+    )
 
 
 def test__get_ds_meltsites():
@@ -1386,13 +1464,6 @@ def test__get_ds_meltsites():
 
     assert Dseq("AGCPAGQGAT", circular=True).get_ds_meltsites(2) == [((6, 2), None)]
     assert Dseq("AGCQAGPGAT", circular=True).get_ds_meltsites(2) == [((4, -2), None)]
-
-def test__get_ds_meltsites():
-
-    assert Dseq("AGJGaGEg").get_ds_meltsites(2) == [((2, 2), None), ((8, 1), None)]
-    assert Dseq("AGIGaGFg").get_ds_meltsites(2) == [((0, -2), None), ((7, -1), None)]
-    assert Dseq("AGJGaGFg").get_ds_meltsites(2) == [((2, 2), None), ((7, -1), None)]
-    assert Dseq("AGIGaGEg").get_ds_meltsites(2) == [((0, -2), None), ((8, 1), None)]
 
     assert Dseq("PEXIGAQFZJ").get_ds_meltsites(2) == [((6, 2), None)]
     assert Dseq("QFZJGAPEXI").get_ds_meltsites(2) == [((4, -2), None)]
@@ -1436,6 +1507,7 @@ def test_nibble():
     assert Dseq("qq").nibble_five_prime_right() == Dseq("q")
     assert Dseq("qq").nibble_three_prime_right() == Dseq("qq")
 
+
 def NO_test_anneal():
 
     # Dseq(-9)
@@ -1454,7 +1526,7 @@ def NO_test_anneal():
 
     # GGACT       G
     # C       GTAGC
-    assert Dseq("GPEIX") / Dseq("JFZJG") == None
+    assert Dseq("GPEIX") / Dseq("JFZJG") is None
 
     # Dseq(-8)
     # GGACT  G
@@ -1464,7 +1536,7 @@ def NO_test_anneal():
     # Dseq(-8)
     # GGACTA G
     # C  GATGC
-    Dseq("GPEIXE") / Dseq("JZFJG") == Dseq("GPECTAJG")
+    assert Dseq("GPEIXE") / Dseq("JZFJG") == Dseq("GPECTAJG")
 
     # Dseq(-8)
     # GGACTA G
@@ -1495,7 +1567,6 @@ def NO_test_anneal():
 def test_mw():
 
     from Bio.Data.IUPACData import unambiguous_dna_weights
-    from Bio.Data.IUPACData import unambiguous_rna_weights
     from Bio.Data.IUPACData import atom_weights
 
     # The molecular weight values for a short DNA molecule agrees very well
@@ -1504,29 +1575,31 @@ def test_mw():
 
     double_strand_linear = Dseq("GATTACA")
 
-    assert round(double_strand_linear.mw(), 1) == 4359.8 # 4359.81 Da (*)
+    assert round(double_strand_linear.mw(), 1) == 4359.8  # 4359.81 Da (*)
 
-    double_strand_circular = Dseq("GATTACA", circular = True)
+    double_strand_circular = Dseq("GATTACA", circular=True)
 
-    assert round(double_strand_circular.mw(), 1) == 4323.8 # 4323.78 Da (*)
+    assert round(double_strand_circular.mw(), 1) == 4323.8  # 4323.78 Da (*)
 
     single_strand_linear = Dseq("PEXXEIE")
 
-    assert round(single_strand_linear.mw(), 1) == 2184.4 # 2184.41 Da (*)
+    assert round(single_strand_linear.mw(), 1) == 2184.4  # 2184.41 Da (*)
 
-    single_strand_circular = Dseq("PEXXEIE", circular = True)
+    single_strand_circular = Dseq("PEXXEIE", circular=True)
 
-    assert round(single_strand_circular.mw(), 1) == 2166.4 # 2166.39 Da (*)
+    assert round(single_strand_circular.mw(), 1) == 2166.4  # 2166.39 Da (*)
 
     ds_lin_obj2 = Dseq("GATZFCA")
-    assert repr(ds_lin_obj2) == textwrap.dedent("""\
+    assert repr(ds_lin_obj2) == textwrap.dedent(
+        """\
                                 Dseq(-7)
                                 GAT  CA
-                                CTAATGT""")
+                                CTAATGT"""
+    )
     # ds_lin_obj2 is missing a T and an A compared to double_strand_linear
     mw = round(ds_lin_obj2.mw(), 1)
 
-    h2o = atom_weights["H"]*2 + atom_weights["O"]
+    h2o = atom_weights["H"] * 2 + atom_weights["O"]
 
     T = unambiguous_dna_weights["T"]
     A = unambiguous_dna_weights["A"]

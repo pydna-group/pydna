@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# flake8: noqa: B950
 """
 test parse
 """
@@ -245,7 +246,10 @@ def test_Amplicon_argument():
 
     amplicon_from_amplicon = pcr(ampl)
 
-    assert str(amplicon_from_amplicon.seq) == "gctactacacacgtactgactgcctccaagatagagtcagtaaccaca"
+    assert (
+        str(amplicon_from_amplicon.seq)
+        == "gctactacacacgtactgactgcctccaagatagagtcagtaaccaca"
+    )
 
 
 def test_pcr_not_specific():
@@ -258,7 +262,9 @@ def test_pcr_not_specific():
         tgtggttactgactctatcttg"""
     )
 
-    t0 = Dseqrecord("gctactacacacgtactgactgtgctactacacacgtactgactgcctccaagatagagtcagtaaccaca")
+    t0 = Dseqrecord(
+        "gctactacacacgtactgactgtgctactacacacgtactgactgcctccaagatagagtcagtaaccaca"
+    )
 
     f = f0
     r = r0
@@ -299,7 +305,9 @@ def test_too_short_primers():
     assert ann.products == []
 
     assert ann.report() == (
-        "Template name 48 bp linear limit=23:\n" "No forward primers anneal...\n" "No reverse primers anneal..."
+        "Template name 48 bp linear limit=23:\n"
+        "No forward primers anneal...\n"
+        "No reverse primers anneal..."
     )
     assert repr(ann) == "Reaction(products = 0)"
 
@@ -791,7 +799,9 @@ def test_annotation():
     from pydna.primer import Primer
 
     dsr = Dseqrecord("ATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATTCTATTGCTGAAAAAGATAAT")
-    dsr.add_feature(x=0, y=60, type="gene", label="my_gene")  # We add a feature to highlight the sequence as a gene
+    dsr.add_feature(
+        x=0, y=60, type="gene", label="my_gene"
+    )  # We add a feature to highlight the sequence as a gene
 
     forward_primer = "ccccggatccATGCAAACAGTAATGATGGA"
     reverse_primer = "ttttggatccATTATCTTTTTCAGCAATAGAATCA"
@@ -803,7 +813,9 @@ def test_annotation():
     # Also works in circular sequences
     dsr_circ = dsr.looped()
     pcr_product_circ = pcr(forward_primer, reverse_primer, dsr_circ)
-    assert str(pcr_product_circ.features[0].location.extract(pcr_product_circ).seq) == str(dsr_circ.seq)
+    assert str(
+        pcr_product_circ.features[0].location.extract(pcr_product_circ).seq
+    ) == str(dsr_circ.seq)
 
     # Check that annotations are transmitted properly if the PCR product spans
     # the origin in a circular sequence
@@ -828,7 +840,11 @@ def test_annotation():
 
         product = pcr(primer_f, primer_r, shifted_vector)
 
-        product_seqs = set(str(f.location.extract(product).seq) for f in product.features if f.type == "test")
+        product_seqs = set(
+            str(f.location.extract(product).seq)
+            for f in product.features
+            if f.type == "test"
+        )
 
         assert product_seqs == feature_seqs, f"Shift {shift}"
 

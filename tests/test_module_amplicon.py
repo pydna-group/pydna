@@ -58,7 +58,7 @@ def test_amplicon():
 
     arg = SeqRecord(Seq("aaa"))
 
-    x = Amplicon.from_SeqRecord(arg)
+    Amplicon.from_SeqRecord(arg)
 
 
 def test_amplicon_dbd():
@@ -67,7 +67,11 @@ def test_amplicon_dbd():
     from pydna.primer import Primer
     from textwrap import dedent
 
-    template = Dseqrecord("GCGTCCAGCGGCTGCCCGAGGCGCCAAGTG" + "GATC" * 360 + "CCCGGGCCGAGCCCGCATCTGAGGCCGCCGCGGGC")
+    template = Dseqrecord(
+        "GCGTCCAGCGGCTGCCCGAGGCGCCAAGTG"
+        + "GATC" * 360
+        + "CCCGGGCCGAGCCCGCATCTGAGGCCGCCGCGGGC"
+    )
 
     p1 = Primer("GCGTCCAGCGGCTGCCCGAGG")
     p2 = Primer("GCCCGCGGCGGCCTCAGATGCGG")

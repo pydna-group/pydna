@@ -49,6 +49,17 @@
 
 # Cloning with Python
 
+import pydna
+from pydna.dseq import Dseq
+from pydna.dseqrecord import Dseqrecord
+from Bio.Restriction import BamHI
+from Bio.Restriction import EcoRI
+from pydna.genbank import genbank
+from pydna.parsers import parse_primers
+from pydna.readers import read
+from pydna.amplify import pcr
+from pydna.assembly import Assembly
+
 myinsertdna = "gtctgtgttgtt"
 
 myplasmid = "ccatttgtatgttcagctaaCCCGGGcttctacccatcccccgaag"
@@ -57,14 +68,14 @@ SmaI = "CCCGGG"
 
 myrecplasmid = myplasmid[:23] + myinsertdna + myplasmid[23:]
 
-myrecplasmid = myplasmid[: myplasmid.find(SmaI) + 3] + myinsertdna + myplasmid[myplasmid.find(SmaI) + 3 :]
+myrecplasmid = (
+    myplasmid[: myplasmid.find(SmaI) + 3]
+    + myinsertdna
+    + myplasmid[myplasmid.find(SmaI) + 3 :]
+)
 
-
-import pydna
 
 pydna.logo()
-
-from pydna.dseq import Dseq
 
 Dseq("aaa", "ttt")
 
@@ -81,13 +92,9 @@ Dseq("aaa", "ttt", circular=True, ovhg=0)
 Dseq("ggaaa", "ccttt")
 
 
-from pydna.dseqrecord import Dseqrecord
-
 x = Dseqrecord("GGATCC")
 
 x.seq
-
-from Bio.Restriction import BamHI
 
 a, b = Dseqrecord("GGATCC").cut(BamHI)
 
@@ -101,21 +108,15 @@ b.seq
 
 (b + a).seq
 
-from Bio.Restriction import EcoRI
-
 c, d = Dseqrecord("GAATTC").cut(EcoRI)
 
 c.seq
 
 d.seq
 
-from pydna.genbank import genbank
-
 gbfile = genbank("CS570233.1")
 
 gbfile
-
-from pydna.parsers import parse_primers
 
 a, b = parse_primers(
     """
@@ -126,8 +127,6 @@ gtgtaggtctatttagtcgtag
 """
 )
 
-from pydna.readers import read
-
 mytemplate = read(
     """
 >mytemplate
@@ -135,12 +134,7 @@ gtcatctacgtcgtacgttgtgtgtacgtagtagtgtcactacgactaaatagacctacac
 """
 )
 
-from pydna.amplify import pcr
-
 ampl = pcr(a, b, mytemplate)
-
-from pydna.assembly import Assembly
-from pydna.dseqrecord import Dseqrecord
 
 a = Dseqrecord("acgatgctatactgCCCCCtgtgctgtgctcta")
 b = Dseqrecord("tgtgctgtgctctaTTTTTtattctggctgtatc")

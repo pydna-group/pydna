@@ -10,7 +10,6 @@ from pydna.dseqrecord import Dseqrecord
 from pydna.design import primer_design
 from pydna.design import user_assembly_design
 from pydna.design import assembly_fragments
-from pydna.design import circular_assembly_fragments
 from pydna.parsers import parse
 from pydna.primer import Primer
 
@@ -229,9 +228,13 @@ def test_primer_Design_with_linker():
 
     asm1 = Assembly(frags)
 
-    assert asm1.assemble_linear()[0].seguid(), (b + linker + c).seguid() == "l95igKB8iKAKrvvqE9CYksyNx40"
+    assert asm1.assemble_linear()[0].seguid(), (
+        b + linker + c
+    ).seguid() == "l95igKB8iKAKrvvqE9CYksyNx40"
 
-    frags = assembly_fragments((primer_design(b), linker, primer_design(c), primer_design(b)))
+    frags = assembly_fragments(
+        (primer_design(b), linker, primer_design(c), primer_design(b))
+    )
 
     b2 = pcr(frags[-1].forward_primer, frags[0].reverse_primer, b)
 
@@ -273,7 +276,9 @@ def test_primer_Design_given_both_primers():
 
 
 def test_primer_Design_multiple_products():
-    b = Dseqrecord("agctactgactattaggggttaagctactgactattaggggtttctgatcatctgatctactatctgactgtactgatcta")
+    b = Dseqrecord(
+        "agctactgactattaggggttaagctactgactattaggggtttctgatcatctgatctactatctgactgtactgatcta"
+    )
     from pydna import _PydnaWarning
 
     with pytest.warns(_PydnaWarning):
@@ -318,7 +323,9 @@ def test_get_tm_and_primer_from_above_and_below():
 
     for f in frags:
         for temp in [40, 45, 50, 55]:
-            assert _design_primer(temp, f, 13, tm_default) == _design_primer(temp, f, 13, tm_default, 40)
+            assert _design_primer(temp, f, 13, tm_default) == _design_primer(
+                temp, f, 13, tm_default, 40
+            )
 
 
 def test_use_estimate_function():
@@ -336,14 +343,18 @@ def test_use_estimate_function():
             amp_lower_with_estimate = primer_design(
                 f, target_tm=temp, tm_func=tm_alt_lower, estimate_function=tm_default
             )
-            amp_lower_no_estimate = primer_design(f, target_tm=temp, tm_func=tm_alt_lower)
+            amp_lower_no_estimate = primer_design(
+                f, target_tm=temp, tm_func=tm_alt_lower
+            )
 
             assert amp_lower_with_estimate == amp_lower_no_estimate
 
             amp_upper_with_estimate = primer_design(
                 f, target_tm=temp, tm_func=tm_alt_upper, estimate_function=tm_default
             )
-            amp_upper_no_estimate = primer_design(f, target_tm=temp, tm_func=tm_alt_upper)
+            amp_upper_no_estimate = primer_design(
+                f, target_tm=temp, tm_func=tm_alt_upper
+            )
 
             assert amp_upper_with_estimate == amp_upper_no_estimate
 
@@ -356,10 +367,14 @@ def test_primer_design_correct_value():
             amp = primer_design(frag, target_tm=original_target_tm, limit=15)
             fwd, rvs = amp.primers()
             possible_fwd = [Primer(frag[0:i].seq) for i in range(15, 40)]
-            possible_rvs = [Primer(frag[-i:].reverse_complement().seq) for i in range(15, 40)]
+            possible_rvs = [
+                Primer(frag[-i:].reverse_complement().seq) for i in range(15, 40)
+            ]
 
             # Finds the closest forward primer
-            fwd_diff = [abs(tm_default(f.seq) - original_target_tm) for f in possible_fwd]
+            fwd_diff = [
+                abs(tm_default(f.seq) - original_target_tm) for f in possible_fwd
+            ]
             correct_fwd = possible_fwd[fwd_diff.index(min(fwd_diff))]
             assert str(fwd.seq) == str(correct_fwd.seq)
 
@@ -371,7 +386,6 @@ def test_primer_design_correct_value():
 
 
 def test_user_assembly_design_across():
-
     """
 
 
@@ -412,8 +426,8 @@ def test_user_assembly_design_across():
 
     assert (a + b).seq == a_sticky + b_sticky
 
-def test_user_assembly_design_left_side():
 
+def test_user_assembly_design_left_side():
     """
 
 
@@ -471,6 +485,7 @@ def test_user_assembly_design_left_side():
     stuffer, b_sticky = b_user.melt(8)
 
     assert (a + b).seq == a_sticky + b_sticky
+
 
 def test_user_assembly_design_right_side():
     """

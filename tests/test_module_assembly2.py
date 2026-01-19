@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# flake8: noqa: B950
 
 from Bio.Restriction import (
     AatII,
@@ -225,13 +226,15 @@ def test_new_assembly():
             FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc3"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(20), ExactPosition(34), strand=1), type="misc4"
+            FeatureLocation(ExactPosition(20), ExactPosition(34), strand=1),
+            type="misc4",
         ),
         SeqFeature(
             FeatureLocation(ExactPosition(0), ExactPosition(21), strand=1), type="misc5"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(19), ExactPosition(34), strand=1), type="misc6"
+            FeatureLocation(ExactPosition(19), ExactPosition(34), strand=1),
+            type="misc6",
         ),
     ]
 
@@ -246,34 +249,43 @@ def test_new_assembly():
             FeatureLocation(ExactPosition(0), ExactPosition(19), strand=1), type="misc9"
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(19), ExactPosition(35), strand=1), type="misc10"
+            FeatureLocation(ExactPosition(19), ExactPosition(35), strand=1),
+            type="misc10",
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc11"
+            FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1),
+            type="misc11",
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(18), ExactPosition(35), strand=1), type="misc12"
+            FeatureLocation(ExactPosition(18), ExactPosition(35), strand=1),
+            type="misc12",
         ),
     ]
 
     c.features = [
         SeqFeature(
-            FeatureLocation(ExactPosition(0), ExactPosition(37), strand=1), type="misc13"
+            FeatureLocation(ExactPosition(0), ExactPosition(37), strand=1),
+            type="misc13",
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(1), ExactPosition(36), strand=1), type="misc14"
+            FeatureLocation(ExactPosition(1), ExactPosition(36), strand=1),
+            type="misc14",
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(0), ExactPosition(16), strand=1), type="misc15"
+            FeatureLocation(ExactPosition(0), ExactPosition(16), strand=1),
+            type="misc15",
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(16), ExactPosition(37), strand=1), type="misc16"
+            FeatureLocation(ExactPosition(16), ExactPosition(37), strand=1),
+            type="misc16",
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(0), ExactPosition(17), strand=1), type="misc17"
+            FeatureLocation(ExactPosition(0), ExactPosition(17), strand=1),
+            type="misc17",
         ),
         SeqFeature(
-            FeatureLocation(ExactPosition(15), ExactPosition(37), strand=1), type="misc18"
+            FeatureLocation(ExactPosition(15), ExactPosition(37), strand=1),
+            type="misc18",
         ),
     ]
     c1 = assembly.Assembly((a, b, c), limit=14)
@@ -828,8 +840,16 @@ def test_marker_replacement_on_plasmid():
     asm_hyg = assembly.Assembly((hygromycin_product, pMEC1135), limit=50)
     candidate = asm_hyg.assemble_circular()[0]
 
-    plasmid_feat = next(f for f in pMEC1135.features if "label" in f.qualifiers and f.qualifiers["label"][0] == "AmpR")
-    candidate_feat = next(f for f in candidate.features if "label" in f.qualifiers and f.qualifiers["label"][0] == "AmpR")
+    plasmid_feat = next(
+        f
+        for f in pMEC1135.features
+        if "label" in f.qualifiers and f.qualifiers["label"][0] == "AmpR"
+    )
+    candidate_feat = next(
+        f
+        for f in candidate.features
+        if "label" in f.qualifiers and f.qualifiers["label"][0] == "AmpR"
+    )
     assert plasmid_feat.extract(pMEC1135).seq == candidate_feat.extract(candidate).seq
 
 
@@ -1100,6 +1120,7 @@ def test_pcr_with_mistmaches():
     prods = asm.assemble_linear()
     assert len(prods) == 0
 
+
 # @pytest.mark.xfail(reason="This should not work.")
 def test_pcrs_with_overlapping_primers_circular_templates():
 
@@ -1130,6 +1151,7 @@ def test_pcrs_with_overlapping_primers_circular_templates():
         asm = assembly.PCRAssembly([primer1, seq_shifted, primer2], limit=8)
         assert str(asm.assemble_linear()[0].seq) == "GCACGTTCGTGCGTTTTGC"
 
+
 # @pytest.mark.xfail(reason="This should not work.")
 def test_pcrs_with_overlapping_primers_linear_templates():
 
@@ -1145,7 +1167,7 @@ def test_pcrs_with_overlapping_primers_linear_templates():
 
     # Overlapping 5', do as normal
     primer1 = Primer("ACGTTCGTGC")
-    primer2 = Primer(reverse_complement("GTGCGTTTTGC")) # CACGCAAAACG
+    primer2 = Primer(reverse_complement("GTGCGTTTTGC"))  # CACGCAAAACG
 
     asm = assembly.PCRAssembly([primer1, seq, primer2], limit=8)
     assert str(asm.assemble_linear()[0].seq) == "ACGTTCGTGCGTTTTGC"
@@ -1555,12 +1577,13 @@ def test_restriction_ligation_partial_overlaps():
 
     # Partial overlaps
     fragments = [Dseqrecord("GGTCTCCCCAATT"), Dseqrecord("GGTCTCCAACCAA")]
-    products = assembly.restriction_ligation_assembly(fragments, [BsaI], allow_partial_overlap=True)
+    products = assembly.restriction_ligation_assembly(
+        fragments, [BsaI], allow_partial_overlap=True
+    )
 
     assert len(products) == 2
     assert str(products[0].seq) == "GGTCTCCCCAACCAA"
     assert str(products[1].seq) == "GGTCTCCAACCAATT"
-
 
 
 def test_only_adjacent_edges():
@@ -2025,7 +2048,9 @@ def test_assembly_is_valid():
     # In a linear assembly, the first and last fragments cannot be circular
     fragments = [Dseqrecord("", circular=True), Dseqrecord("")]
     assembly_plan = [(1, 2, SimpleLocation(0, 3), SimpleLocation(0, 3))]
-    assert not assembly.Assembly.assembly_is_valid(fragments, assembly_plan, False, True)
+    assert not assembly.Assembly.assembly_is_valid(
+        fragments, assembly_plan, False, True
+    )
 
 
 def test_extract_subfragment():
@@ -2087,8 +2112,12 @@ def test_extract_subfragment():
     f1 = Dseqrecord("ATTTA", circular=True)
     # Returns error if start or end location is None in circular sequences
     pytest.raises(ValueError, assembly.extract_subfragment, f1, None, None)
-    pytest.raises(ValueError, assembly.extract_subfragment, f1, None, SimpleLocation(0, 5))
-    pytest.raises(ValueError, assembly.extract_subfragment, f1, SimpleLocation(0, 5), None)
+    pytest.raises(
+        ValueError, assembly.extract_subfragment, f1, None, SimpleLocation(0, 5)
+    )
+    pytest.raises(
+        ValueError, assembly.extract_subfragment, f1, SimpleLocation(0, 5), None
+    )
 
 
 def test_sticky_end_sub_strings():

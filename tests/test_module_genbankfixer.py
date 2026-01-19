@@ -15,7 +15,10 @@ def test_pydna_gbtext_clean():
         ("NCBI_example.gb", "ldseguid=_GHnVotdYSxAKX2bAUIa10ZZDhE"),
         ("YEplac181.txt", "ldseguid=ktUgiF4Ah2i6zM8DbWewnTuwmkw"),
         ("pGADT7-Rec.gb", "cdseguid=L0wFG4Mx6rWMYej1cNpCqSYGOd0"),
-        ("P30350%20(2013-10-11%2013_49_14).dna.txt", "cdseguid=cr9QvaW0QQWgiRNmG3W-ebeCQK0"),
+        (
+            "P30350%20(2013-10-11%2013_49_14).dna.txt",
+            "cdseguid=cr9QvaW0QQWgiRNmG3W-ebeCQK0",
+        ),
         ("ApE_example.gb", "ldseguid=2oLvuMsAc-fgAISC7b3XJBuejGI"),
         ("VectorNTI_example.gb", "cdseguid=fLRW6jTMqqwZCbIFOGyl1TdDbrs"),
         ("hej.txt", "ldseguid=ktUgiF4Ah2i6zM8DbWewnTuwmkw"),

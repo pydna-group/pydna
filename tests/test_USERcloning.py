@@ -6,6 +6,7 @@ from pydna.parsers import parse, parse_primers
 from pydna.amplify import pcr
 from textwrap import dedent
 
+
 def test_USER_cloning():
 
     # >a
@@ -45,18 +46,19 @@ def test_USER_cloning():
     c = "CACCTAAtttGCCGCUc"
 
     assert p.seq.watson == w
-    assert p.seq.crick ==  c[::-1]
+    assert p.seq.crick == c[::-1]
 
     assert te.features[0] == p.features[0]
 
     USERprocessed = p.seq.user()
 
     correct_figure = dedent(
-    """\
+        """\
     Dseq(-17)
     G GGATTaaaCGGCGAg
     CACCTAAtttGCCGC c
-    """).strip()
+    """
+    ).strip()
 
     assert repr(USERprocessed) == correct_figure
 
@@ -69,19 +71,22 @@ def test_USER_cloning():
     stuffer, insert, stuffer = melted1
 
     correct_figure = dedent(
-    """\
+        """\
     Dseq(-17)
       GGATTaaaCGGCGAg
     CACCTAAtttGCCGC
-    """).strip()
+    """
+    ).strip()
 
     assert repr(insert) == correct_figure
 
-    plasmid = Dseq.from_representation("""
+    plasmid = Dseq.from_representation(
+        """
                                        Dseq(-7)
                                          aaaGT
                                        Tcttt
-                                       """)
+                                       """
+    )
 
     plasmid_insert = (plasmid + insert).looped()
 

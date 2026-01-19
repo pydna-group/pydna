@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-import pytest
 from pydna.ligate import ligate
 from pydna.dseq import Dseq
 from pydna.dseqrecord import Dseqrecord
 
-def test_ligate():
 
+def test_ligate():
 
     a = Dseqrecord(
         Dseq.from_representation(

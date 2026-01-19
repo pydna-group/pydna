@@ -10,7 +10,7 @@ def test_repr_pretty_():
 
     pp = MagicMock()
     s = pretty_str("123")
-    t = s._repr_pretty_(pp, None)
+    s._repr_pretty_(pp, None)
     pp.text.assert_called_with("123")
 
 
