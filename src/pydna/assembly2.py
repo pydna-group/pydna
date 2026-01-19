@@ -117,7 +117,7 @@ def ends_from_cutsite(
         and the sequence of the overhang. The first tuple is for the left end, second for the right end.
 
     >>> from Bio.Restriction import NotI
-    >>> x = _Dseq("ctcgGCGGCCGCcagcggccg")
+    >>> x = Dseq("ctcgGCGGCCGCcagcggccg")
     >>> x.get_cutsites(NotI)
     [((6, -4), NotI)]
     >>> ends_from_cutsite(x.get_cutsites(NotI)[0], x)
@@ -156,9 +156,9 @@ def restriction_ligation_overlap(
 
     Parameters
     ----------
-    seqx : _Dseqrecord
+    seqx : Dseqrecord
         The first sequence
-    seqy : _Dseqrecord
+    seqy : Dseqrecord
         The second sequence
     enzymes : RestrictionBatch
         The enzymes to use
@@ -266,9 +266,9 @@ def blunt_overlap(
 
     Parameters
     ----------
-    seqx : _Dseqrecord
+    seqx : Dseqrecord
         The first sequence
-    seqy : _Dseqrecord
+    seqy : Dseqrecord
         The second sequence
     limit : int
         There for compatibility, but it is ignored
@@ -376,9 +376,9 @@ def gibson_overlap(seqx: Dseqrecord, seqy: Dseqrecord, limit=25):
 
     Parameters
     ----------
-    seqx : _Dseqrecord
+    seqx : Dseqrecord
         The first sequence
-    seqy : _Dseqrecord
+    seqy : Dseqrecord
         The second sequence
     limit : int
         Minimum length of the overlap
@@ -432,9 +432,9 @@ def sticky_end_sub_strings(seqx: Dseqrecord, seqy: Dseqrecord, limit: bool = Fal
 
     Parameters
     ----------
-    seqx : _Dseqrecord
+    seqx : Dseqrecord
         The first sequence
-    seqy : _Dseqrecord
+    seqy : Dseqrecord
         The second sequence
     limit : bool
         Whether to allow partial overlaps
@@ -485,15 +485,15 @@ def zip_match_leftwards(
     than the limit or a shorter match if there are mismatches. This is convenient to maintain
     as many features as possible. It is used in PCR assembly.
 
-    >>> seq = _Dseqrecord('AAAAACGTCCCGT')
-    >>> primer = _Dseqrecord('ACGTCCCGT')
+    >>> seq = Dseqrecord('AAAAACGTCCCGT')
+    >>> primer = Dseqrecord('ACGTCCCGT')
     >>> match = (13, 9, 0) # an empty match at the end of each
     >>> zip_match_leftwards(seq, primer, match)
     (4, 0, 9)
 
     Works in circular molecules if the match spans the origin:
-    >>> seq = _Dseqrecord('TCCCGTAAAAACG', circular=True)
-    >>> primer = _Dseqrecord('ACGTCCCGT')
+    >>> seq = Dseqrecord('TCCCGTAAAAACG', circular=True)
+    >>> primer = Dseqrecord('ACGTCCCGT')
     >>> match = (6, 9, 0)
     >>> zip_match_leftwards(seq, primer, match)
     (10, 0, 9)
@@ -575,9 +575,9 @@ def primer_template_overlap(
 
     Parameters
     ----------
-    seqx : _Dseqrecord | _Primer
+    seqx : Dseqrecord | Primer
         The primer
-    seqy : _Dseqrecord | _Primer
+    seqy : Dseqrecord | Primer
         The template
     limit : int
         Minimum length of the overlap
@@ -1992,7 +1992,7 @@ def common_function_assembly_products(
 
     Parameters
     ----------
-    frags : list[_Dseqrecord]
+    frags : list[Dseqrecord]
         List of DNA fragments to assemble
     limit : int or None
         Minimum overlap length required, or None if not applicable
@@ -2007,7 +2007,7 @@ def common_function_assembly_products(
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List of assembled DNA molecules
     """
     if len(frags) == 1:
@@ -2052,7 +2052,7 @@ def gibson_assembly(
 
     Parameters
     ----------
-    frags : list[_Dseqrecord]
+    frags : list[Dseqrecord]
         List of DNA fragments to assemble
     limit : int, optional
         Minimum overlap length required, by default 25
@@ -2061,7 +2061,7 @@ def gibson_assembly(
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List of assembled DNA molecules
     """
 
@@ -2079,7 +2079,7 @@ def in_fusion_assembly(
 
     Parameters
     ----------
-    frags : list[_Dseqrecord]
+    frags : list[Dseqrecord]
         List of DNA fragments to assemble
     limit : int, optional
         Minimum overlap length required, by default 25
@@ -2088,7 +2088,7 @@ def in_fusion_assembly(
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List of assembled DNA molecules
     """
 
@@ -2104,7 +2104,7 @@ def fusion_pcr_assembly(
 
     Parameters
     ----------
-    frags : list[_Dseqrecord]
+    frags : list[Dseqrecord]
         List of DNA fragments to assemble
     limit : int, optional
         Minimum overlap length required, by default 25
@@ -2113,7 +2113,7 @@ def fusion_pcr_assembly(
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List of assembled DNA molecules
     """
     products = gibson_assembly(frags, limit)
@@ -2127,7 +2127,7 @@ def in_vivo_assembly(
 
     Parameters
     ----------
-    frags : list[_Dseqrecord]
+    frags : list[Dseqrecord]
         List of DNA fragments to assemble
     limit : int, optional
         Minimum overlap length required, by default 25
@@ -2136,7 +2136,7 @@ def in_vivo_assembly(
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List of assembled DNA molecules
     """
     products = common_function_assembly_products(
@@ -2159,7 +2159,7 @@ def restriction_ligation_assembly(
 
     Parameters
     ----------
-    frags : list[_Dseqrecord]
+    frags : list[Dseqrecord]
         List of DNA fragments to assemble
     enzymes : list[AbstractCut]
         List of restriction enzymes to use
@@ -2170,7 +2170,7 @@ def restriction_ligation_assembly(
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List of assembled DNA molecules
 
     Examples
@@ -2236,7 +2236,7 @@ def golden_gate_assembly(
 
     Parameters
     ----------
-    frags : list[_Dseqrecord]
+    frags : list[Dseqrecord]
         List of DNA fragments to assemble
     enzymes : list[AbstractCut]
         List of restriction enzymes to use
@@ -2247,7 +2247,7 @@ def golden_gate_assembly(
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List of assembled DNA molecules
 
     Examples
@@ -2270,7 +2270,7 @@ def ligation_assembly(
 
     Parameters
     ----------
-    frags : list[_Dseqrecord]
+    frags : list[Dseqrecord]
         List of DNA fragments to assemble
     allow_blunt : bool, optional
         If True, allow blunt end ligations, by default False
@@ -2281,7 +2281,7 @@ def ligation_assembly(
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List of assembled DNA molecules
 
 
@@ -2346,7 +2346,7 @@ def gateway_assembly(
 
     Parameters
     ----------
-    frags : list[_Dseqrecord]
+    frags : list[Dseqrecord]
         List of DNA fragments to assemble
     reaction_type : Literal['BP', 'LR']
         Type of Gateway reaction
@@ -2362,7 +2362,7 @@ def gateway_assembly(
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List of assembled DNA molecules
 
 
@@ -2455,7 +2455,7 @@ def common_function_integration_products(
 
     Parameters
     ----------
-    frags : list[_Dseqrecord]
+    frags : list[Dseqrecord]
         List of DNA fragments to integrate
     limit : int or None
         Minimum overlap length required, or None if not applicable
@@ -2464,7 +2464,7 @@ def common_function_integration_products(
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List of integrated DNA molecules
     """
     if len(frags) == 1:
@@ -2491,14 +2491,14 @@ def common_handle_insertion_fragments(
 
     Parameters
     ----------
-    genome : _Dseqrecord
+    genome : Dseqrecord
         Target genome sequence
-    inserts : list[_Dseqrecord] or _Dseqrecord
+    inserts : list[Dseqrecord] or Dseqrecord
         DNA fragment(s) to insert
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List containing genome and insert fragments
     """
     if not isinstance(genome, Dseqrecord):
@@ -2522,7 +2522,7 @@ def common_function_excision_products(
 
     Parameters
     ----------
-    genome : _Dseqrecord
+    genome : Dseqrecord
         Target genome sequence
     limit : int or None
         Minimum overlap length required, or None if not applicable
@@ -2531,7 +2531,7 @@ def common_function_excision_products(
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List of excised DNA molecules
     """
     asm = SingleFragmentAssembly([genome], limit, algorithm)
@@ -2548,16 +2548,16 @@ def homologous_recombination_integration(
 
     Parameters
     ----------
-    genome : _Dseqrecord
+    genome : Dseqrecord
         Target genome sequence
-    inserts : list[_Dseqrecord]
+    inserts : list[Dseqrecord]
         DNA fragment(s) to insert
     limit : int, optional
         Minimum homology length required, by default 40
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List of integrated DNA molecules
 
 
@@ -2600,14 +2600,14 @@ def homologous_recombination_excision(
 
     Parameters
     ----------
-    genome : _Dseqrecord
+    genome : Dseqrecord
         Target genome sequence
     limit : int, optional
         Minimum homology length required, by default 40
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List containing excised plasmid and remaining genome sequence
 
     Examples
@@ -2639,14 +2639,14 @@ def cre_lox_integration(
 
     Parameters
     ----------
-    genome : _Dseqrecord
+    genome : Dseqrecord
         Target genome sequence
-    inserts : list[_Dseqrecord] or _Dseqrecord
+    inserts : list[Dseqrecord] or Dseqrecord
         DNA fragment(s) to insert
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List of integrated DNA molecules
 
     Examples
@@ -2694,12 +2694,12 @@ def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
 
     Parameters
     ----------
-    genome : _Dseqrecord
+    genome : Dseqrecord
         Target genome sequence
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List containing excised plasmid and remaining genome sequence
 
     Examples
@@ -2751,18 +2751,18 @@ def crispr_integration(
 
     Parameters
     ----------
-    genome : _Dseqrecord
+    genome : Dseqrecord
         Target genome sequence
-    inserts : list[_Dseqrecord]
+    inserts : list[Dseqrecord]
         DNA fragment(s) to insert
-    guides : list[_Primer]
+    guides : list[Primer]
         List of guide RNAs as Primer objects. This may change in the future.
     limit : int, optional
         Minimum overlap length required, by default 40
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List of integrated DNA molecules
 
     Examples
@@ -2851,11 +2851,11 @@ def pcr_assembly(
 
     Parameters
     ----------
-    template : _Dseqrecord
+    template : Dseqrecord
         Template sequence
-    fwd_primer : _Primer
+    fwd_primer : Primer
         Forward primer
-    rvs_primer : _Primer
+    rvs_primer : Primer
         Reverse primer
     add_primer_features : bool, optional
         If True, add primer features to the product, by default False
@@ -2866,7 +2866,7 @@ def pcr_assembly(
 
     Returns
     -------
-    list[_Dseqrecord]
+    list[Dseqrecord]
         List of assembled DNA molecules
     """
 
