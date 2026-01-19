@@ -357,6 +357,155 @@ def common_sub_strings(
     return [r for r in results if r not in shifted_matches]
 
 
+def _recombinase_homology_offset_and_length(site: str) -> tuple[int, int]:
+    """
+    Return (offset, length) of the lowercase homology region inside a
+    recombinase recognition site string.
+
+    The lowercase segment represents the shared homology between attB and attP.
+    If no lowercase region is present, a ValueError is raised.
+
+    Parameters
+    ----------
+    site : str
+        The recognition site sequence, with the homology region in lowercase.
+
+    Returns
+    -------
+    offset : int
+        Index of the first lowercase character in the site (inclusive).
+    length : int
+        Length of the lowercase homology region.
+
+    Raises
+    ------
+    ValueError
+        If no lowercase characters are present in `site`.
+    """
+    start = -1
+    end = -1
+    for i, ch in enumerate(site):
+        if ch.islower():
+            if start == -1:
+                start = i
+            end = i + 1  # end is exclusive
+
+    if start == -1:
+        raise ValueError(
+            "Recombinase recognition site  does not contain a lowercase homology region."
+        )
+
+    return start, end - start
+
+
+def make_recombinase_algorithm(attB: str, attP: str) -> AssemblyAlgorithmType:
+    """
+    Build an Assembly algorithm that finds overlaps mediated by recombinase
+    recognition sites attB and attP.
+
+    The lowercase part of each recognition site defines the homologous core
+    that will be used as the overlap. For example:
+
+    ::
+
+        attB = "ATGCCCTAAaaTT"
+        attP = "AAaaTTTTTTTCCCT"
+
+    The lowercase ``aa`` is the homology region shared between attB and attP.
+
+    The returned function has the signature expected by Assembly, and returns a
+    list of (start_in_x, start_in_y, length) tuples describing homologous
+    overlaps between two fragments.
+
+    Parameters
+    ----------
+    attB : str
+        The attB recognition site. The homology core must be in lowercase.
+    attP : str
+        The attP recognition site. The homology core must be in lowercase.
+
+    Returns
+    -------
+    AssemblyAlgorithmType
+        A function ``algo(seqx, seqy, limit)`` suitable to pass as the
+        ``algorithm`` argument to :class:`Assembly`.
+
+    Examples
+    --------
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.assembly2 import make_recombinase_algorithm
+    >>> attB = "ATGCCCTAAaaTT"
+    >>> attP = "AAaaTTTTTTTCCCT"
+    >>> seqA = Dseqrecord("aaaATGCCCTAAaaTTtt")
+    >>> seqB = Dseqrecord("tataAAaaTTTTTTTCCCTaaa")
+    >>> algo = make_recombinase_algorithm(attB, attP)
+    >>> algo(seqA, seqB, limit=1)
+    [(12, 6, 2)]
+    """
+
+    # Precompute homology offsets and length for efficiency
+    offB, lenB = _recombinase_homology_offset_and_length(attB)
+    offP, lenP = _recombinase_homology_offset_and_length(attP)
+    homology_len = min(lenB, lenP)
+
+    def recombinase_overlap(
+        seqx: _Dseqrecord, seqy: _Dseqrecord, limit=25
+    ) -> list[SequenceOverlap]:
+        """
+        Assembly algorithm to find overlaps between seqx and seqy mediated
+        by the attB/attP recognition sites.
+
+        Parameters
+        ----------
+        seqx : _Dseqrecord
+            The first sequence.
+        seqy : _Dseqrecord
+            The second sequence.
+        limit : int or bool
+            Minimum homology length. If ``False``, no length filtering is applied.
+
+        Returns
+        -------
+        list[SequenceOverlap]
+            A list of overlaps (start_in_x, start_in_y, length) corresponding
+            to the lowercase homology region of attB/attP.
+        """
+
+        seq_x = str(seqx.seq)
+        seq_y = str(seqy.seq)
+
+        matches: list[SequenceOverlap] = []
+
+        # Find all occurrences of attB in seqx
+        start = 0
+        positions_x: list[int] = []
+        while True:
+            idx = seq_x.find(attB, start)
+            if idx == -1:
+                break
+            positions_x.append(idx + offB)
+            start = idx + 1
+
+        # Find all occurrences of attP in seqy
+        start = 0
+        positions_y: list[int] = []
+        while True:
+            idx = seq_y.find(attP, start)
+            if idx == -1:
+                break
+            positions_y.append(idx + offP)
+            start = idx + 1
+
+        # Build list of overlaps (start_in_x, start_in_y, homology_len)
+        for px in positions_x:
+            for py in positions_y:
+                matches.append((px, py, homology_len))
+
+        return matches
+
+    return recombinase_overlap
+
+
 def gibson_overlap(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=25):
     """
     Assembly algorithm to find terminal overlaps (e.g. for Gibson assembly).
