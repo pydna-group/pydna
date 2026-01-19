@@ -1194,6 +1194,36 @@ document.write(`
 </li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pydna.primer_screen">pydna.primer_screen module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fast-primer-screening">Fast primer screening</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.amplicon_tuple"><code class="docutils literal notranslate"><span class="pre">amplicon_tuple</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.amplicon_tuple.fp"><code class="docutils literal notranslate"><span class="pre">amplicon_tuple.fp</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.amplicon_tuple.fposition"><code class="docutils literal notranslate"><span class="pre">amplicon_tuple.fposition</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.amplicon_tuple.rp"><code class="docutils literal notranslate"><span class="pre">amplicon_tuple.rp</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.amplicon_tuple.rposition"><code class="docutils literal notranslate"><span class="pre">amplicon_tuple.rposition</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.amplicon_tuple.size"><code class="docutils literal notranslate"><span class="pre">amplicon_tuple.size</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.primer_tuple"><code class="docutils literal notranslate"><span class="pre">primer_tuple</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.primer_tuple.fp"><code class="docutils literal notranslate"><span class="pre">primer_tuple.fp</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.primer_tuple.rp"><code class="docutils literal notranslate"><span class="pre">primer_tuple.rp</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.primer_tuple.seq"><code class="docutils literal notranslate"><span class="pre">primer_tuple.seq</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.primer_tuple.size"><code class="docutils literal notranslate"><span class="pre">primer_tuple.size</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.closest_diff"><code class="docutils literal notranslate"><span class="pre">closest_diff()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.expand_iupac_to_dna"><code class="docutils literal notranslate"><span class="pre">expand_iupac_to_dna()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.make_automaton"><code class="docutils literal notranslate"><span class="pre">make_automaton()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.callback"><code class="docutils literal notranslate"><span class="pre">callback()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.forward_primers"><code class="docutils literal notranslate"><span class="pre">forward_primers()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.reverse_primers"><code class="docutils literal notranslate"><span class="pre">reverse_primers()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.primer_pairs"><code class="docutils literal notranslate"><span class="pre">primer_pairs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.flanking_primer_pairs"><code class="docutils literal notranslate"><span class="pre">flanking_primer_pairs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.diff_primer_pairs"><code class="docutils literal notranslate"><span class="pre">diff_primer_pairs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.diff_primer_triplets"><code class="docutils literal notranslate"><span class="pre">diff_primer_triplets()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pydna.readers">pydna.readers module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.readers.read"><code class="docutils literal notranslate"><span class="pre">read()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.readers.read_primer"><code class="docutils literal notranslate"><span class="pre">read_primer()</span></code></a></li>
@@ -13048,6 +13078,526 @@ returned.</p></li>
 </dd></dl>
 
 </section>
+<section id="module-pydna.primer_screen">
+<span id="pydna-primer-screen-module"></span><h2>pydna.primer_screen module<a class="headerlink" href="#module-pydna.primer_screen" title="Link to this heading">#</a></h2>
+<section id="fast-primer-screening">
+<h3>Fast primer screening<a class="headerlink" href="#fast-primer-screening" title="Link to this heading">#</a></h3>
+<p>This module provides fast primer screening using the Aho-Corasick string-search
+algorithm. It is useful for PCR diagnostic purposes when given a list of primers
+and a single sequence or list of sequences to analyze.</p>
+<p>The primer list can consist of <cite>Primer</cite> objects returned by <a class="reference internal" href="#pydna.parsers.parse_primers" title="pydna.parsers.parse_primers"><code class="xref py py-func docutils literal notranslate"><span class="pre">pydna.parsers.parse_primers()</span></code></a>
+or any objects with a <code class="docutils literal notranslate"><span class="pre">seq</span></code> attribute, such as <a class="reference internal" href="#pydna.seqrecord.SeqRecord" title="pydna.seqrecord.SeqRecord"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydna.seqrecord.SeqRecord</span></code></a>
+or <a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqRecord.html#Bio.SeqRecord.SeqRecord" title="(in Biopython v1.86)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Bio.SeqRecord.SeqRecord</span></code></a>.</p>
+<p>The Aho-Corasick algorithm efficiently finds all occurrences of a set of sequences
+within a larger text. If the same primer list is used repeatedly, creating an
+automaton greatly speeds up repeated searches. See <a class="reference internal" href="#pydna.primer_screen.make_automaton" title="pydna.primer_screen.make_automaton"><code class="xref py py-func docutils literal notranslate"><span class="pre">make_automaton()</span></code></a> for
+information on creating, saving, and loading such automata.</p>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="#pydna.primer_screen.forward_primers" title="pydna.primer_screen.forward_primers"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward_primers()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#pydna.primer_screen.reverse_primers" title="pydna.primer_screen.reverse_primers"><code class="xref py py-func docutils literal notranslate"><span class="pre">reverse_primers()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#pydna.primer_screen.primer_pairs" title="pydna.primer_screen.primer_pairs"><code class="xref py py-func docutils literal notranslate"><span class="pre">primer_pairs()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#pydna.primer_screen.flanking_primer_pairs" title="pydna.primer_screen.flanking_primer_pairs"><code class="xref py py-func docutils literal notranslate"><span class="pre">flanking_primer_pairs()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#pydna.primer_screen.diff_primer_pairs" title="pydna.primer_screen.diff_primer_pairs"><code class="xref py py-func docutils literal notranslate"><span class="pre">diff_primer_pairs()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#pydna.primer_screen.diff_primer_triplets" title="pydna.primer_screen.diff_primer_triplets"><code class="xref py py-func docutils literal notranslate"><span class="pre">diff_primer_triplets()</span></code></a></p></li>
+</ul>
+<p class="rubric">References</p>
+<dl class="simple">
+<dt>Aho-Corasick algorithm:</dt><dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm">https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm</a></p>
+</dd>
+<dt>This module uses <cite>pyahocorasick</cite>:</dt><dd><p>Documentation: <a class="reference external" href="https://pyahocorasick.readthedocs.io/en/latest">https://pyahocorasick.readthedocs.io/en/latest</a>
+GitHub: <a class="github reference external" href="https://github.com/WojciechMula/pyahocorasick">WojciechMula/pyahocorasick</a>
+PyPI: <a class="reference external" href="https://pypi.python.org/pypi/pyahocorasick">https://pypi.python.org/pypi/pyahocorasick</a></p>
+</dd>
+</dl>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydna.primer_screen.amplicon_tuple">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydna.primer_screen.</span></span><span class="sig-name descname"><span class="pre">amplicon_tuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fposition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rposition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pydna.primer_screen.amplicon_tuple" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydna.primer_screen.amplicon_tuple.fp">
+<span class="sig-name descname"><span class="pre">fp</span></span><a class="headerlink" href="#pydna.primer_screen.amplicon_tuple.fp" title="Link to this definition">#</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydna.primer_screen.amplicon_tuple.fposition">
+<span class="sig-name descname"><span class="pre">fposition</span></span><a class="headerlink" href="#pydna.primer_screen.amplicon_tuple.fposition" title="Link to this definition">#</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydna.primer_screen.amplicon_tuple.rp">
+<span class="sig-name descname"><span class="pre">rp</span></span><a class="headerlink" href="#pydna.primer_screen.amplicon_tuple.rp" title="Link to this definition">#</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydna.primer_screen.amplicon_tuple.rposition">
+<span class="sig-name descname"><span class="pre">rposition</span></span><a class="headerlink" href="#pydna.primer_screen.amplicon_tuple.rposition" title="Link to this definition">#</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydna.primer_screen.amplicon_tuple.size">
+<span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#pydna.primer_screen.amplicon_tuple.size" title="Link to this definition">#</a></dt>
+<dd><p>Alias for field number 4</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pydna.primer_screen.primer_tuple">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydna.primer_screen.</span></span><span class="sig-name descname"><span class="pre">primer_tuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pydna.primer_screen.primer_tuple" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydna.primer_screen.primer_tuple.fp">
+<span class="sig-name descname"><span class="pre">fp</span></span><a class="headerlink" href="#pydna.primer_screen.primer_tuple.fp" title="Link to this definition">#</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydna.primer_screen.primer_tuple.rp">
+<span class="sig-name descname"><span class="pre">rp</span></span><a class="headerlink" href="#pydna.primer_screen.primer_tuple.rp" title="Link to this definition">#</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydna.primer_screen.primer_tuple.seq">
+<span class="sig-name descname"><span class="pre">seq</span></span><a class="headerlink" href="#pydna.primer_screen.primer_tuple.seq" title="Link to this definition">#</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydna.primer_screen.primer_tuple.size">
+<span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#pydna.primer_screen.primer_tuple.size" title="Link to this definition">#</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.primer_screen.closest_diff">
+<span class="sig-prename descclassname"><span class="pre">pydna.primer_screen.</span></span><span class="sig-name descname"><span class="pre">closest_diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nums</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../_modules/pydna/primer_screen.html#closest_diff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.primer_screen.closest_diff" title="Link to this definition">#</a></dt>
+<dd><p>Smallest difference between two consecutive integers in a sorted list.</p>
+<p>Given a list of integers eg. 1, 5, 7, 11, 19, return the smallest
+absolute difference, in this case 7-5 = 2.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">closest_diff</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">19</span><span class="p">])</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>nums</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) – List of integers.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.8/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – At least two numbers are required.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Diff, always &gt;= 0.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.primer_screen.expand_iupac_to_dna">
+<span class="sig-prename descclassname"><span class="pre">pydna.primer_screen.</span></span><span class="sig-name descname"><span class="pre">expand_iupac_to_dna</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/primer_screen.html#expand_iupac_to_dna"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.primer_screen.expand_iupac_to_dna" title="Link to this definition">#</a></dt>
+<dd><p>Expand an extended IUPAC DNA string to unambiguous IUPAC nucleotide alphabet.</p>
+<p>Expands a string containing extended IUPAC code (ACGTURYSWKMBDHVN) including
+U for uracil into all possible DNA strings using only AGCT.</p>
+<p>Returns a list of strings.</p>
+<p>Example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">expand_iupac_to_dna</span><span class="p">(</span><span class="s2">&quot;ATNG&quot;</span><span class="p">)</span>
+<span class="go">[&#39;ATGG&#39;, &#39;ATAG&#39;, &#39;ATTG&#39;, &#39;ATCG&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">expand_iupac_to_dna</span><span class="p">(</span><span class="s2">&quot;ACGTURYSWKMBDHVN&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">20736</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seq</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – String containing extended IUPAC DNA.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of strings in unambiguous IUPAC nucleotide alphabet.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.primer_screen.make_automaton">
+<span class="sig-prename descclassname"><span class="pre">pydna.primer_screen.</span></span><span class="sig-name descname"><span class="pre">make_automaton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primer_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.8)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><span class="pre">Primer</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Automaton</span></span></span><a class="reference internal" href="../_modules/pydna/primer_screen.html#make_automaton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.primer_screen.make_automaton" title="Link to this definition">#</a></dt>
+<dd><p>Aho-Corasick automaton for a list of primers.</p>
+<p>An automaton <a class="reference external" href="https://github.com/WojciechMula/pyahocorasick">here</a> can
+be made prior to primer screening for a list of Primer
+objects for faster primer search.</p>
+<p>This automaton can be reused as an optional argument across calls to <a class="reference internal" href="#pydna.primer_screen.forward_primers" title="pydna.primer_screen.forward_primers"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward_primers()</span></code></a>,
+<a class="reference internal" href="#pydna.primer_screen.reverse_primers" title="pydna.primer_screen.reverse_primers"><code class="xref py py-func docutils literal notranslate"><span class="pre">reverse_primers()</span></code></a>, <a class="reference internal" href="#pydna.primer_screen.primer_pairs" title="pydna.primer_screen.primer_pairs"><code class="xref py py-func docutils literal notranslate"><span class="pre">primer_pairs()</span></code></a>, <a class="reference internal" href="#pydna.primer_screen.flanking_primer_pairs" title="pydna.primer_screen.flanking_primer_pairs"><code class="xref py py-func docutils literal notranslate"><span class="pre">flanking_primer_pairs()</span></code></a>,
+<a class="reference internal" href="#pydna.primer_screen.diff_primer_pairs" title="pydna.primer_screen.diff_primer_pairs"><code class="xref py py-func docutils literal notranslate"><span class="pre">diff_primer_pairs()</span></code></a>, and <a class="reference internal" href="#pydna.primer_screen.diff_primer_triplets" title="pydna.primer_screen.diff_primer_triplets"><code class="xref py py-func docutils literal notranslate"><span class="pre">diff_primer_triplets()</span></code></a>.</p>
+<p>The primer list can contain None, this can be used to remove primers
+from the primer_list for the automaton, while keeping the original index
+for each primer.</p>
+<p>The limit is the part of the primer used to find annealing positions.
+The automaton processes the uppercase 3’ part of each primer up to <cite>limit</cite>.
+It has to be rebuilt if a different limit is needed.</p>
+<p>The primers can contain ambiguous bases from the extended IUPAC DNA alphabet.</p>
+<p>The automaton can be saved and loaded like this (from the pyahocorasick docs):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna</span><span class="w"> </span><span class="kn">import</span> <span class="n">primer_screen</span>
+
+<span class="c1"># build automaton</span>
+<span class="n">atm</span> <span class="o">=</span> <span class="n">make_automaton</span><span class="p">(</span><span class="n">pl</span><span class="p">,</span> <span class="n">limit</span> <span class="o">=</span> <span class="mi">16</span><span class="p">)</span>
+
+<span class="c1"># save automaton</span>
+<span class="n">atm</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;atm.automaton&quot;</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">)</span>
+
+<span class="c1"># load automaton</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ahocorasick</span>
+<span class="n">atm</span> <span class="o">=</span> <span class="n">ahocorasick</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span>
+
+<span class="c1"># use automaton</span>
+<span class="n">fps</span> <span class="o">=</span> <span class="n">forward_primers</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">primer_list</span><span class="p">,</span> <span class="n">automaton</span><span class="o">=</span><span class="n">atm</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>primer_list</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><em>Primer</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><em>Primer</em></a><em>]</em>) – This is a list of pydna.primer.Primer objects or
+any object with a seq property such as Bio.SeqRecord.SeqRecord.</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – This is the primer part in  the 3’-end that has to
+anneal. The default is 16.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pyahocorasick automaton made for the list of Primer objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ahocorasick.Automaton</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.primer_screen.callback">
+<span class="sig-prename descclassname"><span class="pre">pydna.primer_screen.</span></span><span class="sig-name descname"><span class="pre">callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/pydna/primer_screen.html#callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.primer_screen.callback" title="Link to this definition">#</a></dt>
+<dd><p>PCR product sizes quality control.</p>
+<p>This function accepts two integers representing PCR product sizes
+and returns True or False indicating the ease with which the size
+differences can be distinguished on a typical agarose gel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – One size.</p></li>
+<li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Another size.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.primer_screen.forward_primers">
+<span class="sig-prename descclassname"><span class="pre">pydna.primer_screen.</span></span><span class="sig-name descname"><span class="pre">forward_primers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">primer_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.8)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><span class="pre">Primer</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">automaton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Automaton</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/primer_screen.html#forward_primers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.primer_screen.forward_primers" title="Link to this definition">#</a></dt>
+<dd><p>Forward primers from <cite>primer_list</cite> annealing to <cite>seq</cite> with at least <cite>limit</cite>
+base pairs.</p>
+<p>The optional automaton can speed up the primer search if the same primer
+list is often used, see <a class="reference internal" href="#pydna.primer_screen.make_automaton" title="pydna.primer_screen.make_automaton"><code class="xref py py-func docutils literal notranslate"><span class="pre">make_automaton()</span></code></a> for more information.</p>
+<p>The resulting dict has the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="n">primer_A_index</span> <span class="p">:</span> <span class="p">[</span><span class="n">location1</span><span class="p">,</span> <span class="n">location2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+  <span class="n">primer_B_index</span> <span class="p">:</span> <span class="p">[</span><span class="n">location1</span><span class="p">,</span> <span class="n">location2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Where a key such as primer_A_index (integer) is the index for a primer
+in <cite>primer_list</cite> and the value is a list of locations (integers) where
+the primer binds.</p>
+<p>The concept of location is the same as used in <a class="reference internal" href="#module-pydna.primer" title="pydna.primer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pydna.primer</span></code></a>.
+The forward primer in the figure below anneals at position 14 on the
+template.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">5</span><span class="o">-</span><span class="n">gtcatgatctagtcgatgtta</span><span class="o">-</span><span class="mi">3</span>
+ <span class="o">|||||||||||||||||||||</span>
+
+        <span class="mi">5</span><span class="s1">&#39;-tagtcg-3&#39;</span> <span class="o">=</span> <span class="n">forward</span> <span class="n">primer</span><span class="p">,</span> <span class="n">location</span> <span class="o">=</span> <span class="mi">14</span>
+           <span class="o">||||||</span>
+ <span class="o">|||||||||||||||||||||</span>
+<span class="mi">3</span><span class="o">-</span><span class="n">cagtactagatcagctacaat</span><span class="o">-</span><span class="mi">5</span>
+                <span class="o">|</span>
+  <span class="mi">012345678911111111112</span> <span class="n">position</span>
+            <span class="mi">01234567890</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seq</strong> (<a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord"><em>Dseqrecord</em></a>) – Target sequence to find primer annealing positions.</p></li>
+<li><p><strong>primer_list</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><em>Primer</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><em>Primer</em></a><em>]</em>) – This is a list of pydna.primer.Primer objects or any object
+with a seq property such as Bio.SeqRecord.SeqRecord.</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – This is the part at the 3’-end of each primer that has to
+anneal. The default is 16.</p></li>
+<li><p><strong>automaton</strong> (<em>ahocorasick.Automaton</em><em>, </em><em>optional</em>) – Automaton made with the <a class="reference internal" href="#pydna.primer_screen.make_automaton" title="pydna.primer_screen.make_automaton"><code class="xref py py-func docutils literal notranslate"><span class="pre">make_automaton()</span></code></a>. The default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict of lists where keys are primer indices in primer_list and
+values are lists with primer locations.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>[<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.primer_screen.reverse_primers">
+<span class="sig-prename descclassname"><span class="pre">pydna.primer_screen.</span></span><span class="sig-name descname"><span class="pre">reverse_primers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">primer_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><span class="pre">Primer</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><span class="pre">Primer</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">automaton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Automaton</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/primer_screen.html#reverse_primers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.primer_screen.reverse_primers" title="Link to this definition">#</a></dt>
+<dd><p>Primers from <cite>primer_list</cite> annealing in reverse to <cite>seq</cite> with at least
+<cite>limit</cite> base pairs.</p>
+<p>The optional automaton can speed up the primer search if the same primer
+list is often used, see <a class="reference internal" href="#pydna.primer_screen.make_automaton" title="pydna.primer_screen.make_automaton"><code class="xref py py-func docutils literal notranslate"><span class="pre">make_automaton()</span></code></a> for more information.</p>
+<p>The resulting dict has the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="n">primer_A_index</span> <span class="p">:</span> <span class="p">[</span><span class="n">location1</span><span class="p">,</span> <span class="n">location2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+  <span class="n">primer_B_index</span> <span class="p">:</span> <span class="p">[</span><span class="n">location1</span><span class="p">,</span> <span class="n">location2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Where a key such as primer_A_index (integer) is the index for a primer
+in <cite>primer_list</cite> and the value is a list of locations (integers) where
+the primer binds.</p>
+<p>The concept of location is the same as used in <a class="reference internal" href="#module-pydna.primer" title="pydna.primer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pydna.primer</span></code></a>.
+The reverse primer below anneals at position 9.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">5</span><span class="o">-</span><span class="n">gtcatgatctagtcgatgtta</span><span class="o">-</span><span class="mi">3</span>
+  <span class="o">|||||||||||||||||||||</span>
+           <span class="o">||||||</span>
+         <span class="mi">3</span><span class="o">-</span><span class="n">atcagc</span><span class="o">-</span><span class="mi">5</span> <span class="o">=</span> <span class="n">reverse</span> <span class="n">primer</span><span class="p">,</span> <span class="n">location</span> <span class="o">=</span> <span class="mi">9</span>
+
+  <span class="o">|||||||||||||||||||||</span>
+<span class="mi">3</span><span class="o">-</span><span class="n">cagtactagatcagctacaat</span><span class="o">-</span><span class="mi">5</span>
+           <span class="o">|</span>
+  <span class="mi">012345678911111111112</span> <span class="n">position</span>
+            <span class="mi">01234567890</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seq</strong> (<a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord"><em>Dseqrecord</em></a>) – Target sequence to find primer annealing positions.</p></li>
+<li><p><strong>primer_list</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><em>Primer</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><em>Primer</em></a><em>]</em>) – This is a list of pydna.primer.Primer objects or any object
+with a seq property such as Bio.SeqRecord.SeqRecord.</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – This is the part in the 3’-end of each primer that has to
+anneal. The default is 16.</p></li>
+<li><p><strong>automaton</strong> (<em>ahocorasick.Automaton</em><em>, </em><em>optional</em>) – Automaton made with the <a class="reference internal" href="#pydna.primer_screen.make_automaton" title="pydna.primer_screen.make_automaton"><code class="xref py py-func docutils literal notranslate"><span class="pre">make_automaton()</span></code></a>. The default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict of lists where keys are primer indices in primer_list and
+values are lists with primer locations.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>[<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.primer_screen.primer_pairs">
+<span class="sig-prename descclassname"><span class="pre">pydna.primer_screen.</span></span><span class="sig-name descname"><span class="pre">primer_pairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">primer_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><span class="pre">Primer</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><span class="pre">Primer</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">short</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">automaton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Automaton</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.primer_screen.amplicon_tuple" title="pydna.primer_screen.amplicon_tuple"><span class="pre">amplicon_tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/primer_screen.html#primer_pairs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.primer_screen.primer_pairs" title="Link to this definition">#</a></dt>
+<dd><p>Primer pairs that form PCR products larger than <cite>short</cite> and smaller
+than <cite>long</cite>.</p>
+<p>The PCR product size includes the PCR primers. Only unique primer pairs
+are returned. This means that the forward and reverse primers can only
+bind in one position on the template each.</p>
+<p>If you suspect that primers bind on multiple locations, use the
+<a class="reference internal" href="#pydna.primer_screen.forward_primers" title="pydna.primer_screen.forward_primers"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward_primers()</span></code></a> and <a class="reference internal" href="#pydna.primer_screen.reverse_primers" title="pydna.primer_screen.reverse_primers"><code class="xref py py-func docutils literal notranslate"><span class="pre">reverse_primers()</span></code></a> functions.</p>
+<p>The function returns a list of flat 5-namedtuples of integers and
+integers with this form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+ <span class="p">((</span><span class="n">index_fp1</span><span class="p">,</span> <span class="n">index_rp1</span><span class="p">,</span> <span class="n">position_fp1</span><span class="p">,</span> <span class="n">position_rp1</span><span class="p">,</span> <span class="n">size1</span><span class="p">),</span>
+ <span class="p">((</span><span class="n">index_fp2</span><span class="p">,</span> <span class="n">index_rp2</span><span class="p">,</span> <span class="n">position_fp2</span><span class="p">,</span> <span class="n">position_rp2</span><span class="p">,</span> <span class="n">size2</span><span class="p">),</span>
+  <span class="p">]</span>
+</pre></div>
+</div>
+<p>The indices are the <cite>primer_list</cite> indices and positions are the positions of
+the primers as described in <a class="reference internal" href="#pydna.primer_screen.forward_primers" title="pydna.primer_screen.forward_primers"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward_primers()</span></code></a> and <a class="reference internal" href="#pydna.primer_screen.reverse_primers" title="pydna.primer_screen.reverse_primers"><code class="xref py py-func docutils literal notranslate"><span class="pre">reverse_primers()</span></code></a>
+functions.
+The size includes the length of each primer, so it is the true total length
+of the PCR product.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seq</strong> (<a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord"><em>Dseqrecord</em></a>) – Target sequence to find primer annealing positions.</p></li>
+<li><p><strong>primer_list</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><em>Primer</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><em>Primer</em></a><em>]</em>) – This is a list of pydna.primer.Primer objects or any object
+with a seq property such as Bio.SeqRecord.SeqRecord.</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – This is the part in the 3’-end of each primer that has to
+anneal. The default is 16.</p></li>
+<li><p><strong>short</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Lower limit for the size of the PCR products. The default is 500.</p></li>
+<li><p><strong>long</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Upper limit for the size of the PCR products. The default is 1500.</p></li>
+<li><p><strong>automaton</strong> (<em>ahocorasick.Automaton</em><em>, </em><em>optional</em>) – Automaton made with the <a class="reference internal" href="#pydna.primer_screen.make_automaton" title="pydna.primer_screen.make_automaton"><code class="xref py py-func docutils literal notranslate"><span class="pre">make_automaton()</span></code></a>. The default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of tuples (index_fp, position_fp, index_rp, position_rp, size)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a>(<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>)]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.primer_screen.flanking_primer_pairs">
+<span class="sig-prename descclassname"><span class="pre">pydna.primer_screen.</span></span><span class="sig-name descname"><span class="pre">flanking_primer_pairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">primer_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><span class="pre">Primer</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><span class="pre">Primer</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">automaton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Automaton</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.primer_screen.amplicon_tuple" title="pydna.primer_screen.amplicon_tuple"><span class="pre">amplicon_tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/primer_screen.html#flanking_primer_pairs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.primer_screen.flanking_primer_pairs" title="Link to this definition">#</a></dt>
+<dd><p>Primer pairs that flank a target position (begin..end). This means that
+forward primers have to bind before or at the begin position and reverse primers
+have to bind at or after the end position.</p>
+<p>The function returns a list of the same flat 5-namedtuples of integers returned
+from the <a class="reference internal" href="#pydna.primer_screen.primer_pairs" title="pydna.primer_screen.primer_pairs"><code class="xref py py-func docutils literal notranslate"><span class="pre">primer_pairs()</span></code></a> function.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+ <span class="p">(</span><span class="n">index_fp1</span><span class="p">,</span> <span class="n">position_fp1</span><span class="p">,</span> <span class="n">index_rp1</span><span class="p">,</span> <span class="n">position_rp1</span><span class="p">,</span> <span class="n">size1</span><span class="p">),</span>
+ <span class="p">(</span><span class="n">index_fp2</span><span class="p">,</span> <span class="n">position_fp2</span><span class="p">,</span> <span class="n">index_rp2</span><span class="p">,</span> <span class="n">position_rp2</span><span class="p">,</span> <span class="n">size2</span><span class="p">),</span>
+ <span class="p">]</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seq</strong> (<a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord"><em>Dseqrecord</em></a>) – Target sequence to find primer annealing positions.</p></li>
+<li><p><strong>primer_list</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><em>Primer</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><em>Primer</em></a><em>]</em>) – This is a list of pydna.primer.Primer objects or any object
+with a seq property such as Bio.SeqRecord.SeqRecord.</p></li>
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) – Start and stop position for target sequence.</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – This is the part in the 3’-end of each primer that has to
+anneal. The default is 16.</p></li>
+<li><p><strong>automaton</strong> (<em>ahocorasick.Automaton</em><em>, </em><em>optional</em>) – Automaton made with the <a class="reference internal" href="#pydna.primer_screen.make_automaton" title="pydna.primer_screen.make_automaton"><code class="xref py py-func docutils literal notranslate"><span class="pre">make_automaton()</span></code></a>. The default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of tuples (index_fp, position_fp, index_rp, position_rp, size).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a>[<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.primer_screen.diff_primer_pairs">
+<span class="sig-prename descclassname"><span class="pre">pydna.primer_screen.</span></span><span class="sig-name descname"><span class="pre">diff_primer_pairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequences</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primer_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><span class="pre">Primer</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><span class="pre">Primer</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">short</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">automaton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Automaton</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.8)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">callback</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/primer_screen.html#diff_primer_pairs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.primer_screen.diff_primer_pairs" title="Link to this definition">#</a></dt>
+<dd><p>Primer pairs for diagnostic PCR.</p>
+<p>Given an iterable of sequences and a primer list, primers are selected that result in
+unique product sizes from each of the input sequences.</p>
+<p>Primers 1 and 2 both form PCR products from sequenceA and B below, but of
+different sizes. Primers 1 and 2 could be used to verify genetic modifications such
+as cloning an insert into a plasmid vector.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="mi">1</span><span class="o">&gt;</span>              <span class="o">&lt;</span><span class="mi">2</span>
+<span class="o">-------</span><span class="n">NNNNNNNNN</span><span class="o">----</span>  <span class="n">sequenceA</span>
+
+ <span class="mi">1</span><span class="o">&gt;</span>           <span class="o">&lt;</span><span class="mi">2</span>
+<span class="o">-------</span><span class="n">XXXXX</span><span class="o">--------</span>  <span class="n">sequenceB</span>
+</pre></div>
+</div>
+<p>The callback function is used to return true or false for the PCR products. This score is
+meant to filter for PCR products that are likely to migrate to
+sufficiently distinct locations to be distinguishable on a typical agarose gel.</p>
+<p>Only products larger than <cite>short</cite> and smaller than <cite>long</cite> are returned.</p>
+<p>An example of the output for two sequences (Dseqrecord(-3308), Dseqrecord(-3613)).
+Primers 501 and 1806 would yield a 933 bp product with the 3308 bp sequence and the same
+primer pair would give 1212 bp with the 3613 bp sequence.</p>
+<p>A list of named 4-tuples is returned (Sequence, forward_primer, reverse_primer, size_bp),
+where each tuple has one entry for each sequence in the input argument.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+    <span class="p">((</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="o">-</span><span class="mi">3308</span><span class="p">),</span> <span class="mi">501</span><span class="p">,</span> <span class="mi">1806</span><span class="p">,</span> <span class="mi">933</span><span class="p">),</span> <span class="p">(</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="o">-</span><span class="mi">3613</span><span class="p">),</span> <span class="mi">501</span><span class="p">,</span> <span class="mi">1806</span><span class="p">,</span> <span class="mi">1212</span><span class="p">)),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequences</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord"><em>Dseqrecord</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord"><em>Dseqrecord</em></a><em>]</em>) – Target sequence to find primer annealing positions.</p></li>
+<li><p><strong>primer_list</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><em>Primer</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><em>Primer</em></a><em>]</em>) – This is a list of pydna.primer.Primer objects or any object
+with a seq property such as Bio.SeqRecord.SeqRecord.</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – This is the part in the 3’-end of each primer that has to
+anneal. The default is 16.</p></li>
+<li><p><strong>short</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Lower limit for the size of the PCR products. The default is 500.</p></li>
+<li><p><strong>long</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Upper limit for the size of the PCR products. The default is 1500.</p></li>
+<li><p><strong>automaton</strong> (<em>ahocorasick.Automaton</em><em>, </em><em>optional</em>) – Automaton made with the <a class="reference internal" href="#pydna.primer_screen.make_automaton" title="pydna.primer_screen.make_automaton"><code class="xref py py-func docutils literal notranslate"><span class="pre">make_automaton()</span></code></a>. The default is None.</p></li>
+<li><p><strong>callback</strong> (<em>callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>]</em><em>, </em><em>optional</em>) – A function accepting a list of integers and returning True or False.
+The default is callback.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(Sequence, forward_primer, reverse_primer, size_bp)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a>[<a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord">Dseqrecord</a>, <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.primer_screen.diff_primer_triplets">
+<span class="sig-prename descclassname"><span class="pre">pydna.primer_screen.</span></span><span class="sig-name descname"><span class="pre">diff_primer_triplets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequences</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primer_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><span class="pre">Primer</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><span class="pre">Primer</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">short</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">automaton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Automaton</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.8)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">callback</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/primer_screen.html#diff_primer_triplets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.primer_screen.diff_primer_triplets" title="Link to this definition">#</a></dt>
+<dd><p>Primer triplets for diagnostic PCR.</p>
+<p>Given a list of sequences and a primer list, primer triplets are selected that result in
+PCR products of different sizes from each of the input sequences.</p>
+<p>Primers 1, 2 and 3 form PCR products from sequenceA and B below, but of
+different sizes. Primer 1 binds both sequences while primers 2 and 3 bind one
+sequence each. This primer triplet could be used to verify genetic
+modifications.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="mi">1</span><span class="o">&gt;</span>        <span class="o">&lt;</span><span class="mi">2</span>
+<span class="o">-------</span><span class="n">NNNNNNNNN</span><span class="o">----</span>  <span class="n">sequenceA</span>
+
+ <span class="mi">1</span><span class="o">&gt;</span>     <span class="o">&lt;</span><span class="mi">3</span>
+<span class="o">-------</span><span class="n">XXXXX</span><span class="o">--------</span>  <span class="n">sequenceB</span>
+</pre></div>
+</div>
+<p>The callback function is used to give a score for the PCR products. This score can
+be used to decide if a collection of PCR products are likely to migrate to distinct
+locations on a typical agarose gel.</p>
+<p>Only products larger than <cite>short</cite> and smaller than <cite>long</cite> are returned.</p>
+<p>An example of the output for two sequences = [Dseqrecord(-7664), Dseqrecord(-3613)].
+Primer pair 701, 700 would produce a 724 bp product with the 7664 bp sequence while
+the primer pair 701, 1564 would give a 1450 bp product with the 3613 bp sequence.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+    <span class="p">((</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="o">-</span><span class="mi">7664</span><span class="p">),</span> <span class="mi">701</span><span class="p">,</span> <span class="mi">700</span><span class="p">,</span> <span class="mi">724</span><span class="p">),</span> <span class="p">(</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="o">-</span><span class="mi">3613</span><span class="p">),</span> <span class="mi">701</span><span class="p">,</span> <span class="mi">1564</span><span class="p">,</span> <span class="mi">1450</span><span class="p">)),</span>
+ <span class="p">]</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequences</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord"><em>Dseqrecord</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord"><em>Dseqrecord</em></a><em>]</em>) – Target sequence to find primer annealing positions.</p></li>
+<li><p><strong>primer_list</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><em>Primer</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#pydna.primer.Primer" title="pydna.primer.Primer"><em>Primer</em></a><em>]</em>) – This is a list of pydna.primer.Primer objects or any object
+with a seq property such as Bio.SeqRecord.SeqRecord.</p></li>
+<li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – This is the part in the 3’-end of each primer that has to
+anneal. The default is 16.</p></li>
+<li><p><strong>short</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Lower limit for the size of the PCR products. The default is 500.</p></li>
+<li><p><strong>long</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Upper limit for the size of the PCR products. The default is 2000.</p></li>
+<li><p><strong>automaton</strong> (<em>ahocorasick.Automaton</em><em>, </em><em>optional</em>) – Automaton made with the <a class="reference internal" href="#pydna.primer_screen.make_automaton" title="pydna.primer_screen.make_automaton"><code class="xref py py-func docutils literal notranslate"><span class="pre">make_automaton()</span></code></a>. The default is None.</p></li>
+<li><p><strong>callback</strong> (<em>callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>]</em><em>, </em><em>optional</em>) – A function accepting a list of integers and returning True or False.
+The default is callback.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(Sequence, forward_primer, reverse_primer, size_bp)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>[<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a>[<a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord">Dseqrecord</a>, <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>, <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-pydna.readers">
 <span id="pydna-readers-module"></span><h2>pydna.readers module<a class="headerlink" href="#module-pydna.readers" title="Link to this heading">#</a></h2>
 <p>Provides two functions, read and read_primer.</p>
@@ -15593,6 +16143,36 @@ the location spans the entire sequence (it’s not empty).
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer.Primer.reverse_complement"><code class="docutils literal notranslate"><span class="pre">Primer.reverse_complement()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pydna.primer_screen">pydna.primer_screen module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fast-primer-screening">Fast primer screening</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.amplicon_tuple"><code class="docutils literal notranslate"><span class="pre">amplicon_tuple</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.amplicon_tuple.fp"><code class="docutils literal notranslate"><span class="pre">amplicon_tuple.fp</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.amplicon_tuple.fposition"><code class="docutils literal notranslate"><span class="pre">amplicon_tuple.fposition</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.amplicon_tuple.rp"><code class="docutils literal notranslate"><span class="pre">amplicon_tuple.rp</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.amplicon_tuple.rposition"><code class="docutils literal notranslate"><span class="pre">amplicon_tuple.rposition</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.amplicon_tuple.size"><code class="docutils literal notranslate"><span class="pre">amplicon_tuple.size</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.primer_tuple"><code class="docutils literal notranslate"><span class="pre">primer_tuple</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.primer_tuple.fp"><code class="docutils literal notranslate"><span class="pre">primer_tuple.fp</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.primer_tuple.rp"><code class="docutils literal notranslate"><span class="pre">primer_tuple.rp</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.primer_tuple.seq"><code class="docutils literal notranslate"><span class="pre">primer_tuple.seq</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.primer_tuple.size"><code class="docutils literal notranslate"><span class="pre">primer_tuple.size</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.closest_diff"><code class="docutils literal notranslate"><span class="pre">closest_diff()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.expand_iupac_to_dna"><code class="docutils literal notranslate"><span class="pre">expand_iupac_to_dna()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.make_automaton"><code class="docutils literal notranslate"><span class="pre">make_automaton()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.callback"><code class="docutils literal notranslate"><span class="pre">callback()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.forward_primers"><code class="docutils literal notranslate"><span class="pre">forward_primers()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.reverse_primers"><code class="docutils literal notranslate"><span class="pre">reverse_primers()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.primer_pairs"><code class="docutils literal notranslate"><span class="pre">primer_pairs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.flanking_primer_pairs"><code class="docutils literal notranslate"><span class="pre">flanking_primer_pairs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.diff_primer_pairs"><code class="docutils literal notranslate"><span class="pre">diff_primer_pairs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.primer_screen.diff_primer_triplets"><code class="docutils literal notranslate"><span class="pre">diff_primer_triplets()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pydna.readers">pydna.readers module</a><ul class="nav section-nav flex-column">

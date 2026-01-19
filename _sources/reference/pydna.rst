@@ -257,6 +257,14 @@ pydna.primer module
    :undoc-members:
    :show-inheritance:
 
+pydna.primer\_screen module
+---------------------------
+
+.. automodule:: pydna.primer_screen
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pydna.readers module
 --------------------
 

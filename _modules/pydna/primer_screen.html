@@ -1,0 +1,1258 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pydna.primer_screen &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydna/primer_screen';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../getting_started.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../reference/pydna.html">pydna package</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pydna.primer_screen</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Fast primer screening</span>
+<span class="sd">---------------------</span>
+
+<span class="sd">This module provides fast primer screening using the Aho-Corasick string-search</span>
+<span class="sd">algorithm. It is useful for PCR diagnostic purposes when given a list of primers</span>
+<span class="sd">and a single sequence or list of sequences to analyze.</span>
+
+<span class="sd">The primer list can consist of `Primer` objects returned by :func:`pydna.parsers.parse_primers`</span>
+<span class="sd">or any objects with a ``seq`` attribute, such as :class:`pydna.seqrecord.SeqRecord`</span>
+<span class="sd">or :class:`Bio.SeqRecord.SeqRecord`.</span>
+
+<span class="sd">The Aho-Corasick algorithm efficiently finds all occurrences of a set of sequences</span>
+<span class="sd">within a larger text. If the same primer list is used repeatedly, creating an</span>
+<span class="sd">automaton greatly speeds up repeated searches. See :func:`make_automaton` for</span>
+<span class="sd">information on creating, saving, and loading such automata.</span>
+
+<span class="sd">Functions</span>
+<span class="sd">---------</span>
+
+<span class="sd">- :func:`forward_primers`</span>
+<span class="sd">- :func:`reverse_primers`</span>
+<span class="sd">- :func:`primer_pairs`</span>
+<span class="sd">- :func:`flanking_primer_pairs`</span>
+<span class="sd">- :func:`diff_primer_pairs`</span>
+<span class="sd">- :func:`diff_primer_triplets`</span>
+
+<span class="sd">References</span>
+<span class="sd">----------</span>
+
+<span class="sd">Aho-Corasick algorithm:</span>
+<span class="sd">    https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm</span>
+
+<span class="sd">This module uses `pyahocorasick`:</span>
+<span class="sd">    Documentation: https://pyahocorasick.readthedocs.io/en/latest</span>
+<span class="sd">    GitHub: https://github.com/WojciechMula/pyahocorasick</span>
+<span class="sd">    PyPI: https://pypi.python.org/pypi/pyahocorasick</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="c1"># TODO: circular templates</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">combinations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">pairwise</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">ahocorasick</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Data.IUPACData</span><span class="w"> </span><span class="kn">import</span> <span class="n">ambiguous_dna_values</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+    <span class="s2">&quot;The primer_screen module is experimental &quot;</span>
+    <span class="s2">&quot;and not yet extensively tested. &quot;</span>
+    <span class="s2">&quot;api may change in future versions.&quot;</span><span class="p">,</span>
+    <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">amplicon_tuple</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span>
+    <span class="n">typename</span><span class="o">=</span><span class="s2">&quot;amplicon_tuple&quot;</span><span class="p">,</span> <span class="n">field_names</span><span class="o">=</span><span class="s2">&quot;fp, rp, fposition, rposition, size&quot;</span>
+<span class="p">)</span>
+<span class="n">primer_tuple</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="n">typename</span><span class="o">=</span><span class="s2">&quot;primer_tuple&quot;</span><span class="p">,</span> <span class="n">field_names</span><span class="o">=</span><span class="s2">&quot;seq, fp, rp, size&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="closest_diff">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.closest_diff">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">closest_diff</span><span class="p">(</span><span class="n">nums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Smallest difference between two consecutive integers in a sorted list.</span>
+
+<span class="sd">    Given a list of integers eg. 1, 5, 7, 11, 19, return the smallest</span>
+<span class="sd">    absolute difference, in this case 7-5 = 2.</span>
+
+<span class="sd">    &gt;&gt;&gt; closest_diff([1, 5, 7, 11, 19])</span>
+<span class="sd">    2</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nums : list[int]</span>
+<span class="sd">        List of integers.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        At least two numbers are required.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        Diff, always &gt;= 0.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Need at least two numbers&quot;</span><span class="p">)</span>
+
+    <span class="n">nums</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+    <span class="n">min_diff</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">nums</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">diff</span> <span class="o">&lt;</span> <span class="n">min_diff</span><span class="p">:</span>
+            <span class="n">min_diff</span> <span class="o">=</span> <span class="n">diff</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span>
+
+    <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="expand_iupac_to_dna">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.expand_iupac_to_dna">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">expand_iupac_to_dna</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Expand an extended IUPAC DNA string to unambiguous IUPAC nucleotide alphabet.</span>
+
+<span class="sd">    Expands a string containing extended IUPAC code (ACGTURYSWKMBDHVN) including</span>
+<span class="sd">    U for uracil into all possible DNA strings using only AGCT.</span>
+
+<span class="sd">    Returns a list of strings.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    &gt;&gt;&gt; expand_iupac_to_dna(&quot;ATNG&quot;)</span>
+<span class="sd">    [&#39;ATGG&#39;, &#39;ATAG&#39;, &#39;ATTG&#39;, &#39;ATCG&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; x = expand_iupac_to_dna(&quot;ACGTURYSWKMBDHVN&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; len(x)</span>
+<span class="sd">    20736</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    seq : str</span>
+<span class="sd">        String containing extended IUPAC DNA.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[str]</span>
+<span class="sd">        List of strings in unambiguous IUPAC nucleotide alphabet.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">custom_dict</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">ambiguous_dna_values</span><span class="p">}</span>
+    <span class="c1"># Include RNA</span>
+    <span class="n">custom_dict</span><span class="p">[</span><span class="s2">&quot;U&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;T&quot;</span>
+    <span class="n">choices_per_pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">custom_dict</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">seq</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span>
+    <span class="c1"># Cartesian product of all position choices</span>
+    <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tup</span><span class="p">)</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">choices_per_pos</span><span class="p">)]</span></div>
+
+
+
+<div class="viewcode-block" id="make_automaton">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.make_automaton">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_automaton</span><span class="p">(</span>
+    <span class="n">primer_list</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Primer</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ahocorasick</span><span class="o">.</span><span class="n">Automaton</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Aho-Corasick automaton for a list of primers.</span>
+
+<span class="sd">    An automaton `here &lt;https://github.com/WojciechMula/pyahocorasick&gt;`__ can</span>
+<span class="sd">    be made prior to primer screening for a list of Primer</span>
+<span class="sd">    objects for faster primer search.</span>
+
+
+<span class="sd">    This automaton can be reused as an optional argument across calls to :func:`forward_primers`,</span>
+<span class="sd">    :func:`reverse_primers`, :func:`primer_pairs`, :func:`flanking_primer_pairs`,</span>
+<span class="sd">    :func:`diff_primer_pairs`, and :func:`diff_primer_triplets`.</span>
+
+<span class="sd">    The primer list can contain None, this can be used to remove primers</span>
+<span class="sd">    from the primer_list for the automaton, while keeping the original index</span>
+<span class="sd">    for each primer.</span>
+
+<span class="sd">    The limit is the part of the primer used to find annealing positions.</span>
+<span class="sd">    The automaton processes the uppercase 3&#39; part of each primer up to `limit`.</span>
+<span class="sd">    It has to be rebuilt if a different limit is needed.</span>
+
+<span class="sd">    The primers can contain ambiguous bases from the extended IUPAC DNA alphabet.</span>
+
+<span class="sd">    The automaton can be saved and loaded like this (from the pyahocorasick docs):</span>
+
+<span class="sd">    ::</span>
+
+<span class="sd">        import pickle</span>
+<span class="sd">        from pydna import primer_screen</span>
+
+<span class="sd">        # build automaton</span>
+<span class="sd">        atm = make_automaton(pl, limit = 16)</span>
+
+<span class="sd">        # save automaton</span>
+<span class="sd">        atm.save(&quot;atm.automaton&quot;, pickle.dumps)</span>
+
+<span class="sd">        # load automaton</span>
+<span class="sd">        import ahocorasick</span>
+<span class="sd">        atm = ahocorasick.load(path, pickle.loads)</span>
+
+<span class="sd">        # use automaton</span>
+<span class="sd">        fps = forward_primers(template, primer_list, automaton=atm)</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    primer_list : list[Primer] | tuple[Primer]</span>
+<span class="sd">        This is a list of pydna.primer.Primer objects or</span>
+<span class="sd">        any object with a seq property such as Bio.SeqRecord.SeqRecord.</span>
+<span class="sd">    limit : str, optional</span>
+<span class="sd">        This is the primer part in  the 3&#39;-end that has to</span>
+<span class="sd">        anneal. The default is 16.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ahocorasick.Automaton</span>
+<span class="sd">        pyahocorasick automaton made for the list of Primer objects.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">automaton</span> <span class="o">=</span> <span class="n">ahocorasick</span><span class="o">.</span><span class="n">Automaton</span><span class="p">()</span>
+
+    <span class="n">suffix_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">primer_list</span><span class="p">):</span>
+        <span class="c1"># filter for primers that evaluate to False such as None</span>
+        <span class="c1"># or primers that are too short.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="c1"># Primers may share suffix, so primer indices pertaining to a</span>
+        <span class="c1"># certain suffix are collected together.</span>
+        <span class="k">for</span> <span class="n">footprint</span> <span class="ow">in</span> <span class="n">expand_iupac_to_dna</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">seq</span><span class="p">)[</span><span class="o">-</span><span class="n">limit</span><span class="p">:]</span><span class="o">.</span><span class="n">upper</span><span class="p">()):</span>
+            <span class="n">suffix_dict</span><span class="p">[</span><span class="n">footprint</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">footprint</span><span class="p">,</span> <span class="n">indices</span> <span class="ow">in</span> <span class="n">suffix_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">automaton</span><span class="o">.</span><span class="n">add_word</span><span class="p">(</span><span class="n">footprint</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">indices</span><span class="p">))</span>
+
+    <span class="n">automaton</span><span class="o">.</span><span class="n">make_automaton</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">automaton</span></div>
+
+
+
+<div class="viewcode-block" id="callback">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.callback">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    PCR product sizes quality control.</span>
+
+<span class="sd">    This function accepts two integers representing PCR product sizes</span>
+<span class="sd">    and returns True or False indicating the ease with which the size</span>
+<span class="sd">    differences can be distinguished on a typical agarose gel.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : int</span>
+<span class="sd">        One size.</span>
+<span class="sd">    b : int</span>
+<span class="sd">        Another size.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if successful, False otherwise.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># The length difference has to be 20%</span>
+    <span class="c1"># of the size of the larger fragment</span>
+    <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="nb">max</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="forward_primers">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.forward_primers">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">forward_primers</span><span class="p">(</span>
+    <span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+    <span class="n">primer_list</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Primer</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span>
+    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="n">automaton</span><span class="p">:</span> <span class="n">ahocorasick</span><span class="o">.</span><span class="n">Automaton</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Forward primers from `primer_list` annealing to `seq` with at least `limit`</span>
+<span class="sd">    base pairs.</span>
+
+<span class="sd">    The optional automaton can speed up the primer search if the same primer</span>
+<span class="sd">    list is often used, see :func:`make_automaton` for more information.</span>
+
+<span class="sd">    The resulting dict has the form:</span>
+
+<span class="sd">    ::</span>
+
+<span class="sd">        { primer_A_index : [location1, location2, ...]</span>
+<span class="sd">          primer_B_index : [location1, location2, ...] }</span>
+
+<span class="sd">    Where a key such as primer_A_index (integer) is the index for a primer</span>
+<span class="sd">    in `primer_list` and the value is a list of locations (integers) where</span>
+<span class="sd">    the primer binds.</span>
+
+<span class="sd">    The concept of location is the same as used in :mod:`pydna.primer`.</span>
+<span class="sd">    The forward primer in the figure below anneals at position 14 on the</span>
+<span class="sd">    template.</span>
+
+<span class="sd">    ::</span>
+
+<span class="sd">         5-gtcatgatctagtcgatgtta-3</span>
+<span class="sd">          |||||||||||||||||||||</span>
+
+<span class="sd">                 5&#39;-tagtcg-3&#39; = forward primer, location = 14</span>
+<span class="sd">                    ||||||</span>
+<span class="sd">          |||||||||||||||||||||</span>
+<span class="sd">         3-cagtactagatcagctacaat-5</span>
+<span class="sd">                         |</span>
+<span class="sd">           012345678911111111112 position</span>
+<span class="sd">                     01234567890</span>
+
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    seq : Dseqrecord</span>
+<span class="sd">        Target sequence to find primer annealing positions.</span>
+<span class="sd">    primer_list : list[Primer] | tuple[Primer]</span>
+<span class="sd">        This is a list of pydna.primer.Primer objects or any object</span>
+<span class="sd">        with a seq property such as Bio.SeqRecord.SeqRecord.</span>
+<span class="sd">    limit : str, optional</span>
+<span class="sd">        This is the part at the 3&#39;-end of each primer that has to</span>
+<span class="sd">        anneal. The default is 16.</span>
+<span class="sd">    automaton : ahocorasick.Automaton, optional</span>
+<span class="sd">        Automaton made with the :func:`make_automaton`. The default is None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict[int, list[int]]</span>
+<span class="sd">        Dict of lists where keys are primer indices in primer_list and</span>
+<span class="sd">        values are lists with primer locations.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># if no automaton is given, we make one.</span>
+    <span class="n">automaton</span> <span class="o">=</span> <span class="n">automaton</span> <span class="ow">or</span> <span class="n">make_automaton</span><span class="p">(</span><span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+
+    <span class="c1"># The limit is taken from automaton stats.</span>
+    <span class="n">limit</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()[</span><span class="s2">&quot;longest_word&quot;</span><span class="p">]</span>
+
+    <span class="c1"># A defaultdict of lists is used to collect primer locations since</span>
+    <span class="c1"># different primers can anneal in the same place.</span>
+    <span class="n">fps</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">end_index</span><span class="p">,</span> <span class="n">ids</span> <span class="ow">in</span> <span class="n">automaton</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">seq</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
+            <span class="n">fps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">end_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">fps</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="reverse_primers">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.reverse_primers">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">reverse_primers</span><span class="p">(</span>
+    <span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+    <span class="n">primer_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Primer</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Primer</span><span class="p">],</span>
+    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="n">automaton</span><span class="p">:</span> <span class="n">ahocorasick</span><span class="o">.</span><span class="n">Automaton</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Primers from `primer_list` annealing in reverse to `seq` with at least</span>
+<span class="sd">    `limit` base pairs.</span>
+
+<span class="sd">    The optional automaton can speed up the primer search if the same primer</span>
+<span class="sd">    list is often used, see :func:`make_automaton` for more information.</span>
+
+<span class="sd">    The resulting dict has the form:</span>
+
+<span class="sd">    ::</span>
+
+<span class="sd">        { primer_A_index : [location1, location2, ...]</span>
+<span class="sd">          primer_B_index : [location1, location2, ...] }</span>
+
+<span class="sd">    Where a key such as primer_A_index (integer) is the index for a primer</span>
+<span class="sd">    in `primer_list` and the value is a list of locations (integers) where</span>
+<span class="sd">    the primer binds.</span>
+
+<span class="sd">    The concept of location is the same as used in :mod:`pydna.primer`.</span>
+<span class="sd">    The reverse primer below anneals at position 9.</span>
+
+<span class="sd">    ::</span>
+
+<span class="sd">        5-gtcatgatctagtcgatgtta-3</span>
+<span class="sd">          |||||||||||||||||||||</span>
+<span class="sd">                   ||||||</span>
+<span class="sd">                 3-atcagc-5 = reverse primer, location = 9</span>
+
+<span class="sd">          |||||||||||||||||||||</span>
+<span class="sd">        3-cagtactagatcagctacaat-5</span>
+<span class="sd">                   |</span>
+<span class="sd">          012345678911111111112 position</span>
+<span class="sd">                    01234567890</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    seq : Dseqrecord</span>
+<span class="sd">        Target sequence to find primer annealing positions.</span>
+<span class="sd">    primer_list : list[Primer] | tuple[Primer]</span>
+<span class="sd">        This is a list of pydna.primer.Primer objects or any object</span>
+<span class="sd">        with a seq property such as Bio.SeqRecord.SeqRecord.</span>
+<span class="sd">    limit : str, optional</span>
+<span class="sd">        This is the part in the 3&#39;-end of each primer that has to</span>
+<span class="sd">        anneal. The default is 16.</span>
+<span class="sd">    automaton : ahocorasick.Automaton, optional</span>
+<span class="sd">        Automaton made with the :func:`make_automaton`. The default is None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict[int, list[int]]</span>
+<span class="sd">        Dict of lists where keys are primer indices in primer_list and</span>
+<span class="sd">        values are lists with primer locations.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># if no automaton is given, we make one.</span>
+    <span class="n">automaton</span> <span class="o">=</span> <span class="n">automaton</span> <span class="ow">or</span> <span class="n">make_automaton</span><span class="p">(</span><span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+
+    <span class="c1"># The limit is taken from automaton stats.</span>
+    <span class="c1"># If the automaton is given, the limit argument will be ignored.</span>
+    <span class="n">limit</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()[</span><span class="s2">&quot;longest_word&quot;</span><span class="p">]</span>
+
+    <span class="c1"># A defaultdict of lists is used to collect primer locations since</span>
+    <span class="c1"># different primers can anneal in the same place.</span>
+    <span class="n">rps</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">ln</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+
+    <span class="c1"># We use the reverse complement of the sequence instead of taking the</span>
+    <span class="c1"># reverse complement of each primer.</span>
+    <span class="k">for</span> <span class="n">end_index</span><span class="p">,</span> <span class="n">ids</span> <span class="ow">in</span> <span class="n">automaton</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">seq</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">())</span><span class="o">.</span><span class="n">upper</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
+            <span class="n">rps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ln</span> <span class="o">-</span> <span class="p">(</span><span class="n">end_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">rps</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="primer_pairs">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.primer_pairs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">primer_pairs</span><span class="p">(</span>
+    <span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+    <span class="n">primer_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Primer</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Primer</span><span class="p">],</span>
+    <span class="n">short</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
+    <span class="n">long</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
+    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="n">automaton</span><span class="p">:</span> <span class="n">ahocorasick</span><span class="o">.</span><span class="n">Automaton</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">amplicon_tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Primer pairs that form PCR products larger than `short` and smaller</span>
+<span class="sd">    than `long`.</span>
+
+<span class="sd">    The PCR product size includes the PCR primers. Only unique primer pairs</span>
+<span class="sd">    are returned. This means that the forward and reverse primers can only</span>
+<span class="sd">    bind in one position on the template each.</span>
+
+<span class="sd">    If you suspect that primers bind on multiple locations, use the</span>
+<span class="sd">    :func:`forward_primers` and :func:`reverse_primers` functions.</span>
+
+<span class="sd">    The function returns a list of flat 5-namedtuples of integers and</span>
+<span class="sd">    integers with this form:</span>
+
+<span class="sd">    ::</span>
+
+<span class="sd">        [</span>
+<span class="sd">         ((index_fp1, index_rp1, position_fp1, position_rp1, size1),</span>
+<span class="sd">         ((index_fp2, index_rp2, position_fp2, position_rp2, size2),</span>
+<span class="sd">          ]</span>
+
+
+<span class="sd">    The indices are the `primer_list` indices and positions are the positions of</span>
+<span class="sd">    the primers as described in :func:`forward_primers` and :func:`reverse_primers`</span>
+<span class="sd">    functions.</span>
+<span class="sd">    The size includes the length of each primer, so it is the true total length</span>
+<span class="sd">    of the PCR product.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    seq : Dseqrecord</span>
+<span class="sd">        Target sequence to find primer annealing positions.</span>
+<span class="sd">    primer_list : list[Primer] | tuple[Primer]</span>
+<span class="sd">        This is a list of pydna.primer.Primer objects or any object</span>
+<span class="sd">        with a seq property such as Bio.SeqRecord.SeqRecord.</span>
+<span class="sd">    limit : str, optional</span>
+<span class="sd">        This is the part in the 3&#39;-end of each primer that has to</span>
+<span class="sd">        anneal. The default is 16.</span>
+<span class="sd">    short : int, optional</span>
+<span class="sd">        Lower limit for the size of the PCR products. The default is 500.</span>
+<span class="sd">    long : int, optional</span>
+<span class="sd">        Upper limit for the size of the PCR products. The default is 1500.</span>
+<span class="sd">    automaton : ahocorasick.Automaton, optional</span>
+<span class="sd">        Automaton made with the :func:`make_automaton`. The default is None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[tuple(int, int, int, int, int)]</span>
+<span class="sd">        List of tuples (index_fp, position_fp, index_rp, position_rp, size)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">automaton</span> <span class="o">=</span> <span class="n">automaton</span> <span class="ow">or</span> <span class="n">make_automaton</span><span class="p">(</span><span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+    <span class="n">limit</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()[</span><span class="s2">&quot;longest_word&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Unique forward primers are collected</span>
+    <span class="n">fps</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">fp</span><span class="p">:</span> <span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">fp</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">forward_primers</span><span class="p">(</span>
+            <span class="n">seq</span><span class="p">,</span> <span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span> <span class="n">automaton</span><span class="o">=</span><span class="n">automaton</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Unique reverse primers are collected</span>
+    <span class="n">rps</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">rp</span><span class="p">:</span> <span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">rp</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">reverse_primers</span><span class="p">(</span>
+            <span class="n">seq</span><span class="p">,</span> <span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span> <span class="n">automaton</span><span class="o">=</span><span class="n">automaton</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="p">}</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fposition</span> <span class="ow">in</span> <span class="n">fps</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">rp</span><span class="p">,</span> <span class="n">rposition</span> <span class="ow">in</span> <span class="n">rps</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># We calculate the size of a potential PCR product</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">primer_list</span><span class="p">[</span><span class="n">fp</span><span class="p">])</span> <span class="o">+</span> <span class="n">rposition</span> <span class="o">-</span> <span class="n">fposition</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">primer_list</span><span class="p">[</span><span class="n">rp</span><span class="p">])</span>
+            <span class="c1"># If the size falls within long and short, the data is kept.</span>
+            <span class="k">if</span> <span class="n">short</span> <span class="o">&lt;=</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="n">long</span> <span class="ow">and</span> <span class="n">fposition</span> <span class="o">&lt;=</span> <span class="n">rposition</span><span class="p">:</span>
+                <span class="n">products</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">amplicon_tuple</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="n">fposition</span><span class="p">,</span> <span class="n">rposition</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">products</span></div>
+
+
+
+<div class="viewcode-block" id="flanking_primer_pairs">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.flanking_primer_pairs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">flanking_primer_pairs</span><span class="p">(</span>
+    <span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+    <span class="n">primer_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Primer</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Primer</span><span class="p">],</span>
+    <span class="n">target</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="n">automaton</span><span class="p">:</span> <span class="n">ahocorasick</span><span class="o">.</span><span class="n">Automaton</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">amplicon_tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Primer pairs that flank a target position (begin..end). This means that</span>
+<span class="sd">    forward primers have to bind before or at the begin position and reverse primers</span>
+<span class="sd">    have to bind at or after the end position.</span>
+
+<span class="sd">    The function returns a list of the same flat 5-namedtuples of integers returned</span>
+<span class="sd">    from the :func:`primer_pairs` function.</span>
+
+<span class="sd">    ::</span>
+
+<span class="sd">        [</span>
+<span class="sd">         (index_fp1, position_fp1, index_rp1, position_rp1, size1),</span>
+<span class="sd">         (index_fp2, position_fp2, index_rp2, position_rp2, size2),</span>
+<span class="sd">         ]</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    seq : Dseqrecord</span>
+<span class="sd">        Target sequence to find primer annealing positions.</span>
+<span class="sd">    primer_list : list[Primer] | tuple[Primer]</span>
+<span class="sd">        This is a list of pydna.primer.Primer objects or any object</span>
+<span class="sd">        with a seq property such as Bio.SeqRecord.SeqRecord.</span>
+<span class="sd">    target : tuple[int, int]</span>
+<span class="sd">        Start and stop position for target sequence.</span>
+<span class="sd">    limit : str, optional</span>
+<span class="sd">        This is the part in the 3&#39;-end of each primer that has to</span>
+<span class="sd">        anneal. The default is 16.</span>
+<span class="sd">    automaton : ahocorasick.Automaton, optional</span>
+<span class="sd">        Automaton made with the :func:`make_automaton`. The default is None.</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[tuple[int, int, int, int, int]]</span>
+<span class="sd">        List of tuples (index_fp, position_fp, index_rp, position_rp, size).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">automaton</span> <span class="o">=</span> <span class="n">automaton</span> <span class="ow">or</span> <span class="n">make_automaton</span><span class="p">(</span><span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+    <span class="n">limit</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()[</span><span class="s2">&quot;longest_word&quot;</span><span class="p">]</span>
+
+    <span class="n">begin</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">target</span>
+
+    <span class="k">assert</span> <span class="n">begin</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">,</span> <span class="s2">&quot;begin has to be smaller than end.&quot;</span>
+
+    <span class="n">amplicons</span> <span class="o">=</span> <span class="n">primer_pairs</span><span class="p">(</span>
+        <span class="n">seq</span><span class="p">,</span>
+        <span class="n">primer_list</span><span class="p">,</span>
+        <span class="n">short</span><span class="o">=</span><span class="n">end</span> <span class="o">-</span> <span class="n">begin</span><span class="p">,</span>
+        <span class="n">long</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">),</span>
+        <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
+        <span class="n">automaton</span><span class="o">=</span><span class="n">automaton</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">amplicon</span> <span class="ow">in</span> <span class="n">amplicons</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">fposition</span> <span class="o">&gt;=</span> <span class="n">begin</span> <span class="ow">and</span> <span class="n">end</span> <span class="o">&lt;=</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">rposition</span><span class="p">:</span>
+            <span class="n">products</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">amplicon</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">products</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="diff_primer_pairs">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.diff_primer_pairs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">diff_primer_pairs</span><span class="p">(</span>
+    <span class="n">sequences</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
+    <span class="n">primer_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Primer</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Primer</span><span class="p">],</span>
+    <span class="n">short</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
+    <span class="n">long</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1500</span><span class="p">,</span>
+    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="n">automaton</span><span class="p">:</span> <span class="n">ahocorasick</span><span class="o">.</span><span class="n">Automaton</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">list</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">callback</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Primer pairs for diagnostic PCR.</span>
+
+<span class="sd">    Given an iterable of sequences and a primer list, primers are selected that result in</span>
+<span class="sd">    unique product sizes from each of the input sequences.</span>
+
+<span class="sd">    Primers 1 and 2 both form PCR products from sequenceA and B below, but of</span>
+<span class="sd">    different sizes. Primers 1 and 2 could be used to verify genetic modifications such</span>
+<span class="sd">    as cloning an insert into a plasmid vector.</span>
+
+<span class="sd">    ::</span>
+
+<span class="sd">         1&gt;              &lt;2</span>
+<span class="sd">        -------NNNNNNNNN----  sequenceA</span>
+
+
+<span class="sd">         1&gt;           &lt;2</span>
+<span class="sd">        -------XXXXX--------  sequenceB</span>
+
+
+<span class="sd">    The callback function is used to return true or false for the PCR products. This score is</span>
+<span class="sd">    meant to filter for PCR products that are likely to migrate to</span>
+<span class="sd">    sufficiently distinct locations to be distinguishable on a typical agarose gel.</span>
+
+<span class="sd">    Only products larger than `short` and smaller than `long` are returned.</span>
+
+<span class="sd">    An example of the output for two sequences (Dseqrecord(-3308), Dseqrecord(-3613)).</span>
+<span class="sd">    Primers 501 and 1806 would yield a 933 bp product with the 3308 bp sequence and the same</span>
+<span class="sd">    primer pair would give 1212 bp with the 3613 bp sequence.</span>
+
+<span class="sd">    A list of named 4-tuples is returned (Sequence, forward_primer, reverse_primer, size_bp),</span>
+<span class="sd">    where each tuple has one entry for each sequence in the input argument.</span>
+
+<span class="sd">    ::</span>
+
+<span class="sd">        [</span>
+<span class="sd">            ((Dseqrecord(-3308), 501, 1806, 933), (Dseqrecord(-3613), 501, 1806, 1212)),</span>
+<span class="sd">        ]</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sequences : list[Dseqrecord] | tuple[Dseqrecord]</span>
+<span class="sd">        Target sequence to find primer annealing positions.</span>
+<span class="sd">    primer_list : list[Primer] | tuple[Primer]</span>
+<span class="sd">        This is a list of pydna.primer.Primer objects or any object</span>
+<span class="sd">        with a seq property such as Bio.SeqRecord.SeqRecord.</span>
+<span class="sd">    limit : str, optional</span>
+<span class="sd">        This is the part in the 3&#39;-end of each primer that has to</span>
+<span class="sd">        anneal. The default is 16.</span>
+<span class="sd">    short : int, optional</span>
+<span class="sd">        Lower limit for the size of the PCR products. The default is 500.</span>
+<span class="sd">    long : int, optional</span>
+<span class="sd">        Upper limit for the size of the PCR products. The default is 1500.</span>
+<span class="sd">    automaton : ahocorasick.Automaton, optional</span>
+<span class="sd">        Automaton made with the :func:`make_automaton`. The default is None.</span>
+<span class="sd">    callback : callable[[list], bool], optional</span>
+<span class="sd">        A function accepting a list of integers and returning True or False.</span>
+<span class="sd">        The default is callback.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[tuple[Dseqrecord, int, int, int]]</span>
+<span class="sd">        (Sequence, forward_primer, reverse_primer, size_bp)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">automaton</span> <span class="o">=</span> <span class="n">automaton</span> <span class="ow">or</span> <span class="n">make_automaton</span><span class="p">(</span><span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+    <span class="n">limit</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()[</span><span class="s2">&quot;longest_word&quot;</span><span class="p">]</span>
+    <span class="n">primer_pair_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">number_of_sequences</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">primer_pairs</span><span class="p">(</span>
+            <span class="n">seq</span><span class="p">,</span> <span class="n">primer_list</span><span class="p">,</span> <span class="n">short</span><span class="o">=</span><span class="n">short</span><span class="p">,</span> <span class="n">long</span><span class="o">=</span><span class="n">long</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span> <span class="n">automaton</span><span class="o">=</span><span class="n">automaton</span>
+        <span class="p">):</span>
+
+            <span class="n">primer_pair_dict</span><span class="p">[</span><span class="nb">frozenset</span><span class="p">((</span><span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">))][</span><span class="n">size</span><span class="p">]</span> <span class="o">=</span> <span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="n">seq</span>
+
+    <span class="n">primer_pair_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">primer_pair_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="n">number_of_sequences</span>
+    <span class="p">}</span>
+
+    <span class="n">primer_pair_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k</span><span class="p">:</span> <span class="n">v</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">primer_pair_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">callback</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">pairwise</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="p">}</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">primer_pair</span><span class="p">,</span> <span class="n">seqd</span> <span class="ow">in</span> <span class="n">primer_pair_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">closest_diff</span><span class="p">(</span><span class="n">seqd</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+                <span class="nb">tuple</span><span class="p">(</span>
+                    <span class="n">primer_tuple</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="k">for</span> <span class="n">size</span><span class="p">,</span> <span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="ow">in</span> <span class="n">seqd</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="n">result</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="diff_primer_triplets">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.diff_primer_triplets">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">diff_primer_triplets</span><span class="p">(</span>
+    <span class="n">sequences</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
+    <span class="n">primer_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Primer</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Primer</span><span class="p">],</span>
+    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="n">short</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
+    <span class="n">long</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1500</span><span class="p">,</span>
+    <span class="n">automaton</span><span class="p">:</span> <span class="n">ahocorasick</span><span class="o">.</span><span class="n">Automaton</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">list</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">callback</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Primer triplets for diagnostic PCR.</span>
+
+<span class="sd">    Given a list of sequences and a primer list, primer triplets are selected that result in</span>
+<span class="sd">    PCR products of different sizes from each of the input sequences.</span>
+
+<span class="sd">    Primers 1, 2 and 3 form PCR products from sequenceA and B below, but of</span>
+<span class="sd">    different sizes. Primer 1 binds both sequences while primers 2 and 3 bind one</span>
+<span class="sd">    sequence each. This primer triplet could be used to verify genetic</span>
+<span class="sd">    modifications.</span>
+
+<span class="sd">    ::</span>
+
+<span class="sd">         1&gt;        &lt;2</span>
+<span class="sd">        -------NNNNNNNNN----  sequenceA</span>
+
+<span class="sd">         1&gt;     &lt;3</span>
+<span class="sd">        -------XXXXX--------  sequenceB</span>
+
+
+
+<span class="sd">    The callback function is used to give a score for the PCR products. This score can</span>
+<span class="sd">    be used to decide if a collection of PCR products are likely to migrate to distinct</span>
+<span class="sd">    locations on a typical agarose gel.</span>
+
+<span class="sd">    Only products larger than `short` and smaller than `long` are returned.</span>
+
+<span class="sd">    An example of the output for two sequences = [Dseqrecord(-7664), Dseqrecord(-3613)].</span>
+<span class="sd">    Primer pair 701, 700 would produce a 724 bp product with the 7664 bp sequence while</span>
+<span class="sd">    the primer pair 701, 1564 would give a 1450 bp product with the 3613 bp sequence.</span>
+
+<span class="sd">    ::</span>
+
+<span class="sd">        [</span>
+<span class="sd">            ((Dseqrecord(-7664), 701, 700, 724), (Dseqrecord(-3613), 701, 1564, 1450)),</span>
+<span class="sd">         ]</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sequences : list[Dseqrecord] | tuple[Dseqrecord]</span>
+<span class="sd">        Target sequence to find primer annealing positions.</span>
+<span class="sd">    primer_list : list[Primer] | tuple[Primer]</span>
+<span class="sd">        This is a list of pydna.primer.Primer objects or any object</span>
+<span class="sd">        with a seq property such as Bio.SeqRecord.SeqRecord.</span>
+<span class="sd">    limit : str, optional</span>
+<span class="sd">        This is the part in the 3&#39;-end of each primer that has to</span>
+<span class="sd">        anneal. The default is 16.</span>
+<span class="sd">    short : int, optional</span>
+<span class="sd">        Lower limit for the size of the PCR products. The default is 500.</span>
+<span class="sd">    long : int, optional</span>
+<span class="sd">        Upper limit for the size of the PCR products. The default is 2000.</span>
+<span class="sd">    automaton : ahocorasick.Automaton, optional</span>
+<span class="sd">        Automaton made with the :func:`make_automaton`. The default is None.</span>
+<span class="sd">    callback : callable[[list], bool], optional</span>
+<span class="sd">        A function accepting a list of integers and returning True or False.</span>
+<span class="sd">        The default is callback.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[tuple[Dseqrecord, int, int, int]]</span>
+<span class="sd">        (Sequence, forward_primer, reverse_primer, size_bp)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">automaton</span> <span class="o">=</span> <span class="n">automaton</span> <span class="ow">or</span> <span class="n">make_automaton</span><span class="p">(</span><span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+    <span class="n">limit</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()[</span><span class="s2">&quot;longest_word&quot;</span><span class="p">]</span>
+    <span class="n">number_of_sequences</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># pp = { seq1: [(a,b,c,d,e), ...], seq2: [(i,j,k,l,m), ... ]}</span>
+
+    <span class="c1"># All primer pairs for each sequence are collected.</span>
+    <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">:</span>
+        <span class="n">pp</span><span class="p">[</span><span class="n">seq</span><span class="p">]</span> <span class="o">=</span> <span class="n">primer_pairs</span><span class="p">(</span>
+            <span class="n">seq</span><span class="p">,</span> <span class="n">primer_list</span><span class="p">,</span> <span class="n">short</span><span class="o">=</span><span class="n">short</span><span class="p">,</span> <span class="n">long</span><span class="o">=</span><span class="n">long</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span> <span class="n">automaton</span><span class="o">=</span><span class="n">automaton</span>
+        <span class="p">)</span>
+
+    <span class="c1"># We count all the times a specific pair occurs</span>
+    <span class="n">pair_counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">seq</span><span class="p">,</span> <span class="n">tuples</span> <span class="ow">in</span> <span class="n">pp</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tuples</span><span class="p">:</span>
+            <span class="n">pair</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">t</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># first two integers, unordered</span>
+            <span class="n">pair_counter</span><span class="p">[</span><span class="n">pair</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1"># Pick pairs that appear more than once.</span>
+    <span class="n">pairs_to_remove</span> <span class="o">=</span> <span class="p">{</span><span class="n">pair</span> <span class="k">for</span> <span class="n">pair</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">pair_counter</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">}</span>
+
+    <span class="c1"># Remove pairs that appear more than once.</span>
+    <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">pp</span><span class="p">:</span>
+        <span class="n">pp</span><span class="p">[</span><span class="n">seq</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">pp</span><span class="p">[</span><span class="n">seq</span><span class="p">]</span> <span class="k">if</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">t</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pairs_to_remove</span><span class="p">]</span>
+
+    <span class="n">primertrios</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">seq1</span><span class="p">,</span> <span class="n">seq2</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">sequences</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">fp1</span><span class="p">,</span> <span class="n">rp1</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">size1</span> <span class="ow">in</span> <span class="n">pp</span><span class="p">[</span><span class="n">seq1</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">fp2</span><span class="p">,</span> <span class="n">rp2</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">size2</span> <span class="ow">in</span> <span class="n">pp</span><span class="p">[</span><span class="n">seq2</span><span class="p">]:</span>
+                <span class="n">primertrio</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">((</span><span class="n">fp1</span><span class="p">,</span> <span class="n">rp1</span><span class="p">,</span> <span class="n">fp2</span><span class="p">,</span> <span class="n">rp2</span><span class="p">))</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">primertrio</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">callback</span><span class="p">(</span><span class="n">size1</span><span class="p">,</span> <span class="n">size2</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">primertrios</span><span class="p">[</span><span class="n">primertrio</span><span class="p">]:</span>
+                        <span class="k">del</span> <span class="n">primertrios</span><span class="p">[</span><span class="n">primertrio</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">primertrios</span><span class="p">[</span><span class="n">primertrio</span><span class="p">][</span><span class="n">size1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fp1</span><span class="p">,</span> <span class="n">rp1</span><span class="p">,</span> <span class="n">seq1</span><span class="p">)</span>
+                        <span class="n">primertrios</span><span class="p">[</span><span class="n">primertrio</span><span class="p">][</span><span class="n">size2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fp2</span><span class="p">,</span> <span class="n">rp2</span><span class="p">,</span> <span class="n">seq2</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">primertrio</span><span class="p">,</span> <span class="n">seqd</span> <span class="ow">in</span> <span class="n">primertrios</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqd</span><span class="p">)</span> <span class="o">==</span> <span class="n">number_of_sequences</span> <span class="ow">and</span> <span class="nb">set</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="n">s</span> <span class="k">for</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">seqd</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="p">):</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="n">closest_diff</span><span class="p">(</span><span class="n">seqd</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+                    <span class="nb">tuple</span><span class="p">(</span>
+                        <span class="n">primer_tuple</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">size</span><span class="p">,</span> <span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="ow">in</span> <span class="n">seqd</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="n">result</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
