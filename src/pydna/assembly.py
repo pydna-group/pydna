@@ -53,7 +53,7 @@ from pydna._pretty import pretty_str as ps
 from pydna.contig import Contig
 from pydna.common_sub_strings import common_sub_strings, Match
 
-from pydna.dseqrecord import Dseqrecord as Dseqrecord
+from pydna.dseqrecord import Dseqrecord
 import networkx as nx
 
 from copy import deepcopy

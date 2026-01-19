@@ -7,8 +7,8 @@
 
 """This module provide the Primer class that is a subclass of the biopython SeqRecord."""
 
-from pydna.seq import Seq as Seq
-from pydna.seqrecord import SeqRecord as SeqRecord
+from pydna.seq import Seq
+from pydna.seqrecord import SeqRecord
 
 
 class Primer(SeqRecord):
