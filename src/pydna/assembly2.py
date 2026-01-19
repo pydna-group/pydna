@@ -664,21 +664,6 @@ def primer_template_overlap(
     return list(sorted(out))
 
 
-def fill_left(seq: Dseq) -> Dseq:
-    """Fill the left overhang of a sequence with the complementary sequence."""
-    return seq.cast_to_ds_left()
-
-
-def fill_right(seq: Dseq) -> Dseq:
-    """Fill the right overhang of a sequence with the complementary sequence."""
-    return seq.cast_to_ds_right()  # _Dseq(new_watson, new_crick, seq.ovhg)
-
-
-def fill_dseq(seq: Dseq) -> Dseq:
-    """Fill the overhangs of a sequence with the complementary sequence."""
-    return fill_left(fill_right(seq))
-
-
 def reverse_complement_assembly(
     assembly: EdgeRepresentationAssembly, fragments: list[Dseqrecord]
 ) -> EdgeRepresentationAssembly:
@@ -1004,7 +989,7 @@ def extract_subfragment(
             ovhg = 0
         dummy_cut = ((start, ovhg), None)
         open_seq = seq.apply_cut(dummy_cut, dummy_cut)
-        return Dseqrecord(fill_dseq(open_seq.seq), features=open_seq.features)
+        return Dseqrecord(open_seq.seq.cast_to_ds(), features=open_seq.features)
 
     return seq[start:end]
 

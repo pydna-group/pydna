@@ -2466,6 +2466,10 @@ class Dseq(Seq):
 
         return self.__class__(result, circular=False)
 
+    def cast_to_ds(self):
+        """Sequencially calls cast_to_ds_left and cast_to_ds_right."""
+        return self.cast_to_ds_left().cast_to_ds_right()
+
     def cast_to_ds_left(self):
         """
         GATCNNNN           GATCNNNN

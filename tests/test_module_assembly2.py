@@ -1027,18 +1027,6 @@ def test_restriction_ligation_algorithm():
         ) == [(1, index_in_circular, 4)]
 
 
-def test_fill_dseq():
-
-    solution = Dseq("ACGT")
-    for query in [
-        Dseq("ACGT", "T", 0),
-        Dseq("ACGT", "G", -1),
-        Dseq("ACGT", "C", -2),
-        Dseq("ACGT", "A", -3),
-    ]:
-        assert assembly.fill_dseq(query) == solution
-
-
 def test_pcr_assembly_normal():
 
     primer1 = Primer("ACGTACGT")
