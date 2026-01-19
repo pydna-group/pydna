@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-import textwrap as _textwrap
-import networkx as _nx
-from pydna._pretty import pretty_str as _pretty_str
-from pydna.dseqrecord import Dseqrecord as _Dseqrecord
-from pydna.utils import rc as _rc
+import textwrap
+import networkx as nx
+from pydna._pretty import pretty_str as ps
+from pydna.dseqrecord import Dseqrecord
+from pydna.utils import rc
 import numpy as np
 
 
-class Contig(_Dseqrecord):
+class Contig(Dseqrecord):
     """This class holds information about a DNA assembly. This class is instantiated by
     the :class:`Assembly` class and is not meant to be used directly.
 
@@ -48,7 +48,7 @@ class Contig(_Dseqrecord):
 
     def reverse_complement(self):
         answer = type(self)(super().reverse_complement())
-        g = _nx.DiGraph()
+        g = nx.DiGraph()
         nm = self.nodemap
         g.add_edges_from(
             [(nm[v], nm[u], d) for u, v, d in list(self.graph.edges(data=True))[::-1]]
@@ -60,7 +60,7 @@ class Contig(_Dseqrecord):
                 if ed["name"].endswith("_rc")
                 else "{}_rc".format(ed["name"])[:13]
             )
-            ed["seq"] = _rc(ed["seq"])
+            ed["seq"] = rc(ed["seq"])
             ln = len(ed["seq"])
             start, stop = ed["piece"].start, ed["piece"].stop
             ed["piece"] = slice(
@@ -125,7 +125,7 @@ class Contig(_Dseqrecord):
         for p, s in mylist:
             fig += "{}{}\n".format(" " * (p + firstpos), s)
 
-        return _pretty_str(fig)
+        return ps(fig)
 
     def figure(self):
         r"""Compact ascii representation of the assembled fragments.
@@ -263,7 +263,7 @@ class Contig(_Dseqrecord):
             )
             fig += "|{space}   |\n".format(space=" " * (space))
             fig += " {space}".format(space="-" * (space + 3))
-        return _pretty_str(_textwrap.dedent(fig))
+        return ps(textwrap.dedent(fig))
 
     def figure_mpl(self):
         """

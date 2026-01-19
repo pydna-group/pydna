@@ -5,32 +5,32 @@ Types used in the pydna package.
 
 from typing import (
     TYPE_CHECKING,
-    Tuple as _Tuple,
-    Union as _Union,
-    TypeVar as _TypeVar,
-    Iterable as _Iterable,
-    Callable as _Callable,
+    Tuple,
+    Union,
+    TypeVar,
+    Iterable,
+    Callable,
 )
 
 # Import AbstractCut at runtime for CutSiteType
-from Bio.Restriction.Restriction import AbstractCut as _AbstractCut
-from pydna.crispr import _cas as __cas
+from Bio.Restriction.Restriction import AbstractCut
+from pydna.crispr import _cas
 
 if TYPE_CHECKING:
-    from Bio.Restriction import RestrictionBatch as _RestrictionBatch
+    from Bio.Restriction import RestrictionBatch
     from pydna.dseq import Dseq
-    from Bio.SeqFeature import Location as _Location
-    from pydna.dseqrecord import Dseqrecord as _Dseqrecord
+    from Bio.SeqFeature import Location
+    from pydna.dseqrecord import Dseqrecord
 
 
 # To represent any subclass of Dseq
-DseqType = _TypeVar("DseqType", bound="Dseq")
-EnzymesType = _TypeVar(
-    "EnzymesType", "_RestrictionBatch", _Iterable["_AbstractCut"], "_AbstractCut"
+DseqType = TypeVar("DseqType", bound="Dseq")
+EnzymesType = TypeVar(
+    "EnzymesType", "RestrictionBatch", Iterable["AbstractCut"], "AbstractCut"
 )
-CutSiteType = _Tuple[_Tuple[int, int], _Union[_AbstractCut, None, __cas]]
-AssemblyEdgeType = _Tuple[int, int, "_Location | None", "_Location | None"]
-AssemblySubFragmentType = _Tuple[int, "_Location | None", "_Location | None"]
+CutSiteType = Tuple[Tuple[int, int], Union[AbstractCut, None, _cas]]
+AssemblyEdgeType = Tuple[int, int, "Location | None", "Location | None"]
+AssemblySubFragmentType = Tuple[int, "Location | None", "Location | None"]
 EdgeRepresentationAssembly = list[AssemblyEdgeType]
 SubFragmentRepresentationAssembly = list[AssemblySubFragmentType]
 
@@ -38,7 +38,7 @@ SubFragmentRepresentationAssembly = list[AssemblySubFragmentType]
 # Type alias that describes overlap between two sequences x and y
 # the two first numbers are the positions where the overlap starts on x and y
 # the third number is the length of the overlap
-SequenceOverlap = _Tuple[int, int, int]
-AssemblyAlgorithmType = _Callable[
-    ["_Dseqrecord", "_Dseqrecord", int], list[SequenceOverlap]
+SequenceOverlap = Tuple[int, int, int]
+AssemblyAlgorithmType = Callable[
+    ["Dseqrecord", "Dseqrecord", int], list[SequenceOverlap]
 ]

@@ -42,41 +42,28 @@ sequences separating the overlapping regions form edges.
 The NetworkX package is used to trace linear and circular paths through the
 graph.
 """
-import os as _os
-from Bio.SeqFeature import SeqFeature as _SeqFeature
-from Bio.SeqFeature import ExactPosition as _ExactPosition
-from Bio.SeqFeature import SimpleLocation as _SimpleLocation
-from Bio.SeqFeature import CompoundLocation as _CompoundLocation
-from pydna.utils import rc as _rc
+import os
+from Bio.SeqFeature import SeqFeature
+from Bio.SeqFeature import ExactPosition
+from Bio.SeqFeature import SimpleLocation
+from Bio.SeqFeature import CompoundLocation
+from pydna.utils import rc
 
-# from pydna.utils import memorize as _memorize
-from pydna._pretty import pretty_str as _pretty_str
-from pydna.contig import Contig as _Contig
-from pydna.common_sub_strings import common_sub_strings, Match as _Match
+from pydna._pretty import pretty_str as ps
+from pydna.contig import Contig
+from pydna.common_sub_strings import common_sub_strings, Match
 
-from pydna.dseqrecord import Dseqrecord as _Dseqrecord
-import networkx as _nx
+from pydna.dseqrecord import Dseqrecord
+import networkx as nx
 
-from copy import deepcopy as _deepcopy
-from typing import (
-    Callable as _Callable,
-    Dict as _Dict,
-    List as _List,
-    NamedTuple as _NamedTuple,
-    TypedDict as _TypedDict,
-)
-import itertools as _itertools
+from copy import deepcopy
+from typing import Callable, Dict, List, NamedTuple, TypedDict
+import itertools
 
-# import logging as _logging
-
-# from func_timeout import func_set_timeout
-# from wrapt_timeout_decorator import timeout
 from pydna.threading_timer_decorator_exit import exit_after
 
-# _module_logger = _logging.getLogger("pydna." + __name__)
 
-
-class Assembly(object):  # , metaclass=_Memoize):
+class Assembly(object):
     """Assembly of a list of linear DNA fragments into linear or circular
     constructs. The Assembly is meant to replace the Assembly method as it
     is easier to use. Accepts a list of Dseqrecords (source fragments) to
@@ -123,13 +110,13 @@ class Assembly(object):  # , metaclass=_Memoize):
 
     def __init__(
         self,
-        frags: _List[_Dseqrecord],
+        frags: List[Dseqrecord],
         limit: int = 25,
-        algorithm: _Callable[[str, str, int], _List[_Match]] = common_sub_strings,
+        algorithm: Callable[[str, str, int], List[Match]] = common_sub_strings,
     ) -> None:
         # Fragments is a string subclass with some extra properties
         # The order of the fragments has significance
-        fragments: _List[_FragmentDict] = [
+        fragments: List[_FragmentDict] = [
             {
                 "upper": str(f.seq).upper(),
                 "mixed": str(f.seq),
@@ -142,7 +129,7 @@ class Assembly(object):  # , metaclass=_Memoize):
 
         # rcfragments is a dict with fragments as keys and the reverse
         # complement as value
-        rcfragments: _Dict[str, _FragmentDict] = {
+        rcfragments: Dict[str, _FragmentDict] = {
             f["mixed"]: {
                 "upper": str(frc.seq).upper(),
                 "mixed": str(frc.seq),
@@ -163,7 +150,7 @@ class Assembly(object):  # , metaclass=_Memoize):
         # all combinations of fragments are compared.
         # see https://docs.python.org/3.10/library/itertools.html
         # itertools.combinations('ABCD', 2)-->  AB AC AD BC BD CD
-        for first, secnd in _itertools.combinations(fragments, 2):
+        for first, secnd in itertools.combinations(fragments, 2):
             if first["upper"] == secnd["upper"]:
                 continue
 
@@ -222,7 +209,7 @@ class Assembly(object):  # , metaclass=_Memoize):
         # multidigraph.html
 
         order = 0
-        G = _nx.MultiDiGraph()
+        G = nx.MultiDiGraph()
         # loop through all fragments their and reverse complements
 
         for f in fragments:
@@ -231,7 +218,7 @@ class Assembly(object):  # , metaclass=_Memoize):
         for f in rcfragments.values():
             f["nodes"] = sorted(set(f["nodes"]))
 
-        for f in _itertools.chain(fragments, rcfragments.values()):
+        for f in itertools.chain(fragments, rcfragments.values()):
             # nodes are sorted in place in the order of their position
             # duplicates are removed (same position and sequence)
             # along the fragment since nodes are a tuple (position(int),
@@ -250,7 +237,7 @@ class Assembly(object):  # , metaclass=_Memoize):
                 start2,
                 length2,
                 node2,
-            ) in _itertools.combinations(f["nodes"], 2):
+            ) in itertools.combinations(f["nodes"], 2):
                 feats = [
                     ft
                     for ft in f["features"]
@@ -270,7 +257,7 @@ class Assembly(object):  # , metaclass=_Memoize):
                     name=f["name"],
                 )  # string
 
-        self.G = _nx.create_empty_copy(G)
+        self.G = nx.create_empty_copy(G)
         self.G.add_edges_from(
             sorted(
                 G.edges(data=True), key=lambda t: len(t[2].get("seq", 1)), reverse=True
@@ -282,9 +269,9 @@ class Assembly(object):  # , metaclass=_Memoize):
         self.rcfragments = rcfragments
         self.algorithm = algorithm
 
-    @exit_after(int(_os.getenv("pydna_assembly_limit", 10)))
+    @exit_after(int(os.getenv("pydna_assembly_limit", 10)))
     def assemble_linear(self, start=None, end=None, max_nodes=None):
-        G = _nx.MultiDiGraph(self.G)
+        G = nx.MultiDiGraph(self.G)
 
         G.add_nodes_from(["begin", "begin_rc", "end", "end_rc"], length=0)
 
@@ -354,16 +341,12 @@ class Assembly(object):  # , metaclass=_Memoize):
         max_nodes = max_nodes or len(self.fragments)
 
         linearpaths = list(
-            _itertools.chain(
-                _nx.all_simple_paths(_nx.DiGraph(G), "begin", "end", cutoff=max_nodes),
-                _nx.all_simple_paths(
-                    _nx.DiGraph(G), "begin", "end_rc", cutoff=max_nodes
-                ),
-                _nx.all_simple_paths(
-                    _nx.DiGraph(G), "begin_rc", "end", cutoff=max_nodes
-                ),
-                _nx.all_simple_paths(
-                    _nx.DiGraph(G), "begin_rc", "end_rc", cutoff=max_nodes
+            itertools.chain(
+                nx.all_simple_paths(nx.DiGraph(G), "begin", "end", cutoff=max_nodes),
+                nx.all_simple_paths(nx.DiGraph(G), "begin", "end_rc", cutoff=max_nodes),
+                nx.all_simple_paths(nx.DiGraph(G), "begin_rc", "end", cutoff=max_nodes),
+                nx.all_simple_paths(
+                    nx.DiGraph(G), "begin_rc", "end_rc", cutoff=max_nodes
                 ),
             )
         )
@@ -379,7 +362,7 @@ class Assembly(object):  # , metaclass=_Memoize):
                     e.append((u, v, d))
                 edgelol.append(e)
 
-            for edges in _itertools.product(*edgelol):
+            for edges in itertools.product(*edgelol):
                 # TODO explain
                 if [
                     True
@@ -392,14 +375,14 @@ class Assembly(object):  # , metaclass=_Memoize):
 
                 if key in lps:
                     continue  # TODO: is this test needed?
-                sg = _nx.DiGraph()
+                sg = nx.DiGraph()
                 sg.add_edges_from(edges)
                 sg.add_nodes_from((n, d) for n, d in G.nodes(data=True) if n in lp)
 
                 edgefeatures = []
                 offset = 0
                 for u, v, e in edges:
-                    feats = _deepcopy(e["features"])
+                    feats = deepcopy(e["features"])
                     for f in feats:
                         f.location += offset - e["piece"].start
                     edgefeatures.extend(feats)
@@ -409,7 +392,7 @@ class Assembly(object):  # , metaclass=_Memoize):
 
         return sorted(
             (
-                _Contig.from_string(
+                Contig.from_string(
                     lp[0],
                     features=lp[1],
                     graph=lp[2],
@@ -423,11 +406,11 @@ class Assembly(object):  # , metaclass=_Memoize):
             reverse=True,
         )
 
-    @exit_after(int(_os.getenv("pydna_assembly_limit", 10)))
+    @exit_after(int(os.getenv("pydna_assembly_limit", 10)))
     def assemble_circular(self, length_bound=None):
         cps = {}  # circular assembly
         cpsrc = {}
-        cpaths = sorted(_nx.simple_cycles(self.G, length_bound=length_bound), key=len)
+        cpaths = sorted(nx.simple_cycles(self.G, length_bound=length_bound), key=len)
         cpaths_sorted = []
         for cpath in cpaths:
             order, node = min((self.G.nodes[node]["order"], node) for node in cpath)
@@ -449,7 +432,7 @@ class Assembly(object):  # , metaclass=_Memoize):
                     e.append((u, v, d))
                 edgelol.append(e)
 
-            for edges in _itertools.product(*edgelol):
+            for edges in itertools.product(*edgelol):
                 if [
                     True
                     for ((u, v, e), (x, y, z)) in zip(edges, edges[1:])
@@ -461,7 +444,7 @@ class Assembly(object):  # , metaclass=_Memoize):
 
                 if key in cps or key in cpsrc:
                     continue  # TODO: is test in cpsrc needed?
-                sg = _nx.DiGraph()
+                sg = nx.DiGraph()
                 sg.add_edges_from(edges)
                 sg.add_nodes_from((n, d) for n, d in self.G.nodes(data=True) if n in cp)
 
@@ -469,7 +452,7 @@ class Assembly(object):  # , metaclass=_Memoize):
                 offset = 0
 
                 for u, v, e in edges:
-                    feats = _deepcopy(e["features"])
+                    feats = deepcopy(e["features"])
                     for feat in feats:
                         feat.location += offset
                     edgefeatures.extend(feats)
@@ -478,18 +461,18 @@ class Assembly(object):  # , metaclass=_Memoize):
                         if f.location.start > len(ct) and f.location.end > len(ct):
                             f.location += -len(ct)
                         elif f.location.end > len(ct):
-                            f.location = _CompoundLocation(
+                            f.location = CompoundLocation(
                                 (
-                                    _SimpleLocation(
-                                        f.location.start, _ExactPosition(len(ct))
+                                    SimpleLocation(
+                                        f.location.start, ExactPosition(len(ct))
                                     ),
-                                    _SimpleLocation(
-                                        _ExactPosition(0), f.location.end - len(ct)
+                                    SimpleLocation(
+                                        ExactPosition(0), f.location.end - len(ct)
                                     ),
                                 )
                             )
 
-                cps[key] = cpsrc[_rc(key)] = (
+                cps[key] = cpsrc[rc(key)] = (
                     ct,
                     edgefeatures,
                     sg,
@@ -499,7 +482,7 @@ class Assembly(object):  # , metaclass=_Memoize):
 
         return sorted(
             (
-                _Contig.from_string(
+                Contig.from_string(
                     cp[0],
                     features=cp[1],
                     graph=cp[2],
@@ -513,9 +496,9 @@ class Assembly(object):  # , metaclass=_Memoize):
             reverse=True,
         )
 
-    def __repr__(self) -> _pretty_str:
+    def __repr__(self) -> ps:
         # https://pyformat.info
-        return _pretty_str(
+        return ps(
             "Assembly\n"
             "fragments..: {sequences}\n"
             "limit(bp)..: {limit}\n"
@@ -532,34 +515,34 @@ class Assembly(object):  # , metaclass=_Memoize):
 
 
 example_fragments = (
-    _Dseqrecord("AacgatCAtgctcc", name="a"),
-    _Dseqrecord("TtgctccTAAattctgc", name="b"),
-    _Dseqrecord("CattctgcGAGGacgatG", name="c"),
+    Dseqrecord("AacgatCAtgctcc", name="a"),
+    Dseqrecord("TtgctccTAAattctgc", name="b"),
+    Dseqrecord("CattctgcGAGGacgatG", name="c"),
 )
 
 
 linear_results = (
-    _Dseqrecord("AacgatCAtgctccTAAattctgcGAGGacgatG", name="abc"),
-    _Dseqrecord("ggagcaTGatcgtCCTCgcagaatG", name="ac_rc"),
-    _Dseqrecord("AacgatG", name="ac"),
+    Dseqrecord("AacgatCAtgctccTAAattctgcGAGGacgatG", name="abc"),
+    Dseqrecord("ggagcaTGatcgtCCTCgcagaatG", name="ac_rc"),
+    Dseqrecord("AacgatG", name="ac"),
 )
 
 
 circular_results = (
-    _Dseqrecord("acgatCAtgctccTAAattctgcGAGG", name="abc", circular=True),
-    _Dseqrecord("ggagcaTGatcgtCCTCgcagaatTTA", name="abc_rc", circular=True),
+    Dseqrecord("acgatCAtgctccTAAattctgcGAGG", name="abc", circular=True),
+    Dseqrecord("ggagcaTGatcgtCCTCgcagaatTTA", name="abc_rc", circular=True),
 )
 
 
-class _NodeTuple(_NamedTuple):
+class _NodeTuple(NamedTuple):
     start: int
     length: int
     shared_seq: str  # uppercase
 
 
-class _FragmentDict(_TypedDict):
+class _FragmentDict(TypedDict):
     upper: str
     mixed: str
     name: str
-    features: _List[_SeqFeature]
-    nodes: _List[_NodeTuple]
+    features: List[SeqFeature]
+    nodes: List[_NodeTuple]

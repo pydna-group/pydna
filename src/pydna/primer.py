@@ -7,11 +7,11 @@
 
 """This module provide the Primer class that is a subclass of the biopython SeqRecord."""
 
-from pydna.seq import Seq as _Seq
-from pydna.seqrecord import SeqRecord as _SeqRecord
+from pydna.seq import Seq
+from pydna.seqrecord import SeqRecord
 
 
-class Primer(_SeqRecord):
+class Primer(SeqRecord):
     """Primer and its position on a template, footprint and tail."""
 
     def __init__(
@@ -23,7 +23,7 @@ class Primer(_SeqRecord):
         elif hasattr(record, "transcribe"):  # Seq
             super().__init__(record, *args, **kwargs)
         else:  # string?
-            super().__init__(_Seq(record), *args, **kwargs)
+            super().__init__(Seq(record), *args, **kwargs)
         self.amplicon = amplicon
         self.position = position
         self._fp = footprint or len(record)

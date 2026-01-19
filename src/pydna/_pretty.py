@@ -6,10 +6,10 @@ The pretty_str class is similar to str but has a _repr_pretty_ method
 for for nicer string output in the IPython shell and Jupyter notebook.
 """
 
-from prettytable import PrettyTable as _Pt
-from prettytable import TableStyle as _TableStyle
-from copy import copy as _copy
-from typing import List as _List
+from prettytable import PrettyTable as Pt
+from prettytable import TableStyle
+from copy import copy
+from typing import List
 
 
 class pretty_str(str):
@@ -19,10 +19,10 @@ class pretty_str(str):
         p.text(self)
 
 
-class PrettyTable(_Pt):
+class PrettyTable(Pt):
     """docstring."""
 
-    def lol(self) -> _List[list]:
+    def lol(self) -> List[list]:
         """docstring."""
         return [self._field_names] + self._rows
 
@@ -31,6 +31,6 @@ class PrettyTable(_Pt):
         return self.get_string()
 
     def _repr_markdown_(self) -> pretty_str:
-        c = _copy(self)
-        c.set_style(_TableStyle.MARKDOWN)
+        c = copy(self)
+        c.set_style(TableStyle.MARKDOWN)
         return pretty_str(c.get_string())

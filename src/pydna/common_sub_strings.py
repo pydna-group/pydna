@@ -13,12 +13,10 @@ https://github.com/gip0/py-rstr-max
 the original code was covered by an MIT licence."""
 
 
-# from array import array as _array
-# import itertools as _itertools
-from operator import itemgetter as _itemgetter
-from typing import List as _List, Tuple as _Tuple
+from operator import itemgetter
+from typing import List, Tuple
 
-Match = _Tuple[int, int, int]  # (x_start, y_start, length)
+Match = Tuple[int, int, int]  # (x_start, y_start, length)
 
 # def _kark_sort(s, SA, n, K):
 #     def radixpass(a, b, r, s, n, k):
@@ -314,7 +312,7 @@ Match = _Tuple[int, int, int]  # (x_start, y_start, length)
 #     return match
 
 
-def common_sub_strings(stringx: str, stringy: str, limit: int = 25) -> _List[Match]:
+def common_sub_strings(stringx: str, stringy: str, limit: int = 25) -> List[Match]:
     """
     Finds all common substrings between stringx and stringy, and returns
     them sorted by length.
@@ -340,11 +338,11 @@ def common_sub_strings(stringx: str, stringy: str, limit: int = 25) -> _List[Mat
 
     matches = common_substrings(stringx, stringy, limit=limit)
     matches.sort()
-    matches.sort(key=_itemgetter(2), reverse=True)
+    matches.sort(key=itemgetter(2), reverse=True)
     return matches
 
 
-def terminal_overlap(stringx: str, stringy: str, limit: int = 15) -> _List[Match]:
+def terminal_overlap(stringx: str, stringy: str, limit: int = 15) -> List[Match]:
     """Finds the the flanking common substrings between stringx and stringy
     longer than limit. This means that the results only contains substrings
     that starts or ends at the the ends of stringx and stringy.

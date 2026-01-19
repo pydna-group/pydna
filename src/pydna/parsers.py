@@ -7,29 +7,23 @@
 
 """Provides two functions, parse and parse_primers"""
 
-# import os as _os
-import re as _re
-import io as _io
-import textwrap as _textwrap
+import re
+import io
+import textwrap
 
-from Bio import SeqIO as _SeqIO
+from Bio import SeqIO
 
-# from pydna.genbankfile import GenbankFile as _GenbankFile
-from pydna.dseqrecord import Dseqrecord as _Dseqrecord
-from Bio.SeqRecord import SeqRecord as _SeqRecord
+from pydna.dseqrecord import Dseqrecord
+from Bio.SeqRecord import SeqRecord
 from pydna.opencloning_models import UploadedFileSource
-from pydna.primer import Primer as _Primer
+from pydna.primer import Primer
 
-# from pydna.amplify import pcr as _pcr
-# from copy import deepcopy as _deepcopy
-# from Bio.SeqFeature import SeqFeature as _SeqFeature
-# import xml.etree.ElementTree as _et
 
 try:
-    from itertools import pairwise as _pairwise
+    from itertools import pairwise
 except ImportError:
 
-    def _pairwise(iterable):
+    def pairwise(iterable):
         # pairwise('ABCDEFG') → AB BC CD DE EF FG
         iterator = iter(iterable)
         a = next(iterator, None)
@@ -54,8 +48,8 @@ gb_fasta_embl_regex = (
 
 def extract_from_text(text):
     """docstring."""
-    data = _textwrap.dedent(str(text))
-    mos = list(_re.finditer(gb_fasta_embl_regex, data + "\n\n", flags=_re.MULTILINE))
+    data = textwrap.dedent(str(text))
+    mos = list(re.finditer(gb_fasta_embl_regex, data + "\n\n", flags=re.MULTILINE))
 
     class Fakemo(object):
         def start(self):
@@ -68,7 +62,7 @@ def extract_from_text(text):
 
     gaps = []
 
-    for mo1, mo2 in _pairwise([mofirst] + mos + [molast]):
+    for mo1, mo2 in pairwise([mofirst] + mos + [molast]):
         gaps.append(data[mo1.end() : mo2.start()])
 
     return tuple(mo.group(0) for mo in mos), tuple(gaps)
@@ -88,21 +82,21 @@ def embl_gb_fasta(text):
     # topology = "linear"
 
     for chunk in chunks:
-        handle = _io.StringIO(chunk)
+        handle = io.StringIO(chunk)
         # circular = False
         first_line = chunk.splitlines()[0].lower().split()
         try:
-            parsed = _SeqIO.read(handle, "embl")
+            parsed = SeqIO.read(handle, "embl")
             parsed.annotations["pydna_parse_sequence_file_format"] = "embl"
         except ValueError:
             handle.seek(0)
             try:
-                parsed = _SeqIO.read(handle, "genbank")
+                parsed = SeqIO.read(handle, "genbank")
                 parsed.annotations["pydna_parse_sequence_file_format"] = "genbank"
             except ValueError:
                 handle.seek(0)
                 try:
-                    parsed = _SeqIO.read(handle, "fasta-blast")
+                    parsed = SeqIO.read(handle, "fasta-blast")
                     parsed.annotations["pydna_parse_sequence_file_format"] = "fasta"
                 except ValueError:
                     handle.close()
@@ -132,7 +126,7 @@ def embl_gb_fasta(text):
     return tuple(result_list)
 
 
-def parse(data, ds=True) -> list[_Dseqrecord | _SeqRecord]:
+def parse(data, ds=True) -> list[Dseqrecord | SeqRecord]:
     """Return *all* DNA sequences found in data.
 
     If no sequences are found, an empty list is returned. This is a greedy
@@ -201,7 +195,7 @@ def parse(data, ds=True) -> list[_Dseqrecord | _SeqRecord]:
                 if ds and path:
                     from pydna.opencloning_models import UploadedFileSource
 
-                    result = _Dseqrecord.from_SeqRecord(s)
+                    result = Dseqrecord.from_SeqRecord(s)
                     result.source = UploadedFileSource(
                         file_name=str(path),  # we use str to handle PosixPath
                         sequence_file_format=s.annotations[
@@ -212,7 +206,7 @@ def parse(data, ds=True) -> list[_Dseqrecord | _SeqRecord]:
                     sequences.append(result)
                     # sequences.append(_GenbankFile.from_SeqRecord(s, path=path))
                 elif ds:
-                    sequences.append(_Dseqrecord.from_SeqRecord(s))
+                    sequences.append(Dseqrecord.from_SeqRecord(s))
                 else:
                     sequences.append(s)
     return sequences
@@ -220,10 +214,10 @@ def parse(data, ds=True) -> list[_Dseqrecord | _SeqRecord]:
 
 def parse_primers(data):
     """docstring."""
-    return [_Primer(x) for x in parse(data, ds=False)]
+    return [Primer(x) for x in parse(data, ds=False)]
 
 
-def parse_snapgene(file_path: str) -> list[_Dseqrecord]:
+def parse_snapgene(file_path: str) -> list[Dseqrecord]:
     """Parse a SnapGene file and return a Dseqrecord object.
 
     Parameters
@@ -238,7 +232,7 @@ def parse_snapgene(file_path: str) -> list[_Dseqrecord]:
 
     """
     with open(file_path, "rb") as f:
-        parsed_seq = next(_SeqIO.parse(f, "snapgene"))
+        parsed_seq = next(SeqIO.parse(f, "snapgene"))
         circular = (
             "topology" in parsed_seq.annotations.keys()
             and parsed_seq.annotations["topology"] == "circular"
@@ -249,4 +243,4 @@ def parse_snapgene(file_path: str) -> list[_Dseqrecord]:
             sequence_file_format="snapgene",
             index_in_file=0,
         )
-        return [_Dseqrecord(parsed_seq, circular=circular, source=source)]
+        return [Dseqrecord(parsed_seq, circular=circular, source=source)]

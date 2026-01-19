@@ -8,12 +8,12 @@
 """This module provide functions for melting temperature calculations."""
 
 
-import math as _math
-from Bio.SeqUtils import MeltingTemp as _mt
-from Bio.SeqUtils import gc_fraction as _GC
+import math
+from Bio.SeqUtils import MeltingTemp as mt
+from Bio.SeqUtils import gc_fraction
 
-import textwrap as _textwrap
-from pydna._pretty import pretty_str as _pretty_str
+import textwrap
+from pydna._pretty import pretty_str as ps
 
 # See the documentation for Bio.SeqUtils.MeltingTemp for more details
 # The 10X Taq Buffer with (NH4)2SO4 is commercialized by companies like
@@ -30,7 +30,7 @@ def tm_default(
     strict=True,
     c_seq=None,
     shift=0,
-    nn_table=_mt.DNA_NN4,  # DNA_NN4: values from SantaLucia & Hicks (2004)
+    nn_table=mt.DNA_NN4,  # DNA_NN4: values from SantaLucia & Hicks (2004)
     tmm_table=None,
     imm_table=None,
     de_table=None,
@@ -43,7 +43,7 @@ def tm_default(
     Mg=1.5,  # 1.5 mM Mg2+ is often seen in modern protocols
     dNTPs=0.8,  # I assume 200 µM of each dNTP
     saltcorr=7,  # Tm = 81.5 + 0.41(%GC) - 600/N + 16.6 x log[Na+]
-    func=_mt.Tm_NN,  # Used by Primer3Plus to calculate the product Tm.
+    func=mt.Tm_NN,  # Used by Primer3Plus to calculate the product Tm.
 ):
     return func(
         seq,
@@ -73,7 +73,7 @@ def tm_dbd(
     strict=True,
     c_seq=None,
     shift=0,
-    nn_table=_mt.DNA_NN3,
+    nn_table=mt.DNA_NN3,
     tmm_table=None,
     imm_table=None,
     de_table=None,
@@ -86,7 +86,7 @@ def tm_dbd(
     Mg=1.5,
     dNTPs=0.8,
     saltcorr=1,
-    func=_mt.Tm_NN,
+    func=mt.Tm_NN,
 ):
     return func(
         seq,
@@ -119,7 +119,7 @@ def tm_product(seq: str, K=0.050):
     ing temperature for DNA amplification in vitro
     http://www.ncbi.nlm.nih.gov/pubmed/2243783
     """
-    tmp = 81.5 + 0.41 * _GC(seq) * 100 + 16.6 * _math.log10(K) - 675 / len(seq)
+    tmp = 81.5 + 0.41 * gc_fraction(seq) * 100 + 16.6 * math.log10(K) - 675 / len(seq)
     return tmp
 
 
@@ -160,7 +160,7 @@ def program(amplicon, tm=tm_default, ta=ta_default):
     extension_time_taq = max(30, int(taq_extension_rate * len(amplicon) / 1000))
     # seconds
 
-    f = _textwrap.dedent(
+    f = textwrap.dedent(
         r"""
         |95°C|95°C               |    |tmf:{tmf:.1f}
         |____|_____          72°C|72°C|tmr:{tmr:.1f}
@@ -185,7 +185,7 @@ def program(amplicon, tm=tm_default, ta=ta_default):
         )
     ).strip()
 
-    return _pretty_str(f)
+    return ps(f)
 
 
 taq_program = program
@@ -228,7 +228,7 @@ def dbd_program(amplicon, tm=tm_dbd, ta=ta_dbd):
     tmr = tm(amplicon.reverse_primer.footprint)
 
     if tmf >= 69.0 and tmr >= 69.0:
-        f = _textwrap.dedent(
+        f = textwrap.dedent(
             r"""
                               |98°C|98°C      |    |tmf:{tmf:.1f}
                               |____|____      |    |tmr:{tmr:.1f}
@@ -245,7 +245,7 @@ def dbd_program(amplicon, tm=tm_dbd, ta=ta_dbd):
             )
         ).strip()
     else:
-        f = _textwrap.dedent(
+        f = textwrap.dedent(
             r"""
              |98°C|98°C               |    |tmf:{tmf:.1f}
              |____|_____          72°C|72°C|tmr:{tmr:.1f}
@@ -270,7 +270,7 @@ def dbd_program(amplicon, tm=tm_dbd, ta=ta_dbd):
             )
         ).strip()
 
-    return _pretty_str(f)
+    return ps(f)
 
 
 pfu_sso7d_program = dbd_program
@@ -327,8 +327,8 @@ def tmbresluc(primer: str, *args, primerc=500.0, saltc=50, **kwargs):
         dS += _thermodynamic_data.dSBr[n1 - 97][n2 - 97]
 
     tm = (
-        dH / (1.9872 * _math.log(pri / 1600) + dS)
-        + (16.6 * _math.log(saltc)) / _math.log(10)
+        dH / (1.9872 * math.log(pri / 1600) + dS)
+        + (16.6 * math.log(saltc)) / math.log(10)
     ) - 273.15
 
     return tm

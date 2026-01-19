@@ -2,10 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import pytest
-import IPython
 import warnings
 
-from importlib import reload
 from unittest.mock import patch, mock_open, MagicMock
 
 from pydna.genbankfile import GenbankFile
@@ -13,7 +11,7 @@ from pydna.dseq import Dseq
 from pydna.dseqrecord import Dseqrecord
 from pydna.readers import read
 from pydna.utils import eq
-from pydna.utils import location_boundaries as _location_boundaries
+from pydna.utils import location_boundaries
 from pydna.amplify import pcr
 
 from Bio.Seq import Seq
@@ -486,7 +484,7 @@ def test_write_same_seq_to_existing_file(monkeypatch):
 
     s = Dseqrecord("Ggatcc", circular=True)
 
-    monkeypatch.setattr("pydna.dseqrecord._os.path.isfile", lambda x: True)
+    monkeypatch.setattr("pydna.dseqrecord.os.path.isfile", lambda x: True)
     m = mock_open(read_data=s.format())
 
     with patch("builtins.open", m):
@@ -498,8 +496,8 @@ def test_write_different_file_to_existing_file(monkeypatch):
     s = Dseqrecord("Ggatcc", circular=True)
     d = Dseqrecord("GgatcA", circular=True)
 
-    monkeypatch.setattr("pydna.dseqrecord._os.path.isfile", lambda x: True)
-    monkeypatch.setattr("pydna.dseqrecord._os.rename", lambda x, y: True)
+    monkeypatch.setattr("pydna.dseqrecord.os.path.isfile", lambda x: True)
+    monkeypatch.setattr("pydna.dseqrecord.os.rename", lambda x, y: True)
     m = mock_open(read_data=d.format())
 
     with patch("builtins.open", m) as d:
@@ -515,8 +513,8 @@ def test_write_different_file_to_stamped_existing_file(monkeypatch):
 
     assert new.description[:42] == old.description[:42]
 
-    monkeypatch.setattr("pydna.dseqrecord._os.path.isfile", lambda x: True)
-    monkeypatch.setattr("pydna.dseqrecord._os.rename", lambda x, y: True)
+    monkeypatch.setattr("pydna.dseqrecord.os.path.isfile", lambda x: True)
+    monkeypatch.setattr("pydna.dseqrecord.os.rename", lambda x, y: True)
     m = mock_open(read_data=old.format())
 
     with patch("builtins.open", m):
@@ -554,8 +552,8 @@ def test_write_different_file_to_stamped_existing_file2(monkeypatch):
 
     assert new.description[:35] == old.description[:35]
 
-    monkeypatch.setattr("pydna.dseqrecord._os.path.isfile", lambda x: True)
-    monkeypatch.setattr("pydna.dseqrecord._os.rename", lambda x, y: True)
+    monkeypatch.setattr("pydna.dseqrecord.os.path.isfile", lambda x: True)
+    monkeypatch.setattr("pydna.dseqrecord.os.rename", lambda x, y: True)
     m = mock_open(read_data=old.format())
 
     with patch("builtins.open", m):
@@ -2321,7 +2319,7 @@ def test_apply_cut():
         for shift in range(len(seq)):
             seq_shifted = seq.shifted(shift)
             cut_feature = find_feature_by_id(seq_shifted, "full_overlap")
-            start, end = _location_boundaries(cut_feature.location)
+            start, end = location_boundaries(cut_feature.location)
             # Cut leaving + and - overhangs in the feature full_overlap
             for dummy_cut in (((start, -3), None), ((end, 3), None)):
                 open_seq = seq_shifted.apply_cut(dummy_cut, dummy_cut)
@@ -2355,7 +2353,7 @@ def test_apply_cut2():
         for shift in range(len(seq)):
             seq_shifted = seq.shifted(shift)
             cut_feature = find_feature_by_id(seq_shifted, "full_overlap")
-            start, end = _location_boundaries(cut_feature.location)
+            start, end = location_boundaries(cut_feature.location)
             # Cut leaving + and - overhangs in the feature full_overlap
             for dummy_cut in (((start, -3), None), ((end, 3), None)):
                 open_seq = seq_shifted.apply_cut(dummy_cut, dummy_cut)

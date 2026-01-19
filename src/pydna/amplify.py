@@ -13,28 +13,22 @@ PCR product. The Anneal class should be used if more flexibility is required.
 Primers with 5' tails as well as inverse PCR on circular templates are handled
 correctly."""
 
-from pydna._pretty import pretty_str as _pretty_str
-from pydna.utils import flatten as _flatten
-from pydna.utils import shift_feature as _shift_feature
-from pydna.amplicon import Amplicon as _Amplicon
-from pydna.primer import Primer as _Primer
-from pydna.seqrecord import SeqRecord as _SeqRecord
-from pydna.dseqrecord import Dseqrecord as _Dseqrecord
-from Bio.SeqFeature import SeqFeature as _SeqFeature
-from Bio.SeqFeature import SimpleLocation as _SimpleLocation
-from Bio.SeqFeature import CompoundLocation as _CompoundLocation
-from pydna.seq import Seq as _Seq
-import re as _re
-import copy as _copy
-import operator as _operator
-from pydna.alphabet import iupac_compl_regex as _iupac_compl_regex
-from pydna.utils import anneal_from_left as _anneal_from_left
-
-# import os as _os
-
-# import logging as _logging
-
-# _module_logger = _logging.getLogger("pydna." + __name__)
+from pydna._pretty import pretty_str
+from pydna.utils import flatten
+from pydna.utils import shift_feature
+from pydna.amplicon import Amplicon
+from pydna.primer import Primer
+from pydna.seqrecord import SeqRecord
+from pydna.dseqrecord import Dseqrecord
+from Bio.SeqFeature import SeqFeature
+from Bio.SeqFeature import SimpleLocation
+from Bio.SeqFeature import CompoundLocation
+from pydna.seq import Seq
+import re
+import copy
+import operator
+from pydna.alphabet import iupac_compl_regex
+from pydna.utils import anneal_from_left
 
 
 def _annealing_positions(primer, template, limit):
@@ -96,14 +90,14 @@ def _annealing_positions(primer, template, limit):
     tail = revprimer[limit:].upper()
 
     # Make regex pattern that reflects extended IUPAC DNA code
-    head_regex = "".join(_iupac_compl_regex[key] for key in head)
+    head_regex = "".join(iupac_compl_regex[key] for key in head)
     primer_regex = f"(?:({head_regex})(.{{0,{len(primer) - limit}}}))"
 
     results = []
-    for m in _re.finditer(primer_regex, template.upper()):
+    for m in re.finditer(primer_regex, template.upper()):
         anchor, under_tail = m.groups()
         match_start = m.start()
-        match_extension = _anneal_from_left(tail, under_tail[::-1])
+        match_extension = anneal_from_left(tail, under_tail[::-1])
         results.append((match_start, limit + match_extension))
     return results
 
@@ -205,7 +199,7 @@ class Anneal(object):  # ), metaclass=_Memoize):
 
         """
         self.primers = primers
-        self.template = _copy.deepcopy(template)
+        self.template = copy.deepcopy(template)
 
         self.limit = limit
         self.kwargs = kwargs
@@ -228,7 +222,7 @@ class Anneal(object):  # ), metaclass=_Memoize):
         for p in self.primers:
             self.forward_primers.extend(
                 (
-                    _Primer(
+                    Primer(
                         p,
                         #          template = self.template,
                         position=tcl - pos - min(self.template.seq.ovhg, 0),
@@ -240,7 +234,7 @@ class Anneal(object):  # ), metaclass=_Memoize):
             )
             self.reverse_primers.extend(
                 (
-                    _Primer(
+                    Primer(
                         p,
                         #          template = self.template,
                         position=pos + max(0, self.template.seq.ovhg),
@@ -251,16 +245,16 @@ class Anneal(object):  # ), metaclass=_Memoize):
                 )
             )
 
-        self.forward_primers.sort(key=_operator.attrgetter("position"))
-        self.reverse_primers.sort(key=_operator.attrgetter("position"), reverse=True)
+        self.forward_primers.sort(key=operator.attrgetter("position"))
+        self.reverse_primers.sort(key=operator.attrgetter("position"), reverse=True)
 
         for fp in self.forward_primers:
             if fp.position - fp._fp >= 0:
                 start = fp.position - fp._fp
                 end = fp.position
                 self.template.features.append(
-                    _SeqFeature(
-                        _SimpleLocation(start, end, strand=1),
+                    SeqFeature(
+                        SimpleLocation(start, end, strand=1),
                         type="primer_bind",
                         qualifiers={
                             "label": [fp.name],
@@ -273,11 +267,11 @@ class Anneal(object):  # ), metaclass=_Memoize):
             else:
                 start = len(self.template) - fp._fp + fp.position
                 end = start + fp._fp - len(self.template)
-                sf = _SeqFeature(
-                    _CompoundLocation(
+                sf = SeqFeature(
+                    CompoundLocation(
                         [
-                            _SimpleLocation(start, len(self.template)),
-                            _SimpleLocation(0, end),
+                            SimpleLocation(start, len(self.template)),
+                            SimpleLocation(0, end),
                         ]
                     ),
                     type="primer_bind",
@@ -295,8 +289,8 @@ class Anneal(object):  # ), metaclass=_Memoize):
                 start = rp.position
                 end = rp.position + rp._fp
                 self.template.features.append(
-                    _SeqFeature(
-                        _SimpleLocation(start, end, strand=-1),
+                    SeqFeature(
+                        SimpleLocation(start, end, strand=-1),
                         type="primer_bind",
                         qualifiers={
                             "label": [rp.name],
@@ -310,11 +304,11 @@ class Anneal(object):  # ), metaclass=_Memoize):
                 start = rp.position
                 end = rp.position + rp._fp - len(self.template)
                 self.template.features.append(
-                    _SeqFeature(
-                        _CompoundLocation(
+                    SeqFeature(
+                        CompoundLocation(
                             [
-                                _SimpleLocation(0, end, strand=-1),
-                                _SimpleLocation(start, len(self.template), strand=-1),
+                                SimpleLocation(0, end, strand=-1),
+                                SimpleLocation(start, len(self.template), strand=-1),
                             ],
                         ),
                         type="primer_bind",
@@ -354,15 +348,15 @@ class Anneal(object):  # ), metaclass=_Memoize):
                     continue
                 # Shift features to the right if there was a tail
                 shift_amount = len(fp.tail)
-                feats = [_shift_feature(f, shift_amount, None) for f in feats]
+                feats = [shift_feature(f, shift_amount, None) for f in feats]
 
                 if tpl.circular and fp.position == rp.position:
-                    prd = _Dseqrecord(fp) + _Dseqrecord(rp).reverse_complement()
+                    prd = Dseqrecord(fp) + Dseqrecord(rp).reverse_complement()
                 else:
                     prd = (
-                        _Dseqrecord(fp)
+                        Dseqrecord(fp)
                         + tpl[fp.position : rp.position]
-                        + _Dseqrecord(rp).reverse_complement()
+                        + Dseqrecord(rp).reverse_complement()
                     )
                 prd.features = feats
                 full_tmpl_features = [
@@ -379,16 +373,16 @@ class Anneal(object):  # ), metaclass=_Memoize):
                         new_identifier = " ".join(ft.qualifiers["note"])
 
                 from pydna.utils import (
-                    identifier_from_string as _identifier_from_string,
+                    identifier_from_string,
                 )  # TODO:  clean this up
 
                 prd.name = (
-                    _identifier_from_string(new_identifier)[:16]
+                    identifier_from_string(new_identifier)[:16]
                     or self.kwargs.get("name")
                     or f"{len(prd)}bp_PCR_prod"[:16]
                 )
                 prd.id = (
-                    _identifier_from_string(new_identifier)[:16]
+                    identifier_from_string(new_identifier)[:16]
                     or self.kwargs.get("id")
                     or f"{len(prd)}bp"[:16]
                 )
@@ -396,7 +390,7 @@ class Anneal(object):  # ), metaclass=_Memoize):
                     "description"
                 ) or "pcr_product_{}_{}".format(fp.description, rp.description)
 
-                amplicon = _Amplicon(
+                amplicon = Amplicon(
                     prd,
                     template=tpl,
                     forward_primer=fp,
@@ -442,12 +436,12 @@ class Anneal(object):  # ), metaclass=_Memoize):
                 )
         else:
             mystring += "No reverse primers anneal...\n"
-        return _pretty_str(mystring.strip())
+        return pretty_str(mystring.strip())
 
     report = __str__
 
 
-def pcr(*args, **kwargs) -> _Amplicon:
+def pcr(*args, **kwargs) -> Amplicon:
     """pcr is a convenience function for the Anneal class to simplify its
     usage, especially from the command line. If more than one or no PCR
     product is formed, a ValueError is raised.
@@ -509,15 +503,15 @@ tatcgactgtatcatctgatagcac")
 
     """
 
-    output = _flatten(args)  # flatten
+    output = flatten(args)  # flatten
     new = []
     for s in output:
         if hasattr(s, "watson"):
-            s = _SeqRecord(_Seq(s.watson))
+            s = SeqRecord(Seq(s.watson))
         elif hasattr(s, "transcribe"):
-            s = _SeqRecord(s)
+            s = SeqRecord(s)
         elif isinstance(s, str):
-            s = _SeqRecord(_Seq(s))
+            s = SeqRecord(Seq(s))
         elif hasattr(s, "features"):
             pass
         else:
@@ -532,7 +526,7 @@ tatcgactgtatcatctgatagcac")
         new = [new[0].forward_primer, new[0].reverse_primer, new[0].template]
 
     if not hasattr(new[-1].seq, "watson"):
-        new[-1] = _Dseqrecord(s)
+        new[-1] = Dseqrecord(s)
 
     anneal_primers = Anneal(new[:-1], new[-1], **kwargs)
 

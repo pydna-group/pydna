@@ -10,22 +10,17 @@
 This class is not meant to be use directly but is
 used by the :mod:`amplify` module"""
 
-from pydna.tm import dbd_program as _dbd_program
-from pydna.tm import program as _program
-from pydna.primer import Primer as _Primer
-from pydna._pretty import pretty_str as _pretty_str
-from pydna.dseqrecord import Dseqrecord as _Dseqrecord
-from pydna.seqrecord import SeqRecord as _SeqRecord
-import textwrap as _textwrap
-import copy as _copy
-
-# import logging as _logging
+from pydna.tm import dbd_program
+from pydna.tm import program
+from pydna.primer import Primer
+from pydna._pretty import pretty_str
+from pydna.dseqrecord import Dseqrecord
+from pydna.seqrecord import SeqRecord
+import textwrap
+import copy
 
 
-# _module_logger = _logging.getLogger("pydna." + __name__)
-
-
-class Amplicon(_Dseqrecord):
+class Amplicon(Dseqrecord):
     """The Amplicon class holds information about a PCR reaction involving two
     primers and one template. This class is used by the Anneal class and is not
     meant to be instantiated directly.
@@ -69,12 +64,12 @@ class Amplicon(_Dseqrecord):
         return obj
 
     def __getitem__(self, sl):
-        answer = _copy.copy(self)
+        answer = copy.copy(self)
         answer.seq = answer.seq.__getitem__(sl)
         # answer.seq.alphabet = self.seq.alphabet
-        sr = _SeqRecord("n" * len(self))
+        sr = SeqRecord("n" * len(self))
         sr.features = self.features
-        answer.features = _SeqRecord.__getitem__(sr, sl).features
+        answer.features = SeqRecord.__getitem__(sr, sl).features
         return answer
 
     def __repr__(self):
@@ -90,8 +85,8 @@ class Amplicon(_Dseqrecord):
     def reverse_complement(self):
         r = type(self)(super().reverse_complement())
         r.template = self.template.rc()
-        r.forward_primer = _copy.copy(self.reverse_primer)
-        r.reverse_primer = _copy.copy(self.forward_primer)
+        r.forward_primer = copy.copy(self.reverse_primer)
+        r.reverse_primer = copy.copy(self.forward_primer)
         r.forward_primer.position, r.reverse_primer.position = (
             r.reverse_primer.position,
             r.forward_primer.position,
@@ -143,23 +138,23 @@ class Amplicon(_Dseqrecord):
             {" " * ft}3{fzc}...{rzc}5
             """
         # breakpoint()
-        return _pretty_str(_textwrap.dedent(f).strip("\n"))
+        return pretty_str(textwrap.dedent(f).strip("\n"))
 
     def set_forward_primer_footprint(self, length):
-        self.forward_primer = _Primer(
+        self.forward_primer = Primer(
             self.forward_primer.tail + self.seq[:length], footprint=length
         )
 
     def set_reverse_primer_footprint(self, length):
-        self.reverse_primer = _Primer(
+        self.reverse_primer = Primer(
             self.reverse_primer.tail + self.seq[:length], footprint=length
         )
 
     def program(self):
-        return _program(self)
+        return program(self)
 
     def dbd_program(self):
-        return _dbd_program(self)
+        return dbd_program(self)
 
     def primers(self):
         return self.forward_primer, self.reverse_primer

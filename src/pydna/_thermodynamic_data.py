@@ -5,10 +5,10 @@
 # license.  Please see the LICENSE.txt file that should have been included
 # as part of this package.
 
-import collections as _collections
+import collections
 
-dHBr = _collections.defaultdict(dict)
-dSBr = _collections.defaultdict(dict)
+dHBr = collections.defaultdict(dict)
+dSBr = collections.defaultdict(dict)
 
 dHBr[0][0] = -9100
 dSBr[0][0] = -24

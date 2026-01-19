@@ -16,17 +16,16 @@ a gel image. Exampel can be found in scripts/molecular_weight_standards.ods.
 """
 
 
-from pydna.fakeseq import FakeSeq as _FakeSeq
+from pydna.fakeseq import FakeSeq
 
 
 PennStateLadder = [
-    _FakeSeq(int(n))
-    for n in (10000, 7750, 5000, 4000, 3000, 2000, 1500, 1000, 750, 500)
+    FakeSeq(int(n)) for n in (10000, 7750, 5000, 4000, 3000, 2000, 1500, 1000, 750, 500)
 ]
 
 
 GeneRuler_1kb = [
-    _FakeSeq(int(n))
+    FakeSeq(int(n))
     for n in (
         10000,
         8000,
@@ -49,7 +48,7 @@ GeneRuler_1kb = [
 # https://docs.google.com/spreadsheets/d/1vN0y75ibxPrG6yJQjq1uF2FXP0L-qGSn_fzInUHeTs4/edit#gid=0
 
 GeneRuler_1kb_plus = [
-    _FakeSeq(ln, n=n * 1e-15, rf=rf)
+    FakeSeq(ln, n=n * 1e-15, rf=rf)
     for ln, n, rf in (
         # (length, fmol, Rf )
         (20000, 1.538, 0.000),
@@ -72,7 +71,7 @@ GeneRuler_1kb_plus = [
 
 
 HI_LO_DNA_MARKER = [
-    _FakeSeq(ln, n=n * 1e-15, rf=rf)
+    FakeSeq(ln, n=n * 1e-15, rf=rf)
     for ln, n, rf in (
         # (length, fmol, Rf )
         (10000, 4.545, 0.000),
@@ -121,16 +120,16 @@ HI_LO_DNA_MARKER = [
 
 FakeGel = [
     [
-        _FakeSeq(1000),
-        _FakeSeq(2000),
+        FakeSeq(1000),
+        FakeSeq(2000),
     ],
     [
-        _FakeSeq(3000),
-        _FakeSeq(4000),
+        FakeSeq(3000),
+        FakeSeq(4000),
     ],
     [
-        _FakeSeq(5000),
-        _FakeSeq(6000),
+        FakeSeq(5000),
+        FakeSeq(6000),
     ],
     PennStateLadder,
 ]

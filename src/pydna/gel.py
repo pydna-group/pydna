@@ -9,7 +9,7 @@
 
 """docstring."""
 
-import math as _math
+import math
 from pydna.ladders import GeneRuler_1kb_plus as _mwstd
 
 
@@ -31,8 +31,8 @@ def gel(
     samples=None, gel_length=600, margin=50, interpolator=interpolator(mwstd=_mwstd)
 ):
     import numpy as np
-    from PIL import Image as Image
-    from PIL import ImageDraw as ImageDraw
+    from PIL import Image
+    from PIL import ImageDraw
 
     """docstring."""
     max_intensity = 256
@@ -54,7 +54,7 @@ def gel(
 
     for lane_number, lane in enumerate(samples):
         for band in lane:
-            log = _math.log(len(band), 10)
+            log = math.log(len(band), 10)
             height = (band.m() / (240 * log)) * 1e10
             peak_centre = interpolator(len(band)) * scale + start
             max_spread = 10
@@ -68,7 +68,7 @@ def gel(
                 y2 = peak_centre + i
                 intensity = (
                     height
-                    * _math.exp(
+                    * math.exp(
                         -float(((y1 - peak_centre) ** 2)) / (2 * (band_spread**2))
                     )
                     * max_intensity

@@ -456,7 +456,7 @@ poetry run pre-commit install
 > =================================== FAILURES ===================================
 > ___________________ [doctest] pydna.assembly2.blunt_overlap ____________________
 > ```
-> This means that the doctest of the function `blunt_overlap` failed. You can run the same test locally with `python -m doctest src/pydna/assembly2.py` (use the appropriate path to the module file). That will give you information of what's failing. Fix, and re-run until it passes!
+> This means that the doctest of the function `blunt_overlap` failed. You can run the same test locally with `pytest src/pydna --doctest-modules` (use the appropriate path to the module file). That will give you information of what's failing. Fix, and re-run until it passes!
 
 ### Creating a PR 🔗
 

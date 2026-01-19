@@ -5,12 +5,12 @@
 # license.  Please see the LICENSE.txt file that should have been included
 # as part of this package.
 
-from pydna.dseqrecord import Dseqrecord as _Dseqrecord
-from pydna._pretty import pretty_str as _ps
-import os as _os
+from pydna.dseqrecord import Dseqrecord
+from pydna._pretty import pretty_str as ps
+import os
 
 
-class GenbankRecord(_Dseqrecord):
+class GenbankRecord(Dseqrecord):
     def __init__(
         self, record, *args, item="accession", start=None, stop=None, strand=1, **kwargs
     ):
@@ -23,7 +23,7 @@ class GenbankRecord(_Dseqrecord):
         if self.start is not None and self.stop is not None:
             self._repr += " {}-{}".format(self.start, self.stop)
         self._linktemplate = "<a href='https://www.ncbi.nlm.nih.gov/nuccore/{item}?from={start}&to={stop}&strand={strand}' target='_blank'>{text}</a>"
-        self.hyperlink = _ps(
+        self.hyperlink = ps(
             self._linktemplate.format(
                 item=self.item,
                 start=self.start or "",
@@ -54,7 +54,7 @@ class GenbankRecord(_Dseqrecord):
         if obj.start is not None and obj.stop is not None:
             obj._repr += " {}-{}".format(obj.start, obj.stop)
         obj._linktemplate = "<a href='https://www.ncbi.nlm.nih.gov/nuccore/{item}?from={start}&to={stop}&strand={strand}' target='_blank'>{text}</a>"
-        obj.hyperlink = _ps(
+        obj.hyperlink = ps(
             obj._linktemplate.format(
                 item=obj.item,
                 start=obj.start or "",
@@ -78,7 +78,7 @@ class GenbankRecord(_Dseqrecord):
         if obj.start is not None and obj.stop is not None:
             obj._repr += " {}-{}".format(obj.start, obj.stop)
         obj._linktemplate = "<a href='https://www.ncbi.nlm.nih.gov/nuccore/{item}?from={start}&to={stop}&strand={strand}' target='_blank'>{text}</a>"
-        obj.hyperlink = _ps(
+        obj.hyperlink = ps(
             obj._linktemplate.format(
                 item=obj.item,
                 start=obj.start or "",
@@ -127,7 +127,7 @@ class GenbankRecord(_Dseqrecord):
 
         code = (
             "from pydna.genbank import Genbank\n"
-            f"gb = Genbank('{_os.getenv('pydna_email')}')\n"
+            f"gb = Genbank('{os.getenv('pydna_email')}')\n"
             f"seq = gb.nucleotide('{self.item}'"
         )
         if self.start and self.start:
@@ -140,14 +140,14 @@ class GenbankRecord(_Dseqrecord):
         else:
             code += ")"
 
-        return _ps(code)
+        return ps(code)
 
     def biopython_code(self):
         """docstring."""  # FIXME
 
         code = (
             "from Bio import Entrez, SeqIO\n"
-            f"Entrez.email = '{_os.getenv('pydna_email')}'\n"
+            f"Entrez.email = '{os.getenv('pydna_email')}'\n"
             "handle = Entrez.efetch(db='nuccore',\n"
             f"                       id='{self.item}',\n"
             "                       rettype='gbwithparts',\n"
@@ -165,4 +165,4 @@ class GenbankRecord(_Dseqrecord):
 
         code += "record = SeqIO.read(handle, 'genbank')"
 
-        return _ps(code)
+        return ps(code)
