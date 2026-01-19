@@ -21,12 +21,12 @@ from pydna.utils import (
     limit_iterator,
     create_location,
 )
-from pydna._pretty import pretty_str as _pretty_str
+from pydna._pretty import pretty_str as ps
 from pydna.common_sub_strings import common_sub_strings as common_sub_strings_str
-from pydna.dseqrecord import Dseqrecord as _Dseqrecord
-from pydna.dseq import Dseq as _Dseq
-from pydna.primer import Primer as _Primer
-from pydna.seqrecord import SeqRecord as _SeqRecord
+from pydna.dseqrecord import Dseqrecord
+from pydna.dseq import Dseq
+from pydna.primer import Primer
+from pydna.seqrecord import SeqRecord
 from pydna.types import (
     CutSiteType,
     # TODO: allow user to enforce multi-site
@@ -94,7 +94,7 @@ def gather_overlapping_locations(
 
 
 def ends_from_cutsite(
-    cutsite: CutSiteType, seq: _Dseq
+    cutsite: CutSiteType, seq: Dseq
 ) -> tuple[tuple[str, str], tuple[str, str]]:
     """Get the sticky or blunt ends created by a restriction enzyme cut.
 
@@ -144,8 +144,8 @@ def ends_from_cutsite(
 
 
 def restriction_ligation_overlap(
-    seqx: _Dseqrecord,
-    seqy: _Dseqrecord,
+    seqx: Dseqrecord,
+    seqy: Dseqrecord,
     enzymes=RestrictionBatch,
     partial=False,
     allow_blunt=False,
@@ -256,7 +256,7 @@ def combine_algorithms(*algorithms: AssemblyAlgorithmType) -> AssemblyAlgorithmT
 
 
 def blunt_overlap(
-    seqx: _Dseqrecord, seqy: _Dseqrecord, limit=None
+    seqx: Dseqrecord, seqy: Dseqrecord, limit=None
 ) -> list[SequenceOverlap]:
     """
     Assembly algorithm to find blunt overlaps. Used for blunt ligation.
@@ -294,7 +294,7 @@ def blunt_overlap(
 
 
 def common_sub_strings(
-    seqx: _Dseqrecord, seqy: _Dseqrecord, limit=25
+    seqx: Dseqrecord, seqy: Dseqrecord, limit=25
 ) -> list[SequenceOverlap]:
     """
     Assembly algorithm to find common substrings of length == limit. see the docs of
@@ -357,7 +357,7 @@ def common_sub_strings(
     return [r for r in results if r not in shifted_matches]
 
 
-def gibson_overlap(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=25):
+def gibson_overlap(seqx: Dseqrecord, seqy: Dseqrecord, limit=25):
     """
     Assembly algorithm to find terminal overlaps (e.g. for Gibson assembly).
     The order matters, we want alignments like:
@@ -423,7 +423,7 @@ def gibson_overlap(seqx: _Dseqrecord, seqy: _Dseqrecord, limit=25):
     return [tuple(m) for m in matches]
 
 
-def sticky_end_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit: bool = False):
+def sticky_end_sub_strings(seqx: Dseqrecord, seqy: Dseqrecord, limit: bool = False):
     """
     Assembly algorithm for ligation of sticky ends.
 
@@ -477,7 +477,7 @@ def sticky_end_sub_strings(seqx: _Dseqrecord, seqy: _Dseqrecord, limit: bool = F
 
 
 def zip_match_leftwards(
-    seqx: _SeqRecord, seqy: _SeqRecord, match: SequenceOverlap
+    seqx: SeqRecord, seqy: SeqRecord, match: SequenceOverlap
 ) -> SequenceOverlap:
     """
     Starting from the rightmost edge of the match, return a new match encompassing the max
@@ -514,11 +514,11 @@ def zip_match_leftwards(
     # For those cases we shift by length, then go back
 
     end_on_x = match[0] + match[2]
-    if isinstance(seqx, _Dseqrecord) and seqx.circular and end_on_x <= len(seqx):
+    if isinstance(seqx, Dseqrecord) and seqx.circular and end_on_x <= len(seqx):
         end_on_x += len(seqx)
 
     end_on_y = match[1] + match[2]
-    if isinstance(seqy, _Dseqrecord) and seqy.circular and end_on_y <= len(seqy):
+    if isinstance(seqy, Dseqrecord) and seqy.circular and end_on_y <= len(seqy):
         end_on_y += len(seqy)
 
     count = 0
@@ -535,7 +535,7 @@ def zip_match_leftwards(
 
 
 def zip_match_rightwards(
-    seqx: _Dseqrecord, seqy: _Dseqrecord, match: SequenceOverlap
+    seqx: Dseqrecord, seqy: Dseqrecord, match: SequenceOverlap
 ) -> SequenceOverlap:
     """Same as zip_match_leftwards, but towards the right."""
 
@@ -551,19 +551,19 @@ def zip_match_rightwards(
     return (start_on_x, start_on_y, count)
 
 
-def seqrecord2_uppercase_DNA_string(seqr: _SeqRecord) -> str:
+def seqrecord2_uppercase_DNA_string(seqr: SeqRecord) -> str:
     """
     Transform a Dseqrecord to a sequence string where U is replaced by T, everything is upper case and
     circular sequences are repeated twice. This is used for PCR, to support primers with U's (e.g. for USER cloning).
     """
     out = str(seqr.seq).upper().replace("U", "T")
-    if isinstance(seqr, _Dseqrecord) and seqr.circular:
+    if isinstance(seqr, Dseqrecord) and seqr.circular:
         return out * 2
     return out
 
 
 def primer_template_overlap(
-    seqx: _Dseqrecord | _Primer, seqy: _Dseqrecord | _Primer, limit=25, mismatches=0
+    seqx: Dseqrecord | Primer, seqy: Dseqrecord | Primer, limit=25, mismatches=0
 ) -> list[SequenceOverlap]:
     """
     Assembly algorithm to find overlaps between a primer and a template. It accepts mismatches.
@@ -606,11 +606,11 @@ def primer_template_overlap(
     []
     """
 
-    if isinstance(seqx, _Primer) and isinstance(seqy, _Dseqrecord):
+    if isinstance(seqx, Primer) and isinstance(seqy, Dseqrecord):
         primer = seqx
         template = seqy
         reverse_primer = False
-    elif isinstance(seqx, _Dseqrecord) and isinstance(seqy, _Primer):
+    elif isinstance(seqx, Dseqrecord) and isinstance(seqy, Primer):
         primer = seqy
         template = seqx
         reverse_primer = True
@@ -664,23 +664,23 @@ def primer_template_overlap(
     return list(sorted(out))
 
 
-def fill_left(seq: _Dseq) -> _Dseq:
+def fill_left(seq: Dseq) -> Dseq:
     """Fill the left overhang of a sequence with the complementary sequence."""
     return seq.cast_to_ds_left()
 
 
-def fill_right(seq: _Dseq) -> _Dseq:
+def fill_right(seq: Dseq) -> Dseq:
     """Fill the right overhang of a sequence with the complementary sequence."""
     return seq.cast_to_ds_right()  # _Dseq(new_watson, new_crick, seq.ovhg)
 
 
-def fill_dseq(seq: _Dseq) -> _Dseq:
+def fill_dseq(seq: Dseq) -> Dseq:
     """Fill the overhangs of a sequence with the complementary sequence."""
     return fill_left(fill_right(seq))
 
 
 def reverse_complement_assembly(
-    assembly: EdgeRepresentationAssembly, fragments: list[_Dseqrecord]
+    assembly: EdgeRepresentationAssembly, fragments: list[Dseqrecord]
 ) -> EdgeRepresentationAssembly:
     """Complement an assembly, i.e. reverse the order of the fragments and the orientation of the overlaps."""
     new_assembly = list()
@@ -694,7 +694,7 @@ def reverse_complement_assembly(
 def filter_linear_subassemblies(
     linear_assemblies: list[EdgeRepresentationAssembly],
     circular_assemblies: list[EdgeRepresentationAssembly],
-    fragments: list[_Dseqrecord],
+    fragments: list[Dseqrecord],
 ) -> list[EdgeRepresentationAssembly]:
     """Remove linear assemblies which are sub-assemblies of circular assemblies"""
     all_circular_assemblies = circular_assemblies + [
@@ -753,7 +753,7 @@ def assembly2str_tuple(assembly: EdgeRepresentationAssembly) -> str:
 
 
 def assembly_has_mismatches(
-    fragments: list[_Dseqrecord], assembly: EdgeRepresentationAssembly
+    fragments: list[Dseqrecord], assembly: EdgeRepresentationAssembly
 ) -> bool:
     """Check if an assembly has mismatches. This should never happen and if so it returns an error."""
     for u, v, loc_u, loc_v in assembly:
@@ -769,7 +769,7 @@ def assembly_has_mismatches(
 
 
 def assembly_is_circular(
-    assembly: EdgeRepresentationAssembly, fragments: list[_Dseqrecord]
+    assembly: EdgeRepresentationAssembly, fragments: list[Dseqrecord]
 ) -> bool:
     """
     Based on the topology of the locations of an assembly, determine if it is circular.
@@ -778,7 +778,7 @@ def assembly_is_circular(
     if assembly[0][0] != assembly[-1][1]:
         return False
     elif (
-        isinstance(fragments[abs(assembly[0][0]) - 1], _Dseqrecord)
+        isinstance(fragments[abs(assembly[0][0]) - 1], Dseqrecord)
         and fragments[abs(assembly[0][0]) - 1].circular
     ):
         return True
@@ -790,10 +790,10 @@ def assembly_is_circular(
 
 
 def assemble(
-    fragments: list[_Dseqrecord],
+    fragments: list[Dseqrecord],
     assembly: EdgeRepresentationAssembly,
     is_insertion: bool = False,
-) -> _Dseqrecord:
+) -> Dseqrecord:
     """Generate a Dseqrecord from an assembly and a list of fragments."""
 
     if is_insertion:
@@ -818,7 +818,7 @@ def assemble(
 
     # We transform into Dseqrecords (for primers)
     dseqr_fragments = [
-        f if isinstance(f, _Dseqrecord) else _Dseqrecord(f) for f in fragments
+        f if isinstance(f, Dseqrecord) else Dseqrecord(f) for f in fragments
     ]
     subfragments = get_assembly_subfragments(
         dseqr_fragments, subfragment_representation
@@ -851,8 +851,8 @@ def assemble(
 
 
 def annotate_primer_binding_sites(
-    input_dseqr: _Dseqrecord, fragments: list[_Dseqrecord]
-) -> _Dseqrecord:
+    input_dseqr: Dseqrecord, fragments: list[Dseqrecord]
+) -> Dseqrecord:
     """Annotate the primer binding sites in a Dseqrecord."""
     fwd, _, rvs = fragments
     start_rvs = len(input_dseqr) - len(rvs)
@@ -932,9 +932,9 @@ def subfragment_representation2edge_representation(
 
 
 def get_assembly_subfragments(
-    fragments: list[_Dseqrecord],
+    fragments: list[Dseqrecord],
     subfragment_representation: SubFragmentRepresentationAssembly,
-) -> list[_Dseqrecord]:
+) -> list[Dseqrecord]:
     """From the fragment representation returned by edge_representation2subfragment_representation, get the subfragments that are joined together.
 
     Subfragments are the slices of the fragments that are joined together
@@ -975,8 +975,8 @@ def get_assembly_subfragments(
 
 
 def extract_subfragment(
-    seq: _Dseqrecord, start_location: Location | None, end_location: Location | None
-) -> _Dseqrecord:
+    seq: Dseqrecord, start_location: Location | None, end_location: Location | None
+) -> Dseqrecord:
     """Extract a subfragment from a sequence for an assembly, given the start and end locations of the subfragment."""
 
     if seq.circular and (start_location is None or end_location is None):
@@ -1004,7 +1004,7 @@ def extract_subfragment(
             ovhg = 0
         dummy_cut = ((start, ovhg), None)
         open_seq = seq.apply_cut(dummy_cut, dummy_cut)
-        return _Dseqrecord(fill_dseq(open_seq.seq), features=open_seq.features)
+        return Dseqrecord(fill_dseq(open_seq.seq), features=open_seq.features)
 
     return seq[start:end]
 
@@ -1147,7 +1147,7 @@ class Assembly:
 
     def __init__(
         self,
-        frags: list[_Dseqrecord],
+        frags: list[Dseqrecord],
         limit: int = 25,
         algorithm: AssemblyAlgorithmType = common_sub_strings,
         use_fragment_order: bool = True,
@@ -1186,7 +1186,7 @@ class Assembly:
     @classmethod
     def assembly_is_valid(
         cls,
-        fragments: list[_Dseqrecord | _Primer],
+        fragments: list[Dseqrecord | Primer],
         assembly: EdgeRepresentationAssembly,
         is_circular: bool,
         use_all_fragments: bool,
@@ -1213,9 +1213,9 @@ class Assembly:
         first_fragment = fragments[abs(assembly[0][0]) - 1]
         last_fragment = fragments[abs(assembly[-1][1]) - 1]
         if not is_circular and (
-            isinstance(first_fragment, _Dseqrecord)
+            isinstance(first_fragment, Dseqrecord)
             and first_fragment.circular
-            or (isinstance(last_fragment, _Dseqrecord) and last_fragment.circular)
+            or (isinstance(last_fragment, Dseqrecord) and last_fragment.circular)
         ):
             return False
 
@@ -1256,7 +1256,7 @@ class Assembly:
             # Incompatible as described in figure above
             fragment = fragments[abs(v1) - 1]
             if (
-                isinstance(fragment, _Primer) or not fragment.circular
+                isinstance(fragment, Primer) or not fragment.circular
             ) and location_boundaries(start_location)[1] >= location_boundaries(
                 end_location
             )[
@@ -1281,8 +1281,8 @@ class Assembly:
         match: SequenceOverlap,
         u: int,
         v: int,
-        first: _Dseqrecord,
-        secnd: _Dseqrecord,
+        first: Dseqrecord,
+        secnd: Dseqrecord,
     ):
         """Add edges to the graph from a match returned by the ``algorithm`` function (see pydna.common_substrings). For
         format of edges (see documentation of the Assembly class).
@@ -1670,21 +1670,19 @@ class Assembly:
 
     def assemble_linear(
         self, only_adjacent_edges: bool = False, max_assemblies: int = 50
-    ) -> list[_Dseqrecord]:
+    ) -> list[Dseqrecord]:
         """Assemble linear constructs, from assemblies returned by self.get_linear_assemblies."""
         assemblies = self.get_linear_assemblies(only_adjacent_edges, max_assemblies)
         return [assemble(self.fragments, a) for a in assemblies]
 
     def assemble_circular(
         self, only_adjacent_edges: bool = False, max_assemblies: int = 50
-    ) -> list[_Dseqrecord]:
+    ) -> list[Dseqrecord]:
         """Assemble circular constructs, from assemblies returned by self.get_circular_assemblies."""
         assemblies = self.get_circular_assemblies(only_adjacent_edges, max_assemblies)
         return [assemble(self.fragments, a) for a in assemblies]
 
-    def assemble_insertion(
-        self, only_adjacent_edges: bool = False
-    ) -> list[_Dseqrecord]:
+    def assemble_insertion(self, only_adjacent_edges: bool = False) -> list[Dseqrecord]:
         """Assemble insertion constructs, from assemblies returned by self.get_insertion_assemblies."""
         assemblies = self.get_insertion_assemblies(only_adjacent_edges)
         return [assemble(self.fragments, a, is_insertion=True) for a in assemblies]
@@ -1789,7 +1787,7 @@ class Assembly:
 
     def __repr__(self):
         # https://pyformat.info
-        return _pretty_str(
+        return ps(
             "Assembly\n"
             "fragments..: {sequences}\n"
             "limit(bp)..: {limit}\n"
@@ -1810,7 +1808,7 @@ class PCRAssembly(Assembly):
     the number of mismatches allowed in the overlap. Only supports substitution mismatches, not indels.
     """
 
-    def __init__(self, frags: list[_Dseqrecord | _Primer], limit=25, mismatches=0):
+    def __init__(self, frags: list[Dseqrecord | Primer], limit=25, mismatches=0):
 
         value_error = ValueError(
             "PCRAssembly assembly must be initialised with a list/tuple of primer, template, primer"
@@ -1820,9 +1818,9 @@ class PCRAssembly(Assembly):
 
         # Validate the inputs: should be a series of primer, template, primer
         wrong_fragment_class = (
-            not isinstance(frags[0], _Primer),
-            isinstance(frags[1], _Primer),
-            not isinstance(frags[2], _Primer),
+            not isinstance(frags[0], Primer),
+            isinstance(frags[1], Primer),
+            not isinstance(frags[2], Primer),
         )
         if any(wrong_fragment_class):
             raise value_error
@@ -1883,7 +1881,7 @@ class PCRAssembly(Assembly):
 
     def assemble_linear(
         self, only_adjacent_edges: bool = False, max_assemblies: int = 50
-    ) -> list[_Dseqrecord]:
+    ) -> list[Dseqrecord]:
         """
         Overrides the parent method to ensure that the 5' of the crick strand of the product matches the
         sequence of the reverse primer. This is important when using primers with dUTP (for USER cloning).
@@ -1891,7 +1889,7 @@ class PCRAssembly(Assembly):
         results = super().assemble_linear(only_adjacent_edges, max_assemblies)
         for result in results:
             rp = self.fragments[2]
-            result.seq = result.seq[: -len(rp)] + _Dseq(str(rp.seq.rc()))
+            result.seq = result.seq[: -len(rp)] + Dseq(str(rp.seq.rc()))
         return results
 
 
@@ -1900,7 +1898,7 @@ class SingleFragmentAssembly(Assembly):
     An assembly that represents the circularisation or splicing of a single fragment.
     """
 
-    def __init__(self, frags: [_Dseqrecord], limit=25, algorithm=common_sub_strings):
+    def __init__(self, frags: [Dseqrecord], limit=25, algorithm=common_sub_strings):
 
         if len(frags) != 1:
             raise ValueError(
@@ -1982,13 +1980,13 @@ class SingleFragmentAssembly(Assembly):
 
 
 def common_function_assembly_products(
-    frags: list[_Dseqrecord],
+    frags: list[Dseqrecord],
     limit: int | None,
     algorithm: Callable,
     circular_only: bool,
     filter_results_function: Callable | None = None,
     only_adjacent_edges: bool = False,
-) -> list[_Dseqrecord]:
+) -> list[Dseqrecord]:
     """Common function to avoid code duplication. Could be simplified further
     once SingleFragmentAssembly and Assembly are merged.
 
@@ -2033,8 +2031,8 @@ def common_function_assembly_products(
 
 
 def _recast_sources(
-    products: list[_Dseqrecord], source_cls, **extra_fields
-) -> list[_Dseqrecord]:
+    products: list[Dseqrecord], source_cls, **extra_fields
+) -> list[Dseqrecord]:
     """Recast the `source` of each product to `source_cls` with optional extras.
 
     This avoids repeating the same for-loop across many assembly functions.
@@ -2048,8 +2046,8 @@ def _recast_sources(
 
 
 def gibson_assembly(
-    frags: list[_Dseqrecord], limit: int = 25, circular_only: bool = False
-) -> list[_Dseqrecord]:
+    frags: list[Dseqrecord], limit: int = 25, circular_only: bool = False
+) -> list[Dseqrecord]:
     """Returns the products for Gibson assembly.
 
     Parameters
@@ -2074,8 +2072,8 @@ def gibson_assembly(
 
 
 def in_fusion_assembly(
-    frags: list[_Dseqrecord], limit: int = 25, circular_only: bool = False
-) -> list[_Dseqrecord]:
+    frags: list[Dseqrecord], limit: int = 25, circular_only: bool = False
+) -> list[Dseqrecord]:
     """Returns the products for in-fusion assembly. This is the same as Gibson
     assembly, but with a different name.
 
@@ -2099,8 +2097,8 @@ def in_fusion_assembly(
 
 
 def fusion_pcr_assembly(
-    frags: list[_Dseqrecord], limit: int = 25, circular_only: bool = False
-) -> list[_Dseqrecord]:
+    frags: list[Dseqrecord], limit: int = 25, circular_only: bool = False
+) -> list[Dseqrecord]:
     """Returns the products for fusion PCR assembly. This is the same as Gibson
     assembly, but with a different name.
 
@@ -2123,8 +2121,8 @@ def fusion_pcr_assembly(
 
 
 def in_vivo_assembly(
-    frags: list[_Dseqrecord], limit: int = 25, circular_only: bool = False
-) -> list[_Dseqrecord]:
+    frags: list[Dseqrecord], limit: int = 25, circular_only: bool = False
+) -> list[Dseqrecord]:
     """Returns the products for in vivo assembly (IVA), which relies on homologous recombination between the fragments.
 
     Parameters
@@ -2148,11 +2146,11 @@ def in_vivo_assembly(
 
 
 def restriction_ligation_assembly(
-    frags: list[_Dseqrecord],
+    frags: list[Dseqrecord],
     enzymes: list["AbstractCut"],
     allow_blunt: bool = True,
     circular_only: bool = False,
-) -> list[_Dseqrecord]:
+) -> list[Dseqrecord]:
     """Returns the products for restriction ligation assembly:
 
     - Finds cutsites in the fragments
@@ -2227,11 +2225,11 @@ def restriction_ligation_assembly(
 
 
 def golden_gate_assembly(
-    frags: list[_Dseqrecord],
+    frags: list[Dseqrecord],
     enzymes: list["AbstractCut"],
     allow_blunt: bool = True,
     circular_only: bool = False,
-) -> list[_Dseqrecord]:
+) -> list[Dseqrecord]:
     """Returns the products for Golden Gate assembly. This is the same as
     restriction ligation assembly, but with a different name. Check the documentation
     for ``restriction_ligation_assembly`` for more details.
@@ -2260,11 +2258,11 @@ def golden_gate_assembly(
 
 
 def ligation_assembly(
-    frags: list[_Dseqrecord],
+    frags: list[Dseqrecord],
     allow_blunt: bool = False,
     allow_partial_overlap: bool = False,
     circular_only: bool = False,
-) -> list[_Dseqrecord]:
+) -> list[Dseqrecord]:
     """Returns the products for ligation assembly, as inputs pass the fragments (digested if needed) that
     will be ligated.
 
@@ -2338,12 +2336,12 @@ def assembly_is_multi_site(asm: list[EdgeRepresentationAssembly]) -> bool:
 
 
 def gateway_assembly(
-    frags: list[_Dseqrecord],
+    frags: list[Dseqrecord],
     reaction_type: Literal["BP", "LR"],
     greedy: bool = False,
     circular_only: bool = False,
     multi_site_only: bool = False,
-) -> list[_Dseqrecord]:
+) -> list[Dseqrecord]:
     """Returns the products for Gateway assembly / Gateway cloning.
 
     Parameters
@@ -2451,8 +2449,8 @@ def gateway_assembly(
 
 
 def common_function_integration_products(
-    frags: list[_Dseqrecord], limit: int | None, algorithm: Callable
-) -> list[_Dseqrecord]:
+    frags: list[Dseqrecord], limit: int | None, algorithm: Callable
+) -> list[Dseqrecord]:
     """Common function to avoid code duplication for integration products.
 
     Parameters
@@ -2487,8 +2485,8 @@ def common_function_integration_products(
 
 
 def common_handle_insertion_fragments(
-    genome: _Dseqrecord, inserts: list[_Dseqrecord]
-) -> list[_Dseqrecord]:
+    genome: Dseqrecord, inserts: list[Dseqrecord]
+) -> list[Dseqrecord]:
     """Common function to handle / validate insertion fragments.
 
     Parameters
@@ -2503,11 +2501,11 @@ def common_handle_insertion_fragments(
     list[_Dseqrecord]
         List containing genome and insert fragments
     """
-    if not isinstance(genome, _Dseqrecord):
+    if not isinstance(genome, Dseqrecord):
         raise ValueError("Genome must be a Dseqrecord object")
 
     if not isinstance(inserts, list) or not all(
-        isinstance(f, _Dseqrecord) for f in inserts
+        isinstance(f, Dseqrecord) for f in inserts
     ):
         raise ValueError("Inserts must be a list of Dseqrecord objects")
 
@@ -2518,8 +2516,8 @@ def common_handle_insertion_fragments(
 
 
 def common_function_excision_products(
-    genome: _Dseqrecord, limit: int | None, algorithm: Callable
-) -> list[_Dseqrecord]:
+    genome: Dseqrecord, limit: int | None, algorithm: Callable
+) -> list[Dseqrecord]:
     """Common function to avoid code duplication for excision products.
 
     Parameters
@@ -2541,10 +2539,10 @@ def common_function_excision_products(
 
 
 def homologous_recombination_integration(
-    genome: _Dseqrecord,
-    inserts: list[_Dseqrecord],
+    genome: Dseqrecord,
+    inserts: list[Dseqrecord],
     limit: int = 40,
-) -> list[_Dseqrecord]:
+) -> list[Dseqrecord]:
     """Returns the products resulting from the integration of an insert (or inserts joined
     through in vivo recombination) into the genome through homologous recombination.
 
@@ -2595,8 +2593,8 @@ def homologous_recombination_integration(
 
 
 def homologous_recombination_excision(
-    genome: _Dseqrecord, limit: int = 40
-) -> list[_Dseqrecord]:
+    genome: Dseqrecord, limit: int = 40
+) -> list[Dseqrecord]:
     """Returns the products resulting from the excision of a fragment from the genome through
     homologous recombination.
 
@@ -2632,8 +2630,8 @@ def homologous_recombination_excision(
 
 
 def cre_lox_integration(
-    genome: _Dseqrecord, inserts: list[_Dseqrecord]
-) -> list[_Dseqrecord]:
+    genome: Dseqrecord, inserts: list[Dseqrecord]
+) -> list[Dseqrecord]:
     """Returns the products resulting from the integration of an insert (or inserts joined
     through cre-lox recombination among them) into the genome through cre-lox integration.
 
@@ -2691,7 +2689,7 @@ def cre_lox_integration(
     return _recast_sources(products, CreLoxRecombinationSource)
 
 
-def cre_lox_excision(genome: _Dseqrecord) -> list[_Dseqrecord]:
+def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
     """Returns the products for CRE-lox excision.
 
     Parameters
@@ -2743,11 +2741,11 @@ def cre_lox_excision(genome: _Dseqrecord) -> list[_Dseqrecord]:
 
 
 def crispr_integration(
-    genome: _Dseqrecord,
-    inserts: list[_Dseqrecord],
-    guides: list[_Primer],
+    genome: Dseqrecord,
+    inserts: list[Dseqrecord],
+    guides: list[Primer],
     limit: int = 40,
-) -> list[_Dseqrecord]:
+) -> list[Dseqrecord]:
     """
     Returns the products for CRISPR integration.
 
@@ -2842,13 +2840,13 @@ def crispr_integration(
 
 
 def pcr_assembly(
-    template: _Dseqrecord,
-    fwd_primer: _Primer,
-    rvs_primer: _Primer,
+    template: Dseqrecord,
+    fwd_primer: Primer,
+    rvs_primer: Primer,
     add_primer_features: bool = False,
     limit: int = 14,
     mismatches: int = 0,
-) -> list[_Dseqrecord]:
+) -> list[Dseqrecord]:
     """Returns the products for PCR assembly.
 
     Parameters

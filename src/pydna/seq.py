@@ -9,7 +9,6 @@ the :class:`pydna._pretty_str.pretty_str` class instread of str for a
 nicer output in the IPython shell.
 """
 
-# from pydna.codon import weights as _weights
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from pydna.codon import rare_codons
 from pydna.codon import start as _start
