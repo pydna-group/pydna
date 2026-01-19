@@ -58,6 +58,8 @@ import ahocorasick
 
 import warnings
 
+from Bio.Data.IUPACData import ambiguous_dna_values
+
 warnings.warn(
     "The primer_screen module is experimental "
     "and not yet extensively tested. "
@@ -142,26 +144,7 @@ def expand_iupac_to_dna(seq: str) -> list[str]:
         List of strings in unambiguous IUPAC nucleotide alphabet.
 
     """
-    _IUPAC_TO_DNA = {
-        "A": "A",
-        "C": "C",
-        "G": "G",
-        "T": "T",
-        "U": "T",
-        "R": "AG",  # puRine
-        "Y": "CT",  # pYrimidine
-        "S": "GC",  # Strong (3 H-bonds)
-        "W": "AT",  # Weak (2 H-bonds)
-        "K": "GT",  # Keto
-        "M": "AC",  # aMino
-        "B": "CGT",  # not A
-        "D": "AGT",  # not C
-        "H": "ACT",  # not G
-        "V": "ACG",  # not T
-        "N": "ACGT",  # any
-        "X": "",
-    }
-    choices_per_pos = [_IUPAC_TO_DNA[ch] for ch in seq.upper()]
+    choices_per_pos = [ambiguous_dna_values[ch] for ch in seq.upper()]
     # Cartesian product of all position choices
     return ["".join(tup) for tup in product(*choices_per_pos)]
 

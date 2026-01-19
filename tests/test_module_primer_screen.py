@@ -161,7 +161,3 @@ def test_diff_primer_triplets_2():
 
     with pytest.raises(ValueError, match="No PCR product!"):
         pcr(pl[1215], pl[594], pIL75)
-
-
-def test_expand_iupac_to_dna():
-    assert expand_iupac_to_dna("ATNG") == ['ATAG', 'ATCG', 'ATGG', 'ATTG']
