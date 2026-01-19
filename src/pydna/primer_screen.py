@@ -4,7 +4,7 @@
 Fast primer screening
 ---------------------
 
-This module provides fast primer screening using the Aho–Corasick string-search
+This module provides fast primer screening using the Aho-Corasick string-search
 algorithm. It is useful for PCR diagnostic purposes when given a list of primers
 and a single sequence or list of sequences to analyze.
 
@@ -12,7 +12,7 @@ The primer list can consist of `Primer` objects returned by :func:`pydna.parsers
 or any objects with a ``seq`` attribute, such as :class:`pydna.seqrecord.SeqRecord`
 or :class:`Bio.SeqRecord.SeqRecord`.
 
-The Aho–Corasick algorithm efficiently finds all occurrences of a set of sequences
+The Aho-Corasick algorithm efficiently finds all occurrences of a set of sequences
 within a larger text. If the same primer list is used repeatedly, creating an
 automaton greatly speeds up repeated searches. See :func:`make_automaton` for
 information on creating, saving, and loading such automata.
@@ -30,7 +30,7 @@ Functions
 References
 ----------
 
-Aho–Corasick algorithm:
+Aho-Corasick algorithm:
     https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm
 
 This module uses `pyahocorasick`:
