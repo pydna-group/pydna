@@ -102,7 +102,7 @@ def test_contig_circular():
 
     import networkx as nx
 
-    x = contig.Contig.from_SeqRecord(arg, graph=nx.MultiDiGraph())
+    contig.Contig.from_SeqRecord(arg, graph=nx.MultiDiGraph())
 
 
 def test_reverse_complement():

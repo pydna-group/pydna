@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import pytest
+from textwrap import dedent
 
 
 def test_genbankfile():
@@ -46,18 +47,23 @@ def test_genbankfile():
     )
     assert repr(gbr2) == "Gbnk(-13 CS570233.1 1-13)"
 
-    gbr2.pydna_code() == (
-        "from pydna.genbank import Genbank\n"
-        "gb = Genbank('bjornjobb@gmail.com')\n"
-        "seq = gb.nucleotide('CS570233.1',\n"
-        "                    seq_start=1,\n"
-        "                    seq_stop=13,\n"
-        "                    strand=1)"
+    assert gbr2.pydna_code() == dedent(
+        "".join(
+            [
+                "from pydna.genbank import Genbank\n",
+                "gb = Genbank('None')\n",
+                "seq = gb.nucleotide('CS570233.1',\n",
+                "                    seq_start=1,\n",
+                "                    seq_stop=13,\n",
+                "                    strand=1)",
+            ]
+        )
     )
 
-    gbr2.biopython_code() == """\
+    assert gbr2.biopython_code() == dedent(
+        """\
     from Bio import Entrez, SeqIO
-    Entrez.email = 'bjornjobb@gmail.com'
+    Entrez.email = 'None'
     handle = Entrez.efetch(db='nuccore',
                            id='CS570233.1',
                            rettype='gbwithparts',
@@ -66,6 +72,7 @@ def test_genbankfile():
                            seq_stop=13,
                            strand=1)
     record = SeqIO.read(handle, 'genbank')"""
+    )
 
     from Bio.Seq import Seq
     from pydna.seqrecord import SeqRecord

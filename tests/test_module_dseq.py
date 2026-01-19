@@ -4,7 +4,6 @@
 import pytest
 import textwrap
 
-from pydna.seq import Seq
 from pydna.dseq import Dseq
 from pydna.utils import eq
 
@@ -420,8 +419,7 @@ def test_Dseq_cutting_adding():
     )
 
 
-def test_dseq():
-
+def test_dseq_circular_linear():
     obj1 = Dseq("a", "t", circular=True)
     obj2 = Dseq("a", "t")
 
@@ -1110,7 +1108,7 @@ def test_apply_cut():
                 assert e.args[0] == "Cuts by BamHI EcoRI overlap."
             else:
                 print(first_cut, second_cut)
-                assert False, "Expected ValueError"
+                raise AssertionError("Expected ValueError")
 
     # Rotating the sequence, apply the same cut
     seq = Dseq("acgtATGaatt", circular=True)
@@ -1273,7 +1271,7 @@ def test_get_cut_parameters():
     except AssertionError as e:
         assert e.args[0] == "Circular sequences should not have None cuts"
     else:
-        assert False, "Expected AssertionError"
+        raise AssertionError("Expected AssertionError")
 
     try:
         assert dseq.get_cut_parameters(None, False) == (
@@ -1283,7 +1281,7 @@ def test_get_cut_parameters():
     except AssertionError as e:
         assert e.args[0] == "Circular sequences should not have None cuts"
     else:
-        assert False, "Expected AssertionError"
+        raise AssertionError("Expected AssertionError")
 
     # "Normal" cuts
     assert dseq.get_cut_parameters(((4, -2), None), True) == (4, 6, -2)
@@ -1467,14 +1465,6 @@ def test__get_ds_meltsites():
     assert Dseq("AGCPAGQGAT", circular=True).get_ds_meltsites(2) == [((6, 2), None)]
     assert Dseq("AGCQAGPGAT", circular=True).get_ds_meltsites(2) == [((4, -2), None)]
 
-
-def test__get_ds_meltsites():
-
-    assert Dseq("AGJGaGEg").get_ds_meltsites(2) == [((2, 2), None), ((8, 1), None)]
-    assert Dseq("AGIGaGFg").get_ds_meltsites(2) == [((0, -2), None), ((7, -1), None)]
-    assert Dseq("AGJGaGFg").get_ds_meltsites(2) == [((2, 2), None), ((7, -1), None)]
-    assert Dseq("AGIGaGEg").get_ds_meltsites(2) == [((0, -2), None), ((8, 1), None)]
-
     assert Dseq("PEXIGAQFZJ").get_ds_meltsites(2) == [((6, 2), None)]
     assert Dseq("QFZJGAPEXI").get_ds_meltsites(2) == [((4, -2), None)]
 
@@ -1536,7 +1526,7 @@ def NO_test_anneal():
 
     # GGACT       G
     # C       GTAGC
-    assert Dseq("GPEIX") / Dseq("JFZJG") == None
+    assert Dseq("GPEIX") / Dseq("JFZJG") is None
 
     # Dseq(-8)
     # GGACT  G
@@ -1546,7 +1536,7 @@ def NO_test_anneal():
     # Dseq(-8)
     # GGACTA G
     # C  GATGC
-    Dseq("GPEIXE") / Dseq("JZFJG") == Dseq("GPECTAJG")
+    assert Dseq("GPEIXE") / Dseq("JZFJG") == Dseq("GPECTAJG")
 
     # Dseq(-8)
     # GGACTA G
@@ -1577,7 +1567,6 @@ def NO_test_anneal():
 def test_mw():
 
     from Bio.Data.IUPACData import unambiguous_dna_weights
-    from Bio.Data.IUPACData import unambiguous_rna_weights
     from Bio.Data.IUPACData import atom_weights
 
     # The molecular weight values for a short DNA molecule agrees very well

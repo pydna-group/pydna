@@ -9,7 +9,7 @@ def test_genbankfile():
 
     gbf = genbankfile.GenbankFile("aaa", path="/path/")
 
-    gbf.path == "/path/"
+    assert gbf.path == "/path/"
 
     assert repr(gbf) == "File(id)(-3)"
 

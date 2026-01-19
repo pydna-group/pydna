@@ -58,10 +58,10 @@ def test_pydna_read_test():
 
 def test_parse_and_read_with_biopython_and_pydna():
 
-    q = BPread("read1.gb", "gb")
-    w = BPread("read2.gb", "gb")
-    e = BPread("read3.fasta", "fasta")
-    r = BPread("read4.fasta", "fasta")
+    BPread("read1.gb", "gb")
+    BPread("read2.gb", "gb")
+    BPread("read3.fasta", "fasta")
+    BPread("read4.fasta", "fasta")
 
     # a, b = BPparse("pth1.txt", "gb")
     with open("pth1.txt", "r", encoding="utf-8") as f:

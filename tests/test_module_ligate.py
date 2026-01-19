@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import pytest
 from pydna.ligate import ligate
 from pydna.dseq import Dseq
 from pydna.dseqrecord import Dseqrecord

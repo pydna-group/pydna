@@ -25,11 +25,6 @@ def test_primer():
     assert isinstance(y, type(w))
     assert str(y.seq) == "AAAatcatatctatct"
 
-    from Bio.Seq import Seq
-    from Bio.SeqRecord import SeqRecord
-
-    arg = "AAA"
-
     # print(str(x.seq).rjust(20))
     # print(str(x.tail))
     # print(str(x.footprint).rjust(20))

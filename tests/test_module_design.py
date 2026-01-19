@@ -10,7 +10,6 @@ from pydna.dseqrecord import Dseqrecord
 from pydna.design import primer_design
 from pydna.design import user_assembly_design
 from pydna.design import assembly_fragments
-from pydna.design import circular_assembly_fragments
 from pydna.parsers import parse
 from pydna.primer import Primer
 

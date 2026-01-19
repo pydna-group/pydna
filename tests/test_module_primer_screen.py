@@ -21,7 +21,6 @@ from pydna.primer_screen import diff_primer_pairs
 from pydna.primer_screen import diff_primer_triplets
 from pydna.primer_screen import primer_tuple
 from pydna.primer_screen import amplicon_tuple
-from pydna.primer_screen import expand_iupac_to_dna
 
 
 test_files = pathlib.Path(os.path.join(os.path.dirname(__file__)))
