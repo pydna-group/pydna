@@ -28,8 +28,6 @@ def test_contig(monkeypatch):
         "                                                           ACGATGCTATACTG\n"
     )
 
-    from textwrap import indent
-
     fig = """ -|one|14
 |      \\/
 |      /\\
@@ -82,7 +80,7 @@ def test_contig(monkeypatch):
 
     import networkx as nx
 
-    x = contig.Contig.from_SeqRecord(arg, graph=nx.MultiDiGraph())
+    contig.Contig.from_SeqRecord(arg, graph=nx.MultiDiGraph())
 
 
 def test_reverse_complement(monkeypatch):
@@ -169,7 +167,6 @@ cacagtatagcatcgtaCCCCCgatacagccagaata
 
 
 def test_linear(monkeypatch):
-    from pydna._pretty import pretty_str
     from pydna.assembly import Assembly
     from pydna.dseqrecord import Dseqrecord
 
