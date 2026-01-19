@@ -332,16 +332,13 @@ document.write(`
 <span class="c1"># as part of this package.</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="c1"># import logging as _logging</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Blast</span><span class="w"> </span><span class="kn">import</span> <span class="n">NCBIWWW</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Blast</span><span class="w"> </span><span class="kn">import</span> <span class="n">NCBIXML</span>
 
-<span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
 
-
-<span class="n">email</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_email&quot;</span><span class="p">)</span>
+<span class="n">email</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_email&quot;</span><span class="p">)</span>
 <span class="n">tool</span> <span class="o">=</span> <span class="s2">&quot;pydna&quot;</span>
 
 

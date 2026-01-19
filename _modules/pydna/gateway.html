@@ -326,9 +326,9 @@ document.write(`
   <h1>Source code for pydna.gateway</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse_complement</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span><span class="p">,</span> <span class="n">SeqFeature</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shift_location</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.sequence_regex</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_regex_site</span><span class="p">,</span> <span class="n">dseqrecord_finditer</span>
@@ -407,7 +407,7 @@ document.write(`
 <div class="viewcode-block" id="gateway_overlap">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.gateway.gateway_overlap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">gateway_overlap</span><span class="p">(</span>
-    <span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">reaction</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">greedy</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">seqx</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">reaction</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">greedy</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Find gateway overlaps. If greedy is True, it uses a more greedy consensus site to find attP sites,</span>
@@ -438,7 +438,7 @@ document.write(`
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches_y</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="k">continue</span>
 
-                <span class="k">for</span> <span class="n">match_x</span><span class="p">,</span> <span class="n">match_y</span> <span class="ow">in</span> <span class="n">_itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">matches_x</span><span class="p">,</span> <span class="n">matches_y</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">match_x</span><span class="p">,</span> <span class="n">match_y</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">matches_x</span><span class="p">,</span> <span class="n">matches_y</span><span class="p">):</span>
                     <span class="c1"># Find the overlap sequence within each match, and use the</span>
                     <span class="c1"># core 7 pbs that are constant</span>
                     <span class="n">overlap_x</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">overlap_regex</span><span class="p">,</span> <span class="n">match_x</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
@@ -464,7 +464,7 @@ document.write(`
 <div class="viewcode-block" id="find_gateway_sites">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.gateway.find_gateway_sites">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_gateway_sites</span><span class="p">(</span>
-    <span class="n">seq</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">greedy</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">greedy</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">SimpleLocation</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find all gateway sites in a sequence and return a dictionary with the name and positions of the sites.&quot;&quot;&quot;</span>
     <span class="n">gateway_sites</span> <span class="o">=</span> <span class="n">gateway_sites_greedy</span> <span class="k">if</span> <span class="n">greedy</span> <span class="k">else</span> <span class="n">gateway_sites_conservative</span>
@@ -488,7 +488,7 @@ document.write(`
 
 <div class="viewcode-block" id="annotate_gateway_sites">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.gateway.annotate_gateway_sites">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">annotate_gateway_sites</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">greedy</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseqrecord</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">annotate_gateway_sites</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">greedy</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseqrecord</span><span class="p">:</span>
     <span class="n">sites</span> <span class="o">=</span> <span class="n">find_gateway_sites</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">greedy</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sites</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">sites</span><span class="p">[</span><span class="n">site</span><span class="p">]:</span>

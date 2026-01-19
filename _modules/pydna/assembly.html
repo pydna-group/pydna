@@ -368,43 +368,30 @@ document.write(`
 <span class="sd">The NetworkX package is used to trace linear and circular paths through the</span>
 <span class="sd">graph.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqFeature</span> <span class="k">as</span> <span class="n">_SeqFeature</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExactPosition</span> <span class="k">as</span> <span class="n">_ExactPosition</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span> <span class="k">as</span> <span class="n">_SimpleLocation</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompoundLocation</span> <span class="k">as</span> <span class="n">_CompoundLocation</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rc</span> <span class="k">as</span> <span class="n">_rc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqFeature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExactPosition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompoundLocation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rc</span>
 
-<span class="c1"># from pydna.utils import memorize as _memorize</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.contig</span><span class="w"> </span><span class="kn">import</span> <span class="n">Contig</span> <span class="k">as</span> <span class="n">_Contig</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.common_sub_strings</span><span class="w"> </span><span class="kn">import</span> <span class="n">common_sub_strings</span><span class="p">,</span> <span class="n">Match</span> <span class="k">as</span> <span class="n">_Match</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">ps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.contig</span><span class="w"> </span><span class="kn">import</span> <span class="n">Contig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.common_sub_strings</span><span class="w"> </span><span class="kn">import</span> <span class="n">common_sub_strings</span><span class="p">,</span> <span class="n">Match</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_nx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span> <span class="k">as</span> <span class="n">_deepcopy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Callable</span> <span class="k">as</span> <span class="n">_Callable</span><span class="p">,</span>
-    <span class="n">Dict</span> <span class="k">as</span> <span class="n">_Dict</span><span class="p">,</span>
-    <span class="n">List</span> <span class="k">as</span> <span class="n">_List</span><span class="p">,</span>
-    <span class="n">NamedTuple</span> <span class="k">as</span> <span class="n">_NamedTuple</span><span class="p">,</span>
-    <span class="n">TypedDict</span> <span class="k">as</span> <span class="n">_TypedDict</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_itertools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">TypedDict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
 
-<span class="c1"># import logging as _logging</span>
-
-<span class="c1"># from func_timeout import func_set_timeout</span>
-<span class="c1"># from wrapt_timeout_decorator import timeout</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.threading_timer_decorator_exit</span><span class="w"> </span><span class="kn">import</span> <span class="n">exit_after</span>
-
-<span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
 
 
 <div class="viewcode-block" id="Assembly">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Assembly">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Assembly</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>  <span class="c1"># , metaclass=_Memoize):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Assembly</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Assembly of a list of linear DNA fragments into linear or circular</span>
 <span class="sd">    constructs. The Assembly is meant to replace the Assembly method as it</span>
 <span class="sd">    is easier to use. Accepts a list of Dseqrecords (source fragments) to</span>
@@ -451,13 +438,13 @@ document.write(`
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">frags</span><span class="p">:</span> <span class="n">_List</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
+        <span class="n">frags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
         <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
-        <span class="n">algorithm</span><span class="p">:</span> <span class="n">_Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">_List</span><span class="p">[</span><span class="n">_Match</span><span class="p">]]</span> <span class="o">=</span> <span class="n">common_sub_strings</span><span class="p">,</span>
+        <span class="n">algorithm</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Match</span><span class="p">]]</span> <span class="o">=</span> <span class="n">common_sub_strings</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Fragments is a string subclass with some extra properties</span>
         <span class="c1"># The order of the fragments has significance</span>
-        <span class="n">fragments</span><span class="p">:</span> <span class="n">_List</span><span class="p">[</span><span class="n">_FragmentDict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">fragments</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">_FragmentDict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">{</span>
                 <span class="s2">&quot;upper&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
                 <span class="s2">&quot;mixed&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span>
@@ -470,7 +457,7 @@ document.write(`
 
         <span class="c1"># rcfragments is a dict with fragments as keys and the reverse</span>
         <span class="c1"># complement as value</span>
-        <span class="n">rcfragments</span><span class="p">:</span> <span class="n">_Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">_FragmentDict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">rcfragments</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">_FragmentDict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">f</span><span class="p">[</span><span class="s2">&quot;mixed&quot;</span><span class="p">]:</span> <span class="p">{</span>
                 <span class="s2">&quot;upper&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">frc</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
                 <span class="s2">&quot;mixed&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">frc</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span>
@@ -491,7 +478,7 @@ document.write(`
         <span class="c1"># all combinations of fragments are compared.</span>
         <span class="c1"># see https://docs.python.org/3.10/library/itertools.html</span>
         <span class="c1"># itertools.combinations(&#39;ABCD&#39;, 2)--&gt;  AB AC AD BC BD CD</span>
-        <span class="k">for</span> <span class="n">first</span><span class="p">,</span> <span class="n">secnd</span> <span class="ow">in</span> <span class="n">_itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">first</span><span class="p">,</span> <span class="n">secnd</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">first</span><span class="p">[</span><span class="s2">&quot;upper&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">secnd</span><span class="p">[</span><span class="s2">&quot;upper&quot;</span><span class="p">]:</span>
                 <span class="k">continue</span>
 
@@ -550,7 +537,7 @@ document.write(`
         <span class="c1"># multidigraph.html</span>
 
         <span class="n">order</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">G</span> <span class="o">=</span> <span class="n">_nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">()</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">()</span>
         <span class="c1"># loop through all fragments their and reverse complements</span>
 
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fragments</span><span class="p">:</span>
@@ -559,7 +546,7 @@ document.write(`
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">rcfragments</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">f</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]))</span>
 
-        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">_itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">rcfragments</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">rcfragments</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
             <span class="c1"># nodes are sorted in place in the order of their position</span>
             <span class="c1"># duplicates are removed (same position and sequence)</span>
             <span class="c1"># along the fragment since nodes are a tuple (position(int),</span>
@@ -578,7 +565,7 @@ document.write(`
                 <span class="n">start2</span><span class="p">,</span>
                 <span class="n">length2</span><span class="p">,</span>
                 <span class="n">node2</span><span class="p">,</span>
-            <span class="p">)</span> <span class="ow">in</span> <span class="n">_itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="p">)</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">):</span>
                 <span class="n">feats</span> <span class="o">=</span> <span class="p">[</span>
                     <span class="n">ft</span>
                     <span class="k">for</span> <span class="n">ft</span> <span class="ow">in</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">]</span>
@@ -598,7 +585,7 @@ document.write(`
                     <span class="n">name</span><span class="o">=</span><span class="n">f</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
                 <span class="p">)</span>  <span class="c1"># string</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">_nx</span><span class="o">.</span><span class="n">create_empty_copy</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">create_empty_copy</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span>
             <span class="nb">sorted</span><span class="p">(</span>
                 <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;seq&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
@@ -610,9 +597,9 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">rcfragments</span> <span class="o">=</span> <span class="n">rcfragments</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span> <span class="o">=</span> <span class="n">algorithm</span>
 
-    <span class="nd">@exit_after</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_assembly_limit&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)))</span>
+    <span class="nd">@exit_after</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_assembly_limit&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)))</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">assemble_linear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">G</span> <span class="o">=</span> <span class="n">_nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">)</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">)</span>
 
         <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">([</span><span class="s2">&quot;begin&quot;</span><span class="p">,</span> <span class="s2">&quot;begin_rc&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="s2">&quot;end_rc&quot;</span><span class="p">],</span> <span class="n">length</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
@@ -682,16 +669,12 @@ document.write(`
         <span class="n">max_nodes</span> <span class="o">=</span> <span class="n">max_nodes</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">)</span>
 
         <span class="n">linearpaths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-            <span class="n">_itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span>
-                <span class="n">_nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="n">_nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">&quot;begin&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">max_nodes</span><span class="p">),</span>
-                <span class="n">_nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span>
-                    <span class="n">_nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">&quot;begin&quot;</span><span class="p">,</span> <span class="s2">&quot;end_rc&quot;</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">max_nodes</span>
-                <span class="p">),</span>
-                <span class="n">_nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span>
-                    <span class="n">_nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">&quot;begin_rc&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">max_nodes</span>
-                <span class="p">),</span>
-                <span class="n">_nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span>
-                    <span class="n">_nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">&quot;begin_rc&quot;</span><span class="p">,</span> <span class="s2">&quot;end_rc&quot;</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">max_nodes</span>
+            <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span>
+                <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">&quot;begin&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">max_nodes</span><span class="p">),</span>
+                <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">&quot;begin&quot;</span><span class="p">,</span> <span class="s2">&quot;end_rc&quot;</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">max_nodes</span><span class="p">),</span>
+                <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">&quot;begin_rc&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">max_nodes</span><span class="p">),</span>
+                <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span>
+                    <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">&quot;begin_rc&quot;</span><span class="p">,</span> <span class="s2">&quot;end_rc&quot;</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">max_nodes</span>
                 <span class="p">),</span>
             <span class="p">)</span>
         <span class="p">)</span>
@@ -707,7 +690,7 @@ document.write(`
                     <span class="n">e</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
                 <span class="n">edgelol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">edges</span> <span class="ow">in</span> <span class="n">_itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">edgelol</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">edges</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">edgelol</span><span class="p">):</span>
                 <span class="c1"># TODO explain</span>
                 <span class="k">if</span> <span class="p">[</span>
                     <span class="kc">True</span>
@@ -720,14 +703,14 @@ document.write(`
 
                 <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">lps</span><span class="p">:</span>
                     <span class="k">continue</span>  <span class="c1"># TODO: is this test needed?</span>
-                <span class="n">sg</span> <span class="o">=</span> <span class="n">_nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+                <span class="n">sg</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
                 <span class="n">sg</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
                 <span class="n">sg</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">lp</span><span class="p">)</span>
 
                 <span class="n">edgefeatures</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
-                    <span class="n">feats</span> <span class="o">=</span> <span class="n">_deepcopy</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">])</span>
+                    <span class="n">feats</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">])</span>
                     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">feats</span><span class="p">:</span>
                         <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">+=</span> <span class="n">offset</span> <span class="o">-</span> <span class="n">e</span><span class="p">[</span><span class="s2">&quot;piece&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">start</span>
                     <span class="n">edgefeatures</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">feats</span><span class="p">)</span>
@@ -737,7 +720,7 @@ document.write(`
 
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span>
             <span class="p">(</span>
-                <span class="n">_Contig</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span>
+                <span class="n">Contig</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span>
                     <span class="n">lp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                     <span class="n">features</span><span class="o">=</span><span class="n">lp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                     <span class="n">graph</span><span class="o">=</span><span class="n">lp</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
@@ -751,11 +734,11 @@ document.write(`
             <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="nd">@exit_after</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">_os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_assembly_limit&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)))</span>
+    <span class="nd">@exit_after</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_assembly_limit&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)))</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">assemble_circular</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length_bound</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">cps</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># circular assembly</span>
         <span class="n">cpsrc</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">cpaths</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_nx</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">length_bound</span><span class="o">=</span><span class="n">length_bound</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
+        <span class="n">cpaths</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">length_bound</span><span class="o">=</span><span class="n">length_bound</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
         <span class="n">cpaths_sorted</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">cpath</span> <span class="ow">in</span> <span class="n">cpaths</span><span class="p">:</span>
             <span class="n">order</span><span class="p">,</span> <span class="n">node</span> <span class="o">=</span> <span class="nb">min</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;order&quot;</span><span class="p">],</span> <span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">cpath</span><span class="p">)</span>
@@ -777,7 +760,7 @@ document.write(`
                     <span class="n">e</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
                 <span class="n">edgelol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">edges</span> <span class="ow">in</span> <span class="n">_itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">edgelol</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">edges</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">edgelol</span><span class="p">):</span>
                 <span class="k">if</span> <span class="p">[</span>
                     <span class="kc">True</span>
                     <span class="k">for</span> <span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e</span><span class="p">),</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">edges</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
@@ -789,7 +772,7 @@ document.write(`
 
                 <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">cps</span> <span class="ow">or</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">cpsrc</span><span class="p">:</span>
                     <span class="k">continue</span>  <span class="c1"># TODO: is test in cpsrc needed?</span>
-                <span class="n">sg</span> <span class="o">=</span> <span class="n">_nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+                <span class="n">sg</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
                 <span class="n">sg</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
                 <span class="n">sg</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">cp</span><span class="p">)</span>
 
@@ -797,7 +780,7 @@ document.write(`
                 <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
 
                 <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
-                    <span class="n">feats</span> <span class="o">=</span> <span class="n">_deepcopy</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">])</span>
+                    <span class="n">feats</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">])</span>
                     <span class="k">for</span> <span class="n">feat</span> <span class="ow">in</span> <span class="n">feats</span><span class="p">:</span>
                         <span class="n">feat</span><span class="o">.</span><span class="n">location</span> <span class="o">+=</span> <span class="n">offset</span>
                     <span class="n">edgefeatures</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">feats</span><span class="p">)</span>
@@ -806,18 +789,18 @@ document.write(`
                         <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span> <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">):</span>
                             <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">+=</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
                         <span class="k">elif</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">):</span>
-                            <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">_CompoundLocation</span><span class="p">(</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">CompoundLocation</span><span class="p">(</span>
                                 <span class="p">(</span>
-                                    <span class="n">_SimpleLocation</span><span class="p">(</span>
-                                        <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">_ExactPosition</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">))</span>
+                                    <span class="n">SimpleLocation</span><span class="p">(</span>
+                                        <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">ExactPosition</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">))</span>
                                     <span class="p">),</span>
-                                    <span class="n">_SimpleLocation</span><span class="p">(</span>
-                                        <span class="n">_ExactPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
+                                    <span class="n">SimpleLocation</span><span class="p">(</span>
+                                        <span class="n">ExactPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
                                     <span class="p">),</span>
                                 <span class="p">)</span>
                             <span class="p">)</span>
 
-                <span class="n">cps</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">cpsrc</span><span class="p">[</span><span class="n">_rc</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">cps</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">cpsrc</span><span class="p">[</span><span class="n">rc</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="n">ct</span><span class="p">,</span>
                     <span class="n">edgefeatures</span><span class="p">,</span>
                     <span class="n">sg</span><span class="p">,</span>
@@ -827,7 +810,7 @@ document.write(`
 
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span>
             <span class="p">(</span>
-                <span class="n">_Contig</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span>
+                <span class="n">Contig</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span>
                     <span class="n">cp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                     <span class="n">features</span><span class="o">=</span><span class="n">cp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                     <span class="n">graph</span><span class="o">=</span><span class="n">cp</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
@@ -841,9 +824,9 @@ document.write(`
             <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_pretty_str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ps</span><span class="p">:</span>
         <span class="c1"># https://pyformat.info</span>
-        <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">ps</span><span class="p">(</span>
             <span class="s2">&quot;Assembly</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="s2">&quot;fragments..: </span><span class="si">{sequences}</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="s2">&quot;limit(bp)..: </span><span class="si">{limit}</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -861,37 +844,37 @@ document.write(`
 
 
 <span class="n">example_fragments</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">_Dseqrecord</span><span class="p">(</span><span class="s2">&quot;AacgatCAtgctcc&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">),</span>
-    <span class="n">_Dseqrecord</span><span class="p">(</span><span class="s2">&quot;TtgctccTAAattctgc&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">),</span>
-    <span class="n">_Dseqrecord</span><span class="p">(</span><span class="s2">&quot;CattctgcGAGGacgatG&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;c&quot;</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;AacgatCAtgctcc&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;TtgctccTAAattctgc&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;CattctgcGAGGacgatG&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;c&quot;</span><span class="p">),</span>
 <span class="p">)</span>
 
 
 <span class="n">linear_results</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">_Dseqrecord</span><span class="p">(</span><span class="s2">&quot;AacgatCAtgctccTAAattctgcGAGGacgatG&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;abc&quot;</span><span class="p">),</span>
-    <span class="n">_Dseqrecord</span><span class="p">(</span><span class="s2">&quot;ggagcaTGatcgtCCTCgcagaatG&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ac_rc&quot;</span><span class="p">),</span>
-    <span class="n">_Dseqrecord</span><span class="p">(</span><span class="s2">&quot;AacgatG&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ac&quot;</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;AacgatCAtgctccTAAattctgcGAGGacgatG&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;abc&quot;</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;ggagcaTGatcgtCCTCgcagaatG&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ac_rc&quot;</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;AacgatG&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ac&quot;</span><span class="p">),</span>
 <span class="p">)</span>
 
 
 <span class="n">circular_results</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">_Dseqrecord</span><span class="p">(</span><span class="s2">&quot;acgatCAtgctccTAAattctgcGAGG&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;abc&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-    <span class="n">_Dseqrecord</span><span class="p">(</span><span class="s2">&quot;ggagcaTGatcgtCCTCgcagaatTTA&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;abc_rc&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;acgatCAtgctccTAAattctgcGAGG&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;abc&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;ggagcaTGatcgtCCTCgcagaatTTA&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;abc_rc&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
 <span class="p">)</span>
 
 
-<span class="k">class</span><span class="w"> </span><span class="nc">_NodeTuple</span><span class="p">(</span><span class="n">_NamedTuple</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_NodeTuple</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
     <span class="n">start</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">length</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">shared_seq</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># uppercase</span>
 
 
-<span class="k">class</span><span class="w"> </span><span class="nc">_FragmentDict</span><span class="p">(</span><span class="n">_TypedDict</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_FragmentDict</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
     <span class="n">upper</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">mixed</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">features</span><span class="p">:</span> <span class="n">_List</span><span class="p">[</span><span class="n">_SeqFeature</span><span class="p">]</span>
-    <span class="n">nodes</span><span class="p">:</span> <span class="n">_List</span><span class="p">[</span><span class="n">_NodeTuple</span><span class="p">]</span>
+    <span class="n">features</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SeqFeature</span><span class="p">]</span>
+    <span class="n">nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">_NodeTuple</span><span class="p">]</span>
 </pre></div>
 
                 </article>

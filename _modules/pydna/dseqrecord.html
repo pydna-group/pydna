@@ -337,52 +337,46 @@ document.write(`
 
 <span class="sd">The Dseq and Dseqrecord classes support the notion of circular and linear DNA topology.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">RestrictionBatch</span> <span class="k">as</span> <span class="n">_RestrictionBatch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">RestrictionBatch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommOnly</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span> <span class="k">as</span> <span class="n">_Dseq</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">flatten</span> <span class="k">as</span> <span class="n">_flatten</span><span class="p">,</span> <span class="n">location_boundaries</span> <span class="k">as</span> <span class="n">_location_boundaries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">flatten</span><span class="p">,</span> <span class="n">location_boundaries</span>
 
-<span class="c1"># from pydna.utils import memorize as _memorize</span>
-<span class="c1"># from pydna.utils import rc as _rc</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shift_location</span> <span class="k">as</span> <span class="n">_shift_location</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shift_feature</span> <span class="k">as</span> <span class="n">_shift_feature</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.common_sub_strings</span><span class="w"> </span><span class="kn">import</span> <span class="n">common_sub_strings</span> <span class="k">as</span> <span class="n">_common_sub_strings</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqFeature</span> <span class="k">as</span> <span class="n">_SeqFeature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shift_location</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shift_feature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.common_sub_strings</span><span class="w"> </span><span class="kn">import</span> <span class="n">common_sub_strings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqFeature</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqIO</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompoundLocation</span> <span class="k">as</span> <span class="n">_CompoundLocation</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span> <span class="k">as</span> <span class="n">_SimpleLocation</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span> <span class="k">as</span> <span class="n">_SeqRecord</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">translate</span> <span class="k">as</span> <span class="n">_translate</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">identifier_from_string</span> <span class="k">as</span> <span class="n">_identifier_from_string</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_copy</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_operator</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_re</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_time</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompoundLocation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">translate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">identifier_from_string</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SequenceCutSource</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Source</span>
 
-<span class="c1"># import logging as _logging</span>
-
-<span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
-
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display_html</span> <span class="k">as</span> <span class="n">_display_html</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display_html</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_display_html</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_html</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">item</span>
 
 
 <div class="viewcode-block" id="Dseqrecord">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Dseqrecord</span><span class="p">(</span><span class="n">_SeqRecord</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Dseqrecord</span><span class="p">(</span><span class="n">SeqRecord</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Dseqrecord is a double stranded version of the Biopython SeqRecord [#]_ class.</span>
 <span class="sd">    The Dseqrecord object holds a Dseq object describing the sequence.</span>
 <span class="sd">    Additionally, Dseqrecord hold meta information about the sequence in the</span>
@@ -459,7 +453,7 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">seq</span><span class="p">:</span> <span class="n">_Dseq</span>
+    <span class="n">seq</span><span class="p">:</span> <span class="n">Dseq</span>
     <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Source&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -471,14 +465,11 @@ document.write(`
         <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="c1">#        _module_logger.info(&quot;### Dseqrecord initialized ###&quot;)</span>
-        <span class="c1">#        _module_logger.info(&quot;argument circular = %s&quot;, circular)</span>
-        <span class="c1">#        _module_logger.info(&quot;circular = %s&quot;, circular)</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="c1">#           _module_logger.info(&quot;record is a string&quot;)</span>
+
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-                <span class="n">_Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span>
+                <span class="n">Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span>
                     <span class="n">record</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
                     <span class="c1"># linear=linear,</span>
                     <span class="n">circular</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">circular</span><span class="p">),</span>
@@ -493,14 +484,14 @@ document.write(`
                 <span class="n">record</span> <span class="o">=</span> <span class="n">record</span><span class="p">[:]</span>
             <span class="k">elif</span> <span class="n">circular</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="n">record</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">looped</span><span class="p">()</span>
-            <span class="c1">#           _module_logger.info(&quot;record is a Dseq object&quot;)</span>
+
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="c1"># record is a Bio.Seq object ?</span>
         <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">&quot;transcribe&quot;</span><span class="p">):</span>
-            <span class="c1">#           _module_logger.info(&quot;record is a Seq object&quot;)</span>
+
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-                <span class="n">_Dseq</span><span class="p">(</span>
+                <span class="n">Dseq</span><span class="p">(</span>
                     <span class="nb">str</span><span class="p">(</span><span class="n">record</span><span class="p">),</span>
                     <span class="c1"># linear=linear,</span>
                     <span class="n">circular</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">circular</span><span class="p">),</span>
@@ -511,13 +502,13 @@ document.write(`
 
         <span class="c1"># record is a Bio.SeqRecord or Dseqrecord object ?</span>
         <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">):</span>
-            <span class="c1">#           _module_logger.info(&quot;record is a Bio.SeqRecord or Dseqrecord object&quot;)</span>
+
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">letter_annotations</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="c1"># record.seq is a Dseq object ?</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="s2">&quot;watson&quot;</span><span class="p">):</span>
-                <span class="n">new_seq</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+                <span class="n">new_seq</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">circular</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
                     <span class="n">new_seq</span> <span class="o">=</span> <span class="n">new_seq</span><span class="p">[:]</span>
                 <span class="k">elif</span> <span class="n">circular</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
@@ -525,7 +516,7 @@ document.write(`
                 <span class="bp">self</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">new_seq</span>
             <span class="c1"># record.seq is Bio.SeqRecord object ?</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">_Dseq</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span>
                     <span class="nb">str</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span>
                     <span class="c1"># linear=linear,</span>
                     <span class="n">circular</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">circular</span><span class="p">),</span>
@@ -555,14 +546,14 @@ document.write(`
         <span class="c1"># linear=True, circular=False, n = 5E-14, **kwargs):</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>  <span class="c1"># Does not call __init__</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">_per_letter_annotations</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">_Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span>
             <span class="n">record</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
             <span class="c1"># linear=linear,</span>
             <span class="n">circular</span><span class="o">=</span><span class="n">circular</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">pretty_str</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">pretty_str</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">pretty_str</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">dbxrefs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">annotations</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">:</span> <span class="s2">&quot;DNA&quot;</span><span class="p">}</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
@@ -577,7 +568,7 @@ document.write(`
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_SeqRecord</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
-        <span class="n">record</span><span class="p">:</span> <span class="n">_SeqRecord</span><span class="p">,</span>
+        <span class="n">record</span><span class="p">:</span> <span class="n">SeqRecord</span><span class="p">,</span>
         <span class="o">*</span><span class="n">args</span><span class="p">,</span>
         <span class="n">circular</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">n</span><span class="o">=</span><span class="mf">5e-14</span><span class="p">,</span>
@@ -597,7 +588,7 @@ document.write(`
         <span class="n">obj</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">circular</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">circular</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;topology&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;circular&quot;</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">_Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="n">circular</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="n">circular</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
 
@@ -676,14 +667,14 @@ document.write(`
         <span class="n">qualifiers</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">qualifiers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="n">location</span> <span class="o">=</span> <span class="n">_CompoundLocation</span><span class="p">(</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">CompoundLocation</span><span class="p">(</span>
             <span class="p">(</span>
-                <span class="n">_SimpleLocation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="n">strand</span><span class="o">=</span><span class="n">strand</span><span class="p">),</span>
-                <span class="n">_SimpleLocation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="n">strand</span><span class="p">),</span>
+                <span class="n">SimpleLocation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="n">strand</span><span class="o">=</span><span class="n">strand</span><span class="p">),</span>
+                <span class="n">SimpleLocation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="n">strand</span><span class="p">),</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="n">sf</span> <span class="o">=</span> <span class="n">_SeqFeature</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">type_</span><span class="p">,</span> <span class="n">qualifiers</span><span class="o">=</span><span class="n">qualifiers</span><span class="p">)</span>
+        <span class="n">sf</span> <span class="o">=</span> <span class="n">SeqFeature</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">type_</span><span class="p">,</span> <span class="n">qualifiers</span><span class="o">=</span><span class="n">qualifiers</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;label&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">qualifiers</span><span class="p">:</span>
             <span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;ft</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
@@ -738,7 +729,7 @@ document.write(`
 <span class="sd">        --------</span>
 <span class="sd">        pydna.dseq.Dseq.looped</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">new</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">new</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">looped</span><span class="p">()</span>
 
         <span class="n">old_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># Possibly longer, including sticky ends if any.</span>
@@ -759,7 +750,7 @@ document.write(`
                     <span class="c1">#</span>
                     <span class="c1"># Circular sequence ACGTtt should not have that feature, so we drop it</span>
                     <span class="k">continue</span>
-                <span class="n">fn</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">_shift_location</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">new_length</span><span class="p">)</span>
+                <span class="n">fn</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">shift_location</span><span class="p">(</span><span class="n">fn</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">new_length</span><span class="p">)</span>
                 <span class="n">new_features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
 
             <span class="n">new</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">new_features</span>
@@ -787,16 +778,16 @@ document.write(`
 <span class="sd">        &gt;&gt;&gt;</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_warnings</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna</span><span class="w"> </span><span class="kn">import</span> <span class="n">_PydnaDeprecationWarning</span>
 
-        <span class="n">_warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s2">&quot;tolinear method is obsolete; &quot;</span>
             <span class="s2">&quot;please use obj[:] &quot;</span>
             <span class="s2">&quot;instead of obj.tolinear().&quot;</span><span class="p">,</span>
             <span class="n">_PydnaDeprecationWarning</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">new</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="c1"># new._seq = self.seq.tolinear()</span>
@@ -810,7 +801,7 @@ document.write(`
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.terminal_transferase">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">terminal_transferase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nucleotides</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
-        <span class="n">newseq</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">newseq</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">newseq</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">terminal_transferase</span><span class="p">(</span><span class="n">nucleotides</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">newseq</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
             <span class="n">feature</span><span class="o">.</span><span class="n">location</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nucleotides</span><span class="p">)</span>
@@ -853,12 +844,12 @@ document.write(`
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">record</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;genbank&quot;</span><span class="p">,</span> <span class="s2">&quot;gb&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
             <span class="n">record</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;topology&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;circular&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">record</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;topology&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>
-        <span class="k">return</span> <span class="n">_SeqRecord</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">SeqRecord</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.write">
@@ -894,9 +885,9 @@ document.write(`
             <span class="c1"># generate a name if no name was given</span>
         <span class="c1"># if not isinstance(filename, str):  # is filename a string???</span>
         <span class="c1">#     raise ValueError(&quot;filename has to be a string, got&quot;, type(filename))</span>
-        <span class="n">name</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">_os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&lt;font face=monospace&gt;&lt;a href=&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&#39; target=&#39;_blank&#39;&gt;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&lt;/a&gt;&lt;/font&gt;&lt;br&gt;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">_os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
                 <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
@@ -907,16 +898,16 @@ document.write(`
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span> <span class="o">!=</span> <span class="n">old_file</span><span class="o">.</span><span class="n">seq</span><span class="p">:</span>
                 <span class="c1"># If new sequence is different, the old file is</span>
                 <span class="c1"># renamed with &quot;_OLD_&quot; suffix:</span>
-                <span class="n">oldmtime</span> <span class="o">=</span> <span class="n">_datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span>
-                    <span class="n">_os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                <span class="n">oldmtime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-                <span class="n">tstmp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">_time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1_000_000</span><span class="p">)</span>
+                <span class="n">tstmp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1_000_000</span><span class="p">)</span>
                 <span class="n">old_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_OLD_</span><span class="si">{</span><span class="n">tstmp</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="n">_os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">old_filename</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">old_filename</span><span class="p">)</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
                     <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
-                <span class="n">newmtime</span> <span class="o">=</span> <span class="n">_datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span>
-                    <span class="n">_os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                <span class="n">newmtime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">                &lt;table style=&quot;padding:10px 10px;</span>
@@ -962,8 +953,8 @@ document.write(`
             <span class="k">elif</span> <span class="s2">&quot;seguid&quot;</span> <span class="ow">in</span> <span class="n">old_file</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;comment&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
                 <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(ldseguid|cdseguid)-(\S</span><span class="si">{27}</span><span class="s2">)(_[0-9]</span><span class="si">{4}</span><span class="s2">-[0-9]</span><span class="si">{2}</span><span class="s2">-[0-9]</span><span class="si">{2}</span><span class="s2">T[0-9]</span><span class="si">{2}</span><span class="s2">:[0-9]</span><span class="si">{2}</span><span class="s2">:[0-9]</span><span class="si">{2}</span><span class="s2">\.[0-9]</span><span class="si">{6}</span><span class="s2">){0,1}&quot;</span>
                 <span class="c1"># seguid=NNNNNNNNNNNNNNNNNNNNNNNNNNN_2020-10-10T11:11:11.111111</span>
-                <span class="n">oldstamp</span> <span class="o">=</span> <span class="n">_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">old_file</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
-                <span class="n">newstamp</span> <span class="o">=</span> <span class="n">_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+                <span class="n">oldstamp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">old_file</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+                <span class="n">newstamp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
                 <span class="n">newdescription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span>
                 <span class="k">if</span> <span class="n">oldstamp</span> <span class="ow">and</span> <span class="n">newstamp</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">oldstamp</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)[:</span><span class="mi">35</span><span class="p">]</span> <span class="o">==</span> <span class="n">newstamp</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)[:</span><span class="mi">35</span><span class="p">]:</span>
@@ -972,7 +963,7 @@ document.write(`
                         <span class="p">)</span>
                 <span class="k">elif</span> <span class="n">oldstamp</span><span class="p">:</span>
                     <span class="n">newdescription</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">oldstamp</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-                <span class="n">newobj</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="n">newobj</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
                 <span class="n">newobj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">newdescription</span>
 
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
@@ -980,7 +971,7 @@ document.write(`
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
                     <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">_display_html</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">display_html</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.find">
@@ -1002,7 +993,7 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;Dseqrecord</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="s2">&quot;circular: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="s2">&quot;size: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="p">)</span> <span class="o">+</span> <span class="n">_SeqRecord</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">+</span> <span class="n">SeqRecord</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
@@ -1013,7 +1004,7 @@ document.write(`
             <span class="n">spc</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">-</span> <span class="n">ln</span> <span class="o">%</span> <span class="mi">3</span> <span class="k">if</span> <span class="n">ln</span> <span class="o">%</span> <span class="mi">3</span> <span class="k">else</span> <span class="mi">0</span>
             <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;n&quot;</span> <span class="o">*</span> <span class="n">spc</span> <span class="o">+</span> <span class="n">s</span> <span class="o">+</span> <span class="s2">&quot;nnn&quot;</span>
             <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">_translate</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">frame</span> <span class="p">:</span> <span class="n">frame</span> <span class="o">+</span> <span class="n">spc</span> <span class="o">+</span> <span class="n">ln</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">translate</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">frame</span> <span class="p">:</span> <span class="n">frame</span> <span class="o">+</span> <span class="n">spc</span> <span class="o">+</span> <span class="n">ln</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
                     <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span>
 
@@ -1057,7 +1048,7 @@ document.write(`
         <span class="n">start</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">start</span> <span class="o">=</span> <span class="n">_translate</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">frame</span> <span class="p">:</span> <span class="n">frame</span> <span class="o">+</span> <span class="n">ln</span> <span class="o">+</span> <span class="n">spc</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">translate</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">frame</span> <span class="p">:</span> <span class="n">frame</span> <span class="o">+</span> <span class="n">ln</span> <span class="o">+</span> <span class="n">spc</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
                 <span class="k">break</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="k">pass</span>
@@ -1108,7 +1099,7 @@ document.write(`
         <span class="n">matching_reads</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">read_</span> <span class="ow">in</span> <span class="n">reads</span><span class="p">:</span>
-            <span class="n">matches</span> <span class="o">=</span> <span class="n">_common_sub_strings</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="nb">str</span><span class="p">(</span><span class="n">read_</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="n">limit</span><span class="p">)</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="n">common_sub_strings</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="nb">str</span><span class="p">(</span><span class="n">read_</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="n">limit</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">matches</span><span class="p">:</span>
                 <span class="k">continue</span>
@@ -1129,14 +1120,14 @@ document.write(`
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">newmatches</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">ms</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">newmatches</span><span class="p">:</span>
-                    <span class="n">ms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_SimpleLocation</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
-                <span class="n">loc</span> <span class="o">=</span> <span class="n">_CompoundLocation</span><span class="p">(</span><span class="n">ms</span><span class="p">)</span>
+                    <span class="n">ms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SimpleLocation</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+                <span class="n">loc</span> <span class="o">=</span> <span class="n">CompoundLocation</span><span class="p">(</span><span class="n">ms</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">newmatches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">loc</span> <span class="o">=</span> <span class="n">_SimpleLocation</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
+                <span class="n">loc</span> <span class="o">=</span> <span class="n">SimpleLocation</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">_SeqFeature</span><span class="p">(</span>
+                <span class="n">SeqFeature</span><span class="p">(</span>
                     <span class="n">loc</span><span class="p">,</span>
                     <span class="n">qualifiers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">read_</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">]]},</span>
                     <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;trace&quot;</span><span class="p">,</span>
@@ -1159,7 +1150,7 @@ document.write(`
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;seq&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="s2">&quot;watson&quot;</span><span class="p">):</span>
-            <span class="n">other</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
             <span class="n">other_five_prime</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">five_prime_end</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">other_five_prime</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;5&#39;&quot;</span><span class="p">:</span>
                 <span class="c1"># add other.seq.ovhg</span>
@@ -1170,10 +1161,10 @@ document.write(`
                 <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
                     <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="n">other</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span><span class="p">)</span>
 
-            <span class="n">answer</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">_SeqRecord</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span>
+            <span class="n">answer</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">SeqRecord</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span>
             <span class="n">answer</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">answer</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">_SeqRecord</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
+            <span class="n">answer</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">SeqRecord</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
             <span class="n">answer</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span>
         <span class="k">return</span> <span class="n">answer</span>
 
@@ -1187,7 +1178,7 @@ document.write(`
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;TypeError: can&#39;t multiply circular Dseqrecord.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">new</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">new</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
                 <span class="n">new</span> <span class="o">+=</span> <span class="bp">self</span>
             <span class="n">new</span><span class="o">.</span><span class="n">_per_letter_annotations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_per_letter_annotations</span>
@@ -1197,7 +1188,7 @@ document.write(`
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sl</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
-        <span class="n">answer</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">_copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="n">answer</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
         <span class="n">answer</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">sl</span><span class="p">)</span>
         <span class="c1"># answer.seq.alphabet = self.seq.alphabet</span>
         <span class="c1"># breakpoint()</span>
@@ -1219,9 +1210,9 @@ document.write(`
                 <span class="n">f</span>
                 <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">answer</span><span class="o">.</span><span class="n">features</span>
                 <span class="k">if</span> <span class="p">(</span>
-                    <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
-                    <span class="ow">and</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="o">&lt;</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">location_boundaries</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+                    <span class="ow">and</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="o">&lt;</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="p">)</span>
             <span class="p">]</span>
 
@@ -1237,8 +1228,8 @@ document.write(`
                 <span class="n">identifier</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">])</span>
             <span class="k">elif</span> <span class="s2">&quot;note&quot;</span> <span class="ow">in</span> <span class="n">sf</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">:</span>
                 <span class="n">identifier</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sf</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">])</span>
-        <span class="n">answer</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">_identifier_from_string</span><span class="p">(</span><span class="n">identifier</span><span class="p">)[:</span><span class="mi">16</span><span class="p">]</span>
-        <span class="n">answer</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">_identifier_from_string</span><span class="p">(</span><span class="s2">&quot;part_</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))[:</span><span class="mi">16</span><span class="p">]</span>
+        <span class="n">answer</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">identifier_from_string</span><span class="p">(</span><span class="n">identifier</span><span class="p">)[:</span><span class="mi">16</span><span class="p">]</span>
+        <span class="n">answer</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">identifier_from_string</span><span class="p">(</span><span class="s2">&quot;part_</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))[:</span><span class="mi">16</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">answer</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
@@ -1285,42 +1276,42 @@ document.write(`
 
 <div class="viewcode-block" id="Dseqrecord.no_cutters">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.no_cutters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">no_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">no_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">no_cutters</span><span class="p">(</span><span class="n">batch</span><span class="o">=</span><span class="n">batch</span> <span class="ow">or</span> <span class="n">CommOnly</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.unique_cutters">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.unique_cutters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">unique_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unique_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">unique_cutters</span><span class="p">(</span><span class="n">batch</span><span class="o">=</span><span class="n">batch</span> <span class="ow">or</span> <span class="n">CommOnly</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.once_cutters">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.once_cutters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">once_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">once_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">once_cutters</span><span class="p">(</span><span class="n">batch</span><span class="o">=</span><span class="n">batch</span> <span class="ow">or</span> <span class="n">CommOnly</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.twice_cutters">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.twice_cutters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">twice_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">twice_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">twice_cutters</span><span class="p">(</span><span class="n">batch</span><span class="o">=</span><span class="n">batch</span> <span class="ow">or</span> <span class="n">CommOnly</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.n_cutters">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.n_cutters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">n_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">n_cutters</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="n">batch</span> <span class="ow">or</span> <span class="n">CommOnly</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.cutters">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.cutters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">RestrictionBatch</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">cutters</span><span class="p">(</span><span class="n">batch</span><span class="o">=</span><span class="n">batch</span> <span class="ow">or</span> <span class="n">CommOnly</span><span class="p">)</span></div>
 
@@ -1330,7 +1321,7 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="nf">number_of_cuts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">enzymes</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The number of cuts by digestion with the Restriction enzymes</span>
 <span class="sd">        contained in the iterable.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">enzyme</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span> <span class="k">for</span> <span class="n">enzyme</span> <span class="ow">in</span> <span class="n">_flatten</span><span class="p">(</span><span class="n">enzymes</span><span class="p">)])</span></div>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">enzyme</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span> <span class="k">for</span> <span class="n">enzyme</span> <span class="ow">in</span> <span class="n">flatten</span><span class="p">(</span><span class="n">enzymes</span><span class="p">)])</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.reverse_complement">
@@ -1413,7 +1404,7 @@ document.write(`
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Only circular DNA can be synced!&quot;</span><span class="p">)</span>
 
-        <span class="n">newseq</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">newseq</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">watson</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="n">s_rc</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">crick</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -1429,8 +1420,8 @@ document.write(`
 
         <span class="n">lim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">limit</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">//</span> <span class="n">limit</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
-        <span class="n">c</span> <span class="o">=</span> <span class="n">_common_sub_strings</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">s</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">lim</span><span class="p">)</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="n">_common_sub_strings</span><span class="p">(</span><span class="n">s_rc</span> <span class="o">+</span> <span class="n">s_rc</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">lim</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">common_sub_strings</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">s</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">lim</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">common_sub_strings</span><span class="p">(</span><span class="n">s_rc</span> <span class="o">+</span> <span class="n">s_rc</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">lim</span><span class="p">)</span>
 
         <span class="n">c</span> <span class="o">=</span> <span class="p">[(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">c</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">[(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">d</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
@@ -1456,7 +1447,7 @@ document.write(`
             <span class="n">result</span> <span class="o">=</span> <span class="n">newseq</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">newseq</span><span class="o">.</span><span class="n">shifted</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
-        <span class="c1">#       _module_logger.info(&quot;synced&quot;)</span>
+
         <span class="k">return</span> <span class="n">result</span></div>
 
 
@@ -1488,7 +1479,7 @@ document.write(`
 <span class="sd">        --------</span>
 <span class="sd">        pydna.dseqrecord.Dseqrecord.lower&quot;&quot;&quot;</span>
 
-        <span class="n">upper</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">upper</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="c1"># This is because the @seq.setter methods otherwise sets the _per_letter_annotations to an empty dict</span>
         <span class="n">prev_per_letter_annotation</span> <span class="o">=</span> <span class="n">upper</span><span class="o">.</span><span class="n">_per_letter_annotations</span>
         <span class="n">upper</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">upper</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
@@ -1525,7 +1516,7 @@ document.write(`
 <span class="sd">        pydna.dseqrecord.Dseqrecord.upper</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">lower</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">lower</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">prev_per_letter_annotation</span> <span class="o">=</span> <span class="n">lower</span><span class="o">.</span><span class="n">_per_letter_annotations</span>
         <span class="n">lower</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">lower</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="n">lower</span><span class="o">.</span><span class="n">_per_letter_annotations</span> <span class="o">=</span> <span class="n">prev_per_letter_annotation</span>
@@ -1549,8 +1540,8 @@ document.write(`
                 <span class="n">orf</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">x</span><span class="p">:</span><span class="n">y</span><span class="p">]</span>
                 <span class="n">prt</span> <span class="o">=</span> <span class="n">orf</span><span class="o">.</span><span class="n">translate</span><span class="p">()</span>
                 <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">_SeqFeature</span><span class="p">(</span>
-                        <span class="n">_SimpleLocation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="n">strand</span><span class="p">),</span>
+                    <span class="n">SeqFeature</span><span class="p">(</span>
+                        <span class="n">SimpleLocation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="n">strand</span><span class="p">),</span>
                         <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;CDS&quot;</span><span class="p">,</span>
                         <span class="n">qualifiers</span><span class="o">=</span><span class="p">{</span>
                             <span class="s2">&quot;note&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">y</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">x</span><span class="si">}</span><span class="s2">bp </span><span class="si">{</span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mi">3</span><span class="si">}</span><span class="s2">aa&quot;</span><span class="p">,</span>
@@ -1597,11 +1588,11 @@ document.write(`
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
             <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span>
             <span class="n">locations</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">parts</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">_SimpleLocation</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">fget</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">parts</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">SimpleLocation</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">fget</span>
             <span class="p">)</span>
             <span class="n">strand</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">locations</span> <span class="o">=</span> <span class="p">[</span><span class="n">_SimpleLocation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="n">locations</span> <span class="o">=</span> <span class="p">[</span><span class="n">SimpleLocation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
             <span class="n">strand</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="n">ovhg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">watson</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">crick</span><span class="p">)</span>
@@ -1632,7 +1623,7 @@ document.write(`
             <span class="n">result</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">s1</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">s2</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">s2</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">s1</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">pretty_str</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.shifted">
@@ -1688,15 +1679,15 @@ document.write(`
             <span class="p">)</span>
         <span class="n">ln</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">shift</span> <span class="o">%</span> <span class="n">ln</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># shift is a multiple of ln or 0</span>
+            <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># shift is a multiple of ln or 0</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">shift</span> <span class="o">%=</span> <span class="n">ln</span>  <span class="c1"># 0&lt;=shift&lt;=ln</span>
         <span class="n">newseq</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">[</span><span class="n">shift</span><span class="p">:]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span><span class="n">shift</span><span class="p">])</span><span class="o">.</span><span class="n">looped</span><span class="p">()</span>
-        <span class="n">newfeatures</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
+        <span class="n">newfeatures</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">newfeatures</span><span class="p">:</span>
-            <span class="n">feature</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">_shift_location</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="o">-</span><span class="n">shift</span><span class="p">,</span> <span class="n">ln</span><span class="p">)</span>
-        <span class="n">newfeatures</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">_operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;location.start&quot;</span><span class="p">))</span>
-        <span class="n">answer</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">feature</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">shift_location</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="o">-</span><span class="n">shift</span><span class="p">,</span> <span class="n">ln</span><span class="p">)</span>
+        <span class="n">newfeatures</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;location.start&quot;</span><span class="p">))</span>
+        <span class="n">answer</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">answer</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">newfeatures</span>
         <span class="n">answer</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">newseq</span>
         <span class="k">return</span> <span class="n">answer</span></div>
@@ -1756,7 +1747,7 @@ document.write(`
         <span class="k">if</span> <span class="n">left_cut</span> <span class="o">==</span> <span class="n">right_cut</span><span class="p">:</span>
             <span class="c1"># Not really a cut, but to handle the general case</span>
             <span class="k">if</span> <span class="n">left_cut</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">features</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># The features that span the origin if shifting with left_cut, but that do not cross</span>
                 <span class="c1"># the cut site should be included, and if there is a feature within the cut site, it should</span>
@@ -1779,7 +1770,7 @@ document.write(`
                 <span class="n">initial_shift</span> <span class="o">=</span> <span class="n">left_watson</span> <span class="k">if</span> <span class="n">left_ovhg</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">left_crick</span>
                 <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shifted</span><span class="p">(</span><span class="n">initial_shift</span><span class="p">)</span><span class="o">.</span><span class="n">features</span>
                 <span class="c1"># for f in features:</span>
-                <span class="c1">#     print(f.id, f.location, _location_boundaries(f.location))</span>
+                <span class="c1">#     print(f.id, f.location, location_boundaries(f.location))</span>
                 <span class="c1"># Here, we have done what&#39;s shown below (* indicates the origin).</span>
                 <span class="c1"># The features 0 and 2 have the right location for the final product:</span>
                 <span class="c1">#</span>
@@ -1793,10 +1784,10 @@ document.write(`
                 <span class="n">features_need_transfer</span> <span class="o">=</span> <span class="p">[</span>
                     <span class="n">f</span>
                     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">features</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">_location_boundaries</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">left_ovhg</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">location_boundaries</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">left_ovhg</span><span class="p">))</span>
                 <span class="p">]</span>
                 <span class="n">features_need_transfer</span> <span class="o">=</span> <span class="p">[</span>
-                    <span class="n">_shift_feature</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">-</span><span class="nb">abs</span><span class="p">(</span><span class="n">left_ovhg</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+                    <span class="n">shift_feature</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">-</span><span class="nb">abs</span><span class="p">(</span><span class="n">left_ovhg</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
                     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">features_need_transfer</span>
                 <span class="p">]</span>
 
@@ -1813,7 +1804,7 @@ document.write(`
                 <span class="c1"># as the original one. However, the final product is longer because of the overhang.</span>
 
                 <span class="n">features</span> <span class="o">+=</span> <span class="p">[</span>
-                    <span class="n">_shift_feature</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">left_ovhg</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">dseq</span><span class="p">))</span>
+                    <span class="n">shift_feature</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">left_ovhg</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">dseq</span><span class="p">))</span>
                     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">features_need_transfer</span>
                 <span class="p">]</span>
                 <span class="c1">#                             ^                ^^^^^^^^^</span>
@@ -1825,9 +1816,9 @@ document.write(`
                     <span class="n">f</span>
                     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">features</span>
                     <span class="k">if</span> <span class="p">(</span>
-                        <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dseq</span><span class="p">)</span>
-                        <span class="ow">and</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                        <span class="o">&lt;=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">location_boundaries</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dseq</span><span class="p">)</span>
+                        <span class="ow">and</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="o">&lt;=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
                     <span class="p">)</span>
                 <span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>

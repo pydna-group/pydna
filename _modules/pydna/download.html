@@ -332,32 +332,23 @@ document.write(`
 <span class="c1"># as part of this package.</span>
 <span class="sd">&quot;&quot;&quot;Provides a function for downloading online text files.&quot;&quot;&quot;</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_textwrap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span>
 
-<span class="c1"># import os as _os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
-
-<span class="c1"># from pydna.utils import memorize as _memorize</span>
-<span class="c1"># import logging as _logging</span>
-
-<span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">ps</span>
 
 
-<span class="c1"># @_memorize(&quot;pydna.download.download_text&quot;)</span>
 <div class="viewcode-block" id="download_text">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.download_text">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">download_text</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 
-    <span class="c1">#    _module_logger.info(&quot;#### DOWNLOAD TEXT ####&quot;)</span>
-    <span class="c1">#    _module_logger.info(&quot;url = %s&quot;, url)</span>
     <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-    <span class="c1">#    _module_logger.info(&quot;url = %s&quot;, str(req))</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">_textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="c1">#    _module_logger.info(&quot;result[:160] = %s&quot;, result[:160])</span>
-    <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+    <span class="k">return</span> <span class="n">ps</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
 
 </pre></div>
 

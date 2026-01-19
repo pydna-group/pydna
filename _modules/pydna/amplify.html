@@ -339,28 +339,22 @@ document.write(`
 <span class="sd">Primers with 5&#39; tails as well as inverse PCR on circular templates are handled</span>
 <span class="sd">correctly.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">flatten</span> <span class="k">as</span> <span class="n">_flatten</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shift_feature</span> <span class="k">as</span> <span class="n">_shift_feature</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplicon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Amplicon</span> <span class="k">as</span> <span class="n">_Amplicon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span> <span class="k">as</span> <span class="n">_Primer</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span> <span class="k">as</span> <span class="n">_SeqRecord</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqFeature</span> <span class="k">as</span> <span class="n">_SeqFeature</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span> <span class="k">as</span> <span class="n">_SimpleLocation</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompoundLocation</span> <span class="k">as</span> <span class="n">_CompoundLocation</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq</span> <span class="k">as</span> <span class="n">_Seq</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_re</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_copy</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_operator</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">iupac_compl_regex</span> <span class="k">as</span> <span class="n">_iupac_compl_regex</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">anneal_from_left</span> <span class="k">as</span> <span class="n">_anneal_from_left</span>
-
-<span class="c1"># import os as _os</span>
-
-<span class="c1"># import logging as _logging</span>
-
-<span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">flatten</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shift_feature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplicon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Amplicon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqFeature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompoundLocation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">iupac_compl_regex</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">anneal_from_left</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_annealing_positions</span><span class="p">(</span><span class="n">primer</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
@@ -422,14 +416,14 @@ document.write(`
     <span class="n">tail</span> <span class="o">=</span> <span class="n">revprimer</span><span class="p">[</span><span class="n">limit</span><span class="p">:]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
 
     <span class="c1"># Make regex pattern that reflects extended IUPAC DNA code</span>
-    <span class="n">head_regex</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_iupac_compl_regex</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">head</span><span class="p">)</span>
+    <span class="n">head_regex</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iupac_compl_regex</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">head</span><span class="p">)</span>
     <span class="n">primer_regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(?:(</span><span class="si">{</span><span class="n">head_regex</span><span class="si">}</span><span class="s2">)(.</span><span class="se">{{</span><span class="s2">0,</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">primer</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">limit</span><span class="si">}</span><span class="se">}}</span><span class="s2">))&quot;</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">_re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">primer_regex</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">upper</span><span class="p">()):</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">primer_regex</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">upper</span><span class="p">()):</span>
         <span class="n">anchor</span><span class="p">,</span> <span class="n">under_tail</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
         <span class="n">match_start</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-        <span class="n">match_extension</span> <span class="o">=</span> <span class="n">_anneal_from_left</span><span class="p">(</span><span class="n">tail</span><span class="p">,</span> <span class="n">under_tail</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">match_extension</span> <span class="o">=</span> <span class="n">anneal_from_left</span><span class="p">(</span><span class="n">tail</span><span class="p">,</span> <span class="n">under_tail</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">match_start</span><span class="p">,</span> <span class="n">limit</span> <span class="o">+</span> <span class="n">match_extension</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">results</span>
 
@@ -533,7 +527,7 @@ document.write(`
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">primers</span> <span class="o">=</span> <span class="n">primers</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">limit</span> <span class="o">=</span> <span class="n">limit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
@@ -556,7 +550,7 @@ document.write(`
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">primers</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">forward_primers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
                 <span class="p">(</span>
-                    <span class="n">_Primer</span><span class="p">(</span>
+                    <span class="n">Primer</span><span class="p">(</span>
                         <span class="n">p</span><span class="p">,</span>
                         <span class="c1">#          template = self.template,</span>
                         <span class="n">position</span><span class="o">=</span><span class="n">tcl</span> <span class="o">-</span> <span class="n">pos</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
@@ -568,7 +562,7 @@ document.write(`
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reverse_primers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
                 <span class="p">(</span>
-                    <span class="n">_Primer</span><span class="p">(</span>
+                    <span class="n">Primer</span><span class="p">(</span>
                         <span class="n">p</span><span class="p">,</span>
                         <span class="c1">#          template = self.template,</span>
                         <span class="n">position</span><span class="o">=</span><span class="n">pos</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span><span class="p">),</span>
@@ -579,16 +573,16 @@ document.write(`
                 <span class="p">)</span>
             <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">forward_primers</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">_operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_primers</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">_operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forward_primers</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_primers</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">fp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_primers</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">fp</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">fp</span><span class="o">.</span><span class="n">_fp</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">start</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">fp</span><span class="o">.</span><span class="n">_fp</span>
                 <span class="n">end</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">position</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">_SeqFeature</span><span class="p">(</span>
-                        <span class="n">_SimpleLocation</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                    <span class="n">SeqFeature</span><span class="p">(</span>
+                        <span class="n">SimpleLocation</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
                         <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primer_bind&quot;</span><span class="p">,</span>
                         <span class="n">qualifiers</span><span class="o">=</span><span class="p">{</span>
                             <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">fp</span><span class="o">.</span><span class="n">name</span><span class="p">],</span>
@@ -601,11 +595,11 @@ document.write(`
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">start</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">)</span> <span class="o">-</span> <span class="n">fp</span><span class="o">.</span><span class="n">_fp</span> <span class="o">+</span> <span class="n">fp</span><span class="o">.</span><span class="n">position</span>
                 <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">fp</span><span class="o">.</span><span class="n">_fp</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">)</span>
-                <span class="n">sf</span> <span class="o">=</span> <span class="n">_SeqFeature</span><span class="p">(</span>
-                    <span class="n">_CompoundLocation</span><span class="p">(</span>
+                <span class="n">sf</span> <span class="o">=</span> <span class="n">SeqFeature</span><span class="p">(</span>
+                    <span class="n">CompoundLocation</span><span class="p">(</span>
                         <span class="p">[</span>
-                            <span class="n">_SimpleLocation</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">)),</span>
-                            <span class="n">_SimpleLocation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="p">),</span>
+                            <span class="n">SimpleLocation</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">)),</span>
+                            <span class="n">SimpleLocation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="p">),</span>
                         <span class="p">]</span>
                     <span class="p">),</span>
                     <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primer_bind&quot;</span><span class="p">,</span>
@@ -623,8 +617,8 @@ document.write(`
                 <span class="n">start</span> <span class="o">=</span> <span class="n">rp</span><span class="o">.</span><span class="n">position</span>
                 <span class="n">end</span> <span class="o">=</span> <span class="n">rp</span><span class="o">.</span><span class="n">position</span> <span class="o">+</span> <span class="n">rp</span><span class="o">.</span><span class="n">_fp</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">_SeqFeature</span><span class="p">(</span>
-                        <span class="n">_SimpleLocation</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
+                    <span class="n">SeqFeature</span><span class="p">(</span>
+                        <span class="n">SimpleLocation</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
                         <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primer_bind&quot;</span><span class="p">,</span>
                         <span class="n">qualifiers</span><span class="o">=</span><span class="p">{</span>
                             <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">rp</span><span class="o">.</span><span class="n">name</span><span class="p">],</span>
@@ -638,11 +632,11 @@ document.write(`
                 <span class="n">start</span> <span class="o">=</span> <span class="n">rp</span><span class="o">.</span><span class="n">position</span>
                 <span class="n">end</span> <span class="o">=</span> <span class="n">rp</span><span class="o">.</span><span class="n">position</span> <span class="o">+</span> <span class="n">rp</span><span class="o">.</span><span class="n">_fp</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">_SeqFeature</span><span class="p">(</span>
-                        <span class="n">_CompoundLocation</span><span class="p">(</span>
+                    <span class="n">SeqFeature</span><span class="p">(</span>
+                        <span class="n">CompoundLocation</span><span class="p">(</span>
                             <span class="p">[</span>
-                                <span class="n">_SimpleLocation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
-                                <span class="n">_SimpleLocation</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">),</span> <span class="n">strand</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
+                                <span class="n">SimpleLocation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
+                                <span class="n">SimpleLocation</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="p">),</span> <span class="n">strand</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
                             <span class="p">],</span>
                         <span class="p">),</span>
                         <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;primer_bind&quot;</span><span class="p">,</span>
@@ -682,15 +676,15 @@ document.write(`
                     <span class="k">continue</span>
                 <span class="c1"># Shift features to the right if there was a tail</span>
                 <span class="n">shift_amount</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fp</span><span class="o">.</span><span class="n">tail</span><span class="p">)</span>
-                <span class="n">feats</span> <span class="o">=</span> <span class="p">[</span><span class="n">_shift_feature</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">shift_amount</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">feats</span><span class="p">]</span>
+                <span class="n">feats</span> <span class="o">=</span> <span class="p">[</span><span class="n">shift_feature</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">shift_amount</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">feats</span><span class="p">]</span>
 
                 <span class="k">if</span> <span class="n">tpl</span><span class="o">.</span><span class="n">circular</span> <span class="ow">and</span> <span class="n">fp</span><span class="o">.</span><span class="n">position</span> <span class="o">==</span> <span class="n">rp</span><span class="o">.</span><span class="n">position</span><span class="p">:</span>
-                    <span class="n">prd</span> <span class="o">=</span> <span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span> <span class="o">+</span> <span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">rp</span><span class="p">)</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+                    <span class="n">prd</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span> <span class="o">+</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">rp</span><span class="p">)</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">prd</span> <span class="o">=</span> <span class="p">(</span>
-                        <span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+                        <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
                         <span class="o">+</span> <span class="n">tpl</span><span class="p">[</span><span class="n">fp</span><span class="o">.</span><span class="n">position</span> <span class="p">:</span> <span class="n">rp</span><span class="o">.</span><span class="n">position</span><span class="p">]</span>
-                        <span class="o">+</span> <span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">rp</span><span class="p">)</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+                        <span class="o">+</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">rp</span><span class="p">)</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
                     <span class="p">)</span>
                 <span class="n">prd</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">feats</span>
                 <span class="n">full_tmpl_features</span> <span class="o">=</span> <span class="p">[</span>
@@ -707,16 +701,16 @@ document.write(`
                         <span class="n">new_identifier</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ft</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">])</span>
 
                 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-                    <span class="n">identifier_from_string</span> <span class="k">as</span> <span class="n">_identifier_from_string</span><span class="p">,</span>
+                    <span class="n">identifier_from_string</span><span class="p">,</span>
                 <span class="p">)</span>  <span class="c1"># TODO:  clean this up</span>
 
                 <span class="n">prd</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">_identifier_from_string</span><span class="p">(</span><span class="n">new_identifier</span><span class="p">)[:</span><span class="mi">16</span><span class="p">]</span>
+                    <span class="n">identifier_from_string</span><span class="p">(</span><span class="n">new_identifier</span><span class="p">)[:</span><span class="mi">16</span><span class="p">]</span>
                     <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
                     <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">prd</span><span class="p">)</span><span class="si">}</span><span class="s2">bp_PCR_prod&quot;</span><span class="p">[:</span><span class="mi">16</span><span class="p">]</span>
                 <span class="p">)</span>
                 <span class="n">prd</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">_identifier_from_string</span><span class="p">(</span><span class="n">new_identifier</span><span class="p">)[:</span><span class="mi">16</span><span class="p">]</span>
+                    <span class="n">identifier_from_string</span><span class="p">(</span><span class="n">new_identifier</span><span class="p">)[:</span><span class="mi">16</span><span class="p">]</span>
                     <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
                     <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">prd</span><span class="p">)</span><span class="si">}</span><span class="s2">bp&quot;</span><span class="p">[:</span><span class="mi">16</span><span class="p">]</span>
                 <span class="p">)</span>
@@ -724,7 +718,7 @@ document.write(`
                     <span class="s2">&quot;description&quot;</span>
                 <span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;pcr_product_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fp</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="n">rp</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
 
-                <span class="n">amplicon</span> <span class="o">=</span> <span class="n">_Amplicon</span><span class="p">(</span>
+                <span class="n">amplicon</span> <span class="o">=</span> <span class="n">Amplicon</span><span class="p">(</span>
                     <span class="n">prd</span><span class="p">,</span>
                     <span class="n">template</span><span class="o">=</span><span class="n">tpl</span><span class="p">,</span>
                     <span class="n">forward_primer</span><span class="o">=</span><span class="n">fp</span><span class="p">,</span>
@@ -770,7 +764,7 @@ document.write(`
                 <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mystring</span> <span class="o">+=</span> <span class="s2">&quot;No reverse primers anneal...</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">mystring</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">pretty_str</span><span class="p">(</span><span class="n">mystring</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
 
     <span class="n">report</span> <span class="o">=</span> <span class="fm">__str__</span></div>
 
@@ -778,7 +772,7 @@ document.write(`
 
 <div class="viewcode-block" id="pcr">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.pcr">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">pcr</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Amplicon</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pcr</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Amplicon</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;pcr is a convenience function for the Anneal class to simplify its</span>
 <span class="sd">    usage, especially from the command line. If more than one or no PCR</span>
 <span class="sd">    product is formed, a ValueError is raised.</span>
@@ -840,15 +834,15 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">output</span> <span class="o">=</span> <span class="n">_flatten</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>  <span class="c1"># flatten</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>  <span class="c1"># flatten</span>
     <span class="n">new</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">&quot;watson&quot;</span><span class="p">):</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="n">_SeqRecord</span><span class="p">(</span><span class="n">_Seq</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">watson</span><span class="p">))</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">watson</span><span class="p">))</span>
         <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">&quot;transcribe&quot;</span><span class="p">):</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="n">_SeqRecord</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="n">_SeqRecord</span><span class="p">(</span><span class="n">_Seq</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
         <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">):</span>
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
@@ -863,7 +857,7 @@ document.write(`
         <span class="n">new</span> <span class="o">=</span> <span class="p">[</span><span class="n">new</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">forward_primer</span><span class="p">,</span> <span class="n">new</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reverse_primer</span><span class="p">,</span> <span class="n">new</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">template</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">new</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="s2">&quot;watson&quot;</span><span class="p">):</span>
-        <span class="n">new</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">new</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 
     <span class="n">anneal_primers</span> <span class="o">=</span> <span class="n">Anneal</span><span class="p">(</span><span class="n">new</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">new</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 

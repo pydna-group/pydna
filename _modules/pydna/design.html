@@ -340,24 +340,23 @@ document.write(`
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.tm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tm_default</span> <span class="k">as</span> <span class="n">_tm_default</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_math</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_copy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplicon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Amplicon</span> <span class="k">as</span> <span class="n">_Amplicon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplify</span><span class="w"> </span><span class="kn">import</span> <span class="n">Anneal</span> <span class="k">as</span> <span class="n">_Anneal</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplify</span><span class="w"> </span><span class="kn">import</span> <span class="n">pcr</span> <span class="k">as</span> <span class="n">_pcr</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span> <span class="k">as</span> <span class="n">_Primer</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_operator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.tm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tm_default</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplicon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Amplicon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplify</span><span class="w"> </span><span class="kn">import</span> <span class="n">Anneal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplify</span><span class="w"> </span><span class="kn">import</span> <span class="n">pcr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">pairwise</span><span class="p">,</span> <span class="n">product</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_design_primer</span><span class="p">(</span>
     <span class="n">target_tm</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">template</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span>
+    <span class="n">template</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">tm_func</span><span class="p">,</span>
     <span class="n">starting_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -375,10 +374,10 @@ document.write(`
     <span class="n">p</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span><span class="n">length</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">tmp</span> <span class="o">&lt;</span> <span class="n">target_tm</span><span class="p">:</span>
-        <span class="n">condition</span> <span class="o">=</span> <span class="n">_operator</span><span class="o">.</span><span class="n">le</span>
+        <span class="n">condition</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">le</span>
         <span class="n">increment</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">condition</span> <span class="o">=</span> <span class="n">_operator</span><span class="o">.</span><span class="n">ge</span>
+        <span class="n">condition</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">ge</span>
         <span class="n">increment</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
     <span class="k">while</span> <span class="n">condition</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">target_tm</span><span class="p">):</span>
         <span class="n">prev_temp</span> <span class="o">=</span> <span class="n">tmp</span>
@@ -392,7 +391,6 @@ document.write(`
         <span class="k">if</span> <span class="n">length</span> <span class="o">&lt;</span> <span class="n">limit</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span><span class="n">limit</span><span class="p">]</span>
 
-    <span class="c1"># _module_logger.debug(((p, tmp), (prev_primer, prev_temp)))</span>
     <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">target_tm</span> <span class="o">-</span> <span class="n">tmp</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">target_tm</span> <span class="o">-</span> <span class="n">prev_temp</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">p</span>
     <span class="k">else</span><span class="p">:</span>
@@ -407,7 +405,7 @@ document.write(`
     <span class="n">rp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">limit</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span>
     <span class="n">target_tm</span><span class="o">=</span><span class="mf">55.0</span><span class="p">,</span>
-    <span class="n">tm_func</span><span class="o">=</span><span class="n">_tm_default</span><span class="p">,</span>
+    <span class="n">tm_func</span><span class="o">=</span><span class="n">tm_default</span><span class="p">,</span>
     <span class="n">estimate_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">):</span>
@@ -516,33 +514,33 @@ document.write(`
             <span class="k">return</span> <span class="n">_design_primer</span><span class="p">(</span><span class="n">target_tm</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">tm_func</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">fp</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">rp</span><span class="p">:</span>
-        <span class="c1"># _module_logger.debug(&quot;no primer given, design forward primer:&quot;)</span>
-        <span class="n">fp</span> <span class="o">=</span> <span class="n">_Primer</span><span class="p">((</span><span class="n">design</span><span class="p">(</span><span class="n">target_tm</span><span class="p">,</span> <span class="n">template</span><span class="p">)))</span>
+
+        <span class="n">fp</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">((</span><span class="n">design</span><span class="p">(</span><span class="n">target_tm</span><span class="p">,</span> <span class="n">template</span><span class="p">)))</span>
         <span class="n">target_tm</span> <span class="o">=</span> <span class="n">tm_func</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">fp</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span>
-        <span class="c1"># _module_logger.debug(&quot;no primer given, design reverse primer:&quot;)</span>
-        <span class="n">rp</span> <span class="o">=</span> <span class="n">_Primer</span><span class="p">(</span><span class="n">design</span><span class="p">(</span><span class="n">target_tm</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()))</span>
+
+        <span class="n">rp</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="n">design</span><span class="p">(</span><span class="n">target_tm</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()))</span>
     <span class="k">elif</span> <span class="n">fp</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">rp</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">fp</span> <span class="o">=</span> <span class="n">_Anneal</span><span class="p">((</span><span class="n">fp</span><span class="p">,),</span> <span class="n">template</span><span class="p">)</span><span class="o">.</span><span class="n">forward_primers</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">fp</span> <span class="o">=</span> <span class="n">Anneal</span><span class="p">((</span><span class="n">fp</span><span class="p">,),</span> <span class="n">template</span><span class="p">)</span><span class="o">.</span><span class="n">forward_primers</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Forward primer does not anneal&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unexpected error&quot;</span><span class="p">)</span>
             <span class="k">raise</span>
         <span class="n">target_tm</span> <span class="o">=</span> <span class="n">tm_func</span><span class="p">(</span><span class="n">fp</span><span class="o">.</span><span class="n">footprint</span><span class="p">)</span>
-        <span class="c1"># _module_logger.debug(&quot;forward primer given, design reverse primer:&quot;)</span>
-        <span class="n">rp</span> <span class="o">=</span> <span class="n">_Primer</span><span class="p">(</span><span class="n">design</span><span class="p">(</span><span class="n">target_tm</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()))</span>
+
+        <span class="n">rp</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="n">design</span><span class="p">(</span><span class="n">target_tm</span><span class="p">,</span> <span class="n">template</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()))</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="n">fp</span> <span class="ow">and</span> <span class="n">rp</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">rp</span> <span class="o">=</span> <span class="n">_Anneal</span><span class="p">((</span><span class="n">rp</span><span class="p">,),</span> <span class="n">template</span><span class="p">)</span><span class="o">.</span><span class="n">reverse_primers</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">rp</span> <span class="o">=</span> <span class="n">Anneal</span><span class="p">((</span><span class="n">rp</span><span class="p">,),</span> <span class="n">template</span><span class="p">)</span><span class="o">.</span><span class="n">reverse_primers</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Reverse primer does not anneal&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unexpected error&quot;</span><span class="p">)</span>
             <span class="k">raise</span>
         <span class="n">target_tm</span> <span class="o">=</span> <span class="n">tm_func</span><span class="p">(</span><span class="n">rp</span><span class="o">.</span><span class="n">footprint</span><span class="p">)</span>
-        <span class="c1"># _module_logger.debug(&quot;reverse primer given, design forward primer:&quot;)</span>
-        <span class="n">fp</span> <span class="o">=</span> <span class="n">_Primer</span><span class="p">(</span><span class="n">design</span><span class="p">(</span><span class="n">target_tm</span><span class="p">,</span> <span class="n">template</span><span class="p">))</span>
+
+        <span class="n">fp</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="n">design</span><span class="p">(</span><span class="n">target_tm</span><span class="p">,</span> <span class="n">template</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specify maximum one of the two primers.&quot;</span><span class="p">)</span>
 
@@ -561,15 +559,15 @@ document.write(`
     <span class="n">fp</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">id</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">template</span><span class="o">.</span><span class="n">accession</span>
     <span class="n">rp</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">rp</span><span class="o">.</span><span class="n">id</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">template</span><span class="o">.</span><span class="n">accession</span>
 
-    <span class="n">ampl</span> <span class="o">=</span> <span class="n">_Anneal</span><span class="p">((</span><span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">),</span> <span class="n">template</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+    <span class="n">ampl</span> <span class="o">=</span> <span class="n">Anneal</span><span class="p">((</span><span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">),</span> <span class="n">template</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
 
-    <span class="n">prod</span> <span class="o">=</span> <span class="n">ampl</span><span class="o">.</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">ampl</span><span class="o">.</span><span class="n">products</span> <span class="k">else</span> <span class="n">_Amplicon</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">prod</span> <span class="o">=</span> <span class="n">ampl</span><span class="o">.</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">ampl</span><span class="o">.</span><span class="n">products</span> <span class="k">else</span> <span class="n">Amplicon</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ampl</span><span class="o">.</span><span class="n">products</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_warnings</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna</span><span class="w"> </span><span class="kn">import</span> <span class="n">_PydnaWarning</span>
 
-        <span class="n">_warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s2">&quot;designed primers do not yield a unique PCR product&quot;</span><span class="p">,</span> <span class="n">_PydnaWarning</span>
         <span class="p">)</span>
 
@@ -974,7 +972,7 @@ document.write(`
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;template&quot;</span><span class="p">):</span>
-            <span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">_pcr</span><span class="p">(</span>
+            <span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">pcr</span><span class="p">(</span>
                 <span class="p">(</span><span class="n">fragments</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">forward_primer</span><span class="p">,</span> <span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reverse_primer</span><span class="p">),</span>
                 <span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">template</span><span class="p">,</span>
             <span class="p">)</span>
@@ -989,11 +987,7 @@ document.write(`
             <span class="s2">&quot;Every second fragment larger than maxlink has to be an Amplicon object&quot;</span>
         <span class="p">)</span>
 
-    <span class="c1"># _module_logger.debug(&quot;### assembly fragments ###&quot;)</span>
-    <span class="c1"># _module_logger.debug(&quot;overlap     = %s&quot;, overlap)</span>
-    <span class="c1"># _module_logger.debug(&quot;max_link    = %s&quot;, maxlink)</span>
-
-    <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="n">_copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
 
     <span class="n">first_fragment_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">last_fragment_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
@@ -1001,26 +995,21 @@ document.write(`
     <span class="k">if</span> <span class="n">first_fragment_length</span> <span class="o">&lt;=</span> <span class="n">maxlink</span><span class="p">:</span>
         <span class="c1"># first fragment should be removed and added to second fragment (new first fragment) forward primer</span>
         <span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">forward_primer</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">forward_primer</span>
-        <span class="c1"># _module_logger.debug(&quot;first fragment removed since len(f[0]) = %s&quot;, first_fragment_length)</span>
+
         <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
     <span class="c1"># else:</span>
-    <span class="c1"># _module_logger.debug(&quot;first fragment stays since len(f[0]) = %s&quot;, first_fragment_length)</span>
 
     <span class="k">if</span> <span class="n">last_fragment_length</span> <span class="o">&lt;=</span> <span class="n">maxlink</span><span class="p">:</span>
         <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">reverse_primer</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">reverse_primer</span>
         <span class="p">)</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="c1"># _module_logger.debug(&quot;last fragment removed since len(f[%s]) = %s&quot;, len(f), last_fragment_length)</span>
+
     <span class="c1"># else:</span>
-    <span class="c1"># _module_logger.debug(&quot;last fragment stays since len(f[%s]) = %s&quot;, len(f), last_fragment_length)</span>
 
-    <span class="n">empty</span> <span class="o">=</span> <span class="n">_Dseqrecord</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">empty</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
-    <span class="c1"># _module_logger.debug(f)</span>
-    <span class="c1"># _module_logger.debug(&quot;loop through fragments in groups of three:&quot;)</span>
-
-    <span class="n">tail_length</span> <span class="o">=</span> <span class="n">_math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">overlap</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">tail_length</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">overlap</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">first</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -1028,15 +1017,12 @@ document.write(`
 
         <span class="n">secnd_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">secnd</span><span class="p">)</span>
 
-        <span class="c1"># _module_logger.debug(&quot;first = %s&quot;, str(first.seq))</span>
-        <span class="c1"># _module_logger.debug(&quot;secnd = %s&quot;, str(secnd.seq))</span>
-
         <span class="k">if</span> <span class="n">secnd_len</span> <span class="o">&lt;=</span> <span class="n">maxlink</span><span class="p">:</span>
-            <span class="c1"># _module_logger.debug(&quot;secnd is smaller or equal to maxlink; should be added to primer(s)&quot;)</span>
+
             <span class="n">third</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
-            <span class="c1"># _module_logger.debug(&quot;third = %s&quot;, str(third.seq))</span>
+
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;template&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">third</span><span class="p">,</span> <span class="s2">&quot;template&quot;</span><span class="p">):</span>
-                <span class="c1"># _module_logger.debug(</span>
+
                 <span class="c1">#    &quot;secnd is is flanked by amplicons, so half of secnd should be added each flanking primers&quot;</span>
                 <span class="c1"># )</span>
 
@@ -1057,14 +1043,14 @@ document.write(`
                         <span class="p">:</span> <span class="n">secnd_len</span> <span class="o">//</span> <span class="mi">2</span>
                     <span class="p">]</span>
                 <span class="p">)[</span><span class="o">-</span><span class="n">tail_length</span><span class="p">:]</span>
-                <span class="c1"># _module_logger.debug(&quot;1 %s&quot;, lnk)</span>
+
                 <span class="n">first</span><span class="o">.</span><span class="n">reverse_primer</span> <span class="o">=</span> <span class="n">lnk</span> <span class="o">+</span> <span class="n">first</span><span class="o">.</span><span class="n">reverse_primer</span>
 
                 <span class="n">lnk</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="n">first</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
                     <span class="o">+</span> <span class="n">secnd</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)[:</span> <span class="n">secnd_len</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span>
                 <span class="p">)[</span><span class="o">-</span><span class="n">tail_length</span><span class="p">:]</span>
-                <span class="c1"># _module_logger.debug(&quot;2 %s&quot;, lnk)</span>
+
                 <span class="n">third</span><span class="o">.</span><span class="n">forward_primer</span> <span class="o">=</span> <span class="n">lnk</span> <span class="o">+</span> <span class="n">third</span><span class="o">.</span><span class="n">forward_primer</span>
 
             <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="s2">&quot;template&quot;</span><span class="p">):</span>
@@ -1101,13 +1087,11 @@ document.write(`
         <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">first</span>
         <span class="n">f</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">secnd</span>
 
-    <span class="c1"># _module_logger.debug(&quot;loop ended&quot;)</span>
-
     <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">f</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)]</span>
 
     <span class="k">return</span> <span class="p">[</span>
         <span class="p">(</span>
-            <span class="n">_pcr</span><span class="p">(</span>
+            <span class="n">pcr</span><span class="p">(</span>
                 <span class="n">p</span><span class="o">.</span><span class="n">forward_primer</span><span class="p">,</span>
                 <span class="n">p</span><span class="o">.</span><span class="n">reverse_primer</span><span class="p">,</span>
                 <span class="n">p</span><span class="o">.</span><span class="n">template</span><span class="p">,</span>
@@ -1143,8 +1127,8 @@ document.write(`
 <div class="viewcode-block" id="user_assembly_design">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.user_assembly_design">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">user_assembly_design</span><span class="p">(</span>
-    <span class="n">f</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Amplicon</span><span class="p">],</span> <span class="n">max_overlap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">min_overlap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">max_tail</span><span class="o">=</span><span class="mi">50</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Amplicon</span><span class="p">]:</span>
+    <span class="n">f</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Amplicon</span><span class="p">],</span> <span class="n">max_overlap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">min_overlap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">max_tail</span><span class="o">=</span><span class="mi">50</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Amplicon</span><span class="p">]:</span>
 
     <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 

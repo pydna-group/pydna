@@ -330,12 +330,12 @@ document.write(`
 <span class="c1"># This code is part of the Python-dna distribution and governed by its</span>
 <span class="c1"># license.  Please see the LICENSE.txt file that should have been included</span>
 <span class="c1"># as part of this package.</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
 
 
 <div class="viewcode-block" id="GenbankFile">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.genbankfile.GenbankFile">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">GenbankFile</span><span class="p">(</span><span class="n">_Dseqrecord</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GenbankFile</span><span class="p">(</span><span class="n">Dseqrecord</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>

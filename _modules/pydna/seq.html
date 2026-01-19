@@ -335,26 +335,21 @@ document.write(`
 <span class="sd">nicer output in the IPython shell.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c1"># from pydna.codon import weights as _weights</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqUtils.ProtParam</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProteinAnalysis</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.codon</span><span class="w"> </span><span class="kn">import</span> <span class="n">rare_codons</span> <span class="k">as</span> <span class="n">_rare_codons</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.codon</span><span class="w"> </span><span class="kn">import</span> <span class="n">rare_codons</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.codon</span><span class="w"> </span><span class="kn">import</span> <span class="n">start</span> <span class="k">as</span> <span class="n">_start</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.codon</span><span class="w"> </span><span class="kn">import</span> <span class="n">stop</span> <span class="k">as</span> <span class="n">_stop</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.codon</span><span class="w"> </span><span class="kn">import</span> <span class="n">n_end</span> <span class="k">as</span> <span class="n">_n_end</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">seguid</span><span class="w"> </span><span class="kn">import</span> <span class="n">lsseguid</span> <span class="k">as</span> <span class="n">_lsseguid</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rc</span> <span class="k">as</span> <span class="n">_rc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">seguid</span><span class="w"> </span><span class="kn">import</span> <span class="n">lsseguid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rc</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqUtils</span><span class="w"> </span><span class="kn">import</span> <span class="n">seq3</span> <span class="k">as</span> <span class="n">_seq3</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqUtils</span><span class="w"> </span><span class="kn">import</span> <span class="n">gc_fraction</span> <span class="k">as</span> <span class="n">_GC</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqUtils</span><span class="w"> </span><span class="kn">import</span> <span class="n">seq3</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqUtils</span><span class="w"> </span><span class="kn">import</span> <span class="n">gc_fraction</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq</span> <span class="k">as</span> <span class="n">_Seq</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">PrettyTable</span> <span class="k">as</span> <span class="n">_PrettyTable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">PrettyTable</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span> <span class="k">as</span> <span class="n">_List</span><span class="p">,</span> <span class="n">Optional</span> <span class="k">as</span> <span class="n">_Optional</span><span class="p">,</span> <span class="n">Tuple</span> <span class="k">as</span> <span class="n">_Tuple</span>
-
-<span class="c1"># import logging as _logging</span>
-
-<span class="c1"># _module_logger = _logging.getLogger(&quot;pydna.&quot; + __name__)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
 
 <div class="viewcode-block" id="Seq">
@@ -480,7 +475,7 @@ document.write(`
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.seq.Seq.gc">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">gc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return GC content.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">_GC</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)),</span> <span class="mi">3</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">gc_fraction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)),</span> <span class="mi">3</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Seq.cai">
@@ -494,11 +489,11 @@ document.write(`
 
 <div class="viewcode-block" id="Seq.rarecodons">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.seq.Seq.rarecodons">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rarecodons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organism</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sce&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_List</span><span class="p">[</span><span class="nb">slice</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rarecodons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organism</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sce&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">slice</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
-        <span class="n">rare</span> <span class="o">=</span> <span class="n">_rare_codons</span><span class="p">[</span><span class="n">organism</span><span class="p">]</span>
+        <span class="n">rare</span> <span class="o">=</span> <span class="n">rare_codons</span><span class="p">[</span><span class="n">organism</span><span class="p">]</span>
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
-        <span class="n">slices</span><span class="p">:</span> <span class="n">_List</span><span class="p">[</span><span class="nb">slice</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">slices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">slice</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">//</span> <span class="mi">3</span><span class="p">):</span>
             <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">3</span>
             <span class="n">trip</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">x</span><span class="p">:</span><span class="n">y</span><span class="p">]</span>
@@ -509,25 +504,25 @@ document.write(`
 
 <div class="viewcode-block" id="Seq.startcodon">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.seq.Seq.startcodon">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">startcodon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organism</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sce&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">startcodon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organism</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sce&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_start</span><span class="p">[</span><span class="n">organism</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)[:</span><span class="mi">3</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="Seq.stopcodon">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.seq.Seq.stopcodon">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">stopcodon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organism</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sce&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stopcodon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organism</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sce&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_stop</span><span class="p">[</span><span class="n">organism</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">3</span><span class="p">:])</span></div>
 
 
 <div class="viewcode-block" id="Seq.express">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.seq.Seq.express">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">express</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organism</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sce&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_PrettyTable</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">express</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organism</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sce&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PrettyTable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">_PrettyTable</span><span class="p">(</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PrettyTable</span><span class="p">(</span>
             <span class="p">[</span><span class="s2">&quot;cds&quot;</span><span class="p">,</span> <span class="s2">&quot;len&quot;</span><span class="p">,</span> <span class="s2">&quot;cai&quot;</span><span class="p">,</span> <span class="s2">&quot;gc&quot;</span><span class="p">,</span> <span class="s2">&quot;sta&quot;</span><span class="p">,</span> <span class="s2">&quot;stp&quot;</span><span class="p">,</span> <span class="s2">&quot;n-end&quot;</span><span class="p">]</span>
-            <span class="o">+</span> <span class="n">_rare_codons</span><span class="p">[</span><span class="n">organism</span><span class="p">]</span>
+            <span class="o">+</span> <span class="n">rare_codons</span><span class="p">[</span><span class="n">organism</span><span class="p">]</span>
             <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;rare&quot;</span><span class="p">]</span>
         <span class="p">)</span>
         <span class="n">val</span> <span class="o">=</span> <span class="p">[]</span>
@@ -542,12 +537,12 @@ document.write(`
         <span class="n">val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startcodon</span><span class="p">())</span>
         <span class="n">val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stopcodon</span><span class="p">())</span>
         <span class="n">val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">_n_end</span><span class="p">[</span><span class="n">organism</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_seq3</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">translate</span><span class="p">())),</span>
+            <span class="n">_n_end</span><span class="p">[</span><span class="n">organism</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">seq3</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">translate</span><span class="p">())),</span>
         <span class="p">)</span>
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
         <span class="n">trps</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">3</span> <span class="p">:</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)]</span>
         <span class="n">tot</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">cdn</span> <span class="ow">in</span> <span class="n">_rare_codons</span><span class="p">[</span><span class="n">organism</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">cdn</span> <span class="ow">in</span> <span class="n">rare_codons</span><span class="p">[</span><span class="n">organism</span><span class="p">]:</span>
             <span class="n">cnt</span> <span class="o">=</span> <span class="n">trps</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">cdn</span><span class="p">)</span>
             <span class="n">tot</span> <span class="o">+=</span> <span class="n">cnt</span>
             <span class="n">val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
@@ -558,13 +553,13 @@ document.write(`
 
 <div class="viewcode-block" id="Seq.orfs2">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.seq.Seq.orfs2">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">orfs2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">orfs2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
-        <span class="n">orf</span> <span class="o">=</span> <span class="n">_re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;ATG(?:...)</span><span class="se">{{</span><span class="si">{</span><span class="n">minsize</span><span class="si">}</span><span class="s2">,</span><span class="se">}}</span><span class="s2">?(?:TAG|TAA|TGA)&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">_re</span><span class="o">.</span><span class="n">IGNORECASE</span>
+        <span class="n">orf</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;ATG(?:...)</span><span class="se">{{</span><span class="si">{</span><span class="n">minsize</span><span class="si">}</span><span class="s2">,</span><span class="se">}}</span><span class="s2">?(?:TAG|TAA|TGA)&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span>
         <span class="p">)</span>
         <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">matches</span><span class="p">:</span> <span class="n">_List</span><span class="p">[</span><span class="nb">slice</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">matches</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">slice</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
 
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
@@ -579,7 +574,7 @@ document.write(`
 
 <div class="viewcode-block" id="Seq.orfs">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.seq.Seq.orfs">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">orfs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_List</span><span class="p">[</span><span class="n">_Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">orfs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
         <span class="n">dna</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">three_frame_orfs</span>
 
@@ -607,7 +602,7 @@ document.write(`
 <span class="sd">        ----------</span>
 <span class="sd">        .. [#] http://wiki.christophchamp.com/index.php/SEGUID</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">_lsseguid</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">lsseguid</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">alphabet</span><span class="o">=</span><span class="s2">&quot;{DNA-extended},AU&quot;</span>
         <span class="p">)</span></div>
 
@@ -623,7 +618,7 @@ document.write(`
 <div class="viewcode-block" id="Seq.reverse_complement">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.seq.Seq.reverse_complement">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reverse_complement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">_rc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">rc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">))</span></div>
 
 
     <span class="n">rc</span> <span class="o">=</span> <span class="n">reverse_complement</span></div>
@@ -700,7 +695,7 @@ document.write(`
 <span class="sd">        ----------</span>
 <span class="sd">        .. [#] http://wiki.christophchamp.com/index.php/SEGUID</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">_lsseguid</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">lsseguid</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">alphabet</span><span class="o">=</span><span class="s2">&quot;{protein-extended}&quot;</span>
         <span class="p">)</span></div>
 

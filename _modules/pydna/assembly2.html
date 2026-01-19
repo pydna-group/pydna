@@ -330,8 +330,8 @@ document.write(`
 <span class="sd">see [issues tagged with fixed-with-new-assembly-model](https://github.com/pydna-group/pydna/issues?q=is%3Aissue%20state%3Aopen%20label%3Afixed-with-new-assembly-model)</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_nx</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span><span class="p">,</span> <span class="n">Location</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">RestrictionBatch</span>
@@ -339,20 +339,20 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">shift_location</span> <span class="k">as</span> <span class="n">_shift_location</span><span class="p">,</span>
+    <span class="n">shift_location</span><span class="p">,</span>
     <span class="n">flatten</span><span class="p">,</span>
-    <span class="n">location_boundaries</span> <span class="k">as</span> <span class="n">_location_boundaries</span><span class="p">,</span>
-    <span class="n">locations_overlap</span> <span class="k">as</span> <span class="n">_locations_overlap</span><span class="p">,</span>
+    <span class="n">location_boundaries</span><span class="p">,</span>
+    <span class="n">locations_overlap</span><span class="p">,</span>
     <span class="n">sum_is_sticky</span><span class="p">,</span>
     <span class="n">limit_iterator</span><span class="p">,</span>
     <span class="n">create_location</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">ps</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.common_sub_strings</span><span class="w"> </span><span class="kn">import</span> <span class="n">common_sub_strings</span> <span class="k">as</span> <span class="n">common_sub_strings_str</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span> <span class="k">as</span> <span class="n">_Dseqrecord</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span> <span class="k">as</span> <span class="n">_Dseq</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span> <span class="k">as</span> <span class="n">_Primer</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span> <span class="k">as</span> <span class="n">_SeqRecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.types</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">CutSiteType</span><span class="p">,</span>
     <span class="c1"># TODO: allow user to enforce multi-site</span>
@@ -386,7 +386,7 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractCut</span> <span class="k">as</span> <span class="n">_AbstractCut</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractCut</span>
 
 
 <div class="viewcode-block" id="gather_overlapping_locations">
@@ -400,23 +400,23 @@ document.write(`
 <span class="sd">    the output will be [(loc1, loc2), (loc3,)].</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Make a graph with all the locations as nodes</span>
-    <span class="n">G</span> <span class="o">=</span> <span class="n">_nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">loc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">locs</span><span class="p">):</span>
         <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">loc</span><span class="p">)</span>
 
     <span class="c1"># Add edges between nodes that overlap</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">locs</span><span class="p">)):</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">locs</span><span class="p">)):</span>
-            <span class="k">if</span> <span class="n">_locations_overlap</span><span class="p">(</span><span class="n">locs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">locs</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">fragment_length</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">locations_overlap</span><span class="p">(</span><span class="n">locs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">locs</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">fragment_length</span><span class="p">):</span>
                 <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
 
     <span class="c1"># Get groups of overlapping locations</span>
     <span class="n">groups</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">loc_set</span> <span class="ow">in</span> <span class="n">_nx</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="n">G</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">loc_set</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="n">G</span><span class="p">):</span>
         <span class="n">groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">locs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">loc_set</span><span class="p">))</span>
 
     <span class="c1"># Sort by location of the first element in each group (does not matter which since they are overlapping)</span>
-    <span class="n">groups</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">groups</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">groups</span></div>
 
@@ -425,7 +425,7 @@ document.write(`
 <div class="viewcode-block" id="ends_from_cutsite">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.ends_from_cutsite">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">ends_from_cutsite</span><span class="p">(</span>
-    <span class="n">cutsite</span><span class="p">:</span> <span class="n">CutSiteType</span><span class="p">,</span> <span class="n">seq</span><span class="p">:</span> <span class="n">_Dseq</span>
+    <span class="n">cutsite</span><span class="p">:</span> <span class="n">CutSiteType</span><span class="p">,</span> <span class="n">seq</span><span class="p">:</span> <span class="n">Dseq</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the sticky or blunt ends created by a restriction enzyme cut.</span>
 
@@ -448,7 +448,7 @@ document.write(`
 <span class="sd">        and the sequence of the overhang. The first tuple is for the left end, second for the right end.</span>
 
 <span class="sd">    &gt;&gt;&gt; from Bio.Restriction import NotI</span>
-<span class="sd">    &gt;&gt;&gt; x = _Dseq(&quot;ctcgGCGGCCGCcagcggccg&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; x = Dseq(&quot;ctcgGCGGCCGCcagcggccg&quot;)</span>
 <span class="sd">    &gt;&gt;&gt; x.get_cutsites(NotI)</span>
 <span class="sd">    [((6, -4), NotI)]</span>
 <span class="sd">    &gt;&gt;&gt; ends_from_cutsite(x.get_cutsites(NotI)[0], x)</span>
@@ -478,8 +478,8 @@ document.write(`
 <div class="viewcode-block" id="restriction_ligation_overlap">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.restriction_ligation_overlap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">restriction_ligation_overlap</span><span class="p">(</span>
-    <span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span>
-    <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span>
+    <span class="n">seqx</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+    <span class="n">seqy</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
     <span class="n">enzymes</span><span class="o">=</span><span class="n">RestrictionBatch</span><span class="p">,</span>
     <span class="n">partial</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">allow_blunt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -490,9 +490,9 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    seqx : _Dseqrecord</span>
+<span class="sd">    seqx : Dseqrecord</span>
 <span class="sd">        The first sequence</span>
-<span class="sd">    seqy : _Dseqrecord</span>
+<span class="sd">    seqy : Dseqrecord</span>
 <span class="sd">        The second sequence</span>
 <span class="sd">    enzymes : RestrictionBatch</span>
 <span class="sd">        The enzymes to use</span>
@@ -546,7 +546,7 @@ document.write(`
     <span class="c1">#     if not seqy.circular:</span>
     <span class="c1">#         cuts_y.append(((0, 0), None))</span>
     <span class="n">matches</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">cut_x</span><span class="p">,</span> <span class="n">cut_y</span> <span class="ow">in</span> <span class="n">_itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">cuts_x</span><span class="p">,</span> <span class="n">cuts_y</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">cut_x</span><span class="p">,</span> <span class="n">cut_y</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">cuts_x</span><span class="p">,</span> <span class="n">cuts_y</span><span class="p">):</span>
         <span class="c1"># A blunt end</span>
         <span class="k">if</span> <span class="n">allow_blunt</span> <span class="ow">and</span> <span class="n">cut_x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">cut_y</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">matches</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cut_x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">cut_y</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">))</span>
@@ -596,7 +596,7 @@ document.write(`
 <div class="viewcode-block" id="blunt_overlap">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.blunt_overlap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">blunt_overlap</span><span class="p">(</span>
-    <span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">seqx</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SequenceOverlap</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Assembly algorithm to find blunt overlaps. Used for blunt ligation.</span>
@@ -606,9 +606,9 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    seqx : _Dseqrecord</span>
+<span class="sd">    seqx : Dseqrecord</span>
 <span class="sd">        The first sequence</span>
-<span class="sd">    seqy : _Dseqrecord</span>
+<span class="sd">    seqy : Dseqrecord</span>
 <span class="sd">        The second sequence</span>
 <span class="sd">    limit : int</span>
 <span class="sd">        There for compatibility, but it is ignored</span>
@@ -637,7 +637,7 @@ document.write(`
 <div class="viewcode-block" id="common_sub_strings">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.common_sub_strings">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">common_sub_strings</span><span class="p">(</span>
-    <span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span>
+    <span class="n">seqx</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SequenceOverlap</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Assembly algorithm to find common substrings of length == limit. see the docs of</span>
@@ -703,7 +703,7 @@ document.write(`
 
 <div class="viewcode-block" id="gibson_overlap">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.gibson_overlap">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">gibson_overlap</span><span class="p">(</span><span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gibson_overlap</span><span class="p">(</span><span class="n">seqx</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Assembly algorithm to find terminal overlaps (e.g. for Gibson assembly).</span>
 <span class="sd">    The order matters, we want alignments like:</span>
@@ -722,9 +722,9 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    seqx : _Dseqrecord</span>
+<span class="sd">    seqx : Dseqrecord</span>
 <span class="sd">        The first sequence</span>
-<span class="sd">    seqy : _Dseqrecord</span>
+<span class="sd">    seqy : Dseqrecord</span>
 <span class="sd">        The second sequence</span>
 <span class="sd">    limit : int</span>
 <span class="sd">        Minimum length of the overlap</span>
@@ -772,7 +772,7 @@ document.write(`
 
 <div class="viewcode-block" id="sticky_end_sub_strings">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.sticky_end_sub_strings">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">sticky_end_sub_strings</span><span class="p">(</span><span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sticky_end_sub_strings</span><span class="p">(</span><span class="n">seqx</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Assembly algorithm for ligation of sticky ends.</span>
 
@@ -781,9 +781,9 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    seqx : _Dseqrecord</span>
+<span class="sd">    seqx : Dseqrecord</span>
 <span class="sd">        The first sequence</span>
-<span class="sd">    seqy : _Dseqrecord</span>
+<span class="sd">    seqy : Dseqrecord</span>
 <span class="sd">        The second sequence</span>
 <span class="sd">    limit : bool</span>
 <span class="sd">        Whether to allow partial overlaps</span>
@@ -829,7 +829,7 @@ document.write(`
 <div class="viewcode-block" id="zip_match_leftwards">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.zip_match_leftwards">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">zip_match_leftwards</span><span class="p">(</span>
-    <span class="n">seqx</span><span class="p">:</span> <span class="n">_SeqRecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_SeqRecord</span><span class="p">,</span> <span class="n">match</span><span class="p">:</span> <span class="n">SequenceOverlap</span>
+    <span class="n">seqx</span><span class="p">:</span> <span class="n">SeqRecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">SeqRecord</span><span class="p">,</span> <span class="n">match</span><span class="p">:</span> <span class="n">SequenceOverlap</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SequenceOverlap</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Starting from the rightmost edge of the match, return a new match encompassing the max</span>
@@ -837,15 +837,15 @@ document.write(`
 <span class="sd">    than the limit or a shorter match if there are mismatches. This is convenient to maintain</span>
 <span class="sd">    as many features as possible. It is used in PCR assembly.</span>
 
-<span class="sd">    &gt;&gt;&gt; seq = _Dseqrecord(&#39;AAAAACGTCCCGT&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; primer = _Dseqrecord(&#39;ACGTCCCGT&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; seq = Dseqrecord(&#39;AAAAACGTCCCGT&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; primer = Dseqrecord(&#39;ACGTCCCGT&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; match = (13, 9, 0) # an empty match at the end of each</span>
 <span class="sd">    &gt;&gt;&gt; zip_match_leftwards(seq, primer, match)</span>
 <span class="sd">    (4, 0, 9)</span>
 
 <span class="sd">    Works in circular molecules if the match spans the origin:</span>
-<span class="sd">    &gt;&gt;&gt; seq = _Dseqrecord(&#39;TCCCGTAAAAACG&#39;, circular=True)</span>
-<span class="sd">    &gt;&gt;&gt; primer = _Dseqrecord(&#39;ACGTCCCGT&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; seq = Dseqrecord(&#39;TCCCGTAAAAACG&#39;, circular=True)</span>
+<span class="sd">    &gt;&gt;&gt; primer = Dseqrecord(&#39;ACGTCCCGT&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; match = (6, 9, 0)</span>
 <span class="sd">    &gt;&gt;&gt; zip_match_leftwards(seq, primer, match)</span>
 <span class="sd">    (10, 0, 9)</span>
@@ -866,11 +866,11 @@ document.write(`
     <span class="c1"># For those cases we shift by length, then go back</span>
 
     <span class="n">end_on_x</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">match</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seqx</span><span class="p">,</span> <span class="n">_Dseqrecord</span><span class="p">)</span> <span class="ow">and</span> <span class="n">seqx</span><span class="o">.</span><span class="n">circular</span> <span class="ow">and</span> <span class="n">end_on_x</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqx</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seqx</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="ow">and</span> <span class="n">seqx</span><span class="o">.</span><span class="n">circular</span> <span class="ow">and</span> <span class="n">end_on_x</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqx</span><span class="p">):</span>
         <span class="n">end_on_x</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqx</span><span class="p">)</span>
 
     <span class="n">end_on_y</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">match</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seqy</span><span class="p">,</span> <span class="n">_Dseqrecord</span><span class="p">)</span> <span class="ow">and</span> <span class="n">seqy</span><span class="o">.</span><span class="n">circular</span> <span class="ow">and</span> <span class="n">end_on_y</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqy</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seqy</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="ow">and</span> <span class="n">seqy</span><span class="o">.</span><span class="n">circular</span> <span class="ow">and</span> <span class="n">end_on_y</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqy</span><span class="p">):</span>
         <span class="n">end_on_y</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqy</span><span class="p">)</span>
 
     <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
@@ -890,7 +890,7 @@ document.write(`
 <div class="viewcode-block" id="zip_match_rightwards">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.zip_match_rightwards">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">zip_match_rightwards</span><span class="p">(</span>
-    <span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">match</span><span class="p">:</span> <span class="n">SequenceOverlap</span>
+    <span class="n">seqx</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">match</span><span class="p">:</span> <span class="n">SequenceOverlap</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SequenceOverlap</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Same as zip_match_leftwards, but towards the right.&quot;&quot;&quot;</span>
 
@@ -909,13 +909,13 @@ document.write(`
 
 <div class="viewcode-block" id="seqrecord2_uppercase_DNA_string">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.seqrecord2_uppercase_DNA_string">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">seqrecord2_uppercase_DNA_string</span><span class="p">(</span><span class="n">seqr</span><span class="p">:</span> <span class="n">_SeqRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">seqrecord2_uppercase_DNA_string</span><span class="p">(</span><span class="n">seqr</span><span class="p">:</span> <span class="n">SeqRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transform a Dseqrecord to a sequence string where U is replaced by T, everything is upper case and</span>
 <span class="sd">    circular sequences are repeated twice. This is used for PCR, to support primers with U&#39;s (e.g. for USER cloning).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">out</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">seqr</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;U&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seqr</span><span class="p">,</span> <span class="n">_Dseqrecord</span><span class="p">)</span> <span class="ow">and</span> <span class="n">seqr</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seqr</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="ow">and</span> <span class="n">seqr</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">out</span> <span class="o">*</span> <span class="mi">2</span>
     <span class="k">return</span> <span class="n">out</span></div>
 
@@ -924,7 +924,7 @@ document.write(`
 <div class="viewcode-block" id="primer_template_overlap">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.primer_template_overlap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">primer_template_overlap</span><span class="p">(</span>
-    <span class="n">seqx</span><span class="p">:</span> <span class="n">_Dseqrecord</span> <span class="o">|</span> <span class="n">_Primer</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">_Dseqrecord</span> <span class="o">|</span> <span class="n">_Primer</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">mismatches</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">seqx</span><span class="p">:</span> <span class="n">Dseqrecord</span> <span class="o">|</span> <span class="n">Primer</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">Dseqrecord</span> <span class="o">|</span> <span class="n">Primer</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">mismatches</span><span class="o">=</span><span class="mi">0</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SequenceOverlap</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Assembly algorithm to find overlaps between a primer and a template. It accepts mismatches.</span>
@@ -936,9 +936,9 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    seqx : _Dseqrecord | _Primer</span>
+<span class="sd">    seqx : Dseqrecord | Primer</span>
 <span class="sd">        The primer</span>
-<span class="sd">    seqy : _Dseqrecord | _Primer</span>
+<span class="sd">    seqy : Dseqrecord | Primer</span>
 <span class="sd">        The template</span>
 <span class="sd">    limit : int</span>
 <span class="sd">        Minimum length of the overlap</span>
@@ -967,11 +967,11 @@ document.write(`
 <span class="sd">    []</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seqx</span><span class="p">,</span> <span class="n">_Primer</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seqy</span><span class="p">,</span> <span class="n">_Dseqrecord</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seqx</span><span class="p">,</span> <span class="n">Primer</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seqy</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">):</span>
         <span class="n">primer</span> <span class="o">=</span> <span class="n">seqx</span>
         <span class="n">template</span> <span class="o">=</span> <span class="n">seqy</span>
         <span class="n">reverse_primer</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seqx</span><span class="p">,</span> <span class="n">_Dseqrecord</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seqy</span><span class="p">,</span> <span class="n">_Primer</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seqx</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seqy</span><span class="p">,</span> <span class="n">Primer</span><span class="p">):</span>
         <span class="n">primer</span> <span class="o">=</span> <span class="n">seqy</span>
         <span class="n">template</span> <span class="o">=</span> <span class="n">seqx</span>
         <span class="n">reverse_primer</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1028,7 +1028,7 @@ document.write(`
 
 <div class="viewcode-block" id="fill_left">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.fill_left">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fill_left</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">_Dseq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseq</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fill_left</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">Dseq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseq</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill the left overhang of a sequence with the complementary sequence.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">seq</span><span class="o">.</span><span class="n">cast_to_ds_left</span><span class="p">()</span></div>
 
@@ -1036,7 +1036,7 @@ document.write(`
 
 <div class="viewcode-block" id="fill_right">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.fill_right">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fill_right</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">_Dseq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseq</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fill_right</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">Dseq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseq</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill the right overhang of a sequence with the complementary sequence.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">seq</span><span class="o">.</span><span class="n">cast_to_ds_right</span><span class="p">()</span>  <span class="c1"># _Dseq(new_watson, new_crick, seq.ovhg)</span></div>
 
@@ -1044,7 +1044,7 @@ document.write(`
 
 <div class="viewcode-block" id="fill_dseq">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.fill_dseq">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fill_dseq</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">_Dseq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseq</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fill_dseq</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">Dseq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseq</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill the overhangs of a sequence with the complementary sequence.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">fill_left</span><span class="p">(</span><span class="n">fill_right</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span></div>
 
@@ -1053,7 +1053,7 @@ document.write(`
 <div class="viewcode-block" id="reverse_complement_assembly">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.reverse_complement_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">reverse_complement_assembly</span><span class="p">(</span>
-    <span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">,</span> <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]</span>
+    <span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">,</span> <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Complement an assembly, i.e. reverse the order of the fragments and the orientation of the overlaps.&quot;&quot;&quot;</span>
     <span class="n">new_assembly</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -1070,7 +1070,7 @@ document.write(`
 <span class="k">def</span><span class="w"> </span><span class="nf">filter_linear_subassemblies</span><span class="p">(</span>
     <span class="n">linear_assemblies</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">],</span>
     <span class="n">circular_assemblies</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">],</span>
-    <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
+    <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove linear assemblies which are sub-assemblies of circular assemblies&quot;&quot;&quot;</span>
     <span class="n">all_circular_assemblies</span> <span class="o">=</span> <span class="n">circular_assemblies</span> <span class="o">+</span> <span class="p">[</span>
@@ -1141,7 +1141,7 @@ document.write(`
 <div class="viewcode-block" id="assembly_has_mismatches">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.assembly_has_mismatches">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">assembly_has_mismatches</span><span class="p">(</span>
-    <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span> <span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span>
+    <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span> <span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an assembly has mismatches. This should never happen and if so it returns an error.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">loc_u</span><span class="p">,</span> <span class="n">loc_v</span> <span class="ow">in</span> <span class="n">assembly</span><span class="p">:</span>
@@ -1160,7 +1160,7 @@ document.write(`
 <div class="viewcode-block" id="assembly_is_circular">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.assembly_is_circular">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">assembly_is_circular</span><span class="p">(</span>
-    <span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">,</span> <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]</span>
+    <span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">,</span> <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Based on the topology of the locations of an assembly, determine if it is circular.</span>
@@ -1169,14 +1169,14 @@ document.write(`
     <span class="k">if</span> <span class="n">assembly</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">assembly</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">elif</span> <span class="p">(</span>
-        <span class="nb">isinstance</span><span class="p">(</span><span class="n">fragments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">assembly</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">_Dseqrecord</span><span class="p">)</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">fragments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">assembly</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">Dseqrecord</span><span class="p">)</span>
         <span class="ow">and</span> <span class="n">fragments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">assembly</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">circular</span>
     <span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">assembly</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="o">&gt;</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">assembly</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">location_boundaries</span><span class="p">(</span><span class="n">assembly</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="o">&gt;</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">assembly</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
         <span class="p">)</span></div>
 
 
@@ -1184,10 +1184,10 @@ document.write(`
 <div class="viewcode-block" id="assemble">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.assemble">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">assemble</span><span class="p">(</span>
-    <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
+    <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
     <span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">,</span>
     <span class="n">is_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseqrecord</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseqrecord</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a Dseqrecord from an assembly and a list of fragments.&quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">is_insertion</span><span class="p">:</span>
@@ -1212,7 +1212,7 @@ document.write(`
 
     <span class="c1"># We transform into Dseqrecords (for primers)</span>
     <span class="n">dseqr_fragments</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">f</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">_Dseqrecord</span><span class="p">)</span> <span class="k">else</span> <span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fragments</span>
+        <span class="n">f</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="k">else</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fragments</span>
     <span class="p">]</span>
     <span class="n">subfragments</span> <span class="o">=</span> <span class="n">get_assembly_subfragments</span><span class="p">(</span>
         <span class="n">dseqr_fragments</span><span class="p">,</span> <span class="n">subfragment_representation</span>
@@ -1248,8 +1248,8 @@ document.write(`
 <div class="viewcode-block" id="annotate_primer_binding_sites">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.annotate_primer_binding_sites">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">annotate_primer_binding_sites</span><span class="p">(</span>
-    <span class="n">input_dseqr</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseqrecord</span><span class="p">:</span>
+    <span class="n">input_dseqr</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseqrecord</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Annotate the primer binding sites in a Dseqrecord.&quot;&quot;&quot;</span>
     <span class="n">fwd</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">rvs</span> <span class="o">=</span> <span class="n">fragments</span>
     <span class="n">start_rvs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_dseqr</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">rvs</span><span class="p">)</span>
@@ -1338,9 +1338,9 @@ document.write(`
 <div class="viewcode-block" id="get_assembly_subfragments">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.get_assembly_subfragments">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_assembly_subfragments</span><span class="p">(</span>
-    <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
+    <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
     <span class="n">subfragment_representation</span><span class="p">:</span> <span class="n">SubFragmentRepresentationAssembly</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;From the fragment representation returned by edge_representation2subfragment_representation, get the subfragments that are joined together.</span>
 
 <span class="sd">    Subfragments are the slices of the fragments that are joined together</span>
@@ -1384,8 +1384,8 @@ document.write(`
 <div class="viewcode-block" id="extract_subfragment">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.extract_subfragment">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">extract_subfragment</span><span class="p">(</span>
-    <span class="n">seq</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">start_location</span><span class="p">:</span> <span class="n">Location</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">end_location</span><span class="p">:</span> <span class="n">Location</span> <span class="o">|</span> <span class="kc">None</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Dseqrecord</span><span class="p">:</span>
+    <span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">start_location</span><span class="p">:</span> <span class="n">Location</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">end_location</span><span class="p">:</span> <span class="n">Location</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseqrecord</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract a subfragment from a sequence for an assembly, given the start and end locations of the subfragment.&quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">seq</span><span class="o">.</span><span class="n">circular</span> <span class="ow">and</span> <span class="p">(</span><span class="n">start_location</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">end_location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
@@ -1399,11 +1399,11 @@ document.write(`
         <span class="c1"># elif end_location is None:</span>
         <span class="c1">#     end_location = start_location</span>
 
-    <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">start_location</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">start_location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">end</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">end_location</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">end_location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">start_location</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">start_location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">end_location</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">end_location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="c1"># Special case, some of it could be handled by better Dseqrecord slicing in the future</span>
-    <span class="k">if</span> <span class="n">seq</span><span class="o">.</span><span class="n">circular</span> <span class="ow">and</span> <span class="n">_locations_overlap</span><span class="p">(</span><span class="n">start_location</span><span class="p">,</span> <span class="n">end_location</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">seq</span><span class="o">.</span><span class="n">circular</span> <span class="ow">and</span> <span class="n">locations_overlap</span><span class="p">(</span><span class="n">start_location</span><span class="p">,</span> <span class="n">end_location</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)):</span>
         <span class="c1"># The overhang is different for origin-spanning features, for instance</span>
         <span class="c1"># for a feature join{[12:13], [0:3]} in a sequence of length 13, the overhang</span>
         <span class="c1"># is -4, not 9</span>
@@ -1413,7 +1413,7 @@ document.write(`
             <span class="n">ovhg</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">dummy_cut</span> <span class="o">=</span> <span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">ovhg</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">open_seq</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">apply_cut</span><span class="p">(</span><span class="n">dummy_cut</span><span class="p">,</span> <span class="n">dummy_cut</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">_Dseqrecord</span><span class="p">(</span><span class="n">fill_dseq</span><span class="p">(</span><span class="n">open_seq</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="n">features</span><span class="o">=</span><span class="n">open_seq</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">fill_dseq</span><span class="p">(</span><span class="n">open_seq</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="n">features</span><span class="o">=</span><span class="n">open_seq</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">seq</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span></div>
 
@@ -1565,7 +1565,7 @@ document.write(`
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
+        <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
         <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
         <span class="n">algorithm</span><span class="p">:</span> <span class="n">AssemblyAlgorithmType</span> <span class="o">=</span> <span class="n">common_sub_strings</span><span class="p">,</span>
         <span class="n">use_fragment_order</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -1573,7 +1573,7 @@ document.write(`
     <span class="p">):</span>
 
         <span class="c1"># TODO: allow for the same fragment to be included more than once?</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">_nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">()</span>
         <span class="c1"># Add positive and negative nodes for forward and reverse fragments</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;seq&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">})</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">frags</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span>
@@ -1581,12 +1581,12 @@ document.write(`
         <span class="p">)</span>
 
         <span class="c1"># Iterate over all possible combinations of fragments</span>
-        <span class="n">fragment_pairs</span> <span class="o">=</span> <span class="n">_itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span>
+        <span class="n">fragment_pairs</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span>
             <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">),</span> <span class="mi">2</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">fragment_pairs</span><span class="p">:</span>
             <span class="c1"># All the relative orientations of the fragments in the pair</span>
-            <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_itertools</span><span class="o">.</span><span class="n">product</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="o">-</span><span class="n">i</span><span class="p">],</span> <span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="n">j</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="o">-</span><span class="n">i</span><span class="p">],</span> <span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="n">j</span><span class="p">]):</span>
                 <span class="n">u_seq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="s2">&quot;seq&quot;</span><span class="p">]</span>
                 <span class="n">v_seq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s2">&quot;seq&quot;</span><span class="p">]</span>
                 <span class="n">matches</span> <span class="o">=</span> <span class="n">algorithm</span><span class="p">(</span><span class="n">u_seq</span><span class="p">,</span> <span class="n">v_seq</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
@@ -1606,7 +1606,7 @@ document.write(`
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">assembly_is_valid</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
-        <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span> <span class="o">|</span> <span class="n">_Primer</span><span class="p">],</span>
+        <span class="n">fragments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span> <span class="o">|</span> <span class="n">Primer</span><span class="p">],</span>
         <span class="n">assembly</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">,</span>
         <span class="n">is_circular</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">use_all_fragments</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -1633,9 +1633,9 @@ document.write(`
         <span class="n">first_fragment</span> <span class="o">=</span> <span class="n">fragments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">assembly</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
         <span class="n">last_fragment</span> <span class="o">=</span> <span class="n">fragments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">assembly</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_circular</span> <span class="ow">and</span> <span class="p">(</span>
-            <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_fragment</span><span class="p">,</span> <span class="n">_Dseqrecord</span><span class="p">)</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_fragment</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">)</span>
             <span class="ow">and</span> <span class="n">first_fragment</span><span class="o">.</span><span class="n">circular</span>
-            <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">last_fragment</span><span class="p">,</span> <span class="n">_Dseqrecord</span><span class="p">)</span> <span class="ow">and</span> <span class="n">last_fragment</span><span class="o">.</span><span class="n">circular</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">last_fragment</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="ow">and</span> <span class="n">last_fragment</span><span class="o">.</span><span class="n">circular</span><span class="p">)</span>
         <span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
 
@@ -1676,8 +1676,8 @@ document.write(`
             <span class="c1"># Incompatible as described in figure above</span>
             <span class="n">fragment</span> <span class="o">=</span> <span class="n">fragments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
             <span class="k">if</span> <span class="p">(</span>
-                <span class="nb">isinstance</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">_Primer</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">fragment</span><span class="o">.</span><span class="n">circular</span>
-            <span class="p">)</span> <span class="ow">and</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">start_location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">_location_boundaries</span><span class="p">(</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">Primer</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">fragment</span><span class="o">.</span><span class="n">circular</span>
+            <span class="p">)</span> <span class="ow">and</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">start_location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">location_boundaries</span><span class="p">(</span>
                 <span class="n">end_location</span>
             <span class="p">)[</span>
                 <span class="mi">1</span>
@@ -1704,8 +1704,8 @@ document.write(`
         <span class="n">match</span><span class="p">:</span> <span class="n">SequenceOverlap</span><span class="p">,</span>
         <span class="n">u</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">v</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">first</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span>
-        <span class="n">secnd</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span>
+        <span class="n">first</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+        <span class="n">secnd</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add edges to the graph from a match returned by the ``algorithm`` function (see pydna.common_substrings). For</span>
 <span class="sd">        format of edges (see documentation of the Assembly class).</span>
@@ -1724,10 +1724,10 @@ document.write(`
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># We use shift_location with 0 to wrap origin-spanning features</span>
             <span class="n">locs</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">_shift_location</span><span class="p">(</span>
+                <span class="n">shift_location</span><span class="p">(</span>
                     <span class="n">SimpleLocation</span><span class="p">(</span><span class="n">x_start</span><span class="p">,</span> <span class="n">x_start</span> <span class="o">+</span> <span class="n">length</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">first</span><span class="p">)</span>
                 <span class="p">),</span>
-                <span class="n">_shift_location</span><span class="p">(</span>
+                <span class="n">shift_location</span><span class="p">(</span>
                     <span class="n">SimpleLocation</span><span class="p">(</span><span class="n">y_start</span><span class="p">,</span> <span class="n">y_start</span> <span class="o">+</span> <span class="n">length</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">secnd</span><span class="p">)</span>
                 <span class="p">),</span>
             <span class="p">]</span>
@@ -1768,7 +1768,7 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Copy the graph since we will add the begin and end mock nodes</span>
-        <span class="n">G</span> <span class="o">=</span> <span class="n">_nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">)</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">)</span>
         <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">([</span><span class="s2">&quot;begin&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_fragment_order</span><span class="p">:</span>
@@ -1809,7 +1809,7 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="nf">node_path2assembly_list</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">cycle</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">circular</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a node path in the format [1, 2, 3] (as returned by _nx.cycles.simple_cycles) to a list of all</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a node path in the format [1, 2, 3] (as returned by networkx.cycles.simple_cycles) to a list of all</span>
 <span class="sd">          possible assemblies.</span>
 
 <span class="sd">        There may be multiple assemblies for a given node path, if there are several edges connecting two nodes,</span>
@@ -1823,14 +1823,14 @@ document.write(`
             <span class="n">combine</span><span class="o">.</span><span class="n">append</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">v</span><span class="p">]])</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format_assembly_edge</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
-            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">_itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">combine</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">combine</span><span class="p">)</span>
         <span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="Assembly.get_unique_linear_paths">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.get_unique_linear_paths">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_unique_linear_paths</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">G_with_begin_end</span><span class="p">:</span> <span class="n">_nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">,</span> <span class="n">max_paths</span><span class="o">=</span><span class="mi">10000</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">G_with_begin_end</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">,</span> <span class="n">max_paths</span><span class="o">=</span><span class="mi">10000</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get unique linear paths from the graph, removing those that contain the same node twice.&quot;&quot;&quot;</span>
         <span class="c1"># We remove the begin and end nodes, and get all paths without edges</span>
@@ -1841,8 +1841,8 @@ document.write(`
         <span class="n">node_paths</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">limit_iterator</span><span class="p">(</span>
-                <span class="n">_nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span>
-                    <span class="n">_nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G_with_begin_end</span><span class="p">),</span>
+                <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span>
+                    <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G_with_begin_end</span><span class="p">),</span>
                     <span class="s2">&quot;begin&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;end&quot;</span><span class="p">,</span>
                     <span class="n">cutoff</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
@@ -1897,7 +1897,7 @@ document.write(`
         <span class="n">sorted_cycles</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span>
             <span class="n">circular_permutation_min_abs</span><span class="p">,</span>
             <span class="n">limit_iterator</span><span class="p">(</span>
-                <span class="n">_nx</span><span class="o">.</span><span class="n">cycles</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">length_bound</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">)),</span>
+                <span class="n">nx</span><span class="o">.</span><span class="n">cycles</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">,</span> <span class="n">length_bound</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">)),</span>
                 <span class="mi">10000</span><span class="p">,</span>
             <span class="p">),</span>
         <span class="p">)</span>
@@ -1965,8 +1965,8 @@ document.write(`
             <span class="n">fragment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
             <span class="c1"># Find the pair of edges that should be last and first  ((3, 1, [8:10], [9:11)]), (1, 2, [4:6], [0:2]) in</span>
             <span class="c1"># the example above. Only one of the pairs of edges should satisfy this condition for the topology to make sense.</span>
-            <span class="n">left_of_insertion</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">start_location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">right_of_insertion</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">end_location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">left_of_insertion</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">start_location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">right_of_insertion</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">end_location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">fragment</span><span class="o">.</span><span class="n">circular</span> <span class="ow">and</span> <span class="p">(</span>
                 <span class="n">right_of_insertion</span> <span class="o">&gt;=</span> <span class="n">left_of_insertion</span>
                 <span class="c1"># The below condition is for single-site integration.</span>
@@ -1978,7 +1978,7 @@ document.write(`
                 <span class="c1">#</span>
                 <span class="c1"># The locations of homology on the genome are [0:10] and [2:12], so not identical</span>
                 <span class="c1"># but they overlap.</span>
-                <span class="ow">or</span> <span class="n">_locations_overlap</span><span class="p">(</span><span class="n">start_location</span><span class="p">,</span> <span class="n">end_location</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">fragment</span><span class="p">))</span>
+                <span class="ow">or</span> <span class="n">locations_overlap</span><span class="p">(</span><span class="n">start_location</span><span class="p">,</span> <span class="n">end_location</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">fragment</span><span class="p">))</span>
             <span class="p">):</span>
                 <span class="n">edge_pair_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 
@@ -2012,13 +2012,13 @@ document.write(`
         <span class="n">fragment1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">f1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
         <span class="n">fragment2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">f2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">_locations_overlap</span><span class="p">(</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">locations_overlap</span><span class="p">(</span>
             <span class="n">loc_f1_1</span><span class="p">,</span> <span class="n">loc_f1_2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">fragment1</span><span class="p">)</span>
-        <span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">_locations_overlap</span><span class="p">(</span><span class="n">loc_f2_2</span><span class="p">,</span> <span class="n">loc_f2_1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">fragment2</span><span class="p">)):</span>
+        <span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">locations_overlap</span><span class="p">(</span><span class="n">loc_f2_2</span><span class="p">,</span> <span class="n">loc_f2_1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">fragment2</span><span class="p">)):</span>
             <span class="k">return</span> <span class="n">same_assembly</span>
 
         <span class="c1"># Sort to make compatible with insertion assembly</span>
-        <span class="k">if</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">loc_f1_1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">loc_f1_2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">loc_f1_1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">loc_f1_2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="n">new_assembly</span> <span class="o">=</span> <span class="n">same_assembly</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">new_assembly</span> <span class="o">=</span> <span class="n">same_assembly</span><span class="p">[:]</span>
@@ -2031,10 +2031,10 @@ document.write(`
         <span class="n">fragment2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">f2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
 
         <span class="c1"># Extract boundaries</span>
-        <span class="n">f2_1_start</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">loc_f2_1</span><span class="p">)</span>
-        <span class="n">f2_2_start</span><span class="p">,</span> <span class="n">f2_2_end</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">loc_f2_2</span><span class="p">)</span>
-        <span class="n">f1_1_start</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">loc_f1_1</span><span class="p">)</span>
-        <span class="n">f1_2_start</span><span class="p">,</span> <span class="n">f1_2_end</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">loc_f1_2</span><span class="p">)</span>
+        <span class="n">f2_1_start</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">loc_f2_1</span><span class="p">)</span>
+        <span class="n">f2_2_start</span><span class="p">,</span> <span class="n">f2_2_end</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">loc_f2_2</span><span class="p">)</span>
+        <span class="n">f1_1_start</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">loc_f1_1</span><span class="p">)</span>
+        <span class="n">f1_2_start</span><span class="p">,</span> <span class="n">f1_2_end</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">loc_f1_2</span><span class="p">)</span>
 
         <span class="n">overlap_diff</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fragment1</span><span class="p">[</span><span class="n">f1_1_start</span><span class="p">:</span><span class="n">f1_2_end</span><span class="p">])</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span>
             <span class="n">fragment2</span><span class="p">[</span><span class="n">f2_1_start</span><span class="p">:</span><span class="n">f2_2_end</span><span class="p">]</span>
@@ -2077,7 +2077,7 @@ document.write(`
                 <span class="s2">&quot;only_adjacent_edges not implemented for insertion assemblies&quot;</span>
             <span class="p">)</span>
 
-        <span class="n">cycles</span> <span class="o">=</span> <span class="n">limit_iterator</span><span class="p">(</span><span class="n">_nx</span><span class="o">.</span><span class="n">cycles</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">),</span> <span class="mi">10000</span><span class="p">)</span>
+        <span class="n">cycles</span> <span class="o">=</span> <span class="n">limit_iterator</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">cycles</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">),</span> <span class="mi">10000</span><span class="p">)</span>
 
         <span class="c1"># We apply constrains already here because sometimes the combinatorial explosion is too large</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_all_fragments</span><span class="p">:</span>
@@ -2096,7 +2096,7 @@ document.write(`
             <span class="p">)</span>
 
         <span class="c1"># We find cycles first</span>
-        <span class="n">iterator</span> <span class="o">=</span> <span class="n">limit_iterator</span><span class="p">(</span><span class="n">_nx</span><span class="o">.</span><span class="n">cycles</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">),</span> <span class="mi">10000</span><span class="p">)</span>
+        <span class="n">iterator</span> <span class="o">=</span> <span class="n">limit_iterator</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">cycles</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">),</span> <span class="mi">10000</span><span class="p">)</span>
         <span class="n">assemblies</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
             <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_path2assembly_list</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">iterator</span><span class="p">),</span> <span class="p">[]</span>
         <span class="p">)</span>
@@ -2123,7 +2123,7 @@ document.write(`
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.assemble_linear">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">assemble_linear</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Assemble linear constructs, from assemblies returned by self.get_linear_assemblies.&quot;&quot;&quot;</span>
         <span class="n">assemblies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_linear_assemblies</span><span class="p">(</span><span class="n">only_adjacent_edges</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">assemble</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">assemblies</span><span class="p">]</span></div>
@@ -2133,7 +2133,7 @@ document.write(`
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.assemble_circular">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">assemble_circular</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Assemble circular constructs, from assemblies returned by self.get_circular_assemblies.&quot;&quot;&quot;</span>
         <span class="n">assemblies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_circular_assemblies</span><span class="p">(</span><span class="n">only_adjacent_edges</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">assemble</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">assemblies</span><span class="p">]</span></div>
@@ -2141,9 +2141,7 @@ document.write(`
 
 <div class="viewcode-block" id="Assembly.assemble_insertion">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.assemble_insertion">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">assemble_insertion</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">assemble_insertion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Assemble insertion constructs, from assemblies returned by self.get_insertion_assemblies.&quot;&quot;&quot;</span>
         <span class="n">assemblies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_insertion_assemblies</span><span class="p">(</span><span class="n">only_adjacent_edges</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">assemble</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">is_insertion</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">assemblies</span><span class="p">]</span></div>
@@ -2188,10 +2186,10 @@ document.write(`
                         <span class="k">if</span> <span class="n">edge_location</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">this_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
                             <span class="n">this_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge_location</span><span class="p">)</span>
             <span class="n">this_dict</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-                <span class="n">this_dict</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">this_dict</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="p">)</span>
             <span class="n">this_dict</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-                <span class="n">this_dict</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">this_dict</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="p">)</span>
             <span class="n">locations_on_fragments</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">this_dict</span>
 
@@ -2241,7 +2239,7 @@ document.write(`
 
             <span class="n">pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-                <span class="n">pairs</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">_itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">pair</span><span class="p">))</span>
+                <span class="n">pairs</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">pair</span><span class="p">))</span>
             <span class="n">allowed_location_pairs</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">pairs</span>
 
         <span class="n">fragment_assembly</span> <span class="o">=</span> <span class="n">edge_representation2subfragment_representation</span><span class="p">(</span>
@@ -2255,7 +2253,7 @@ document.write(`
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># https://pyformat.info</span>
-        <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">ps</span><span class="p">(</span>
             <span class="s2">&quot;Assembly</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="s2">&quot;fragments..: </span><span class="si">{sequences}</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="s2">&quot;limit(bp)..: </span><span class="si">{limit}</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -2279,7 +2277,7 @@ document.write(`
 <span class="sd">    the number of mismatches allowed in the overlap. Only supports substitution mismatches, not indels.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span> <span class="o">|</span> <span class="n">_Primer</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">mismatches</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span> <span class="o">|</span> <span class="n">Primer</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">mismatches</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 
         <span class="n">value_error</span> <span class="o">=</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;PCRAssembly assembly must be initialised with a list/tuple of primer, template, primer&quot;</span>
@@ -2289,15 +2287,15 @@ document.write(`
 
         <span class="c1"># Validate the inputs: should be a series of primer, template, primer</span>
         <span class="n">wrong_fragment_class</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frags</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">_Primer</span><span class="p">),</span>
-            <span class="nb">isinstance</span><span class="p">(</span><span class="n">frags</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">_Primer</span><span class="p">),</span>
-            <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frags</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">_Primer</span><span class="p">),</span>
+            <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frags</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Primer</span><span class="p">),</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">frags</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">Primer</span><span class="p">),</span>
+            <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frags</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">Primer</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">wrong_fragment_class</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">value_error</span>
 
         <span class="c1"># TODO: allow for the same fragment to be included more than once?</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">_nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">()</span>
         <span class="c1"># Add positive and negative nodes for forward and reverse fragments</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;seq&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">})</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">frags</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span>
@@ -2310,8 +2308,8 @@ document.write(`
             <span class="c1"># primer, template, primer</span>
             <span class="n">p1</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">p2</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span>
             <span class="n">primer_ids</span> <span class="o">+=</span> <span class="p">[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">]</span>
-            <span class="n">pairs</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">_itertools</span><span class="o">.</span><span class="n">product</span><span class="p">([</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">],</span> <span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="o">-</span><span class="n">t</span><span class="p">]))</span>
-            <span class="n">pairs</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">_itertools</span><span class="o">.</span><span class="n">product</span><span class="p">([</span><span class="n">t</span><span class="p">,</span> <span class="o">-</span><span class="n">t</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="n">p1</span><span class="p">,</span> <span class="o">-</span><span class="n">p2</span><span class="p">]))</span>
+            <span class="n">pairs</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">([</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">],</span> <span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="o">-</span><span class="n">t</span><span class="p">]))</span>
+            <span class="n">pairs</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">([</span><span class="n">t</span><span class="p">,</span> <span class="o">-</span><span class="n">t</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="n">p1</span><span class="p">,</span> <span class="o">-</span><span class="n">p2</span><span class="p">]))</span>
 
         <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
             <span class="n">u_seq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="s2">&quot;seq&quot;</span><span class="p">]</span>
@@ -2363,7 +2361,7 @@ document.write(`
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.PCRAssembly.assemble_linear">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">assemble_linear</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overrides the parent method to ensure that the 5&#39; of the crick strand of the product matches the</span>
 <span class="sd">        sequence of the reverse primer. This is important when using primers with dUTP (for USER cloning).</span>
@@ -2371,7 +2369,7 @@ document.write(`
         <span class="n">results</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">assemble_linear</span><span class="p">(</span><span class="n">only_adjacent_edges</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
             <span class="n">rp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">rp</span><span class="p">)]</span> <span class="o">+</span> <span class="n">_Dseq</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">rp</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">rc</span><span class="p">()))</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">seq</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">rp</span><span class="p">)]</span> <span class="o">+</span> <span class="n">Dseq</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">rp</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">rc</span><span class="p">()))</span>
         <span class="k">return</span> <span class="n">results</span></div>
 </div>
 
@@ -2384,14 +2382,14 @@ document.write(`
 <span class="sd">    An assembly that represents the circularisation or splicing of a single fragment.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frags</span><span class="p">:</span> <span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">common_sub_strings</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frags</span><span class="p">:</span> <span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">common_sub_strings</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">frags</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;SingleFragmentAssembly assembly must be initialised with a single fragment&quot;</span>
             <span class="p">)</span>
         <span class="c1"># TODO: allow for the same fragment to be included more than once?</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">_nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">()</span>
         <span class="n">frag</span> <span class="o">=</span> <span class="n">frags</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="c1"># Add positive and negative nodes for forward and reverse fragments</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">seq</span><span class="o">=</span><span class="n">frag</span><span class="p">)</span>
@@ -2447,8 +2445,8 @@ document.write(`
             <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]:</span>
                 <span class="k">return</span> <span class="kc">False</span>
             <span class="c1"># We don&#39;t want to get overlap only (e.g. GAATTCcatGAATTC giving GAATTC)</span>
-            <span class="n">left_start</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">right_end</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">])</span>
+            <span class="n">left_start</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">right_end</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">])</span>
             <span class="k">if</span> <span class="n">left_start</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">right_end</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
                 <span class="k">return</span> <span class="kc">False</span>
             <span class="k">return</span> <span class="kc">True</span>
@@ -2478,19 +2476,19 @@ document.write(`
 <div class="viewcode-block" id="common_function_assembly_products">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.common_function_assembly_products">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">common_function_assembly_products</span><span class="p">(</span>
-    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
+    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">algorithm</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
     <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">filter_results_function</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">only_adjacent_edges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Common function to avoid code duplication. Could be simplified further</span>
 <span class="sd">    once SingleFragmentAssembly and Assembly are merged.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    frags : list[_Dseqrecord]</span>
+<span class="sd">    frags : list[Dseqrecord]</span>
 <span class="sd">        List of DNA fragments to assemble</span>
 <span class="sd">    limit : int or None</span>
 <span class="sd">        Minimum overlap length required, or None if not applicable</span>
@@ -2505,7 +2503,7 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">frags</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -2530,8 +2528,8 @@ document.write(`
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_recast_sources</span><span class="p">(</span>
-    <span class="n">products</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span> <span class="n">source_cls</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_fields</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+    <span class="n">products</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span> <span class="n">source_cls</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_fields</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Recast the `source` of each product to `source_cls` with optional extras.</span>
 
 <span class="sd">    This avoids repeating the same for-loop across many assembly functions.</span>
@@ -2547,13 +2545,13 @@ document.write(`
 <div class="viewcode-block" id="gibson_assembly">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.gibson_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">gibson_assembly</span><span class="p">(</span>
-    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for Gibson assembly.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    frags : list[_Dseqrecord]</span>
+<span class="sd">    frags : list[Dseqrecord]</span>
 <span class="sd">        List of DNA fragments to assemble</span>
 <span class="sd">    limit : int, optional</span>
 <span class="sd">        Minimum overlap length required, by default 25</span>
@@ -2562,7 +2560,7 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -2576,14 +2574,14 @@ document.write(`
 <div class="viewcode-block" id="in_fusion_assembly">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.in_fusion_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">in_fusion_assembly</span><span class="p">(</span>
-    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for in-fusion assembly. This is the same as Gibson</span>
 <span class="sd">    assembly, but with a different name.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    frags : list[_Dseqrecord]</span>
+<span class="sd">    frags : list[Dseqrecord]</span>
 <span class="sd">        List of DNA fragments to assemble</span>
 <span class="sd">    limit : int, optional</span>
 <span class="sd">        Minimum overlap length required, by default 25</span>
@@ -2592,7 +2590,7 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -2604,14 +2602,14 @@ document.write(`
 <div class="viewcode-block" id="fusion_pcr_assembly">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.fusion_pcr_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fusion_pcr_assembly</span><span class="p">(</span>
-    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for fusion PCR assembly. This is the same as Gibson</span>
 <span class="sd">    assembly, but with a different name.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    frags : list[_Dseqrecord]</span>
+<span class="sd">    frags : list[Dseqrecord]</span>
 <span class="sd">        List of DNA fragments to assemble</span>
 <span class="sd">    limit : int, optional</span>
 <span class="sd">        Minimum overlap length required, by default 25</span>
@@ -2620,7 +2618,7 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">(</span><span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
@@ -2631,13 +2629,13 @@ document.write(`
 <div class="viewcode-block" id="in_vivo_assembly">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.in_vivo_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">in_vivo_assembly</span><span class="p">(</span>
-    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for in vivo assembly (IVA), which relies on homologous recombination between the fragments.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    frags : list[_Dseqrecord]</span>
+<span class="sd">    frags : list[Dseqrecord]</span>
 <span class="sd">        List of DNA fragments to assemble</span>
 <span class="sd">    limit : int, optional</span>
 <span class="sd">        Minimum overlap length required, by default 25</span>
@@ -2646,7 +2644,7 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_assembly_products</span><span class="p">(</span>
@@ -2659,11 +2657,11 @@ document.write(`
 <div class="viewcode-block" id="restriction_ligation_assembly">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.restriction_ligation_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">restriction_ligation_assembly</span><span class="p">(</span>
-    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
-    <span class="n">enzymes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;_AbstractCut&quot;</span><span class="p">],</span>
+    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
+    <span class="n">enzymes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;AbstractCut&quot;</span><span class="p">],</span>
     <span class="n">allow_blunt</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for restriction ligation assembly:</span>
 
 <span class="sd">    - Finds cutsites in the fragments</span>
@@ -2672,9 +2670,9 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    frags : list[_Dseqrecord]</span>
+<span class="sd">    frags : list[Dseqrecord]</span>
 <span class="sd">        List of DNA fragments to assemble</span>
-<span class="sd">    enzymes : list[_AbstractCut]</span>
+<span class="sd">    enzymes : list[AbstractCut]</span>
 <span class="sd">        List of restriction enzymes to use</span>
 <span class="sd">    allow_blunt : bool, optional</span>
 <span class="sd">        If True, allow blunt end ligations, by default True</span>
@@ -2683,7 +2681,7 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 
 <span class="sd">    Examples</span>
@@ -2741,20 +2739,20 @@ document.write(`
 <div class="viewcode-block" id="golden_gate_assembly">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.golden_gate_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">golden_gate_assembly</span><span class="p">(</span>
-    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
-    <span class="n">enzymes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;_AbstractCut&quot;</span><span class="p">],</span>
+    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
+    <span class="n">enzymes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;AbstractCut&quot;</span><span class="p">],</span>
     <span class="n">allow_blunt</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for Golden Gate assembly. This is the same as</span>
 <span class="sd">    restriction ligation assembly, but with a different name. Check the documentation</span>
 <span class="sd">    for ``restriction_ligation_assembly`` for more details.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    frags : list[_Dseqrecord]</span>
+<span class="sd">    frags : list[Dseqrecord]</span>
 <span class="sd">        List of DNA fragments to assemble</span>
-<span class="sd">    enzymes : list[_AbstractCut]</span>
+<span class="sd">    enzymes : list[AbstractCut]</span>
 <span class="sd">        List of restriction enzymes to use</span>
 <span class="sd">    allow_blunt : bool, optional</span>
 <span class="sd">        If True, allow blunt end ligations, by default True</span>
@@ -2763,7 +2761,7 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 
 <span class="sd">    Examples</span>
@@ -2777,11 +2775,11 @@ document.write(`
 <div class="viewcode-block" id="ligation_assembly">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.ligation_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">ligation_assembly</span><span class="p">(</span>
-    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
+    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
     <span class="n">allow_blunt</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">allow_partial_overlap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for ligation assembly, as inputs pass the fragments (digested if needed) that</span>
 <span class="sd">    will be ligated.</span>
 
@@ -2789,7 +2787,7 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    frags : list[_Dseqrecord]</span>
+<span class="sd">    frags : list[Dseqrecord]</span>
 <span class="sd">        List of DNA fragments to assemble</span>
 <span class="sd">    allow_blunt : bool, optional</span>
 <span class="sd">        If True, allow blunt end ligations, by default False</span>
@@ -2800,7 +2798,7 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 
 
@@ -2861,17 +2859,17 @@ document.write(`
 <div class="viewcode-block" id="gateway_assembly">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.gateway_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">gateway_assembly</span><span class="p">(</span>
-    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
+    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
     <span class="n">reaction_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;BP&quot;</span><span class="p">,</span> <span class="s2">&quot;LR&quot;</span><span class="p">],</span>
     <span class="n">greedy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">multi_site_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for Gateway assembly / Gateway cloning.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    frags : list[_Dseqrecord]</span>
+<span class="sd">    frags : list[Dseqrecord]</span>
 <span class="sd">        List of DNA fragments to assemble</span>
 <span class="sd">    reaction_type : Literal[&#39;BP&#39;, &#39;LR&#39;]</span>
 <span class="sd">        Type of Gateway reaction</span>
@@ -2887,7 +2885,7 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 
 
@@ -2977,13 +2975,13 @@ document.write(`
 <div class="viewcode-block" id="common_function_integration_products">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.common_function_integration_products">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">common_function_integration_products</span><span class="p">(</span>
-    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">:</span> <span class="n">Callable</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">:</span> <span class="n">Callable</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Common function to avoid code duplication for integration products.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    frags : list[_Dseqrecord]</span>
+<span class="sd">    frags : list[Dseqrecord]</span>
 <span class="sd">        List of DNA fragments to integrate</span>
 <span class="sd">    limit : int or None</span>
 <span class="sd">        Minimum overlap length required, or None if not applicable</span>
@@ -2992,7 +2990,7 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of integrated DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">frags</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -3016,27 +3014,27 @@ document.write(`
 <div class="viewcode-block" id="common_handle_insertion_fragments">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.common_handle_insertion_fragments">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">common_handle_insertion_fragments</span><span class="p">(</span>
-    <span class="n">genome</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">inserts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+    <span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">inserts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Common function to handle / validate insertion fragments.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    genome : _Dseqrecord</span>
+<span class="sd">    genome : Dseqrecord</span>
 <span class="sd">        Target genome sequence</span>
-<span class="sd">    inserts : list[_Dseqrecord] or _Dseqrecord</span>
+<span class="sd">    inserts : list[Dseqrecord] or Dseqrecord</span>
 <span class="sd">        DNA fragment(s) to insert</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List containing genome and insert fragments</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">_Dseqrecord</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Genome must be a Dseqrecord object&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inserts</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
-        <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">_Dseqrecord</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">inserts</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">inserts</span>
     <span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inserts must be a list of Dseqrecord objects&quot;</span><span class="p">)</span>
 
@@ -3050,13 +3048,13 @@ document.write(`
 <div class="viewcode-block" id="common_function_excision_products">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.common_function_excision_products">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">common_function_excision_products</span><span class="p">(</span>
-    <span class="n">genome</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">:</span> <span class="n">Callable</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+    <span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">:</span> <span class="n">Callable</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Common function to avoid code duplication for excision products.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    genome : _Dseqrecord</span>
+<span class="sd">    genome : Dseqrecord</span>
 <span class="sd">        Target genome sequence</span>
 <span class="sd">    limit : int or None</span>
 <span class="sd">        Minimum overlap length required, or None if not applicable</span>
@@ -3065,7 +3063,7 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of excised DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">asm</span> <span class="o">=</span> <span class="n">SingleFragmentAssembly</span><span class="p">([</span><span class="n">genome</span><span class="p">],</span> <span class="n">limit</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">)</span>
@@ -3076,25 +3074,25 @@ document.write(`
 <div class="viewcode-block" id="homologous_recombination_integration">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.homologous_recombination_integration">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">homologous_recombination_integration</span><span class="p">(</span>
-    <span class="n">genome</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span>
-    <span class="n">inserts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
+    <span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+    <span class="n">inserts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products resulting from the integration of an insert (or inserts joined</span>
 <span class="sd">    through in vivo recombination) into the genome through homologous recombination.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    genome : _Dseqrecord</span>
+<span class="sd">    genome : Dseqrecord</span>
 <span class="sd">        Target genome sequence</span>
-<span class="sd">    inserts : list[_Dseqrecord]</span>
+<span class="sd">    inserts : list[Dseqrecord]</span>
 <span class="sd">        DNA fragment(s) to insert</span>
 <span class="sd">    limit : int, optional</span>
 <span class="sd">        Minimum homology length required, by default 40</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of integrated DNA molecules</span>
 
 
@@ -3133,21 +3131,21 @@ document.write(`
 <div class="viewcode-block" id="homologous_recombination_excision">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.homologous_recombination_excision">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">homologous_recombination_excision</span><span class="p">(</span>
-    <span class="n">genome</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+    <span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products resulting from the excision of a fragment from the genome through</span>
 <span class="sd">    homologous recombination.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    genome : _Dseqrecord</span>
+<span class="sd">    genome : Dseqrecord</span>
 <span class="sd">        Target genome sequence</span>
 <span class="sd">    limit : int, optional</span>
 <span class="sd">        Minimum homology length required, by default 40</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List containing excised plasmid and remaining genome sequence</span>
 
 <span class="sd">    Examples</span>
@@ -3173,8 +3171,8 @@ document.write(`
 <div class="viewcode-block" id="cre_lox_integration">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.cre_lox_integration">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cre_lox_integration</span><span class="p">(</span>
-    <span class="n">genome</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span> <span class="n">inserts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+    <span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">inserts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products resulting from the integration of an insert (or inserts joined</span>
 <span class="sd">    through cre-lox recombination among them) into the genome through cre-lox integration.</span>
 
@@ -3182,14 +3180,14 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    genome : _Dseqrecord</span>
+<span class="sd">    genome : Dseqrecord</span>
 <span class="sd">        Target genome sequence</span>
-<span class="sd">    inserts : list[_Dseqrecord] or _Dseqrecord</span>
+<span class="sd">    inserts : list[Dseqrecord] or Dseqrecord</span>
 <span class="sd">        DNA fragment(s) to insert</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of integrated DNA molecules</span>
 
 <span class="sd">    Examples</span>
@@ -3235,17 +3233,17 @@ document.write(`
 
 <div class="viewcode-block" id="cre_lox_excision">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.cre_lox_excision">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">cre_lox_excision</span><span class="p">(</span><span class="n">genome</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cre_lox_excision</span><span class="p">(</span><span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for CRE-lox excision.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    genome : _Dseqrecord</span>
+<span class="sd">    genome : Dseqrecord</span>
 <span class="sd">        Target genome sequence</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List containing excised plasmid and remaining genome sequence</span>
 
 <span class="sd">    Examples</span>
@@ -3290,28 +3288,28 @@ document.write(`
 <div class="viewcode-block" id="crispr_integration">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.crispr_integration">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">crispr_integration</span><span class="p">(</span>
-    <span class="n">genome</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span>
-    <span class="n">inserts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">],</span>
-    <span class="n">guides</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Primer</span><span class="p">],</span>
+    <span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+    <span class="n">inserts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
+    <span class="n">guides</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Primer</span><span class="p">],</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the products for CRISPR integration.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    genome : _Dseqrecord</span>
+<span class="sd">    genome : Dseqrecord</span>
 <span class="sd">        Target genome sequence</span>
-<span class="sd">    inserts : list[_Dseqrecord]</span>
+<span class="sd">    inserts : list[Dseqrecord]</span>
 <span class="sd">        DNA fragment(s) to insert</span>
-<span class="sd">    guides : list[_Primer]</span>
+<span class="sd">    guides : list[Primer]</span>
 <span class="sd">        List of guide RNAs as Primer objects. This may change in the future.</span>
 <span class="sd">    limit : int, optional</span>
 <span class="sd">        Minimum overlap length required, by default 40</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of integrated DNA molecules</span>
 
 <span class="sd">    Examples</span>
@@ -3356,9 +3354,9 @@ document.write(`
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">product</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">products</span><span class="p">):</span>
         <span class="c1"># The second element of product.source.input is conventionally the insert/repair fragment</span>
         <span class="c1"># The other two (first and third) are the two bits of the genome</span>
-        <span class="n">repair_start</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">right_location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">repair_start</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">right_location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="c1"># Here we do +1 because the position of the cut marks the boundary (e.g. 0:10, 10:20 if a cut is at pos 10)</span>
-        <span class="n">repair_end</span> <span class="o">=</span> <span class="n">_location_boundaries</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">left_location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">repair_end</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">left_location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">repair_location</span> <span class="o">=</span> <span class="n">create_location</span><span class="p">(</span><span class="n">repair_start</span><span class="p">,</span> <span class="n">repair_end</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">genome</span><span class="p">))</span>
         <span class="n">some_cuts_inside_repair</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">all_cuts_inside_repair</span> <span class="o">=</span> <span class="p">[]</span>
@@ -3392,22 +3390,22 @@ document.write(`
 <div class="viewcode-block" id="pcr_assembly">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.pcr_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pcr_assembly</span><span class="p">(</span>
-    <span class="n">template</span><span class="p">:</span> <span class="n">_Dseqrecord</span><span class="p">,</span>
-    <span class="n">fwd_primer</span><span class="p">:</span> <span class="n">_Primer</span><span class="p">,</span>
-    <span class="n">rvs_primer</span><span class="p">:</span> <span class="n">_Primer</span><span class="p">,</span>
+    <span class="n">template</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+    <span class="n">fwd_primer</span><span class="p">:</span> <span class="n">Primer</span><span class="p">,</span>
+    <span class="n">rvs_primer</span><span class="p">:</span> <span class="n">Primer</span><span class="p">,</span>
     <span class="n">add_primer_features</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
     <span class="n">mismatches</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Dseqrecord</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for PCR assembly.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    template : _Dseqrecord</span>
+<span class="sd">    template : Dseqrecord</span>
 <span class="sd">        Template sequence</span>
-<span class="sd">    fwd_primer : _Primer</span>
+<span class="sd">    fwd_primer : Primer</span>
 <span class="sd">        Forward primer</span>
-<span class="sd">    rvs_primer : _Primer</span>
+<span class="sd">    rvs_primer : Primer</span>
 <span class="sd">        Reverse primer</span>
 <span class="sd">    add_primer_features : bool, optional</span>
 <span class="sd">        If True, add primer features to the product, by default False</span>
@@ -3418,7 +3416,7 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    list[_Dseqrecord]</span>
+<span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 

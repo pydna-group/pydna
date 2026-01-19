@@ -338,27 +338,27 @@ document.write(`
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_copy</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_sys</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_math</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_inspect</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span> <span class="k">as</span> <span class="n">_List</span><span class="p">,</span> <span class="n">Tuple</span> <span class="k">as</span> <span class="n">_Tuple</span><span class="p">,</span> <span class="n">Union</span> <span class="k">as</span> <span class="n">_Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">RestrictionBatch</span> <span class="k">as</span> <span class="n">_RestrictionBatch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">RestrictionBatch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommOnly</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">seguid</span><span class="w"> </span><span class="kn">import</span> <span class="n">ldseguid</span> <span class="k">as</span> <span class="n">_ldseguid</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">seguid</span><span class="w"> </span><span class="kn">import</span> <span class="n">cdseguid</span> <span class="k">as</span> <span class="n">_cdseguid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">seguid</span><span class="w"> </span><span class="kn">import</span> <span class="n">ldseguid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">seguid</span><span class="w"> </span><span class="kn">import</span> <span class="n">cdseguid</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq</span> <span class="k">as</span> <span class="n">_Seq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">_SeqAbstractBaseClass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Data.IUPACData</span><span class="w"> </span><span class="kn">import</span> <span class="n">unambiguous_dna_weights</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Data.IUPACData</span><span class="w"> </span><span class="kn">import</span> <span class="n">unambiguous_rna_weights</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Data.IUPACData</span><span class="w"> </span><span class="kn">import</span> <span class="n">atom_weights</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">_pretty_str</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rc</span> <span class="k">as</span> <span class="n">_rc</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">flatten</span> <span class="k">as</span> <span class="n">_flatten</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">cuts_overlap</span> <span class="k">as</span> <span class="n">_cuts_overlap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">flatten</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">cuts_overlap</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">basepair_dict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">dscode_to_watson_table</span>
@@ -374,7 +374,7 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">representation_tuple</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">dsbreaks</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.common_sub_strings</span><span class="w"> </span><span class="kn">import</span> <span class="n">common_sub_strings</span> <span class="k">as</span> <span class="n">_common_sub_strings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.common_sub_strings</span><span class="w"> </span><span class="kn">import</span> <span class="n">common_sub_strings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">DseqType</span><span class="p">,</span> <span class="n">EnzymesType</span><span class="p">,</span> <span class="n">CutSiteType</span>
 
 
@@ -493,7 +493,7 @@ document.write(`
 
 <div class="viewcode-block" id="Dseq">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Dseq</span><span class="p">(</span><span class="n">_Seq</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Dseq</span><span class="p">(</span><span class="n">Seq</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Dseq describes a double stranded DNA fragment, linear or circular.</span>
 
 <span class="sd">    Dseq can be initiated in two ways, using two strings, each representing the</span>
@@ -768,8 +768,8 @@ document.write(`
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">watson</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
-        <span class="n">crick</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">watson</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">crick</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">ovhg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">pos</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -806,10 +806,10 @@ document.write(`
 <span class="sd">            stranded part.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="n">ovhg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># ovhg not given, try to guess from sequences</span>
-                <span class="n">limit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">_math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">watson</span><span class="p">))</span> <span class="o">/</span> <span class="n">_math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-                <span class="n">olaps</span> <span class="o">=</span> <span class="n">_common_sub_strings</span><span class="p">(</span>
+                <span class="n">limit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">watson</span><span class="p">))</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+                <span class="n">olaps</span> <span class="o">=</span> <span class="n">common_sub_strings</span><span class="p">(</span>
                     <span class="nb">str</span><span class="p">(</span><span class="n">watson</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
-                    <span class="nb">str</span><span class="p">(</span><span class="n">_rc</span><span class="p">(</span><span class="n">crick</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">rc</span><span class="p">(</span><span class="n">crick</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span>
                     <span class="n">limit</span><span class="p">,</span>
                 <span class="p">)</span>
 
@@ -907,7 +907,7 @@ document.write(`
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">circular</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">clean</span> <span class="o">=</span> <span class="n">_inspect</span><span class="o">.</span><span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">dsdna</span><span class="p">)</span>
+        <span class="n">clean</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">dsdna</span><span class="p">)</span>
         <span class="n">watson</span><span class="p">,</span> <span class="n">crick</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">ln</span>
             <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">clean</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
@@ -1167,7 +1167,7 @@ document.write(`
 <div class="viewcode-block" id="Dseq.find">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.find">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">sub</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_SeqAbstractBaseClass</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">_sys</span><span class="o">.</span><span class="n">maxsize</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">sub</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">_SeqAbstractBaseClass</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;This method behaves like the python string method of the same name.</span>
 
@@ -1253,7 +1253,7 @@ document.write(`
             <span class="n">same</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="n">same</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">length_limit_for_repr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_pretty_str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">length_limit_for_repr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pretty_str</span><span class="p">:</span>
 
         <span class="n">header</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="p">({</span><span class="kc">False</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">True</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;o&#39;</span><span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">])</span><span class="si">}{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
 
@@ -1261,7 +1261,7 @@ document.write(`
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span> <span class="n">length_limit_for_repr</span><span class="o">=</span><span class="n">length_limit_for_repr</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">_pretty_str</span><span class="p">(</span><span class="n">header</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">w</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pretty_str</span><span class="p">(</span><span class="n">header</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">w</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Dseq.reverse_complement">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.reverse_complement">[docs]</a>
@@ -1286,7 +1286,7 @@ document.write(`
 <span class="sd">        &gt;&gt;&gt;</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span><span class="n">_rc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">),</span> <span class="n">circular</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span><span class="n">rc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">),</span> <span class="n">circular</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">)</span></div>
 
 
     <span class="n">rc</span> <span class="o">=</span> <span class="n">reverse_complement</span>  <span class="c1"># alias for reverse_complement</span>
@@ -1311,7 +1311,7 @@ document.write(`
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;DNA is not circular.&quot;</span><span class="p">)</span>
         <span class="n">shift</span> <span class="o">=</span> <span class="n">shift</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">shift</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">shift</span><span class="p">:]</span> <span class="o">+</span> <span class="bp">self</span><span class="p">[:</span><span class="n">shift</span><span class="p">])</span><span class="o">.</span><span class="n">looped</span><span class="p">()</span></div>
 
@@ -1370,7 +1370,7 @@ document.write(`
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="n">type5</span><span class="p">,</span> <span class="n">sticky5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">five_prime_end</span><span class="p">()</span>
         <span class="n">type3</span><span class="p">,</span> <span class="n">sticky3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">three_prime_end</span><span class="p">()</span>
@@ -1396,7 +1396,7 @@ document.write(`
 
 <div class="viewcode-block" id="Dseq.five_prime_end">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.five_prime_end">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">five_prime_end</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">five_prime_end</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a 2-tuple of trings describing the structure of the 5&#39; end of</span>
 <span class="sd">        the DNA fragment.</span>
 
@@ -1468,7 +1468,7 @@ document.write(`
 
 <div class="viewcode-block" id="Dseq.three_prime_end">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.three_prime_end">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">three_prime_end</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">three_prime_end</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a tuple describing the structure of the 5&#39; end of</span>
 <span class="sd">        the DNA fragment</span>
 
@@ -1579,10 +1579,10 @@ document.write(`
 
         <span class="c1"># If other evaluates to False, return a copy of self.</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">other</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="c1"># If self evaluates to False, return a copy of other.</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
         <span class="c1"># get right side end properties for self.</span>
         <span class="n">self_type</span><span class="p">,</span> <span class="n">self_tail</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">three_prime_end</span><span class="p">()</span>
@@ -1631,7 +1631,7 @@ document.write(`
         <span class="n">stuffer</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="nb">type</span><span class="p">,</span> <span class="n">se</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">five_prime_end</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;5&#39;&quot;</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">_rc</span><span class="p">(</span><span class="n">se</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">rc</span><span class="p">(</span><span class="n">se</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nucleotides</span><span class="p">:</span>
                     <span class="n">stuffer</span> <span class="o">+=</span> <span class="n">n</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -1642,7 +1642,7 @@ document.write(`
         <span class="n">stuffer</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="nb">type</span><span class="p">,</span> <span class="n">se</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">three_prime_end</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;5&#39;&quot;</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">_rc</span><span class="p">(</span><span class="n">se</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">rc</span><span class="p">(</span><span class="n">se</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">nucleotides</span><span class="p">:</span>
                     <span class="n">stuffer</span> <span class="o">+=</span> <span class="n">n</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -1651,7 +1651,7 @@ document.write(`
 
 <div class="viewcode-block" id="Dseq.fill_in">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.fill_in">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">fill_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nucleotides</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DseqType</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fill_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nucleotides</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DseqType</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fill in of five prime protruding end with a DNA polymerase</span>
 <span class="sd">        that has only DNA polymerase activity (such as Exo-Klenow [#]_).</span>
 <span class="sd">        Exo-Klenow is a modified version of the Klenow fragment of E.</span>
@@ -1979,7 +1979,7 @@ document.write(`
 <span class="sd">            DESCRIPTION.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">recessed</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">recessed</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">n</span> <span class="o">+=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">recessed</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span>
@@ -2049,7 +2049,7 @@ document.write(`
 <span class="sd">        gatc</span>
 <span class="sd">        ctag</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">recessed</span> <span class="o">=</span> <span class="n">_copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">recessed</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-</span> <span class="n">n</span>
         <span class="n">ovhg</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_ovhg</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_ovhg</span>
         <span class="n">n</span> <span class="o">-=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ovhg</span><span class="p">)</span>
@@ -2213,21 +2213,21 @@ document.write(`
 <div class="viewcode-block" id="Dseq.no_cutters">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.no_cutters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">no_cutters</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionBatch</span><span class="p">:</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RestrictionBatch</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Enzymes in a RestrictionBatch not cutting sequence.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">batch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">batch</span> <span class="o">=</span> <span class="n">CommOnly</span>
         <span class="n">ana</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">ncut</span> <span class="o">=</span> <span class="p">{</span><span class="n">enz</span><span class="p">:</span> <span class="n">sitelist</span> <span class="k">for</span> <span class="p">(</span><span class="n">enz</span><span class="p">,</span> <span class="n">sitelist</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ana</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">sitelist</span><span class="p">}</span>
-        <span class="k">return</span> <span class="n">_RestrictionBatch</span><span class="p">(</span><span class="n">ncut</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">RestrictionBatch</span><span class="p">(</span><span class="n">ncut</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseq.unique_cutters">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.unique_cutters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">unique_cutters</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionBatch</span><span class="p">:</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RestrictionBatch</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Enzymes in a RestrictionBatch cutting sequence once.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">batch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">batch</span> <span class="o">=</span> <span class="n">CommOnly</span>
@@ -2239,8 +2239,8 @@ document.write(`
 <div class="viewcode-block" id="Dseq.twice_cutters">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.twice_cutters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">twice_cutters</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionBatch</span><span class="p">:</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RestrictionBatch</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Enzymes in a RestrictionBatch cutting sequence twice.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">batch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">batch</span> <span class="o">=</span> <span class="n">CommOnly</span>
@@ -2250,27 +2250,25 @@ document.write(`
 <div class="viewcode-block" id="Dseq.n_cutters">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.n_cutters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">n_cutters</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionBatch</span><span class="p">:</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RestrictionBatch</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Enzymes in a RestrictionBatch cutting n times.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">batch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">batch</span> <span class="o">=</span> <span class="n">CommOnly</span>
         <span class="n">ana</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">ncut</span> <span class="o">=</span> <span class="p">{</span><span class="n">enz</span><span class="p">:</span> <span class="n">sitelist</span> <span class="k">for</span> <span class="p">(</span><span class="n">enz</span><span class="p">,</span> <span class="n">sitelist</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ana</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sitelist</span><span class="p">)</span> <span class="o">==</span> <span class="n">n</span><span class="p">}</span>
-        <span class="k">return</span> <span class="n">_RestrictionBatch</span><span class="p">(</span><span class="n">ncut</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">RestrictionBatch</span><span class="p">(</span><span class="n">ncut</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseq.cutters">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.cutters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">cutters</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">_RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_RestrictionBatch</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cutters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">RestrictionBatch</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RestrictionBatch</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Enzymes in a RestrictionBatch cutting sequence at least once.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">batch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">batch</span> <span class="o">=</span> <span class="n">CommOnly</span>
         <span class="n">ana</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">ncut</span> <span class="o">=</span> <span class="p">{</span><span class="n">enz</span><span class="p">:</span> <span class="n">sitelist</span> <span class="k">for</span> <span class="p">(</span><span class="n">enz</span><span class="p">,</span> <span class="n">sitelist</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ana</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">sitelist</span><span class="p">}</span>
-        <span class="k">return</span> <span class="n">_RestrictionBatch</span><span class="p">(</span><span class="n">ncut</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">RestrictionBatch</span><span class="p">(</span><span class="n">ncut</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseq.seguid">
@@ -2278,14 +2276,14 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="nf">seguid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;SEGUID checksum for the sequence.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
-            <span class="n">cs</span> <span class="o">=</span> <span class="n">_cdseguid</span><span class="p">(</span>
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">cdseguid</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">alphabet</span><span class="o">=</span><span class="s2">&quot;{DNA-extended}&quot;</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
             <span class="n">w</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="si">}{</span><span class="s1">&#39;-&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
             <span class="n">c</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;-&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">watson</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="p">))</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">crick</span><span class="si">}{</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-            <span class="n">cs</span> <span class="o">=</span> <span class="n">_ldseguid</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">alphabet</span><span class="o">=</span><span class="s2">&quot;{DNA-extended}&quot;</span><span class="p">)</span>
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">ldseguid</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">alphabet</span><span class="o">=</span><span class="s2">&quot;{DNA-extended}&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cs</span></div>
 
 
@@ -2444,7 +2442,7 @@ document.write(`
 
 <div class="viewcode-block" id="Dseq.cut">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.cut">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">cut</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">DseqType</span><span class="p">,</span> <span class="o">*</span><span class="n">enzymes</span><span class="p">:</span> <span class="n">EnzymesType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Tuple</span><span class="p">[</span><span class="n">DseqType</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cut</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">DseqType</span><span class="p">,</span> <span class="o">*</span><span class="n">enzymes</span><span class="p">:</span> <span class="n">EnzymesType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">DseqType</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of linear Dseq fragments produced in the digestion.</span>
 <span class="sd">        If there are no cuts, an empty list is returned.</span>
 
@@ -2616,7 +2614,7 @@ document.write(`
 
 <div class="viewcode-block" id="Dseq.get_cutsites">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.get_cutsites">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_cutsites</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">DseqType</span><span class="p">,</span> <span class="o">*</span><span class="n">enzymes</span><span class="p">:</span> <span class="n">EnzymesType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_List</span><span class="p">[</span><span class="n">CutSiteType</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_cutsites</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">DseqType</span><span class="p">,</span> <span class="o">*</span><span class="n">enzymes</span><span class="p">:</span> <span class="n">EnzymesType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">CutSiteType</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of cutsites, represented represented as `((cut_watson, ovhg), enz)`:</span>
 
 <span class="sd">        - `cut_watson` is a positive integer contained in `[0,len(seq))`, where `seq` is the sequence</span>
@@ -2635,7 +2633,7 @@ document.write(`
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 
-<span class="sd">        enzymes : Union[_RestrictionBatch,list[_AbstractCut]]</span>
+<span class="sd">        enzymes : Union[RestrictionBatch,list[_AbstractCut]]</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -2671,11 +2669,11 @@ document.write(`
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">enzymes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">enzymes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">_RestrictionBatch</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">enzymes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">enzymes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">RestrictionBatch</span><span class="p">):</span>
             <span class="c1"># argument is probably a RestrictionBatch</span>
             <span class="n">enzymes</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">enzymes</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
 
-        <span class="n">enzymes</span> <span class="o">=</span> <span class="n">_flatten</span><span class="p">(</span><span class="n">enzymes</span><span class="p">)</span>
+        <span class="n">enzymes</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">enzymes</span><span class="p">)</span>
         <span class="n">out</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">enzymes</span><span class="p">:</span>
             <span class="c1"># Positions of the cut on the watson strand. They are 1-based, so we subtract</span>
@@ -2689,7 +2687,7 @@ document.write(`
 
 <div class="viewcode-block" id="Dseq.left_end_position">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.left_end_position">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">left_end_position</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">left_end_position</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The index in the full sequence of the watson and crick start positions.</span>
 
@@ -2709,7 +2707,7 @@ document.write(`
 
 <div class="viewcode-block" id="Dseq.right_end_position">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.right_end_position">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">right_end_position</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">right_end_position</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The index in the full sequence of the watson and crick end positions.</span>
 
 <span class="sd">        full sequence (str(self)) for all three cases is AAA</span>
@@ -2812,7 +2810,7 @@ document.write(`
 
 <div class="viewcode-block" id="Dseq.get_ds_meltsites">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.get_ds_meltsites">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_ds_meltsites</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">DseqType</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_List</span><span class="p">[</span><span class="n">CutSiteType</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_ds_meltsites</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">DseqType</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">CutSiteType</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Double stranded DNA melt sites</span>
 
@@ -2934,8 +2932,8 @@ document.write(`
 <div class="viewcode-block" id="Dseq.get_cut_parameters">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.get_cut_parameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_cut_parameters</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">cut</span><span class="p">:</span> <span class="n">_Union</span><span class="p">[</span><span class="n">CutSiteType</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">is_left</span><span class="p">:</span> <span class="nb">bool</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">cut</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">CutSiteType</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">is_left</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;For a given cut expressed as ((cut_watson, ovhg), enz), returns</span>
 <span class="sd">        a tuple (cut_watson, cut_crick, ovhg).</span>
 
@@ -3191,7 +3189,7 @@ document.write(`
 <span class="sd">            GttCTTAA</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">_cuts_overlap</span><span class="p">(</span><span class="n">left_cut</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">cuts_overlap</span><span class="p">(</span><span class="n">left_cut</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cuts by </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> overlap.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">left_cut</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">right_cut</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
         <span class="n">left_watson</span><span class="p">,</span> <span class="n">left_crick</span><span class="p">,</span> <span class="n">ovhg_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cut_parameters</span><span class="p">(</span><span class="n">left_cut</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
@@ -3208,8 +3206,8 @@ document.write(`
 <div class="viewcode-block" id="Dseq.get_cutsite_pairs">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.get_cutsite_pairs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_cutsite_pairs</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">cutsites</span><span class="p">:</span> <span class="n">_List</span><span class="p">[</span><span class="n">CutSiteType</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_List</span><span class="p">[</span><span class="n">_Tuple</span><span class="p">[</span><span class="n">_Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">CutSiteType</span><span class="p">],</span> <span class="n">_Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">CutSiteType</span><span class="p">]]]:</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">cutsites</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CutSiteType</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">CutSiteType</span><span class="p">],</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">CutSiteType</span><span class="p">]]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns pairs of cutsites that render the edges of the resulting fragments.</span>
 
 <span class="sd">        A fragment produced by restriction is represented by a tuple of length 2 that</span>
@@ -3334,10 +3332,7 @@ document.write(`
 <span class="sd">           TAGTCA</span>
 <span class="sd">        &gt;&gt;&gt; parts = ds.get_parts()</span>
 <span class="sd">        &gt;&gt;&gt; parts</span>
-<span class="sd">        DseqParts(sticky_left5=&#39;PPP&#39;, sticky_left3=&#39;&#39;,</span>
-<span class="sd">                  middle=&#39;ATC&#39;,</span>
-<span class="sd">                  sticky_right3=&#39;&#39;, sticky_right5=&#39;FQZ&#39;,</span>
-<span class="sd">                  single_watson=&#39;&#39;, single_crick=&#39;&#39;)</span>
+<span class="sd">        DseqParts(sticky_left5=&#39;PPP&#39;, sticky_left3=&#39;&#39;, middle=&#39;ATC&#39;, sticky_right3=&#39;&#39;, sticky_right5=&#39;FQZ&#39;, single_watson=&#39;&#39;, single_crick=&#39;&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; Dseq(parts.sticky_left5)</span>
 <span class="sd">        Dseq(-3)</span>
 <span class="sd">        GGG</span>
