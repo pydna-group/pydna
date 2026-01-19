@@ -13,8 +13,8 @@ been set to a valid email address. The easiest way to do this permanantly is to 
 
 
 from pydna.opencloning_models import NCBISequenceSource
-from pydna.genbankrecord import GenbankRecord
 from pydna.readers import read
+from pydna.dseqrecord import Dseqrecord
 
 from Bio import Entrez
 from Bio.SeqFeature import SimpleLocation
@@ -73,7 +73,7 @@ class Genbank:
         seq_start: Optional[int] = None,
         seq_stop: Optional[int] = None,
         strand: Literal[1, 2] = 1,
-    ) -> GenbankRecord:
+    ) -> Dseqrecord:
         """This method downloads a genbank nuclotide record from genbank. This method is
         cached by default. This can be controlled by editing the **pydna_cached_funcs** environment
         variable. The best way to do this permanently is to edit the edit the
@@ -112,7 +112,7 @@ class Genbank:
         "2", 2, "-" or "-1", the antisense (Crick) strand is returned, otherwise
         the sense (Watson) strand is returned.
 
-        Result is returned as a :class:`pydna.genbankrecord.GenbankRecord` object.
+        Result is returned as a :class:`Dseqrecord` object.
 
         References
         ----------
@@ -183,14 +183,8 @@ class Genbank:
         )
         return result
 
-        # return GenbankRecord(
-        #     read(text), item=item, start=seq_start, stop=seq_stop, strand=strand
-        # )
 
-
-def genbank(
-    accession: str = "CS570233.1", *args, email=None, **kwargs
-) -> GenbankRecord:
+def genbank(accession: str = "CS570233.1", *args, email=None, **kwargs) -> Dseqrecord:
     """
     Download a genbank nuclotide record.
 
