@@ -13,8 +13,6 @@ https://github.com/gip0/py-rstr-max
 the original code was covered by an MIT licence."""
 
 
-# from array import array as _array
-# import itertools as _itertools
 from operator import itemgetter
 from typing import List, Tuple
 

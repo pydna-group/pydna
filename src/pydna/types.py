@@ -13,24 +13,24 @@ from typing import (
 )
 
 # Import AbstractCut at runtime for CutSiteType
-from Bio.Restriction.Restriction import AbstractCut as _AbstractCut
-from pydna.crispr import _cas as __cas
+from Bio.Restriction.Restriction import AbstractCut
+from pydna.crispr import _cas
 
 if TYPE_CHECKING:
-    from Bio.Restriction import RestrictionBatch as _RestrictionBatch
+    from Bio.Restriction import RestrictionBatch
     from pydna.dseq import Dseq
-    from Bio.SeqFeature import Location as _Location
-    from pydna.dseqrecord import Dseqrecord as _Dseqrecord
+    from Bio.SeqFeature import Location
+    from pydna.dseqrecord import Dseqrecord
 
 
 # To represent any subclass of Dseq
 DseqType = TypeVar("DseqType", bound="Dseq")
 EnzymesType = TypeVar(
-    "EnzymesType", "_RestrictionBatch", Iterable["_AbstractCut"], "_AbstractCut"
+    "EnzymesType", "RestrictionBatch", Iterable["AbstractCut"], "AbstractCut"
 )
-CutSiteType = Tuple[Tuple[int, int], Union[_AbstractCut, None, __cas]]
-AssemblyEdgeType = Tuple[int, int, "_Location | None", "_Location | None"]
-AssemblySubFragmentType = Tuple[int, "_Location | None", "_Location | None"]
+CutSiteType = Tuple[Tuple[int, int], Union[AbstractCut, None, _cas]]
+AssemblyEdgeType = Tuple[int, int, "Location | None", "Location | None"]
+AssemblySubFragmentType = Tuple[int, "Location | None", "Location | None"]
 EdgeRepresentationAssembly = list[AssemblyEdgeType]
 SubFragmentRepresentationAssembly = list[AssemblySubFragmentType]
 
@@ -40,5 +40,5 @@ SubFragmentRepresentationAssembly = list[AssemblySubFragmentType]
 # the third number is the length of the overlap
 SequenceOverlap = Tuple[int, int, int]
 AssemblyAlgorithmType = Callable[
-    ["_Dseqrecord", "_Dseqrecord", int], list[SequenceOverlap]
+    ["Dseqrecord", "Dseqrecord", int], list[SequenceOverlap]
 ]

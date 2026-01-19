@@ -585,9 +585,9 @@ def gbtext_clean(gbtext):
 
     jseqlist = toJSON(gbtext)
     jseq = jseqlist.pop()
-    from collections import namedtuple as _namedtuple
-    from pydna._pretty import pretty_str as _pretty_str
+    from collections import namedtuple
+    from pydna._pretty import pretty_str as ps
 
-    Result = _namedtuple("Result", "gbtext jseq")
-    result = Result(_pretty_str(toGB(jseq).strip()), jseq)
+    Result = namedtuple("Result", "gbtext jseq")
+    result = Result(ps(toGB(jseq).strip()), jseq)
     return result

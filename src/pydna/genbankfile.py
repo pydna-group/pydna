@@ -4,10 +4,10 @@
 # This code is part of the Python-dna distribution and governed by its
 # license.  Please see the LICENSE.txt file that should have been included
 # as part of this package.
-from pydna.dseqrecord import Dseqrecord as _Dseqrecord
+from pydna.dseqrecord import Dseqrecord as Dseqrecord
 
 
-class GenbankFile(_Dseqrecord):
+class GenbankFile(Dseqrecord):
     def __init__(self, record, *args, path=None, **kwargs):
         super().__init__(record, *args, **kwargs)
         self.path = path

@@ -5,7 +5,7 @@ see [issues tagged with fixed-with-new-assembly-model](https://github.com/pydna-
 """
 
 import networkx as nx
-import itertools as _itertools
+import itertools
 from Bio.SeqFeature import SimpleLocation, Location
 
 from Bio.Restriction.Restriction import RestrictionBatch
@@ -13,10 +13,10 @@ import regex
 import copy
 
 from pydna.utils import (
-    shift_location as _shift_location,
+    shift_location,
     flatten,
-    location_boundaries as _location_boundaries,
-    locations_overlap as _locations_overlap,
+    location_boundaries,
+    locations_overlap,
     sum_is_sticky,
     limit_iterator,
     create_location,
@@ -60,7 +60,7 @@ from pydna.crispr import cas9
 import warnings
 
 if TYPE_CHECKING:  # pragma: no cover
-    from Bio.Restriction import AbstractCut as _AbstractCut
+    from Bio.Restriction import AbstractCut
 
 
 def gather_overlapping_locations(
@@ -79,7 +79,7 @@ def gather_overlapping_locations(
     # Add edges between nodes that overlap
     for i in range(len(locs)):
         for j in range(i + 1, len(locs)):
-            if _locations_overlap(locs[i], locs[j], fragment_length):
+            if locations_overlap(locs[i], locs[j], fragment_length):
                 G.add_edge(i, j)
 
     # Get groups of overlapping locations
@@ -88,7 +88,7 @@ def gather_overlapping_locations(
         groups.append(tuple(locs[i] for i in loc_set))
 
     # Sort by location of the first element in each group (does not matter which since they are overlapping)
-    groups.sort(key=lambda x: _location_boundaries(x[0])[0])
+    groups.sort(key=lambda x: location_boundaries(x[0])[0])
 
     return groups
 
@@ -212,7 +212,7 @@ def restriction_ligation_overlap(
     #     if not seqy.circular:
     #         cuts_y.append(((0, 0), None))
     matches = list()
-    for cut_x, cut_y in _itertools.product(cuts_x, cuts_y):
+    for cut_x, cut_y in itertools.product(cuts_x, cuts_y):
         # A blunt end
         if allow_blunt and cut_x[0][1] == cut_y[0][1] == 0:
             matches.append((cut_x[0][0], cut_y[0][0], 0))
@@ -784,8 +784,8 @@ def assembly_is_circular(
         return True
     else:
         return (
-            _location_boundaries(assembly[0][2])[0]
-            > _location_boundaries(assembly[-1][3])[0]
+            location_boundaries(assembly[0][2])[0]
+            > location_boundaries(assembly[-1][3])[0]
         )
 
 
@@ -990,11 +990,11 @@ def extract_subfragment(
         # elif end_location is None:
         #     end_location = start_location
 
-    start = 0 if start_location is None else _location_boundaries(start_location)[0]
-    end = None if end_location is None else _location_boundaries(end_location)[1]
+    start = 0 if start_location is None else location_boundaries(start_location)[0]
+    end = None if end_location is None else location_boundaries(end_location)[1]
 
     # Special case, some of it could be handled by better Dseqrecord slicing in the future
-    if seq.circular and _locations_overlap(start_location, end_location, len(seq)):
+    if seq.circular and locations_overlap(start_location, end_location, len(seq)):
         # The overhang is different for origin-spanning features, for instance
         # for a feature join{[12:13], [0:3]} in a sequence of length 13, the overhang
         # is -4, not 9
@@ -1163,12 +1163,12 @@ class Assembly:
         )
 
         # Iterate over all possible combinations of fragments
-        fragment_pairs = _itertools.combinations(
+        fragment_pairs = itertools.combinations(
             filter(lambda x: x > 0, self.G.nodes), 2
         )
         for i, j in fragment_pairs:
             # All the relative orientations of the fragments in the pair
-            for u, v in _itertools.product([i, -i], [j, -j]):
+            for u, v in itertools.product([i, -i], [j, -j]):
                 u_seq = self.G.nodes[u]["seq"]
                 v_seq = self.G.nodes[v]["seq"]
                 matches = algorithm(u_seq, v_seq, limit)
@@ -1257,7 +1257,7 @@ class Assembly:
             fragment = fragments[abs(v1) - 1]
             if (
                 isinstance(fragment, _Primer) or not fragment.circular
-            ) and _location_boundaries(start_location)[1] >= _location_boundaries(
+            ) and location_boundaries(start_location)[1] >= location_boundaries(
                 end_location
             )[
                 1
@@ -1301,10 +1301,10 @@ class Assembly:
         else:
             # We use shift_location with 0 to wrap origin-spanning features
             locs = [
-                _shift_location(
+                shift_location(
                     SimpleLocation(x_start, x_start + length), 0, len(first)
                 ),
-                _shift_location(
+                shift_location(
                     SimpleLocation(y_start, y_start + length), 0, len(secnd)
                 ),
             ]
@@ -1391,7 +1391,7 @@ class Assembly:
             combine.append([(u, v, key) for key in self.G[u][v]])
         return [
             tuple(map(self.format_assembly_edge, x))
-            for x in _itertools.product(*combine)
+            for x in itertools.product(*combine)
         ]
 
     def get_unique_linear_paths(
@@ -1521,8 +1521,8 @@ class Assembly:
             fragment = self.fragments[abs(v1) - 1]
             # Find the pair of edges that should be last and first  ((3, 1, [8:10], [9:11)]), (1, 2, [4:6], [0:2]) in
             # the example above. Only one of the pairs of edges should satisfy this condition for the topology to make sense.
-            left_of_insertion = _location_boundaries(start_location)[0]
-            right_of_insertion = _location_boundaries(end_location)[0]
+            left_of_insertion = location_boundaries(start_location)[0]
+            right_of_insertion = location_boundaries(end_location)[0]
             if not fragment.circular and (
                 right_of_insertion >= left_of_insertion
                 # The below condition is for single-site integration.
@@ -1534,7 +1534,7 @@ class Assembly:
                 #
                 # The locations of homology on the genome are [0:10] and [2:12], so not identical
                 # but they overlap.
-                or _locations_overlap(start_location, end_location, len(fragment))
+                or locations_overlap(start_location, end_location, len(fragment))
             ):
                 edge_pair_index.append(i)
 
@@ -1565,13 +1565,13 @@ class Assembly:
         fragment1 = self.fragments[abs(f1) - 1]
         fragment2 = self.fragments[abs(f2) - 1]
 
-        if not _locations_overlap(
+        if not locations_overlap(
             loc_f1_1, loc_f1_2, len(fragment1)
-        ) or not _locations_overlap(loc_f2_2, loc_f2_1, len(fragment2)):
+        ) or not locations_overlap(loc_f2_2, loc_f2_1, len(fragment2)):
             return same_assembly
 
         # Sort to make compatible with insertion assembly
-        if _location_boundaries(loc_f1_1)[0] > _location_boundaries(loc_f1_2)[0]:
+        if location_boundaries(loc_f1_1)[0] > location_boundaries(loc_f1_2)[0]:
             new_assembly = same_assembly[::-1]
         else:
             new_assembly = same_assembly[:]
@@ -1584,10 +1584,10 @@ class Assembly:
         fragment2 = self.fragments[abs(f2) - 1]
 
         # Extract boundaries
-        f2_1_start, _ = _location_boundaries(loc_f2_1)
-        f2_2_start, f2_2_end = _location_boundaries(loc_f2_2)
-        f1_1_start, _ = _location_boundaries(loc_f1_1)
-        f1_2_start, f1_2_end = _location_boundaries(loc_f1_2)
+        f2_1_start, _ = location_boundaries(loc_f2_1)
+        f2_2_start, f2_2_end = location_boundaries(loc_f2_2)
+        f1_1_start, _ = location_boundaries(loc_f1_1)
+        f1_2_start, f1_2_end = location_boundaries(loc_f1_2)
 
         overlap_diff = len(fragment1[f1_1_start:f1_2_end]) - len(
             fragment2[f2_1_start:f2_2_end]
@@ -1726,10 +1726,10 @@ class Assembly:
                         if edge_location not in this_dict[key]:
                             this_dict[key].append(edge_location)
             this_dict["left"] = sorted(
-                this_dict["left"], key=lambda x: _location_boundaries(x)[0]
+                this_dict["left"], key=lambda x: location_boundaries(x)[0]
             )
             this_dict["right"] = sorted(
-                this_dict["right"], key=lambda x: _location_boundaries(x)[0]
+                this_dict["right"], key=lambda x: location_boundaries(x)[0]
             )
             locations_on_fragments[node] = this_dict
 
@@ -1776,7 +1776,7 @@ class Assembly:
 
             pairs = list()
             for pair in zip(left, right):
-                pairs += list(_itertools.product(*pair))
+                pairs += list(itertools.product(*pair))
             allowed_location_pairs[node] = pairs
 
         fragment_assembly = edge_representation2subfragment_representation(
@@ -1841,8 +1841,8 @@ class PCRAssembly(Assembly):
             # primer, template, primer
             p1, t, p2 = (i + 1, i + 2, i + 3)
             primer_ids += [p1, p2]
-            pairs += list(_itertools.product([p1, p2], [t, -t]))
-            pairs += list(_itertools.product([t, -t], [-p1, -p2]))
+            pairs += list(itertools.product([p1, p2], [t, -t]))
+            pairs += list(itertools.product([t, -t], [-p1, -p2]))
 
         for u, v in pairs:
             u_seq = self.G.nodes[u]["seq"]
@@ -1958,8 +1958,8 @@ class SingleFragmentAssembly(Assembly):
             if x[0][2] == x[0][3]:
                 return False
             # We don't want to get overlap only (e.g. GAATTCcatGAATTC giving GAATTC)
-            left_start, _ = _location_boundaries(x[0][2])
-            _, right_end = _location_boundaries(x[0][3])
+            left_start, _ = location_boundaries(x[0][2])
+            _, right_end = location_boundaries(x[0][3])
             if left_start == 0 and right_end == len(self.fragments[0]):
                 return False
             return True
@@ -2149,7 +2149,7 @@ def in_vivo_assembly(
 
 def restriction_ligation_assembly(
     frags: list[_Dseqrecord],
-    enzymes: list["_AbstractCut"],
+    enzymes: list["AbstractCut"],
     allow_blunt: bool = True,
     circular_only: bool = False,
 ) -> list[_Dseqrecord]:
@@ -2163,7 +2163,7 @@ def restriction_ligation_assembly(
     ----------
     frags : list[_Dseqrecord]
         List of DNA fragments to assemble
-    enzymes : list[_AbstractCut]
+    enzymes : list[AbstractCut]
         List of restriction enzymes to use
     allow_blunt : bool, optional
         If True, allow blunt end ligations, by default True
@@ -2228,7 +2228,7 @@ def restriction_ligation_assembly(
 
 def golden_gate_assembly(
     frags: list[_Dseqrecord],
-    enzymes: list["_AbstractCut"],
+    enzymes: list["AbstractCut"],
     allow_blunt: bool = True,
     circular_only: bool = False,
 ) -> list[_Dseqrecord]:
@@ -2240,7 +2240,7 @@ def golden_gate_assembly(
     ----------
     frags : list[_Dseqrecord]
         List of DNA fragments to assemble
-    enzymes : list[_AbstractCut]
+    enzymes : list[AbstractCut]
         List of restriction enzymes to use
     allow_blunt : bool, optional
         If True, allow blunt end ligations, by default True
@@ -2809,9 +2809,9 @@ def crispr_integration(
     for i, product in enumerate(products):
         # The second element of product.source.input is conventionally the insert/repair fragment
         # The other two (first and third) are the two bits of the genome
-        repair_start = _location_boundaries(product.source.input[0].right_location)[0]
+        repair_start = location_boundaries(product.source.input[0].right_location)[0]
         # Here we do +1 because the position of the cut marks the boundary (e.g. 0:10, 10:20 if a cut is at pos 10)
-        repair_end = _location_boundaries(product.source.input[2].left_location)[1] + 1
+        repair_end = location_boundaries(product.source.input[2].left_location)[1] + 1
         repair_location = create_location(repair_start, repair_end, len(genome))
         some_cuts_inside_repair = []
         all_cuts_inside_repair = []

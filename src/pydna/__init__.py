@@ -201,7 +201,7 @@ def get_env():
 
 def logo():
     """Ascii-art logotype of pydna."""
-    from pydna._pretty import pretty_str as _pretty_str
+    from pydna._pretty import pretty_str
 
     message = f"pydna {__version__}"
     try:
@@ -211,7 +211,7 @@ def logo():
     else:
         f = Figlet()
         message = f.renderText(message)
-    return _pretty_str(message)
+    return pretty_str(message)
 
 
 ## Override Bio.Restriction.FormattedSeq._table

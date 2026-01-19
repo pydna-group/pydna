@@ -18,21 +18,21 @@ import math
 import inspect
 from typing import List, Tuple, Union
 
-from Bio.Restriction import RestrictionBatch as _RestrictionBatch
+from Bio.Restriction import RestrictionBatch
 from Bio.Restriction import CommOnly
 
 from seguid import ldseguid
 from seguid import cdseguid
 
-from pydna.seq import Seq as _Seq
+from pydna.seq import Seq
 from Bio.Seq import _SeqAbstractBaseClass
 from Bio.Data.IUPACData import unambiguous_dna_weights
 from Bio.Data.IUPACData import unambiguous_rna_weights
 from Bio.Data.IUPACData import atom_weights
-from pydna._pretty import pretty_str as _pretty_str
-from pydna.utils import rc as _rc
-from pydna.utils import flatten as _flatten
-from pydna.utils import cuts_overlap as _cuts_overlap
+from pydna._pretty import pretty_str
+from pydna.utils import rc
+from pydna.utils import flatten
+from pydna.utils import cuts_overlap
 
 from pydna.alphabet import basepair_dict
 from pydna.alphabet import dscode_to_watson_table
@@ -48,7 +48,7 @@ from pydna.alphabet import get_parts
 from pydna.alphabet import representation_tuple
 from pydna.alphabet import dsbreaks
 
-from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
+from pydna.common_sub_strings import common_sub_strings
 from pydna.types import DseqType, EnzymesType, CutSiteType
 
 
@@ -156,7 +156,7 @@ class CircularBytes(bytes):
         return pos
 
 
-class Dseq(_Seq):
+class Dseq(Seq):
     """Dseq describes a double stranded DNA fragment, linear or circular.
 
     Dseq can be initiated in two ways, using two strings, each representing the
@@ -470,9 +470,9 @@ class Dseq(_Seq):
             """
             if ovhg is None:  # ovhg not given, try to guess from sequences
                 limit = int(math.log(len(watson)) / math.log(4))
-                olaps = _common_sub_strings(
+                olaps = common_sub_strings(
                     str(watson).lower(),
-                    str(_rc(crick).lower()),
+                    str(rc(crick).lower()),
                     limit,
                 )
 
@@ -901,7 +901,7 @@ class Dseq(_Seq):
             same = False
         return same
 
-    def __repr__(self, lim: int = length_limit_for_repr) -> _pretty_str:
+    def __repr__(self, lim: int = length_limit_for_repr) -> pretty_str:
 
         header = f"{self.__class__.__name__}({({False: '-', True: 'o'}[self.circular])}{len(self)})"
 
@@ -909,7 +909,7 @@ class Dseq(_Seq):
             self._data.decode("ascii"), length_limit_for_repr=length_limit_for_repr
         )
 
-        return _pretty_str(header + "\n" + w + "\n" + c)
+        return pretty_str(header + "\n" + w + "\n" + c)
 
     def reverse_complement(self) -> "Dseq":
         """Dseq object where watson and crick have switched places.
@@ -932,7 +932,7 @@ class Dseq(_Seq):
         >>>
 
         """
-        return Dseq.quick(_rc(self._data), circular=self.circular)
+        return Dseq.quick(rc(self._data), circular=self.circular)
 
     rc = reverse_complement  # alias for reverse_complement
 
@@ -1264,7 +1264,7 @@ class Dseq(_Seq):
         stuffer = ""
         type, se = self.five_prime_end()
         if type == "5'":
-            for n in _rc(se):
+            for n in rc(se):
                 if n in nucleotides:
                     stuffer += n
                 else:
@@ -1275,7 +1275,7 @@ class Dseq(_Seq):
         stuffer = ""
         type, se = self.three_prime_end()
         if type == "5'":
-            for n in _rc(se):
+            for n in rc(se):
                 if n in nucleotides:
                     stuffer += n
                 else:
@@ -1823,18 +1823,18 @@ class Dseq(_Seq):
         return recessed
 
     def no_cutters(
-        self, batch: Union[_RestrictionBatch, None] = None
-    ) -> _RestrictionBatch:
+        self, batch: Union[RestrictionBatch, None] = None
+    ) -> RestrictionBatch:
         """Enzymes in a RestrictionBatch not cutting sequence."""
         if batch is None:
             batch = CommOnly
         ana = batch.search(self)
         ncut = {enz: sitelist for (enz, sitelist) in ana.items() if not sitelist}
-        return _RestrictionBatch(ncut)
+        return RestrictionBatch(ncut)
 
     def unique_cutters(
-        self, batch: Union[_RestrictionBatch, None] = None
-    ) -> _RestrictionBatch:
+        self, batch: Union[RestrictionBatch, None] = None
+    ) -> RestrictionBatch:
         """Enzymes in a RestrictionBatch cutting sequence once."""
         if batch is None:
             batch = CommOnly
@@ -1843,32 +1843,30 @@ class Dseq(_Seq):
     once_cutters = unique_cutters  # alias for unique_cutters
 
     def twice_cutters(
-        self, batch: Union[_RestrictionBatch, None] = None
-    ) -> _RestrictionBatch:
+        self, batch: Union[RestrictionBatch, None] = None
+    ) -> RestrictionBatch:
         """Enzymes in a RestrictionBatch cutting sequence twice."""
         if batch is None:
             batch = CommOnly
         return self.n_cutters(n=2, batch=batch)
 
     def n_cutters(
-        self, n=3, batch: Union[_RestrictionBatch, None] = None
-    ) -> _RestrictionBatch:
+        self, n=3, batch: Union[RestrictionBatch, None] = None
+    ) -> RestrictionBatch:
         """Enzymes in a RestrictionBatch cutting n times."""
         if batch is None:
             batch = CommOnly
         ana = batch.search(self)
         ncut = {enz: sitelist for (enz, sitelist) in ana.items() if len(sitelist) == n}
-        return _RestrictionBatch(ncut)
+        return RestrictionBatch(ncut)
 
-    def cutters(
-        self, batch: Union[_RestrictionBatch, None] = None
-    ) -> _RestrictionBatch:
+    def cutters(self, batch: Union[RestrictionBatch, None] = None) -> RestrictionBatch:
         """Enzymes in a RestrictionBatch cutting sequence at least once."""
         if batch is None:
             batch = CommOnly
         ana = batch.search(self)
         ncut = {enz: sitelist for (enz, sitelist) in ana.items() if sitelist}
-        return _RestrictionBatch(ncut)
+        return RestrictionBatch(ncut)
 
     def seguid(self) -> str:
         """SEGUID checksum for the sequence."""
@@ -2212,7 +2210,7 @@ class Dseq(_Seq):
         Parameters
         ----------
 
-        enzymes : Union[_RestrictionBatch,list[_AbstractCut]]
+        enzymes : Union[RestrictionBatch,list[_AbstractCut]]
 
         Returns
         -------
@@ -2248,11 +2246,11 @@ class Dseq(_Seq):
 
         """
 
-        if len(enzymes) == 1 and isinstance(enzymes[0], _RestrictionBatch):
+        if len(enzymes) == 1 and isinstance(enzymes[0], RestrictionBatch):
             # argument is probably a RestrictionBatch
             enzymes = [e for e in enzymes[0]]
 
-        enzymes = _flatten(enzymes)
+        enzymes = flatten(enzymes)
         out = list()
         for e in enzymes:
             # Positions of the cut on the watson strand. They are 1-based, so we subtract
@@ -2735,7 +2733,7 @@ class Dseq(_Seq):
             GttCTTAA
 
         """
-        if _cuts_overlap(left_cut, right_cut, len(self)):
+        if cuts_overlap(left_cut, right_cut, len(self)):
             raise ValueError("Cuts by {} {} overlap.".format(left_cut[1], right_cut[1]))
 
         left_watson, left_crick, ovhg_left = self.get_cut_parameters(left_cut, True)

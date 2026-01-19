@@ -14,19 +14,18 @@ the :class:`pydna._pretty_str.pretty_str` class instread of str for a
 nicer output in the IPython shell.
 """
 
+from Bio.SeqFeature import SeqFeature
+from pydna._pretty import pretty_str as ps
 
-from Bio.SeqFeature import SeqFeature as _SeqFeature
-from pydna._pretty import pretty_str as _pretty_str
+from pydna.seq import ProteinSeq
+from pydna.common_sub_strings import common_sub_strings
 
-from pydna.seq import ProteinSeq as _ProteinSeq
-from pydna.common_sub_strings import common_sub_strings as _common_sub_strings
-
-from Bio.Data.CodonTable import TranslationError as _TranslationError
-from Bio.SeqRecord import SeqRecord as _SeqRecord
-from Bio.SeqFeature import SimpleLocation as _SimpleLocation
-from Bio.SeqFeature import CompoundLocation as _CompoundLocation
-from pydna.seq import Seq as _Seq
-from pydna._pretty import PrettyTable as PrettyTable
+from Bio.Data.CodonTable import TranslationError
+from Bio.SeqRecord import SeqRecord
+from Bio.SeqFeature import SimpleLocation
+from Bio.SeqFeature import CompoundLocation
+from pydna.seq import Seq
+from pydna._pretty import PrettyTable
 
 import re
 import pickle
@@ -35,13 +34,10 @@ from copy import copy
 from pydna import _PydnaWarning
 from warnings import warn
 
-# import logging as _logging
 import datetime
 
-# _module_logger = _logging.getLogger("pydna." + __name__)
 
-
-class SeqRecord(_SeqRecord):
+class SeqRecord(SeqRecord):
     """
     A subclass of the Biopython SeqRecord class.
 
@@ -62,7 +58,7 @@ class SeqRecord(_SeqRecord):
         letter_annotations=None,
     ):
         if isinstance(seq, str):
-            seq = _Seq(seq)
+            seq = Seq(seq)
         super().__init__(
             seq,
             id=id,
@@ -76,23 +72,21 @@ class SeqRecord(_SeqRecord):
         self._fix_attributes()
 
     def _fix_attributes(self):
-        self.id = _pretty_str(self.id)
-        self.name = _pretty_str(self.name)
-        self.description = _pretty_str(self.description)
+        self.id = ps(self.id)
+        self.name = ps(self.name)
+        self.description = ps(self.description)
 
         self.annotations.update({"molecule_type": "DNA"})
         self.map_target = None
 
         if not hasattr(self.seq, "transcribe"):
-            self.seq = _Seq(self.seq)
+            self.seq = Seq(self.seq)
 
         self.seq._data = b"".join(self.seq._data.split())  # remove whitespaces
-        self.annotations = {
-            _pretty_str(k): _pretty_str(v) for k, v in self.annotations.items()
-        }
+        self.annotations = {ps(k): ps(v) for k, v in self.annotations.items()}
 
     @classmethod
-    def from_Bio_SeqRecord(clc, sr: _SeqRecord):
+    def from_Bio_SeqRecord(clc, sr: SeqRecord):
         """Creates a pydnaSeqRecord from a Biopython SeqRecord."""
         # https://stackoverflow.com/questions/15404256/changing-the-\
         # class-of-a-python-object-casting
@@ -189,7 +183,7 @@ class SeqRecord(_SeqRecord):
         """
         try:
             self.seq.translate(table=table, cds=True)
-        except _TranslationError:
+        except TranslationError:
             return False
         else:
             return True
@@ -197,7 +191,7 @@ class SeqRecord(_SeqRecord):
     def translate(self):
         """docstring."""
         p = super().translate()
-        return ProteinSeqRecord(_ProteinSeq(p.seq))
+        return ProteinSeqRecord(ProteinSeq(p.seq))
 
     def add_colors_to_features_for_ape(self):
         """Assign colors to features.
@@ -296,19 +290,19 @@ class SeqRecord(_SeqRecord):
                 qualifiers["label"] = ["orf{}".format(y - x)]
 
         try:
-            location = _SimpleLocation(x, y, strand=strand)
+            location = SimpleLocation(x, y, strand=strand)
         except ValueError as err:
             if self.circular:
-                location = _CompoundLocation(
+                location = CompoundLocation(
                     (
-                        _SimpleLocation(x, len(self.seq), strand=strand),
-                        _SimpleLocation(0, y, strand=strand),
+                        SimpleLocation(x, len(self.seq), strand=strand),
+                        SimpleLocation(0, y, strand=strand),
                     )
                 )
             else:
                 raise err
 
-        sf = _SeqFeature(location, type=type_, qualifiers=qualifiers)
+        sf = SeqFeature(location, type=type_, qualifiers=qualifiers)
 
         self.features.append(sf)
 
@@ -444,7 +438,7 @@ class SeqRecord(_SeqRecord):
         result = self.annotations.get("comment", "")
         if newcomment:
             self.annotations["comment"] = (result + "\n" + newcomment).strip()
-            result = _pretty_str(self.annotations["comment"])
+            result = ps(self.annotations["comment"])
         return result
 
     def datefunction():
@@ -483,7 +477,7 @@ class SeqRecord(_SeqRecord):
         oldcomment = self.annotations.get("comment", "")
         oldstamp = re.findall(r"..seguid=\S{27}", oldcomment)
         if oldstamp and oldstamp[0] == chksum:
-            return _pretty_str(oldstamp[0])
+            return ps(oldstamp[0])
         elif oldstamp:
             warn(
                 f"Stamp change.\nNew: {chksum}\nOld: {oldstamp[0]}",
@@ -492,7 +486,7 @@ class SeqRecord(_SeqRecord):
         self.annotations["comment"] = (
             f"{oldcomment}\n" f"{tool} {chksum} {now()} {comment}"
         ).strip()
-        return _pretty_str(chksum)
+        return ps(chksum)
 
     def lcs(self, other, *args, limit=25, **kwargs):
         """Return the longest common substring between the sequence.
@@ -533,16 +527,16 @@ class SeqRecord(_SeqRecord):
         else:
             r = str(other.lower())
 
-        olaps = _common_sub_strings(str(self.seq).lower(), r, limit=limit or 25)
+        olaps = common_sub_strings(str(self.seq).lower(), r, limit=limit or 25)
 
         try:
             start_in_self, start_in_other, length = olaps.pop(0)
         except IndexError:
-            result = _SeqFeature()
+            result = SeqFeature()
         else:
             label = "sequence" if not hasattr(other, "name") else other.name
-            result = _SeqFeature(
-                _SimpleLocation(start_in_self, start_in_self + length, strand=1),
+            result = SeqFeature(
+                SimpleLocation(start_in_self, start_in_self + length, strand=1),
                 type=kwargs.get("type") or "read",
                 qualifiers={
                     "label": [kwargs.get("label") or label],
@@ -566,8 +560,8 @@ class SeqRecord(_SeqRecord):
         for slc in self.seq.rarecodons(organism):
             cdn = self.seq._data[slc].decode("ASCII")
             sfs.append(
-                _SeqFeature(
-                    _SimpleLocation(slc.start, slc.stop),
+                SeqFeature(
+                    SimpleLocation(slc.start, slc.stop),
                     type=f"rare_codon_{organism}",
                     qualifiers={"label": [cdn]},
                 )
@@ -625,11 +619,11 @@ class SeqRecord(_SeqRecord):
 
     def __str__(self):
         """docstring."""
-        return _pretty_str(super().__str__())
+        return ps(super().__str__())
 
     def __repr__(self):
         """docstring."""
-        return _pretty_str(super().__repr__())
+        return ps(super().__repr__())
 
     def __format__(self, format):
         """docstring."""
@@ -641,14 +635,14 @@ class SeqRecord(_SeqRecord):
             return text
 
         if format == "pydnafasta":
-            return _pretty_str(
+            return ps(
                 f">{self.id} {len(self)} bp {dict(((True, 'circular'), (False, 'linear')))[self.seq.circular]}\n{str(self.seq)}\n"
             )
         if format == "primer":
-            return _pretty_str(
+            return ps(
                 f">{self.id} {len(self)}-mer{removeprefix(self.description, self.name).strip()}\n{str(self.seq)}\n"
             )
-        return _pretty_str(super().__format__(format))
+        return ps(super().__format__(format))
 
     def __add__(self, other):
         """docstring."""
@@ -664,9 +658,7 @@ class SeqRecord(_SeqRecord):
 
     def __getitem__(self, index):
         """docstring."""
-        from pydna.utils import (
-            identifier_from_string as _identifier_from_string,
-        )  # TODO: clean this up
+        from pydna.utils import identifier_from_string
 
         answer = super().__getitem__(index)
         if len(answer) < 2:
@@ -678,8 +670,8 @@ class SeqRecord(_SeqRecord):
                 identifier = " ".join(sf.qualifiers["label"])
             elif "note" in sf.qualifiers:
                 identifier = " ".join(sf.qualifiers["note"])
-        answer.id = _identifier_from_string(identifier)[:16]
-        answer.name = _identifier_from_string(f"part_{self.name}")[:16]
+        answer.id = identifier_from_string(identifier)[:16]
+        answer.name = identifier_from_string(f"part_{self.name}")[:16]
         return answer
 
     def __bool__(self):
@@ -706,7 +698,7 @@ class SeqRecord(_SeqRecord):
             pth = pth.with_suffix(".pickle")
         with open(pth, "wb") as f:
             pickle.dump(self, f, protocol=protocol)
-        return _pretty_str(pth)
+        return ps(pth)
 
 
 class ProteinSeqRecord(SeqRecord):
@@ -739,4 +731,4 @@ class ProteinSeqRecord(SeqRecord):
 
     def __format__(self, format):
         """docstring."""
-        return _pretty_str(_SeqRecord.__format__(self, format))
+        return ps(SeqRecord.__format__(self, format))

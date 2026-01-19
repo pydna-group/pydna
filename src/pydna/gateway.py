@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from Bio.Seq import reverse_complement
-from pydna.dseqrecord import Dseqrecord as _Dseqrecord
+from pydna.dseqrecord import Dseqrecord
 import re
 import itertools
 from Bio.SeqFeature import SimpleLocation, SeqFeature
@@ -79,7 +79,7 @@ primer_design_attB = {
 
 
 def gateway_overlap(
-    seqx: _Dseqrecord, seqy: _Dseqrecord, reaction: str, greedy: bool
+    seqx: Dseqrecord, seqy: Dseqrecord, reaction: str, greedy: bool
 ) -> list[tuple[int, int, int]]:
     """
     Find gateway overlaps. If greedy is True, it uses a more greedy consensus site to find attP sites,
@@ -133,7 +133,7 @@ def gateway_overlap(
 
 
 def find_gateway_sites(
-    seq: _Dseqrecord, greedy: bool
+    seq: Dseqrecord, greedy: bool
 ) -> dict[str, list[SimpleLocation]]:
     """Find all gateway sites in a sequence and return a dictionary with the name and positions of the sites."""
     gateway_sites = gateway_sites_greedy if greedy else gateway_sites_conservative
@@ -154,7 +154,7 @@ def find_gateway_sites(
     return out
 
 
-def annotate_gateway_sites(seq: _Dseqrecord, greedy: bool) -> _Dseqrecord:
+def annotate_gateway_sites(seq: Dseqrecord, greedy: bool) -> Dseqrecord:
     sites = find_gateway_sites(seq, greedy)
     for site in sites:
         for loc in sites[site]:

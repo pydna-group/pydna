@@ -31,8 +31,8 @@ def gel(
     samples=None, gel_length=600, margin=50, interpolator=interpolator(mwstd=_mwstd)
 ):
     import numpy as np
-    from PIL import Image as Image
-    from PIL import ImageDraw as ImageDraw
+    from PIL import Image
+    from PIL import ImageDraw
 
     """docstring."""
     max_intensity = 256

@@ -225,12 +225,12 @@ def anneal_from_left(watson: str, crick: str) -> int:
 
 def cai(seq: str, organism: str = "sce", weights_dict: dict = None):
     """docstring."""
-    from cai2 import CAI as _CAI
+    from cai2 import CAI
 
     if weights_dict is None:
         weights_dict = weights
 
-    return round(_CAI(seq.upper(), weights=weights_dict[organism]), 3)
+    return round(CAI(seq.upper(), weights=weights_dict[organism]), 3)
 
 
 def rarecodons(seq: str, organism="sce"):
@@ -311,17 +311,16 @@ def complement(sequence: StrOrBytes) -> StrOrBytes:
 
 #     def decorator(f):
 #         def wrappee(*args, **kwargs):
-#             _module_logger.info("#### memorizer ####")
-#             _module_logger.info("cache filename                   = %s", filename)
-#             _module_logger.info(
+
+
 #                 "os.environ['pydna_cached_funcs'] = %s",
 #                 _os.getenv("pydna_cached_funcs", ""),
 #             )
 #             if filename not in _os.getenv("pydna_cached_funcs", ""):
-#                 _module_logger.info("cache filename not among cached functions, made it new!")
+
 #                 return f(*args, **kwargs)
 #             key = _base64.urlsafe_b64encode(_hashlib.sha1(_pickle.dumps((args, kwargs))).digest()).decode("ascii")
-#             _module_logger.info("key = %s", key)
+
 #             cache = _shelve.open(
 #                 _os.path.join(_os.environ["pydna_data_dir"], identifier_from_string(filename)),
 #                 writeback=False,
@@ -329,17 +328,17 @@ def complement(sequence: StrOrBytes) -> StrOrBytes:
 #             try:
 #                 result = cache[key]
 #             except KeyError:
-#                 _module_logger.info(
+
 #                     "no result for key %s in shelve %s",
 #                     key,
 #                     identifier_from_string(filename),
 #                 )
 #                 result = f(*args, **kwargs)
-#                 _module_logger.info("made it new!")
+
 #                 cache[key] = result
-#                 _module_logger.info("saved result under key %s", key)
+
 #             else:
-#                 _module_logger.info("found %s in cache", key)
+
 #             cache.close()
 #             return result
 

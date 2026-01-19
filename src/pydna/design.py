@@ -14,24 +14,23 @@
 
 """
 
-from pydna.tm import tm_default as _tm_default
+from pydna.tm import tm_default
 import math
 import copy
-from pydna.amplicon import Amplicon as _Amplicon
-from pydna.amplify import Anneal as _Anneal
-from pydna.amplify import pcr as _pcr
-from pydna.dseqrecord import Dseqrecord as _Dseqrecord
-from pydna.primer import Primer as _Primer
+from pydna.amplicon import Amplicon
+from pydna.amplify import Anneal
+from pydna.amplify import pcr
+from pydna.dseqrecord import Dseqrecord
+from pydna.primer import Primer
 import operator
 from typing import Tuple
 from itertools import pairwise, product
 import re
-from pydna.primer import Primer
 
 
 def _design_primer(
     target_tm: float,
-    template: _Dseqrecord,
+    template: Dseqrecord,
     limit: int,
     tm_func,
     starting_length: int = 0,
@@ -66,7 +65,6 @@ def _design_primer(
         if length < limit:
             return template.seq[:limit]
 
-    # _module_logger.debug(((p, tmp), (prev_primer, prev_temp)))
     if abs(target_tm - tmp) < abs(target_tm - prev_temp):
         return p
     else:
@@ -79,7 +77,7 @@ def primer_design(
     rp=None,
     limit=13,
     target_tm=55.0,
-    tm_func=_tm_default,
+    tm_func=tm_default,
     estimate_function=None,
     **kwargs,
 ):
@@ -188,33 +186,33 @@ def primer_design(
             return _design_primer(target_tm, template, limit, tm_func)
 
     if not fp and not rp:
-        # _module_logger.debug("no primer given, design forward primer:")
-        fp = _Primer((design(target_tm, template)))
+
+        fp = Primer((design(target_tm, template)))
         target_tm = tm_func(str(fp.seq))
-        # _module_logger.debug("no primer given, design reverse primer:")
-        rp = _Primer(design(target_tm, template.reverse_complement()))
+
+        rp = Primer(design(target_tm, template.reverse_complement()))
     elif fp and not rp:
         try:
-            fp = _Anneal((fp,), template).forward_primers.pop()
+            fp = Anneal((fp,), template).forward_primers.pop()
         except IndexError:
             raise ValueError("Forward primer does not anneal")
         except Exception:  # pragma: no cover
             print("Unexpected error")
             raise
         target_tm = tm_func(fp.footprint)
-        # _module_logger.debug("forward primer given, design reverse primer:")
-        rp = _Primer(design(target_tm, template.reverse_complement()))
+
+        rp = Primer(design(target_tm, template.reverse_complement()))
     elif not fp and rp:
         try:
-            rp = _Anneal((rp,), template).reverse_primers.pop()
+            rp = Anneal((rp,), template).reverse_primers.pop()
         except IndexError:
             raise ValueError("Reverse primer does not anneal")
         except Exception:  # pragma: no cover
             print("Unexpected error")
             raise
         target_tm = tm_func(rp.footprint)
-        # _module_logger.debug("reverse primer given, design forward primer:")
-        fp = _Primer(design(target_tm, template))
+
+        fp = Primer(design(target_tm, template))
     else:
         raise ValueError("Specify maximum one of the two primers.")
 
@@ -233,15 +231,15 @@ def primer_design(
     fp.description = fp.id + " " + template.accession
     rp.description = rp.id + " " + template.accession
 
-    ampl = _Anneal((fp, rp), template, limit=limit)
+    ampl = Anneal((fp, rp), template, limit=limit)
 
-    prod = ampl.products[0] if ampl.products else _Amplicon("")
+    prod = ampl.products[0] if ampl.products else Amplicon("")
 
     if len(ampl.products) > 1:
-        import warnings as _warnings
+        import warnings
         from pydna import _PydnaWarning
 
-        _warnings.warn(
+        warnings.warn(
             "designed primers do not yield a unique PCR product", _PydnaWarning
         )
 
@@ -643,7 +641,7 @@ def assembly_fragments(f, overlap=35, maxlink=40, circular=False):
         )
 
         if hasattr(fragments[0], "template"):
-            fragments[0] = _pcr(
+            fragments[0] = pcr(
                 (fragments[-1].forward_primer, fragments[0].reverse_primer),
                 fragments[0].template,
             )
@@ -658,10 +656,6 @@ def assembly_fragments(f, overlap=35, maxlink=40, circular=False):
             "Every second fragment larger than maxlink has to be an Amplicon object"
         )
 
-    # _module_logger.debug("### assembly fragments ###")
-    # _module_logger.debug("overlap     = %s", overlap)
-    # _module_logger.debug("max_link    = %s", maxlink)
-
     f = [copy.copy(f) for f in f]
 
     first_fragment_length = len(f[0])
@@ -670,24 +664,19 @@ def assembly_fragments(f, overlap=35, maxlink=40, circular=False):
     if first_fragment_length <= maxlink:
         # first fragment should be removed and added to second fragment (new first fragment) forward primer
         f[1].forward_primer = f[0].seq._data.decode("ASCII") + f[1].forward_primer
-        # _module_logger.debug("first fragment removed since len(f[0]) = %s", first_fragment_length)
+
         f = f[1:]
     # else:
-    # _module_logger.debug("first fragment stays since len(f[0]) = %s", first_fragment_length)
 
     if last_fragment_length <= maxlink:
         f[-2].reverse_primer = (
             f[-1].seq.reverse_complement()._data.decode("ASCII") + f[-2].reverse_primer
         )
         f = f[:-1]
-    # _module_logger.debug("last fragment removed since len(f[%s]) = %s", len(f), last_fragment_length)
+
     # else:
-    # _module_logger.debug("last fragment stays since len(f[%s]) = %s", len(f), last_fragment_length)
 
-    empty = _Dseqrecord("")
-
-    # _module_logger.debug(f)
-    # _module_logger.debug("loop through fragments in groups of three:")
+    empty = Dseqrecord("")
 
     tail_length = math.ceil(overlap / 2)
 
@@ -697,15 +686,12 @@ def assembly_fragments(f, overlap=35, maxlink=40, circular=False):
 
         secnd_len = len(secnd)
 
-        # _module_logger.debug("first = %s", str(first.seq))
-        # _module_logger.debug("secnd = %s", str(secnd.seq))
-
         if secnd_len <= maxlink:
-            # _module_logger.debug("secnd is smaller or equal to maxlink; should be added to primer(s)")
+
             third = f[i + 2]
-            # _module_logger.debug("third = %s", str(third.seq))
+
             if hasattr(f[i], "template") and hasattr(third, "template"):
-                # _module_logger.debug(
+
                 #    "secnd is is flanked by amplicons, so half of secnd should be added each flanking primers"
                 # )
 
@@ -726,14 +712,14 @@ def assembly_fragments(f, overlap=35, maxlink=40, circular=False):
                         : secnd_len // 2
                     ]
                 )[-tail_length:]
-                # _module_logger.debug("1 %s", lnk)
+
                 first.reverse_primer = lnk + first.reverse_primer
 
                 lnk = (
                     first.seq._data.decode("ASCII")
                     + secnd.seq._data.decode("ASCII")[: secnd_len // 2]
                 )[-tail_length:]
-                # _module_logger.debug("2 %s", lnk)
+
                 third.forward_primer = lnk + third.forward_primer
 
             elif hasattr(first, "template"):
@@ -770,13 +756,11 @@ def assembly_fragments(f, overlap=35, maxlink=40, circular=False):
         f[i] = first
         f[i + 1] = secnd
 
-    # _module_logger.debug("loop ended")
-
     f = [item for item in f if len(item)]
 
     return [
         (
-            _pcr(
+            pcr(
                 p.forward_primer,
                 p.reverse_primer,
                 p.template,
@@ -806,8 +790,8 @@ def circular_assembly_fragments(f, overlap=35, maxlink=40):
 
 
 def user_assembly_design(
-    f: list[_Amplicon], max_overlap: int = 15, min_overlap: int = 4, max_tail=50
-) -> list[_Amplicon]:
+    f: list[Amplicon], max_overlap: int = 15, min_overlap: int = 4, max_tail=50
+) -> list[Amplicon]:
 
     import warnings
 

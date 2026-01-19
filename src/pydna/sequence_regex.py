@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from pydna.dseqrecord import Dseqrecord as _Dseqrecord
+from pydna.dseqrecord import Dseqrecord
 import re
-from Bio.Data.IUPACData import ambiguous_dna_values as _ambiguous_dna_values
+from Bio.Data.IUPACData import ambiguous_dna_values
 
-ambiguous_only_dna_values = {**_ambiguous_dna_values}
+custom_ambiguous_only_dna_values = {**ambiguous_dna_values}
 for normal_base in "ACGT":
-    del ambiguous_only_dna_values[normal_base]
+    del custom_ambiguous_only_dna_values[normal_base]
 
 
 def compute_regex_site(site: str) -> str:
@@ -19,7 +19,7 @@ def compute_regex_site(site: str) -> str:
         The regex pattern.
     """
     upper_site = site.upper()
-    for k, v in ambiguous_only_dna_values.items():
+    for k, v in custom_ambiguous_only_dna_values.items():
         if len(v) > 1:
             upper_site = upper_site.replace(k, f"[{''.join(v)}]")
 
@@ -28,7 +28,7 @@ def compute_regex_site(site: str) -> str:
     return upper_site
 
 
-def dseqrecord_finditer(pattern: str, seq: _Dseqrecord) -> list[re.Match]:
+def dseqrecord_finditer(pattern: str, seq: Dseqrecord) -> list[re.Match]:
     """
     Finds all matches of a regex pattern in a Dseqrecord.
 

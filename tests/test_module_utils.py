@@ -406,62 +406,6 @@ def test_smallest_rotation():
     assert sr("tttaaa") == "aaattt"
 
 
-# def test_memorize(monkeypatch):
-#    from unittest import mock
-#
-#    from pydna.utils import memorize as _memorize
-#
-#    @_memorize("mf")
-#    def mf(*args, **kwargs):
-#        return args, kwargs
-#
-#    import base64 as _base64
-#    import pickle as _pickle
-#    import hashlib as _hashlib
-#
-#    args = (1,)
-#    kwargs = {"kw": 1}
-#
-#    dump = _pickle.dumps((args, kwargs))
-#
-#    hash_ = _hashlib.sha1(dump).digest()
-#
-#    bkey = _base64.urlsafe_b64encode(hash_)
-#
-#    key = bkey.decode("ascii")
-#
-#    assert key == "6pHTTwgXP8xcXoEMEzdKSzN6EeM=" or "ux_W9TiWkWBAkQD_FgZTO-pXuYk="
-#
-#    class Fakedict(dict):
-#        def __init__(self, *args, **kwargs):
-#            super().__init__(*args, **kwargs)
-#
-#        def close(self):
-#            pass
-#
-#    cache = Fakedict()
-#    cache[key] = "saved!"
-#    mockshelve_open = mock.MagicMock()
-#    mockshelve_open.return_value = cache
-#
-#    monkeypatch.setenv("pydna_cached_funcs", "mf")
-#    monkeypatch.setattr("pydna.utils._shelve.open", mockshelve_open)
-#
-#    monkeypatch.setenv("pydna_cached_funcs", "mf")
-#
-#    assert mf(1, kw=1) == "saved!"
-#
-#    cache[key] = ((1,), {"kw": 1})
-#
-#    assert mf(1, kw=1) == ((1,), {"kw": 1})
-#
-#    assert mf(2, kw=2) == ((2,), {"kw": 2})
-#
-#    monkeypatch.setenv("pydna_cached_funcs", "")
-#
-#    assert mf(1, kw=1) == ((1,), {"kw": 1})
-
-
 def test_shift_location():
     from pydna.utils import shift_location
     from Bio.SeqFeature import SimpleLocation

@@ -11,10 +11,10 @@ The function can be used if the environmental variable **pydna_email** has
 been set to a valid email address. The easiest way to do this permanantly is to edit the
 `pydna.ini` file. See the documentation of :func:`pydna.open_config_folder`"""
 
-# from pydna.utils import memorize as _memorize
+
 from pydna.opencloning_models import NCBISequenceSource
-from pydna.genbankrecord import GenbankRecord as _GenbankRecord
-from pydna.readers import read as _read
+from pydna.genbankrecord import GenbankRecord
+from pydna.readers import read
 
 from Bio import Entrez
 from Bio.SeqFeature import SimpleLocation
@@ -55,10 +55,6 @@ class Genbank:
         ):
             raise ValueError("email address {} is not valid.".format(users_email))
 
-        # _module_logger.info("#### Genbank ititiation ####")
-        # _module_logger.info("Genbank initiated with email: %s", users_email)
-        # _module_logger.info("Genbank initiated with tool : %s", tool)
-
         if users_email == "someone@example.com":
             raise ValueError(
                 "you have to set your email address in order to download from Genbank"
@@ -77,7 +73,7 @@ class Genbank:
         seq_start: Optional[int] = None,
         seq_stop: Optional[int] = None,
         strand: Literal[1, 2] = 1,
-    ) -> _GenbankRecord:
+    ) -> GenbankRecord:
         """This method downloads a genbank nuclotide record from genbank. This method is
         cached by default. This can be controlled by editing the **pydna_cached_funcs** environment
         variable. The best way to do this permanently is to edit the edit the
@@ -152,17 +148,9 @@ class Genbank:
             except (KeyError, AttributeError):
                 strand = 1
 
-        # _module_logger.info("#### Genbank download ####")
-        # _module_logger.info("item  %s", item)
-        # _module_logger.info("start %s", seq_start)
-        # _module_logger.info("stop  %s", seq_stop)
-
-        # _module_logger.info("strand  %s", str(strand))
-
         Entrez.email = self.email
         Entrez.tool = self.tool
 
-        # _module_logger.info("Entrez.email  %s", self.email)
         text = Entrez.efetch(
             db="nuccore",
             id=item,
@@ -173,9 +161,7 @@ class Genbank:
             retmode="text",
         ).read()
 
-        # _module_logger.info("text[:160]  %s", text[:160])
-
-        result = _read(text)
+        result = read(text)
         # TODO: Address this for cases where only one is defined
         if seq_start is not None and seq_stop is not None:
             location = SimpleLocation(
@@ -197,14 +183,14 @@ class Genbank:
         )
         return result
 
-        # return _GenbankRecord(
-        #     _read(text), item=item, start=seq_start, stop=seq_stop, strand=strand
+        # return GenbankRecord(
+        #     read(text), item=item, start=seq_start, stop=seq_stop, strand=strand
         # )
 
 
 def genbank(
     accession: str = "CS570233.1", *args, email=None, **kwargs
-) -> _GenbankRecord:
+) -> GenbankRecord:
     """
     Download a genbank nuclotide record.
 

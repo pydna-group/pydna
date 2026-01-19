@@ -6,8 +6,8 @@
 # as part of this package.
 
 """Provides two functions, read and read_primer."""
-from pydna.parsers import parse as _parse
-from pydna.primer import Primer as _Primer
+from pydna.parsers import parse
+from pydna.primer import Primer
 
 
 def read(data, ds=True):
@@ -39,7 +39,7 @@ def read(data, ds=True):
     """
 
     try:
-        (result,) = _parse(data, ds)
+        (result,) = parse(data, ds)
     except ValueError as err:
         msg = str(err)
 
@@ -58,4 +58,4 @@ def read_primer(data):
     """Use this function to read a primer sequence from a string or a local file.
     The usage is similar to the :func:`parse_primer` function."""
 
-    return _Primer(read(data, ds=False))
+    return Primer(read(data, ds=False))
