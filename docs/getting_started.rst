@@ -1,5 +1,5 @@
 Getting started
-==============
+===============
 
 .. toctree::
    :maxdepth: 1
@@ -23,7 +23,7 @@ You can run the notebooks locally, but also on the browser using Google Colab, s
 the notebook to open it in Colab.
 
 First steps
-----------
+-----------
 
 We recommend that you first go through the following notebooks, which cover the basics of how sequences are handled in pydna:
 

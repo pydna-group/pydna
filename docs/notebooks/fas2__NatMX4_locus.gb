@@ -1,0 +1,118 @@
+LOCUS       fas2__NatMX4_loc        3308 bp    DNA     linear   SYN 24-SEP-2025
+DEFINITION  .
+ACCESSION   .
+VERSION     .
+KEYWORDS    .
+SOURCE
+  ORGANISM  .
+            .
+COMMENT     Annotated with pLannotate v1.2.2. >fas2::natMX4
+
+            ApEinfo:methylated:1
+FEATURES             Location/Qualifiers
+     promoter        1103..1446
+                     /note="pLannotate"
+                     /label="TEF promoter"
+                     /database="snapgene"
+                     /identity="100.0"
+                     /match_length="100.0"
+                     /fragment="False"
+                     /other="promoter"
+     terminator      2025..2222
+                     /note="pLannotate"
+                     /label="TEF terminator"
+                     /database="snapgene"
+                     /identity="100.0"
+                     /match_length="100.0"
+                     /fragment="False"
+                     /other="terminator"
+     gene            1103..2222
+                     /note="pLannotate"
+                     /label="natMX6"
+                     /database="snapgene"
+                     /identity="99.3"
+                     /match_length="100.0"
+                     /fragment="False"
+                     /other="gene"
+     CDS             1453..2017
+                     /note="pLannotate"
+                     /label="NrsR (fragment)"
+                     /database="snapgene"
+                     /identity="99.8"
+                     /match_length="99.1"
+                     /fragment="True"
+                     /other="CDS"
+     CDS             2..493
+                     /note="pLannotate"
+                     /label="SSO1 (fragment)"
+                     /database="swissprot"
+                     /identity="100.0"
+                     /match_length="56.6"
+                     /fragment="True"
+                     /other="CDS"
+     CDS             1070..1159
+                     /note="pLannotate"
+                     /label="MRL1 (fragment)"
+                     /database="swissprot"
+                     /identity="96.7"
+                     /match_length="11.0"
+                     /fragment="True"
+                     /other="CDS"
+ORIGIN
+        1 ccaggactac agaattgtgg attccaacta caaggaggag aataaagagc aagccaagag
+       61 gcagtatatg atcattcaac cagaggccac cgaagatgaa gttgaagcag ccataagcga
+      121 tgtagggggc cagcagatct tctcacaagc attgttgaat gctaacagac gtggggaagc
+      181 caagactgct cttgcggaag tccaggcaag gcaccaagag ttattgaaac tagaaaaatc
+      241 catggcagaa cttactcaat tgtttaatga catggaagaa ctggtaatag aacaacaaga
+      301 aaacgtagac gtcatcgaca agaacgttga agacgctcaa ctcgacgtag aacagggtgt
+      361 cggtcatacc gataaagccg tcaagagtgc cagaaaagca agaaagaaca agattagatg
+      421 ttggttgatt gtattcgcca tcattgtagt cgttgttgtt gtcgttgttg tcccagccgt
+      481 tgtcaaaacg cgttaattcc aactattttc tatatttcta ttctatccga actccccttt
+      541 tgtatatcaa tatatcttaa tactttcgcc tattctttac tatatttcct aaattttctc
+      601 tggtctgcag gccaaaaaca acaacttact actgaatcat ggacgtgtat ttagtttagc
+      661 caagcaatat ttaaatatca ctcttcctaa aaatacattg ggcattaccc gcaaactaac
+      721 ccatcgctta gcaaaatcca accatttttt ttttatctcc cgcgttttca catgctacct
+      781 cattcgcctc gtaacgttac gaccgaaatc tcactaaggc acggtttgtt gggcagttta
+      841 cagatgttgg ataaccagtt gtttctaaac ggttatgcct catatataac ttgttaactg
+      901 aaggttacac aagaccacat caccactgtc gtgcttttct aataaccgct atattagacg
+      961 tttaaagggc tacagcaaca ccaattgaaa taccatcatt cagctgaagc ttcgtacgct
+     1021 gcaggtcgac ggatccccgg gttaattaag gcgcgccaga tctgtttagc ttgccttgtc
+     1081 cccgccgggt cacccggcca gcgacatgga ggcccagaat accctccttg acagtcttga
+     1141 cgtgcgcagc tcaggggcat gatgtgactg tcgcccgtac atttagccca tacatcccca
+     1201 tgtataatca tttgcatcca tacattttga tggccgcacg gcgcgaagca aaaattacgg
+     1261 ctcctcgctg cagacctgcg agcagggaaa cgctcccctc acagacgcgt tgaattgtcc
+     1321 ccacgccgcg cccctgtaga gaaatataaa aggttaggat ttgccactga ggttcttctt
+     1381 tcatatactt ccttttaaaa tcttgctagg atacagttct cacatcacat ccgaacataa
+     1441 acaaccatgg gtaccactct tgacgacacg gcttaccggt accgcaccag tgtcccgggg
+     1501 gacgccgagg ccatcgaggc actggatggg tccttcacca ccgacaccgt cttccgcgtc
+     1561 accgccaccg gggacggctt caccctgcgg gaggtgccgg tggacccgcc cctgaccaag
+     1621 gtgttccccg acgacgaatc ggacgacgaa tcggacgacg gggaggacgg cgacccggac
+     1681 tcccggacgt tcgtcgcgta cggggacgac ggcgacctgg cgggcttcgt ggtcgtctcg
+     1741 tactccggct ggaaccgccg gctgaccgtc gaggacatcg aggtcgcccc ggagcaccgg
+     1801 gggcacgggg tcgggcgcgc gttgatgggg ctcgcgacgg agttcgcccg cgagcggggc
+     1861 gccgggcacc tctggctgga ggtcaccaac gtcaacgcac cggcgatcca cgcgtaccgg
+     1921 cggatggggt tcaccctctg cggcctggac accgccctgt acgacggcac cgcctcggac
+     1981 ggcgagcagg cgctctacat gagcatgccc tgcccctaat cagtactgac aataaaaaga
+     2041 ttcttgtttt caagaacttg tcatttgtat agttttttta tattgtagtt gttctatttt
+     2101 aatcaaatgt tagcgtgatt tatatttttt ttcgcctcga catcatctgc ccagatgcga
+     2161 agttaagtgc gcagaaagta atatcatgcg tcaatcgtat gtgaatgctg gtcgctatac
+     2221 tgctgtcgat tcgatactaa cgccgccatc cagtgtcgaa aacgagctcg aattcatcga
+     2281 tgatatcaga tccactagtg gcctatgcag agagcactac gtagtccctc ttttaatatg
+     2341 taacgtgtcg cttctattta tcagacataa tagtaattac tttgttattt ttctatcgtt
+     2401 tccttacttt agcctctgat ttcgatctgg cctaatcatt gtgtacgtct ataatcatat
+     2461 ggccctgagc gtacacaccg ttcaattctt ctatttggtc ggcccacaca aattcgcgcg
+     2521 ggggcatatt gacgcgtgga agaatagaag tccgcgtagc agctctgggg taattaggct
+     2581 tttacgatat cggctggccc agcaccggtt tttattcctc ccgtggttgt tgtctctacc
+     2641 gtgaggaggg gaaagggtca gggacggccg gtagttatgt tgtctcaacg attactgcca
+     2701 tctattgttt acaccaatcg cgtggggcaa ggggctggaa ggctgtggtg tacagaatag
+     2761 ggtctaatac ccgatgcgcg acgctcctgc gactggttgt gtgagccacc ccttgatcgc
+     2821 ctctgccaaa tactcaggga agagaaaaat cgcgaaggtg gacgagtgcc cttaaagaac
+     2881 cagcatcctc gatcgccgct gccgttcgcc ctggcttagc ggtgggaagc atcctttggc
+     2941 tttcgaattc tccgccgttg agtcccccta agggccttat ttatcccctc tatttttttt
+     3001 tagaaaatgt tttctttttc aagatttgtt tgctccttca cggcttcccc cttaaccgtt
+     3061 caacagtctt ccgtatataa caatctcaat ccactcttat tgcctataat tttgattaat
+     3121 tcttattcat cccggcagat aaagtttcgt cttgttttga aagagacagg agttcttggc
+     3181 tgcagtattt tgcaacagct tcattaacca tgtatgtaaa gaaaaaatct ggagcgactt
+     3241 actggcttag ctttttttac taacacataa ataatactgt gataagataa gaaaaaaaca
+     3301 cgaaatgg
+//

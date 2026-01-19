@@ -54,6 +54,7 @@ pyparsing = { version = ">=2.4.7", optional = true }
 pyperclip = { version = ">=1.8.2", optional = true }
 python = ">=3.10,<4.0"
 requests = { version = ">=2.26.0", optional = true }
+pyahocorasick = { version = ">=2.2.0", optional = true }
 scipy = [
   { version = ">=1.11.3", python = ">=3.12", optional = true },
   { version = ">=1.9.3", python = "<3.12", optional = true },
@@ -66,6 +67,7 @@ clipboard = ["pyperclip"]
 download = ["pyparsing", "requests"]
 express = ["cai2"]
 gel = ["scipy", "matplotlib", "pillow"]
+primer_screen = ["pyahocorasick"]
 [build-system]
 build-backend = "poetry_dynamic_versioning.backend"
 requires = ["poetry-core", "poetry-dynamic-versioning"]
