@@ -127,7 +127,7 @@ def expand_iupac_to_dna(seq: str) -> list[str]:
     Example:
 
     >>> expand_iupac_to_dna("ATNG")
-    ['ATAG', 'ATCG', 'ATGG', 'ATTG']
+    ['ATGG', 'ATAG', 'ATTG', 'ATCG']
     >>> x = expand_iupac_to_dna("ACGTURYSWKMBDHVN")
     >>> len(x)
     20736
@@ -144,7 +144,10 @@ def expand_iupac_to_dna(seq: str) -> list[str]:
         List of strings in unambiguous IUPAC nucleotide alphabet.
 
     """
-    choices_per_pos = [ambiguous_dna_values[ch] for ch in seq.upper()]
+    custom_dict = {**ambiguous_dna_values}
+    # Include RNA
+    custom_dict["U"] = "T"
+    choices_per_pos = [custom_dict[ch] for ch in seq.upper()]
     # Cartesian product of all position choices
     return ["".join(tup) for tup in product(*choices_per_pos)]
 
