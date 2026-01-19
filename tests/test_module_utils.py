@@ -91,7 +91,9 @@ def test_eq():
 
     assert eq(Dseqrecord("ATA"), Dseqrecord("ATA"), circular=True)
     assert not eq(Dseqrecord("ATA"), Dseqrecord("CCC"), circular=True)
-    assert not eq(Dseqrecord("ATA"), Dseqrecord("ATA"), Dseqrecord("CCC"), circular=True)
+    assert not eq(
+        Dseqrecord("ATA"), Dseqrecord("ATA"), Dseqrecord("CCC"), circular=True
+    )
 
 
 # def test_shift_origin():
@@ -218,7 +220,10 @@ def test_complement():
 def test_seq31():
     from pydna.utils import seq31
 
-    assert seq31("MetAlaIleValMetGlyArgTrpLysGlyAlaArgTer") == "M  A  I  V  M  G  R  W  K  G  A  R  *"
+    assert (
+        seq31("MetAlaIleValMetGlyArgTrpLysGlyAlaArgTer")
+        == "M  A  I  V  M  G  R  W  K  G  A  R  *"
+    )
 
 
 # def test_parse_text_table():
@@ -422,9 +427,13 @@ def test_shift_location():
         loc = SimpleLocation(0, 4, strand)
         assert shift_location(loc, 1, 6) == SimpleLocation(1, 5, strand)
         if strand == -1:
-            assert shift_location(loc, -1, 6) == SimpleLocation(0, 3, strand) + SimpleLocation(5, 6, strand)
+            assert shift_location(loc, -1, 6) == SimpleLocation(
+                0, 3, strand
+            ) + SimpleLocation(5, 6, strand)
         else:
-            assert shift_location(loc, -1, 6) == SimpleLocation(5, 6, strand) + SimpleLocation(0, 3, strand)
+            assert shift_location(loc, -1, 6) == SimpleLocation(
+                5, 6, strand
+            ) + SimpleLocation(0, 3, strand)
 
     # Shifting ignoring the sequence length
     # See https://github.com/pydna-group/pydna/issues/281
@@ -439,10 +448,12 @@ def test_shift_location():
             pass
 
         composed_loc = SimpleLocation(2, 4, strand) + SimpleLocation(5, 6, strand)
-        assert shift_location(composed_loc, 1000, None) == SimpleLocation(1002, 1004, strand) + SimpleLocation(
-            1005, 1006, strand
-        )
-        assert shift_location(composed_loc, -2, None) == SimpleLocation(0, 2, strand) + SimpleLocation(3, 4, strand)
+        assert shift_location(composed_loc, 1000, None) == SimpleLocation(
+            1002, 1004, strand
+        ) + SimpleLocation(1005, 1006, strand)
+        assert shift_location(composed_loc, -2, None) == SimpleLocation(
+            0, 2, strand
+        ) + SimpleLocation(3, 4, strand)
 
 
 def test_locations_overlap():
@@ -466,7 +477,13 @@ def test_locations_overlap():
     no_overlap_left = SimpleLocation(0, 5)
     no_overlap_right = SimpleLocation(11, 15)
 
-    overlapping_locations = [inner_overlap, right_overlap, left_overlap, exact_overlap, greater_overlap]
+    overlapping_locations = [
+        inner_overlap,
+        right_overlap,
+        left_overlap,
+        exact_overlap,
+        greater_overlap,
+    ]
     non_overlapping_locations = [no_overlap_left, no_overlap_right]
 
     for shift in range(20):

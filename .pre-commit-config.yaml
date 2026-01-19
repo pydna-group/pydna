@@ -1,5 +1,4 @@
 default_stages: [pre-commit]
-exclude: ^(tests/)
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -23,7 +22,6 @@ repos:
     rev: 25.1.0
     hooks:
       - id: black
-        files: ^src/
 
   # Further linting (e.g. module imported but not used)
   - repo: https://github.com/PyCQA/flake8
@@ -31,6 +29,7 @@ repos:
     hooks:
       - id: flake8
         args: ["--max-line-length=88"]
+        exclude: ^tests/
 
   # Remove metadata from jupyter notebooks. This will always be triggered when you commit a change in a notebook.
   - repo: local

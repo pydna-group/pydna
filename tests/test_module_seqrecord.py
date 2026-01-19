@@ -152,10 +152,19 @@ def test_lcs():
     }
     assert s.lcs("GGATCC", limit=4).__dict__ == expected.__dict__
     assert s.lcs(Seq("GGATCC"), limit=4).__dict__ == expected.__dict__
-    assert s.lcs(BSeqRecord(Seq("GGATCC"), name="sequence"), limit=4).__dict__ == expected.__dict__
+    assert (
+        s.lcs(BSeqRecord(Seq("GGATCC"), name="sequence"), limit=4).__dict__
+        == expected.__dict__
+    )
     assert s.lcs(Dseq("GGATCC"), limit=4).__dict__ == expected.__dict__
-    assert s.lcs(Dseqrecord(Dseq("GGATCC"), name="sequence"), limit=4).__dict__ == expected.__dict__
-    assert s.lcs(Dseqrecord("GGATCC", name="sequence"), limit=4).__dict__ == expected.__dict__
+    assert (
+        s.lcs(Dseqrecord(Dseq("GGATCC"), name="sequence"), limit=4).__dict__
+        == expected.__dict__
+    )
+    assert (
+        s.lcs(Dseqrecord("GGATCC", name="sequence"), limit=4).__dict__
+        == expected.__dict__
+    )
 
 
 def test_format():
@@ -236,7 +245,8 @@ def test_seqrecord():
     assert obj.gc() == 0.067
 
     assert repr(obj) == (
-        "SeqRecord(seq=Seq('aaaATGAAATAAttt'), id='id', " "name='name', description='description', dbxrefs=[])"
+        "SeqRecord(seq=Seq('aaaATGAAATAAttt'), id='id', "
+        "name='name', description='description', dbxrefs=[])"
     )
 
     obj.annotations = {"date": "24-DEC-1970"}

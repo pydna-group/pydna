@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import pytest
-# from importlib import reload
 from pydna import assembly
 from pydna.dseqrecord import Dseqrecord
 from pydna.parsers import parse
@@ -17,7 +15,7 @@ from Bio.Restriction import AjiI, AgeI
 from Bio.Restriction import SalI
 from pydna.assembly import Assembly
 from Bio.Restriction import AatII
-from pydna._pretty import pretty_str
+
 
 def test_built():
 
@@ -30,9 +28,6 @@ def test_built():
 
 
 def test_new_assembly():
-
-
-
 
     #                   0000000000111111111222222222233333333334444444444555555555566
     #                   0123456780123456789012345678901234567890123456789012345678901
@@ -50,36 +45,75 @@ def test_new_assembly():
     # ACTACGGCCTTCTCTCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGTacgatgctatactgg
 
     a.features = [
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(34), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(1), ExactPosition(33), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(1), ExactPosition(20), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(20), ExactPosition(33), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(21), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(19), ExactPosition(34), strand=1), type="misc"),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(34), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(1), ExactPosition(33), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(1), ExactPosition(20), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(20), ExactPosition(33), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(21), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(19), ExactPosition(34), strand=1), type="misc"
+        ),
     ]
 
     b.features = [
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(35), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(1), ExactPosition(34), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(19), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(19), ExactPosition(35), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(18), ExactPosition(35), strand=1), type="misc"),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(35), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(1), ExactPosition(34), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(19), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(19), ExactPosition(35), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(18), ExactPosition(35), strand=1), type="misc"
+        ),
     ]
 
     c.features = [
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(37), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(1), ExactPosition(36), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(16), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(16), ExactPosition(37), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(17), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(15), ExactPosition(37), strand=1), type="misc"),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(37), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(1), ExactPosition(36), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(16), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(16), ExactPosition(37), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(17), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(15), ExactPosition(37), strand=1), type="misc"
+        ),
     ]
 
     ln0 = assembly.Assembly((a, b, c), limit=14)
     l = ln0.assemble_linear()[0]
 
-    assert str(l.seq) == "ACTACGGCCTTCTCTCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGTacgatgctatactgg"
+    assert (
+        str(l.seq)
+        == "ACTACGGCCTTCTCTCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGTacgatgctatactgg"
+    )
 
     feature_seqs = (
         [f.extract(a).seq for f in a.features]
@@ -123,8 +157,14 @@ def test_new_assembly():
     c.add_feature(1, 36, label="third")
     ln2 = assembly.Assembly((a, b2, b3, c), limit=14)
     linprods = ln2.assemble_linear()
-    assert str(linprods[0].seq) == "ACTACGGCCTTCTCTCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGTacgatgctatactgg"
-    assert str(linprods[1].seq) == "ACTACGGCCTTCTCTCCCCCtgtgctgtgctctaCCtattctggctgtatctGGGGGTacgatgctatactgg"
+    assert (
+        str(linprods[0].seq)
+        == "ACTACGGCCTTCTCTCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGTacgatgctatactgg"
+    )
+    assert (
+        str(linprods[1].seq)
+        == "ACTACGGCCTTCTCTCCCCCtgtgctgtgctctaCCtattctggctgtatctGGGGGTacgatgctatactgg"
+    )
 
     # acgatgctatactgg 15
     a = Dseqrecord("acgatgctatactggCCCCCtgtgctgtgctctaGG", name="one36")
@@ -134,37 +174,76 @@ def test_new_assembly():
     c = Dseqrecord("tattctggctgtatctGGGGGTacgatgctatactgg", name="three37")
     # acgatgctatactgg 15
     a.features = [
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(34), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(1), ExactPosition(33), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(20), ExactPosition(34), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(21), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(19), ExactPosition(34), strand=1), type="misc"),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(34), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(1), ExactPosition(33), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(20), ExactPosition(34), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(21), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(19), ExactPosition(34), strand=1), type="misc"
+        ),
     ]
 
     b.features = [
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(35), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(1), ExactPosition(34), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(19), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(19), ExactPosition(35), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(18), ExactPosition(35), strand=1), type="misc"),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(35), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(1), ExactPosition(34), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(19), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(19), ExactPosition(35), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(20), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(18), ExactPosition(35), strand=1), type="misc"
+        ),
     ]
 
     c.features = [
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(37), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(1), ExactPosition(36), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(16), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(16), ExactPosition(37), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(0), ExactPosition(17), strand=1), type="misc"),
-        SeqFeature(FeatureLocation(ExactPosition(15), ExactPosition(37), strand=1), type="misc"),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(37), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(1), ExactPosition(36), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(16), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(16), ExactPosition(37), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(0), ExactPosition(17), strand=1), type="misc"
+        ),
+        SeqFeature(
+            FeatureLocation(ExactPosition(15), ExactPosition(37), strand=1), type="misc"
+        ),
     ]
     c1 = assembly.Assembly((a, b, c), limit=14)
     result = c1.assemble_circular()[0]
 
     assert result.seguid() == "cdseguid=CRIbOfddcwCZbvVOOOU4uJYP-So"
 
-    assert str(result.seq) == "acgatgctatactggCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGT"
+    assert (
+        str(result.seq)
+        == "acgatgctatactggCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGT"
+    )
     # acgatgctatactggCCCCCtgtgctgtgctctaGG
     feature_seqs = (
         [f.extract(a).seq for f in a.features]
@@ -197,8 +276,14 @@ def test_new_assembly():
     assert circprods[1].seguid() == "cdseguid=CRIbOfddcwCZbvVOOOU4uJYP-So"
     assert circprods[2].seguid() == "cdseguid=zFIq5LWXL_YSxrSF2Q5hbzO0BPw"
     assert circprods[3].seguid() == "cdseguid=zFIq5LWXL_YSxrSF2Q5hbzO0BPw"
-    assert str(circprods[0].seq) == "acgatgctatactggCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGT"
-    assert str(circprods[2].seq) == "acgatgctatactggCCCCCtgtgctgtgctctaCCtattctggctgtatctGGGGGT"
+    assert (
+        str(circprods[0].seq)
+        == "acgatgctatactggCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGT"
+    )
+    assert (
+        str(circprods[2].seq)
+        == "acgatgctatactggCCCCCtgtgctgtgctctaCCtattctggctgtatctGGGGGT"
+    )
 
     # VJtsIfDO2DkKXbW-sLF3nJ-AEe4
     # acgatgctatactgg 15
@@ -215,8 +300,10 @@ def test_new_assembly():
     # acgatgctatactgg 15
 
     c3 = assembly.Assembly((a, b, c), limit=14)
-    assert str(c3.assemble_circular()[0].seq) == "acgatgctatactggCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGT"
-
+    assert (
+        str(c3.assemble_circular()[0].seq)
+        == "acgatgctatactggCCCCCtgtgctgtgctctaTTTTTtattctggctgtatctGGGGGT"
+    )
 
     text1 = """
     >A_AgTEFp_b_631 NP+geg/4Ykv2pIwEqiLylYKPYOE
@@ -250,9 +337,6 @@ def test_new_assembly():
 
 
 def test_assembly():
-
-
-
 
     text1 = """
     >A_AgTEFp_b_631 NP+geg/4Ykv2pIwEqiLylYKPYOE
@@ -480,11 +564,7 @@ algorithm..: common_sub_strings"""
 
 
 def test_MXblaster1():
-
-
-
-
-    """ test MXblaster1"""
+    """test MXblaster1"""
 
     primer = parse("primers.fas", ds=False)
     primer = primer[::-1]
@@ -546,7 +626,9 @@ def test_MXblaster1():
     B_gal1_ISceI_c = pcr([primer[467], primer[468]], pCAPs_PCR_prod_gal1_ISceI_2)
     C_AgTEFt_d = pcr([primer[568], primer[166]], pCAPs_EcoRV_AgTEFt)
 
-    a = assembly.Assembly((pCAPs_pSU0_E_Z, A_KlLEU2tt_b, B_gal1_ISceI_c, C_AgTEFt_d), limit=25)
+    a = assembly.Assembly(
+        (pCAPs_pSU0_E_Z, A_KlLEU2tt_b, B_gal1_ISceI_c, C_AgTEFt_d), limit=25
+    )
     candidate = a.assemble_circular()[0]
     assert candidate.seguid() == "cdseguid=GGV2uIPTRD0lcV7RJPbVTItXNII"
     assert len(candidate) == 8099
@@ -563,9 +645,13 @@ def test_MXblaster1():
         for f in x.features:
             oldfeats[f.qualifiers["label"][0]] = f.extract(x).seq
 
-    KlLEU2tt_gal1_ISceI_AgTEFt_2 = pcr(primer[166], primer[167], YPK0_KlLEU2tt_gal1_ISceI_AgTEFt)
+    KlLEU2tt_gal1_ISceI_AgTEFt_2 = pcr(
+        primer[166], primer[167], YPK0_KlLEU2tt_gal1_ISceI_AgTEFt
+    )
 
-    a = assembly.Assembly((AgTEFp_hph_KlLEU2tt_2, KlLEU2tt_gal1_ISceI_AgTEFt_2, pCAPs_pSU0_E_Z), limit=61)
+    a = assembly.Assembly(
+        (AgTEFp_hph_KlLEU2tt_2, KlLEU2tt_gal1_ISceI_AgTEFt_2, pCAPs_pSU0_E_Z), limit=61
+    )
     candidate = a.assemble_circular()[0]
     assert len(candidate) == 9772
     assert candidate.seguid() == "cdseguid=bUl04KTp5LpAulZX3UHdejwnuIQ"
@@ -575,10 +661,11 @@ def test_MXblaster1():
 
     assert pCAPs_MX4blaster1.seguid() == "cdseguid=bUl04KTp5LpAulZX3UHdejwnuIQ"
 
-
     AX023560 = read("AX023560.gb")
 
-    GAL10prom_slice = slice(AX023560.features[1].location.start, AX023560.features[1].location.end)
+    GAL10prom_slice = slice(
+        AX023560.features[1].location.start, AX023560.features[1].location.end
+    )
 
     GAL10prom = AX023560[GAL10prom_slice]
 
@@ -600,7 +687,9 @@ def test_MXblaster1():
 
     assert GAL_GIN2.seguid() == "ldseguid=VMbnoWQyowa92XOf2wbKlsM26f8"
 
-    assert pCAPs_MX4blaster1.seguid() == "cdseguid=bUl04KTp5LpAulZX3UHdejwnuIQ"  # 9772bp__a
+    assert (
+        pCAPs_MX4blaster1.seguid() == "cdseguid=bUl04KTp5LpAulZX3UHdejwnuIQ"
+    )  # 9772bp__a
 
     pCAPs_MX4blaster1_AgeI = pCAPs_MX4blaster1.cut(AgeI)[0]
 
@@ -630,17 +719,12 @@ def test_MXblaster1():
 
 def test_assemble_pGUP1():
 
-
-
-
-
     GUP1rec1sens = read("GUP1rec1sens.txt")
     GUP1rec2AS = read("GUP1rec2AS.txt")
     GUP1_locus = read("GUP1_locus.gb")
     pGREG505 = read("pGREG505.gb")
 
     insert = pcr(GUP1rec1sens, GUP1rec2AS, GUP1_locus)
-
 
     his3, lin_vect = pGREG505.cut(SalI)
 
@@ -675,7 +759,6 @@ def test_pYPK7_TDH3_GAL2_PGI1():
 
     pYPKp7 = read("pYPKp7.gb")
 
-
     pYPKp7_AatII = pYPKp7.linearize(AatII)
 
     z = Assembly((pYPKp7_AatII, pMEC1142), limit=300)
@@ -702,10 +785,8 @@ def test_marker_replacement_on_plasmid():
     """
     )
 
-
     pAG32 = read("pAG32.gb")
     pMEC1135 = read("pMEC1135.gb")
-
 
     hygromycin_product = pcr(f, r, pAG32)
 
@@ -714,7 +795,10 @@ def test_marker_replacement_on_plasmid():
     candidate, other = asm_hyg.assemble_linear()
 
     # AmpR feature
-    assert pMEC1135.features[-1].extract(pMEC1135).seq == candidate.features[-1].extract(candidate).seq
+    assert (
+        pMEC1135.features[-1].extract(pMEC1135).seq
+        == candidate.features[-1].extract(candidate).seq
+    )
 
 
 def test_linear_with_annotations2():
@@ -734,7 +818,11 @@ def test_linear_with_annotations2():
     c.add_feature(0, 10, label="c_feat")
     c_feat_seq = c.features[0].extract(c)
 
-    feature_sequences = {"a_feat": a_feat_seq, "b_feat": b_feat_seq, "c_feat": c_feat_seq}
+    feature_sequences = {
+        "a_feat": a_feat_seq,
+        "b_feat": b_feat_seq,
+        "c_feat": c_feat_seq,
+    }
 
     a.name = "aaa"  # 1234567890123456
     b.name = "bbb"
@@ -750,12 +838,16 @@ def test_linear_with_annotations2():
     assert x.detailed_figure()
     for feat in x.features:
         try:
-            assert feat.extract(x).seq == feature_sequences[feat.qualifiers["label"]].seq
+            assert (
+                feat.extract(x).seq == feature_sequences[feat.qualifiers["label"]].seq
+            )
         except AssertionError:
             print(feat.qualifiers["label"])
             print(feat.extract(x).seq, "extracted feat")
             print(feature_sequences[feat.qualifiers["label"]].seq, "original feat")
-            assert feat.extract(x).seq == feature_sequences[feat.qualifiers["label"]].seq
+            assert (
+                feat.extract(x).seq == feature_sequences[feat.qualifiers["label"]].seq
+            )
 
 
 # acgatgctatactgtgCCNCCtgtgctgtgctcta

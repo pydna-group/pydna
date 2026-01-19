@@ -9,6 +9,7 @@ from pathlib import Path
 from Bio.SeqIO import read as BPread
 from Bio.SeqIO import parse as BPparse
 
+
 def test_read_no_data():
     data = ""
     with pytest.raises(ValueError) as err:
@@ -20,6 +21,7 @@ def test_read_no_data():
     with pytest.raises(ValueError):
         read(data, ds=True)
     assert err.match("No sequence found in data")
+
 
 def test_read_too_many_sequences():
     data = ">a\na\n>g\ng"
@@ -33,6 +35,7 @@ def test_read_too_many_sequences():
         read(data, ds=True)
     assert err.match("More than one sequence found in data")
 
+
 def test_read_primer_no_data():
     data = ""
     with pytest.raises(ValueError):
@@ -42,13 +45,16 @@ def test_read_primer_no_data():
     with pytest.raises(ValueError):
         read_primer(data)
 
+
 def test_read_primer():
     data = ">pr\ngatc"
     pr = read_primer(data)
     assert str(pr.seq) == "gatc"
 
+
 def test_pydna_read_test():
     assert read("pydna_read_test.txt").format("gb")[349:368] == '/label="2micron 2µ"'
+
 
 def test_parse_and_read_with_biopython_and_pydna():
 
@@ -69,8 +75,12 @@ def test_parse_and_read_with_biopython_and_pydna():
 
     x, y = parse("pth1.txt")
 
-    assert "".join(a.format("gb").splitlines()[1:]) == "".join(x.format("gb").splitlines()[1:])
-    assert "".join(b.format("gb").strip().splitlines()[4:]) == "".join(y.format("gb").splitlines()[4:])
+    assert "".join(a.format("gb").splitlines()[1:]) == "".join(
+        x.format("gb").splitlines()[1:]
+    )
+    assert "".join(b.format("gb").strip().splitlines()[4:]) == "".join(
+        y.format("gb").splitlines()[4:]
+    )
 
 
 def test_read_from_string():
@@ -167,6 +177,7 @@ def test_read_from_unicode():
     x, y = parse(text)
     assert x.format()[3268:3278] == "2micron 2µ"
 
+
 def test_read_from_file():
 
     a = read("read1.gb")
@@ -181,7 +192,13 @@ def test_read_from_file():
     d.format("gb")
     e.format("gb")
 
-    assert str(a.seq).lower() == str(b.seq).lower() == str(c.seq).lower() == str(d.seq).lower()
+    assert (
+        str(a.seq).lower()
+        == str(b.seq).lower()
+        == str(c.seq).lower()
+        == str(d.seq).lower()
+    )
+
 
 def test_read_with_feature_spanning_ori():
 

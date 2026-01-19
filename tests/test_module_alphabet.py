@@ -10,7 +10,6 @@ from pydna.alphabet import (
     annealing_dict,
     annealing_dict_w_holes,
     complement_dict_for_dscode,
-
     # translation tables
     complement_table_for_dscode,
     dscode_to_watson_table,
@@ -18,20 +17,16 @@ from pydna.alphabet import (
     dscode_to_watson_tail_table,
     dscode_to_crick_tail_table,
     dscode_to_full_sequence_table,
-
     # letter sets
     ds_letters,
     ss_letters_watson,
     ss_letters_crick,
-
     # regex-related
     iupac_compl_regex,
     regex_ss_melt_factory,
     regex_ds_melt_factory,
-
     # data structures
     DseqParts,
-
     # helpers
     get_parts,
     dsbreaks,
@@ -43,6 +38,7 @@ from pydna.alphabet import (
 # ---------------------------------------------------------------------------
 # Translation tables
 # ---------------------------------------------------------------------------
+
 
 def test_translation_tables():
 
@@ -61,6 +57,7 @@ def test_translation_tables():
 # Alphabet letter sets
 # ---------------------------------------------------------------------------
 
+
 def test_letters():
 
     assert ds_letters == "GATCUORYMKSWHBVDNgatcuorymkswhbvdn"
@@ -72,6 +69,7 @@ def test_letters():
 # ---------------------------------------------------------------------------
 # Core dictionaries
 # ---------------------------------------------------------------------------
+
 
 def test_basepair_dict():
 
@@ -109,6 +107,7 @@ def test_annealing_dicts():
 # IUPAC complement regex
 # ---------------------------------------------------------------------------
 
+
 def test_iupac_compl_regex():
 
     assert iupac_compl_regex["A"] == "(?:T|U)"
@@ -120,17 +119,23 @@ def test_iupac_compl_regex():
 # regex_ss_melt_factory
 # ---------------------------------------------------------------------------
 
+
 def test_regex_ss_melt_factory():
 
     regex = regex_ss_melt_factory(3)
     assert regex.groups == 8
 
     s = Dseq("GFTTAJA")
-    assert repr(s) == dedent("""\
+    assert (
+        repr(s)
+        == dedent(
+            """\
         Dseq(-7)
         G TTA A
         CTAATGT
-    """).strip()
+    """
+        ).strip()
+    )
 
     m = regex.search(s._data)
     assert m is not None
@@ -141,17 +146,23 @@ def test_regex_ss_melt_factory():
 # regex_ds_melt_factory
 # ---------------------------------------------------------------------------
 
+
 def test_regex_ds_melt_factory():
 
     regex = regex_ds_melt_factory(3)
     assert regex.groups == 8
 
     s = Dseq("aaaGFTTAIAttt")
-    assert repr(s) == dedent("""\
+    assert (
+        repr(s)
+        == dedent(
+            """\
         Dseq(-13)
         aaaG TTACAttt
         tttCTAAT Taaa
-    """).strip()
+    """
+        ).strip()
+    )
 
     m = regex.search(s._data)
     assert m is not None
@@ -161,6 +172,7 @@ def test_regex_ds_melt_factory():
 # ---------------------------------------------------------------------------
 # DseqParts and helpers
 # ---------------------------------------------------------------------------
+
 
 def test_get_parts_and_DseqParts():
 

@@ -41,7 +41,9 @@ def test_genbankfile():
 
     assert gbr_rc.strand == 2
 
-    gbr2 = genbankrecord.GenbankRecord("atgttcctacatg", item="CS570233.1", start=1, stop=13, strand=1)
+    gbr2 = genbankrecord.GenbankRecord(
+        "atgttcctacatg", item="CS570233.1", start=1, stop=13, strand=1
+    )
     assert repr(gbr2) == "Gbnk(-13 CS570233.1 1-13)"
 
     gbr2.pydna_code() == (
