@@ -102,7 +102,7 @@ pandas = "*"
 autopep8 = "^2.1.0"
 black = "^25.1.0"
 pre-commit = ">3.6"
-nbstripout = "^0.7.1"
+nbstripout = ">=0.7.1,<0.10.0"
 flake8-bugbear = "^24.12.12"
 
 [tool.pytest.ini_options]
