@@ -15,14 +15,14 @@
 """
 
 from pydna.tm import tm_default as _tm_default
-import math as _math
-import copy as _copy
+import math
+import copy
 from pydna.amplicon import Amplicon as _Amplicon
 from pydna.amplify import Anneal as _Anneal
 from pydna.amplify import pcr as _pcr
 from pydna.dseqrecord import Dseqrecord as _Dseqrecord
 from pydna.primer import Primer as _Primer
-import operator as _operator
+import operator
 from typing import Tuple
 from itertools import pairwise, product
 import re
@@ -49,10 +49,10 @@ def _design_primer(
     p = str(template.seq[:length])
 
     if tmp < target_tm:
-        condition = _operator.le
+        condition = operator.le
         increment = 1
     else:
-        condition = _operator.ge
+        condition = operator.ge
         increment = -1
     while condition(tmp, target_tm):
         prev_temp = tmp
@@ -662,7 +662,7 @@ def assembly_fragments(f, overlap=35, maxlink=40, circular=False):
     # _module_logger.debug("overlap     = %s", overlap)
     # _module_logger.debug("max_link    = %s", maxlink)
 
-    f = [_copy.copy(f) for f in f]
+    f = [copy.copy(f) for f in f]
 
     first_fragment_length = len(f[0])
     last_fragment_length = len(f[-1])
@@ -689,7 +689,7 @@ def assembly_fragments(f, overlap=35, maxlink=40, circular=False):
     # _module_logger.debug(f)
     # _module_logger.debug("loop through fragments in groups of three:")
 
-    tail_length = _math.ceil(overlap / 2)
+    tail_length = math.ceil(overlap / 2)
 
     for i in range(len(f) - 1):
         first = f[i]

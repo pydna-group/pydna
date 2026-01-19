@@ -24,63 +24,63 @@ This should not be a difficult fix. The returned result has two properties,
 which is the formatted genbank string."""
 
 
-import re as _re
-import pyparsing as _pp
+import re
+import pyparsing as pp
 
 GoodLocus = (
-    _pp.Literal("LOCUS")
-    + _pp.Word(_pp.alphas + _pp.nums + "-_()." + "\\").setResultsName("name")
-    + _pp.Word(_pp.nums).setResultsName("size")
-    + _pp.Suppress(_pp.CaselessLiteral("bp"))
-    + _pp.Word(_pp.alphas + "-").setResultsName("seqtype")
-    + (_pp.CaselessLiteral("linear") | _pp.CaselessLiteral("circular")).setResultsName(
+    pp.Literal("LOCUS")
+    + pp.Word(pp.alphas + pp.nums + "-_()." + "\\").setResultsName("name")
+    + pp.Word(pp.nums).setResultsName("size")
+    + pp.Suppress(pp.CaselessLiteral("bp"))
+    + pp.Word(pp.alphas + "-").setResultsName("seqtype")
+    + (pp.CaselessLiteral("linear") | pp.CaselessLiteral("circular")).setResultsName(
         "topology"
     )
-    + _pp.Optional(_pp.Word(_pp.alphas), default="   ").setResultsName("divcode")
-    + _pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").setResultsName("date")
+    + pp.Optional(pp.Word(pp.alphas), default="   ").setResultsName("divcode")
+    + pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").setResultsName("date")
 )
 
 # Older versions of ApE don't include a LOCUS name! Need separate def for this case:
 BrokenLocus1 = (
-    _pp.Literal("LOCUS").setResultsName("name")
-    + _pp.Word(_pp.nums).setResultsName("size")
-    + _pp.Suppress(_pp.CaselessLiteral("bp"))
-    + _pp.Word(_pp.alphas + "-").setResultsName("seqtype")
-    + (_pp.CaselessLiteral("linear") | _pp.CaselessLiteral("circular")).setResultsName(
+    pp.Literal("LOCUS").setResultsName("name")
+    + pp.Word(pp.nums).setResultsName("size")
+    + pp.Suppress(pp.CaselessLiteral("bp"))
+    + pp.Word(pp.alphas + "-").setResultsName("seqtype")
+    + (pp.CaselessLiteral("linear") | pp.CaselessLiteral("circular")).setResultsName(
         "topology"
     )
-    + _pp.Optional(_pp.Word(_pp.alphas), default="   ").setResultsName("divcode")
-    + _pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").setResultsName("date")
+    + pp.Optional(pp.Word(pp.alphas), default="   ").setResultsName("divcode")
+    + pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").setResultsName("date")
 )
 
 # LOCUS       YEplac181	5741 bp 	DNA	SYN
 BrokenLocus2 = (
-    _pp.Literal("LOCUS")
-    + _pp.Word(_pp.alphas + _pp.nums + "-_()." + "\\").setResultsName("name")
-    + _pp.Word(_pp.nums).setResultsName("size")
-    + _pp.Suppress(_pp.CaselessLiteral("bp"))
-    + _pp.Word(_pp.alphas + "-").setResultsName("seqtype")
-    + _pp.Optional(
-        _pp.CaselessLiteral("linear") | _pp.CaselessLiteral("circular"),
+    pp.Literal("LOCUS")
+    + pp.Word(pp.alphas + pp.nums + "-_()." + "\\").setResultsName("name")
+    + pp.Word(pp.nums).setResultsName("size")
+    + pp.Suppress(pp.CaselessLiteral("bp"))
+    + pp.Word(pp.alphas + "-").setResultsName("seqtype")
+    + pp.Optional(
+        pp.CaselessLiteral("linear") | pp.CaselessLiteral("circular"),
         default="linear",
     ).setResultsName("topology")
-    + _pp.Optional(_pp.Word(_pp.alphas), default="   ").setResultsName("divcode")
-    + _pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").setResultsName("date")
+    + pp.Optional(pp.Word(pp.alphas), default="   ").setResultsName("divcode")
+    + pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").setResultsName("date")
 )
 
 BrokenLocus3 = (
-    _pp.Literal("LOCUS")
-    + _pp.Word(_pp.alphas + _pp.nums + "-_()." + "\\").setResultsName("name")
-    + _pp.Word(_pp.nums).setResultsName("size")
-    + _pp.Suppress(_pp.CaselessLiteral("bp"))
-    + _pp.Word(_pp.alphas + "-").setResultsName("seqtype")
-    + _pp.Optional(
-        _pp.CaselessLiteral("linear") | _pp.CaselessLiteral("circular"),
+    pp.Literal("LOCUS")
+    + pp.Word(pp.alphas + pp.nums + "-_()." + "\\").setResultsName("name")
+    + pp.Word(pp.nums).setResultsName("size")
+    + pp.Suppress(pp.CaselessLiteral("bp"))
+    + pp.Word(pp.alphas + "-").setResultsName("seqtype")
+    + pp.Optional(
+        pp.CaselessLiteral("linear") | pp.CaselessLiteral("circular"),
         default="linear",
     ).setResultsName("topology")
-    + _pp.Word(_pp.alphas).setResultsName("divcode")
-    + _pp.Optional(
-        _pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").setResultsName("date"),
+    + pp.Word(pp.alphas).setResultsName("divcode")
+    + pp.Optional(
+        pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").setResultsName("date"),
         default="19-MAR-1970",
     ).setResultsName("date")
 )
@@ -95,14 +95,13 @@ LocusEntry = GoodLocus | BrokenLocus1 | BrokenLocus2 | BrokenLocus3
 # (Though these entries are generally useless when it comes to hacking on DNA)
 
 # All entries in a genbank file headed by an all-caps title with no space between start-of-line and title
-CapWord = _pp.Word("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+CapWord = pp.Word("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 # after titled line, all subsequent lines have to have at least one space in front of them
 # this is how we split up the genbank record
-SpacedLine = _pp.White(min=1) + _pp.CharsNotIn("\n") + _pp.LineEnd()
+SpacedLine = pp.White(min=1) + pp.CharsNotIn("\n") + pp.LineEnd()
 # HeaderLine = CapWord + CharsNotIn("\n") + LineEnd()
-GenericEntry = _pp.Group(
-    CapWord
-    + _pp.Combine(_pp.CharsNotIn("\n") + _pp.LineEnd() + _pp.ZeroOrMore(SpacedLine))
+GenericEntry = pp.Group(
+    CapWord + pp.Combine(pp.CharsNotIn("\n") + pp.LineEnd() + pp.ZeroOrMore(SpacedLine))
 ).setResultsName("generics", listAllMatches=True)
 
 
@@ -135,28 +134,28 @@ GenericEntry = _pp.Group(
 #
 # if you don't know where something is, don't use it or guess and move on
 
-LPAREN = _pp.Suppress("(")
-RPAREN = _pp.Suppress(")")
-SEP = _pp.Suppress(_pp.Literal(".."))
+LPAREN = pp.Suppress("(")
+RPAREN = pp.Suppress(")")
+SEP = pp.Suppress(pp.Literal(".."))
 
 # recognize numbers w. < & > uncertainty specs, then strip the <> chars to make it fixed
-gbIndex = _pp.Word(_pp.nums + "<>").setParseAction(
+gbIndex = pp.Word(pp.nums + "<>").setParseAction(
     lambda s, l_, t: int(t[0].replace("<", "").replace(">", ""))
 )
-SimpleSlice = _pp.Group(gbIndex + SEP + gbIndex) | _pp.Group(gbIndex).setParseAction(
+SimpleSlice = pp.Group(gbIndex + SEP + gbIndex) | pp.Group(gbIndex).setParseAction(
     lambda s, l_, t: [[t[0][0], t[0][0]]]
 )
 
 # recursive def for nested function syntax:  f( g(), g() )
-complexSlice = _pp.Forward()
+complexSlice = pp.Forward()
 (
     complexSlice
-    << (_pp.Literal("complement") | _pp.Literal("join"))
+    << (pp.Literal("complement") | pp.Literal("join"))
     + LPAREN
-    + (_pp.delimitedList(complexSlice) | _pp.delimitedList(SimpleSlice))
+    + (pp.delimitedList(complexSlice) | pp.delimitedList(SimpleSlice))
     + RPAREN
 )
-featLocation = _pp.Group(SimpleSlice | complexSlice)
+featLocation = pp.Group(SimpleSlice | complexSlice)
 
 
 def parseGBLoc(s, l_, t):
@@ -183,7 +182,7 @@ featLocation.setParseAction(parseGBLoc)
 
 
 def strip_multiline(s, l_, t):
-    whitespace = _re.compile("[\n]{1}[ ]+")
+    whitespace = re.compile("[\n]{1}[ ]+")
     return whitespace.sub(" ", t[0])
 
 
@@ -192,59 +191,57 @@ def toInt(s, l_, t):
 
 
 # Quoted KeyVal:   /key="value"
-QuoteFeaturekeyval = _pp.Group(
-    _pp.Suppress("/")
-    + _pp.Word(_pp.alphas + _pp.nums + "_-")
-    + _pp.Suppress("=")
-    + _pp.QuotedString('"', multiline=True).setParseAction(strip_multiline)
+QuoteFeaturekeyval = pp.Group(
+    pp.Suppress("/")
+    + pp.Word(pp.alphas + pp.nums + "_-")
+    + pp.Suppress("=")
+    + pp.QuotedString('"', multiline=True).setParseAction(strip_multiline)
 )
 
 # UnQuoted KeyVal: /key=value  (I'm assuming it doesn't do multilines this way? wrong! ApE does store long labels this way! sigh.)
 # NoQuoteFeaturekeyval = Group(Suppress('/') + Word(alphas+nums+"_-") + Suppress('=') + OneOrMore(CharsNotIn("\n")) )
 keyvalspacedline = (
-    _pp.White(exact=21)
-    + _pp.CharsNotIn("/")
-    + _pp.OneOrMore(_pp.CharsNotIn("\n"))
-    + _pp.LineEnd()
+    pp.White(exact=21)
+    + pp.CharsNotIn("/")
+    + pp.OneOrMore(pp.CharsNotIn("\n"))
+    + pp.LineEnd()
 )
-NoQuoteFeaturekeyval = _pp.Group(
-    _pp.Suppress("/")
-    + _pp.Word(_pp.alphas + _pp.nums + "_-")
-    + _pp.Suppress("=")
-    + _pp.Combine(
-        _pp.CharsNotIn("\n") + _pp.LineEnd() + _pp.ZeroOrMore(keyvalspacedline)
-    )
+NoQuoteFeaturekeyval = pp.Group(
+    pp.Suppress("/")
+    + pp.Word(pp.alphas + pp.nums + "_-")
+    + pp.Suppress("=")
+    + pp.Combine(pp.CharsNotIn("\n") + pp.LineEnd() + pp.ZeroOrMore(keyvalspacedline))
 )
 
 # Special Case for Numerical Vals:  /bases=12  OR  /bases="12"
-NumFeaturekeyval = _pp.Group(
-    _pp.Suppress("/")
-    + _pp.Word(_pp.alphas + _pp.nums + "_-")
-    + _pp.Suppress("=")
-    + (_pp.Suppress('"') + _pp.Word(_pp.nums).setParseAction(toInt) + _pp.Suppress('"'))
-    | (_pp.Word(_pp.nums).setParseAction(toInt))
+NumFeaturekeyval = pp.Group(
+    pp.Suppress("/")
+    + pp.Word(pp.alphas + pp.nums + "_-")
+    + pp.Suppress("=")
+    + (pp.Suppress('"') + pp.Word(pp.nums).setParseAction(toInt) + pp.Suppress('"'))
+    | (pp.Word(pp.nums).setParseAction(toInt))
 )
 
 # Key Only KeyVal: /pseudo
 # post-parse convert it into a pair to resemble the structure of the first three cases i.e. [pseudo, True]
-FlagFeaturekeyval = _pp.Group(
-    _pp.Suppress("/") + _pp.Word(_pp.alphas + _pp.nums + "_-")
+FlagFeaturekeyval = pp.Group(
+    pp.Suppress("/") + pp.Word(pp.alphas + pp.nums + "_-")
 ).setParseAction(lambda s, l_, t: [[t[0][0], True]])
 
-Feature = _pp.Group(
-    _pp.Word(_pp.alphas + _pp.nums + "_-").setParseAction(
+Feature = pp.Group(
+    pp.Word(pp.alphas + pp.nums + "_-").setParseAction(
         lambda s, l_, t: [["type", t[0]]]
     )
     + featLocation.setResultsName("location")
-    + _pp.OneOrMore(
+    + pp.OneOrMore(
         NumFeaturekeyval | QuoteFeaturekeyval | NoQuoteFeaturekeyval | FlagFeaturekeyval
     )
 )
 
 FeaturesEntry = (
-    _pp.Literal("FEATURES")
-    + _pp.Literal("Location/Qualifiers")
-    + _pp.Group(_pp.OneOrMore(Feature)).setResultsName("features")
+    pp.Literal("FEATURES")
+    + pp.Literal("Location/Qualifiers")
+    + pp.Group(pp.OneOrMore(Feature)).setResultsName("features")
 )
 
 # ===============================================================================
@@ -252,12 +249,12 @@ FeaturesEntry = (
 
 # sequence is just a column-spaced big table of dna nucleotides
 # should it recognize full IUPAC alphabet?  NCBI uses n for unknown region
-Sequence = _pp.OneOrMore(
-    _pp.Suppress(_pp.Word(_pp.nums)) + _pp.OneOrMore(_pp.Word("ACGTacgtNn"))
+Sequence = pp.OneOrMore(
+    pp.Suppress(pp.Word(pp.nums)) + pp.OneOrMore(pp.Word("ACGTacgtNn"))
 )
 
 # Group(  ) hides the setResultsName names def'd inside, such that one needs to first access this group and then access the dict of contents inside
-SequenceEntry = _pp.Suppress(_pp.Literal("ORIGIN")) + Sequence.setParseAction(
+SequenceEntry = pp.Suppress(pp.Literal("ORIGIN")) + Sequence.setParseAction(
     lambda s, l_, t: "".join(t)
 ).setResultsName("sequence")
 
@@ -266,13 +263,13 @@ SequenceEntry = _pp.Suppress(_pp.Literal("ORIGIN")) + Sequence.setParseAction(
 # Final GenBank Parser
 
 # GB files with multiple records split by "//" sequence at beginning of line
-GBEnd = _pp.Literal("//")
+GBEnd = pp.Literal("//")
 
 # Begin w. LOCUS, slurp all entries, then stop at the end!
-GB = LocusEntry + _pp.OneOrMore(FeaturesEntry | SequenceEntry | GenericEntry) + GBEnd
+GB = LocusEntry + pp.OneOrMore(FeaturesEntry | SequenceEntry | GenericEntry) + GBEnd
 
 # NCBI often returns sets of GB files
-multipleGB = _pp.OneOrMore(_pp.Group(GB))
+multipleGB = pp.OneOrMore(pp.Group(GB))
 
 # ===============================================================================
 # End Genbank Parser
@@ -284,7 +281,7 @@ multipleGB = _pp.OneOrMore(_pp.Group(GB))
 
 
 def strip_indent(str):
-    whitespace = _re.compile("[\n]{1}(COMMENT){0,1}[ ]+")
+    whitespace = re.compile("[\n]{1}(COMMENT){0,1}[ ]+")
     return whitespace.sub("\n", str)
 
 

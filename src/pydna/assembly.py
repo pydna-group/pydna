@@ -57,12 +57,12 @@ from pydna.common_sub_strings import common_sub_strings, Match as _Match
 from pydna.dseqrecord import Dseqrecord as _Dseqrecord
 import networkx as _nx
 
-from copy import deepcopy as _deepcopy
+from copy import deepcopy
 from typing import (
-    Callable as _Callable,
-    Dict as _Dict,
-    List as _List,
-    NamedTuple as _NamedTuple,
+    Callable,
+    Dict,
+    List,
+    NamedTuple,
     TypedDict as _TypedDict,
 )
 import itertools as _itertools
@@ -123,13 +123,13 @@ class Assembly(object):  # , metaclass=_Memoize):
 
     def __init__(
         self,
-        frags: _List[_Dseqrecord],
+        frags: List[_Dseqrecord],
         limit: int = 25,
-        algorithm: _Callable[[str, str, int], _List[_Match]] = common_sub_strings,
+        algorithm: Callable[[str, str, int], List[_Match]] = common_sub_strings,
     ) -> None:
         # Fragments is a string subclass with some extra properties
         # The order of the fragments has significance
-        fragments: _List[_FragmentDict] = [
+        fragments: List[_FragmentDict] = [
             {
                 "upper": str(f.seq).upper(),
                 "mixed": str(f.seq),
@@ -142,7 +142,7 @@ class Assembly(object):  # , metaclass=_Memoize):
 
         # rcfragments is a dict with fragments as keys and the reverse
         # complement as value
-        rcfragments: _Dict[str, _FragmentDict] = {
+        rcfragments: Dict[str, _FragmentDict] = {
             f["mixed"]: {
                 "upper": str(frc.seq).upper(),
                 "mixed": str(frc.seq),
@@ -162,7 +162,7 @@ class Assembly(object):  # , metaclass=_Memoize):
 
         # all combinations of fragments are compared.
         # see https://docs.python.org/3.10/library/itertools.html
-        # itertools.combinations('ABCD', 2)-->  AB AC AD BC BD CD
+        # _itertools.combinations('ABCD', 2)-->  AB AC AD BC BD CD
         for first, secnd in _itertools.combinations(fragments, 2):
             if first["upper"] == secnd["upper"]:
                 continue
@@ -399,7 +399,7 @@ class Assembly(object):  # , metaclass=_Memoize):
                 edgefeatures = []
                 offset = 0
                 for u, v, e in edges:
-                    feats = _deepcopy(e["features"])
+                    feats = deepcopy(e["features"])
                     for f in feats:
                         f.location += offset - e["piece"].start
                     edgefeatures.extend(feats)
@@ -469,7 +469,7 @@ class Assembly(object):  # , metaclass=_Memoize):
                 offset = 0
 
                 for u, v, e in edges:
-                    feats = _deepcopy(e["features"])
+                    feats = deepcopy(e["features"])
                     for feat in feats:
                         feat.location += offset
                     edgefeatures.extend(feats)
@@ -551,7 +551,7 @@ circular_results = (
 )
 
 
-class _NodeTuple(_NamedTuple):
+class _NodeTuple(NamedTuple):
     start: int
     length: int
     shared_seq: str  # uppercase
@@ -561,5 +561,5 @@ class _FragmentDict(_TypedDict):
     upper: str
     mixed: str
     name: str
-    features: _List[_SeqFeature]
-    nodes: _List[_NodeTuple]
+    features: List[_SeqFeature]
+    nodes: List[_NodeTuple]

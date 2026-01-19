@@ -8,11 +8,11 @@
 """Provides two functions, parse and parse_primers"""
 
 # import os as _os
-import re as _re
-import io as _io
-import textwrap as _textwrap
+import re
+import io
+import textwrap
 
-from Bio import SeqIO as _SeqIO
+from Bio import SeqIO
 
 # from pydna.genbankfile import GenbankFile as _GenbankFile
 from pydna.dseqrecord import Dseqrecord as _Dseqrecord
@@ -54,8 +54,8 @@ gb_fasta_embl_regex = (
 
 def extract_from_text(text):
     """docstring."""
-    data = _textwrap.dedent(str(text))
-    mos = list(_re.finditer(gb_fasta_embl_regex, data + "\n\n", flags=_re.MULTILINE))
+    data = textwrap.dedent(str(text))
+    mos = list(re.finditer(gb_fasta_embl_regex, data + "\n\n", flags=re.MULTILINE))
 
     class Fakemo(object):
         def start(self):
@@ -88,21 +88,21 @@ def embl_gb_fasta(text):
     # topology = "linear"
 
     for chunk in chunks:
-        handle = _io.StringIO(chunk)
+        handle = io.StringIO(chunk)
         # circular = False
         first_line = chunk.splitlines()[0].lower().split()
         try:
-            parsed = _SeqIO.read(handle, "embl")
+            parsed = SeqIO.read(handle, "embl")
             parsed.annotations["pydna_parse_sequence_file_format"] = "embl"
         except ValueError:
             handle.seek(0)
             try:
-                parsed = _SeqIO.read(handle, "genbank")
+                parsed = SeqIO.read(handle, "genbank")
                 parsed.annotations["pydna_parse_sequence_file_format"] = "genbank"
             except ValueError:
                 handle.seek(0)
                 try:
-                    parsed = _SeqIO.read(handle, "fasta-blast")
+                    parsed = SeqIO.read(handle, "fasta-blast")
                     parsed.annotations["pydna_parse_sequence_file_format"] = "fasta"
                 except ValueError:
                     handle.close()
@@ -238,7 +238,7 @@ def parse_snapgene(file_path: str) -> list[_Dseqrecord]:
 
     """
     with open(file_path, "rb") as f:
-        parsed_seq = next(_SeqIO.parse(f, "snapgene"))
+        parsed_seq = next(SeqIO.parse(f, "snapgene"))
         circular = (
             "topology" in parsed_seq.annotations.keys()
             and parsed_seq.annotations["topology"] == "circular"

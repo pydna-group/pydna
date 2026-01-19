@@ -486,7 +486,7 @@ def test_write_same_seq_to_existing_file(monkeypatch):
 
     s = Dseqrecord("Ggatcc", circular=True)
 
-    monkeypatch.setattr("pydna.dseqrecord._os.path.isfile", lambda x: True)
+    monkeypatch.setattr("pydna.dseqrecord.os.path.isfile", lambda x: True)
     m = mock_open(read_data=s.format())
 
     with patch("builtins.open", m):
@@ -498,8 +498,8 @@ def test_write_different_file_to_existing_file(monkeypatch):
     s = Dseqrecord("Ggatcc", circular=True)
     d = Dseqrecord("GgatcA", circular=True)
 
-    monkeypatch.setattr("pydna.dseqrecord._os.path.isfile", lambda x: True)
-    monkeypatch.setattr("pydna.dseqrecord._os.rename", lambda x, y: True)
+    monkeypatch.setattr("pydna.dseqrecord.os.path.isfile", lambda x: True)
+    monkeypatch.setattr("pydna.dseqrecord.os.rename", lambda x, y: True)
     m = mock_open(read_data=d.format())
 
     with patch("builtins.open", m) as d:
@@ -515,8 +515,8 @@ def test_write_different_file_to_stamped_existing_file(monkeypatch):
 
     assert new.description[:42] == old.description[:42]
 
-    monkeypatch.setattr("pydna.dseqrecord._os.path.isfile", lambda x: True)
-    monkeypatch.setattr("pydna.dseqrecord._os.rename", lambda x, y: True)
+    monkeypatch.setattr("pydna.dseqrecord.os.path.isfile", lambda x: True)
+    monkeypatch.setattr("pydna.dseqrecord.os.rename", lambda x, y: True)
     m = mock_open(read_data=old.format())
 
     with patch("builtins.open", m):
@@ -554,8 +554,8 @@ def test_write_different_file_to_stamped_existing_file2(monkeypatch):
 
     assert new.description[:35] == old.description[:35]
 
-    monkeypatch.setattr("pydna.dseqrecord._os.path.isfile", lambda x: True)
-    monkeypatch.setattr("pydna.dseqrecord._os.rename", lambda x, y: True)
+    monkeypatch.setattr("pydna.dseqrecord.os.path.isfile", lambda x: True)
+    monkeypatch.setattr("pydna.dseqrecord.os.rename", lambda x, y: True)
     m = mock_open(read_data=old.format())
 
     with patch("builtins.open", m):

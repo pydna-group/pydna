@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import textwrap as _textwrap
-import networkx as _nx
+import textwrap
+import networkx as nx
 from pydna._pretty import pretty_str as _pretty_str
 from pydna.dseqrecord import Dseqrecord as _Dseqrecord
 from pydna.utils import rc as _rc
@@ -48,7 +48,7 @@ class Contig(_Dseqrecord):
 
     def reverse_complement(self):
         answer = type(self)(super().reverse_complement())
-        g = _nx.DiGraph()
+        g = nx.DiGraph()
         nm = self.nodemap
         g.add_edges_from(
             [(nm[v], nm[u], d) for u, v, d in list(self.graph.edges(data=True))[::-1]]
@@ -263,7 +263,7 @@ class Contig(_Dseqrecord):
             )
             fig += "|{space}   |\n".format(space=" " * (space))
             fig += " {space}".format(space="-" * (space + 3))
-        return _pretty_str(_textwrap.dedent(fig))
+        return _pretty_str(textwrap.dedent(fig))
 
     def figure_mpl(self):
         """

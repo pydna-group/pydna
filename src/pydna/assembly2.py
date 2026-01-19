@@ -4,7 +4,7 @@ Improved implementation of the assembly module. To see a list of issues with the
 see [issues tagged with fixed-with-new-assembly-model](https://github.com/pydna-group/pydna/issues?q=is%3Aissue%20state%3Aopen%20label%3Afixed-with-new-assembly-model)
 """
 
-import networkx as _nx
+import networkx as nx
 import itertools as _itertools
 from Bio.SeqFeature import SimpleLocation, Location
 
@@ -72,7 +72,7 @@ def gather_overlapping_locations(
     the output will be [(loc1, loc2), (loc3,)].
     """
     # Make a graph with all the locations as nodes
-    G = _nx.Graph()
+    G = nx.Graph()
     for i, loc in enumerate(locs):
         G.add_node(i, location=loc)
 
@@ -84,7 +84,7 @@ def gather_overlapping_locations(
 
     # Get groups of overlapping locations
     groups = list()
-    for loc_set in _nx.connected_components(G):
+    for loc_set in nx.connected_components(G):
         groups.append(tuple(locs[i] for i in loc_set))
 
     # Sort by location of the first element in each group (does not matter which since they are overlapping)
@@ -1155,7 +1155,7 @@ class Assembly:
     ):
 
         # TODO: allow for the same fragment to be included more than once?
-        self.G = _nx.MultiDiGraph()
+        self.G = nx.MultiDiGraph()
         # Add positive and negative nodes for forward and reverse fragments
         self.G.add_nodes_from((i + 1, {"seq": f}) for (i, f) in enumerate(frags))
         self.G.add_nodes_from(
@@ -1339,7 +1339,7 @@ class Assembly:
         """
 
         # Copy the graph since we will add the begin and end mock nodes
-        G = _nx.MultiDiGraph(self.G)
+        G = nx.MultiDiGraph(self.G)
         G.add_nodes_from(["begin", "end"])
 
         if self.use_fragment_order:
@@ -1377,7 +1377,7 @@ class Assembly:
     def node_path2assembly_list(
         self, cycle: list[int], circular: bool
     ) -> list[EdgeRepresentationAssembly]:
-        """Convert a node path in the format [1, 2, 3] (as returned by _nx.cycles.simple_cycles) to a list of all
+        """Convert a node path in the format [1, 2, 3] (as returned by networkx.cycles.simple_cycles) to a list of all
           possible assemblies.
 
         There may be multiple assemblies for a given node path, if there are several edges connecting two nodes,
@@ -1395,7 +1395,7 @@ class Assembly:
         ]
 
     def get_unique_linear_paths(
-        self, G_with_begin_end: _nx.MultiDiGraph, max_paths=10000
+        self, G_with_begin_end: nx.MultiDiGraph, max_paths=10000
     ) -> list[list[int]]:
         """Get unique linear paths from the graph, removing those that contain the same node twice."""
         # We remove the begin and end nodes, and get all paths without edges
@@ -1406,8 +1406,8 @@ class Assembly:
         node_paths = [
             x[1:-1]
             for x in limit_iterator(
-                _nx.all_simple_paths(
-                    _nx.DiGraph(G_with_begin_end),
+                nx.all_simple_paths(
+                    nx.DiGraph(G_with_begin_end),
                     "begin",
                     "end",
                     cutoff=(len(self.fragments) + 1),
@@ -1456,7 +1456,7 @@ class Assembly:
         sorted_cycles = map(
             circular_permutation_min_abs,
             limit_iterator(
-                _nx.cycles.simple_cycles(self.G, length_bound=len(self.fragments)),
+                nx.cycles.simple_cycles(self.G, length_bound=len(self.fragments)),
                 10000,
             ),
         )
@@ -1627,7 +1627,7 @@ class Assembly:
                 "only_adjacent_edges not implemented for insertion assemblies"
             )
 
-        cycles = limit_iterator(_nx.cycles.simple_cycles(self.G), 10000)
+        cycles = limit_iterator(nx.cycles.simple_cycles(self.G), 10000)
 
         # We apply constrains already here because sometimes the combinatorial explosion is too large
         if self.use_all_fragments:
@@ -1646,7 +1646,7 @@ class Assembly:
             )
 
         # We find cycles first
-        iterator = limit_iterator(_nx.cycles.simple_cycles(self.G), 10000)
+        iterator = limit_iterator(nx.cycles.simple_cycles(self.G), 10000)
         assemblies = sum(
             map(lambda x: self.node_path2assembly_list(x, True), iterator), []
         )
@@ -1828,7 +1828,7 @@ class PCRAssembly(Assembly):
             raise value_error
 
         # TODO: allow for the same fragment to be included more than once?
-        self.G = _nx.MultiDiGraph()
+        self.G = nx.MultiDiGraph()
         # Add positive and negative nodes for forward and reverse fragments
         self.G.add_nodes_from((i + 1, {"seq": f}) for (i, f) in enumerate(frags))
         self.G.add_nodes_from(
@@ -1907,7 +1907,7 @@ class SingleFragmentAssembly(Assembly):
                 "SingleFragmentAssembly assembly must be initialised with a single fragment"
             )
         # TODO: allow for the same fragment to be included more than once?
-        self.G = _nx.MultiDiGraph()
+        self.G = nx.MultiDiGraph()
         frag = frags[0]
         # Add positive and negative nodes for forward and reverse fragments
         self.G.add_node(1, seq=frag)

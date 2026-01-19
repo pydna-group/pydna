@@ -8,11 +8,11 @@
 """This module provide functions for melting temperature calculations."""
 
 
-import math as _math
+import math
 from Bio.SeqUtils import MeltingTemp as _mt
 from Bio.SeqUtils import gc_fraction as _GC
 
-import textwrap as _textwrap
+import textwrap
 from pydna._pretty import pretty_str as _pretty_str
 
 # See the documentation for Bio.SeqUtils.MeltingTemp for more details
@@ -119,7 +119,7 @@ def tm_product(seq: str, K=0.050):
     ing temperature for DNA amplification in vitro
     http://www.ncbi.nlm.nih.gov/pubmed/2243783
     """
-    tmp = 81.5 + 0.41 * _GC(seq) * 100 + 16.6 * _math.log10(K) - 675 / len(seq)
+    tmp = 81.5 + 0.41 * _GC(seq) * 100 + 16.6 * math.log10(K) - 675 / len(seq)
     return tmp
 
 
@@ -160,7 +160,7 @@ def program(amplicon, tm=tm_default, ta=ta_default):
     extension_time_taq = max(30, int(taq_extension_rate * len(amplicon) / 1000))
     # seconds
 
-    f = _textwrap.dedent(
+    f = textwrap.dedent(
         r"""
         |95°C|95°C               |    |tmf:{tmf:.1f}
         |____|_____          72°C|72°C|tmr:{tmr:.1f}
@@ -228,7 +228,7 @@ def dbd_program(amplicon, tm=tm_dbd, ta=ta_dbd):
     tmr = tm(amplicon.reverse_primer.footprint)
 
     if tmf >= 69.0 and tmr >= 69.0:
-        f = _textwrap.dedent(
+        f = textwrap.dedent(
             r"""
                               |98°C|98°C      |    |tmf:{tmf:.1f}
                               |____|____      |    |tmr:{tmr:.1f}
@@ -245,7 +245,7 @@ def dbd_program(amplicon, tm=tm_dbd, ta=ta_dbd):
             )
         ).strip()
     else:
-        f = _textwrap.dedent(
+        f = textwrap.dedent(
             r"""
              |98°C|98°C               |    |tmf:{tmf:.1f}
              |____|_____          72°C|72°C|tmr:{tmr:.1f}
@@ -327,8 +327,8 @@ def tmbresluc(primer: str, *args, primerc=500.0, saltc=50, **kwargs):
         dS += _thermodynamic_data.dSBr[n1 - 97][n2 - 97]
 
     tm = (
-        dH / (1.9872 * _math.log(pri / 1600) + dS)
-        + (16.6 * _math.log(saltc)) / _math.log(10)
+        dH / (1.9872 * math.log(pri / 1600) + dS)
+        + (16.6 * math.log(saltc)) / math.log(10)
     ) - 273.15
 
     return tm

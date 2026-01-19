@@ -26,14 +26,14 @@ from Bio.SeqRecord import SeqRecord as _SeqRecord
 from Bio.SeqFeature import SimpleLocation as _SimpleLocation
 from Bio.SeqFeature import CompoundLocation as _CompoundLocation
 from pydna.seq import Seq as _Seq
-from pydna._pretty import PrettyTable as _PrettyTable
+from pydna._pretty import PrettyTable as PrettyTable
 
-import re as _re
-import pickle as _pickle
-from copy import copy as _copy
+import re
+import pickle
+from copy import copy
 
 from pydna import _PydnaWarning
-from warnings import warn as _warn
+from warnings import warn
 
 # import logging as _logging
 import datetime
@@ -110,7 +110,7 @@ class SeqRecord(_SeqRecord):
         """Alias for name property."""
         if len(value) > 16:
             shortvalue = value[:16]
-            _warn(
+            warn(
                 ("locus property {} truncated" "to 16 chars {}").format(
                     value, shortvalue
                 ),
@@ -333,7 +333,7 @@ class SeqRecord(_SeqRecord):
         |   0 | L:ft2         | --> | 2   | 4   |   2 | misc |  no  |
         +-----+---------------+-----+-----+-----+-----+------+------+
         """
-        x = _PrettyTable(
+        x = PrettyTable(
             ["Ft#", "Label or Note", "Dir", "Sta", "End", "Len", "type", "orf?"]
         )
         x.align["Ft#"] = "r"  # Left align
@@ -481,11 +481,11 @@ class SeqRecord(_SeqRecord):
         """
         chksum = self.seq.seguid()
         oldcomment = self.annotations.get("comment", "")
-        oldstamp = _re.findall(r"..seguid=\S{27}", oldcomment)
+        oldstamp = re.findall(r"..seguid=\S{27}", oldcomment)
         if oldstamp and oldstamp[0] == chksum:
             return _pretty_str(oldstamp[0])
         elif oldstamp:
-            _warn(
+            warn(
                 f"Stamp change.\nNew: {chksum}\nOld: {oldstamp[0]}",
                 _PydnaWarning,
             )
@@ -588,7 +588,7 @@ class SeqRecord(_SeqRecord):
 
     def copy(self):
         """docstring."""
-        return _copy(self)
+        return copy(self)
 
     def __lt__(self, other):
         """docstring."""
@@ -705,7 +705,7 @@ class SeqRecord(_SeqRecord):
         if not pth.suffix:
             pth = pth.with_suffix(".pickle")
         with open(pth, "wb") as f:
-            _pickle.dump(self, f, protocol=protocol)
+            pickle.dump(self, f, protocol=protocol)
         return _pretty_str(pth)
 
 

@@ -7,7 +7,7 @@
 
 from pydna.dseqrecord import Dseqrecord as _Dseqrecord
 from pydna._pretty import pretty_str as _ps
-import os as _os
+import os
 
 
 class GenbankRecord(_Dseqrecord):
@@ -127,7 +127,7 @@ class GenbankRecord(_Dseqrecord):
 
         code = (
             "from pydna.genbank import Genbank\n"
-            f"gb = Genbank('{_os.getenv('pydna_email')}')\n"
+            f"gb = Genbank('{os.getenv('pydna_email')}')\n"
             f"seq = gb.nucleotide('{self.item}'"
         )
         if self.start and self.start:
@@ -147,7 +147,7 @@ class GenbankRecord(_Dseqrecord):
 
         code = (
             "from Bio import Entrez, SeqIO\n"
-            f"Entrez.email = '{_os.getenv('pydna_email')}'\n"
+            f"Entrez.email = '{os.getenv('pydna_email')}'\n"
             "handle = Entrez.efetch(db='nuccore',\n"
             f"                       id='{self.item}',\n"
             "                       rettype='gbwithparts',\n"

@@ -6,7 +6,7 @@
 # as part of this package.
 
 from pydna.dseqrecord import Dseqrecord
-import os as _os
+import os
 
 # import logging as _logging
 from Bio.Blast import NCBIWWW
@@ -15,7 +15,7 @@ from Bio.Blast import NCBIXML
 # _module_logger = _logging.getLogger("pydna." + __name__)
 
 
-email = _os.getenv("pydna_email")
+email = os.getenv("pydna_email")
 tool = "pydna"
 
 

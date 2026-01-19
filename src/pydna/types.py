@@ -5,11 +5,11 @@ Types used in the pydna package.
 
 from typing import (
     TYPE_CHECKING,
-    Tuple as _Tuple,
-    Union as _Union,
-    TypeVar as _TypeVar,
-    Iterable as _Iterable,
-    Callable as _Callable,
+    Tuple,
+    Union,
+    TypeVar,
+    Iterable,
+    Callable,
 )
 
 # Import AbstractCut at runtime for CutSiteType
@@ -24,13 +24,13 @@ if TYPE_CHECKING:
 
 
 # To represent any subclass of Dseq
-DseqType = _TypeVar("DseqType", bound="Dseq")
-EnzymesType = _TypeVar(
-    "EnzymesType", "_RestrictionBatch", _Iterable["_AbstractCut"], "_AbstractCut"
+DseqType = TypeVar("DseqType", bound="Dseq")
+EnzymesType = TypeVar(
+    "EnzymesType", "_RestrictionBatch", Iterable["_AbstractCut"], "_AbstractCut"
 )
-CutSiteType = _Tuple[_Tuple[int, int], _Union[_AbstractCut, None, __cas]]
-AssemblyEdgeType = _Tuple[int, int, "_Location | None", "_Location | None"]
-AssemblySubFragmentType = _Tuple[int, "_Location | None", "_Location | None"]
+CutSiteType = Tuple[Tuple[int, int], Union[_AbstractCut, None, __cas]]
+AssemblyEdgeType = Tuple[int, int, "_Location | None", "_Location | None"]
+AssemblySubFragmentType = Tuple[int, "_Location | None", "_Location | None"]
 EdgeRepresentationAssembly = list[AssemblyEdgeType]
 SubFragmentRepresentationAssembly = list[AssemblySubFragmentType]
 
@@ -38,7 +38,7 @@ SubFragmentRepresentationAssembly = list[AssemblySubFragmentType]
 # Type alias that describes overlap between two sequences x and y
 # the two first numbers are the positions where the overlap starts on x and y
 # the third number is the length of the overlap
-SequenceOverlap = _Tuple[int, int, int]
-AssemblyAlgorithmType = _Callable[
+SequenceOverlap = Tuple[int, int, int]
+AssemblyAlgorithmType = Callable[
     ["_Dseqrecord", "_Dseqrecord", int], list[SequenceOverlap]
 ]

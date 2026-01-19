@@ -16,12 +16,12 @@ from pydna.opencloning_models import NCBISequenceSource
 from pydna.genbankrecord import GenbankRecord as _GenbankRecord
 from pydna.readers import read as _read
 
-from Bio import Entrez as _Entrez
+from Bio import Entrez
 from Bio.SeqFeature import SimpleLocation
 
-from typing import Literal as _Literal, Optional as _Optional
-import re as _re
-import os as _os
+from typing import Literal, Optional
+import re
+import os
 
 
 class Genbank:
@@ -50,8 +50,8 @@ class Genbank:
         *,
         tool: str = "pydna",
     ) -> None:
-        if not _re.match(
-            r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}", users_email, _re.IGNORECASE
+        if not re.match(
+            r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}", users_email, re.IGNORECASE
         ):
             raise ValueError("email address {} is not valid.".format(users_email))
 
@@ -74,9 +74,9 @@ class Genbank:
     def nucleotide(
         self,
         item: str,
-        seq_start: _Optional[int] = None,
-        seq_stop: _Optional[int] = None,
-        strand: _Literal[1, 2] = 1,
+        seq_start: Optional[int] = None,
+        seq_stop: Optional[int] = None,
+        strand: Literal[1, 2] = 1,
     ) -> _GenbankRecord:
         """This method downloads a genbank nuclotide record from genbank. This method is
         cached by default. This can be controlled by editing the **pydna_cached_funcs** environment
@@ -125,15 +125,15 @@ class Genbank:
         .. [#]   http://www.ncbi.nlm.nih.gov/books/NBK25499/#chapter4.EFetch
         """
         matches = (
-            (1, _re.search(r"(REGION:\s(?P<start>\d+)\.\.(?P<stop>\d+))", item)),
+            (1, re.search(r"(REGION:\s(?P<start>\d+)\.\.(?P<stop>\d+))", item)),
             (
                 2,
-                _re.search(
+                re.search(
                     r"(REGION: complement\((?P<start>\d+)\.\.(?P<stop>\d+)\))", item
                 ),
             ),
-            (1, _re.search(r"(:|\s)(?P<start>\d+)-(?P<stop>\d+)", item)),
-            (2, _re.search(r"(:|\s)c(?P<start>\d+)-(?P<stop>\d+)", item)),
+            (1, re.search(r"(:|\s)(?P<start>\d+)-(?P<stop>\d+)", item)),
+            (2, re.search(r"(:|\s)c(?P<start>\d+)-(?P<stop>\d+)", item)),
         )
 
         for strand_, match in matches:
@@ -159,11 +159,11 @@ class Genbank:
 
         # _module_logger.info("strand  %s", str(strand))
 
-        _Entrez.email = self.email
-        _Entrez.tool = self.tool
+        Entrez.email = self.email
+        Entrez.tool = self.tool
 
         # _module_logger.info("Entrez.email  %s", self.email)
-        text = _Entrez.efetch(
+        text = Entrez.efetch(
             db="nuccore",
             id=item,
             rettype="gbwithparts",
@@ -249,6 +249,6 @@ def genbank(
         //
 
     """
-    email = email or _os.getenv("pydna_email")
+    email = email or os.getenv("pydna_email")
     gb = Genbank(email)
     return gb.nucleotide(accession, *args, **kwargs)

@@ -24,17 +24,11 @@ from Bio.SeqFeature import SeqFeature as _SeqFeature
 from Bio.SeqFeature import SimpleLocation as _SimpleLocation
 from Bio.SeqFeature import CompoundLocation as _CompoundLocation
 from pydna.seq import Seq as _Seq
-import re as _re
-import copy as _copy
-import operator as _operator
+import re
+import copy
+import operator
 from pydna.alphabet import iupac_compl_regex as _iupac_compl_regex
 from pydna.utils import anneal_from_left as _anneal_from_left
-
-# import os as _os
-
-# import logging as _logging
-
-# _module_logger = _logging.getLogger("pydna." + __name__)
 
 
 def _annealing_positions(primer, template, limit):
@@ -100,7 +94,7 @@ def _annealing_positions(primer, template, limit):
     primer_regex = f"(?:({head_regex})(.{{0,{len(primer) - limit}}}))"
 
     results = []
-    for m in _re.finditer(primer_regex, template.upper()):
+    for m in re.finditer(primer_regex, template.upper()):
         anchor, under_tail = m.groups()
         match_start = m.start()
         match_extension = _anneal_from_left(tail, under_tail[::-1])
@@ -205,7 +199,7 @@ class Anneal(object):  # ), metaclass=_Memoize):
 
         """
         self.primers = primers
-        self.template = _copy.deepcopy(template)
+        self.template = copy.deepcopy(template)
 
         self.limit = limit
         self.kwargs = kwargs
@@ -251,8 +245,8 @@ class Anneal(object):  # ), metaclass=_Memoize):
                 )
             )
 
-        self.forward_primers.sort(key=_operator.attrgetter("position"))
-        self.reverse_primers.sort(key=_operator.attrgetter("position"), reverse=True)
+        self.forward_primers.sort(key=operator.attrgetter("position"))
+        self.reverse_primers.sort(key=operator.attrgetter("position"), reverse=True)
 
         for fp in self.forward_primers:
             if fp.position - fp._fp >= 0:

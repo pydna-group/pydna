@@ -6,30 +6,30 @@
 # as part of this package.
 """Miscellaneous functions."""
 
-import re as _re
-import keyword as _keyword
-import collections as _collections
-import itertools as _itertools
-from copy import deepcopy as _deepcopy
+import re
+import keyword
+import collections
+import itertools
+from copy import deepcopy
 
-import sys as _sys
+import sys
 import random
-import subprocess as _subprocess
-from bisect import bisect as _bisect
-from math import ceil as _ceil
+import subprocess
+from bisect import bisect
+from math import ceil
 
-from pydna.codon import weights as _weights
-from pydna.codon import rare_codons as _rare_codons
+from pydna.codon import weights
+from pydna.codon import rare_codons
 from pydna.alphabet import basepair_dict
 from pydna.alphabet import complement_table_for_dscode
-from Bio.SeqFeature import SimpleLocation as _sl
-from Bio.SeqFeature import CompoundLocation as _cl
-from Bio.SeqFeature import Location as _Location
+from Bio.SeqFeature import SimpleLocation
+from Bio.SeqFeature import CompoundLocation
+from Bio.SeqFeature import Location
 
-from typing import Union as _Union, TypeVar as _TypeVar, List as _List
+from typing import Union, TypeVar, List
 
 # For functions that take str or bytes as input and return str or bytes as output, matching the input type
-StrOrBytes = _TypeVar("StrOrBytes", str, bytes)
+StrOrBytes = TypeVar("StrOrBytes", str, bytes)
 
 
 def three_frame_orfs(
@@ -42,7 +42,7 @@ def three_frame_orfs(
 ):
     """Overlapping orfs in three frames."""
     # breakpoint()
-    limit = _ceil(limit / 3) - 1
+    limit = ceil(limit / 3) - 1
     dna = dna.upper()
 
     orfs = []
@@ -56,7 +56,7 @@ def three_frame_orfs(
 
         for startindex in startdindices:
             try:
-                stopindex = stopdindices[_bisect(stopdindices, startindex)]
+                stopindex = stopdindices[bisect(stopdindices, startindex)]
             except IndexError:
                 pass
             else:
@@ -77,7 +77,7 @@ def shift_location(original_location, shift, lim):
             raise ValueError(
                 "Shift moves location below zero, use a `lim` to loop around if sequence is circular."
             )
-        lim = _sys.maxsize
+        lim = sys.maxsize
 
     for part in original_location.parts:
         new_start = (part.start + shift) % lim
@@ -93,7 +93,7 @@ def shift_location(original_location, shift, lim):
         # https://github.com/pydna-group/pydna/issues/195
 
         if len(part) == 0:
-            newparts.append(_sl(new_start, new_start, strand))
+            newparts.append(SimpleLocation(new_start, new_start, strand))
             continue
         # Join with old, case 1
         elif strand != -1 and old_end == new_start:
@@ -106,12 +106,15 @@ def shift_location(original_location, shift, lim):
             part._start = new_start
             new_end = part.end
         if new_start < new_end:
-            newparts.append(_sl(new_start, new_end, strand))
+            newparts.append(SimpleLocation(new_start, new_end, strand))
         else:
-            parttuple = (_sl(new_start, lim, strand), _sl(0, new_end, strand))
+            parttuple = (
+                SimpleLocation(new_start, lim, strand),
+                SimpleLocation(0, new_end, strand),
+            )
             newparts.extend(parttuple if strand != -1 else parttuple[::-1])
     try:
-        newloc = _cl(newparts)
+        newloc = CompoundLocation(newparts)
     except ValueError:
         newloc, *n = newparts
     assert len(newloc) == len(original_location)
@@ -131,7 +134,7 @@ def shift_feature(feature, shift, lim):
     """Return a new feature with shifted location."""
     # TODO: Missing tests
     new_location = shift_location(feature.location, shift, lim)
-    new_feature = _deepcopy(feature)
+    new_feature = deepcopy(feature)
     new_feature.location = new_location
     return new_feature
 
@@ -211,7 +214,7 @@ def anneal_from_left(watson: str, crick: str) -> int:
 
     result = len(
         list(
-            _itertools.takewhile(
+            itertools.takewhile(
                 lambda x: basepair_dict.get((x[0], x[1])), zip(watson, crick[::-1])
             )
         )
@@ -220,16 +223,19 @@ def anneal_from_left(watson: str, crick: str) -> int:
     return result
 
 
-def cai(seq: str, organism: str = "sce", weights: dict = _weights):
+def cai(seq: str, organism: str = "sce", weights_dict: dict = None):
     """docstring."""
     from cai2 import CAI as _CAI
 
-    return round(_CAI(seq.upper(), weights=weights[organism]), 3)
+    if weights_dict is None:
+        weights_dict = weights
+
+    return round(_CAI(seq.upper(), weights=weights_dict[organism]), 3)
 
 
 def rarecodons(seq: str, organism="sce"):
     """docstring."""
-    rare = _rare_codons[organism]
+    rare = rare_codons[organism]
     s = seq.upper()
     slices = []
     for i in range(0, len(seq) // 3):
@@ -270,13 +276,13 @@ def express(seq: str, organism="sce"):
 
 def open_folder(pth):
     """docstring."""
-    if _sys.platform == "win32":
-        _subprocess.run(["start", pth], shell=True)
-    elif _sys.platform == "darwin":
-        _subprocess.run(["open", pth])
+    if sys.platform == "win32":
+        subprocess.run(["start", pth], shell=True)
+    elif sys.platform == "darwin":
+        subprocess.run(["open", pth])
     else:
         try:
-            _subprocess.run(["xdg-open", pth])
+            subprocess.run(["xdg-open", pth])
         except OSError:
             return "no cache to open."
 
@@ -348,16 +354,16 @@ def identifier_from_string(s: str) -> str:
     based on the argument s or an empty string
     """
     s = s.strip()
-    s = _re.sub(r"\s+", r"_", s)
+    s = re.sub(r"\s+", r"_", s)
     s.replace("-", "_")
-    s = _re.sub("[^0-9a-zA-Z_]", "", s)
-    if s and not s[0].isidentifier() or _keyword.iskeyword(s):
+    s = re.sub("[^0-9a-zA-Z_]", "", s)
+    if s and not s[0].isidentifier() or keyword.iskeyword(s):
         s = "_{s}".format(s=s)
     assert s == "" or s.isidentifier()
     return s
 
 
-def flatten(*args) -> _List:
+def flatten(*args) -> List:
     """Flattens an iterable of iterables.
 
     Down to str, bytes, bytearray or any of the pydna or Biopython seq objects
@@ -367,7 +373,7 @@ def flatten(*args) -> _List:
     while args:
         top = args.pop()
         if (
-            isinstance(top, _collections.abc.Iterable)
+            isinstance(top, collections.abc.Iterable)
             and not isinstance(top, (str, bytes, bytearray))
             and not hasattr(top, "reverse_complement")
         ):
@@ -663,12 +669,12 @@ def eq(*args, **kwargs):
 
     if topology == "circular":
         # force circular comparison of all given sequences
-        for s1, s2 in _itertools.combinations(args_string_list, 2):
+        for s1, s2 in itertools.combinations(args_string_list, 2):
             if not (s1 in s2 + s2 or rc(s1) in s2 + s2):
                 same = False
     elif topology == "linear":
         # force linear comparison of all given sequences
-        for s1, s2 in _itertools.combinations(args_string_list, 2):
+        for s1, s2 in itertools.combinations(args_string_list, 2):
             if not (s1 == s2 or s1 == rc(s2)):
                 same = False
     return same
@@ -734,14 +740,18 @@ def cuts_overlap(left_cut, right_cut, seq_len):
     return (x[1] >= y[0]) != (y[1] <= x[0])  # (x[1] > y[0]) != (y[1] < x[0])
 
 
-def location_boundaries(loc: _Union[_sl, _cl]):
+def location_boundaries(loc: Union[SimpleLocation, CompoundLocation]):
     if loc.strand == -1:
         return loc.parts[-1].start, loc.parts[0].end
     else:
         return loc.parts[0].start, loc.parts[-1].end
 
 
-def locations_overlap(loc1: _Union[_sl, _cl], loc2: _Union[_sl, _cl], seq_len):
+def locations_overlap(
+    loc1: Union[SimpleLocation, CompoundLocation],
+    loc2: Union[SimpleLocation, CompoundLocation],
+    seq_len,
+):
     start1, end1 = location_boundaries(loc1)
     start2, end2 = location_boundaries(loc2)
 
@@ -759,7 +769,7 @@ def locations_overlap(loc1: _Union[_sl, _cl], loc2: _Union[_sl, _cl], seq_len):
             [start2 - seq_len, end2],
         ]
 
-    for b1, b2 in _itertools.product(boundaries1, boundaries2):
+    for b1, b2 in itertools.product(boundaries1, boundaries2):
         if b1[0] < b2[1] and b1[1] > b2[0]:
             return True
 
@@ -814,7 +824,7 @@ def limit_iterator(iterator, limit):
 
 def create_location(
     start: int, end: int, lim: int, strand: int | None = None
-) -> _Location:
+) -> Location:
     """
     Create a location object from a start and end position.
     If the end position is less than the start position, the location is circular. It handles negative positions.
@@ -867,6 +877,6 @@ def create_location(
     while end < 0:
         end += lim
     if end > start:
-        return _sl(start, end, strand)
+        return SimpleLocation(start, end, strand)
     else:
-        return shift_location(_sl(start, end + lim, strand), 0, lim)
+        return shift_location(SimpleLocation(start, end + lim, strand), 0, lim)

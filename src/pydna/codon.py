@@ -6,7 +6,7 @@
 
 # https://www.genome.jp/kegg/catalog/org_list.html
 
-from typing import Dict as _Dict
+from typing import Dict
 
 _sce_weights = {
     "TTT": 1.0,
@@ -81,7 +81,7 @@ weights = {"sce": _sce_weights}
 # PMID: 11589713
 
 
-start: _Dict[str, _Dict[str, float]] = {
+start: Dict[str, Dict[str, float]] = {
     "sce": {"ATG": 1.000, "TTG": 0.069, "ATA": 0.005},
     "eco": {},
 }
@@ -99,13 +99,13 @@ rare_codons = {
     "eco": ["AGG", "AGA", "ATA", "CTA", "CGA", "CGG", "CCC", "TCG"],
 }
 
-stop: _Dict[str, _Dict[str, float]] = {
+stop: Dict[str, Dict[str, float]] = {
     "sce": {"TAA": 0.470, "TAG": 0.230, "TGA": 0.300},
     "eco": {},
 }
 
 
-n_end: _Dict[str, _Dict[str, str]] = {
+n_end: Dict[str, Dict[str, str]] = {
     "sce": {
         "Val": ">30 h",
         "Met": ">30 h",

@@ -106,7 +106,7 @@ def test_pydna_Genbank_fresh_part(monkeypatch):
     mock_efetch = mock.MagicMock(name="mock_efetch1")
     mock_efetch().read.side_effect = open("X60065-100-110.gb", "r").read
     monkeypatch.setenv("pydna_email", "someoneelse@example.com")
-    monkeypatch.setattr("pydna.genbank._Entrez.efetch", mock_efetch)
+    monkeypatch.setattr("pydna.genbank.Entrez.efetch", mock_efetch)
     from pydna.genbank import Genbank
 
     gb = Genbank("bjornjobb@gmail.com")
@@ -123,7 +123,7 @@ def test_pydna_Genbank_fresh_partII(monkeypatch):
     mock_efetch = mock.MagicMock(name="mock_efetch1")
     mock_efetch().read.side_effect = open("X60065-100-110.gb", "r").read
     monkeypatch.setenv("pydna_email", "someoneelse@example.com")
-    monkeypatch.setattr("pydna.genbank._Entrez.efetch", mock_efetch)
+    monkeypatch.setattr("pydna.genbank.Entrez.efetch", mock_efetch)
     from pydna.genbank import Genbank
 
     gb = Genbank("bjornjobb@gmail.com")

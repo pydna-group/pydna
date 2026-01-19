@@ -2,7 +2,7 @@
 from Bio.Seq import reverse_complement
 from pydna.dseqrecord import Dseqrecord as _Dseqrecord
 import re
-import itertools as _itertools
+import itertools
 from Bio.SeqFeature import SimpleLocation, SeqFeature
 from pydna.utils import shift_location
 from pydna.sequence_regex import compute_regex_site, dseqrecord_finditer
@@ -110,7 +110,7 @@ def gateway_overlap(
                 if len(matches_y) == 0:
                     continue
 
-                for match_x, match_y in _itertools.product(matches_x, matches_y):
+                for match_x, match_y in itertools.product(matches_x, matches_y):
                     # Find the overlap sequence within each match, and use the
                     # core 7 pbs that are constant
                     overlap_x = re.search(overlap_regex, match_x.group())
