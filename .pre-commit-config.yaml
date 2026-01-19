@@ -29,7 +29,6 @@ repos:
     hooks:
       - id: flake8
         args: ["--max-line-length=88"]
-        exclude: ^tests/
 
   # Remove metadata from jupyter notebooks. This will always be triggered when you commit a change in a notebook.
   - repo: local
