@@ -7,7 +7,6 @@ import warnings
 
 from unittest.mock import patch, mock_open, MagicMock
 
-from pydna.genbankfile import GenbankFile
 from pydna.dseq import Dseq
 from pydna.dseqrecord import Dseqrecord
 from pydna.readers import read
@@ -1915,7 +1914,6 @@ def test___eq__():
     # field is instantiated (this is removed in the __eq__ method
     # to compare seqrecords, and if it's missing it gives an error)
     assert Dseqrecord("AAA") != Dseqrecord.from_SeqRecord(SeqRecord("AAA"))
-    assert Dseqrecord("AAA") != GenbankFile.from_SeqRecord(SeqRecord("AAA"))
 
 
 def test___ne__():
