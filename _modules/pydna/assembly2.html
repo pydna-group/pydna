@@ -1026,30 +1026,6 @@ document.write(`
 
 
 
-<div class="viewcode-block" id="fill_left">
-<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.fill_left">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fill_left</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">Dseq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseq</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill the left overhang of a sequence with the complementary sequence.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">seq</span><span class="o">.</span><span class="n">cast_to_ds_left</span><span class="p">()</span></div>
-
-
-
-<div class="viewcode-block" id="fill_right">
-<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.fill_right">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fill_right</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">Dseq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseq</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill the right overhang of a sequence with the complementary sequence.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">seq</span><span class="o">.</span><span class="n">cast_to_ds_right</span><span class="p">()</span>  <span class="c1"># _Dseq(new_watson, new_crick, seq.ovhg)</span></div>
-
-
-
-<div class="viewcode-block" id="fill_dseq">
-<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.fill_dseq">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fill_dseq</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">Dseq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseq</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fill the overhangs of a sequence with the complementary sequence.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">fill_left</span><span class="p">(</span><span class="n">fill_right</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span></div>
-
-
-
 <div class="viewcode-block" id="reverse_complement_assembly">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.reverse_complement_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">reverse_complement_assembly</span><span class="p">(</span>
@@ -1413,7 +1389,7 @@ document.write(`
             <span class="n">ovhg</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">dummy_cut</span> <span class="o">=</span> <span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">ovhg</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">open_seq</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">apply_cut</span><span class="p">(</span><span class="n">dummy_cut</span><span class="p">,</span> <span class="n">dummy_cut</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">fill_dseq</span><span class="p">(</span><span class="n">open_seq</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="n">features</span><span class="o">=</span><span class="n">open_seq</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">open_seq</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">cast_to_ds</span><span class="p">(),</span> <span class="n">features</span><span class="o">=</span><span class="n">open_seq</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">seq</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span></div>
 

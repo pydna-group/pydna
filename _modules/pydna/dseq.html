@@ -2905,6 +2905,13 @@ document.write(`
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="Dseq.cast_to_ds">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.cast_to_ds">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cast_to_ds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sequencially calls cast_to_ds_left and cast_to_ds_right.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cast_to_ds_left</span><span class="p">()</span><span class="o">.</span><span class="n">cast_to_ds_right</span><span class="p">()</span></div>
+
+
 <div class="viewcode-block" id="Dseq.cast_to_ds_left">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.cast_to_ds_left">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cast_to_ds_left</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
