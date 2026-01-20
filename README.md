@@ -481,16 +481,14 @@ To work locally with the documentation, check the [documentation README](docs/RE
 See the [releases](https://github.com/pydna-group/pydna/releases) for changes and releases.
 
 The build workflow builds a PyPI packages using poetry. This workflow is triggered by publishing a Github release manually from the Github web interface.
+We keep future release names [here](https://docs.google.com/document/d/1PrBYKzDh6QBcqfH9ksjpgArJo3ibDhMRNcibfXtYmCc/edit?tab=t.0). Please edit to
+reflect used release names.
 
-![----]( http://bit.ly/coloredline)
+![----](http://bit.ly/coloredline)
 
 ## History 📜
 
 Pydna was made public in 2012 on [Google code](https://code.google.com/archive/p/pydna).
-
-:microbe:
-
-:portugal:
 
 ## Who is using pydna? 🧪
 
