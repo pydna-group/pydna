@@ -2,7 +2,7 @@
 import pytest
 from pydna.dseqrecord import Dseqrecord
 from pydna.assembly import Assembly
-from pydna import contig
+
 from pydna._pretty import pretty_str
 from pydna.amplify import pcr
 from pydna.parsers import parse_primers
@@ -85,24 +85,6 @@ def test_contig_circular():
     assert fig == cont.figure()
 
     return cont.figure_mpl()
-
-    from unittest.mock import MagicMock
-
-    pp = MagicMock()
-
-    cont._repr_pretty_(pp, None)
-
-    pp.text.assert_called_with("Contig(o59)")
-
-    from Bio.Seq import Seq
-
-    from pydna.seqrecord import SeqRecord
-
-    arg = SeqRecord(Seq("aaa"))
-
-    import networkx as nx
-
-    contig.Contig.from_SeqRecord(arg, graph=nx.MultiDiGraph())
 
 
 def test_reverse_complement():
@@ -314,14 +296,10 @@ def test_mpl3():
         fragment.name = target.strip()
         fragments.append(fragment)
 
-    asm = Assembly(fragments)
+    asm3 = Assembly(fragments)
 
-    cps = asm.assemble_circular()
+    cps3 = asm3.assemble_circular()
 
-    cp = cps[0]
+    cp3 = cps3[0]
 
-    return cp.figure_mpl()
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-vv", "-s"])
+    return cp3.figure_mpl()
