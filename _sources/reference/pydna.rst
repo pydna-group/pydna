@@ -73,14 +73,6 @@ pydna.common\_sub\_strings module
    :undoc-members:
    :show-inheritance:
 
-pydna.conftest module
----------------------
-
-.. automodule:: pydna.conftest
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pydna.contig module
 -------------------
 
@@ -177,14 +169,6 @@ pydna.genbank module
    :undoc-members:
    :show-inheritance:
 
-pydna.genbankfile module
-------------------------
-
-.. automodule:: pydna.genbankfile
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pydna.genbankfixer module
 -------------------------
 
@@ -193,34 +177,10 @@ pydna.genbankfixer module
    :undoc-members:
    :show-inheritance:
 
-pydna.genbankrecord module
---------------------------
-
-.. automodule:: pydna.genbankrecord
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pydna.goldengate module
------------------------
-
-.. automodule:: pydna.goldengate
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pydna.ladders module
 --------------------
 
 .. automodule:: pydna.ladders
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-pydna.ligate module
--------------------
-
-.. automodule:: pydna.ligate
    :members:
    :undoc-members:
    :show-inheritance:

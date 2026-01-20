@@ -339,8 +339,8 @@ document.write(`
 
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">NCBISequenceSource</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.genbankrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenbankRecord</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.readers</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio</span><span class="w"> </span><span class="kn">import</span> <span class="n">Entrez</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span>
@@ -403,7 +403,7 @@ document.write(`
         <span class="n">seq_start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">seq_stop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">strand</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenbankRecord</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseqrecord</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;This method downloads a genbank nuclotide record from genbank. This method is</span>
 <span class="sd">        cached by default. This can be controlled by editing the **pydna_cached_funcs** environment</span>
 <span class="sd">        variable. The best way to do this permanently is to edit the edit the</span>
@@ -442,7 +442,7 @@ document.write(`
 <span class="sd">        &quot;2&quot;, 2, &quot;-&quot; or &quot;-1&quot;, the antisense (Crick) strand is returned, otherwise</span>
 <span class="sd">        the sense (Watson) strand is returned.</span>
 
-<span class="sd">        Result is returned as a :class:`pydna.genbankrecord.GenbankRecord` object.</span>
+<span class="sd">        Result is returned as a :class:`Dseqrecord` object.</span>
 
 <span class="sd">        References</span>
 <span class="sd">        ----------</span>
@@ -515,16 +515,10 @@ document.write(`
 </div>
 
 
-        <span class="c1"># return GenbankRecord(</span>
-        <span class="c1">#     read(text), item=item, start=seq_start, stop=seq_stop, strand=strand</span>
-        <span class="c1"># )</span>
-
 
 <div class="viewcode-block" id="genbank">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.genbank">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">genbank</span><span class="p">(</span>
-    <span class="n">accession</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;CS570233.1&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenbankRecord</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">genbank</span><span class="p">(</span><span class="n">accession</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;CS570233.1&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseqrecord</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Download a genbank nuclotide record.</span>
 
