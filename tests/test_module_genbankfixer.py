@@ -51,7 +51,3 @@ def test_wrapstring():
         == "01234\n56789\n\n"
     )
     assert wrapstring("0123456789", 1, 5, padfirst=False) == "0123\n 4567\n 89\n"
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-x", "-vvv", "-s"])

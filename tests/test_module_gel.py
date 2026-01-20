@@ -42,7 +42,3 @@ def test_gel():
     frame4 = np.asarray(im)
 
     assert np.array_equal(frame3, frame4)
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-vv", "-s"])

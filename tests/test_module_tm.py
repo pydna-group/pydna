@@ -62,7 +62,3 @@ def test_tm_neb():
             tm.tm_neb("blah")
 
         assert "Could not connect to NEB API" in str(excinfo.value)
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-vv", "-s"])

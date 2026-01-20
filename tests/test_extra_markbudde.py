@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import pytest
-
 from pydna.readers import read
 
 
@@ -28,7 +26,3 @@ def test_mark_budde():
     'pGREG505'
     >>>
     """
-
-
-if __name__ == "__main__":
-    pytest.cmdline.main([__file__, "-v", "-s"])

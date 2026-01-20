@@ -4,7 +4,6 @@
 test parse
 """
 
-import pytest
 import os
 
 test_files = os.path.join(os.path.dirname(__file__))
@@ -427,7 +426,3 @@ def test_parse_snapgene():
     )[0]
     assert not seq.circular
     assert len(seq) == 2304
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])

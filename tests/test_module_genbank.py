@@ -229,7 +229,3 @@ def test_pydna_Genbank_set_strand_antisense_stop10(urlopenMock, monkeypatch):
     loc = SimpleLocation(0, 10, -1)
     assert result.source.coordinates == loc
     assert str(loc.extract(full_sequence.seq)) == str(result.seq)
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-vv", "-s"])

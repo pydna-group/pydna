@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import pytest
 
 
 def test_primer():
@@ -34,7 +33,3 @@ def test_primer():
     # print(str(w.seq).ljust(20))
     # print(str(w.tail))
     # print(str(w.footprint).rjust(15))
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-vv", "-s"])
