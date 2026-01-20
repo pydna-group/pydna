@@ -1605,3 +1605,15 @@ def test_mw():
     A = unambiguous_dna_weights["A"]
 
     assert round(double_strand_linear.mw() - A - T + h2o, 1) == round(mw, 1)
+
+
+def test_cast_to_ds():
+
+    solution = Dseq("ACGT")
+    for query in [
+        Dseq("ACGT", "T", 0),
+        Dseq("ACGT", "G", -1),
+        Dseq("ACGT", "C", -2),
+        Dseq("ACGT", "A", -3),
+    ]:
+        assert query.cast_to_ds() == solution
