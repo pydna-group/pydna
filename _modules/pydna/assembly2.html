@@ -2570,7 +2570,7 @@ document.write(`
 <span class="sd">        List of assembled DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">(</span><span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">(</span><span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">InFusionSource</span><span class="p">)</span></div>
 
 
@@ -2597,7 +2597,7 @@ document.write(`
 <span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">(</span><span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">(</span><span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">OverlapExtensionPCRLigationSource</span><span class="p">)</span></div>
 
 
