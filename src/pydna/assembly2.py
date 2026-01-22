@@ -2077,7 +2077,7 @@ def in_fusion_assembly(
         List of assembled DNA molecules
     """
 
-    products = gibson_assembly(frags, limit)
+    products = gibson_assembly(frags, limit, circular_only)
     return _recast_sources(products, InFusionSource)
 
 
@@ -2101,7 +2101,7 @@ def fusion_pcr_assembly(
     list[Dseqrecord]
         List of assembled DNA molecules
     """
-    products = gibson_assembly(frags, limit)
+    products = gibson_assembly(frags, limit, circular_only)
     return _recast_sources(products, OverlapExtensionPCRLigationSource)
 
 
