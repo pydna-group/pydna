@@ -1601,9 +1601,8 @@ class Dseq(Seq):
             DESCRIPTION.
 
         """
-        recessed = copy.deepcopy(self)
         n += max(0, self.ovhg or 0)
-        recessed = Dseq(
+        return Dseq(
             self._data[:n]
             .translate(dscode_to_crick_table)
             .translate(complement_table_for_dscode)
@@ -1611,7 +1610,6 @@ class Dseq(Seq):
             .lstrip()
             + self._data[n:]
         )
-        return recessed
 
     def nibble_five_prime_right(self: DseqType, n: int = 1) -> DseqType:
         """
@@ -1668,18 +1666,16 @@ class Dseq(Seq):
         gatc
         ctag
         """
-        recessed = copy.deepcopy(self)
         n = len(self) - n
         ovhg = len(self) if self.right_ovhg is None else self.right_ovhg
         n -= max(0, ovhg)
-        recessed = Dseq(
+        return Dseq(
             self._data[:n]
             + self._data[n:]
             .translate(dscode_to_watson_table)
             .translate(dscode_to_watson_tail_table)
             .lstrip()
         )
-        return recessed
 
     exo1_front = nibble_five_prime_left  # TODO: consider using the new names
     exo1_end = nibble_five_prime_right  # TODO: consider using the new names
@@ -1745,14 +1741,13 @@ class Dseq(Seq):
         """
         ovhg = len(self) if self.ovhg is None else self.ovhg
         n -= min(0, ovhg)
-        recessed = Dseq(
+        return Dseq(
             self._data[:n]
             .translate(dscode_to_watson_table)
             .translate(dscode_to_watson_tail_table)
             .lstrip()
             + self._data[n:]
         )
-        return recessed
 
     def nibble_three_prime_right(self: DseqType, n=1) -> DseqType:
         """
@@ -1812,7 +1807,7 @@ class Dseq(Seq):
         n = len(self) - n
         ovhg = len(self) if self.right_ovhg is None else self.right_ovhg
         n += min(0, ovhg)
-        recessed = Dseq(
+        return Dseq(
             self._data[:n]
             + self._data[n:]
             .translate(dscode_to_crick_table)
@@ -1820,7 +1815,6 @@ class Dseq(Seq):
             .translate(dscode_to_crick_tail_table)
             .lstrip()
         )
-        return recessed
 
     def no_cutters(
         self, batch: Union[RestrictionBatch, None] = None
