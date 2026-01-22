@@ -1649,6 +1649,23 @@ def test_gibson_assembly():
                 assert products_str == expected_outputs
 
 
+def test_gibson_assembly_circular_only():
+    hom = "CGTACGCACA"
+
+    seq1 = Dseqrecord("AAAA" + hom)
+    seq2 = Dseqrecord(hom + "CCCC")
+    for gibson_like_function in [
+        assembly.gibson_assembly,
+        assembly.in_fusion_assembly,
+        assembly.fusion_pcr_assembly,
+    ]:
+        products = gibson_like_function([seq1, seq2], 7, circular_only=True)
+        assert len(products) == 0
+        products = gibson_like_function([seq1, seq2], 7, circular_only=False)
+        assert len(products) == 1
+        assert str(products[0].seq) == "AAAA" + hom + "CCCC"
+
+
 def test_insertion_assembly():
 
     # Insertion of linear sequence into linear sequence (like
