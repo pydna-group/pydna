@@ -105,14 +105,6 @@ pydna.design module
    :undoc-members:
    :show-inheritance:
 
-pydna.download module
----------------------
-
-.. automodule:: pydna.download
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 pydna.dseq module
 -----------------
 
