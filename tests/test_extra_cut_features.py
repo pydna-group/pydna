@@ -3,7 +3,6 @@
 """
 test cut
 """
-import pytest
 
 
 def test_cut_feat():
@@ -32,7 +31,3 @@ def test_cut_feat():
 
     pcrProdDseqrecord = amplicon_to_dseqrecord(pcrProd)
     assert len(pcrProdDseqrecord.cut(EcoRI)[1].features) == 16
-
-
-if __name__ == "__main__":
-    pytest.cmdline.main([__file__, "-v", "-s"])

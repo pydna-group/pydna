@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import pytest
 
 
 def test_contig(monkeypatch):
@@ -186,7 +185,3 @@ def test_linear(monkeypatch):
     assert x.figure() == answer.strip()
     answer = "acgatgctatactgtgCCNCCtgtgctgtgctcta\n                     TGTGCTGTGCTCTA\n                     tgtgctgtgctctaTTTTTTTtattctggctgtatc\n                                          TATTCTGGCTGTATC\n                                          tattctggctgtatcGGGGGtacgatgctatactgtg\n"
     assert x.detailed_figure()
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-vv", "-s"])

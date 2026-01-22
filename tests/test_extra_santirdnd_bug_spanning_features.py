@@ -4,8 +4,6 @@
 test parse
 """
 
-import pytest
-
 
 def test_spanning_features():
     pass
@@ -85,6 +83,3 @@ def test_spanning_features():
 #    x2=tmp2._multiply_circular(2)
 #
 #    assert str(x2.features[0].extract(x2).seq) == "GTGTGTAGTAGCTGTGGTTACTGACTC"
-
-if __name__ == "__main__":
-    pytest.cmdline.main([__file__, "-v", "-s"])

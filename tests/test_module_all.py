@@ -15,22 +15,14 @@ def test_repr():
         "Assembly",
         "genbank",
         "Genbank",
-        "download_text",
         "Dseqrecord",
         "Dseq",
         "read",
         "read_primer",
         "parse",
         "parse_primers",
-        # "ape",
         "primer_design",
         "assembly_fragments",
-        # "circular_assembly_fragments",
         "eq",
         "gbtext_clean",
-        # "PrimerList",
     ]
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])

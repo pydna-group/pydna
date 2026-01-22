@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import pytest
-
 
 def test_crispr():
     from pydna.crispr import cas9, protospacer
@@ -59,7 +57,3 @@ def test_crispr():
     assert target.cut(cas9("GTTACTTTACCCGACGTCCC")) == target.cut(
         cas9("GTTACTTTACCCGACGTCCC".lower())
     )
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-vv", "-s"])

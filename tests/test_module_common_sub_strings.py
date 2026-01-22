@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import pytest
-
 
 def test_fast():
     from pydna import common_sub_strings
@@ -70,7 +68,3 @@ def test_fast():
     (8, 1, 2)
     (8, 4, 2) 6
     """
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v", "-s"])

@@ -372,10 +372,6 @@ def test_cai():
     assert s.express().lol() == lol
 
 
-if __name__ == "__main__":
-    pytest.main([__file__, "-vv", "-s"])
-
-
 #    >>> import warnings
 #    >>> from pydna import _PydnaWarning
 #    >>> warnings.simplefilter('ignore', _PydnaWarning)

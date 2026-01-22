@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import pytest
 
 
 def test_fakeseq():
@@ -14,7 +13,3 @@ def test_fakeseq():
     assert str(fs) == repr(fs) == "FakeSeq(1.0e+03)"
 
     assert fs > FakeSeq(999)
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-vv", "-s"])

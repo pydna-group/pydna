@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import pytest
-
 
 def test_repr_pretty_():
     from pydna._pretty import pretty_str
@@ -51,7 +49,3 @@ def test_PrettyTable():
     c = copy(x)
     c.set_style(TableStyle.MARKDOWN)
     assert x._repr_markdown_() == pretty_str(c.get_string())
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-vv", "-s"])

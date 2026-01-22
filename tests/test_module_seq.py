@@ -89,25 +89,6 @@ def test_no_orf():
     assert s2.orfs(2) == []
 
 
-if __name__ == "__main__":
-    args = [
-        __file__,
-        "--cov=pydna",
-        "--cov-append",
-        "--cov-report=html:../htmlcov",
-        "--cov-report=xml",
-        "--capture=no",
-        "--durations=10",
-        "--import-mode=importlib",
-        "--nbval",
-        "--current-env",
-        "--doctest-modules",
-        "--capture=no",
-        "-vvv",
-    ]
-    pytest.main(args)
-
-
 #    >>> import warnings
 #    >>> from pydna import _PydnaWarning
 #    >>> warnings.simplefilter('ignore', _PydnaWarning)

@@ -340,7 +340,3 @@ def test_create_location():
 
     # Special case: start and end are the same, spans entire sequence
     assert str(create_location(5, 5, 10)) == "join{[5:10], [0:5]}"
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-vv", "-s"])

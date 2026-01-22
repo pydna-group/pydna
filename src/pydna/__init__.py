@@ -49,23 +49,27 @@ functions with a lowercase letter:
          ├── amplify
          │         ├── Anneal
          │         └── pcr
+         │
          ├── assembly
          │          └── Assembly
+         │
          ├── design
          │        ├── assembly_fragments
          │        └── primer_design
-         ├── download
-         │          └── download_text
+         │
          ├── dseqrecord
          │            └── Dseqrecord
          ├── gel
          │     └── Gel
+         │
          ├── genbank
          │         ├── genbank
          │         └── Genbank
+         │
          ├── parsers
          │         ├── parse
          │         └── parse_primers
+         │
          └── readers
                    ├── read
                    └── read_primers

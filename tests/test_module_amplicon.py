@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import pytest
 
 
 def test_amplicon():
@@ -131,7 +130,3 @@ def test_amplicon_dbd_low_gc():
     fig = dedent(fig).strip()
 
     assert str(prod.dbd_program()) == fig
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-vv", "-s"])
