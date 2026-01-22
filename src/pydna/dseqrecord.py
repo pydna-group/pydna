@@ -26,7 +26,7 @@ from Bio.SeqFeature import CompoundLocation
 from Bio.SeqFeature import SimpleLocation
 from pydna.seqrecord import SeqRecord
 from Bio.Seq import translate
-from pydna.utils import identifier_from_string
+
 import copy
 import operator
 import os
@@ -851,15 +851,6 @@ class Dseqrecord(SeqRecord):
             return self.apply_cut(cut, cut)
         else:
             answer = Dseqrecord("")
-        identifier = "part_{id}".format(id=self.id)
-        if answer.features:
-            sf = max(answer.features, key=len)  # default
-            if "label" in sf.qualifiers:
-                identifier = " ".join(sf.qualifiers["label"])
-            elif "note" in sf.qualifiers:
-                identifier = " ".join(sf.qualifiers["note"])
-        answer.id = identifier_from_string(identifier)[:16]
-        answer.name = identifier_from_string("part_{name}".format(name=self.name))[:16]
         return answer
 
     def __eq__(self, other):
