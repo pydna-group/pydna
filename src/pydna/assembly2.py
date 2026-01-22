@@ -1649,7 +1649,8 @@ class Assembly:
             fragment2[f2_1_start:f2_2_end]
         )
 
-        if overlap_diff == 0:
+        # Safeguard
+        if overlap_diff == 0:  # pragma: no cover
             raise AssertionError("Overlap is 0")
 
         if overlap_diff > 0:

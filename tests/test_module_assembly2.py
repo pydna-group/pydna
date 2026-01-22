@@ -2853,3 +2853,8 @@ def test_terminal_overlap():
         assert assembly.terminal_overlap(a, b, limit=4) == []
         assert assembly.terminal_overlap(a, b, limit=4, trim_ends="5'") == [(3, 2, 4)]
         assert assembly.terminal_overlap(a, b, limit=4, trim_ends="3'") == []
+
+
+def test_terminal_overlap_error():
+    with pytest.raises(ValueError):
+        assembly.terminal_overlap(Dseqrecord("A"), Dseqrecord("A"), trim_ends="dummy")
