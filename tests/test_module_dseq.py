@@ -1628,3 +1628,38 @@ def test_cast_to_ds():
         Dseq("ACGT", "A", -3),
     ]:
         assert query.cast_to_ds() == solution
+
+
+def test_overlapping_cuts():
+
+    from pydna.dseq import Dseq
+    from Bio.Restriction import PstI, SbfI, BamHI, DpnI, BcgI
+
+    s = Dseq("CCTGCAGG")
+
+    assert s.cut(PstI) == (Dseq(b"CCXPIE"), Dseq(b"ZQJFGG"))
+    assert s.cut(SbfI) == (Dseq(b"CCXPIE"), Dseq(b"ZQJFGG"))
+
+    with pytest.raises(ValueError):
+        s.cut(PstI, SbfI)
+
+    t = Dseq("GGATCC")
+
+    assert t.cut(BamHI) == (Dseq("GQFZJ"), Dseq("PEXIC"))
+    assert t.cut(DpnI) == (Dseq("GGA"), Dseq("TCC"))
+
+    with pytest.raises(ValueError):
+        t.cut(BamHI, DpnI)
+
+    q = Dseq("TgcgtagatcgtACGAggatccTGCGtcaagtgtctat")
+    assert q.cut(BamHI, BamHI, BamHI) == (
+        Dseq("TgcgtagatcgtACGAgqfzj"),
+        Dseq("pexicTGCGtcaagtgtctat"),
+    )
+
+    assert q.cut(BamHI, BcgI) == (
+        Dseq("Tpi"),
+        Dseq("qjgtagatcgtACGAgqfzj"),
+        Dseq("pexicTGCGtcaagtgtcxe"),
+        Dseq("zft"),
+    )
