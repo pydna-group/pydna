@@ -1878,7 +1878,7 @@ class Dseq(Seq):
             """docstring."""
             w = f"{self.ovhg * '-'}{self.watson}{'-' * (-self.ovhg + len(self.crick) - len(self.watson))}".upper()
             c = f"{'-' * (self.ovhg + len(self.watson) - len(self.crick))}{self.crick}{-self.ovhg * '-'}".upper()
-            cs = ldseguid(w, c, alphabet="{DNA-extended}")
+            cs = ldseguid(w, c, alphabet="{DNA-extended},AU")
         return cs
 
     def isblunt(self) -> bool:

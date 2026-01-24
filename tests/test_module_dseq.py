@@ -1345,6 +1345,17 @@ def test_checksums():
     )
 
 
+def test_seguid_with_uracil():
+
+    x = Dseq("PEXIaUaOaQFZJ")
+
+    assert x.seguid() == "ldseguid=AA-pG6wsGMu2J-AuWBWlOi3iDc4"
+
+    y = Dseq("QFZJaUaOaPEXI")
+
+    assert y.seguid() == "ldseguid=10e3S-WXX1z0BHqpbYTPeb2MwUY"
+
+
 def test_ovhg():
     # No overhang
     assert Dseq("AAAA").ovhg == 0
