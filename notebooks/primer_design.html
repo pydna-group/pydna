@@ -510,22 +510,9 @@ document.write(`
 <blockquote>
 <div><p><strong>NOTE:</strong> When you call the function, it will make a request to the NEB server. This makes it much slower than using the builtin methods. In addition, we cannot guarantee that the NEB server will always be available, nor that the calculations that they use will not change in the future, since the code is not available.</p>
 </div></blockquote>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.tm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tm_neb</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">tm_neb</span><span class="p">(</span><span class="s2">&quot;ATGCAAACAGTAATGATGGA&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;q5-0&quot;</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">tm_neb</span><span class="p">(</span><span class="s2">&quot;ATTATCTTTTTCAGCAATAGAATCA&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;q5-0&quot;</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>59
-57
-</pre></div>
-</div>
-</div>
-</div>
+<p>from pydna.tm import tm_neb</p>
+<p>print(tm_neb(“ATGCAAACAGTAATGATGGA”, 0.5, “q5-0”))
+print(tm_neb(“ATTATCTTTTTCAGCAATAGAATCA”, 0.5, “q5-0”))</p>
 </section>
 </section>
 <section id="designing-primers-for-pcr">
@@ -769,54 +756,15 @@ products AGCATATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATTCTATTGCTGAAAAAGATAATCACTCT
 <p>You can use the NEB Tm calculator for primer design, but it is much slower than the other methods because it relies on making requests to the NEB server.</p>
 <p>You can use the <code class="docutils literal notranslate"><span class="pre">estimate_function</span></code> argument to pass another function that will be used to estimate a first Tm, then the NEB calculator will be used to refine it.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">estimate_function</span></code> and <code class="docutils literal notranslate"><span class="pre">tm_method</span></code> only takes the sequence string as argument, so you need to make an adapter function for the the case of <code class="docutils literal notranslate"><span class="pre">tm_neb</span></code> (see below)</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">custom_tm_function</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
-    <span class="c1"># We include the print statement to show that is only called a few times</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Estimating Tm using NEB Tm calculator&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">tm_neb</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;q5-0&#39;</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;With an estimate function&quot;</span><span class="p">)</span>
-<span class="n">primer_design</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">tm_func</span><span class="o">=</span><span class="n">custom_tm_function</span><span class="p">,</span> <span class="n">estimate_function</span><span class="o">=</span><span class="n">tm_default</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Without an estimate function&quot;</span><span class="p">)</span>
-<span class="n">primer_design</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">tm_func</span><span class="o">=</span><span class="n">custom_tm_function</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>With an estimate function
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-
-Without an estimate function
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-Estimating Tm using NEB Tm calculator
-</pre></div>
-</div>
-<div class="output text_html">Amplicon(54)</div></div>
-</div>
+<p>def custom_tm_function(seq):
+# We include the print statement to show that is only called a few times
+print(‘Estimating Tm using NEB Tm calculator’)
+return tm_neb(seq, 0.5, ‘q5-0’)</p>
+<p>print(“With an estimate function”)
+primer_design(template, tm_func=custom_tm_function, estimate_function=tm_default)
+print()</p>
+<p>print(“Without an estimate function”)
+primer_design(template, tm_func=custom_tm_function)</p>
 </section>
 </section>
 </section>
