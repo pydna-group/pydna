@@ -39,6 +39,7 @@ def test_tms():
         tm.Q5(primer)
 
 
+@pytest.mark.skip(reason="Some kind of server error.")
 def test_tm_neb():
     from pydna import tm
     import requests
