@@ -308,4 +308,20 @@ def parse_snapgene(file_path: str) -> list[Dseqrecord]:
             sequence_file_format="snapgene",
             index_in_file=0,
         )
+
         return [Dseqrecord(parsed_seq, circular=circular, source=source)]
+
+
+def parse_proteins(data):
+    """docstring."""
+    from pydna.seq import ProteinSeq as _ProteinSeq
+    from pydna.seqrecord import ProteinSeqRecord as _ProteinSeqRecord
+
+    new = []
+    for s in parse(data, ds=False):
+        obj = _ProteinSeqRecord("")
+        obj.__dict__.update(s.__dict__)
+        obj.seq = _ProteinSeq(obj.seq)
+        obj.annotations |= {"molecule_type": "protein"}
+        new.append(obj)
+    return new
