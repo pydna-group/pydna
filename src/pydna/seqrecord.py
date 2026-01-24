@@ -76,7 +76,7 @@ class SeqRecord(BioSeqRecordSeqRecord):
         self.name = ps(self.name)
         self.description = ps(self.description)
 
-        self.annotations.update({"molecule_type": "DNA"})
+        self.annotations.setdefault("molecule_type", "DNA")
         self.map_target = None
 
         if not hasattr(self.seq, "transcribe"):

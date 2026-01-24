@@ -6,8 +6,26 @@
 # as part of this package.
 
 """Provides two functions, read and read_primer."""
+
 from pydna.parsers import parse
-from pydna.primer import Primer
+from pydna.parsers import parse_primers
+from pydna.parsers import parse_proteins
+
+
+def _read(parser, data, **kwargs):
+    try:
+        (result,) = parser(data, **kwargs)
+    except ValueError as err:
+        msg = str(err)
+        if "too many" in msg:
+            raise ValueError(
+                f"More than one sequence found in data ({str(data)[:79]})"
+            ) from err
+        elif "not enough" in msg:
+            raise ValueError(f"No sequence found in data ({str(data)[:79]})") from err
+        else:  # pragma: no cover
+            raise err  # re-raises the same ValueError with original traceback
+    return result
 
 
 def read(data, ds=True, is_path=None):
@@ -40,25 +58,19 @@ def read(data, ds=True, is_path=None):
     parse
 
     """
+    return _read(parse, data, ds=True)
 
-    try:
-        (result,) = parse(data, ds, is_path)
-    except ValueError as err:
-        msg = str(err)
-
-        if "too many" in msg:
-            raise ValueError(
-                f"More than one sequence found in data ({str(data)[:79]})"
-            ) from err
-        elif "not enough" in msg:
-            raise ValueError(f"No sequence found in data ({str(data)[:79]})") from err
-        else:  # pragma: no cover
-            raise err  # re-raises the same ValueError with original traceback
-    return result
 
 
 def read_primer(data):
     """Use this function to read a primer sequence from a string or a local file.
     The usage is similar to the :func:`parse_primer` function."""
 
-    return Primer(read(data, ds=False))
+    return _read(parse_primers, data)
+
+
+def read_protein(data):
+    """Use this function to read a primer sequence from a string or a local file.
+    The usage is similar to the :func:`parse_primer` function."""
+
+    return _read(parse_proteins, data, ds=False)
