@@ -701,9 +701,20 @@ document.write(`
 
 
 
-<div class="viewcode-block" id="gibson_overlap">
-<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.gibson_overlap">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">gibson_overlap</span><span class="p">(</span><span class="n">seqx</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_trim_end_info</span><span class="p">(</span>
+    <span class="n">end_info</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">trim_ends</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">is_five_prime</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Utility function to get the trim information for terminal_overlap.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">end_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">trim_ends</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">end_info</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">is_five_prime</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">end_info</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">return</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">is_five_prime</span> <span class="k">else</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="terminal_overlap">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.terminal_overlap">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">terminal_overlap</span><span class="p">(</span>
+    <span class="n">seqx</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">trim_ends</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Assembly algorithm to find terminal overlaps (e.g. for Gibson assembly).</span>
 <span class="sd">    The order matters, we want alignments like:</span>
@@ -728,6 +739,9 @@ document.write(`
 <span class="sd">        The second sequence</span>
 <span class="sd">    limit : int</span>
 <span class="sd">        Minimum length of the overlap</span>
+<span class="sd">    trim_ends : str</span>
+<span class="sd">        The ends to trim, either &#39;5&#39; or &#39;3&#39;</span>
+<span class="sd">        If None, no trimming is done</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -735,38 +749,104 @@ document.write(`
 <span class="sd">        A list of overlaps between the two sequences</span>
 
 <span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
-<span class="sd">    &gt;&gt;&gt; from pydna.assembly2 import gibson_overlap</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.assembly2 import terminal_overlap</span>
 <span class="sd">    &gt;&gt;&gt; x = Dseqrecord(&quot;ttactaAAAAAA&quot;)</span>
 <span class="sd">    &gt;&gt;&gt; y = Dseqrecord(&quot;AAAAAAcgcacg&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; gibson_overlap(x, y, limit=5)</span>
+<span class="sd">    &gt;&gt;&gt; terminal_overlap(x, y, limit=5)</span>
 <span class="sd">    [(6, 0, 6), (7, 0, 5)]</span>
-<span class="sd">    &gt;&gt;&gt; gibson_overlap(y, x, limit=5)</span>
+<span class="sd">    &gt;&gt;&gt; terminal_overlap(y, x, limit=5)</span>
+<span class="sd">    []</span>
+
+<span class="sd">    Trimming the ends:</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.dseq import Dseq</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.assembly2 import terminal_overlap</span>
+<span class="sd">    &gt;&gt;&gt; x = Dseqrecord(Dseq.from_full_sequence_and_overhangs(&quot;aaaACGT&quot;, 0, 3))</span>
+<span class="sd">    &gt;&gt;&gt; y = Dseqrecord(Dseq.from_full_sequence_and_overhangs(&quot;ACGTccc&quot;, 3, 0))</span>
+<span class="sd">    &gt;&gt;&gt; terminal_overlap(x, y, limit=4)</span>
+<span class="sd">    [(3, 0, 4)]</span>
+<span class="sd">    &gt;&gt;&gt; terminal_overlap(x, y, limit=4, trim_ends=&quot;5&#39;&quot;)</span>
+<span class="sd">    [(3, 0, 4)]</span>
+<span class="sd">    &gt;&gt;&gt; terminal_overlap(x, y, limit=4, trim_ends=&quot;3&#39;&quot;)</span>
 <span class="sd">    []</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># Because Gibson enzymes remove 5&#39; overhangs, we remove them from the sequence</span>
-    <span class="c1"># when looking for homology, then we shift the location of the second fragment accordingly.</span>
-    <span class="c1"># This is only relevant for linear fragments, so we don&#39;t need to worry about</span>
-    <span class="c1"># shifting locations for circular fragments.</span>
-    <span class="n">trim_x_left</span> <span class="o">=</span> <span class="o">-</span><span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span> <span class="k">if</span> <span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
-    <span class="n">trim_x_right</span> <span class="o">=</span> <span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">watson_ovhg</span> <span class="k">if</span> <span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">watson_ovhg</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span>
-    <span class="n">trim_y_left</span> <span class="o">=</span> <span class="o">-</span><span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span> <span class="k">if</span> <span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
-    <span class="n">trim_y_right</span> <span class="o">=</span> <span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">watson_ovhg</span> <span class="k">if</span> <span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">watson_ovhg</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">trim_ends</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">trim_ends</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;5&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;3&#39;&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;trim_ends must be &#39;5&#39; or &#39;3&#39;&quot;</span><span class="p">)</span>
 
-    <span class="n">stringx</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="p">[</span><span class="n">trim_x_left</span><span class="p">:</span><span class="n">trim_x_right</span><span class="p">])</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-    <span class="n">stringy</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="p">[</span><span class="n">trim_y_left</span><span class="p">:</span><span class="n">trim_y_right</span><span class="p">])</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">trim_ends</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">trim_x_left</span><span class="p">,</span> <span class="n">trim_x_right</span><span class="p">,</span> <span class="n">trim_y_left</span><span class="p">,</span> <span class="n">trim_y_right</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">stringx</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="n">stringy</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">trim_x_right</span> <span class="o">=</span> <span class="n">_get_trim_end_info</span><span class="p">(</span>
+            <span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">three_prime_end</span><span class="p">(),</span> <span class="n">trim_ends</span><span class="p">,</span> <span class="n">is_five_prime</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="n">trim_y_left</span> <span class="o">=</span> <span class="n">_get_trim_end_info</span><span class="p">(</span>
+            <span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">five_prime_end</span><span class="p">(),</span> <span class="n">trim_ends</span><span class="p">,</span> <span class="n">is_five_prime</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="c1"># I actually don&#39;t think these two are needed, since only the terminal</span>
+        <span class="c1"># join between x_right and y_left is tested, but maybe there is some edge-case</span>
+        <span class="c1"># that I am missing, so keeping them just in case.</span>
+        <span class="n">trim_x_left</span> <span class="o">=</span> <span class="n">_get_trim_end_info</span><span class="p">(</span>
+            <span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">five_prime_end</span><span class="p">(),</span> <span class="n">trim_ends</span><span class="p">,</span> <span class="n">is_five_prime</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="n">trim_y_right</span> <span class="o">=</span> <span class="n">_get_trim_end_info</span><span class="p">(</span>
+            <span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">three_prime_end</span><span class="p">(),</span> <span class="n">trim_ends</span><span class="p">,</span> <span class="n">is_five_prime</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+
+        <span class="n">stringx</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="p">[</span><span class="n">trim_x_left</span><span class="p">:</span><span class="n">trim_x_right</span><span class="p">])</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="n">stringy</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">seqy</span><span class="o">.</span><span class="n">seq</span><span class="p">[</span><span class="n">trim_y_left</span><span class="p">:</span><span class="n">trim_y_right</span><span class="p">])</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
     <span class="c1"># We have to convert to list because we need to modify the matches</span>
     <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span>
         <span class="nb">list</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">common_sub_strings_str</span><span class="p">(</span><span class="n">stringx</span><span class="p">,</span> <span class="n">stringy</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">stringx</span><span class="p">))</span>
     <span class="p">]</span>
+
+    <span class="c1"># Shift the matches if the left end has been trimmed</span>
     <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
         <span class="k">match</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">trim_x_left</span>
         <span class="k">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">trim_y_left</span>
 
     <span class="c1"># convert to tuples again</span>
     <span class="k">return</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="gibson_overlap">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.gibson_overlap">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gibson_overlap</span><span class="p">(</span><span class="n">seqx</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Assembly algorithm to find terminal overlaps for Gibson assembly.</span>
+<span class="sd">    It is a wrapper around terminal_overlap with trim_ends=&quot;5&#39;&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">terminal_overlap</span><span class="p">(</span><span class="n">seqx</span><span class="p">,</span> <span class="n">seqy</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">trim_ends</span><span class="o">=</span><span class="s2">&quot;5&#39;&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="in_fusion_overlap">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.in_fusion_overlap">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">in_fusion_overlap</span><span class="p">(</span><span class="n">seqx</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Assembly algorithm to find terminal overlaps for in-fusion assembly.</span>
+<span class="sd">    It is a wrapper around terminal_overlap with trim_ends=&quot;3&#39;&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">terminal_overlap</span><span class="p">(</span><span class="n">seqx</span><span class="p">,</span> <span class="n">seqy</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">trim_ends</span><span class="o">=</span><span class="s2">&quot;3&#39;&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="pcr_fusion_overlap">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.pcr_fusion_overlap">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pcr_fusion_overlap</span><span class="p">(</span><span class="n">seqx</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Assembly algorithm to find terminal overlaps for PCR fusion assembly.</span>
+<span class="sd">    It is a wrapper around terminal_overlap with trim_ends=None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">terminal_overlap</span><span class="p">(</span><span class="n">seqx</span><span class="p">,</span> <span class="n">seqy</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">trim_ends</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
 
 
 
@@ -2016,8 +2096,9 @@ document.write(`
             <span class="n">fragment2</span><span class="p">[</span><span class="n">f2_1_start</span><span class="p">:</span><span class="n">f2_2_end</span><span class="p">]</span>
         <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">overlap_diff</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Overlap is 0&quot;</span>
+        <span class="c1"># Safeguard</span>
+        <span class="k">if</span> <span class="n">overlap_diff</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">&quot;Overlap is 0&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">overlap_diff</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">new_loc_f1_1</span> <span class="o">=</span> <span class="n">create_location</span><span class="p">(</span>
@@ -2570,7 +2651,9 @@ document.write(`
 <span class="sd">        List of assembled DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">(</span><span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">)</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_assembly_products</span><span class="p">(</span>
+        <span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">in_fusion_overlap</span><span class="p">,</span> <span class="n">circular_only</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">InFusionSource</span><span class="p">)</span></div>
 
 
@@ -2597,7 +2680,9 @@ document.write(`
 <span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List of assembled DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">products</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">(</span><span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">)</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_assembly_products</span><span class="p">(</span>
+        <span class="n">frags</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">pcr_fusion_overlap</span><span class="p">,</span> <span class="n">circular_only</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">OverlapExtensionPCRLigationSource</span><span class="p">)</span></div>
 
 

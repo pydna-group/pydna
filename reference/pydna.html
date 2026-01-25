@@ -608,7 +608,10 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.combine_algorithms"><code class="docutils literal notranslate"><span class="pre">combine_algorithms()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.blunt_overlap"><code class="docutils literal notranslate"><span class="pre">blunt_overlap()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.common_sub_strings"><code class="docutils literal notranslate"><span class="pre">common_sub_strings()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.terminal_overlap"><code class="docutils literal notranslate"><span class="pre">terminal_overlap()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.gibson_overlap"><code class="docutils literal notranslate"><span class="pre">gibson_overlap()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.in_fusion_overlap"><code class="docutils literal notranslate"><span class="pre">in_fusion_overlap()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.pcr_fusion_overlap"><code class="docutils literal notranslate"><span class="pre">pcr_fusion_overlap()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.sticky_end_sub_strings"><code class="docutils literal notranslate"><span class="pre">sticky_end_sub_strings()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.zip_match_leftwards"><code class="docutils literal notranslate"><span class="pre">zip_match_leftwards()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.zip_match_rightwards"><code class="docutils literal notranslate"><span class="pre">zip_match_rightwards()</span></code></a></li>
@@ -6216,8 +6219,8 @@ the function common_sub_strings_str for more details. It is case insensitive.</p
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pydna.assembly2.gibson_overlap">
-<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">gibson_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seqx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seqy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/assembly2.html#gibson_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.gibson_overlap" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydna.assembly2.terminal_overlap">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">terminal_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seqx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seqy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trim_ends</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/assembly2.html#terminal_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.terminal_overlap" title="Link to this definition">#</a></dt>
 <dd><p>Assembly algorithm to find terminal overlaps (e.g. for Gibson assembly).
 The order matters, we want alignments like:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">seqx</span><span class="p">:</span>    <span class="n">oooo</span><span class="o">------</span><span class="n">xxxx</span>
@@ -6237,23 +6240,58 @@ The order matters, we want alignments like:</p>
 <li><p><strong>seqx</strong> (<a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord"><em>Dseqrecord</em></a>) – The first sequence</p></li>
 <li><p><strong>seqy</strong> (<a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord"><em>Dseqrecord</em></a>) – The second sequence</p></li>
 <li><p><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Minimum length of the overlap</p></li>
+<li><p><strong>trim_ends</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The ends to trim, either ‘5’ or ‘3’
+If None, no trimming is done</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><em>list[SequenceOverlap]</em> – A list of overlaps between the two sequences</p></li>
 <li><p><em>&gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</em></p></li>
-<li><p><em>&gt;&gt;&gt; from pydna.assembly2 import gibson_overlap</em></p></li>
+<li><p><em>&gt;&gt;&gt; from pydna.assembly2 import terminal_overlap</em></p></li>
 <li><p><em>&gt;&gt;&gt; x = Dseqrecord(“ttactaAAAAAA”)</em></p></li>
 <li><p><em>&gt;&gt;&gt; y = Dseqrecord(“AAAAAAcgcacg”)</em></p></li>
-<li><p><em>&gt;&gt;&gt; gibson_overlap(x, y, limit=5)</em></p></li>
+<li><p><em>&gt;&gt;&gt; terminal_overlap(x, y, limit=5)</em></p></li>
 <li><p><em>[(6, 0, 6), (7, 0, 5)]</em></p></li>
-<li><p><em>&gt;&gt;&gt; gibson_overlap(y, x, limit=5)</em></p></li>
+<li><p><em>&gt;&gt;&gt; terminal_overlap(y, x, limit=5)</em></p></li>
+<li><p><em>[]</em></p></li>
+<li><p><em>Trimming the ends</em></p></li>
+<li><p><em>&gt;&gt;&gt; from pydna.dseq import Dseq</em></p></li>
+<li><p><em>&gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</em></p></li>
+<li><p><em>&gt;&gt;&gt; from pydna.assembly2 import terminal_overlap</em></p></li>
+<li><p><em>&gt;&gt;&gt; x = Dseqrecord(Dseq.from_full_sequence_and_overhangs(“aaaACGT”, 0, 3))</em></p></li>
+<li><p><em>&gt;&gt;&gt; y = Dseqrecord(Dseq.from_full_sequence_and_overhangs(“ACGTccc”, 3, 0))</em></p></li>
+<li><p><em>&gt;&gt;&gt; terminal_overlap(x, y, limit=4)</em></p></li>
+<li><p><em>[(3, 0, 4)]</em></p></li>
+<li><p><em>&gt;&gt;&gt; terminal_overlap(x, y, limit=4, trim_ends=”5’”)</em></p></li>
+<li><p><em>[(3, 0, 4)]</em></p></li>
+<li><p><em>&gt;&gt;&gt; terminal_overlap(x, y, limit=4, trim_ends=”3’”)</em></p></li>
 <li><p><em>[]</em></p></li>
 </ul>
 </p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.gibson_overlap">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">gibson_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seqx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seqy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/assembly2.html#gibson_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.gibson_overlap" title="Link to this definition">#</a></dt>
+<dd><p>Assembly algorithm to find terminal overlaps for Gibson assembly.
+It is a wrapper around terminal_overlap with trim_ends=”5’”.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.in_fusion_overlap">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">in_fusion_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seqx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seqy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/assembly2.html#in_fusion_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.in_fusion_overlap" title="Link to this definition">#</a></dt>
+<dd><p>Assembly algorithm to find terminal overlaps for in-fusion assembly.
+It is a wrapper around terminal_overlap with trim_ends=”3’”.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.assembly2.pcr_fusion_overlap">
+<span class="sig-prename descclassname"><span class="pre">pydna.assembly2.</span></span><span class="sig-name descname"><span class="pre">pcr_fusion_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seqx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seqy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/assembly2.html#pcr_fusion_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.assembly2.pcr_fusion_overlap" title="Link to this definition">#</a></dt>
+<dd><p>Assembly algorithm to find terminal overlaps for PCR fusion assembly.
+It is a wrapper around terminal_overlap with trim_ends=None.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -15334,7 +15372,10 @@ the location spans the entire sequence (it’s not empty).
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.combine_algorithms"><code class="docutils literal notranslate"><span class="pre">combine_algorithms()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.blunt_overlap"><code class="docutils literal notranslate"><span class="pre">blunt_overlap()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.common_sub_strings"><code class="docutils literal notranslate"><span class="pre">common_sub_strings()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.terminal_overlap"><code class="docutils literal notranslate"><span class="pre">terminal_overlap()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.gibson_overlap"><code class="docutils literal notranslate"><span class="pre">gibson_overlap()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.in_fusion_overlap"><code class="docutils literal notranslate"><span class="pre">in_fusion_overlap()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.pcr_fusion_overlap"><code class="docutils literal notranslate"><span class="pre">pcr_fusion_overlap()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.sticky_end_sub_strings"><code class="docutils literal notranslate"><span class="pre">sticky_end_sub_strings()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.zip_match_leftwards"><code class="docutils literal notranslate"><span class="pre">zip_match_leftwards()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.assembly2.zip_match_rightwards"><code class="docutils literal notranslate"><span class="pre">zip_match_rightwards()</span></code></a></li>

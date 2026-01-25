@@ -1979,17 +1979,15 @@ document.write(`
 <span class="sd">            DESCRIPTION.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">recessed</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">n</span> <span class="o">+=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">recessed</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">Dseq</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span>
             <span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_crick_table</span><span class="p">)</span>
             <span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">complement_table_for_dscode</span><span class="p">)</span>
             <span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_crick_tail_table</span><span class="p">)</span>
             <span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
             <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">recessed</span></div>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseq.nibble_five_prime_right">
@@ -2049,18 +2047,16 @@ document.write(`
 <span class="sd">        gatc</span>
 <span class="sd">        ctag</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">recessed</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-</span> <span class="n">n</span>
         <span class="n">ovhg</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_ovhg</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_ovhg</span>
         <span class="n">n</span> <span class="o">-=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ovhg</span><span class="p">)</span>
-        <span class="n">recessed</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">Dseq</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span>
             <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span>
             <span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_watson_table</span><span class="p">)</span>
             <span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_watson_tail_table</span><span class="p">)</span>
             <span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">recessed</span></div>
+        <span class="p">)</span></div>
 
 
     <span class="n">exo1_front</span> <span class="o">=</span> <span class="n">nibble_five_prime_left</span>  <span class="c1"># TODO: consider using the new names</span>
@@ -2129,14 +2125,13 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ovhg</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span>
         <span class="n">n</span> <span class="o">-=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ovhg</span><span class="p">)</span>
-        <span class="n">recessed</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">Dseq</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span>
             <span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_watson_table</span><span class="p">)</span>
             <span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_watson_tail_table</span><span class="p">)</span>
             <span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
             <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">recessed</span></div>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseq.nibble_three_prime_right">
@@ -2199,15 +2194,14 @@ document.write(`
         <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-</span> <span class="n">n</span>
         <span class="n">ovhg</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_ovhg</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_ovhg</span>
         <span class="n">n</span> <span class="o">+=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ovhg</span><span class="p">)</span>
-        <span class="n">recessed</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">Dseq</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span>
             <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span>
             <span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_crick_table</span><span class="p">)</span>
             <span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">complement_table_for_dscode</span><span class="p">)</span>
             <span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_crick_tail_table</span><span class="p">)</span>
             <span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">recessed</span></div>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseq.no_cutters">
