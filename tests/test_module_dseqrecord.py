@@ -456,6 +456,11 @@ def test_format():
         == "LOCUS       AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 6 bp    DNA     linear   UNK 01-JAN-1980"
     )
 
+    assert (
+        Dseqrecord("PEXIGATCQFZJ").format("fasta-2line dscode")
+        == ">id description\nPEXIGATCQFZJ"
+    )
+
 
 def test_write():
 
