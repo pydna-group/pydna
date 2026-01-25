@@ -1611,6 +1611,9 @@ def test_golden_gate():
 
 
 def test_gibson_assembly():
+    # This test is a bit convoluted, but it tests the correct trimming behaviour
+    # for Gibson (5'), in-fusion (3') and pcr fusion (no trimming).
+
     # For the test we pass input fragments + expected output
     test_cases = [
         (["AGAGACCaaaAGAGACC"], ["AGAGACCaaa"]),
@@ -1618,32 +1621,54 @@ def test_gibson_assembly():
     ]
 
     # Should return the same thing for gibson and equivalent functions:
-    for gibson_like_function in [
-        assembly.gibson_assembly,
-        assembly.in_fusion_assembly,
-        assembly.fusion_pcr_assembly,
-    ]:
+    for i, gibson_like_function in enumerate(
+        [
+            assembly.gibson_assembly,
+            assembly.in_fusion_assembly,
+            assembly.fusion_pcr_assembly,
+        ]
+    ):
+        mult = 1 if i == 0 else -1
         for fragments_str, expected_outputs in test_cases:
-            for mode in range(3):
+            for mode in range(4):
                 if mode == 0:
                     # No overhangs
                     fragments = [Dseqrecord(f) for f in fragments_str]
                 elif mode == 1:
-                    # 3' overhangs (should give the same results as no overhangs)
+                    # Overhangs that should give the same results as no overhangs
                     fragments = [
-                        Dseqrecord(Dseq.from_full_sequence_and_overhangs(f, 3, 3))
+                        Dseqrecord(
+                            Dseq.from_full_sequence_and_overhangs(f, 3 * mult, 3 * mult)
+                        )
                         for f in fragments_str
                     ]
-                else:
-                    # Add 5' overhangs that will be removed in Gibson, so should give same results as no overhangs
+                elif mode == 2:
+                    # Overhangs that will prevent the joining
                     fragments = [
                         Dseqrecord(
                             Dseq.from_full_sequence_and_overhangs(
-                                "aaa" + f + "aaa", -3, -3
+                                "aaa" + f + "ccc", 3 * mult, 3 * mult
                             )
                         )
                         for f in fragments_str
                     ]
+                    products = gibson_like_function(fragments, 7, circular_only=True)
+                    assert len(products) == 0
+                    continue
+                elif i != 2:
+                    # Add overhangs that will be removed, so should give same results as no overhangs
+                    # Skipped in PCR fusion
+                    fragments = [
+                        Dseqrecord(
+                            Dseq.from_full_sequence_and_overhangs(
+                                "aaa" + f + "aaa", -3 * mult, -3 * mult
+                            )
+                        )
+                        for f in fragments_str
+                    ]
+                else:
+                    # If PCR fusion and mode 3, skip
+                    continue
                 products = gibson_like_function(fragments, 7, circular_only=True)
                 products_str = [str(p.seq) for p in products]
                 assert products_str == expected_outputs
@@ -2775,3 +2800,61 @@ def test_pcr_assembly():
     primer_fwd = Primer("ACGTACGT")
     products = assembly.pcr_assembly(template, primer_fwd, primer_fwd, limit=8)
     assert len(products) == 1
+
+
+def test_terminal_overlap():
+
+    # The loop is just to show that the left overhang of the x sequence
+    # and the right overhang of the y sequence don't affect the outcome
+    for outside_ovhg in (0, 2, -2):
+
+        # Cases where the overlap is on the overhang
+        a = Dseqrecord(
+            Dseq.from_full_sequence_and_overhangs("aaaACGT", outside_ovhg, 3)
+        )
+        b = Dseqrecord(
+            Dseq.from_full_sequence_and_overhangs("ACGTccc", 3, outside_ovhg)
+        )
+
+        assert assembly.terminal_overlap(a, b, limit=4) == [(3, 0, 4)]
+        assert assembly.terminal_overlap(a, b, limit=4, trim_ends="5'") == [(3, 0, 4)]
+        assert assembly.terminal_overlap(a, b, limit=4, trim_ends="3'") == []
+
+        a = Dseqrecord(
+            Dseq.from_full_sequence_and_overhangs("aaaACGT", outside_ovhg, -3)
+        )
+        b = Dseqrecord(
+            Dseq.from_full_sequence_and_overhangs("ACGTccc", -3, outside_ovhg)
+        )
+
+        assert assembly.terminal_overlap(a, b, limit=4) == [(3, 0, 4)]
+        assert assembly.terminal_overlap(a, b, limit=4, trim_ends="5'") == []
+        assert assembly.terminal_overlap(a, b, limit=4, trim_ends="3'") == [(3, 0, 4)]
+
+        # Cases where trimming the overhang exposes the homologous terminal overlap
+        a = Dseqrecord(
+            Dseq.from_full_sequence_and_overhangs("aaaACGTaa", outside_ovhg, 2)
+        )
+        b = Dseqrecord(
+            Dseq.from_full_sequence_and_overhangs("ggACGTccc", 2, outside_ovhg)
+        )
+
+        assert assembly.terminal_overlap(a, b, limit=4) == []
+        assert assembly.terminal_overlap(a, b, limit=4, trim_ends="5'") == []
+        assert assembly.terminal_overlap(a, b, limit=4, trim_ends="3'") == [(3, 2, 4)]
+
+        a = Dseqrecord(
+            Dseq.from_full_sequence_and_overhangs("aaaACGTaa", outside_ovhg, -2)
+        )
+        b = Dseqrecord(
+            Dseq.from_full_sequence_and_overhangs("ggACGTccc", -2, outside_ovhg)
+        )
+
+        assert assembly.terminal_overlap(a, b, limit=4) == []
+        assert assembly.terminal_overlap(a, b, limit=4, trim_ends="5'") == [(3, 2, 4)]
+        assert assembly.terminal_overlap(a, b, limit=4, trim_ends="3'") == []
+
+
+def test_terminal_overlap_error():
+    with pytest.raises(ValueError):
+        assembly.terminal_overlap(Dseqrecord("A"), Dseqrecord("A"), trim_ends="dummy")

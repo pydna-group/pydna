@@ -357,7 +357,18 @@ def common_sub_strings(
     return [r for r in results if r not in shifted_matches]
 
 
-def gibson_overlap(seqx: Dseqrecord, seqy: Dseqrecord, limit=25):
+def _get_trim_end_info(
+    end_info: tuple[str, str], trim_ends: str, is_five_prime: bool
+) -> int | None:
+    """Utility function to get the trim information for terminal_overlap."""
+    if end_info[0] == trim_ends:
+        return len(end_info[1]) if is_five_prime else len(end_info[1]) * -1
+    return 0 if is_five_prime else None
+
+
+def terminal_overlap(
+    seqx: Dseqrecord, seqy: Dseqrecord, limit=25, trim_ends: None | str = None
+):
     """
     Assembly algorithm to find terminal overlaps (e.g. for Gibson assembly).
     The order matters, we want alignments like:
@@ -382,6 +393,9 @@ def gibson_overlap(seqx: Dseqrecord, seqy: Dseqrecord, limit=25):
         The second sequence
     limit : int
         Minimum length of the overlap
+    trim_ends : str
+        The ends to trim, either '5' or '3'
+        If None, no trimming is done
 
     Returns
     -------
@@ -389,38 +403,95 @@ def gibson_overlap(seqx: Dseqrecord, seqy: Dseqrecord, limit=25):
         A list of overlaps between the two sequences
 
     >>> from pydna.dseqrecord import Dseqrecord
-    >>> from pydna.assembly2 import gibson_overlap
+    >>> from pydna.assembly2 import terminal_overlap
     >>> x = Dseqrecord("ttactaAAAAAA")
     >>> y = Dseqrecord("AAAAAAcgcacg")
-    >>> gibson_overlap(x, y, limit=5)
+    >>> terminal_overlap(x, y, limit=5)
     [(6, 0, 6), (7, 0, 5)]
-    >>> gibson_overlap(y, x, limit=5)
+    >>> terminal_overlap(y, x, limit=5)
+    []
+
+    Trimming the ends:
+    >>> from pydna.dseq import Dseq
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.assembly2 import terminal_overlap
+    >>> x = Dseqrecord(Dseq.from_full_sequence_and_overhangs("aaaACGT", 0, 3))
+    >>> y = Dseqrecord(Dseq.from_full_sequence_and_overhangs("ACGTccc", 3, 0))
+    >>> terminal_overlap(x, y, limit=4)
+    [(3, 0, 4)]
+    >>> terminal_overlap(x, y, limit=4, trim_ends="5'")
+    [(3, 0, 4)]
+    >>> terminal_overlap(x, y, limit=4, trim_ends="3'")
     []
     """
 
-    # Because Gibson enzymes remove 5' overhangs, we remove them from the sequence
-    # when looking for homology, then we shift the location of the second fragment accordingly.
-    # This is only relevant for linear fragments, so we don't need to worry about
-    # shifting locations for circular fragments.
-    trim_x_left = -seqx.seq.ovhg if seqx.seq.ovhg < 0 else 0
-    trim_x_right = seqx.seq.watson_ovhg if seqx.seq.watson_ovhg < 0 else None
-    trim_y_left = -seqy.seq.ovhg if seqy.seq.ovhg < 0 else 0
-    trim_y_right = seqy.seq.watson_ovhg if seqy.seq.watson_ovhg < 0 else None
+    if trim_ends is not None and trim_ends not in ["5'", "3'"]:
+        raise ValueError("trim_ends must be '5' or '3'")
 
-    stringx = str(seqx.seq[trim_x_left:trim_x_right]).upper()
-    stringy = str(seqy.seq[trim_y_left:trim_y_right]).upper()
+    if trim_ends is None:
+        trim_x_left, trim_x_right, trim_y_left, trim_y_right = (0, None, 0, None)
+        stringx = str(seqx.seq).upper()
+        stringy = str(seqy.seq).upper()
+    else:
+        trim_x_right = _get_trim_end_info(
+            seqx.seq.three_prime_end(), trim_ends, is_five_prime=False
+        )
+        trim_y_left = _get_trim_end_info(
+            seqy.seq.five_prime_end(), trim_ends, is_five_prime=True
+        )
+
+        # I actually don't think these two are needed, since only the terminal
+        # join between x_right and y_left is tested, but maybe there is some edge-case
+        # that I am missing, so keeping them just in case.
+        trim_x_left = _get_trim_end_info(
+            seqx.seq.five_prime_end(), trim_ends, is_five_prime=True
+        )
+        trim_y_right = _get_trim_end_info(
+            seqy.seq.three_prime_end(), trim_ends, is_five_prime=False
+        )
+
+        stringx = str(seqx.seq[trim_x_left:trim_x_right]).upper()
+        stringy = str(seqy.seq[trim_y_left:trim_y_right]).upper()
+
     # We have to convert to list because we need to modify the matches
     matches = [
         list(m)
         for m in common_sub_strings_str(stringx, stringy, limit)
         if (m[1] == 0 and m[0] + m[2] == len(stringx))
     ]
+
+    # Shift the matches if the left end has been trimmed
     for match in matches:
         match[0] += trim_x_left
         match[1] += trim_y_left
 
     # convert to tuples again
     return [tuple(m) for m in matches]
+
+
+def gibson_overlap(seqx: Dseqrecord, seqy: Dseqrecord, limit=25):
+    """
+    Assembly algorithm to find terminal overlaps for Gibson assembly.
+    It is a wrapper around terminal_overlap with trim_ends="5'".
+    """
+
+    return terminal_overlap(seqx, seqy, limit, trim_ends="5'")
+
+
+def in_fusion_overlap(seqx: Dseqrecord, seqy: Dseqrecord, limit=25):
+    """
+    Assembly algorithm to find terminal overlaps for in-fusion assembly.
+    It is a wrapper around terminal_overlap with trim_ends="3'".
+    """
+    return terminal_overlap(seqx, seqy, limit, trim_ends="3'")
+
+
+def pcr_fusion_overlap(seqx: Dseqrecord, seqy: Dseqrecord, limit=25):
+    """
+    Assembly algorithm to find terminal overlaps for PCR fusion assembly.
+    It is a wrapper around terminal_overlap with trim_ends=None.
+    """
+    return terminal_overlap(seqx, seqy, limit, trim_ends=None)
 
 
 def sticky_end_sub_strings(seqx: Dseqrecord, seqy: Dseqrecord, limit: bool = False):
@@ -1578,8 +1649,9 @@ class Assembly:
             fragment2[f2_1_start:f2_2_end]
         )
 
-        if overlap_diff == 0:
-            assert False, "Overlap is 0"
+        # Safeguard
+        if overlap_diff == 0:  # pragma: no cover
+            raise AssertionError("Overlap is 0")
 
         if overlap_diff > 0:
             new_loc_f1_1 = create_location(
@@ -2077,7 +2149,9 @@ def in_fusion_assembly(
         List of assembled DNA molecules
     """
 
-    products = gibson_assembly(frags, limit, circular_only)
+    products = common_function_assembly_products(
+        frags, limit, in_fusion_overlap, circular_only
+    )
     return _recast_sources(products, InFusionSource)
 
 
@@ -2101,7 +2175,9 @@ def fusion_pcr_assembly(
     list[Dseqrecord]
         List of assembled DNA molecules
     """
-    products = gibson_assembly(frags, limit, circular_only)
+    products = common_function_assembly_products(
+        frags, limit, pcr_fusion_overlap, circular_only
+    )
     return _recast_sources(products, OverlapExtensionPCRLigationSource)
 
 
