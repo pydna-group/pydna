@@ -6,9 +6,12 @@ from Bio.Align.substitution_matrices import load
 # Input sequences
 # ---------------------------------------------------------------------
 
+seq1 = "MKTAYIAKKKKKISFVKSHFSR"
+seq2 = "MKTAYIAKQRQISFVKSHFSRQ"
 seq1 = "MKTAYIAKQRQISFVKSHFSRQ"
 seq2 = "MKTAYIAKQISFVKSHFSR"
-
+seq2 = "MKTAYIAKQRQISFVKSHFSRQ"
+seq1 = "MKTAYIAKQISFVKSHFSR"
 # ---------------------------------------------------------------------
 # Alignment setup
 # ---------------------------------------------------------------------
@@ -41,18 +44,25 @@ def flush():
         return
 
     if current["type"] == "del":
-        seq = "".join(current["residues"])
-        start = current["start"]
-        end = current["end"]
-        if start == end:
-            edits.append(f"Delete {seq} at position {start}")
+        seq = "".join(current["from"])
+        s, e = current["start"], current["end"]
+        if s == e:
+            edits.append(f"Delete {seq} at position {s}")
         else:
-            edits.append(f"Delete {seq} at position {start}-{end}")
+            edits.append(f"Delete {seq} at position {s}-{e}")
 
     elif current["type"] == "ins":
-        seq = "".join(current["residues"])
-        pos = current["after"]
-        edits.append(f"Insert {seq} after position {pos}")
+        seq = "".join(current["to"])
+        edits.append(f"Insert {seq} after position {current['after']}")
+
+    elif current["type"] == "sub":
+        frm = "".join(current["from"])
+        to = "".join(current["to"])
+        s, e = current["start"], current["end"]
+        if s == e:
+            edits.append(f"Substitute {frm} → {to} at position {s}")
+        else:
+            edits.append(f"Substitute {frm} → {to} from position {s} to {e}")
 
     current = None
 
@@ -66,30 +76,30 @@ p2 = 0  # position in seq2 (0-based)
 
 for (s1_start, s1_end), (s2_start, s2_end) in zip(blocks1, blocks2):
 
-    # --- deletions (gap in seq2) ---
+    # --- deletions ---
     while p1 < s1_start:
         if current and current["type"] == "del" and current["end"] + 1 == p1 + 1:
-            current["residues"].append(seq1[p1])
+            current["from"].append(seq1[p1])
             current["end"] += 1
         else:
             flush()
             current = {
                 "type": "del",
-                "residues": [seq1[p1]],
+                "from": [seq1[p1]],
                 "start": p1 + 1,
                 "end": p1 + 1,
             }
         p1 += 1
 
-    # --- insertions (gap in seq1) ---
+    # --- insertions ---
     while p2 < s2_start:
         if current and current["type"] == "ins" and current["after"] == p1:
-            current["residues"].append(seq2[p2])
+            current["to"].append(seq2[p2])
         else:
             flush()
             current = {
                 "type": "ins",
-                "residues": [seq2[p2]],
+                "to": [seq2[p2]],
                 "after": p1,
             }
         p2 += 1
@@ -98,9 +108,25 @@ for (s1_start, s1_end), (s2_start, s2_end) in zip(blocks1, blocks2):
     for i in range(s1_end - s1_start):
         a = seq1[s1_start + i]
         b = seq2[s2_start + i]
-        if a != b:
+        pos = s1_start + i + 1
+
+        if a == b:
             flush()
-            edits.append(f"Substitute {a} → {b} at position {s1_start + i + 1}")
+            continue
+
+        if current and current["type"] == "sub" and current["end"] + 1 == pos:
+            current["from"].append(a)
+            current["to"].append(b)
+            current["end"] += 1
+        else:
+            flush()
+            current = {
+                "type": "sub",
+                "from": [a],
+                "to": [b],
+                "start": pos,
+                "end": pos,
+            }
 
     p1 = s1_end
     p2 = s2_end
@@ -108,13 +134,13 @@ for (s1_start, s1_end), (s2_start, s2_end) in zip(blocks1, blocks2):
 # --- tail deletions ---
 while p1 < len(seq1):
     if current and current["type"] == "del" and current["end"] + 1 == p1 + 1:
-        current["residues"].append(seq1[p1])
+        current["from"].append(seq1[p1])
         current["end"] += 1
     else:
         flush()
         current = {
             "type": "del",
-            "residues": [seq1[p1]],
+            "from": [seq1[p1]],
             "start": p1 + 1,
             "end": p1 + 1,
         }
@@ -123,12 +149,12 @@ while p1 < len(seq1):
 # --- tail insertions ---
 while p2 < len(seq2):
     if current and current["type"] == "ins" and current["after"] == p1:
-        current["residues"].append(seq2[p2])
+        current["to"].append(seq2[p2])
     else:
         flush()
         current = {
             "type": "ins",
-            "residues": [seq2[p2]],
+            "to": [seq2[p2]],
             "after": p1,
         }
     p2 += 1
