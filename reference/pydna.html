@@ -2015,9 +2015,22 @@ underlying Dseq object has to be circular.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pydna.all.Dseqrecord.format">
-<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gb'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/dseqrecord.html#Dseqrecord.format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.Dseqrecord.format" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gb'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/dseqrecord.html#Dseqrecord.format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.Dseqrecord.format" title="Link to this definition">#</a></dt>
 <dd><p>Returns the sequence as a string using a format supported by Biopython
-SeqIO <a class="footnote-reference brackets" href="#id2" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Default is “gb” which is short for Genbank.</p>
+SeqIO <a class="footnote-reference brackets" href="#id2" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Default is “gb” which is short for Genbank.
+Allowed Formats are for example:</p>
+<ul class="simple">
+<li><p>“fasta”: The standard FASTA format.</p></li>
+<li><p>“fasta-2line”: No line wrapping and exactly two lines per record.</p></li>
+<li><p>“genbank” (or “gb”): The GenBank flat file format.</p></li>
+<li><p>“embl”: The EMBL flat file format.</p></li>
+<li><p>“imgt”: The IMGT variant of the EMBL format.</p></li>
+</ul>
+<p>The format string can be modified with the keyword “dscode” if
+the underlying dscode string is desired in the output. for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;PEXIGATCQFZJ&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;fasta-2line dscode&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">=</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span><span class="p">)</span>
@@ -2037,6 +2050,12 @@ SeqIO <a class="footnote-reference brackets" href="#id2" id="id5" role="doc-note
 <span class="go">ORIGIN</span>
 <span class="go">        1 aaa</span>
 <span class="go">//</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;PEXIGATCQFZJ&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;fasta-2line&quot;</span><span class="p">))</span>
+<span class="go">&gt;id description</span>
+<span class="go">GATCGATCGATC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;PEXIGATCQFZJ&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;fasta-2line dscode&quot;</span><span class="p">))</span>
+<span class="go">&gt;id description</span>
+<span class="go">PEXIGATCQFZJ</span>
 </pre></div>
 </div>
 <p class="rubric">References</p>
@@ -10751,9 +10770,22 @@ underlying Dseq object has to be circular.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pydna.dseqrecord.Dseqrecord.format">
-<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gb'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/dseqrecord.html#Dseqrecord.format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.dseqrecord.Dseqrecord.format" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gb'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/dseqrecord.html#Dseqrecord.format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.dseqrecord.Dseqrecord.format" title="Link to this definition">#</a></dt>
 <dd><p>Returns the sequence as a string using a format supported by Biopython
-SeqIO <a class="footnote-reference brackets" href="#id36" id="id35" role="doc-noteref"><span class="fn-bracket">[</span>18<span class="fn-bracket">]</span></a>. Default is “gb” which is short for Genbank.</p>
+SeqIO <a class="footnote-reference brackets" href="#id36" id="id35" role="doc-noteref"><span class="fn-bracket">[</span>18<span class="fn-bracket">]</span></a>. Default is “gb” which is short for Genbank.
+Allowed Formats are for example:</p>
+<ul class="simple">
+<li><p>“fasta”: The standard FASTA format.</p></li>
+<li><p>“fasta-2line”: No line wrapping and exactly two lines per record.</p></li>
+<li><p>“genbank” (or “gb”): The GenBank flat file format.</p></li>
+<li><p>“embl”: The EMBL flat file format.</p></li>
+<li><p>“imgt”: The IMGT variant of the EMBL format.</p></li>
+</ul>
+<p>The format string can be modified with the keyword “dscode” if
+the underlying dscode string is desired in the output. for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;PEXIGATCQFZJ&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;fasta-2line dscode&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">=</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span><span class="p">)</span>
@@ -10773,6 +10805,12 @@ SeqIO <a class="footnote-reference brackets" href="#id36" id="id35" role="doc-no
 <span class="go">ORIGIN</span>
 <span class="go">        1 aaa</span>
 <span class="go">//</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;PEXIGATCQFZJ&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;fasta-2line&quot;</span><span class="p">))</span>
+<span class="go">&gt;id description</span>
+<span class="go">GATCGATCGATC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;PEXIGATCQFZJ&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;fasta-2line dscode&quot;</span><span class="p">))</span>
+<span class="go">&gt;id description</span>
+<span class="go">PEXIGATCQFZJ</span>
 </pre></div>
 </div>
 <p class="rubric">References</p>
