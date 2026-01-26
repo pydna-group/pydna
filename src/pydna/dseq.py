@@ -2244,7 +2244,7 @@ class Dseq(Seq):
             # argument is probably a RestrictionBatch
             enzymes = [e for e in enzymes[0]]
 
-        enzymes = flatten(enzymes)
+        enzymes = list(dict.fromkeys(flatten(enzymes)))  # remove duplicate enzymes
         out = list()
         for e in enzymes:
             # Positions of the cut on the watson strand. They are 1-based, so we subtract
