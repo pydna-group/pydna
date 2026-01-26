@@ -26,7 +26,7 @@ from Bio.SeqFeature import CompoundLocation
 from Bio.SeqFeature import SimpleLocation
 from pydna.seqrecord import SeqRecord
 from Bio.Seq import translate
-
+from Bio.Seq import Seq as BPSeq
 import copy
 import operator
 import os
@@ -453,9 +453,23 @@ class Dseqrecord(SeqRecord):
             feature.location += len(nucleotides)
         return newseq
 
-    def format(self, f="gb"):
+    def format(self, format: str = "gb"):
         """Returns the sequence as a string using a format supported by Biopython
         SeqIO [#]_. Default is "gb" which is short for Genbank.
+        Allowed Formats are for example:
+
+        * "fasta": The standard FASTA format.
+        * "fasta-2line": No line wrapping and exactly two lines per record.
+        * "genbank" (or "gb"): The GenBank flat file format.
+        * "embl": The EMBL flat file format.
+        * "imgt": The IMGT variant of the EMBL format.
+
+        The format string can be modified with the keyword "dscode" if
+        the underlying dscode string is desired in the output. for example:
+        ::
+
+            Dseqrecord("PEXIGATCQFZJ").format("fasta-2line dscode")
+
 
         Examples
         --------
@@ -477,6 +491,12 @@ class Dseqrecord(SeqRecord):
         ORIGIN
                 1 aaa
         //
+        >>> print(Dseqrecord("PEXIGATCQFZJ").format("fasta-2line"))
+        >id description
+        GATCGATCGATC
+        >>> print(Dseqrecord("PEXIGATCQFZJ").format("fasta-2line dscode"))
+        >id description
+        PEXIGATCQFZJ
 
 
         References
@@ -486,13 +506,19 @@ class Dseqrecord(SeqRecord):
 
 
         """
-
         record = copy.deepcopy(self)
-        if f in ("genbank", "gb") and self.circular:
+        if "dscode" in format:
+            format = format.replace("dscode", "")
+            obj = BPSeq("")
+            obj._data = record.seq._data
+            record.seq = obj
+        format = format.strip(" -")
+        if format in ("genbank", "gb") and self.circular:
             record.annotations["topology"] = "circular"
         else:
             record.annotations["topology"] = "linear"
-        return SeqRecord.format(record, f).strip()
+
+        return SeqRecord.format(record, format).strip()
 
     def write(self, filename=None, f="gb"):
         """Writes the Dseqrecord to a file using the format f, which must
