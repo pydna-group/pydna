@@ -21,7 +21,7 @@ from pydna.seq import ProteinSeq
 from pydna.common_sub_strings import common_sub_strings
 
 from Bio.Data.CodonTable import TranslationError
-from Bio.SeqRecord import SeqRecord
+from Bio.SeqRecord import SeqRecord as BioSeqRecordSeqRecord
 from Bio.SeqFeature import SimpleLocation
 from Bio.SeqFeature import CompoundLocation
 from pydna.seq import Seq
@@ -37,7 +37,7 @@ from warnings import warn
 import datetime
 
 
-class SeqRecord(SeqRecord):
+class SeqRecord(BioSeqRecordSeqRecord):
     """
     A subclass of the Biopython SeqRecord class.
 
@@ -86,7 +86,7 @@ class SeqRecord(SeqRecord):
         self.annotations = {ps(k): ps(v) for k, v in self.annotations.items()}
 
     @classmethod
-    def from_Bio_SeqRecord(clc, sr: SeqRecord):
+    def from_Bio_SeqRecord(clc, sr: BioSeqRecordSeqRecord):
         """Creates a pydnaSeqRecord from a Biopython SeqRecord."""
         # https://stackoverflow.com/questions/15404256/changing-the-\
         # class-of-a-python-object-casting
