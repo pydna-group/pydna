@@ -785,7 +785,7 @@ class Dseq(Seq):
         >>> ssobj
         Dseq(-7)
         GATTACA
-        <BLANKLINE>
+        |||||||
         >>> round(ssobj.mw(), 1)
         2184.4
         >>> ds_lin_obj2 = Dseq("GATZFCA")
@@ -908,7 +908,8 @@ class Dseq(Seq):
         w, c = representation_tuple(
             self._data.decode("ascii"), length_limit_for_repr=length_limit_for_repr
         )
-
+        w = w or "|" * len(c)
+        c = c or "|" * len(w)
         return pretty_str(header + "\n" + w + "\n" + c)
 
     def reverse_complement(self) -> "Dseq":
@@ -1574,7 +1575,7 @@ class Dseq(Seq):
         ctag
         >>> ds.nibble_five_prime_left(4)
         Dseq(-4)
-        <BLANKLINE>
+        ||||
         ctag
         >>> ds = Dseq.from_representation(
         ... '''
@@ -1655,7 +1656,7 @@ class Dseq(Seq):
         >>> ds.nibble_five_prime_right(4)
         Dseq(-4)
         gatc
-        <BLANKLINE>
+        ||||
         >>> ds = Dseq.from_representation(
         ... '''
         ... gatc
@@ -1724,7 +1725,7 @@ class Dseq(Seq):
         >>> ds.nibble_three_prime_left(4)
         Dseq(-4)
         gatc
-        <BLANKLINE>
+        ||||
         >>> ds = Dseq.from_representation(
         ... '''
         ...   gatc
@@ -1792,7 +1793,7 @@ class Dseq(Seq):
         ctag
         >>> ds.nibble_three_prime_right(4)
         Dseq(-4)
-        <BLANKLINE>
+        ||||
         ctag
         >>> ds = Dseq.from_representation(
         ... '''
@@ -2583,7 +2584,7 @@ class Dseq(Seq):
         >>> strands[0]
         Dseq(-2)
         ta
-        <BLANKLINE>
+        ||
         >>> ds = Dseq("tagaaptapgtatg")
         >>> ds
         Dseq(-14)
@@ -2596,7 +2597,7 @@ class Dseq(Seq):
         atctt    catac
         >>> strands[0]
         Dseq(-2)
-        <BLANKLINE>
+        ||
         at
         """
 
@@ -2630,7 +2631,7 @@ class Dseq(Seq):
         >>> strands[0]
         Dseq(-2)
         ta
-        <BLANKLINE>
+        ||
         >>> new, strands = ds.shed_ss_dna([],[(6, 8)])
         >>> new
         Dseq(-14)
@@ -2638,7 +2639,7 @@ class Dseq(Seq):
         atcttc  ccatac
         >>> strands[0]
         Dseq(-2)
-        <BLANKLINE>
+        ||
         at
         >>> ds = Dseq("tagaagtaggtatg")
         >>> new, (strand1, strand2) = ds.shed_ss_dna([(6, 8), (9, 11)],[])
@@ -2649,11 +2650,11 @@ class Dseq(Seq):
         >>> strand1
         Dseq(-2)
         ta
-        <BLANKLINE>
+        ||
         >>> strand2
         Dseq(-2)
         gt
-        <BLANKLINE>
+        ||
         """
 
         watson_cutpairs = watson_cutpairs or list()
@@ -2872,14 +2873,14 @@ class Dseq(Seq):
         >>> Dseq(parts.sticky_left5)
         Dseq(-3)
         GGG
-        <BLANKLINE>
+        |||
         >>> Dseq(parts.middle)
         Dseq(-3)
         ATC
         TAG
         >>> Dseq(parts.sticky_right5)
         Dseq(-3)
-        <BLANKLINE>
+        |||
         TCA
 
         Parameters
