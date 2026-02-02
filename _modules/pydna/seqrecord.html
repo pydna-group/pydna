@@ -347,7 +347,7 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.common_sub_strings</span><span class="w"> </span><span class="kn">import</span> <span class="n">common_sub_strings</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Data.CodonTable</span><span class="w"> </span><span class="kn">import</span> <span class="n">TranslationError</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqRecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqRecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span> <span class="k">as</span> <span class="n">BioSeqRecordSeqRecord</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompoundLocation</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Seq</span>
@@ -365,7 +365,7 @@ document.write(`
 
 <div class="viewcode-block" id="SeqRecord">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">SeqRecord</span><span class="p">(</span><span class="n">SeqRecord</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SeqRecord</span><span class="p">(</span><span class="n">BioSeqRecordSeqRecord</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subclass of the Biopython SeqRecord class.</span>
 
@@ -416,7 +416,7 @@ document.write(`
 <div class="viewcode-block" id="SeqRecord.from_Bio_SeqRecord">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.seqrecord.SeqRecord.from_Bio_SeqRecord">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_Bio_SeqRecord</span><span class="p">(</span><span class="n">clc</span><span class="p">,</span> <span class="n">sr</span><span class="p">:</span> <span class="n">SeqRecord</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_Bio_SeqRecord</span><span class="p">(</span><span class="n">clc</span><span class="p">,</span> <span class="n">sr</span><span class="p">:</span> <span class="n">BioSeqRecordSeqRecord</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a pydnaSeqRecord from a Biopython SeqRecord.&quot;&quot;&quot;</span>
         <span class="c1"># https://stackoverflow.com/questions/15404256/changing-the-\</span>
         <span class="c1"># class-of-a-python-object-casting</span>
