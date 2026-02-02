@@ -37,6 +37,8 @@ jobs:
       run:
         shell: bash
     runs-on: ${{ matrix.os }}
+    env:
+      MPLBACKEND: Agg
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
