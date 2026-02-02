@@ -1133,7 +1133,7 @@ document.write(`
 <span class="sd">        &gt;&gt;&gt; ssobj</span>
 <span class="sd">        Dseq(-7)</span>
 <span class="sd">        GATTACA</span>
-<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        |||||||</span>
 <span class="sd">        &gt;&gt;&gt; round(ssobj.mw(), 1)</span>
 <span class="sd">        2184.4</span>
 <span class="sd">        &gt;&gt;&gt; ds_lin_obj2 = Dseq(&quot;GATZFCA&quot;)</span>
@@ -1260,7 +1260,8 @@ document.write(`
         <span class="n">w</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">representation_tuple</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span> <span class="n">length_limit_for_repr</span><span class="o">=</span><span class="n">length_limit_for_repr</span>
         <span class="p">)</span>
-
+        <span class="n">w</span> <span class="o">=</span> <span class="n">w</span> <span class="ow">or</span> <span class="s2">&quot;|&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">c</span> <span class="ow">or</span> <span class="s2">&quot;|&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pretty_str</span><span class="p">(</span><span class="n">header</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">w</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Dseq.reverse_complement">
@@ -1952,7 +1953,7 @@ document.write(`
 <span class="sd">        ctag</span>
 <span class="sd">        &gt;&gt;&gt; ds.nibble_five_prime_left(4)</span>
 <span class="sd">        Dseq(-4)</span>
-<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        ||||</span>
 <span class="sd">        ctag</span>
 <span class="sd">        &gt;&gt;&gt; ds = Dseq.from_representation(</span>
 <span class="sd">        ... &#39;&#39;&#39;</span>
@@ -2036,7 +2037,7 @@ document.write(`
 <span class="sd">        &gt;&gt;&gt; ds.nibble_five_prime_right(4)</span>
 <span class="sd">        Dseq(-4)</span>
 <span class="sd">        gatc</span>
-<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        ||||</span>
 <span class="sd">        &gt;&gt;&gt; ds = Dseq.from_representation(</span>
 <span class="sd">        ... &#39;&#39;&#39;</span>
 <span class="sd">        ... gatc</span>
@@ -2108,7 +2109,7 @@ document.write(`
 <span class="sd">        &gt;&gt;&gt; ds.nibble_three_prime_left(4)</span>
 <span class="sd">        Dseq(-4)</span>
 <span class="sd">        gatc</span>
-<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        ||||</span>
 <span class="sd">        &gt;&gt;&gt; ds = Dseq.from_representation(</span>
 <span class="sd">        ... &#39;&#39;&#39;</span>
 <span class="sd">        ...   gatc</span>
@@ -2179,7 +2180,7 @@ document.write(`
 <span class="sd">        ctag</span>
 <span class="sd">        &gt;&gt;&gt; ds.nibble_three_prime_right(4)</span>
 <span class="sd">        Dseq(-4)</span>
-<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        ||||</span>
 <span class="sd">        ctag</span>
 <span class="sd">        &gt;&gt;&gt; ds = Dseq.from_representation(</span>
 <span class="sd">        ... &#39;&#39;&#39;</span>
@@ -3036,7 +3037,7 @@ document.write(`
 <span class="sd">        &gt;&gt;&gt; strands[0]</span>
 <span class="sd">        Dseq(-2)</span>
 <span class="sd">        ta</span>
-<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        ||</span>
 <span class="sd">        &gt;&gt;&gt; ds = Dseq(&quot;tagaaptapgtatg&quot;)</span>
 <span class="sd">        &gt;&gt;&gt; ds</span>
 <span class="sd">        Dseq(-14)</span>
@@ -3049,7 +3050,7 @@ document.write(`
 <span class="sd">        atctt    catac</span>
 <span class="sd">        &gt;&gt;&gt; strands[0]</span>
 <span class="sd">        Dseq(-2)</span>
-<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        ||</span>
 <span class="sd">        at</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -3086,7 +3087,7 @@ document.write(`
 <span class="sd">        &gt;&gt;&gt; strands[0]</span>
 <span class="sd">        Dseq(-2)</span>
 <span class="sd">        ta</span>
-<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        ||</span>
 <span class="sd">        &gt;&gt;&gt; new, strands = ds.shed_ss_dna([],[(6, 8)])</span>
 <span class="sd">        &gt;&gt;&gt; new</span>
 <span class="sd">        Dseq(-14)</span>
@@ -3094,7 +3095,7 @@ document.write(`
 <span class="sd">        atcttc  ccatac</span>
 <span class="sd">        &gt;&gt;&gt; strands[0]</span>
 <span class="sd">        Dseq(-2)</span>
-<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        ||</span>
 <span class="sd">        at</span>
 <span class="sd">        &gt;&gt;&gt; ds = Dseq(&quot;tagaagtaggtatg&quot;)</span>
 <span class="sd">        &gt;&gt;&gt; new, (strand1, strand2) = ds.shed_ss_dna([(6, 8), (9, 11)],[])</span>
@@ -3105,11 +3106,11 @@ document.write(`
 <span class="sd">        &gt;&gt;&gt; strand1</span>
 <span class="sd">        Dseq(-2)</span>
 <span class="sd">        ta</span>
-<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        ||</span>
 <span class="sd">        &gt;&gt;&gt; strand2</span>
 <span class="sd">        Dseq(-2)</span>
 <span class="sd">        gt</span>
-<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        ||</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">watson_cutpairs</span> <span class="o">=</span> <span class="n">watson_cutpairs</span> <span class="ow">or</span> <span class="nb">list</span><span class="p">()</span>
@@ -3337,14 +3338,14 @@ document.write(`
 <span class="sd">        &gt;&gt;&gt; Dseq(parts.sticky_left5)</span>
 <span class="sd">        Dseq(-3)</span>
 <span class="sd">        GGG</span>
-<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        |||</span>
 <span class="sd">        &gt;&gt;&gt; Dseq(parts.middle)</span>
 <span class="sd">        Dseq(-3)</span>
 <span class="sd">        ATC</span>
 <span class="sd">        TAG</span>
 <span class="sd">        &gt;&gt;&gt; Dseq(parts.sticky_right5)</span>
 <span class="sd">        Dseq(-3)</span>
-<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        |||</span>
 <span class="sd">        TCA</span>
 
 <span class="sd">        Parameters</span>
