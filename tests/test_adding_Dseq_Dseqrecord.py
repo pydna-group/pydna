@@ -2,14 +2,11 @@
 # -*- coding: utf-8 -*-
 import pytest
 from Bio.Seq import Seq
-from Bio.Seq import MutableSeq
+
+# from Bio.Seq import MutableSeq
 from Bio.SeqRecord import SeqRecord
 from pydna.dseq import Dseq
 from pydna.dseqrecord import Dseqrecord
-
-biopython_Seq = Seq("AT")
-mutable_biopython_Seq = MutableSeq("AT")
-biopython_SeqRecord = SeqRecord(biopython_Seq)
 
 
 def test_adding_Dseq_to_strings_both_sides():
@@ -189,3 +186,16 @@ def test_adding_strings_to_Dseqrecord_on_both_sides():
     with pytest.raises(TypeError) as e:
         assert (Dseqrecord("QFZJ") + "aaa").seq
         assert e.match("sticky ends not compatible!")
+
+
+def test_adding_to_Dseqrecord_on_both_sides():
+    # biopython_Seq = Seq("AT")
+    # mutable_biopython_Seq = MutableSeq("AT")
+    # biopython_SeqRecord = SeqRecord(biopython_Seq)
+    assert (Dseqrecord("GT") + SeqRecord(Seq("AT"))).seq == Dseqrecord("GTAT").seq
+    assert (SeqRecord(Seq("AT")) + Dseqrecord("GT")).seq == SeqRecord(
+        seq=Seq("ATGT")
+    ).seq
+    with pytest.raises(TypeError) as e:
+        Seq("AT") + Dseqrecord("GT")
+        assert e.match("unsupported operand")
