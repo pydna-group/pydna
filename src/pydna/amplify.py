@@ -390,6 +390,8 @@ class Anneal(object):  # ), metaclass=_Memoize):
                     "description"
                 ) or "pcr_product_{}_{}".format(fp.description, rp.description)
 
+                del prd.position
+
                 amplicon = Amplicon(
                     prd,
                     template=tpl,

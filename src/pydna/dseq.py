@@ -576,8 +576,8 @@ class Dseq(Seq):
 
         ovhg = ovhgw or ovhgc
 
-        watson = watson.strip()
-        crick = crick.strip()[::-1]
+        watson = watson.strip(" |")
+        crick = crick.strip(" |")[::-1]
 
         return Dseq(watson, crick, ovhg)
 
@@ -1101,7 +1101,7 @@ class Dseq(Seq):
         elif sticky := sticky3:
             type_ = "3'"
 
-        return type_, sticky.lower()
+        return type_, sticky
 
     def three_prime_end(self) -> Tuple[str, str]:
         """Returns a tuple describing the structure of the 5' end of
@@ -1161,7 +1161,7 @@ class Dseq(Seq):
         elif sticky := sticky3:
             type_ = "3'"
 
-        return type_, sticky.lower()
+        return type_, sticky
 
     def __add__(self: DseqType, other: [DseqType, str, bytes]) -> DseqType:
         """
@@ -1202,57 +1202,57 @@ class Dseq(Seq):
             A new Dseq object.
 
         """
-
-        if self.circular:
+        # handles: self + other
+        if self.circular or getattr(other, "circular", None):
+            # if self is circular or other has an attribute
+            # "circular" that evaluates to True
             raise TypeError("circular DNA cannot be ligated!")
-        try:
-            if other.circular:
-                raise TypeError("circular DNA cannot be ligated!")
-        except AttributeError:
-            pass
-
-        # If other evaluates to False, return a copy of self.
+        # If other evaluates to False, return a copy of self
+        # in analogy with what happens to strings eg. "" + "abc" == "abc"
         if not other:
             return copy.deepcopy(self)
         # If self evaluates to False, return a copy of other.
+        # in analogy with what happens to strings eg. "abc" + "" == "abc"
         elif not self:
             return copy.deepcopy(other)
-
         # get right side end properties for self.
         self_type, self_tail = self.three_prime_end()
-
         try:
             other_type, other_tail = other.five_prime_end()
         except AttributeError:
             # if other does not have the expected properties
-            # most likely it is a string that can be cast as
-            # a Dseq.
-            other_type, other_tail = "blunt", ""
-            other = Dseq(other)
-
+            # most likely it is a string.
+            other_type, other_tail = "single", other
+            other = Dseq(other.translate(dscode_to_watson_tail_table))
         err = TypeError("sticky ends not compatible!")
-
         # The sticky ends has to be of the same type
         # or
         # one or both of is "single" indicating a stranded molecule.
         if (self_type != other_type) and ("single" not in (self_type, other_type)):
             raise err
-
-        # tail length has to be equal for two phosphdiester bonds to form
-        if len(self_tail) != len(other_tail):
-            raise err
-
+            # tail length has to be equal for two phosphdiester bonds to form
+            if len(self_tail) != len(other_tail):
+                raise err
+        if self_type == other_type == "single":
+            if (self.watson and other.watson) or (self.crick and other.crick):
+                self_tail = other_tail = ""
         # Each basepair is checked against the pydna.alphabet basepair_dict
         # which contains the permitted base pairings.
+        j = b""
         for w, c in zip(self_tail, other_tail[::-1]):
             try:
-                basepair_dict[(w, c)]
+                j += basepair_dict[(w, c)].encode("ascii")
             except KeyError:
                 raise err
+        i = len(j)
+        return type(self)(self._data[: -i or None] + j + other._data[i:])
 
-        return self.__class__(
-            self.watson + other.watson, other.crick + self.crick, self.ovhg
-        )
+    def __radd__(self, other):
+        if isinstance(other, str):
+            other = Dseq(other.translate(dscode_to_watson_tail_table))
+            return other + self
+        else:
+            return NotImplemented
 
     def __mul__(self: DseqType, number: int) -> DseqType:
         if not isinstance(number, int):
