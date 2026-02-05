@@ -1179,11 +1179,11 @@ class Dseq(Seq):
         >>> "g" + ds # adding a string of left side returns a Dseq
         Dseq(-2)
         ga
-        ct
+         t
         >>> ds + "c" # adding a string of right side returns a Dseq
         Dseq(-2)
         ac
-        tg
+        t
 
 
         Parameters

@@ -185,7 +185,9 @@ class Anneal(object):  # ), metaclass=_Memoize):
         Name: 1011bp_PCR_prod
         Description: pcr_product_p1_p2
         Number of features: 2
+        /pydna_parse_sequence_file_format=fasta
         /molecule_type=DNA
+        /topology=linear
         Dseq(-1011)
         taca..gcac
         atgt..cgtg
