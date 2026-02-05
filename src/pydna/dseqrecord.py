@@ -1518,3 +1518,8 @@ class Dseqrecord(SeqRecord):
         for x in it:
             result = result + self + x
         return result
+
+    def cast_to_ss(self):
+        answer = copy.deepcopy(self)
+        answer.seq = answer.seq.cast_to_ss()
+        return answer

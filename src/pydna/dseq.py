@@ -2486,6 +2486,9 @@ class Dseq(Seq):
 
         return self.__class__(result, circular=False)
 
+    def cast_to_ss(self):
+        return type(self)(self._data.translate(dscode_to_watson_tail_table))
+
     def get_cut_parameters(
         self, cut: Union[CutSiteType, None], is_left: bool
     ) -> Tuple[int, int, int]:
