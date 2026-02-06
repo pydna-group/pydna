@@ -16,7 +16,7 @@ from Bio.Restriction import CommOnly
 from pydna.dseq import Dseq
 from pydna._pretty import pretty_str
 from pydna.utils import flatten, location_boundaries
-
+from pydna.alphabet import dscode_to_watson_tail_table
 from pydna.utils import shift_location
 from pydna.utils import shift_feature
 from pydna.common_sub_strings import common_sub_strings
@@ -805,24 +805,59 @@ class Dseqrecord(SeqRecord):
         )
 
     def __add__(self, other):
-        if hasattr(other, "seq") and hasattr(other.seq, "watson"):
-            other = copy.deepcopy(other)
-            other_five_prime = other.seq.five_prime_end()
-            if other_five_prime[0] == "5'":
-                # add other.seq.ovhg
-                for f in other.features:
-                    f.location = f.location + other.seq.ovhg
-            elif other_five_prime[0] == "3'":
-                # subtract other.seq.ovhg (sign change)
-                for f in other.features:
-                    f.location = f.location + (-other.seq.ovhg)
-
-            answer = Dseqrecord(SeqRecord.__add__(self, other))
-            answer.n = min(self.n, other.n)
+        # handles   self + other
+        if self.circular or getattr(other, "circular", None):
+            # if self is circular or other has an attribute
+            # "circular" that evaluates to True
+            raise TypeError("circular DNA cannot be ligated!")
+        if hasattr(other, "watson"):
+            # if other has the attribute "watson", assume
+            # that other is a Dseq.
+            # Cast other as a Dseqrecord.
+            other = type(self)(other)
+        if hasattr(other, "seq"):
+            if hasattr(other.seq, "watson"):
+                # if other has the attribute "seq" and other.seq has the
+                # attribute "watson", assume that other is a Dseqrecord.
+                pass
+            else:
+                # other has the attribute "seq" but other.seq has no
+                # attribute "watson", assume that other is a SeqRecord.
+                # Cast other.seq as a Dseq
+                other.seq = Dseq(str(other.seq))
         else:
-            answer = Dseqrecord(SeqRecord.__add__(self, Dseqrecord(other)))
-            answer.n = self.n
+            # Assume that other is a string or a Seq object.
+            # Cast other as a string.
+            other = str(other.translate(dscode_to_watson_tail_table))
+
+        # Add the two seq objects together, unless other is a string
+        # Then add the string and let the Dseq __add__ deal with that.
+        other = copy.deepcopy(other)
+        joined = self.seq + getattr(other, "seq", other)
+        answer = copy.deepcopy(self)
+        answer.seq = joined
+        if hasattr(other, "features"):
+            # offset is how much other's features needs to be pushed
+            # takes sticky ends into account by measuring lengths of each
+            # element separately and joined.
+            offset = len(self) - (len(self) + len(other) - len(joined))
+            for f in other.features:
+                f.location = f.location + offset
+            answer.features += other.features
         return answer
+
+    def __radd__(self, other):
+        # handles   other + self
+        if isinstance(other, str):
+            offset = len(other)
+            sequence = other.translate(dscode_to_watson_tail_table) + self.seq
+            answer = copy.deepcopy(self)
+            answer.seq = sequence
+            for f in answer.features:
+                f.location = f.location + offset
+            return answer
+        else:
+            return NotImplemented
 
     def __mul__(self, number):
         if not isinstance(number, int):
@@ -1486,3 +1521,8 @@ class Dseqrecord(SeqRecord):
         for x in it:
             result = result + self + x
         return result
+
+    def cast_to_ss(self):
+        answer = copy.deepcopy(self)
+        answer.seq = answer.seq.cast_to_ss()
+        return answer

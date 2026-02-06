@@ -468,11 +468,11 @@ def test_dseq_circular_linear():
     assert obj[2:1]._data == b"ga"
 
     obj = Dseq("G", "", 0)
-    assert obj.five_prime_end() == ("single", "g")
-    assert obj.three_prime_end() == ("single", "g")
+    assert obj.five_prime_end() == ("single", "G")
+    assert obj.three_prime_end() == ("single", "G")
     obj = Dseq("", "C", 0)
-    assert obj.five_prime_end() == ("single", "c")
-    assert obj.three_prime_end() == ("single", "c")
+    assert obj.five_prime_end() == ("single", "C")
+    assert obj.three_prime_end() == ("single", "C")
 
     obj = Dseq("ccGGATCC", "aaggatcc", -2)
     # assert obj._data == b"ccGGATCCtt"

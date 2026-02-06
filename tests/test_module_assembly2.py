@@ -1392,8 +1392,8 @@ def test_ends_from_cutsite():
     cut = a.get_cutsites([BsaI])[0]
     a1, a2 = a.cut([BsaI])
     assert assembly.ends_from_cutsite(cut, a) == (
-        a1.three_prime_end(),
-        a2.five_prime_end(),
+        (a1.three_prime_end()[0], a1.three_prime_end()[1].lower()),
+        (a2.five_prime_end()[0], a2.five_prime_end()[1].lower()),
     )
 
     a = Dseq("ACcTGatacACTGGATactA", circular=False)
@@ -1401,8 +1401,8 @@ def test_ends_from_cutsite():
     cut = a.get_cutsites([BsrI])[0]
     a1, a2 = a.cut([BsrI])
     assert assembly.ends_from_cutsite(cut, a) == (
-        a1.three_prime_end(),
-        a2.five_prime_end(),
+        (a1.three_prime_end()[0], a1.three_prime_end()[1].lower()),
+        (a2.five_prime_end()[0], a2.five_prime_end()[1].lower()),
     )
 
     with pytest.raises(ValueError):
