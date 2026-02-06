@@ -833,11 +833,14 @@ class Dseqrecord(SeqRecord):
         # Add the two seq objects together, unless other is a string
         # Then add the string and let the Dseq __add__ deal with that.
         other = copy.deepcopy(other)
-        sequence = self.seq + getattr(other, "seq", other)
+        joined = self.seq + getattr(other, "seq", other)
         answer = copy.deepcopy(self)
-        answer.seq = sequence
+        answer.seq = joined
         if hasattr(other, "features"):
-            offset = len(self) + (len(sequence) - len(self) - len(other))
+            # offset is how much other's features needs to be pushed
+            # takes sticky ends into account by measuring lengths of each
+            # element separately and joined.
+            offset = len(self) - (len(self) + len(other) - len(joined))
             for f in other.features:
                 f.location = f.location + offset
             answer.features += other.features
