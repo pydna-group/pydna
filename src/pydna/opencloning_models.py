@@ -94,6 +94,8 @@ from Bio.SeqIO.InsdcIO import _insdc_location_string as format_feature_location
 from pydna.types import CutSiteType, SubFragmentRepresentationAssembly
 from pydna.utils import create_location
 from typing import TYPE_CHECKING
+import textwrap
+from pydna._pretty import pretty_str
 
 if TYPE_CHECKING:  # pragma: no cover
     from pydna.dseqrecord import Dseqrecord
@@ -354,6 +356,9 @@ class Source(ConfiguredBaseModel):
             nx.generate_network_text(history_graph, with_labels=True, sources=[id(seq)])
         )
 
+    def figure(self):
+        return None
+
 
 class AssemblySource(Source):
     circular: bool
@@ -527,6 +532,34 @@ class CreLoxRecombinationSource(AssemblySource):
 class PCRSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_PCRSource]] = _PCRSource
     add_primer_features: bool = Field(default=False)
+
+    def figure(self):
+        fp = self.input[0].sequence
+        rp = self.input[2].sequence
+        tp = self.input[1].sequence
+        fp_fp = len(self.input[0].right_location)
+        rp_fp = len(self.input[2].left_location)
+        fp_position = self.input[1].left_location.end
+        rp_position = self.input[1].right_location.start
+
+        ft = len(fp) - fp_fp  # forward tail length
+
+        # rt = len(rp) - rp_fp  # reverse tail length
+        faz = tp[fp_position - fp_fp : fp_position].seq
+        raz = tp[rp_position : rp_position + rp_fp].seq
+        sp3 = " " * (len(fp.seq) + 3)
+        # breakpoint()
+        fzc = tp.seq.crick[::-1][fp_position - fp_fp : fp_position]
+        rzc = tp.seq.crick[::-1][rp_position : rp_position + rp_fp]
+        f = f"""
+            {" " * ft}5{faz}...{raz}3
+             {sp3}{"|" * rp_fp}
+            {sp3}3{rp.seq[::-1]}5
+            5{fp.seq}3
+             {"|" * fp_fp:>{len(fp)}}
+            {" " * ft}3{fzc}...{rzc}5
+            """
+        return pretty_str(textwrap.dedent(f).strip("\n"))
 
 
 class SequenceCutSource(Source):

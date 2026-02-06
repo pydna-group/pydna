@@ -34,7 +34,7 @@ import re
 import time
 import datetime
 from typing import Union, TYPE_CHECKING
-from pydna.opencloning_models import SequenceCutSource
+from pydna.opencloning_models import SequenceCutSource, PCRSource
 
 if TYPE_CHECKING:  # pragma: no cover
     from pydna.opencloning_models import Source
@@ -1182,6 +1182,12 @@ class Dseqrecord(SeqRecord):
 
     def figure(self, feature=0, highlight="\x1b[48;5;11m", plain="\x1b[0m"):
         """docstring."""
+
+        if self.source is not None:
+            source_figure = self.source.figure()
+            if source_figure is not None:
+                return source_figure
+
         if self.features:
             f = self.features[feature]
             locations = sorted(
@@ -1486,3 +1492,7 @@ class Dseqrecord(SeqRecord):
         for x in it:
             result = result + self + x
         return result
+
+    def is_amplicon(self):
+        """Returns True if the sequence is the product of a PCR"""
+        return self.source is not None and isinstance(self.source, PCRSource)
