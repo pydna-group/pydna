@@ -867,7 +867,7 @@ def assemble(
         f_u = fragments[u - 1] if u > 0 else fragments[-u - 1].reverse_complement()
         f_v = fragments[v - 1] if v > 0 else fragments[-v - 1].reverse_complement()
         seq_u = str(loc_u.extract(f_u).seq)
-        seq_v = str(loc_v.extract(f_v).seq.rc())
+        seq_v = str(loc_v.extract(f_v).seq.reverse_complement())
         # Test if seq_u and seq_v anneal
         if not anneal_strands(seq_u, seq_v):
             raise ValueError("Mismatch in assembly")
@@ -1946,7 +1946,7 @@ class PCRAssembly(Assembly):
         results = super().assemble_linear(only_adjacent_edges, max_assemblies)
         for result in results:
             rp = self.fragments[2]
-            result.seq = result.seq[: -len(rp)] + Dseq(str(rp.seq.rc()))
+            result.seq = result.seq[: -len(rp)] + Dseq(str(rp.seq.reverse_complement()))
         return results
 
 
