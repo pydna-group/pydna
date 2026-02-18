@@ -38,7 +38,7 @@ repository = "https://github.com/pydna-group/pydna/tree/master"
 version = "6.0.0-a.24.post.17+b7b559bd66"
 [tool.poetry.dependencies]
 appdirs = ">=1.4.4"
-biopython = "1.85"
+biopython = "^1.85"
 cai2 = { version = ">=1.0.5", optional = true }
 matplotlib = { version = ">=3.4.3", optional = true }
 networkx = ">=2.8.8"
