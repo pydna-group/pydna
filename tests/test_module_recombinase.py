@@ -2,6 +2,7 @@
 import pytest
 from Bio.SeqFeature import SimpleLocation
 from pydna.dseqrecord import Dseqrecord
+from pydna.dseq import Dseq
 from pydna.assembly2 import (
     Assembly,
     recombinase_integration,
@@ -240,30 +241,31 @@ def test_recombinase_excision():
     site2 = "AAaaTTTTTTTCCCT"
 
     rec = Recombinase(site1, site2)
-    genome = Dseqrecord(
-        f"cccccc{site1.upper()}tttt{site2.upper()}aaaaa",
-        circular=True,
-    )
+    genome = Dseqrecord(f"cccccc{site1.upper()}tttt{site2.upper()}aaaaa")
 
     products = recombinase_excision(genome, rec)
     assert len(products) == 2
-    assert str(products[0].seq) == "ccccccATGCCCTAAaaTTTTTTTCCCTtttt"
-    # assert str(products[1].seq) == "ccccccATGCCCTAAAATTTTTTTCCCTbbbbbCAAACTaaaaa"
+    assert products[0].seq.upper() == Dseq("AACTttttAA".upper())
+    assert (
+        products[1].seq.upper()
+        == Dseq("ccccccATGCCCTAAAATTTTTTTCCCTaaaaa", circular=True).upper()
+    )
 
 
 def test_recombinase_integration_excision_reversibility():
     """With same site on both sides (Cre-Lox style), integrate then excise returns originals."""
-    site = "ATGCCCTAAaaTT"
+    site = "ATGaaGTA"
 
     genome = Dseqrecord(f"cccccc{site.upper()}aaaaa")
     insert = Dseqrecord(f"{site.upper()}bbbbb", circular=True)
+    rec = Recombinase(site, site)
 
-    products = recombinase_integration(genome, [insert], site, site)
+    products = recombinase_integration(genome, [insert], rec)
     assert len(products) == 1
     integrated = products[0]
 
-    excised = recombinase_excision(integrated, site, site)
+    excised = recombinase_excision(integrated, rec)
     assert len(excised) == 2
 
-    seqs = [str(p.seq).upper() for p in excised]
-    assert any(site.upper() in s for s in seqs)
+    assert excised[1].seq.seguid() == genome.seq.seguid()
+    assert excised[0].seq.seguid() == insert.seq.seguid()

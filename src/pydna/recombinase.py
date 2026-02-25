@@ -129,6 +129,8 @@ class Recombinase:
         self._configs = [
             (self._site1_fwd, self._site2_fwd, off1, off2),
             (self._site1_rev, self._site2_rev, off1_rev, off2_rev),
+            (self._site2_fwd, self._site1_fwd, off2, off1),
+            (self._site2_rev, self._site1_rev, off2_rev, off1_rev),
         ]
 
     def overlap(
