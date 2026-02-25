@@ -44,6 +44,8 @@ from pydna.alphabet import dscode_to_watson_tail_table
 from pydna.alphabet import dscode_to_crick_tail_table
 from pydna.alphabet import complement_table_for_dscode
 from pydna.alphabet import letters_not_in_dscode
+from pydna.alphabet import ss_letters_watson
+from pydna.alphabet import ss_letters_crick
 from pydna.alphabet import get_parts
 from pydna.alphabet import representation_tuple
 from pydna.alphabet import dsbreaks
@@ -2797,6 +2799,52 @@ class Dseq(Seq):
             cutsites.append(cutsites[0])
 
         return list(zip(cutsites, cutsites[1:]))
+
+    def shift_melt_cutsite_pairs(
+        self, cutsite_pairs: List[Tuple[CutSiteType, CutSiteType]]
+    ) -> List[Tuple[CutSiteType, CutSiteType]]:
+        """Takes a list of cutsite pairs that will be applied to a sequence with parts with ssDNA, and shifts them
+        so that they only comprise the dsDNA part.
+        """
+        ss_crick_bytes = set(ss_letters_crick.encode("ascii"))
+        ss_watson_bytes = set(ss_letters_watson.encode("ascii"))
+
+        new_cutsite_pairs = []
+        for left_cut, right_cut in cutsite_pairs:
+            if left_cut is not None:
+                (watson, ovhg), enz = left_cut
+                crick = watson - ovhg
+                if ovhg > 0:
+                    while (
+                        watson < len(self._data)
+                        and self._data[watson] in ss_crick_bytes
+                    ):
+                        watson += 1
+                        ovhg += 1
+                elif ovhg < 0:
+                    while (
+                        crick < len(self._data) and self._data[crick] in ss_watson_bytes
+                    ):
+                        crick += 1
+                        ovhg -= 1
+                left_cut = ((watson, ovhg), enz)
+
+            if right_cut is not None:
+                (watson, ovhg), enz = right_cut
+                crick = watson - ovhg
+                if ovhg > 0:
+                    while crick > 0 and self._data[crick - 1] in ss_watson_bytes:
+                        crick -= 1
+                        ovhg += 1
+                elif ovhg < 0:
+                    while watson > 0 and self._data[watson - 1] in ss_crick_bytes:
+                        watson -= 1
+                        ovhg -= 1
+                right_cut = ((watson, ovhg), enz)
+
+            new_cutsite_pairs.append((left_cut, right_cut))
+
+        return new_cutsite_pairs
 
     def get_parts(self):
         """
