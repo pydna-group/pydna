@@ -2638,7 +2638,7 @@ def test_gateway_assembly():
     # Test that greedy is being used (finds)
     with pytest.raises(ValueError) as e:
         assembly.gateway_assembly(products_LR, "LR", greedy=True)
-    assert "fragment 2: attB1, attL1, attR1, attP1" in str(e.value)
+    assert "fragment 2: attB1, attP1, attL1, attR1" in str(e.value)
 
     # Test multi site only
     seq1 = Dseqrecord("aaa" + attB1 + "ggg" + attB2 + "ccc", circular=True)
