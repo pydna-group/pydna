@@ -97,8 +97,8 @@ def gateway_overlap(
     -------
     list[tuple[int, int, int]] A list of overlaps between the two sequences.
     """
-    type = "greedy" if greedy else "conservative"
-    return recombinase_dict[reaction][type].overlap(seqx, seqy)
+    mode = "greedy" if greedy else "conservative"
+    return recombinase_dict[reaction][mode].overlap(seqx, seqy)
 
 
 def find_gateway_sites(
@@ -106,19 +106,19 @@ def find_gateway_sites(
 ) -> dict[str, list[SimpleLocation]]:
     """Find all gateway sites in a sequence and return a dictionary with the name and positions of the sites."""
 
-    type = "greedy" if greedy else "conservative"
+    mode = "greedy" if greedy else "conservative"
     collection = RecombinaseCollection(
-        recombinase_dict["BP"][type].recombinases
-        + recombinase_dict["LR"][type].recombinases
+        recombinase_dict["BP"][mode].recombinases
+        + recombinase_dict["LR"][mode].recombinases
     )
     return collection.find(seq)
 
 
 def annotate_gateway_sites(seq: Dseqrecord, greedy: bool) -> Dseqrecord:
     """Annotate gateway sites in a sequence."""
-    type = "greedy" if greedy else "conservative"
+    mode = "greedy" if greedy else "conservative"
     collection = RecombinaseCollection(
-        recombinase_dict["BP"][type].recombinases
-        + recombinase_dict["LR"][type].recombinases
+        recombinase_dict["BP"][mode].recombinases
+        + recombinase_dict["LR"][mode].recombinases
     )
     return collection.annotate(seq)

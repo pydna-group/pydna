@@ -331,12 +331,12 @@ class Recombinase:
         Parameters
         ----------
         seq : Dseqrecord
-            Sequence to annotate (modified in place and returned).
+            Sequence to annotate.
 
         Returns
         -------
         Dseqrecord
-            The same sequence with added features.
+            A copy of the sequence with added features.
         """
         out_seq = copy.deepcopy(seq)
         sites = self.find(out_seq)
