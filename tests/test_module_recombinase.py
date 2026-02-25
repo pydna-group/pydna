@@ -269,3 +269,14 @@ def test_recombinase_integration_excision_reversibility():
 
     assert excised[1].seq.seguid() == genome.seq.seguid()
     assert excised[0].seq.seguid() == insert.seq.seguid()
+
+
+def test_recombinase_reverse():
+    site1 = "ATGCCCTAAaaTT"
+    site2 = "AAaaTTTTTTTCCCT"
+    rec = Recombinase(site1, site2)
+    rev_rec = rec.get_reverse_recombinase()
+    assert rev_rec.site1 == "ATGCCCTAAaaTTTTTTTCCCT"
+    assert rev_rec.site2 == "AAaaTT"
+    assert rev_rec.site1_name == "site12"
+    assert rev_rec.site2_name == "site21"

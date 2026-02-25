@@ -133,6 +133,45 @@ class Recombinase:
             (self._site2_rev, self._site1_rev, off2_rev, off1_rev),
         ]
 
+    def __repr__(self) -> str:
+        return f"Recombinase(site1={self.site1}, site2={self.site2}, site1_name={self.site1_name}, site2_name={self.site2_name})"
+
+    def get_reverse_recombinase(
+        self, site12_name: str = "site12", site21_name: str = "site21"
+    ) -> "Recombinase":
+        """Get a recombinase that does the reverse reaction.
+
+        Parameters
+        ----------
+        site12_name : str, optional
+            Label for site12 in find/annotate output. Default is "site12".
+        site21_name : str, optional
+            Label for site21 in find/annotate output. Default is "site21".
+
+        Returns
+        -------
+        Recombinase
+            A recombinase that does the reverse reaction.
+
+        Examples
+        --------
+        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.recombinase import Recombinase
+        >>> rec = Recombinase("ATGCCCTAAaaTT", "AAaaTTTTTTTCCCT")
+        >>> rec.get_reverse_recombinase()
+        Recombinase(site1=ATGCCCTAAaaTTTTTTTCCCT, site2=AAaaTT, site1_name=site12, site2_name=site21)
+        """
+        _, _, off1, off2 = self._configs[0]
+        site12 = (
+            self.site1[: off1 + self._homology_len]
+            + self.site2[off2 + self._homology_len :]
+        )
+        site21 = (
+            self.site2[: off2 + self._homology_len]
+            + self.site1[off1 + self._homology_len :]
+        )
+        return Recombinase(site12, site21, site12_name, site21_name)
+
     def overlap(
         self,
         seqx: Dseqrecord,
