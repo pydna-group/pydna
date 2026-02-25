@@ -49,6 +49,13 @@ def test_recombinase_homology_offset_and_length_invalid_chars():
 # ---------------------------------------------------------------------------
 
 
+def test_recombinase_init_errors():
+    # Different cores
+    with pytest.raises(ValueError) as e:
+        Recombinase("ATGacCTAAATT", "AAaaTTTTTTTCCCT")
+    assert "Recombinase recognition sites do not have matching" in str(e.value)
+
+
 def test_recombinase_overlap_single_match():
     site1 = "ATGCCCTAAaaTT"
     site2 = "AAaaTTTTTTTCCCT"

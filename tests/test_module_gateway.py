@@ -1,4 +1,5 @@
-from pydna.gateway import gateway_overlap, find_gateway_sites
+# -*- coding: utf-8 -*-
+from pydna.gateway import annotate_gateway_sites, gateway_overlap, find_gateway_sites
 import pydna.assembly2 as assembly
 import glob
 from pydna.parsers import parse_snapgene
@@ -119,3 +120,9 @@ def test_find_gateway_sites():
     assert find_gateway_sites(seq, greedy=False) == {
         "attB3": [SimpleLocation(0, 21, 1), SimpleLocation(24, 45, 1)]
     }
+
+
+def test_annotate_gateway_sites():
+    seq = Dseqrecord("CAACTTTGTATACAAAAGTTGaaaCAACTTTGTATAATAAAGTTG")
+    annotated_seq = annotate_gateway_sites(seq, greedy=False)
+    assert len(annotated_seq.features) == 2
