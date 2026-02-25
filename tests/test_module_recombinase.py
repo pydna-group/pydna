@@ -339,6 +339,10 @@ def test_recombinase_collection_annotate():
     assert annotated_seq.features[0].qualifiers.get("label", []) == ["s1"]
     assert annotated_seq.features[1].qualifiers.get("label", []) == ["s1"]
 
+    # It does not re-annotate if the sequence is already annotated.
+    annotated_seq = collection.annotate(annotated_seq)
+    assert len(annotated_seq.features) == 2
+
 
 def test_recombinase_collection_init_errors():
     # Check that the init method raises errors for invalid inputs.
