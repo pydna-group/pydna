@@ -65,11 +65,19 @@ so you can use it as a single Recombinase. For an example, check the gateway mod
     >>> sites = collection.find(seq)
     >>> annotated = collection.annotate(seq)
 
-IUPAC degenerate bases (e.g. N matches any base)::
+IUPAC degenerate bases work (e.g. N matches any base)::
 
     >>> site1 = "ATGNNNaaTT"
     >>> site2 = "CCNNaaTTGG"
     >>> rec = Recombinase(site1, site2)
+
+If the recombinase reaction is reversible, you can get the reverse recombinase with the get_reverse_recombinase method.
+
+    >>> rec = Recombinase('AAAcgCG', 'TTAcgATGA', site1_name="s1", site2_name="s2")
+    >>> rec
+    Recombinase(site1=AAAcgCG, site2=TTAcgATGA, site1_name=s1, site2_name=s2)
+    >>> rec.get_reverse_recombinase(site12_name="s1+s2", site21_name="s2+s1")
+    Recombinase(site1=AAAcgATGA, site2=TTAcgCG, site1_name=s1+s2, site2_name=s2+s1)
 
 Using a Recombinase as Assembly algorithm::
 
