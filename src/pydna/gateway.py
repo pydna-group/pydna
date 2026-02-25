@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from pydna.dseqrecord import Dseqrecord
 from Bio.SeqFeature import SimpleLocation
-from pydna.recombinase import Recombinase
+from pydna.recombinase import Recombinase, RecombinaseCollection
 
 
-def create_recombinase_dict() -> dict[str, dict[str, list[Recombinase]]]:
+def create_recombinase_dict() -> dict[str, dict[str, RecombinaseCollection]]:
     """Create a dictionary of recombinases for the Gateway reaction."""
     raw_gateway_common = {
         "attB1": "CHWVTWTgtacaaaAAANNNG",
@@ -66,8 +66,8 @@ def create_recombinase_dict() -> dict[str, dict[str, list[Recombinase]]]:
             greedy.append(Recombinase(seq1_greedy, seq2_greedy, site1, site2))
 
         out_dict[reaction] = {
-            "conservative": conservative,
-            "greedy": greedy,
+            "conservative": RecombinaseCollection(conservative),
+            "greedy": RecombinaseCollection(greedy),
         }
     return out_dict
 
@@ -98,8 +98,7 @@ def gateway_overlap(
     list[tuple[int, int, int]] A list of overlaps between the two sequences.
     """
     type = "greedy" if greedy else "conservative"
-    recombinases = recombinase_dict[reaction][type]
-    return sum((r.overlap(seqx, seqy) for r in recombinases), [])
+    return recombinase_dict[reaction][type].overlap(seqx, seqy)
 
 
 def find_gateway_sites(
@@ -108,18 +107,18 @@ def find_gateway_sites(
     """Find all gateway sites in a sequence and return a dictionary with the name and positions of the sites."""
 
     type = "greedy" if greedy else "conservative"
-    out = dict()
-    for reaction in ["BP", "LR"]:
-        for rec in recombinase_dict[reaction][type]:
-            out.update(rec.find(seq))
-    return out
+    collection = RecombinaseCollection(
+        recombinase_dict["BP"][type].recombinases
+        + recombinase_dict["LR"][type].recombinases
+    )
+    return collection.find(seq)
 
 
 def annotate_gateway_sites(seq: Dseqrecord, greedy: bool) -> Dseqrecord:
     """Annotate gateway sites in a sequence."""
     type = "greedy" if greedy else "conservative"
-    out = seq
-    for reaction in ["BP", "LR"]:
-        for rec in recombinase_dict[reaction][type]:
-            out = rec.annotate(out)
-    return seq
+    collection = RecombinaseCollection(
+        recombinase_dict["BP"][type].recombinases
+        + recombinase_dict["LR"][type].recombinases
+    )
+    return collection.annotate(seq)

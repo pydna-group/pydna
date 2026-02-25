@@ -2855,11 +2855,13 @@ def recombinase_integration(
     --------
     >>> from pydna.dseqrecord import Dseqrecord
     >>> from pydna.assembly2 import recombinase_integration, recombinase_excision
+    >>> from pydna.recombinase import Recombinase
     >>> site1 = "ATGCCCTAAaaTT"
     >>> site2 = "AAaaTTTTTTTCCCT"
     >>> genome = Dseqrecord(f"cccccc{site1.upper()}aaaaa")
     >>> insert = Dseqrecord(f"{site2.upper()}bbbbb", circular=True)
-    >>> products = recombinase_integration(genome, [insert], site1, site2)
+    >>> recombinase = Recombinase(site1, site2)
+    >>> products = recombinase_integration(genome, [insert], recombinase)
     >>> len(products) >= 1
     True
     """

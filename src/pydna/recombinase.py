@@ -11,13 +11,79 @@ uppercase portion represents the flanking recognition arms.
 
 For example::
 
-    site1 = "ATGCCCTAAaaTT"
-    site2 = "AAaaTTTTTTTCCCT"
+    >>> site1 = "ATGCCCTAAaaTT"
+    >>> site2 = "AAaaTTTTTTTCCCT"
 
 The lowercase ``aa`` is the overlap that will appear in the assembled product.
 
 Sites may contain IUPAC degenerate bases (N, W, S, etc.) and the search
 handles both linear and circular sequences.
+
+The easiest way to use it is with the recombinase_integration and
+recombinase_excision functions from the assembly2 module.
+
+Integration and excision with a single recombinase::
+
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.recombinase import Recombinase
+    >>> from pydna.assembly2 import recombinase_integration, recombinase_excision
+    >>> site1 = "ATGCCCTAAaaCT"
+    >>> site2 = "CAaaTTTTTTTCCCT"
+    >>> genome = Dseqrecord("ccccccATGCCCTAAAACTaaaaa")
+    >>> insert = Dseqrecord("CAAATTTTTTTCCCTbbbbb", circular=True)
+    >>> rec = Recombinase(site1, site2)
+    >>> products = recombinase_integration(genome, [insert], rec)
+    >>>
+    >>> # Cre-Lox style (same site on both sides): integrate then excise returns originals
+    >>> site = "ATGaaGTA"
+    >>> genome = Dseqrecord("ccccccATGAAGTAAAAA")
+    >>> insert = Dseqrecord("ATGAAGTABbbbb", circular=True)
+    >>> rec = Recombinase(site, site)
+    >>> integrated = recombinase_integration(genome, [insert], rec)[0]
+    >>> excised = recombinase_excision(integrated, rec)
+
+Find and annotate sites in a sequence::
+
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.recombinase import Recombinase
+    >>> site1, site2 = "ATGCCCTAAaaTT", "AAaaTTTTTTTCCCT"
+    >>> rec = Recombinase(site1, site2, site1_name="mysite1", site2_name="mysite2")
+    >>> seq = Dseqrecord("gggATGCCCTAAaaTTttt")
+    >>> sites = rec.find(seq)
+    >>> annotated = rec.annotate(seq)
+
+When several sites are possible, or when using multiple recombinases, you can
+create a RecombinaseCollection. It has the methods overlap, find, and annotate,
+so you can use it as a single Recombinase. For an example, check the gateway module::
+
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.recombinase import Recombinase, RecombinaseCollection
+    >>> rec1 = Recombinase("AAaaTTC", "CCaaTTC", site1_name="s1", site2_name="s2")
+    >>> rec2 = Recombinase("GAccACC", "TCccAAC", site1_name="s3", site2_name="s4")
+    >>> collection = RecombinaseCollection([rec1, rec2])
+    >>> seq = Dseqrecord("gggAAAATTCTtttGACCACCTttt")
+    >>> sites = collection.find(seq)
+    >>> annotated = collection.annotate(seq)
+
+IUPAC degenerate bases (e.g. N matches any base)::
+
+    >>> site1 = "ATGNNNaaTT"
+    >>> site2 = "CCNNaaTTGG"
+    >>> rec = Recombinase(site1, site2)
+
+Using a Recombinase as Assembly algorithm::
+
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.recombinase import Recombinase
+    >>> from pydna.assembly2 import Assembly
+    >>> site1 = "ATGCCCTAAaaTT"
+    >>> site2 = "AAaaTTTTTTTCCCT"
+    >>> seqA = Dseqrecord("aaaATGCCCTAAaaTTtt")
+    >>> seqB = Dseqrecord("tataAAaaTTTTTTTCCCTaaa")
+    >>> rec = Recombinase(site1, site2)
+    >>> asm = Assembly([seqA, seqB], algorithm=rec.overlap, use_fragment_order=False)
+    >>> products = asm.assemble_linear()
+
 """
 
 import re
@@ -89,10 +155,9 @@ class Recombinase:
     >>> rec = Recombinase("ATGCCCTAAaaTT", "AAaaTTTTTTTCCCT")
     >>> seqA = Dseqrecord("aaaATGCCCTAAaaTTtt")
     >>> seqB = Dseqrecord("tataAAaaTTTTTTTCCCTaaa")
-    >>> rec.overlap(seqA, seqB)
-    [(12, 6, 2)]
+    >>> _ = rec.overlap(seqA, seqB)
     >>> sites = rec.find(seqA)
-    >>> rec.annotate(seqA)
+    >>> _ = rec.annotate(seqA)
     """
 
     def __init__(
@@ -281,3 +346,36 @@ class Recombinase:
                         )
                     )
         return out_seq
+
+
+class RecombinaseCollection:
+    """A collection of recombinases."""
+
+    def __init__(self, recombinases: list[Recombinase]):
+        if not isinstance(recombinases, list):
+            raise ValueError("recombinases must be a list of Recombinase objects")
+        if not all(isinstance(r, Recombinase) for r in recombinases):
+            raise ValueError("recombinases must be a list of Recombinase objects")
+        if len(recombinases) == 0:
+            raise ValueError("recombinases must be a non-empty list")
+        self.recombinases = recombinases
+
+    def overlap(self, seqx: Dseqrecord, seqy: Dseqrecord) -> list[SequenceOverlap]:
+        """Find overlaps between *seqx* and *seqy* mediated by the recombinases."""
+        return sum((r.overlap(seqx, seqy) for r in self.recombinases), [])
+
+    def find(self, seq: Dseqrecord) -> dict[str, list[SimpleLocation]]:
+        """Find all occurrences of the recombinase sites in *seq*."""
+        out = dict()
+        for rec in self.recombinases:
+            rec_sites = rec.find(seq)
+            for k, v in rec_sites.items():
+                out.setdefault(k, []).extend(v)
+        return out
+
+    def annotate(self, seq: Dseqrecord) -> Dseqrecord:
+        """Annotate *seq* with features for all occurrences of the recombinase sites."""
+        out = seq
+        for rec in self.recombinases:
+            out = rec.annotate(out)
+        return out

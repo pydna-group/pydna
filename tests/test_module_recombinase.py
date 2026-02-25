@@ -11,6 +11,7 @@ from pydna.assembly2 import (
 from pydna.recombinase import (
     _recombinase_homology_offset_and_length,
     Recombinase,
+    RecombinaseCollection,
 )
 
 
@@ -280,3 +281,63 @@ def test_recombinase_reverse():
     assert rev_rec.site2 == "AAaaTT"
     assert rev_rec.site1_name == "site12"
     assert rev_rec.site2_name == "site21"
+
+
+# ---------------------------------------------------------------------------
+# RecombinaseCollection
+# ---------------------------------------------------------------------------
+
+
+def test_recombinase_collection():
+    site1 = "AAaaTTC"
+    site2 = "CCaaTTC"
+    site3 = "GAccACC"
+    site4 = "TCccAAC"
+    rec1 = Recombinase(site1, site2, site1_name="s1", site2_name="s2")
+    rec2 = Recombinase(site3, site4, site1_name="s3", site2_name="s4")
+    collection = RecombinaseCollection([rec1, rec2])
+    seq1 = Dseqrecord(f"ggg{site1.upper()}ttt{site3.upper()}ttt")
+    seq2 = Dseqrecord(f"gggc{site2.upper()}ttt{site4.upper()}ttt")
+    print(collection.overlap(seq1, seq2))
+    assert collection.overlap(seq1, seq2) == [(5, 6, 2), (15, 16, 2)]
+
+
+def test_recombinase_collection_find():
+    # Here the important thing to test is that if
+    # two recombinases have the same site name, the find method should return
+    # both locations.
+    site1 = "AAaaTTC"
+    site2 = "CCaaTTC"
+    site3 = "GAccACC"
+    site4 = "TCccAAC"
+    rec1 = Recombinase(site1, site2, site1_name="s1", site2_name="s2")
+    rec2 = Recombinase(site3, site4, site1_name="s1", site2_name="s2")
+    collection = RecombinaseCollection([rec1, rec2])
+    seq = Dseqrecord(f"ggg{site1.upper()}ttt{site3.upper()}ttt")
+    assert len(collection.find(seq)["s1"]) == 2
+
+
+def test_recombinase_collection_annotate():
+    # Same as above, checking that two sites with the same name are annotated.
+    site1 = "AAaaTTC"
+    site2 = "CCaaTTC"
+    site3 = "GAccACC"
+    site4 = "TCccAAC"
+    rec1 = Recombinase(site1, site2, site1_name="s1", site2_name="s2")
+    rec2 = Recombinase(site3, site4, site1_name="s1", site2_name="s2")
+    collection = RecombinaseCollection([rec1, rec2])
+    seq = Dseqrecord(f"ggg{site1.upper()}ttt{site3.upper()}ttt")
+    annotated_seq = collection.annotate(seq)
+    assert len(annotated_seq.features) == 2
+    assert annotated_seq.features[0].qualifiers.get("label", []) == ["s1"]
+    assert annotated_seq.features[1].qualifiers.get("label", []) == ["s1"]
+
+
+def test_recombinase_collection_init_errors():
+    # Check that the init method raises errors for invalid inputs.
+    with pytest.raises(ValueError):
+        RecombinaseCollection(None)
+    with pytest.raises(ValueError):
+        RecombinaseCollection([])
+    with pytest.raises(ValueError):
+        RecombinaseCollection([Recombinase("AAaaTTC", "CCaaTTC"), "blah"])
