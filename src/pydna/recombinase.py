@@ -21,12 +21,13 @@ handles both linear and circular sequences.
 """
 
 import re
-import itertools as _itertools
+import itertools
+import copy
 
 from Bio.Seq import reverse_complement
 from Bio.SeqFeature import SimpleLocation, SeqFeature
 
-from pydna.dseqrecord import Dseqrecord as _Dseqrecord
+from pydna.dseqrecord import Dseqrecord
 from pydna.utils import shift_location
 from pydna.sequence_regex import compute_regex_site, dseqrecord_finditer
 from pydna.types import SequenceOverlap
@@ -76,6 +77,10 @@ class Recombinase:
         The first recognition site. The homology core must be in lowercase.
     site2 : str
         The second recognition site. The homology core must be in lowercase.
+    site1_name : str, optional
+        Label for site1 in find/annotate output. Default is "site1".
+    site2_name : str, optional
+        Label for site2 in find/annotate output. Default is "site2".
 
     Examples
     --------
@@ -86,11 +91,21 @@ class Recombinase:
     >>> seqB = Dseqrecord("tataAAaaTTTTTTTCCCTaaa")
     >>> rec.overlap(seqA, seqB)
     [(12, 6, 2)]
+    >>> sites = rec.find(seqA)
+    >>> rec.annotate(seqA)
     """
 
-    def __init__(self, site1: str, site2: str):
+    def __init__(
+        self,
+        site1: str,
+        site2: str,
+        site1_name: str = "site1",
+        site2_name: str = "site2",
+    ):
         self.site1 = site1
         self.site2 = site2
+        self.site1_name = site1_name
+        self.site2_name = site2_name
 
         off1, len1 = _recombinase_homology_offset_and_length(site1)
         off2, len2 = _recombinase_homology_offset_and_length(site2)
@@ -118,8 +133,8 @@ class Recombinase:
 
     def overlap(
         self,
-        seqx: _Dseqrecord,
-        seqy: _Dseqrecord,
+        seqx: Dseqrecord,
+        seqy: Dseqrecord,
         limit: None = None,
     ) -> list[SequenceOverlap]:
         """Find overlaps between *seqx* and *seqy* mediated by the sites.
@@ -149,7 +164,7 @@ class Recombinase:
             if not matches_y:
                 continue
 
-            for mx, my in _itertools.product(matches_x, matches_y):
+            for mx, my in itertools.product(matches_x, matches_y):
                 # Here we wrap in case the sequence is circular and the match spans the origin,
                 # and the offset makes the match go beyond the origin.
                 matches.append(
@@ -169,83 +184,59 @@ class Recombinase:
                 unique.append(m)
         return unique
 
+    def find(self, seq: Dseqrecord) -> dict[str, list[SimpleLocation]]:
+        """Find all occurrences of the recombinase sites in *seq*.
 
-def find_recombinase_sites(
-    seq: _Dseqrecord,
-    site1: str,
-    site2: str,
-    site1_name: str = "site1",
-    site2_name: str = "site2",
-) -> dict[str, list[SimpleLocation]]:
-    """Find all occurrences of the recombinase sites in *seq*.
+        Parameters
+        ----------
+        seq : Dseqrecord
+            Sequence to search.
 
-    Parameters
-    ----------
-    seq : Dseqrecord
-        Sequence to search.
-    site1 : str
-        First recognition site (may contain degenerate bases).
-    site2 : str
-        Second recognition site (may contain degenerate bases).
-    site1_name : str
-        Label for site1 in the returned dictionary.
-    site2_name : str
-        Label for site2 in the returned dictionary.
+        Returns
+        -------
+        dict[str, list[SimpleLocation]]
+            Dictionary mapping site names to lists of locations.
+        """
+        out: dict[str, list[SimpleLocation]] = {}
+        for name, raw_site in [
+            (self.site1_name, self.site1),
+            (self.site2_name, self.site2),
+        ]:
+            fwd_re = compute_regex_site(raw_site)
+            rev_re = compute_regex_site(reverse_complement(raw_site))
+            for pattern, strand in [(fwd_re, 1), (rev_re, -1)]:
+                for match in dseqrecord_finditer(pattern, seq):
+                    loc = SimpleLocation(match.start(), match.end(), strand)
+                    loc = shift_location(loc, 0, len(seq))
+                    out.setdefault(name, []).append(loc)
+        return out
 
-    Returns
-    -------
-    dict[str, list[SimpleLocation]]
-        Dictionary mapping site names to lists of locations.
-    """
-    out: dict[str, list[SimpleLocation]] = {}
-    for name, raw_site in [(site1_name, site1), (site2_name, site2)]:
-        fwd_re = compute_regex_site(raw_site)
-        rev_re = compute_regex_site(reverse_complement(raw_site))
-        for pattern, strand in [(fwd_re, 1), (rev_re, -1)]:
-            for match in dseqrecord_finditer(pattern, seq):
-                loc = SimpleLocation(match.start(), match.end(), strand)
-                loc = shift_location(loc, 0, len(seq))
-                out.setdefault(name, []).append(loc)
-    return out
+    def annotate(self, seq: Dseqrecord) -> Dseqrecord:
+        """Annotate *seq* with features for all occurrences of the recombinase sites.
 
+        Parameters
+        ----------
+        seq : Dseqrecord
+            Sequence to annotate (modified in place and returned).
 
-def annotate_recombinase_sites(
-    seq: _Dseqrecord,
-    site1: str,
-    site2: str,
-    site1_name: str = "site1",
-    site2_name: str = "site2",
-) -> _Dseqrecord:
-    """Annotate *seq* with features for all occurrences of the recombinase sites.
-
-    Parameters
-    ----------
-    seq : Dseqrecord
-        Sequence to annotate (modified in place and returned).
-    site1 : str
-        First recognition site.
-    site2 : str
-        Second recognition site.
-    site1_name : str
-        Label for site1 features.
-    site2_name : str
-        Label for site2 features.
-
-    Returns
-    -------
-    Dseqrecord
-        The same sequence with added features.
-    """
-    sites = find_recombinase_sites(seq, site1, site2, site1_name, site2_name)
-    for name, locs in sites.items():
-        for loc in locs:
-            if not any(
-                f.location == loc
-                and f.type == "protein_bind"
-                and f.qualifiers.get("label", []) == [name]
-                for f in seq.features
-            ):
-                seq.features.append(
-                    SeqFeature(loc, type="protein_bind", qualifiers={"label": [name]})
-                )
-    return seq
+        Returns
+        -------
+        Dseqrecord
+            The same sequence with added features.
+        """
+        out_seq = copy.deepcopy(seq)
+        sites = self.find(out_seq)
+        for name, locs in sites.items():
+            for loc in locs:
+                if not any(
+                    f.location == loc
+                    and f.type == "protein_bind"
+                    and f.qualifiers.get("label", []) == [name]
+                    for f in out_seq.features
+                ):
+                    out_seq.features.append(
+                        SeqFeature(
+                            loc, type="protein_bind", qualifiers={"label": [name]}
+                        )
+                    )
+        return out_seq

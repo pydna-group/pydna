@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 import pytest
-
+from Bio.SeqFeature import SimpleLocation
 from pydna.dseqrecord import Dseqrecord
 from pydna.assembly2 import (
     Assembly,
@@ -9,8 +10,6 @@ from pydna.assembly2 import (
 from pydna.recombinase import (
     _recombinase_homology_offset_and_length,
     Recombinase,
-    find_recombinase_sites,
-    annotate_recombinase_sites,
 )
 
 
@@ -161,27 +160,14 @@ def test_reverse_complement_sites():
     site2 = "AAaaTTTTTTTCCCT"
 
     rc_site1 = reverse_complement(site1)
+    rc_site2 = reverse_complement(site2)
     seqA = Dseqrecord(f"ggg{rc_site1}ggg")
-    seqB = Dseqrecord(f"ttt{reverse_complement(site2)}ttt")
+    seqB = Dseqrecord(f"ttt{rc_site2}ttt")
 
     rec = Recombinase(site1, site2)
     matches = rec.overlap(seqA, seqB, limit=None)
-    assert len(matches) >= 1
-
-
-# ---------------------------------------------------------------------------
-# Recombinase class
-# ---------------------------------------------------------------------------
-
-
-def test_recombinase_class_basic():
-    rec = Recombinase("ATGCCCTAAaaTT", "AAaaTTTTTTTCCCT")
-
-    seqA = Dseqrecord("aaaATGCCCTAAaaTTtt")
-    seqB = Dseqrecord("tataAAaaTTTTTTTCCCTaaa")
-
-    matches = rec.overlap(seqA, seqB)
-    assert matches == [(12, 6, 2)]
+    assert len(matches) == 1
+    assert matches[0] == (5, 14, 2)
 
 
 # ---------------------------------------------------------------------------
@@ -191,48 +177,40 @@ def test_recombinase_class_basic():
 
 def test_find_recombinase_sites():
     site1 = "ATGCCCTAAaaTT"
+    site2 = "AAaaTTTTTTTCCCT"
+    rec = Recombinase(site1, site2, site1_name="s1", site2_name="s2")
     seq = Dseqrecord(f"ggg{site1.upper()}ttt")
-    sites = find_recombinase_sites(
-        seq, site1, "GGGaaaCCC", site1_name="s1", site2_name="s2"
-    )
+    sites = rec.find(seq)
     assert "s1" in sites
-    assert len(sites["s1"]) >= 1
+    assert sites["s1"] == [SimpleLocation(3, 3 + len(site1), 1)]
+
+    # Works origin-spanning sites
+    seq_looped = seq.looped()
+    for shift in range(len(seq_looped)):
+        seq_looped_shifted = seq_looped.shifted(shift)
+        sites = rec.find(seq_looped_shifted)
+        assert str(sites["s1"][0].extract(seq_looped_shifted.seq)) == site1.upper()
+
+    # Works with multiple sites
+    seq = Dseqrecord(f"ggg{site1.upper()}ttt{site2.upper()}ttt{site1.upper()}ttt")
+    sites = rec.find(seq)
+    assert len(sites["s1"]) == 2
+    assert len(sites["s2"]) == 1
 
 
 def test_annotate_recombinase_sites():
     site1 = "ATGCCCTAAaaTT"
-    seq = Dseqrecord(f"ggg{site1.upper()}ttt")
-    assert len(seq.features) == 0
-    annotate_recombinase_sites(
-        seq, site1, "GGGaaaCCC", site1_name="mysite1", site2_name="mysite2"
-    )
-    assert len(seq.features) >= 1
-    assert any(f.qualifiers.get("label", []) == ["mysite1"] for f in seq.features)
-
-    # Calling again should not duplicate
-    n_before = len(seq.features)
-    annotate_recombinase_sites(
-        seq, site1, "GGGaaaCCC", site1_name="mysite1", site2_name="mysite2"
-    )
-    assert len(seq.features) == n_before
-
-
-# ---------------------------------------------------------------------------
-# Symmetry: site1 in seqy and site2 in seqx should also work
-# ---------------------------------------------------------------------------
-
-
-def test_sites_swapped_between_sequences():
-    """With site1 in seqx and site2 in seqy (can be either order in Assembly)."""
-    site1 = "ATGCCCTAAaaTT"
     site2 = "AAaaTTTTTTTCCCT"
+    rec = Recombinase(site1, site2, site1_name="mysite1", site2_name="mysite2")
+    seq = Dseqrecord(f"ggg{site1.upper()}ttt")
 
-    seqA = Dseqrecord("aaaATGCCCTAAaaTTtt")
-    seqB = Dseqrecord("tataAAaaTTTTTTTCCCTaaa")
+    annotated_seq = rec.annotate(seq)
+    assert len(annotated_seq.features) == 1
+    assert annotated_seq.features[0].qualifiers.get("label", []) == ["mysite1"]
+    assert annotated_seq.features[0].location == SimpleLocation(3, 3 + len(site1), 1)
 
-    rec = Recombinase(site1, site2)
-    matches = rec.overlap(seqA, seqB, limit=None)
-    assert len(matches) >= 1
+    # Does not change original sequence
+    assert len(seq.features) == 0
 
 
 # ---------------------------------------------------------------------------
@@ -242,32 +220,35 @@ def test_sites_swapped_between_sequences():
 
 def test_recombinase_integration():
     """Integration of insert into genome via recombinase sites."""
-    site1 = "ATGCCCTAAaaTT"
-    site2 = "AAaaTTTTTTTCCCT"
+    site1 = "ATGCCCTAAaaCT"
+    site2 = "CAaaTTTTTTTCCCT"
 
     genome = Dseqrecord(f"cccccc{site1.upper()}aaaaa")
     insert = Dseqrecord(f"{site2.upper()}bbbbb", circular=True)
+    rec = Recombinase(site1, site2)
 
-    products = recombinase_integration(genome, [insert], site1, site2)
-    assert len(products) >= 1
-    # Integrated product should contain both flanking regions and insert
-    seq_str = str(products[0].seq).upper()
-    assert "ATGCCCTAA" in seq_str
-    assert "TTTTTTTCCCT" in seq_str
+    products = recombinase_integration(genome, [insert], rec)
+
+    assert len(products) == 1
+    assert len(products[0].features) == 0
+    assert str(products[0].seq) == "ccccccATGCCCTAAAATTTTTTTCCCTbbbbbCAAACTaaaaa"
 
 
 def test_recombinase_excision():
     """Excision of plasmid from genome with two recombinase sites."""
-    site1 = "ATGCCCTAAaaTT"
+    site1 = "ATGCCCTAAaaCT"
     site2 = "AAaaTTTTTTTCCCT"
 
+    rec = Recombinase(site1, site2)
     genome = Dseqrecord(
-        f"cccccc{site1.upper()}xxxxx{site2.upper()}aaaaa",
+        f"cccccc{site1.upper()}tttt{site2.upper()}aaaaa",
         circular=True,
     )
 
-    products = recombinase_excision(genome, site1, site2)
-    assert len(products) >= 1
+    products = recombinase_excision(genome, rec)
+    assert len(products) == 2
+    assert str(products[0].seq) == "ccccccATGCCCTAAaaTTTTTTTCCCTtttt"
+    # assert str(products[1].seq) == "ccccccATGCCCTAAAATTTTTTTCCCTbbbbbCAAACTaaaaa"
 
 
 def test_recombinase_integration_excision_reversibility():

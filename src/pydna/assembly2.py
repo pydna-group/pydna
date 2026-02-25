@@ -1970,11 +1970,15 @@ class SingleFragmentAssembly(Assembly):
         self.G.add_node(1, seq=frag)
 
         matches = algorithm(frag, frag, limit)
+        # Remove matches where the whole sequence matches
+        matches = [match for match in matches if match[2] != len(frag)]
+
         for match in matches:
             self.add_edges_from_match(match, 1, 1, frag, frag)
 
         # To avoid duplicated outputs
-        self.G.remove_edges_from([(-1, -1)])
+        while (-1, -1) in self.G.edges():
+            self.G.remove_edges_from([(-1, -1)])
 
         # These two are constrained
         self.use_fragment_order = True
@@ -2805,8 +2809,7 @@ def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
 
 def recombinase_excision(
     genome: Dseqrecord,
-    site1: str,
-    site2: str,
+    recombinase: Recombinase,
 ) -> list[Dseqrecord]:
     """Returns the products for recombinase-mediated excision.
 
@@ -2814,26 +2817,23 @@ def recombinase_excision(
     ----------
     genome : Dseqrecord
         Target genome sequence containing two recombinase sites.
-    site1 : str
-        First recombinase recognition site (lowercase = overlap core).
-    site2 : str
-        Second recombinase recognition site (lowercase = overlap core).
+    recombinase : Recombinase
+        Recombinase object.
 
     Returns
     -------
     list[Dseqrecord]
         List containing excised plasmid and remaining genome sequence.
     """
-    rec = Recombinase(site1, site2)
-    products = common_function_excision_products(genome, None, rec.overlap)
+    products = common_function_excision_products(genome, None, recombinase.overlap)
+    products = [recombinase.annotate(p) for p in products]
     return _recast_sources(products, RecombinaseSource)
 
 
 def recombinase_integration(
     genome: Dseqrecord,
     inserts: list[Dseqrecord],
-    site1: str,
-    site2: str,
+    recombinase: Recombinase,
 ) -> list[Dseqrecord]:
     """Returns the products resulting from recombinase-mediated integration.
 
@@ -2843,10 +2843,8 @@ def recombinase_integration(
         Target genome sequence.
     inserts : list[Dseqrecord]
         DNA fragment(s) to insert.
-    site1 : str
-        First recombinase recognition site (lowercase = overlap core).
-    site2 : str
-        Second recombinase recognition site (lowercase = overlap core).
+    recombinase : Recombinase
+        Recombinase object.
 
     Returns
     -------
@@ -2866,8 +2864,10 @@ def recombinase_integration(
     True
     """
     fragments = common_handle_insertion_fragments(genome, inserts)
-    rec = Recombinase(site1, site2)
-    products = common_function_integration_products(fragments, None, rec.overlap)
+    products = common_function_integration_products(
+        fragments, None, recombinase.overlap
+    )
+    products = [recombinase.annotate(p) for p in products]
     return _recast_sources(products, RecombinaseSource)
 
 
