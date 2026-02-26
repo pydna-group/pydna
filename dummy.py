@@ -1,25 +1,29 @@
 # -*- coding: utf-8 -*-
 from pydna.dseq import Dseq
 
-seq = Dseq("AGJGaGEg")
+seq = Dseq("AGJJJGaGEEg")
+
 
 cutsite_pairs = seq.get_cutsite_pairs(seq.get_ds_meltsites(2))
 new_cutsite_pairs = seq.shift_melt_cutsite_pairs(cutsite_pairs)
 
 assert new_cutsite_pairs[0] == (None, ((2, 2), None))
-assert new_cutsite_pairs[1] == (((3, 3), None), ((8, 2), None))
-assert new_cutsite_pairs[2] == (((8, 1), None), None)
+assert new_cutsite_pairs[1] == (((5, 5), None), ((11, 3), None))
+assert new_cutsite_pairs[2] == (((11, 1), None), None)
 
 
-seq = Dseq("AGEGaGJg")
+seq = Dseq("AGEEGaGJJJg")
 
 
 cutsite_pairs = seq.get_cutsite_pairs(seq.get_ds_meltsites(2))
 new_cutsite_pairs = seq.shift_melt_cutsite_pairs(cutsite_pairs)
 
-seq2 = Dseq("AGGGaGGg")
 
+print(new_cutsite_pairs)
+print(repr(seq.apply_cut(*new_cutsite_pairs[0])))
+print(repr(seq.apply_cut(*new_cutsite_pairs[1])))
+print(repr(seq.apply_cut(*new_cutsite_pairs[2])))
 
-assert new_cutsite_pairs[0] == (None, ((0, -2), None))
-assert new_cutsite_pairs[1] == (((0, -3), None), ((6, -2), None))
-assert new_cutsite_pairs[2] == (((7, -1), None), None)
+# assert new_cutsite_pairs[0] == (None, ((0, -2), None))
+# assert new_cutsite_pairs[1] == (((0, -3), None), ((6, -2), None))
+# assert new_cutsite_pairs[2] == (((7, -1), None), None)
