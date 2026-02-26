@@ -5,7 +5,7 @@ from Bio.Data.IUPACData import ambiguous_dna_values
 from Bio.Seq import reverse_complement
 from pydna.sequence_regex import compute_regex_site, dseqrecord_finditer
 from Bio.SeqFeature import Location, SimpleLocation, SeqFeature
-from pydna.utils import shift_location
+from pydna.utils import shift_location, deduplicate
 
 # We create a dictionary to map ambiguous bases to their consensus base
 # For example, ambigous_base_dict['ACGT'] -> 'N'
@@ -58,12 +58,7 @@ def cre_loxP_overlap(
             value_y = match_y.group()
             if value_x[13:21] == value_y[13:21]:
                 out.append((match_x.start() + 13, match_y.start() + 13, 8))
-    # Unique values (keeping the order)
-    unique_out = []
-    for item in out:
-        if item not in unique_out:
-            unique_out.append(item)
-    return unique_out
+    return deduplicate(out)
 
 
 loxP_dict = {

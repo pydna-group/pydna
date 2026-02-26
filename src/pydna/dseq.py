@@ -33,6 +33,7 @@ from pydna._pretty import pretty_str
 from pydna.utils import rc
 from pydna.utils import flatten
 from pydna.utils import cuts_overlap
+from pydna.utils import deduplicate
 
 from pydna.alphabet import basepair_dict
 from pydna.alphabet import dscode_to_watson_table
@@ -2762,6 +2763,9 @@ class Dseq(Seq):
         left_watson, left_crick, ovhg_left = self.get_cut_parameters(left_cut, True)
         right_watson, right_crick, _ = self.get_cut_parameters(right_cut, False)
 
+        print("%%")
+        print(self[left_watson:right_watson])
+        print(self[left_crick:right_crick])
         return Dseq(
             self[left_watson:right_watson]._data.translate(dscode_to_watson_table),
             self[left_crick:right_crick]
@@ -2831,6 +2835,8 @@ class Dseq(Seq):
         """
         ss_crick_bytes = set(ss_letters_crick.encode("ascii"))
         ss_watson_bytes = set(ss_letters_watson.encode("ascii"))
+        n = len(self._data)
+        data = self._data * 2 if self.circular else self._data
 
         new_cutsite_pairs = []
         for left_cut, right_cut in cutsite_pairs:
@@ -2838,34 +2844,36 @@ class Dseq(Seq):
                 (watson, ovhg), enz = left_cut
                 crick = watson - ovhg
                 if ovhg > 0:
-                    while (
-                        watson < len(self._data)
-                        and self._data[watson] in ss_crick_bytes
-                    ):
+                    while watson < len(data) and data[watson] in ss_crick_bytes:
                         watson += 1
-                        ovhg += 1
                 elif ovhg < 0:
-                    while (
-                        crick < len(self._data) and self._data[crick] in ss_watson_bytes
-                    ):
+                    while crick < len(data) and data[crick] in ss_watson_bytes:
                         crick += 1
-                        ovhg -= 1
-                left_cut = ((watson, ovhg), enz)
+                if self.circular:
+                    left_cut = ((watson % n, (watson % n) - (crick % n)), enz)
+                else:
+                    left_cut = ((watson, watson - crick), enz)
 
             if right_cut is not None:
                 (watson, ovhg), enz = right_cut
                 crick = watson - ovhg
                 if ovhg > 0:
-                    while crick > 0 and self._data[crick - 1] in ss_watson_bytes:
+                    while crick > 0 and data[crick - 1] in ss_watson_bytes:
                         crick -= 1
-                        ovhg += 1
                 elif ovhg < 0:
-                    while watson > 0 and self._data[watson - 1] in ss_crick_bytes:
+                    while watson > 0 and data[watson - 1] in ss_crick_bytes:
                         watson -= 1
-                        ovhg -= 1
-                right_cut = ((watson, ovhg), enz)
+                if self.circular:
+                    right_cut = ((watson % n, (watson % n) - (crick % n)), enz)
+                else:
+                    right_cut = ((watson, watson - crick), enz)
 
             new_cutsite_pairs.append((left_cut, right_cut))
+
+        if self.circular:
+            new_cutsite_pairs = [
+                cut for pair in deduplicate(new_cutsite_pairs) for cut in pair
+            ]
 
         return new_cutsite_pairs
 

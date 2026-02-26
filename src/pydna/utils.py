@@ -879,3 +879,20 @@ def create_location(
         return SimpleLocation(start, end, strand)
     else:
         return shift_location(SimpleLocation(start, end + lim, strand), 0, lim)
+
+
+def deduplicate(iterable):
+    """Remove duplicates from an iterable while preserving order.
+
+    >>> deduplicate([3, 1, 2, 1, 3, 4])
+    [3, 1, 2, 4]
+    >>> deduplicate([(1, 2), (3, 4), (1, 2)])
+    [(1, 2), (3, 4)]
+    """
+    seen = set()
+    result = []
+    for item in iterable:
+        if item not in seen:
+            seen.add(item)
+            result.append(item)
+    return result
