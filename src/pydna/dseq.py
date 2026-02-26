@@ -2440,7 +2440,6 @@ class Dseq(Seq):
         if self.circular:
             spacer = length
             cutfrom = self._data[-length:] + self._data + self._data[:length]
-            print(cutfrom)
         else:
             spacer = 0
             cutfrom = self._data
@@ -2561,8 +2560,13 @@ class Dseq(Seq):
         cutsites = new.get_ds_meltsites(length)
 
         cutsite_pairs = self.get_cutsite_pairs(cutsites)
+        cutsite_pairs = self.shift_melt_cutsite_pairs(cutsite_pairs)
 
-        result = tuple(new.apply_cut(*cutsite_pair) for cutsite_pair in cutsite_pairs)
+        result = tuple(
+            new.apply_cut(*cutsite_pair, allow_overlap=True)
+            for cutsite_pair in cutsite_pairs
+        )
+        print(result)
 
         result = tuple([new]) if strands and not result else result
 
@@ -2763,9 +2767,6 @@ class Dseq(Seq):
         left_watson, left_crick, ovhg_left = self.get_cut_parameters(left_cut, True)
         right_watson, right_crick, _ = self.get_cut_parameters(right_cut, False)
 
-        print("%%")
-        print(self[left_watson:right_watson])
-        print(self[left_crick:right_crick])
         return Dseq(
             self[left_watson:right_watson]._data.translate(dscode_to_watson_table),
             self[left_crick:right_crick]
@@ -2836,45 +2837,58 @@ class Dseq(Seq):
         ss_crick_bytes = set(ss_letters_crick.encode("ascii"))
         ss_watson_bytes = set(ss_letters_watson.encode("ascii"))
         n = len(self._data)
-        data = self._data * 2 if self.circular else self._data
+        is_circular = self.circular
 
         new_cutsite_pairs = []
         for left_cut, right_cut in cutsite_pairs:
             if left_cut is not None:
                 (watson, ovhg), enz = left_cut
-                crick = watson - ovhg
                 if ovhg > 0:
-                    while watson < len(data) and data[watson] in ss_crick_bytes:
+                    for _ in range(n):
+                        if (not is_circular and watson >= n) or self._data[
+                            watson % n
+                        ] not in ss_crick_bytes:
+                            break
                         watson += 1
+                        ovhg += 1
                 elif ovhg < 0:
-                    while crick < len(data) and data[crick] in ss_watson_bytes:
-                        crick += 1
-                if self.circular:
-                    left_cut = ((watson % n, (watson % n) - (crick % n)), enz)
+                    for _ in range(n):
+                        if (not is_circular and watson - ovhg >= n) or self._data[
+                            (watson - ovhg) % n
+                        ] not in ss_watson_bytes:
+                            break
+                        ovhg -= 1
+                if is_circular:
+                    left_cut = ((watson % n, ovhg % n), enz)
                 else:
-                    left_cut = ((watson, watson - crick), enz)
+                    left_cut = ((watson, ovhg), enz)
 
             if right_cut is not None:
                 (watson, ovhg), enz = right_cut
-                crick = watson - ovhg
                 if ovhg > 0:
-                    while crick > 0 and data[crick - 1] in ss_watson_bytes:
-                        crick -= 1
+                    for _ in range(n):
+                        if (not is_circular and watson - ovhg <= 0) or self._data[
+                            (watson - ovhg - 1) % n
+                        ] not in ss_watson_bytes:
+                            break
+                        ovhg += 1
                 elif ovhg < 0:
-                    while watson > 0 and data[watson - 1] in ss_crick_bytes:
+                    for _ in range(n):
+                        if (not is_circular and watson <= 0) or self._data[
+                            (watson - 1) % n
+                        ] not in ss_crick_bytes:
+                            break
                         watson -= 1
-                if self.circular:
-                    right_cut = ((watson % n, (watson % n) - (crick % n)), enz)
+                        ovhg -= 1
+                if is_circular:
+                    right_cut = ((watson % n, ovhg % n), enz)
                 else:
-                    right_cut = ((watson, watson - crick), enz)
+                    right_cut = ((watson, ovhg), enz)
 
             new_cutsite_pairs.append((left_cut, right_cut))
 
         if self.circular:
-            new_cutsite_pairs = [
-                cut for pair in deduplicate(new_cutsite_pairs) for cut in pair
-            ]
-
+            new_cutsite_pairs = deduplicate(new_cutsite_pairs)
         return new_cutsite_pairs
 
     def get_parts(self):
