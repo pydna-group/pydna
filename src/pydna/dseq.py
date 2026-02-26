@@ -2420,11 +2420,26 @@ class Dseq(Seq):
         if length < 1:
             return tuple()
 
-        regex = regex_ds_melt_factory(length)
+        regex = regex_ds_melt_factory(length, self.circular)
 
+        # parts = self.get_parts()
+        # # Pad with ssDNA if at the edges if both ends have single stranded regions
+        # if self.circular and (
+        #     (parts.sticky_right5 or parts.sticky_right3)
+        #     and (parts.sticky_left5 or parts.sticky_left3)
+        # ):
+        #     padding_left = len(self) - max(
+        #         len(parts.sticky_right5), len(parts.sticky_right3)
+        #     )
+        #     padding_right = max(len(parts.sticky_left5), len(parts.sticky_left3))
+        #     cutfrom = (
+        #         self._data[padding_left:] + self._data + self._data[:padding_right]
+        #     )
+        #     spacer = padding_left % len(self)
         if self.circular:
             spacer = length
             cutfrom = self._data[-length:] + self._data + self._data[:length]
+            print(cutfrom)
         else:
             spacer = 0
             cutfrom = self._data
@@ -2441,6 +2456,8 @@ class Dseq(Seq):
 
             cuts.append(cut)
 
+        # Remove cuts from circular sequences starting in the padding
+        cuts = [cut for cut in cuts if (0 <= cut[0][0] <= len(self))]
         return cuts
 
     def cast_to_ds_right(self):

@@ -1485,6 +1485,13 @@ def test__get_ds_meltsites():
     assert Dseq("AGCPAGQGAT", circular=True).get_ds_meltsites(2) == [((6, 2), None)]
     assert Dseq("AGCQAGPGAT", circular=True).get_ds_meltsites(2) == [((4, -2), None)]
 
+    seq = Dseq("AGEEGaGJJJg", circular=True)
+
+    for shift in range(len(seq)):
+        new_seq = seq.shifted(shift)
+        assert len(new_seq.get_ds_meltsites(2)) == 0
+        assert len(new_seq.get_ds_meltsites(3)) == 2
+
 
 def test_nibble():
 
