@@ -956,10 +956,12 @@ class Dseq(Seq):
         if not self.circular:
             raise TypeError("DNA is not circular.")
         shift = shift % len(self)
+        out = copy.deepcopy(self)
         if not shift:
-            return copy.deepcopy(self)
+            return out
         else:
-            return (self[shift:] + self[:shift]).looped()
+            out._data = out._data[shift:] + out._data[:shift]
+            return out
 
     def looped(self: DseqType) -> DseqType:
         """Circularized Dseq object.
