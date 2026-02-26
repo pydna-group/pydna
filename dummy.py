@@ -31,6 +31,11 @@ for shift in range(len(seq)):
     print("==")
     cutsite_pairs = new_seq.get_cutsite_pairs(new_seq.get_ds_meltsites(3))
 
+    print(repr(new_seq))
+    expected_product = new_seq.apply_cut(((10, 6), None), ((4, 4), None))
+    print(repr(expected_product))
+    break
+
     print(cutsite_pairs)
     print(new_seq.shift_melt_cutsite_pairs(cutsite_pairs))
     print(repr(new_seq))

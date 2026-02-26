@@ -2698,7 +2698,9 @@ class Dseq(Seq):
 
         return Dseq.quick(new), strands
 
-    def apply_cut(self, left_cut: CutSiteType, right_cut: CutSiteType) -> "Dseq":
+    def apply_cut(
+        self, left_cut: CutSiteType, right_cut: CutSiteType, allow_overlap: bool = False
+    ) -> "Dseq":
         """Extracts a subfragment of the sequence between two cuts.
 
         For more detail see the documentation of get_cutsite_pairs.
@@ -2753,11 +2755,13 @@ class Dseq(Seq):
             GttCTTAA
 
         """
-        if cuts_overlap(left_cut, right_cut, len(self)):
+
+        if not allow_overlap and cuts_overlap(left_cut, right_cut, len(self)):
             raise ValueError("Cuts by {} {} overlap.".format(left_cut[1], right_cut[1]))
 
         left_watson, left_crick, ovhg_left = self.get_cut_parameters(left_cut, True)
         right_watson, right_crick, _ = self.get_cut_parameters(right_cut, False)
+
         return Dseq(
             self[left_watson:right_watson]._data.translate(dscode_to_watson_table),
             self[left_crick:right_crick]
