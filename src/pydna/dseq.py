@@ -68,6 +68,14 @@ class CircularBytes(bytes):
     def __new__(cls, value: bytes | bytearray | memoryview):
         return super().__new__(cls, bytes(value))
 
+    def shifted(self, shift: int) -> "CircularBytes":
+        """
+        Shift the sequence by the given number of bases.
+        """
+        if shift % len(self) == 0:
+            return copy.deepcopy(self)
+        return CircularBytes(self[shift:] + self[:shift])
+
     def __getitem__(self, key):
         n = len(self)
         if n == 0:
@@ -86,17 +94,20 @@ class CircularBytes(bytes):
 
             if step > 0:
                 start = 0 if start is None else start
-                stop = n if stop is None else stop
+                if stop is None:
+                    if start < 0:
+                        stop = 0
+                    else:
+                        stop = n
                 while stop <= start:
                     stop += n
-                rng = range(start, stop, step)
             else:
                 start = (n - 1) if start is None else start
                 stop = -1 if stop is None else stop
                 while stop >= start:
                     stop -= n
-                rng = range(start, stop, step)
 
+            rng = range(start, stop, step)
             limit = n if step % n == 0 else n * 2
             out = bytearray()
             count = 0
@@ -157,6 +168,23 @@ class CircularBytes(bytes):
         if pos == -1 or pos >= n:
             return -1
         return pos
+
+    def replace_with(self, start, end, replacement) -> "CircularBytes":
+        """
+        Replace the subsequence between start and end with the replacement.
+        """
+        shifted = self.shifted(start)
+
+        if end < start:
+            end += len(self)
+
+        if len(replacement) != end - start:
+            raise ValueError(
+                "Replacement length must match the length of the subsequence"
+            )
+
+        shifted = CircularBytes(replacement + shifted[len(replacement) : len(self)])
+        return shifted.shifted(-start)
 
 
 class Dseq(Seq):
@@ -2364,14 +2392,22 @@ class Dseq(Seq):
         for m in regex.finditer(cutfrom):
 
             if m.lastgroup == "watson":
-                cut1 = m.start() + spacer
-                cut2 = m.end() + spacer
+                cut1 = m.start() - spacer
+                cut2 = m.end() - spacer
                 watson_cuts.append((cut1, cut2))
             else:
                 assert m.lastgroup == "crick"
-                cut1 = m.start() + spacer
-                cut2 = m.end() + spacer
+                cut1 = m.start() - spacer
+                cut2 = m.end() - spacer
                 crick_cuts.append((cut1, cut2))
+
+        if self.circular:
+            watson_cuts = [
+                (cut[0], cut[1]) for cut in watson_cuts if 0 <= cut[0] <= len(self)
+            ]
+            crick_cuts = [
+                (cut[0], cut[1]) for cut in crick_cuts if 0 <= cut[0] <= len(self)
+            ]
 
         return watson_cuts, crick_cuts
 
@@ -2423,20 +2459,6 @@ class Dseq(Seq):
 
         regex = regex_ds_melt_factory(length, self.circular)
 
-        # parts = self.get_parts()
-        # # Pad with ssDNA if at the edges if both ends have single stranded regions
-        # if self.circular and (
-        #     (parts.sticky_right5 or parts.sticky_right3)
-        #     and (parts.sticky_left5 or parts.sticky_left3)
-        # ):
-        #     padding_left = len(self) - max(
-        #         len(parts.sticky_right5), len(parts.sticky_right3)
-        #     )
-        #     padding_right = max(len(parts.sticky_left5), len(parts.sticky_left3))
-        #     cutfrom = (
-        #         self._data[padding_left:] + self._data + self._data[:padding_right]
-        #     )
-        #     spacer = padding_left % len(self)
         if self.circular:
             spacer = length
             cutfrom = self._data[-length:] + self._data + self._data[:length]
@@ -2566,7 +2588,6 @@ class Dseq(Seq):
             new.apply_cut(*cutsite_pair, allow_overlap=True)
             for cutsite_pair in cutsite_pairs
         )
-        print(result)
 
         result = tuple([new]) if strands and not result else result
 
@@ -2687,21 +2708,21 @@ class Dseq(Seq):
         crick_cutpairs = crick_cutpairs or list()
         strands = []
 
-        new = bytearray(self._data)
+        new = CircularBytes(self._data)
 
         for x, y in watson_cutpairs:
             stuffer = new[x:y]
             ss = Dseq.quick(new[x:y].translate(dscode_to_watson_tail_table))
-            new[x:y] = stuffer.translate(dscode_to_crick_tail_table)
+            new = new.replace_with(x, y, stuffer.translate(dscode_to_crick_tail_table))
             strands.append(ss)
 
         for x, y in crick_cutpairs:
             stuffer = new[x:y]
             ss = Dseq.quick(stuffer.translate(dscode_to_crick_tail_table))
-            new[x:y] = stuffer.translate(dscode_to_watson_tail_table)
+            new = new.replace_with(x, y, stuffer.translate(dscode_to_watson_tail_table))
             strands.append(ss)
 
-        return Dseq.quick(new), strands
+        return Dseq.quick(bytes(new), circular=self.circular), strands
 
     def apply_cut(
         self, left_cut: CutSiteType, right_cut: CutSiteType, allow_overlap: bool = False
@@ -2838,6 +2859,7 @@ class Dseq(Seq):
         ss_watson_bytes = set(ss_letters_watson.encode("ascii"))
         n = len(self._data)
         is_circular = self.circular
+        data = CircularBytes(self._data)
 
         new_cutsite_pairs = []
         for left_cut, right_cut in cutsite_pairs:
@@ -2845,16 +2867,16 @@ class Dseq(Seq):
                 (watson, ovhg), enz = left_cut
                 if ovhg > 0:
                     for _ in range(n):
-                        if (not is_circular and watson >= n) or self._data[
-                            watson % n
+                        if (not is_circular and watson >= n) or data[
+                            watson
                         ] not in ss_crick_bytes:
                             break
                         watson += 1
                         ovhg += 1
                 elif ovhg < 0:
                     for _ in range(n):
-                        if (not is_circular and watson - ovhg >= n) or self._data[
-                            (watson - ovhg) % n
+                        if (not is_circular and watson - ovhg >= n) or data[
+                            watson - ovhg
                         ] not in ss_watson_bytes:
                             break
                         ovhg -= 1
@@ -2867,15 +2889,15 @@ class Dseq(Seq):
                 (watson, ovhg), enz = right_cut
                 if ovhg > 0:
                     for _ in range(n):
-                        if (not is_circular and watson - ovhg <= 0) or self._data[
-                            (watson - ovhg - 1) % n
+                        if (not is_circular and watson - ovhg <= 0) or data[
+                            watson - ovhg - 1
                         ] not in ss_watson_bytes:
                             break
                         ovhg += 1
                 elif ovhg < 0:
                     for _ in range(n):
-                        if (not is_circular and watson <= 0) or self._data[
-                            (watson - 1) % n
+                        if (not is_circular and watson <= 0) or data[
+                            watson - 1
                         ] not in ss_crick_bytes:
                             break
                         watson -= 1
