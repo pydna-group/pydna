@@ -911,7 +911,7 @@ def regex_ds_melt_factory(length: int, circular: bool) -> re.Pattern:
     --------
 
     >>> from pydna.dseq import Dseq
-    >>> regex = regex_ds_melt_factory(3)
+    >>> regex = regex_ds_melt_factory(3, False)
     >>> s = Dseq("aaaGFTTAIAttt")
     >>> s
     Dseq(-13)
