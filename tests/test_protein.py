@@ -66,7 +66,6 @@ def read_w_seqio(sequence: str, sequenceformat: str):
 
 
 def test_fasta_protein():
-
     (pydna_protein,) = parse_proteins(fasta_sequence)
     biopython_protein = read_w_seqio(fasta_sequence, "fasta-blast")
     assert pydna_protein.__dict__.keys() == biopython_protein.__dict__.keys() | {
@@ -75,7 +74,6 @@ def test_fasta_protein():
 
 
 def test_genpept_protein():
-
     (pydna_protein,) = parse_proteins(genpept_sequence)
     biopython_protein = read_w_seqio(genpept_sequence, "gb")
     assert pydna_protein.__dict__.keys() == biopython_protein.__dict__.keys() | {
