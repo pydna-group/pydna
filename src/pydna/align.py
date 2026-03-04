@@ -151,36 +151,36 @@ def align(seq1, seq2):
     return alignment, edits
 
 
-# if __name__ == "__main__":
-#
-#    seq1 = "MKTAYIAKKKKKISFVKSHFSR"
-#    seq2 = "MKTAYIAKKKKKISFVKSHFSR"
-#
-#    aln, editlist = align(seq1, seq2)
-#
-#    print(aln)
-#    print("\n".join(editlist))
-#
-#    seq1 = "MKTAYIAKKKKKISFVKSHFSR"
-#    seq2 = "MKTAYIAKQRQISFVKSHFSRQ"
-#
-#    aln, editlist = align(seq1, seq2)
-#
-#    print(aln)
-#    print("\n".join(editlist))
-#
-#    seq1 = "MKTAYIAKQRQISFVKSHFSRQ"
-#    seq2 = "MKTAYIAKQISFVKSHFSR"
-#
-#    aln, editlist = align(seq1, seq2)
-#
-#    print(aln)
-#    print("\n".join(editlist))
-#
-#    seq2 = "MKTAYIAKQRQISFVKSHFSRQ"
-#    seq1 = "MKTAYIAKQISFVKSHFSR"
-#
-#    aln, editlist = align(seq1, seq2)
-#
-#    print(aln)
-#    print("\n".join(editlist))
+ if __name__ == "__main__":
+
+    seq1 = "MKTAYIAKKKKKISFVKSHFSR"
+    seq2 = "MKTAYIAKKKKKISFVKSHFSR"
+
+    aln, editlist = align(seq1, seq2)
+
+    print(aln)
+    print("\n".join(editlist))
+
+    seq1 = "MKTAYIAKKKKKISFVKSHFSR"
+    seq2 = "MKTAYIAKQRQISFVKSHFSRQ"
+
+    aln, editlist = align(seq1, seq2)
+
+    print(aln)
+    print("\n".join(editlist))
+
+    seq1 = "MKTAYIAKQRQISFVKSHFSRQ"
+    seq2 = "MKTAYIAKQISFVKSHFSR"
+
+    aln, editlist = align(seq1, seq2)
+
+    print(aln)
+    print("\n".join(editlist))
+
+    seq2 = "MKTAYIAKQRQISFVKSHFSRQ"
+    seq1 = "MKTAYIAKQISFVKSHFSR"
+
+    aln, editlist = align(seq1, seq2)
+
+    print(aln)
+    print("\n".join(editlist))
