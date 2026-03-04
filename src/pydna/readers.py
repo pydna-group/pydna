@@ -73,4 +73,4 @@ def read_protein(data):
     """Use this function to read a primer sequence from a string or a local file.
     The usage is similar to the :func:`parse_primer` function."""
 
-    return _read(parse_proteins, data, ds=False)
+    return _read(parse_proteins, data)
