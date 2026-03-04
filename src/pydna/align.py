@@ -10,7 +10,7 @@ aligner.mode = "global"
 aligner.substitution_matrix = load("BLOSUM62")
 aligner.match_score = 1
 aligner.mismatch_score = -1
-aligner.open_gap_score = -5
+aligner.open_gap_score = -10
 aligner.extend_gap_score = -1
 
 
@@ -37,6 +37,7 @@ def align(seq1, seq2):
             seq = "".join(current["from"])
             s, e = current["start"], current["end"]
             if s == e:
+<<<<<<< HEAD
                 edits.append(f"Insert {seq} at position {s}")
             else:
                 edits.append(f"Insert {seq} at position {s}-{e}")
@@ -44,15 +45,30 @@ def align(seq1, seq2):
         elif current["type"] == "ins":
             seq = "".join(current["to"])
             edits.append(f"Delete {seq} after position {current['after']}")
+=======
+                edits.append(f"Delete {seq} at position {s}")
+            else:
+                edits.append(f"Delete {seq} at position {s}-{e}")
+
+        elif current["type"] == "ins":
+            seq = "".join(current["to"])
+            edits.append(f"Insert {seq} after position {current['after']}")
+>>>>>>> 7d840282 (synced sequence files, addad align module)
 
         elif current["type"] == "sub":
             frm = "".join(current["from"])
             to = "".join(current["to"])
             s, e = current["start"], current["end"]
             if s == e:
+<<<<<<< HEAD
                 edits.append(f"Substitute {to} → {frm} at position {s}")
             else:
                 edits.append(f"Substitute {to} → {frm} from position {s} to {e}")
+=======
+                edits.append(f"Substitute {frm} → {to} at position {s}")
+            else:
+                edits.append(f"Substitute {frm} → {to} from position {s} to {e}")
+>>>>>>> 7d840282 (synced sequence files, addad align module)
 
         current = None
 
@@ -151,3 +167,41 @@ def align(seq1, seq2):
     flush()
 
     return alignment, edits
+<<<<<<< HEAD
+=======
+
+
+# if __name__ == "__main__":
+#
+#    seq1 = "MKTAYIAKKKKKISFVKSHFSR"
+#    seq2 = "MKTAYIAKKKKKISFVKSHFSR"
+#
+#    aln, editlist = align(seq1, seq2)
+#
+#    print(aln)
+#    print("\n".join(editlist))
+#
+#    seq1 = "MKTAYIAKKKKKISFVKSHFSR"
+#    seq2 = "MKTAYIAKQRQISFVKSHFSRQ"
+#
+#    aln, editlist = align(seq1, seq2)
+#
+#    print(aln)
+#    print("\n".join(editlist))
+#
+#    seq1 = "MKTAYIAKQRQISFVKSHFSRQ"
+#    seq2 = "MKTAYIAKQISFVKSHFSR"
+#
+#    aln, editlist = align(seq1, seq2)
+#
+#    print(aln)
+#    print("\n".join(editlist))
+#
+#    seq2 = "MKTAYIAKQRQISFVKSHFSRQ"
+#    seq1 = "MKTAYIAKQISFVKSHFSR"
+#
+#    aln, editlist = align(seq1, seq2)
+#
+#    print(aln)
+#    print("\n".join(editlist))
+>>>>>>> 7d840282 (synced sequence files, addad align module)
