@@ -105,6 +105,7 @@ from pydna.dseqrecord import Dseqrecord
 from pydna.utils import shift_location
 from pydna.sequence_regex import compute_regex_site, dseqrecord_finditer
 from pydna.types import SequenceOverlap
+from opencloning_linkml.datamodel import Recombinase as RecombinaseModel
 
 
 def _recombinase_homology_offset_and_length(site: str) -> tuple[int, int]:
@@ -174,11 +175,13 @@ class Recombinase:
         site2: str,
         site1_name: str = "site1",
         site2_name: str = "site2",
+        name: str = "",
     ):
         self.site1 = site1
         self.site2 = site2
         self.site1_name = site1_name
         self.site2_name = site2_name
+        self.name = name
 
         off1, len1 = _recombinase_homology_offset_and_length(site1)
         off2, len2 = _recombinase_homology_offset_and_length(site2)
@@ -355,6 +358,17 @@ class Recombinase:
                     )
         return out_seq
 
+    def to_opencloning_model(self) -> list[RecombinaseModel]:
+        return [
+            RecombinaseModel(
+                site1=self.site1,
+                site2=self.site2,
+                site1_name=self.site1_name,
+                site2_name=self.site2_name,
+                name=self.name,
+            ),
+        ]
+
 
 class RecombinaseCollection:
     """A collection of recombinases."""
@@ -387,3 +401,6 @@ class RecombinaseCollection:
         for rec in self.recombinases:
             out = rec.annotate(out)
         return out
+
+    def to_opencloning_model(self) -> list[RecombinaseModel]:
+        return sum((r.to_opencloning_model() for r in self.recombinases), [])

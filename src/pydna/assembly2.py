@@ -39,7 +39,7 @@ from pydna.types import (
 from pydna.gateway import gateway_overlap, find_gateway_sites
 from pydna.cre_lox import cre_loxP_overlap
 from pydna.alphabet import anneal_strands
-from pydna.recombinase import Recombinase
+from pydna.recombinase import Recombinase, RecombinaseCollection
 
 from typing import TYPE_CHECKING, Callable, Literal
 from pydna.opencloning_models import (
@@ -2809,7 +2809,7 @@ def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
 
 def recombinase_excision(
     genome: Dseqrecord,
-    recombinase: Recombinase,
+    recombinase: Recombinase | RecombinaseCollection,
 ) -> list[Dseqrecord]:
     """Returns the products for recombinase-mediated excision.
 
@@ -2817,7 +2817,7 @@ def recombinase_excision(
     ----------
     genome : Dseqrecord
         Target genome sequence containing two recombinase sites.
-    recombinase : Recombinase
+    recombinase : Recombinase | RecombinaseCollection
         Recombinase object.
 
     Returns
@@ -2827,13 +2827,13 @@ def recombinase_excision(
     """
     products = common_function_excision_products(genome, None, recombinase.overlap)
     products = [recombinase.annotate(p) for p in products]
-    return _recast_sources(products, RecombinaseSource)
+    return _recast_sources(products, RecombinaseSource, recombinases=recombinase)
 
 
 def recombinase_integration(
     genome: Dseqrecord,
     inserts: list[Dseqrecord],
-    recombinase: Recombinase,
+    recombinase: Recombinase | RecombinaseCollection,
 ) -> list[Dseqrecord]:
     """Returns the products resulting from recombinase-mediated integration.
 
@@ -2843,7 +2843,7 @@ def recombinase_integration(
         Target genome sequence.
     inserts : list[Dseqrecord]
         DNA fragment(s) to insert.
-    recombinase : Recombinase
+    recombinase : Recombinase | RecombinaseCollection
         Recombinase object.
 
     Returns
@@ -2870,7 +2870,7 @@ def recombinase_integration(
         fragments, None, recombinase.overlap
     )
     products = [recombinase.annotate(p) for p in products]
-    return _recast_sources(products, RecombinaseSource)
+    return _recast_sources(products, RecombinaseSource, recombinases=recombinase)
 
 
 def crispr_integration(
