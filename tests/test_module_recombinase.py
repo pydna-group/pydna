@@ -289,6 +289,29 @@ def test_recombinase_reverse():
     assert rev_rec.site1_name == "site12"
     assert rev_rec.site2_name == "site21"
 
+    # Renaming convention
+    for site1_name, site2_name in [
+        ("attB", "attP"),
+        ("attP", "attB"),
+        ("attL", "attR"),
+        ("attR", "attL"),
+    ]:
+        rec = Recombinase(site1, site2, site1_name=site1_name, site2_name=site2_name)
+        rev_rec = rec.get_reverse_recombinase()
+        if site1_name == "attB":
+            expected = ("attR", "attL")
+        elif site1_name == "attP":
+            expected = ("attL", "attR")
+        elif site1_name == "attL":
+            expected = ("attP", "attB")
+        elif site1_name == "attR":
+            expected = ("attB", "attP")
+        print(
+            f"site1_name: {site1_name}, site2_name: {site2_name}, expected: {expected}"
+        )
+        assert rev_rec.site1_name == expected[0]
+        assert rev_rec.site2_name == expected[1]
+
 
 # ---------------------------------------------------------------------------
 # RecombinaseCollection

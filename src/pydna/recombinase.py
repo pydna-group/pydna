@@ -246,6 +246,20 @@ class Recombinase:
             self.site2[: off2 + self._homology_len]
             + self.site1[off1 + self._homology_len :]
         )
+        if site12_name == "site12" and site21_name == "site21":
+            if self.site1_name == "attB" and self.site2_name == "attP":
+                site12_name = "attR"
+                site21_name = "attL"
+            elif self.site1_name == "attP" and self.site2_name == "attB":
+                site12_name = "attL"
+                site21_name = "attR"
+            elif self.site1_name == "attL" and self.site2_name == "attR":
+                site12_name = "attP"
+                site21_name = "attB"
+            elif self.site1_name == "attR" and self.site2_name == "attL":
+                site12_name = "attB"
+                site21_name = "attP"
+
         return Recombinase(site12, site21, site12_name, site21_name)
 
     def overlap(
