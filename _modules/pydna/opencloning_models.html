@@ -29,7 +29,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b530ca2f" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -38,8 +38,8 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=9eea9577"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydna/opencloning_models';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -409,6 +409,8 @@ document.write(`
     <span class="n">PlannotateAnnotationReport</span> <span class="k">as</span> <span class="n">_PlannotateAnnotationReport</span><span class="p">,</span>
     <span class="n">ReverseComplementSource</span> <span class="k">as</span> <span class="n">_ReverseComplementSource</span><span class="p">,</span>
     <span class="n">NCBISequenceSource</span> <span class="k">as</span> <span class="n">_NCBISequenceSource</span><span class="p">,</span>
+    <span class="n">RecombinaseSource</span> <span class="k">as</span> <span class="n">_RecombinaseSource</span><span class="p">,</span>
+    <span class="n">Recombinase</span> <span class="k">as</span> <span class="n">_Recombinase</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">Location</span><span class="p">,</span> <span class="n">LocationParserError</span><span class="p">,</span> <span class="n">SimpleLocation</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractCut</span>
@@ -424,6 +426,7 @@ document.write(`
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.recombinase</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecombinaseCollection</span><span class="p">,</span> <span class="n">Recombinase</span>
 
 
 <span class="c1"># Thread-local storage for ID strategy</span>
@@ -1011,6 +1014,35 @@ document.write(`
 <span class="k">class</span><span class="w"> </span><span class="nc">PCRSource</span><span class="p">(</span><span class="n">AssemblySource</span><span class="p">):</span>
     <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_PCRSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_PCRSource</span>
     <span class="n">add_primer_features</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="RecombinaseSource">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.RecombinaseSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RecombinaseSource</span><span class="p">(</span><span class="n">AssemblySource</span><span class="p">):</span>
+
+    <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_RecombinaseSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_RecombinaseSource</span>
+    <span class="n">recombinases</span><span class="p">:</span> <span class="nb">object</span>
+
+    <span class="nd">@field_validator</span><span class="p">(</span><span class="s2">&quot;recombinases&quot;</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_recombinases</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="s2">&quot;RecombinaseCollection&quot;</span> <span class="o">|</span> <span class="s2">&quot;Recombinase&quot;</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.recombinase</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecombinaseCollection</span><span class="p">,</span> <span class="n">Recombinase</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">RecombinaseCollection</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Recombinase</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;recombinases must be a RecombinaseCollection or a Recombinase&quot;</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="RecombinaseSource.serialize_recombinases">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.RecombinaseSource.serialize_recombinases">[docs]</a>
+    <span class="nd">@field_serializer</span><span class="p">(</span><span class="s2">&quot;recombinases&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_recombinases</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">recombinases</span><span class="p">:</span> <span class="s2">&quot;RecombinaseCollection&quot;</span> <span class="o">|</span> <span class="s2">&quot;Recombinase&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_Recombinase</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">recombinases</span><span class="o">.</span><span class="n">to_opencloning_model</span><span class="p">()</span></div>
+</div>
 
 
 

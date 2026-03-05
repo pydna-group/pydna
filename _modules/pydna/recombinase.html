@@ -1,0 +1,850 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pydna.recombinase &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydna/recombinase';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../getting_started.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../reference/pydna.html">pydna package</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pydna.recombinase</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Generic site-specific recombinase functionality.</span>
+
+<span class="sd">This module provides tools for simulating site-specific recombination reactions</span>
+<span class="sd">mediated by recombinases (e.g. phage integrases such as phiC31, Bxb1, etc.).</span>
+
+<span class="sd">Recombinase sites are specified as strings where the **lowercase** portion</span>
+<span class="sd">indicates the homology/overlap core shared between the two sites. The</span>
+<span class="sd">uppercase portion represents the flanking recognition arms.</span>
+
+<span class="sd">For example::</span>
+
+<span class="sd">    &gt;&gt;&gt; site1 = &quot;ATGCCCTAAaaTT&quot;</span>
+<span class="sd">    &gt;&gt;&gt; site2 = &quot;AAaaTTTTTTTCCCT&quot;</span>
+
+<span class="sd">The lowercase ``aa`` is the overlap that will appear in the assembled product.</span>
+
+<span class="sd">Sites may contain IUPAC degenerate bases (N, W, S, etc.) and the search</span>
+<span class="sd">handles both linear and circular sequences.</span>
+
+<span class="sd">The easiest way to use it is with the recombinase_integration and</span>
+<span class="sd">recombinase_excision functions from the assembly2 module.</span>
+
+<span class="sd">Integration and excision with a single recombinase::</span>
+
+<span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.recombinase import Recombinase</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.assembly2 import recombinase_integration, recombinase_excision</span>
+<span class="sd">    &gt;&gt;&gt; site1 = &quot;ATGCCCTAAaaCT&quot;</span>
+<span class="sd">    &gt;&gt;&gt; site2 = &quot;CAaaTTTTTTTCCCT&quot;</span>
+<span class="sd">    &gt;&gt;&gt; genome = Dseqrecord(&quot;ccccccATGCCCTAAAACTaaaaa&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; insert = Dseqrecord(&quot;CAAATTTTTTTCCCTbbbbb&quot;, circular=True)</span>
+<span class="sd">    &gt;&gt;&gt; rec = Recombinase(site1, site2)</span>
+<span class="sd">    &gt;&gt;&gt; products = recombinase_integration(genome, [insert], rec)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; # Cre-Lox style (same site on both sides): integrate then excise returns originals</span>
+<span class="sd">    &gt;&gt;&gt; site = &quot;ATGaaGTA&quot;</span>
+<span class="sd">    &gt;&gt;&gt; genome = Dseqrecord(&quot;ccccccATGAAGTAAAAA&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; insert = Dseqrecord(&quot;ATGAAGTABbbbb&quot;, circular=True)</span>
+<span class="sd">    &gt;&gt;&gt; rec = Recombinase(site, site)</span>
+<span class="sd">    &gt;&gt;&gt; integrated = recombinase_integration(genome, [insert], rec)[0]</span>
+<span class="sd">    &gt;&gt;&gt; excised = recombinase_excision(integrated, rec)</span>
+
+<span class="sd">Find and annotate sites in a sequence::</span>
+
+<span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.recombinase import Recombinase</span>
+<span class="sd">    &gt;&gt;&gt; site1, site2 = &quot;ATGCCCTAAaaTT&quot;, &quot;AAaaTTTTTTTCCCT&quot;</span>
+<span class="sd">    &gt;&gt;&gt; rec = Recombinase(site1, site2, site1_name=&quot;mysite1&quot;, site2_name=&quot;mysite2&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; seq = Dseqrecord(&quot;gggATGCCCTAAaaTTttt&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; sites = rec.find(seq)</span>
+<span class="sd">    &gt;&gt;&gt; annotated = rec.annotate(seq)</span>
+
+<span class="sd">When several sites are possible, or when using multiple recombinases, you can</span>
+<span class="sd">create a RecombinaseCollection. It has the methods overlap, find, and annotate,</span>
+<span class="sd">so you can use it as a single Recombinase. For an example, check the gateway module::</span>
+
+<span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.recombinase import Recombinase, RecombinaseCollection</span>
+<span class="sd">    &gt;&gt;&gt; rec1 = Recombinase(&quot;AAaaTTC&quot;, &quot;CCaaTTC&quot;, site1_name=&quot;s1&quot;, site2_name=&quot;s2&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; rec2 = Recombinase(&quot;GAccACC&quot;, &quot;TCccAAC&quot;, site1_name=&quot;s3&quot;, site2_name=&quot;s4&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; collection = RecombinaseCollection([rec1, rec2])</span>
+<span class="sd">    &gt;&gt;&gt; seq = Dseqrecord(&quot;gggAAAATTCTtttGACCACCTttt&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; sites = collection.find(seq)</span>
+<span class="sd">    &gt;&gt;&gt; annotated = collection.annotate(seq)</span>
+
+<span class="sd">IUPAC degenerate bases work (e.g. N matches any base)::</span>
+
+<span class="sd">    &gt;&gt;&gt; site1 = &quot;ATGNNNaaTT&quot;</span>
+<span class="sd">    &gt;&gt;&gt; site2 = &quot;CCNNaaTTGG&quot;</span>
+<span class="sd">    &gt;&gt;&gt; rec = Recombinase(site1, site2)</span>
+
+<span class="sd">If the recombinase reaction is reversible, you can get the reverse recombinase with the get_reverse_recombinase method.</span>
+
+<span class="sd">    &gt;&gt;&gt; rec = Recombinase(&#39;AAAcgCG&#39;, &#39;TTAcgATGA&#39;, site1_name=&quot;s1&quot;, site2_name=&quot;s2&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; rec</span>
+<span class="sd">    Recombinase(site1=AAAcgCG, site2=TTAcgATGA, site1_name=s1, site2_name=s2)</span>
+<span class="sd">    &gt;&gt;&gt; rec.get_reverse_recombinase(site12_name=&quot;s1+s2&quot;, site21_name=&quot;s2+s1&quot;)</span>
+<span class="sd">    Recombinase(site1=AAAcgATGA, site2=TTAcgCG, site1_name=s1+s2, site2_name=s2+s1)</span>
+
+<span class="sd">Using a Recombinase as Assembly algorithm::</span>
+
+<span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.recombinase import Recombinase</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.assembly2 import Assembly</span>
+<span class="sd">    &gt;&gt;&gt; site1 = &quot;ATGCCCTAAaaTT&quot;</span>
+<span class="sd">    &gt;&gt;&gt; site2 = &quot;AAaaTTTTTTTCCCT&quot;</span>
+<span class="sd">    &gt;&gt;&gt; seqA = Dseqrecord(&quot;aaaATGCCCTAAaaTTtt&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; seqB = Dseqrecord(&quot;tataAAaaTTTTTTTCCCTaaa&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; rec = Recombinase(site1, site2)</span>
+<span class="sd">    &gt;&gt;&gt; asm = Assembly([seqA, seqB], algorithm=rec.overlap, use_fragment_order=False)</span>
+<span class="sd">    &gt;&gt;&gt; products = asm.assemble_linear()</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse_complement</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span><span class="p">,</span> <span class="n">SeqFeature</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shift_location</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.sequence_regex</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_regex_site</span><span class="p">,</span> <span class="n">dseqrecord_finditer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">SequenceOverlap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">opencloning_linkml.datamodel</span><span class="w"> </span><span class="kn">import</span> <span class="n">Recombinase</span> <span class="k">as</span> <span class="n">RecombinaseModel</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_recombinase_homology_offset_and_length</span><span class="p">(</span><span class="n">site</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return (offset, length) of the lowercase homology region inside a</span>
+<span class="sd">    recombinase recognition site string.</span>
+
+<span class="sd">    The lowercase segment represents the shared homology between the two</span>
+<span class="sd">    recombinase sites.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    site : str</span>
+<span class="sd">        The recognition site sequence, with the homology region in lowercase.</span>
+<span class="sd">        Must contain only letters (no digits or symbols).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    offset : int</span>
+<span class="sd">        Index of the first lowercase character in the site.</span>
+<span class="sd">    length : int</span>
+<span class="sd">        Length of the contiguous lowercase homology region.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the site contains invalid characters or no lowercase region.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[A-Z]+[a-z]+[A-Z]+&quot;</span><span class="p">,</span> <span class="n">site</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Recombinase recognition site is not in the expected format.&quot;</span>
+            <span class="s2">&quot;Expected format: [A-Z]+[a-z]+[A-Z]+, e.g. &#39;ATGCCCTAAaaTT&#39;&quot;</span>
+        <span class="p">)</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[a-z]+&quot;</span><span class="p">,</span> <span class="n">site</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">())</span>
+
+
+<div class="viewcode-block" id="Recombinase">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.recombinase.Recombinase">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Recombinase</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A site-specific recombinase defined by two recognition sites. Homology cores must match.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    site1 : str</span>
+<span class="sd">        The first recognition site. The homology core must be in lowercase.</span>
+<span class="sd">    site2 : str</span>
+<span class="sd">        The second recognition site. The homology core must be in lowercase.</span>
+<span class="sd">    site1_name : str, optional</span>
+<span class="sd">        Label for site1 in find/annotate output. Default is &quot;site1&quot;.</span>
+<span class="sd">    site2_name : str, optional</span>
+<span class="sd">        Label for site2 in find/annotate output. Default is &quot;site2&quot;.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.recombinase import Recombinase</span>
+<span class="sd">    &gt;&gt;&gt; rec = Recombinase(&quot;ATGCCCTAAaaTT&quot;, &quot;AAaaTTTTTTTCCCT&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; seqA = Dseqrecord(&quot;aaaATGCCCTAAaaTTtt&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; seqB = Dseqrecord(&quot;tataAAaaTTTTTTTCCCTaaa&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; _ = rec.overlap(seqA, seqB)</span>
+<span class="sd">    &gt;&gt;&gt; sites = rec.find(seqA)</span>
+<span class="sd">    &gt;&gt;&gt; _ = rec.annotate(seqA)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">site1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">site2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">site1_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;site1&quot;</span><span class="p">,</span>
+        <span class="n">site2_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;site2&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">site1</span> <span class="o">=</span> <span class="n">site1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">site2</span> <span class="o">=</span> <span class="n">site2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">site1_name</span> <span class="o">=</span> <span class="n">site1_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">site2_name</span> <span class="o">=</span> <span class="n">site2_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="n">off1</span><span class="p">,</span> <span class="n">len1</span> <span class="o">=</span> <span class="n">_recombinase_homology_offset_and_length</span><span class="p">(</span><span class="n">site1</span><span class="p">)</span>
+        <span class="n">off2</span><span class="p">,</span> <span class="n">len2</span> <span class="o">=</span> <span class="n">_recombinase_homology_offset_and_length</span><span class="p">(</span><span class="n">site2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">site1</span><span class="p">[</span><span class="n">off1</span> <span class="p">:</span> <span class="n">off1</span> <span class="o">+</span> <span class="n">len1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">site2</span><span class="p">[</span><span class="n">off2</span> <span class="p">:</span> <span class="n">off2</span> <span class="o">+</span> <span class="n">len2</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Recombinase recognition sites do not have matching homology cores.&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">site1</span><span class="p">[</span><span class="n">off1</span><span class="p">:</span><span class="n">off1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">len1</span><span class="p">]</span><span class="si">}</span><span class="s2"> == </span><span class="si">{</span><span class="n">site2</span><span class="p">[</span><span class="n">off2</span><span class="p">:</span><span class="n">off2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">len2</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_homology_len</span> <span class="o">=</span> <span class="n">len1</span>
+
+        <span class="n">rc1</span> <span class="o">=</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">site1</span><span class="p">)</span>
+        <span class="n">rc2</span> <span class="o">=</span> <span class="n">reverse_complement</span><span class="p">(</span><span class="n">site2</span><span class="p">)</span>
+        <span class="n">off1_rev</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_recombinase_homology_offset_and_length</span><span class="p">(</span><span class="n">rc1</span><span class="p">)</span>
+        <span class="n">off2_rev</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_recombinase_homology_offset_and_length</span><span class="p">(</span><span class="n">rc2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_site1_fwd</span> <span class="o">=</span> <span class="n">compute_regex_site</span><span class="p">(</span><span class="n">site1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_site1_rev</span> <span class="o">=</span> <span class="n">compute_regex_site</span><span class="p">(</span><span class="n">rc1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_site2_fwd</span> <span class="o">=</span> <span class="n">compute_regex_site</span><span class="p">(</span><span class="n">site2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_site2_rev</span> <span class="o">=</span> <span class="n">compute_regex_site</span><span class="p">(</span><span class="n">rc2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_configs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_site1_fwd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site2_fwd</span><span class="p">,</span> <span class="n">off1</span><span class="p">,</span> <span class="n">off2</span><span class="p">),</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_site1_rev</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site2_rev</span><span class="p">,</span> <span class="n">off1_rev</span><span class="p">,</span> <span class="n">off2_rev</span><span class="p">),</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_site2_fwd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site1_fwd</span><span class="p">,</span> <span class="n">off2</span><span class="p">,</span> <span class="n">off1</span><span class="p">),</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_site2_rev</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site1_rev</span><span class="p">,</span> <span class="n">off2_rev</span><span class="p">,</span> <span class="n">off1_rev</span><span class="p">),</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Recombinase(site1=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">site1</span><span class="si">}</span><span class="s2">, site2=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">site2</span><span class="si">}</span><span class="s2">, site1_name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">site1_name</span><span class="si">}</span><span class="s2">, site2_name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">site2_name</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+<div class="viewcode-block" id="Recombinase.get_reverse_recombinase">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.recombinase.Recombinase.get_reverse_recombinase">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_reverse_recombinase</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">site12_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;site12&quot;</span><span class="p">,</span> <span class="n">site21_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;site21&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Recombinase&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a recombinase that does the reverse reaction.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        site12_name : str, optional</span>
+<span class="sd">            Label for site12 in find/annotate output. Default is &quot;site12&quot;.</span>
+<span class="sd">        site21_name : str, optional</span>
+<span class="sd">            Label for site21 in find/annotate output. Default is &quot;site21&quot;.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Recombinase</span>
+<span class="sd">            A recombinase that does the reverse reaction.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
+<span class="sd">        &gt;&gt;&gt; from pydna.recombinase import Recombinase</span>
+<span class="sd">        &gt;&gt;&gt; rec = Recombinase(&quot;ATGCCCTAAaaTT&quot;, &quot;AAaaTTTTTTTCCCT&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; rec.get_reverse_recombinase()</span>
+<span class="sd">        Recombinase(site1=ATGCCCTAAaaTTTTTTTCCCT, site2=AAaaTT, site1_name=site12, site2_name=site21)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">off1</span><span class="p">,</span> <span class="n">off2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">site12</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">site1</span><span class="p">[:</span> <span class="n">off1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_homology_len</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">site2</span><span class="p">[</span><span class="n">off2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_homology_len</span> <span class="p">:]</span>
+        <span class="p">)</span>
+        <span class="n">site21</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">site2</span><span class="p">[:</span> <span class="n">off2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_homology_len</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">site1</span><span class="p">[</span><span class="n">off1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_homology_len</span> <span class="p">:]</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">site12_name</span> <span class="o">==</span> <span class="s2">&quot;site12&quot;</span> <span class="ow">and</span> <span class="n">site21_name</span> <span class="o">==</span> <span class="s2">&quot;site21&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">site1_name</span> <span class="o">==</span> <span class="s2">&quot;attB&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">site2_name</span> <span class="o">==</span> <span class="s2">&quot;attP&quot;</span><span class="p">:</span>
+                <span class="n">site12_name</span> <span class="o">=</span> <span class="s2">&quot;attR&quot;</span>
+                <span class="n">site21_name</span> <span class="o">=</span> <span class="s2">&quot;attL&quot;</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">site1_name</span> <span class="o">==</span> <span class="s2">&quot;attP&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">site2_name</span> <span class="o">==</span> <span class="s2">&quot;attB&quot;</span><span class="p">:</span>
+                <span class="n">site12_name</span> <span class="o">=</span> <span class="s2">&quot;attL&quot;</span>
+                <span class="n">site21_name</span> <span class="o">=</span> <span class="s2">&quot;attR&quot;</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">site1_name</span> <span class="o">==</span> <span class="s2">&quot;attL&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">site2_name</span> <span class="o">==</span> <span class="s2">&quot;attR&quot;</span><span class="p">:</span>
+                <span class="n">site12_name</span> <span class="o">=</span> <span class="s2">&quot;attP&quot;</span>
+                <span class="n">site21_name</span> <span class="o">=</span> <span class="s2">&quot;attB&quot;</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">site1_name</span> <span class="o">==</span> <span class="s2">&quot;attR&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">site2_name</span> <span class="o">==</span> <span class="s2">&quot;attL&quot;</span><span class="p">:</span>
+                <span class="n">site12_name</span> <span class="o">=</span> <span class="s2">&quot;attB&quot;</span>
+                <span class="n">site21_name</span> <span class="o">=</span> <span class="s2">&quot;attP&quot;</span>
+
+        <span class="k">return</span> <span class="n">Recombinase</span><span class="p">(</span><span class="n">site12</span><span class="p">,</span> <span class="n">site21</span><span class="p">,</span> <span class="n">site12_name</span><span class="p">,</span> <span class="n">site21_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Recombinase.overlap">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.recombinase.Recombinase.overlap">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">overlap</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">seqx</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+        <span class="n">seqy</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SequenceOverlap</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find overlaps between *seqx* and *seqy* mediated by the sites.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        seqx : Dseqrecord</span>
+<span class="sd">            The first sequence.</span>
+<span class="sd">        seqy : Dseqrecord</span>
+<span class="sd">            The second sequence.</span>
+<span class="sd">        limit : None</span>
+<span class="sd">            Not used. Present only to satisfy the</span>
+<span class="sd">            ``AssemblyAlgorithmType`` convention.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[SequenceOverlap]</span>
+<span class="sd">            A list of ``(start_in_x, start_in_y, length)`` tuples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">matches</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SequenceOverlap</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">site_x_re</span><span class="p">,</span> <span class="n">site_y_re</span><span class="p">,</span> <span class="n">off_x</span><span class="p">,</span> <span class="n">off_y</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configs</span><span class="p">:</span>
+            <span class="n">matches_x</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dseqrecord_finditer</span><span class="p">(</span><span class="n">site_x_re</span><span class="p">,</span> <span class="n">seqx</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">matches_x</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">matches_y</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dseqrecord_finditer</span><span class="p">(</span><span class="n">site_y_re</span><span class="p">,</span> <span class="n">seqy</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">matches_y</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">for</span> <span class="n">mx</span><span class="p">,</span> <span class="n">my</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">matches_x</span><span class="p">,</span> <span class="n">matches_y</span><span class="p">):</span>
+                <span class="c1"># Here we wrap in case the sequence is circular and the match spans the origin,</span>
+                <span class="c1"># and the offset makes the match go beyond the origin.</span>
+                <span class="n">matches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">+</span> <span class="n">off_x</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqx</span><span class="p">),</span>
+                        <span class="p">(</span><span class="n">my</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">+</span> <span class="n">off_y</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqy</span><span class="p">),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_homology_len</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Deduplicate while preserving order</span>
+        <span class="n">seen</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">SequenceOverlap</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">unique</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SequenceOverlap</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">m</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                <span class="n">unique</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">unique</span></div>
+
+
+<div class="viewcode-block" id="Recombinase.find">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.recombinase.Recombinase.find">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">SimpleLocation</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find all occurrences of the recombinase sites in *seq*.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        seq : Dseqrecord</span>
+<span class="sd">            Sequence to search.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict[str, list[SimpleLocation]]</span>
+<span class="sd">            Dictionary mapping site names to lists of locations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">out</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">SimpleLocation</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">raw_site</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">site1_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">site1</span><span class="p">),</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">site2_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">site2</span><span class="p">),</span>
+        <span class="p">]:</span>
+            <span class="n">fwd_re</span> <span class="o">=</span> <span class="n">compute_regex_site</span><span class="p">(</span><span class="n">raw_site</span><span class="p">)</span>
+            <span class="n">rev_re</span> <span class="o">=</span> <span class="n">compute_regex_site</span><span class="p">(</span><span class="n">reverse_complement</span><span class="p">(</span><span class="n">raw_site</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">strand</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">fwd_re</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="n">rev_re</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]:</span>
+                <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">dseqrecord_finditer</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">seq</span><span class="p">):</span>
+                    <span class="n">loc</span> <span class="o">=</span> <span class="n">SimpleLocation</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">(),</span> <span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">strand</span><span class="p">)</span>
+                    <span class="n">loc</span> <span class="o">=</span> <span class="n">shift_location</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+                    <span class="n">out</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="Recombinase.annotate">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.recombinase.Recombinase.annotate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">annotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseqrecord</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Annotate *seq* with features for all occurrences of the recombinase sites.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        seq : Dseqrecord</span>
+<span class="sd">            Sequence to annotate.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dseqrecord</span>
+<span class="sd">            A copy of the sequence with added features.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">out_seq</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+        <span class="n">sites</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">out_seq</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">locs</span> <span class="ow">in</span> <span class="n">sites</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">locs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">==</span> <span class="n">loc</span>
+                    <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;protein_bind&quot;</span>
+                    <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="p">[])</span> <span class="o">==</span> <span class="p">[</span><span class="n">name</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">out_seq</span><span class="o">.</span><span class="n">features</span>
+                <span class="p">):</span>
+                    <span class="n">out_seq</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">SeqFeature</span><span class="p">(</span>
+                            <span class="n">loc</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;protein_bind&quot;</span><span class="p">,</span> <span class="n">qualifiers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">name</span><span class="p">]}</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+        <span class="k">return</span> <span class="n">out_seq</span></div>
+
+
+<div class="viewcode-block" id="Recombinase.to_opencloning_model">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.recombinase.Recombinase.to_opencloning_model">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_opencloning_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RecombinaseModel</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">RecombinaseModel</span><span class="p">(</span>
+                <span class="n">site1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">site1</span><span class="p">,</span>
+                <span class="n">site2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">site2</span><span class="p">,</span>
+                <span class="n">site1_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">site1_name</span><span class="p">,</span>
+                <span class="n">site2_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">site2_name</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RecombinaseCollection">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.recombinase.RecombinaseCollection">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RecombinaseCollection</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A collection of recombinases.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recombinases</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Recombinase</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">recombinases</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;recombinases must be a list of Recombinase objects&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Recombinase</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">recombinases</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;recombinases must be a list of Recombinase objects&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">recombinases</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;recombinases must be a non-empty list&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recombinases</span> <span class="o">=</span> <span class="n">recombinases</span>
+
+<div class="viewcode-block" id="RecombinaseCollection.overlap">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.recombinase.RecombinaseCollection.overlap">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">overlap</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">seqx</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">seqy</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SequenceOverlap</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find overlaps between *seqx* and *seqy* mediated by the recombinases.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">((</span><span class="n">r</span><span class="o">.</span><span class="n">overlap</span><span class="p">(</span><span class="n">seqx</span><span class="p">,</span> <span class="n">seqy</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">recombinases</span><span class="p">),</span> <span class="p">[])</span></div>
+
+
+<div class="viewcode-block" id="RecombinaseCollection.find">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.recombinase.RecombinaseCollection.find">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">SimpleLocation</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find all occurrences of the recombinase sites in *seq*.&quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">recombinases</span><span class="p">:</span>
+            <span class="n">rec_sites</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">rec_sites</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="RecombinaseCollection.annotate">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.recombinase.RecombinaseCollection.annotate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">annotate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseqrecord</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Annotate *seq* with features for all occurrences of the recombinase sites.&quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">seq</span>
+        <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">recombinases</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="RecombinaseCollection.to_opencloning_model">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.recombinase.RecombinaseCollection.to_opencloning_model">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_opencloning_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RecombinaseModel</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">((</span><span class="n">r</span><span class="o">.</span><span class="n">to_opencloning_model</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">recombinases</span><span class="p">),</span> <span class="p">[])</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

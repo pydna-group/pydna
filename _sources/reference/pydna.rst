@@ -3,8 +3,8 @@ pydna package
 
 .. automodule:: pydna
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------
@@ -14,277 +14,285 @@ pydna.all module
 
 .. automodule:: pydna.all
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.alphabet module
 ---------------------
 
 .. automodule:: pydna.alphabet
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.amplicon module
 ---------------------
 
 .. automodule:: pydna.amplicon
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.amplify module
 --------------------
 
 .. automodule:: pydna.amplify
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.assembly module
 ---------------------
 
 .. automodule:: pydna.assembly
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.assembly2 module
 ----------------------
 
 .. automodule:: pydna.assembly2
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.codon module
 ------------------
 
 .. automodule:: pydna.codon
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.common\_sub\_strings module
 ---------------------------------
 
 .. automodule:: pydna.common_sub_strings
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.contig module
 -------------------
 
 .. automodule:: pydna.contig
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.cre\_lox module
 ---------------------
 
 .. automodule:: pydna.cre_lox
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.crispr module
 -------------------
 
 .. automodule:: pydna.crispr
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.design module
 -------------------
 
 .. automodule:: pydna.design
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.dseq module
 -----------------
 
 .. automodule:: pydna.dseq
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.dseqrecord module
 -----------------------
 
 .. automodule:: pydna.dseqrecord
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.fakeseq module
 --------------------
 
 .. automodule:: pydna.fakeseq
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.fusionpcr module
 ----------------------
 
 .. automodule:: pydna.fusionpcr
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.gateway module
 --------------------
 
 .. automodule:: pydna.gateway
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.gel module
 ----------------
 
 .. automodule:: pydna.gel
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.genbank module
 --------------------
 
 .. automodule:: pydna.genbank
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.genbankfixer module
 -------------------------
 
 .. automodule:: pydna.genbankfixer
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.ladders module
 --------------------
 
 .. automodule:: pydna.ladders
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.oligonucleotide\_hybridization module
 -------------------------------------------
 
 .. automodule:: pydna.oligonucleotide_hybridization
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.opencloning\_models module
 --------------------------------
 
 .. automodule:: pydna.opencloning_models
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.parsers module
 --------------------
 
 .. automodule:: pydna.parsers
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.primer module
 -------------------
 
 .. automodule:: pydna.primer
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.primer\_screen module
 ---------------------------
 
 .. automodule:: pydna.primer_screen
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.readers module
 --------------------
 
 .. automodule:: pydna.readers
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
+
+pydna.recombinase module
+------------------------
+
+.. automodule:: pydna.recombinase
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 pydna.seq module
 ----------------
 
 .. automodule:: pydna.seq
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.seqrecord module
 ----------------------
 
 .. automodule:: pydna.seqrecord
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.sequence\_picker module
 -----------------------------
 
 .. automodule:: pydna.sequence_picker
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.sequence\_regex module
 ----------------------------
 
 .. automodule:: pydna.sequence_regex
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.threading\_timer\_decorator\_exit module
 ----------------------------------------------
 
 .. automodule:: pydna.threading_timer_decorator_exit
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.tm module
 ---------------
 
 .. automodule:: pydna.tm
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.types module
 ------------------
 
 .. automodule:: pydna.types
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pydna.utils module
 ------------------
 
 .. automodule:: pydna.utils
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

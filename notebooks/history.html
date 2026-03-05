@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b530ca2f" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -39,8 +39,8 @@
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../_static/documentation_options.js?v=9eea9577"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/history';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -443,6 +443,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cre-lox-integration">Cre-lox integration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pcr-assembly">PCR assembly</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#crispr-integration">CRISPR integration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-recombinases">Custom recombinases</a></li>
 </ul>
             </nav>
         </div>
@@ -822,6 +823,45 @@ of the cloning strategy like below. See an example in <a class="reference extern
 </div>
 </div>
 </section>
+<section id="custom-recombinases">
+<h2>Custom recombinases<a class="headerlink" href="#custom-recombinases" title="Link to this heading">#</a></h2>
+<p>You can use custom recombinases, for which you can define the recognition sites.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.recombinase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Recombinase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">recombinase_integration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">CloningStrategy</span>
+
+<span class="n">site1</span> <span class="o">=</span> <span class="s2">&quot;ATGCCCTAAaaCT&quot;</span>
+<span class="n">site2</span> <span class="o">=</span> <span class="s2">&quot;CAaaTTTTTTTCCCT&quot;</span>
+
+<span class="n">genome</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cccccc</span><span class="si">{</span><span class="n">site1</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">aaaaa&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;genome&quot;</span><span class="p">)</span>
+<span class="n">insert</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">site2</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">bbbbb&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;insert&quot;</span><span class="p">)</span>
+<span class="n">rec</span> <span class="o">=</span> <span class="n">Recombinase</span><span class="p">(</span><span class="n">site1</span><span class="p">,</span> <span class="n">site2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_recombinase&quot;</span><span class="p">,</span> <span class="n">site1_name</span><span class="o">=</span><span class="s2">&quot;attB&quot;</span><span class="p">,</span> <span class="n">site2_name</span><span class="o">=</span><span class="s2">&quot;attP&quot;</span><span class="p">)</span>
+
+<span class="n">product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">recombinase_integration</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="p">[</span><span class="n">insert</span><span class="p">],</span> <span class="n">rec</span><span class="p">)</span>
+
+<span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;engineered_allele&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">history</span><span class="p">())</span>
+
+<span class="n">cs</span> <span class="o">=</span> <span class="n">CloningStrategy</span><span class="o">.</span><span class="n">from_dseqrecords</span><span class="p">([</span><span class="n">product</span><span class="p">])</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;recombinase.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>╙── engineered_allele (Dseqrecord(-44))
+    └─╼ RecombinaseSource
+        ├─╼ genome (Dseqrecord(-24))
+        └─╼ insert (Dseqrecord(o20))
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 </section>
 
 
@@ -879,6 +919,7 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cre-lox-integration">Cre-lox integration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pcr-assembly">PCR assembly</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#crispr-integration">CRISPR integration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-recombinases">Custom recombinases</a></li>
 </ul>
   </nav></div>
 

@@ -29,7 +29,7 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css?v=b530ca2f" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -38,8 +38,8 @@
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="_static/documentation_options.js?v=9eea9577"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -397,6 +397,12 @@ document.write(`
 </li>
       <li><a href="reference/pydna.html#pydna.alphabet.anneal_strands">anneal_strands() (in module pydna.alphabet)</a>
 </li>
+      <li><a href="reference/pydna.html#pydna.recombinase.Recombinase.annotate">annotate() (pydna.recombinase.Recombinase method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.recombinase.RecombinaseCollection.annotate">(pydna.recombinase.RecombinaseCollection method)</a>
+</li>
+      </ul></li>
       <li><a href="reference/pydna.html#pydna.gateway.annotate_gateway_sites">annotate_gateway_sites() (in module pydna.gateway)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.cre_lox.annotate_loxP_sites">annotate_loxP_sites() (in module pydna.cre_lox)</a>
@@ -408,8 +414,6 @@ document.write(`
       <li><a href="reference/pydna.html#pydna.opencloning_models.AnnotationSource.annotation_tool">annotation_tool (pydna.opencloning_models.AnnotationSource attribute)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.AnnotationSource.annotation_tool_version">annotation_tool_version (pydna.opencloning_models.AnnotationSource attribute)</a>
-</li>
-      <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.annotations">annotations (pydna.dseqrecord.Dseqrecord attribute)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.AnnotationSource">AnnotationSource (class in pydna.opencloning_models)</a>
 </li>
@@ -623,6 +627,8 @@ document.write(`
 </li>
       <li><a href="reference/pydna.html#pydna.utils.create_location">create_location() (in module pydna.utils)</a>
 </li>
+      <li><a href="reference/pydna.html#pydna.gateway.create_recombinase_dict">create_recombinase_dict() (in module pydna.gateway)</a>
+</li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.CreLoxRecombinationSource">CreLoxRecombinationSource (class in pydna.opencloning_models)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.all.Dseq.crick">crick (pydna.all.Dseq property)</a>
@@ -685,16 +691,14 @@ document.write(`
         <li><a href="reference/pydna.html#pydna.amplicon.Amplicon.dbd_program">(pydna.amplicon.Amplicon method)</a>
 </li>
       </ul></li>
-      <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.dbxrefs">dbxrefs (pydna.dseqrecord.Dseqrecord attribute)</a>
-</li>
       <li><a href="reference/pydna.html#pydna.seqrecord.SeqRecord.definition">definition (pydna.seqrecord.SeqRecord property)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.contig.Contig.detailed_figure">detailed_figure() (pydna.contig.Contig method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/pydna.html#pydna.primer_screen.diff_primer_pairs">diff_primer_pairs() (in module pydna.primer_screen)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/pydna.html#pydna.primer_screen.diff_primer_triplets">diff_primer_triplets() (in module pydna.primer_screen)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.alphabet.dsbreaks">dsbreaks() (in module pydna.alphabet)</a>
@@ -820,6 +824,10 @@ document.write(`
 </li>
         <li><a href="reference/pydna.html#pydna.dseqrecord.Dseqrecord.find">(pydna.dseqrecord.Dseqrecord method)</a>
 </li>
+        <li><a href="reference/pydna.html#pydna.recombinase.Recombinase.find">(pydna.recombinase.Recombinase method)</a>
+</li>
+        <li><a href="reference/pydna.html#pydna.recombinase.RecombinaseCollection.find">(pydna.recombinase.RecombinaseCollection method)</a>
+</li>
       </ul></li>
       <li><a href="reference/pydna.html#pydna.all.Dseqrecord.find_aa">find_aa() (pydna.all.Dseqrecord method)</a>
 
@@ -857,10 +865,10 @@ document.write(`
       </ul></li>
       <li><a href="reference/pydna.html#pydna.assembly2.Assembly.format_assembly_edge">format_assembly_edge() (pydna.assembly2.Assembly method)</a>
 </li>
-      <li><a href="reference/pydna.html#pydna.assembly2.Assembly.format_insertion_assembly">format_insertion_assembly() (pydna.assembly2.Assembly method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/pydna.html#pydna.assembly2.Assembly.format_insertion_assembly">format_insertion_assembly() (pydna.assembly2.Assembly method)</a>
+</li>
       <li><a href="reference/pydna.html#pydna.assembly2.Assembly.format_insertion_assembly_edge_case">format_insertion_assembly_edge_case() (pydna.assembly2.Assembly method)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.all.Anneal.forward_primers">forward_primers (pydna.all.Anneal attribute)</a>
@@ -1056,6 +1064,8 @@ document.write(`
       <li><a href="reference/pydna.html#pydna.assembly2.Assembly.get_possible_assembly_number">get_possible_assembly_number() (pydna.assembly2.Assembly method)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.cre_lox.get_regex_dict">get_regex_dict() (in module pydna.cre_lox)</a>
+</li>
+      <li><a href="reference/pydna.html#pydna.recombinase.Recombinase.get_reverse_recombinase">get_reverse_recombinase() (pydna.recombinase.Recombinase method)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.all.Dseq.get_ss_meltsites">get_ss_meltsites() (pydna.all.Dseq method)</a>
 
@@ -1336,6 +1346,8 @@ document.write(`
 </li>
         <li><a href="reference/pydna.html#pydna.opencloning_models.PrimerModel.model_config">(pydna.opencloning_models.PrimerModel attribute)</a>
 </li>
+        <li><a href="reference/pydna.html#pydna.opencloning_models.RecombinaseSource.model_config">(pydna.opencloning_models.RecombinaseSource attribute)</a>
+</li>
         <li><a href="reference/pydna.html#pydna.opencloning_models.RepositoryIdSource.model_config">(pydna.opencloning_models.RepositoryIdSource attribute)</a>
 </li>
         <li><a href="reference/pydna.html#pydna.opencloning_models.RepositoryIdSourceWithSequenceFileUrl.model_config">(pydna.opencloning_models.RepositoryIdSourceWithSequenceFileUrl attribute)</a>
@@ -1426,6 +1438,8 @@ document.write(`
         <li><a href="reference/pydna.html#module-pydna.primer_screen">pydna.primer_screen</a>
 </li>
         <li><a href="reference/pydna.html#module-pydna.readers">pydna.readers</a>
+</li>
+        <li><a href="reference/pydna.html#module-pydna.recombinase">pydna.recombinase</a>
 </li>
         <li><a href="reference/pydna.html#module-pydna.seq">pydna.seq</a>
 </li>
@@ -1580,6 +1594,12 @@ document.write(`
 </li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.OligoHybridizationSource.overhang_crick_3prime">overhang_crick_3prime (pydna.opencloning_models.OligoHybridizationSource attribute)</a>
 </li>
+      <li><a href="reference/pydna.html#pydna.recombinase.Recombinase.overlap">overlap() (pydna.recombinase.Recombinase method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.recombinase.RecombinaseCollection.overlap">(pydna.recombinase.RecombinaseCollection method)</a>
+</li>
+      </ul></li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.OverlapExtensionPCRLigationSource">OverlapExtensionPCRLigationSource (class in pydna.opencloning_models)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.all.Dseq.ovhg">ovhg (pydna.all.Dseq property)</a>
@@ -1742,8 +1762,6 @@ document.write(`
         <li><a href="reference/pydna.html#module-pydna.contig">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     pydna.cre_lox
 
@@ -1751,6 +1769,8 @@ document.write(`
         <li><a href="reference/pydna.html#module-pydna.cre_lox">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     pydna.crispr
 
@@ -1868,6 +1888,13 @@ document.write(`
 
       <ul>
         <li><a href="reference/pydna.html#module-pydna.readers">module</a>
+</li>
+      </ul></li>
+      <li>
+    pydna.recombinase
+
+      <ul>
+        <li><a href="reference/pydna.html#module-pydna.recombinase">module</a>
 </li>
       </ul></li>
       <li>
@@ -2006,6 +2033,18 @@ document.write(`
       </ul></li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.CloningStrategy.reassign_ids">reassign_ids() (pydna.opencloning_models.CloningStrategy method)</a>
 </li>
+      <li><a href="reference/pydna.html#pydna.recombinase.Recombinase">Recombinase (class in pydna.recombinase)</a>
+</li>
+      <li><a href="reference/pydna.html#pydna.assembly2.recombinase_excision">recombinase_excision() (in module pydna.assembly2)</a>
+</li>
+      <li><a href="reference/pydna.html#pydna.assembly2.recombinase_integration">recombinase_integration() (in module pydna.assembly2)</a>
+</li>
+      <li><a href="reference/pydna.html#pydna.recombinase.RecombinaseCollection">RecombinaseCollection (class in pydna.recombinase)</a>
+</li>
+      <li><a href="reference/pydna.html#pydna.opencloning_models.RecombinaseSource.recombinases">recombinases (pydna.opencloning_models.RecombinaseSource attribute)</a>
+</li>
+      <li><a href="reference/pydna.html#pydna.opencloning_models.RecombinaseSource">RecombinaseSource (class in pydna.opencloning_models)</a>
+</li>
       <li><a href="reference/pydna.html#pydna.alphabet.regex_ds_melt_factory">regex_ds_melt_factory() (in module pydna.alphabet)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.alphabet.regex_ss_melt_factory">regex_ss_melt_factory() (in module pydna.alphabet)</a>
@@ -2018,12 +2057,12 @@ document.write(`
         <li><a href="reference/pydna.html#pydna.amplify.Anneal.report">(pydna.amplify.Anneal method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/pydna.html#pydna.opencloning_models.RepositoryIdSource.repository_id">repository_id (pydna.opencloning_models.RepositoryIdSource attribute)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.RepositoryIdSource">RepositoryIdSource (class in pydna.opencloning_models)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/pydna.html#pydna.opencloning_models.RepositoryIdSourceWithSequenceFileUrl">RepositoryIdSourceWithSequenceFileUrl (class in pydna.opencloning_models)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.alphabet.representation_tuple">representation_tuple() (in module pydna.alphabet)</a>
@@ -2151,6 +2190,8 @@ document.write(`
       <li><a href="reference/pydna.html#pydna.opencloning_models.SequenceCutSource.serialize_cut_site">serialize_cut_site() (pydna.opencloning_models.SequenceCutSource method)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.Source.serialize_input">serialize_input() (pydna.opencloning_models.Source method)</a>
+</li>
+      <li><a href="reference/pydna.html#pydna.opencloning_models.RecombinaseSource.serialize_recombinases">serialize_recombinases() (pydna.opencloning_models.RecombinaseSource method)</a>
 </li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.RestrictionAndLigationSource.serialize_restriction_enzymes">serialize_restriction_enzymes() (pydna.opencloning_models.RestrictionAndLigationSource method)</a>
 </li>
@@ -2321,6 +2362,8 @@ document.write(`
 </li>
         <li><a href="reference/pydna.html#pydna.opencloning_models.PolymeraseExtensionSource.TARGET_MODEL">(pydna.opencloning_models.PolymeraseExtensionSource attribute)</a>
 </li>
+        <li><a href="reference/pydna.html#pydna.opencloning_models.RecombinaseSource.TARGET_MODEL">(pydna.opencloning_models.RecombinaseSource attribute)</a>
+</li>
         <li><a href="reference/pydna.html#pydna.opencloning_models.RepositoryIdSource.TARGET_MODEL">(pydna.opencloning_models.RepositoryIdSource attribute)</a>
 </li>
         <li><a href="reference/pydna.html#pydna.opencloning_models.RestrictionAndLigationSource.TARGET_MODEL">(pydna.opencloning_models.RestrictionAndLigationSource attribute)</a>
@@ -2390,6 +2433,12 @@ document.write(`
 
       <ul>
         <li><a href="reference/pydna.html#pydna.dseq.Dseq.to_blunt_string">(pydna.dseq.Dseq method)</a>
+</li>
+      </ul></li>
+      <li><a href="reference/pydna.html#pydna.recombinase.Recombinase.to_opencloning_model">to_opencloning_model() (pydna.recombinase.Recombinase method)</a>
+
+      <ul>
+        <li><a href="reference/pydna.html#pydna.recombinase.RecombinaseCollection.to_opencloning_model">(pydna.recombinase.RecombinaseCollection method)</a>
 </li>
       </ul></li>
       <li><a href="reference/pydna.html#pydna.opencloning_models.AssemblyFragment.to_pydantic_model">to_pydantic_model() (pydna.opencloning_models.AssemblyFragment method)</a>

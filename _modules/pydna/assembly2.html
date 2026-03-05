@@ -29,7 +29,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b530ca2f" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -38,8 +38,8 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=9eea9577"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydna/assembly2';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -365,6 +365,7 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.gateway</span><span class="w"> </span><span class="kn">import</span> <span class="n">gateway_overlap</span><span class="p">,</span> <span class="n">find_gateway_sites</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.cre_lox</span><span class="w"> </span><span class="kn">import</span> <span class="n">cre_loxP_overlap</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">anneal_strands</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.recombinase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Recombinase</span><span class="p">,</span> <span class="n">RecombinaseCollection</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Literal</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -378,6 +379,7 @@ document.write(`
     <span class="n">GatewaySource</span><span class="p">,</span>
     <span class="n">HomologousRecombinationSource</span><span class="p">,</span>
     <span class="n">CreLoxRecombinationSource</span><span class="p">,</span>
+    <span class="n">RecombinaseSource</span><span class="p">,</span>
     <span class="n">PCRSource</span><span class="p">,</span>
     <span class="n">SourceInput</span><span class="p">,</span>
     <span class="n">CRISPRSource</span><span class="p">,</span>
@@ -2452,11 +2454,15 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">seq</span><span class="o">=</span><span class="n">frag</span><span class="p">)</span>
 
         <span class="n">matches</span> <span class="o">=</span> <span class="n">algorithm</span><span class="p">(</span><span class="n">frag</span><span class="p">,</span> <span class="n">frag</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+        <span class="c1"># Remove matches where the whole sequence matches</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span><span class="n">match</span> <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span> <span class="k">if</span> <span class="n">match</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">frag</span><span class="p">)]</span>
+
         <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_edges_from_match</span><span class="p">(</span><span class="n">match</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">frag</span><span class="p">,</span> <span class="n">frag</span><span class="p">)</span>
 
         <span class="c1"># To avoid duplicated outputs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">remove_edges_from</span><span class="p">([(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">remove_edges_from</span><span class="p">([(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
 
         <span class="c1"># These two are constrained</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_fragment_order</span> <span class="o">=</span> <span class="kc">True</span>
@@ -3343,6 +3349,78 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_excision_products</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cre_loxP_overlap</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">CreLoxRecombinationSource</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="recombinase_excision">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.recombinase_excision">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">recombinase_excision</span><span class="p">(</span>
+    <span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+    <span class="n">recombinase</span><span class="p">:</span> <span class="n">Recombinase</span> <span class="o">|</span> <span class="n">RecombinaseCollection</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for recombinase-mediated excision.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    genome : Dseqrecord</span>
+<span class="sd">        Target genome sequence containing two recombinase sites.</span>
+<span class="sd">    recombinase : Recombinase | RecombinaseCollection</span>
+<span class="sd">        Recombinase object.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[Dseqrecord]</span>
+<span class="sd">        List containing excised plasmid and remaining genome sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_excision_products</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">recombinase</span><span class="o">.</span><span class="n">overlap</span><span class="p">)</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="p">[</span><span class="n">recombinase</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">products</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">RecombinaseSource</span><span class="p">,</span> <span class="n">recombinases</span><span class="o">=</span><span class="n">recombinase</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="recombinase_integration">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.recombinase_integration">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">recombinase_integration</span><span class="p">(</span>
+    <span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+    <span class="n">inserts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
+    <span class="n">recombinase</span><span class="p">:</span> <span class="n">Recombinase</span> <span class="o">|</span> <span class="n">RecombinaseCollection</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products resulting from recombinase-mediated integration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    genome : Dseqrecord</span>
+<span class="sd">        Target genome sequence.</span>
+<span class="sd">    inserts : list[Dseqrecord]</span>
+<span class="sd">        DNA fragment(s) to insert.</span>
+<span class="sd">    recombinase : Recombinase | RecombinaseCollection</span>
+<span class="sd">        Recombinase object.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list[Dseqrecord]</span>
+<span class="sd">        List of integrated DNA molecules.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.assembly2 import recombinase_integration, recombinase_excision</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.recombinase import Recombinase</span>
+<span class="sd">    &gt;&gt;&gt; site1 = &quot;ATGCCCTAAaaTT&quot;</span>
+<span class="sd">    &gt;&gt;&gt; site2 = &quot;AAaaTTTTTTTCCCT&quot;</span>
+<span class="sd">    &gt;&gt;&gt; genome = Dseqrecord(f&quot;cccccc{site1.upper()}aaaaa&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; insert = Dseqrecord(f&quot;{site2.upper()}bbbbb&quot;, circular=True)</span>
+<span class="sd">    &gt;&gt;&gt; recombinase = Recombinase(site1, site2)</span>
+<span class="sd">    &gt;&gt;&gt; products = recombinase_integration(genome, [insert], recombinase)</span>
+<span class="sd">    &gt;&gt;&gt; len(products) &gt;= 1</span>
+<span class="sd">    True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fragments</span> <span class="o">=</span> <span class="n">common_handle_insertion_fragments</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">inserts</span><span class="p">)</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_integration_products</span><span class="p">(</span>
+        <span class="n">fragments</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">recombinase</span><span class="o">.</span><span class="n">overlap</span>
+    <span class="p">)</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="p">[</span><span class="n">recombinase</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">products</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">RecombinaseSource</span><span class="p">,</span> <span class="n">recombinases</span><span class="o">=</span><span class="n">recombinase</span><span class="p">)</span></div>
 
 
 

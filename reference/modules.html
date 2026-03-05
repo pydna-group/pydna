@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b530ca2f" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -39,8 +39,8 @@
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../_static/documentation_options.js?v=9eea9577"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'reference/modules';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -689,6 +689,8 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.homologous_recombination_excision"><code class="docutils literal notranslate"><span class="pre">homologous_recombination_excision()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.cre_lox_integration"><code class="docutils literal notranslate"><span class="pre">cre_lox_integration()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.cre_lox_excision"><code class="docutils literal notranslate"><span class="pre">cre_lox_excision()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.recombinase_excision"><code class="docutils literal notranslate"><span class="pre">recombinase_excision()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.recombinase_integration"><code class="docutils literal notranslate"><span class="pre">recombinase_integration()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.crispr_integration"><code class="docutils literal notranslate"><span class="pre">crispr_integration()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.assembly2.pcr_assembly"><code class="docutils literal notranslate"><span class="pre">pcr_assembly()</span></code></a></li>
 </ul>
@@ -848,8 +850,6 @@ document.write(`
 <li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.shifted"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.shifted()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.cut"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.cut()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.apply_cut"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.apply_cut()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.annotations"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.annotations</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.dbxrefs"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.dbxrefs</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.history"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.history()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.dseqrecord.Dseqrecord.join"><code class="docutils literal notranslate"><span class="pre">Dseqrecord.join()</span></code></a></li>
 </ul>
@@ -870,6 +870,7 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.gateway">pydna.gateway module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.gateway.create_recombinase_dict"><code class="docutils literal notranslate"><span class="pre">create_recombinase_dict()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.gateway.gateway_overlap"><code class="docutils literal notranslate"><span class="pre">gateway_overlap()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.gateway.find_gateway_sites"><code class="docutils literal notranslate"><span class="pre">find_gateway_sites()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.gateway.annotate_gateway_sites"><code class="docutils literal notranslate"><span class="pre">annotate_gateway_sites()</span></code></a></li>
@@ -1109,6 +1110,13 @@ document.write(`
 <li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.PCRSource.model_config"><code class="docutils literal notranslate"><span class="pre">PCRSource.model_config</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.RecombinaseSource"><code class="docutils literal notranslate"><span class="pre">RecombinaseSource</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.RecombinaseSource.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">RecombinaseSource.TARGET_MODEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.RecombinaseSource.recombinases"><code class="docutils literal notranslate"><span class="pre">RecombinaseSource.recombinases</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.RecombinaseSource.serialize_recombinases"><code class="docutils literal notranslate"><span class="pre">RecombinaseSource.serialize_recombinases()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.RecombinaseSource.model_config"><code class="docutils literal notranslate"><span class="pre">RecombinaseSource.model_config</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceCutSource"><code class="docutils literal notranslate"><span class="pre">SequenceCutSource</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceCutSource.left_edge"><code class="docutils literal notranslate"><span class="pre">SequenceCutSource.left_edge</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.opencloning_models.SequenceCutSource.right_edge"><code class="docutils literal notranslate"><span class="pre">SequenceCutSource.right_edge</span></code></a></li>
@@ -1205,6 +1213,24 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.readers">pydna.readers module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.readers.read"><code class="docutils literal notranslate"><span class="pre">read()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.readers.read_primer"><code class="docutils literal notranslate"><span class="pre">read_primer()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.recombinase">pydna.recombinase module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.recombinase.Recombinase"><code class="docutils literal notranslate"><span class="pre">Recombinase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.recombinase.Recombinase.get_reverse_recombinase"><code class="docutils literal notranslate"><span class="pre">Recombinase.get_reverse_recombinase()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.recombinase.Recombinase.overlap"><code class="docutils literal notranslate"><span class="pre">Recombinase.overlap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.recombinase.Recombinase.find"><code class="docutils literal notranslate"><span class="pre">Recombinase.find()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.recombinase.Recombinase.annotate"><code class="docutils literal notranslate"><span class="pre">Recombinase.annotate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.recombinase.Recombinase.to_opencloning_model"><code class="docutils literal notranslate"><span class="pre">Recombinase.to_opencloning_model()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydna.html#pydna.recombinase.RecombinaseCollection"><code class="docutils literal notranslate"><span class="pre">RecombinaseCollection</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.recombinase.RecombinaseCollection.overlap"><code class="docutils literal notranslate"><span class="pre">RecombinaseCollection.overlap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.recombinase.RecombinaseCollection.find"><code class="docutils literal notranslate"><span class="pre">RecombinaseCollection.find()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.recombinase.RecombinaseCollection.annotate"><code class="docutils literal notranslate"><span class="pre">RecombinaseCollection.annotate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pydna.html#pydna.recombinase.RecombinaseCollection.to_opencloning_model"><code class="docutils literal notranslate"><span class="pre">RecombinaseCollection.to_opencloning_model()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="pydna.html#module-pydna.seq">pydna.seq module</a><ul>
