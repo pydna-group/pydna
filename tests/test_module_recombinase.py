@@ -306,9 +306,7 @@ def test_recombinase_reverse():
             expected = ("attP", "attB")
         elif site1_name == "attR":
             expected = ("attB", "attP")
-        print(
-            f"site1_name: {site1_name}, site2_name: {site2_name}, expected: {expected}"
-        )
+
         assert rev_rec.site1_name == expected[0]
         assert rev_rec.site2_name == expected[1]
 
@@ -328,7 +326,6 @@ def test_recombinase_collection():
     collection = RecombinaseCollection([rec1, rec2])
     seq1 = Dseqrecord(f"ggg{site1.upper()}ttt{site3.upper()}ttt")
     seq2 = Dseqrecord(f"gggc{site2.upper()}ttt{site4.upper()}ttt")
-    print(collection.overlap(seq1, seq2))
     assert collection.overlap(seq1, seq2) == [(5, 6, 2), (15, 16, 2)]
 
 
