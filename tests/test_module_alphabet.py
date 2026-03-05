@@ -149,7 +149,7 @@ def test_regex_ss_melt_factory():
 
 def test_regex_ds_melt_factory():
 
-    regex = regex_ds_melt_factory(3)
+    regex = regex_ds_melt_factory(3, False)
     assert regex.groups == 8
 
     s = Dseq("aaaGFTTAIAttt")
@@ -167,6 +167,15 @@ def test_regex_ds_melt_factory():
     m = regex.search(s._data)
     assert m is not None
     assert m.groupdict()["crick"] == b"TTA"
+
+    s = Dseq("AGJJJGaGEEg")
+    regex = regex_ds_melt_factory(2, False)
+    m = regex.search(s._data)
+    assert m.groupdict()["watson"] == b"AG"
+
+    regex_circ = regex_ds_melt_factory(2, True)
+    m = regex_circ.search(s._data)
+    assert m is None
 
 
 # ---------------------------------------------------------------------------

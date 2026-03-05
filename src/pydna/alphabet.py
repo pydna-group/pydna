@@ -887,7 +887,7 @@ def regex_ss_melt_factory(length: int) -> re.Pattern:
     return re.compile(regex.encode("ascii"))
 
 
-def regex_ds_melt_factory(length: int) -> re.Pattern:
+def regex_ds_melt_factory(length: int, circular: bool) -> re.Pattern:
     """
     A regular expression for finding double-stranded regions flanked by single-stranded DNA
     that can be melted to shed multiple double stranded fragments.
@@ -911,7 +911,7 @@ def regex_ds_melt_factory(length: int) -> re.Pattern:
     --------
 
     >>> from pydna.dseq import Dseq
-    >>> regex = regex_ds_melt_factory(3)
+    >>> regex = regex_ds_melt_factory(3, False)
     >>> s = Dseq("aaaGFTTAIAttt")
     >>> s
     Dseq(-13)
@@ -934,13 +934,16 @@ def regex_ds_melt_factory(length: int) -> re.Pattern:
 
     """
 
+    start_if_not_circular = "|^" if not circular else ""
+    end_if_not_circular = "|$" if not circular else ""
+
     regex = (
-        f"(?P<watson>((?<=[{ss_letters_watson}])|^)"
+        f"(?P<watson>((?<=[{ss_letters_watson}]){start_if_not_circular})"
         f"([{ds_letters}]{{1,{length}}})"
-        f"((?=[^{ss_letters_watson}{ds_letters}])|$))|"
-        f"(?P<crick>((?<=[{ss_letters_crick}])|^)"
+        f"((?=[^{ss_letters_watson}{ds_letters}]){end_if_not_circular}))|"
+        f"(?P<crick>((?<=[{ss_letters_crick}]){start_if_not_circular})"
         f"([{ds_letters}]{{1,{length}}})"
-        f"((?=[^{ss_letters_crick}{ds_letters}])|$))"
+        f"((?=[^{ss_letters_crick}{ds_letters}]){end_if_not_circular}))"
     )
 
     return re.compile(regex.encode("ascii"))

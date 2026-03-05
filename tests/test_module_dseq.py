@@ -1459,6 +1459,19 @@ def test_melt():
         Dseq("PEPEXIGATC"),
     )
 
+    seq = Dseq("AGEEGaGJJJg", circular=True)
+
+    expected_product = Dseq("gAGAAGaG", "CtCGGGcTC", 6)
+
+    expected_product = seq.apply_cut(
+        ((10, 6), None), ((7, 5), None), allow_overlap=True
+    )
+
+    for shift in range(len(seq)):
+        new_seq = seq.shifted(shift)
+        product, *_ = new_seq.melt(3)
+        assert product == expected_product
+
 
 def test__get_ds_meltsites():
 
@@ -1484,6 +1497,13 @@ def test__get_ds_meltsites():
 
     assert Dseq("AGCPAGQGAT", circular=True).get_ds_meltsites(2) == [((6, 2), None)]
     assert Dseq("AGCQAGPGAT", circular=True).get_ds_meltsites(2) == [((4, -2), None)]
+
+    seq = Dseq("AGEEGaGJJJg", circular=True)
+
+    for shift in range(len(seq)):
+        new_seq = seq.shifted(shift)
+        assert len(new_seq.get_ds_meltsites(2)) == 0
+        assert len(new_seq.get_ds_meltsites(3)) == 2
 
 
 def test_nibble():
@@ -1663,3 +1683,66 @@ def test_overlapping_cuts():
         Dseq("pexicTGCGtcaagtgtcxe"),
         Dseq("zft"),
     )
+
+
+def test_shift_melt_cutsite_pairs():
+    seq = Dseq("AGJJJGaGEEg")
+
+    cutsite_pairs = seq.get_cutsite_pairs(seq.get_ds_meltsites(2))
+    new_cutsite_pairs = seq.shift_melt_cutsite_pairs(cutsite_pairs)
+
+    assert new_cutsite_pairs[0] == (None, ((2, 2), None))
+    assert new_cutsite_pairs[1] == (((5, 5), None), ((11, 3), None))
+    assert new_cutsite_pairs[2] == (((11, 1), None), None)
+
+    seq = Dseq("AGEEGaGJJJg")
+
+    cutsite_pairs = seq.get_cutsite_pairs(seq.get_ds_meltsites(2))
+    new_cutsite_pairs = seq.shift_melt_cutsite_pairs(cutsite_pairs)
+
+    assert new_cutsite_pairs[0] == (None, ((0, -2), None))
+    assert new_cutsite_pairs[1] == (((0, -4), None), ((7, -4), None))
+    assert new_cutsite_pairs[2] == (((10, -1), None), None)
+
+    seq = Dseq("AGEEGaGJJJg", circular=True)
+
+    cutsite_pairs = seq.get_cutsite_pairs(seq.get_ds_meltsites(3))
+
+    shifted_cutsite_pairs = seq.shift_melt_cutsite_pairs(cutsite_pairs)
+
+    assert shifted_cutsite_pairs == [(((10, 6), None), ((7, 5), None))]
+
+    expected_product = seq.apply_cut(
+        ((10, 6), None), ((7, 5), None), allow_overlap=True
+    )
+
+    for shift in range(len(seq)):
+        new_seq = seq.shifted(shift)
+
+        cutsite_pairs = new_seq.get_cutsite_pairs(new_seq.get_ds_meltsites(3))
+        shifted_cutsite_pairs = new_seq.shift_melt_cutsite_pairs(cutsite_pairs)
+        assert len(shifted_cutsite_pairs) == 1
+        prod = new_seq.apply_cut(*shifted_cutsite_pairs[0], allow_overlap=True)
+        assert prod == expected_product
+
+
+def test_melt_ss_dna():
+    ds = Dseq("tagaaptapgtatg", circular=True)
+
+    product = ds.melt_ss_dna(2)[0]
+
+    for shift in range(len(ds)):
+        new_ds = ds.shifted(shift)
+
+        assert new_ds.melt_ss_dna(2)[1][0]._data == b"zf"
+        assert new_ds.melt_ss_dna(2)[0] == product.shifted(shift)
+
+    ds = Dseq("tagaajtajgtatg", circular=True)
+
+    product = ds.melt_ss_dna(2)[0]
+
+    for shift in range(len(ds)):
+        new_ds = ds.shifted(shift)
+
+        assert new_ds.melt_ss_dna(2)[1][0]._data == b"xe"
+        assert new_ds.melt_ss_dna(2)[0] == product.shifted(shift)
