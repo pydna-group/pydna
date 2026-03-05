@@ -83,6 +83,8 @@ from opencloning_linkml.datamodel import (
     PlannotateAnnotationReport as _PlannotateAnnotationReport,
     ReverseComplementSource as _ReverseComplementSource,
     NCBISequenceSource as _NCBISequenceSource,
+    RecombinaseSource as _RecombinaseSource,
+    Recombinase as _Recombinase,
 )
 from Bio.SeqFeature import Location, LocationParserError, SimpleLocation
 from Bio.Restriction.Restriction import AbstractCut
@@ -98,6 +100,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:  # pragma: no cover
     from pydna.dseqrecord import Dseqrecord
     from pydna.primer import Primer
+    from pydna.recombinase import RecombinaseCollection, Recombinase
 
 
 # Thread-local storage for ID strategy
@@ -527,6 +530,29 @@ class CreLoxRecombinationSource(AssemblySource):
 class PCRSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_PCRSource]] = _PCRSource
     add_primer_features: bool = Field(default=False)
+
+
+class RecombinaseSource(AssemblySource):
+
+    TARGET_MODEL: ClassVar[Type[_RecombinaseSource]] = _RecombinaseSource
+    recombinases: object
+
+    @field_validator("recombinases")
+    @classmethod
+    def _validate_recombinases(cls, value: "RecombinaseCollection" | "Recombinase"):
+        from pydna.recombinase import RecombinaseCollection, Recombinase
+
+        if isinstance(value, RecombinaseCollection) or isinstance(value, Recombinase):
+            return value
+        raise ValueError(
+            "recombinases must be a RecombinaseCollection or a Recombinase"
+        )
+
+    @field_serializer("recombinases")
+    def serialize_recombinases(
+        self, recombinases: "RecombinaseCollection" | "Recombinase"
+    ) -> list[_Recombinase]:
+        return recombinases.to_opencloning_model()
 
 
 class SequenceCutSource(Source):

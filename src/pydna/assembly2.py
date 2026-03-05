@@ -39,6 +39,7 @@ from pydna.types import (
 from pydna.gateway import gateway_overlap, find_gateway_sites
 from pydna.cre_lox import cre_loxP_overlap
 from pydna.alphabet import anneal_strands
+from pydna.recombinase import Recombinase, RecombinaseCollection
 
 from typing import TYPE_CHECKING, Callable, Literal
 from pydna.opencloning_models import (
@@ -52,6 +53,7 @@ from pydna.opencloning_models import (
     GatewaySource,
     HomologousRecombinationSource,
     CreLoxRecombinationSource,
+    RecombinaseSource,
     PCRSource,
     SourceInput,
     CRISPRSource,
@@ -1968,11 +1970,15 @@ class SingleFragmentAssembly(Assembly):
         self.G.add_node(1, seq=frag)
 
         matches = algorithm(frag, frag, limit)
+        # Remove matches where the whole sequence matches
+        matches = [match for match in matches if match[2] != len(frag)]
+
         for match in matches:
             self.add_edges_from_match(match, 1, 1, frag, frag)
 
         # To avoid duplicated outputs
-        self.G.remove_edges_from([(-1, -1)])
+        while (-1, -1) in self.G.edges():
+            self.G.remove_edges_from([(-1, -1)])
 
         # These two are constrained
         self.use_fragment_order = True
@@ -2799,6 +2805,72 @@ def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
     """
     products = common_function_excision_products(genome, None, cre_loxP_overlap)
     return _recast_sources(products, CreLoxRecombinationSource)
+
+
+def recombinase_excision(
+    genome: Dseqrecord,
+    recombinase: Recombinase | RecombinaseCollection,
+) -> list[Dseqrecord]:
+    """Returns the products for recombinase-mediated excision.
+
+    Parameters
+    ----------
+    genome : Dseqrecord
+        Target genome sequence containing two recombinase sites.
+    recombinase : Recombinase | RecombinaseCollection
+        Recombinase object.
+
+    Returns
+    -------
+    list[Dseqrecord]
+        List containing excised plasmid and remaining genome sequence.
+    """
+    products = common_function_excision_products(genome, None, recombinase.overlap)
+    products = [recombinase.annotate(p) for p in products]
+    return _recast_sources(products, RecombinaseSource, recombinases=recombinase)
+
+
+def recombinase_integration(
+    genome: Dseqrecord,
+    inserts: list[Dseqrecord],
+    recombinase: Recombinase | RecombinaseCollection,
+) -> list[Dseqrecord]:
+    """Returns the products resulting from recombinase-mediated integration.
+
+    Parameters
+    ----------
+    genome : Dseqrecord
+        Target genome sequence.
+    inserts : list[Dseqrecord]
+        DNA fragment(s) to insert.
+    recombinase : Recombinase | RecombinaseCollection
+        Recombinase object.
+
+    Returns
+    -------
+    list[Dseqrecord]
+        List of integrated DNA molecules.
+
+    Examples
+    --------
+    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.assembly2 import recombinase_integration, recombinase_excision
+    >>> from pydna.recombinase import Recombinase
+    >>> site1 = "ATGCCCTAAaaTT"
+    >>> site2 = "AAaaTTTTTTTCCCT"
+    >>> genome = Dseqrecord(f"cccccc{site1.upper()}aaaaa")
+    >>> insert = Dseqrecord(f"{site2.upper()}bbbbb", circular=True)
+    >>> recombinase = Recombinase(site1, site2)
+    >>> products = recombinase_integration(genome, [insert], recombinase)
+    >>> len(products) >= 1
+    True
+    """
+    fragments = common_handle_insertion_fragments(genome, inserts)
+    products = common_function_integration_products(
+        fragments, None, recombinase.overlap
+    )
+    products = [recombinase.annotate(p) for p in products]
+    return _recast_sources(products, RecombinaseSource, recombinases=recombinase)
 
 
 def crispr_integration(
