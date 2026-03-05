@@ -1918,7 +1918,7 @@ def test___eq__():
     # Test that when instantiated from a seqrecord, the source
     # field is instantiated (this is removed in the __eq__ method
     # to compare seqrecords, and if it's missing it gives an error)
-    assert Dseqrecord("AAA") != Dseqrecord.from_SeqRecord(SeqRecord("AAA"))
+    assert Dseqrecord("AAA") != Dseqrecord.from_SeqRecord(SeqRecord(Seq("AAA")))
 
 
 def test___ne__():
