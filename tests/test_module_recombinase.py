@@ -352,3 +352,17 @@ def test_recombinase_collection_init_errors():
         RecombinaseCollection([])
     with pytest.raises(ValueError):
         RecombinaseCollection([Recombinase("AAaaTTC", "CCaaTTC"), "blah"])
+
+
+def test_recombinase_collection_in_assembly_functions():
+    site1 = "AAaaTTC"
+    site2 = "CCaaTTC"
+    site3 = "GAccACC"
+    site4 = "TCccAAC"
+    rec1 = Recombinase(site1, site2, site1_name="s1", site2_name="s2")
+    rec2 = Recombinase(site3, site4, site1_name="s1", site2_name="s2")
+    collection = RecombinaseCollection([rec1, rec2])
+    seq = Dseqrecord(f"ggg{site1.upper()}ttt{site3.upper()}ttt")
+    seq2 = Dseqrecord(f"ggg{site2.upper()}ttt{site4.upper()}ttt")
+    products = recombinase_integration(seq, [seq2], collection)
+    assert len(products) == 1

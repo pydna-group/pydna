@@ -382,7 +382,9 @@ class RecombinaseCollection:
             raise ValueError("recombinases must be a non-empty list")
         self.recombinases = recombinases
 
-    def overlap(self, seqx: Dseqrecord, seqy: Dseqrecord) -> list[SequenceOverlap]:
+    def overlap(
+        self, seqx: Dseqrecord, seqy: Dseqrecord, limit: None = None
+    ) -> list[SequenceOverlap]:
         """Find overlaps between *seqx* and *seqy* mediated by the recombinases."""
         return sum((r.overlap(seqx, seqy) for r in self.recombinases), [])
 
