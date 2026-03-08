@@ -1468,6 +1468,18 @@ def test_melt():
         product, *_ = new_seq.melt(3)
         assert product == expected_product
 
+    # Special case where a circular molecule melts into two ssDNAs
+    seq = Dseq("AGEEGaGJJJg", circular=True)
+    expected_products = (
+        Dseq("", "CtCGGGcTC"[::-1], len("CtCGGGcTC")),
+        Dseq("gAGAAGaG", "", ovhg=-5),
+    )
+
+    for shift in range(len(seq)):
+        new_seq = seq.shifted(shift)
+        products = new_seq.melt(3)
+        assert (products == expected_products) or (products == expected_products[::-1])
+
 
 def test__get_ds_meltsites():
 

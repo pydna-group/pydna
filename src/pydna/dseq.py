@@ -2577,7 +2577,7 @@ class Dseq(Seq):
         # In the right end, the overhang does not matter
         return *self.right_end_position(), self.watson_ovhg
 
-    def melt(self, length, shift=True):
+    def melt(self, length):
         """
         TBD
 
@@ -2601,13 +2601,19 @@ class Dseq(Seq):
         cutsites = new.get_ds_meltsites(length)
 
         cutsite_pairs = self.get_cutsite_pairs(cutsites)
-        if shift:
-            cutsite_pairs = self.shift_melt_cutsite_pairs(cutsite_pairs)
+        cutsite_pairs = self.shift_melt_cutsite_pairs(cutsite_pairs)
 
         result = tuple(
             new.apply_cut(*cutsite_pair, allow_overlap=True)
             for cutsite_pair in cutsite_pairs
         )
+        # Special case for a case like circular AGEEGaGJJJg, where two ssDNAs should be returned.
+        if (
+            self.circular
+            and len(cutsite_pairs) == 2
+            and cuts_overlap(*cutsite_pairs[0], len(self))
+        ):
+            result = tuple(result[0].melt(length))
 
         result = tuple([new]) if strands and not result else result
 
