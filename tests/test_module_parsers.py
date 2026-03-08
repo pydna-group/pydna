@@ -414,8 +414,8 @@ def test_parse_is_path():
     # Should throw an error if the path is not a file:
     text_input = ">seq\nACGT"
     with pytest.raises(FileNotFoundError):
-        # We can't pass a linebreak because it breaks tests in windows
-        parse(">seqACGT", is_path=True)
+        # We can't pass a linebreak nor > because it breaks tests in windows
+        parse("ACGT", is_path=True)
     assert len(parse(text_input, is_path=False)) == 1
 
     # Should throw an error if passing a path as no is_path
