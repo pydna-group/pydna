@@ -227,7 +227,7 @@ def parse(data, ds=True, is_path=None) -> list[Dseqrecord | SeqRecord]:
 
     is_path : bool, optional
         If True, the data is treated as a path to a file. If False, the data is treated as a string (e.g. FASTA file content).
-        If None, the both are tried.
+        If None, both are tried.
 
     Returns
     -------
