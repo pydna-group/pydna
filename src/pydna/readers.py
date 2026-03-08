@@ -10,7 +10,7 @@ from pydna.parsers import parse
 from pydna.primer import Primer
 
 
-def read(data, ds=True):
+def read(data, ds=True, is_path=None):
     """This function is similar the :func:`parse` function but expects one and only
     one sequence or and exception is thrown.
 
@@ -21,6 +21,9 @@ def read(data, ds=True):
     ds : bool
         Double stranded or single stranded DNA, if True return
         Dseqrecord objects, else Bio.SeqRecord objects.
+    is_path : bool, optional
+        If True, the data is treated as a path to a file. If False, the data is treated as a string (e.g. FASTA file content).
+        If None, the both are tried.
 
     Returns
     -------
@@ -39,7 +42,7 @@ def read(data, ds=True):
     """
 
     try:
-        (result,) = parse(data, ds)
+        (result,) = parse(data, ds, is_path)
     except ValueError as err:
         msg = str(err)
 

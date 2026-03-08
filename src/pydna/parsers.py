@@ -10,8 +10,10 @@
 import re
 import io
 import textwrap
-
+import os
 from Bio import SeqIO
+from Bio.SeqIO.InsdcIO import GenBankScanner, GenBankIterator
+import warnings
 
 from pydna.dseqrecord import Dseqrecord
 from Bio.SeqRecord import SeqRecord
@@ -68,6 +70,76 @@ def extract_from_text(text):
     return tuple(mo.group(0) for mo in mos), tuple(gaps)
 
 
+class CustomGenBankScanner(GenBankScanner):
+    """
+    A custom GenBank scanner that parses the LOCUS line and extracts the name, size, molecule_type, topology and date
+    from malformed GenBank files.
+
+    For example, the following line:
+
+    ```
+        LOCUS       pKM265       4536 bp    DNA   circular  SYN        21-JUN-2013
+    ```
+    """
+
+    def _feed_first_line(self, consumer, line):
+        # A regex for
+        m = re.match(
+            r"(?i)LOCUS\s+(?P<name>\S+)\s+(?P<size>\d+ bp)\s+(?P<molecule_type>\S+)(?:\s+(?P<topology>circular|linear))?(?:\s+.+\s+)?(?P<date>\d+-\w+-\d+)?",
+            line,
+        )
+        if m is None:
+            raise ValueError("LOCUS line cannot be parsed")
+        name, size, molecule_type, topology, date = m.groups()
+
+        consumer.locus(name)
+        consumer.size(size[:-3])
+        consumer.molecule_type(molecule_type)
+        consumer.topology(topology.lower() if topology is not None else None)
+        consumer.date(date)
+
+
+class CustomGenBankIterator(GenBankIterator):
+
+    def __init__(self, source):
+        super(GenBankIterator, self).__init__(source, fmt="GenBank")
+        self.records = CustomGenBankScanner(debug=0).parse_records(self.stream)
+
+
+def parse_genbank(handle: io.StringIO) -> SeqRecord:
+    """
+    Equivalent to SeqIO.read(handle, "genbank") but with more permissive parsing for the LOCUS line. It also
+    removes BASE_COUNT lines that can be misplaced and anyway are not stored in the SeqRecord.annotations.
+    """
+
+    filtered_lines = list()
+    for line in handle:
+        if not line.lstrip().startswith("BASE COUNT"):
+            filtered_lines.append(line)
+    filtered_handle = io.StringIO("".join(filtered_lines))
+
+    try:
+        # This may raise a ValueError such as "LOCUS line does not contain space at position X"
+        # then use the more permissive CustomGenBankIterator
+        parsed = SeqIO.read(filtered_handle, "genbank")
+
+        # Sometimes the line is enough to parse the record, but not enough to parse the topology,
+        # then raise an error starting with "LOCUS line does not contain" to trigger the
+        # more permissive CustomGenBankIterator
+        if "topology" not in parsed.annotations.keys():
+            raise ValueError("LOCUS line does not contain topology")
+        return parsed
+    except ValueError as e:
+        if "LOCUS line does not contain" not in str(e):
+            raise e
+        filtered_handle.seek(0)
+        warnings.warn(
+            "LOCUS line is wrongly formatted, we used a more permissive parser.",
+            stacklevel=2,
+        )
+        return next(CustomGenBankIterator(filtered_handle))
+
+
 def embl_gb_fasta(text):
     """Parse embl, genbank or fasta format from text.
 
@@ -79,11 +151,9 @@ def embl_gb_fasta(text):
     """
     chunks, gaps = extract_from_text(text)
     result_list = []
-    # topology = "linear"
 
     for chunk in chunks:
         handle = io.StringIO(chunk)
-        # circular = False
         first_line = chunk.splitlines()[0].lower().split()
         try:
             parsed = SeqIO.read(handle, "embl")
@@ -91,7 +161,7 @@ def embl_gb_fasta(text):
         except ValueError:
             handle.seek(0)
             try:
-                parsed = SeqIO.read(handle, "genbank")
+                parsed = parse_genbank(handle)
                 parsed.annotations["pydna_parse_sequence_file_format"] = "genbank"
             except ValueError:
                 handle.seek(0)
@@ -126,7 +196,7 @@ def embl_gb_fasta(text):
     return tuple(result_list)
 
 
-def parse(data, ds=True) -> list[Dseqrecord | SeqRecord]:
+def parse(data, ds=True, is_path=None) -> list[Dseqrecord | SeqRecord]:
     """Return *all* DNA sequences found in data.
 
     If no sequences are found, an empty list is returned. This is a greedy
@@ -155,6 +225,10 @@ def parse(data, ds=True) -> list[Dseqrecord | SeqRecord]:
         If False single stranded :class:`Bio.SeqRecord` [#]_ objects are
         returned.
 
+    is_path : bool, optional
+        If True, the data is treated as a path to a file. If False, the data is treated as a string (e.g. FASTA file content).
+        If None, the both are tried.
+
     Returns
     -------
     list
@@ -178,37 +252,33 @@ def parse(data, ds=True) -> list[Dseqrecord | SeqRecord]:
     sequences = []
 
     for item in data:
-        try:
-            # item is a path to a utf-8 encoded text file?
-            with open(item, "r", encoding="utf-8") as f:
-                raw = f.read()
-        except IOError:
-            # item was not a path, add sequences parsed from item
-            raw = item
-            path = None
-        else:
-            # item was a readable text file, seqences are parsed from the file
+        if is_path is None:
+            path = item if os.path.isfile(item) else None
+        elif is_path:
             path = item
-        finally:
-            newsequences = embl_gb_fasta(raw)
-            for s in newsequences:
-                if ds and path:
-                    from pydna.opencloning_models import UploadedFileSource
+        else:
+            path = None
 
-                    result = Dseqrecord.from_SeqRecord(s)
-                    result.source = UploadedFileSource(
-                        file_name=str(path),  # we use str to handle PosixPath
-                        sequence_file_format=s.annotations[
-                            "pydna_parse_sequence_file_format"
-                        ],
-                        index_in_file=0,
-                    )
-                    sequences.append(result)
-                    # sequences.append(_GenbankFile.from_SeqRecord(s, path=path))
-                elif ds:
-                    sequences.append(Dseqrecord.from_SeqRecord(s))
-                else:
-                    sequences.append(s)
+        raw = item if not path else open(path, "r", encoding="utf-8").read()
+
+        newsequences = embl_gb_fasta(raw)
+        for s in newsequences:
+            if ds and path:
+                from pydna.opencloning_models import UploadedFileSource
+
+                result = Dseqrecord.from_SeqRecord(s)
+                result.source = UploadedFileSource(
+                    file_name=str(path),  # we use str to handle PosixPath
+                    sequence_file_format=s.annotations[
+                        "pydna_parse_sequence_file_format"
+                    ],
+                    index_in_file=0,
+                )
+                sequences.append(result)
+            elif ds:
+                sequences.append(Dseqrecord.from_SeqRecord(s))
+            else:
+                sequences.append(s)
     return sequences
 
 

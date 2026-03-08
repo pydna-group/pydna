@@ -6,6 +6,17 @@ test parse
 
 import os
 
+from Bio.SeqIO import parse as BPparse
+from pydna.parsers import (
+    embl_gb_fasta,
+    extract_from_text,
+    parse,
+    parse_primers,
+    parse_snapgene,
+)
+from pydna.readers import read
+import pytest
+
 test_files = os.path.join(os.path.dirname(__file__))
 
 
@@ -21,8 +32,6 @@ def test_extract_from_text():
             ID
             //
             """
-    from pydna.parsers import extract_from_text
-
     seqs, gaps = extract_from_text(text)
     assert seqs == (">a\naaaa\n", "LOCUS\n//", ">b\nbbbbbb\n", "ID\n//")
     assert [g.strip() for g in gaps] == ["", "", "", "", ""]
@@ -60,8 +69,6 @@ def test_extract_from_text():
         "",
         "comment 4",
     )
-
-    from pydna.parsers import embl_gb_fasta
 
     text = """\
             LOCUS       New_linear_DNA             2 bp    DNA     linear       29-MAR-2024
@@ -132,10 +139,7 @@ def test_extract_from_text():
 
 
 def test_parse1():
-    from pydna.parsers import parse
-    from pydna.readers import read
-
-    """ test parsing fasta sequences from a text"""
+    """test parsing fasta sequences from a text"""
 
     text = """
             points....: 1
@@ -248,10 +252,6 @@ def test_parse1():
 
 
 def test_parse2():
-    from pydna.parsers import parse
-
-    # from pydna.readers import read
-
     seqs = parse("RefDataBjorn.fas")
 
     assert len(seqs) == 771
@@ -270,8 +270,6 @@ def test_parse2():
 
 
 def test_parse_primers():
-    from pydna.parsers import parse_primers
-
     data = str(">1\n" "aaaa\n" ">2\n" "cccc\n")
     parse_primers(data)
 
@@ -288,8 +286,6 @@ def test_parse_primers():
 
 
 def test_parse_error():
-    from pydna.parsers import parse
-
     data = """
 LOCUS
 DATA_IS_NOT_A_SEQUENCE
@@ -298,8 +294,6 @@ DATA_IS_NOT_A_SEQUENCE
 
 
 def test_parse_list():
-    from pydna.parsers import parse_primers
-
     data = str(">1\n" "aaaa\n" ">2\n" "cccc\n")
 
     assert [str(x.seq) for x in parse_primers([data, data])] == [
@@ -311,12 +305,6 @@ def test_parse_list():
 
 
 def test_misc_parse():
-
-    from pydna.parsers import parse
-
-    # from Bio.SeqIO import read as BPread
-    from Bio.SeqIO import parse as BPparse
-
     # q = BPread("read1.gb", "gb")
     # w = BPread("read2.gb", "gb")
     # e = BPread("read3.fasta", "fasta")
@@ -346,8 +334,6 @@ def test_misc_parse():
 
 
 def test_dna2949():
-    from pydna.parsers import parse
-
     with open("dna2943.gb") as f:
         f.read()
     seqlist = parse("dna2943.gb", ds=True)
@@ -357,8 +343,6 @@ def test_dna2949():
 
 
 def proteins():
-    from pydna.parsers import embl_gb_fasta
-
     proteins = """\
     >pdb|3VQM|V Chain V, C-terminal peptide from Small heat shock protein StHsp14.0
     VIKIE
@@ -408,8 +392,6 @@ def proteins():
 
 
 def test_parse_snapgene():
-    from pydna.parsers import parse_snapgene
-
     # Parse circular snapgene file
     seq = parse_snapgene(
         os.path.join(test_files, "gateway_manual_cloning/pDONRtm201.dna")
@@ -426,3 +408,38 @@ def test_parse_snapgene():
     )[0]
     assert not seq.circular
     assert len(seq) == 2304
+
+
+def test_parse_is_path():
+    # Should throw an error if the path is not a file:
+    text_input = ">seq\nACGT"
+    with pytest.raises(FileNotFoundError):
+        parse(text_input, is_path=True)
+    assert len(parse(text_input, is_path=False)) == 1
+
+    # Should throw an error if passing a path as no is_path
+    file_name = os.path.join(test_files, "pAG25.gb")
+
+    assert len(parse(file_name, is_path=False)) == 0
+    assert len(parse(file_name, is_path=True)) == 1
+
+
+def test_permisive_parser_ape_topology():
+    assert read(f"{test_files}/broken_genbank_files/P2RP3.ape", "r").circular is True
+    assert (
+        read(f"{test_files}/broken_genbank_files/P2RP3_linear.ape", "r").circular
+        is False
+    )
+
+
+def test_permisive_parser_no_topology():
+    seq = read(f"{test_files}/broken_genbank_files/ase1_no_topology.gb", "r")
+    assert seq.annotations["topology"] == "linear"
+
+
+def test_permissive_parser_malformed_LOCUS_line():
+    assert read(f"{test_files}/broken_genbank_files/pSEVA427.gbk", "r").circular is True
+
+
+def test_permissive_parser_base_count_misplaced():
+    read(f"{test_files}/broken_genbank_files/base_count_misplaced.gb")

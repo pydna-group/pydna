@@ -112,6 +112,9 @@ minversion = "6.0.2"
 python_files = "test_*.py"
 testpaths = ["tests", "src/pydna"]
 norecursedirs = ["*"]
+markers = [
+    "mpl_image_compare",
+]
 
 [tool.black]
 include = '\.pyi?$'
