@@ -559,7 +559,7 @@ class Dseq(Seq):
                     data.append(basepair_dict[w, c])
                 except KeyError as err:
                     print(f"Base mismatch in representation {err}")
-                    raise ValueError(f"Base mismatch in representation: {err}")
+                    raise ValueError(f"Base mismatch in representation: {err}") from err
             data = "".join(data).strip()
             self._data = data.encode("ascii")
 
@@ -2849,7 +2849,7 @@ class Dseq(Seq):
 
         return list(zip(cutsites, cutsites[1:]))
 
-    def shift_melt_cutsite_pairs(
+    def shift_melt_cutsite_pairs(  # noqa: C901
         self, cutsite_pairs: List[Tuple[CutSiteType, CutSiteType]]
     ) -> List[Tuple[CutSiteType, CutSiteType]]:
         """Takes a list of cutsite pairs that will be applied to a sequence with parts with ssDNA, and shifts them
