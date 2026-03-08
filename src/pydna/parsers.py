@@ -88,7 +88,7 @@ class CustomGenBankScanner(GenBankScanner):
             r"(?i)LOCUS\s+(?P<name>\S+)\s+(?P<size>\d+ bp)\s+(?P<molecule_type>\S+)(?:\s+(?P<topology>circular|linear))?(?:\s+.+\s+)?(?P<date>\d+-\w+-\d+)?",
             line,
         )
-        if m is None:
+        if m is None:  # pragma: no cover - I don't think this can happen, but JIC
             raise ValueError("LOCUS line cannot be parsed")
         name, size, molecule_type, topology, date = m.groups()
 
