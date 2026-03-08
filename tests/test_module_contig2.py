@@ -45,7 +45,7 @@ def test_contig_linear():
         "                                      tattctggctgtatcGGGGGtacgatgctatactg\n"
     )
 
-    return cont.figure_mpl()
+    cont.figure_mpl()
 
 
 @pytest.mark.mpl_image_compare
@@ -84,7 +84,7 @@ def test_contig_circular():
 
     assert fig == cont.figure()
 
-    return cont.figure_mpl()
+    cont.figure_mpl()
 
 
 def test_reverse_complement():
@@ -201,7 +201,7 @@ def test_mpl1():
     asm = Assembly((a, b), limit=20)
     cps = asm.assemble_circular()
     cp = cps[0]
-    return cp.figure_mpl()
+    cp.figure_mpl()
 
 
 @pytest.mark.mpl_image_compare
@@ -222,7 +222,7 @@ def test_mpl2():
     asm2 = Assembly((x, y, z), limit=20)
     cps2 = asm2.assemble_circular()
     cp2 = cps2[0]
-    return cp2.figure_mpl()
+    cp2.figure_mpl()
 
 
 @pytest.mark.mpl_image_compare
@@ -302,4 +302,4 @@ def test_mpl3():
 
     cp3 = cps3[0]
 
-    return cp3.figure_mpl()
+    cp3.figure_mpl()

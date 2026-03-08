@@ -29,60 +29,60 @@ import pyparsing as pp
 
 GoodLocus = (
     pp.Literal("LOCUS")
-    + pp.Word(pp.alphas + pp.nums + "-_()." + "\\").setResultsName("name")
-    + pp.Word(pp.nums).setResultsName("size")
+    + pp.Word(pp.alphas + pp.nums + "-_()." + "\\").set_results_name("name")
+    + pp.Word(pp.nums).set_results_name("size")
     + pp.Suppress(pp.CaselessLiteral("bp"))
-    + pp.Word(pp.alphas + "-").setResultsName("seqtype")
-    + (pp.CaselessLiteral("linear") | pp.CaselessLiteral("circular")).setResultsName(
+    + pp.Word(pp.alphas + "-").set_results_name("seqtype")
+    + (pp.CaselessLiteral("linear") | pp.CaselessLiteral("circular")).set_results_name(
         "topology"
     )
-    + pp.Optional(pp.Word(pp.alphas), default="   ").setResultsName("divcode")
-    + pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").setResultsName("date")
+    + pp.Optional(pp.Word(pp.alphas), default="   ").set_results_name("divcode")
+    + pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").set_results_name("date")
 )
 
 # Older versions of ApE don't include a LOCUS name! Need separate def for this case:
 BrokenLocus1 = (
-    pp.Literal("LOCUS").setResultsName("name")
-    + pp.Word(pp.nums).setResultsName("size")
+    pp.Literal("LOCUS").set_results_name("name")
+    + pp.Word(pp.nums).set_results_name("size")
     + pp.Suppress(pp.CaselessLiteral("bp"))
-    + pp.Word(pp.alphas + "-").setResultsName("seqtype")
-    + (pp.CaselessLiteral("linear") | pp.CaselessLiteral("circular")).setResultsName(
+    + pp.Word(pp.alphas + "-").set_results_name("seqtype")
+    + (pp.CaselessLiteral("linear") | pp.CaselessLiteral("circular")).set_results_name(
         "topology"
     )
-    + pp.Optional(pp.Word(pp.alphas), default="   ").setResultsName("divcode")
-    + pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").setResultsName("date")
+    + pp.Optional(pp.Word(pp.alphas), default="   ").set_results_name("divcode")
+    + pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").set_results_name("date")
 )
 
 # LOCUS       YEplac181	5741 bp 	DNA	SYN
 BrokenLocus2 = (
     pp.Literal("LOCUS")
-    + pp.Word(pp.alphas + pp.nums + "-_()." + "\\").setResultsName("name")
-    + pp.Word(pp.nums).setResultsName("size")
+    + pp.Word(pp.alphas + pp.nums + "-_()." + "\\").set_results_name("name")
+    + pp.Word(pp.nums).set_results_name("size")
     + pp.Suppress(pp.CaselessLiteral("bp"))
-    + pp.Word(pp.alphas + "-").setResultsName("seqtype")
+    + pp.Word(pp.alphas + "-").set_results_name("seqtype")
     + pp.Optional(
         pp.CaselessLiteral("linear") | pp.CaselessLiteral("circular"),
         default="linear",
-    ).setResultsName("topology")
-    + pp.Optional(pp.Word(pp.alphas), default="   ").setResultsName("divcode")
-    + pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").setResultsName("date")
+    ).set_results_name("topology")
+    + pp.Optional(pp.Word(pp.alphas), default="   ").set_results_name("divcode")
+    + pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").set_results_name("date")
 )
 
 BrokenLocus3 = (
     pp.Literal("LOCUS")
-    + pp.Word(pp.alphas + pp.nums + "-_()." + "\\").setResultsName("name")
-    + pp.Word(pp.nums).setResultsName("size")
+    + pp.Word(pp.alphas + pp.nums + "-_()." + "\\").set_results_name("name")
+    + pp.Word(pp.nums).set_results_name("size")
     + pp.Suppress(pp.CaselessLiteral("bp"))
-    + pp.Word(pp.alphas + "-").setResultsName("seqtype")
+    + pp.Word(pp.alphas + "-").set_results_name("seqtype")
     + pp.Optional(
         pp.CaselessLiteral("linear") | pp.CaselessLiteral("circular"),
         default="linear",
-    ).setResultsName("topology")
-    + pp.Word(pp.alphas).setResultsName("divcode")
+    ).set_results_name("topology")
+    + pp.Word(pp.alphas).set_results_name("divcode")
     + pp.Optional(
-        pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").setResultsName("date"),
+        pp.Regex(r"(\d{2})-(\S{3})-(\d{4})").set_results_name("date"),
         default="19-MAR-1970",
-    ).setResultsName("date")
+    ).set_results_name("date")
 )
 
 LocusEntry = GoodLocus | BrokenLocus1 | BrokenLocus2 | BrokenLocus3
@@ -102,7 +102,7 @@ SpacedLine = pp.White(min=1) + pp.CharsNotIn("\n") + pp.LineEnd()
 # HeaderLine = CapWord + CharsNotIn("\n") + LineEnd()
 GenericEntry = pp.Group(
     CapWord + pp.Combine(pp.CharsNotIn("\n") + pp.LineEnd() + pp.ZeroOrMore(SpacedLine))
-).setResultsName("generics", listAllMatches=True)
+).set_results_name("generics", list_all_matches=True)
 
 
 # ===============================================================================
@@ -139,10 +139,10 @@ RPAREN = pp.Suppress(")")
 SEP = pp.Suppress(pp.Literal(".."))
 
 # recognize numbers w. < & > uncertainty specs, then strip the <> chars to make it fixed
-gbIndex = pp.Word(pp.nums + "<>").setParseAction(
+gbIndex = pp.Word(pp.nums + "<>").set_parse_action(
     lambda s, l_, t: int(t[0].replace("<", "").replace(">", ""))
 )
-SimpleSlice = pp.Group(gbIndex + SEP + gbIndex) | pp.Group(gbIndex).setParseAction(
+SimpleSlice = pp.Group(gbIndex + SEP + gbIndex) | pp.Group(gbIndex).set_parse_action(
     lambda s, l_, t: [[t[0][0], t[0][0]]]
 )
 
@@ -152,7 +152,7 @@ complexSlice = pp.Forward()
     complexSlice
     << (pp.Literal("complement") | pp.Literal("join"))
     + LPAREN
-    + (pp.delimitedList(complexSlice) | pp.delimitedList(SimpleSlice))
+    + (pp.DelimitedList(complexSlice) | pp.DelimitedList(SimpleSlice))
     + RPAREN
 )
 featLocation = pp.Group(SimpleSlice | complexSlice)
@@ -176,7 +176,7 @@ def parseGBLoc(s, l_, t):
     return [["location", locationlist], ["strand", strand]]
 
 
-featLocation.setParseAction(parseGBLoc)
+featLocation.set_parse_action(parseGBLoc)
 
 # ==== Genbank Feature Key-Value Pairs
 
@@ -195,7 +195,7 @@ QuoteFeaturekeyval = pp.Group(
     pp.Suppress("/")
     + pp.Word(pp.alphas + pp.nums + "_-")
     + pp.Suppress("=")
-    + pp.QuotedString('"', multiline=True).setParseAction(strip_multiline)
+    + pp.QuotedString('"', multiline=True).set_parse_action(strip_multiline)
 )
 
 # UnQuoted KeyVal: /key=value  (I'm assuming it doesn't do multilines this way? wrong! ApE does store long labels this way! sigh.)
@@ -218,21 +218,21 @@ NumFeaturekeyval = pp.Group(
     pp.Suppress("/")
     + pp.Word(pp.alphas + pp.nums + "_-")
     + pp.Suppress("=")
-    + (pp.Suppress('"') + pp.Word(pp.nums).setParseAction(toInt) + pp.Suppress('"'))
-    | (pp.Word(pp.nums).setParseAction(toInt))
+    + (pp.Suppress('"') + pp.Word(pp.nums).set_parse_action(toInt) + pp.Suppress('"'))
+    | (pp.Word(pp.nums).set_parse_action(toInt))
 )
 
 # Key Only KeyVal: /pseudo
 # post-parse convert it into a pair to resemble the structure of the first three cases i.e. [pseudo, True]
 FlagFeaturekeyval = pp.Group(
     pp.Suppress("/") + pp.Word(pp.alphas + pp.nums + "_-")
-).setParseAction(lambda s, l_, t: [[t[0][0], True]])
+).set_parse_action(lambda s, l_, t: [[t[0][0], True]])
 
 Feature = pp.Group(
-    pp.Word(pp.alphas + pp.nums + "_-").setParseAction(
+    pp.Word(pp.alphas + pp.nums + "_-").set_parse_action(
         lambda s, l_, t: [["type", t[0]]]
     )
-    + featLocation.setResultsName("location")
+    + featLocation.set_results_name("location")
     + pp.OneOrMore(
         NumFeaturekeyval | QuoteFeaturekeyval | NoQuoteFeaturekeyval | FlagFeaturekeyval
     )
@@ -241,7 +241,7 @@ Feature = pp.Group(
 FeaturesEntry = (
     pp.Literal("FEATURES")
     + pp.Literal("Location/Qualifiers")
-    + pp.Group(pp.OneOrMore(Feature)).setResultsName("features")
+    + pp.Group(pp.OneOrMore(Feature)).set_results_name("features")
 )
 
 # ===============================================================================
@@ -253,10 +253,10 @@ Sequence = pp.OneOrMore(
     pp.Suppress(pp.Word(pp.nums)) + pp.OneOrMore(pp.Word("ACGTacgtNn"))
 )
 
-# Group(  ) hides the setResultsName names def'd inside, such that one needs to first access this group and then access the dict of contents inside
-SequenceEntry = pp.Suppress(pp.Literal("ORIGIN")) + Sequence.setParseAction(
+# Group(  ) hides the set_results_name names def'd inside, such that one needs to first access this group and then access the dict of contents inside
+SequenceEntry = pp.Suppress(pp.Literal("ORIGIN")) + Sequence.set_parse_action(
     lambda s, l_, t: "".join(t)
-).setResultsName("sequence")
+).set_results_name("sequence")
 
 
 # ===============================================================================
@@ -299,7 +299,7 @@ def concat_dict(dlist):
 
 
 def toJSON(gbkstring):
-    parsed = multipleGB.parseString(gbkstring)
+    parsed = multipleGB.parse_string(gbkstring)
 
     jseqlist = []
 
