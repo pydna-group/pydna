@@ -1459,13 +1459,9 @@ def test_melt():
         Dseq("PEPEXIGATC"),
     )
 
-    seq = Dseq("AGEEGaGJJJg", circular=True)
+    seq = Dseq("AGEEGaaGJJJg", circular=True)
 
-    expected_product = Dseq("gAGAAGaG", "CtCGGGcTC", 6)
-
-    expected_product = seq.apply_cut(
-        ((10, 6), None), ((7, 5), None), allow_overlap=True
-    )
+    expected_product = Dseq("gAGAAGaaG", "CTcGGGCttC", -5)
 
     for shift in range(len(seq)):
         new_seq = seq.shifted(shift)
@@ -1704,16 +1700,16 @@ def test_shift_melt_cutsite_pairs():
     assert new_cutsite_pairs[1] == (((0, -4), None), ((7, -4), None))
     assert new_cutsite_pairs[2] == (((10, -1), None), None)
 
-    seq = Dseq("AGEEGaGJJJg", circular=True)
+    seq = Dseq("AGEEGaaGJJJg", circular=True)
 
     cutsite_pairs = seq.get_cutsite_pairs(seq.get_ds_meltsites(3))
 
     shifted_cutsite_pairs = seq.shift_melt_cutsite_pairs(cutsite_pairs)
 
-    assert shifted_cutsite_pairs == [(((10, 6), None), ((7, 5), None))]
+    assert shifted_cutsite_pairs == [(((11, -5), None), ((8, -6), None))]
 
     expected_product = seq.apply_cut(
-        ((10, 6), None), ((7, 5), None), allow_overlap=True
+        ((11, -5), None), ((8, -6), None), allow_overlap=True
     )
 
     for shift in range(len(seq)):

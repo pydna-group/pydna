@@ -907,6 +907,30 @@ def regex_ds_melt_factory(length: int, circular: bool) -> re.Pattern:
         aaaG TTACAttt   <-- "TTA" is found by the regex for length <= 3
         tttCTAAT Taaa
 
+    The name of the capture groups (watson and crick) identifies the ssDNA
+    strand on the left side of the dsDNA. For example:
+
+    ::
+        gCtC  CTTCtC  CTg
+         GaGAAGAAGaGAAGA
+
+    The first capture group CtC starts with ssDNA on the watson strand,
+    then dsDNA, then ssNDA on the crick strand and the match will be
+    ``{'watson': b'CtC', 'crick': None}``.
+
+    The second capture group CTg starts with ssDNA on the crick strand,
+    then dsDNA, then ssNDA on the watson strand and the match will be
+    ``{'watson': None, 'crick': b'CTg'}``.
+
+    This can be slightly confusing if there are no overhangs, for example:
+
+    ::
+        CtC  CTTCtC  CT
+        GaGAAGAAGaGAAGA
+
+    Will give ``{'watson': b'CtC', 'crick': None}``, because it "could have
+    started" with the ssDNA on the watson strand, but not on the crick strand.
+
     Examples
     --------
 
@@ -926,10 +950,12 @@ def regex_ds_melt_factory(length: int, circular: bool) -> re.Pattern:
     length : int
         Max length of double stranded region flanked by single stranded
         regions.
+    circular : bool
+        Whether the sequence is circular.
 
     Returns
     -------
-    TYPE
+    re.Pattern
         regular expression object.
 
     """
@@ -940,10 +966,10 @@ def regex_ds_melt_factory(length: int, circular: bool) -> re.Pattern:
     regex = (
         f"(?P<watson>((?<=[{ss_letters_watson}]){start_if_not_circular})"
         f"([{ds_letters}]{{1,{length}}})"
-        f"((?=[^{ss_letters_watson}{ds_letters}]){end_if_not_circular}))|"
+        f"((?=[{ss_letters_crick}]){end_if_not_circular}))|"
         f"(?P<crick>((?<=[{ss_letters_crick}]){start_if_not_circular})"
         f"([{ds_letters}]{{1,{length}}})"
-        f"((?=[^{ss_letters_crick}{ds_letters}]){end_if_not_circular}))"
+        f"((?=[{ss_letters_watson}]){end_if_not_circular}))"
     )
 
     return re.compile(regex.encode("ascii"))

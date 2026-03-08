@@ -2440,6 +2440,25 @@ class Dseq(Seq):
         See get_ss_meltsites for melting of single stranded regions from
         molecules.
 
+        Positive overhangs come from watson matches from regex_ds_melt_factory,
+        negative overhangs come from crick matches. That gives you a clue of
+        where the dsDNA part is located on each side:
+
+        ::
+
+            Watson cut - positive overhang (4, 3):
+            Crick cut - negative overhang (14, -2):
+
+               04          14
+               ><          ><
+            sDDD  DDDDDD  DDs
+             DDDssDDDDDDssDD
+
+        ``><`` denotes the fact that the watson value of the cut represents the
+        position between letters, not the index of the letters themselves.
+
+        This information is used in the `shift_melt_cutsite_pairs` method.
+
         Examples
         --------
         >>> from pydna.dseq import Dseq
@@ -2558,7 +2577,7 @@ class Dseq(Seq):
         # In the right end, the overhang does not matter
         return *self.right_end_position(), self.watson_ovhg
 
-    def melt(self, length):
+    def melt(self, length, shift=True):
         """
         TBD
 
@@ -2582,7 +2601,8 @@ class Dseq(Seq):
         cutsites = new.get_ds_meltsites(length)
 
         cutsite_pairs = self.get_cutsite_pairs(cutsites)
-        cutsite_pairs = self.shift_melt_cutsite_pairs(cutsite_pairs)
+        if shift:
+            cutsite_pairs = self.shift_melt_cutsite_pairs(cutsite_pairs)
 
         result = tuple(
             new.apply_cut(*cutsite_pair, allow_overlap=True)
@@ -2849,65 +2869,81 @@ class Dseq(Seq):
 
         return list(zip(cutsites, cutsites[1:]))
 
-    def shift_melt_cutsite_pairs(  # noqa: C901
+    def shift_melt_cutsite(
+        self, cutsite: CutSiteType, is_right: bool
+    ) -> Tuple[int, int]:
+        """
+        Shifts a melt cutsite pair so that it only comprises the dsDNA part.
+
+        See the documentation of get_ds_meltsites for more information.
+
+        For ovhg > 0:
+
+                               xxxxxx <- gap when cut is left?
+        gap when cut is right?->  xxxxxx
+
+        For ovhg < 0, the opposite happens.
+
+        """
+
+        if cutsite is None:
+            return None
+
+        iter_count = 0
+        (watson, ovhg), enz = cutsite
+        ss_crick_bytes = bytes(ss_letters_crick.encode("ascii"))
+        ss_watson_bytes = bytes(ss_letters_watson.encode("ascii"))
+        n = len(self._data)
+        data = CircularBytes(self._data)
+
+        def within_sequence(pos: int) -> bool:
+            nonlocal iter_count
+            if not self.circular:
+                output = pos >= 0 and pos < n
+            else:
+                output = iter_count < n
+                iter_count += 1
+            return output
+
+        if ovhg > 0:
+            if is_right:
+                prev_pos = watson - ovhg - 1
+                while within_sequence(prev_pos) and data[prev_pos] in ss_watson_bytes:
+                    ovhg += 1
+                    prev_pos -= 1
+            else:
+                while within_sequence(watson) and data[watson] in ss_crick_bytes:
+                    ovhg += 1
+                    watson += 1
+        elif ovhg < 0:
+            if is_right:
+                while (
+                    within_sequence(watson - 1) and data[watson - 1] in ss_crick_bytes
+                ):
+                    ovhg -= 1
+                    watson -= 1
+            else:
+                next_pos = watson - ovhg
+                while within_sequence(next_pos) and data[next_pos] in ss_watson_bytes:
+                    ovhg -= 1
+                    next_pos += 1
+        if self.circular:
+            watson %= n
+        return (watson, ovhg), enz
+
+    def shift_melt_cutsite_pairs(
         self, cutsite_pairs: List[Tuple[CutSiteType, CutSiteType]]
     ) -> List[Tuple[CutSiteType, CutSiteType]]:
         """Takes a list of cutsite pairs that will be applied to a sequence with parts with ssDNA, and shifts them
         so that they only comprise the dsDNA part.
         """
-        ss_crick_bytes = set(ss_letters_crick.encode("ascii"))
-        ss_watson_bytes = set(ss_letters_watson.encode("ascii"))
-        n = len(self._data)
-        is_circular = self.circular
-        data = CircularBytes(self._data)
 
         new_cutsite_pairs = []
-        for left_cut, right_cut in cutsite_pairs:
-            if left_cut is not None:
-                (watson, ovhg), enz = left_cut
-                if ovhg > 0:
-                    for _ in range(n):
-                        if (not is_circular and watson >= n) or data[
-                            watson
-                        ] not in ss_crick_bytes:
-                            break
-                        watson += 1
-                        ovhg += 1
-                elif ovhg < 0:
-                    for _ in range(n):
-                        if (not is_circular and watson - ovhg >= n) or data[
-                            watson - ovhg
-                        ] not in ss_watson_bytes:
-                            break
-                        ovhg -= 1
-                if is_circular:
-                    left_cut = ((watson % n, ovhg % n), enz)
-                else:
-                    left_cut = ((watson, ovhg), enz)
 
-            if right_cut is not None:
-                (watson, ovhg), enz = right_cut
-                if ovhg > 0:
-                    for _ in range(n):
-                        if (not is_circular and watson - ovhg <= 0) or data[
-                            watson - ovhg - 1
-                        ] not in ss_watson_bytes:
-                            break
-                        ovhg += 1
-                elif ovhg < 0:
-                    for _ in range(n):
-                        if (not is_circular and watson <= 0) or data[
-                            watson - 1
-                        ] not in ss_crick_bytes:
-                            break
-                        watson -= 1
-                        ovhg -= 1
-                if is_circular:
-                    right_cut = ((watson % n, ovhg % n), enz)
-                else:
-                    right_cut = ((watson, ovhg), enz)
-
-            new_cutsite_pairs.append((left_cut, right_cut))
+        for left, right in cutsite_pairs:
+            left = self.shift_melt_cutsite(left, False)
+            right = self.shift_melt_cutsite(right, True)
+            new_cutsite_pairs.append(((left, right)))
 
         if self.circular:
             new_cutsite_pairs = deduplicate(new_cutsite_pairs)
