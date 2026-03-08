@@ -425,21 +425,18 @@ def test_parse_is_path():
     assert len(parse(file_name, is_path=True)) == 1
 
 
-def test_permisive_parser_ape_topology():
-    assert read(f"{test_files}/broken_genbank_files/P2RP3.ape", "r").circular is True
-    assert (
-        read(f"{test_files}/broken_genbank_files/P2RP3_linear.ape", "r").circular
-        is False
-    )
+def test_permissive_parser_ape_topology():
+    assert read(f"{test_files}/broken_genbank_files/P2RP3.ape").circular is True
+    assert read(f"{test_files}/broken_genbank_files/P2RP3_linear.ape").circular is False
 
 
 def test_permisive_parser_no_topology():
-    seq = read(f"{test_files}/broken_genbank_files/ase1_no_topology.gb", "r")
+    seq = read(f"{test_files}/broken_genbank_files/ase1_no_topology.gb")
     assert seq.annotations["topology"] == "linear"
 
 
 def test_permissive_parser_malformed_LOCUS_line():
-    assert read(f"{test_files}/broken_genbank_files/pSEVA427.gbk", "r").circular is True
+    assert read(f"{test_files}/broken_genbank_files/pSEVA427.gbk").circular is True
 
 
 def test_permissive_parser_base_count_misplaced():

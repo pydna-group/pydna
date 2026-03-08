@@ -259,7 +259,11 @@ def parse(data, ds=True, is_path=None) -> list[Dseqrecord | SeqRecord]:
         else:
             path = None
 
-        raw = item if not path else open(path, "r", encoding="utf-8").read()
+        if path:
+            with open(path, "r", encoding="utf-8") as f:
+                raw = f.read()
+        else:
+            raw = item
 
         newsequences = embl_gb_fasta(raw)
         for s in newsequences:

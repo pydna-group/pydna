@@ -15,6 +15,7 @@ c = Dseqrecord("tattctggctgtatcGGGGGtacgatgctatactg", name="three")
 
 
 @pytest.mark.mpl_image_compare
+@pytest.mark.filterwarnings("ignore::pytest.PytestReturnNotNoneWarning")
 def test_contig_linear():
 
     asm = Assembly((a, b, c), limit=14)
@@ -45,10 +46,11 @@ def test_contig_linear():
         "                                      tattctggctgtatcGGGGGtacgatgctatactg\n"
     )
 
-    cont.figure_mpl()
+    return cont.figure_mpl()  # type: ignore
 
 
 @pytest.mark.mpl_image_compare
+@pytest.mark.filterwarnings("ignore::pytest.PytestReturnNotNoneWarning")
 def test_contig_circular():
 
     asm = Assembly((a, b, c), limit=14)
@@ -84,7 +86,7 @@ def test_contig_circular():
 
     assert fig == cont.figure()
 
-    cont.figure_mpl()
+    return cont.figure_mpl()  # type: ignore
 
 
 def test_reverse_complement():
@@ -188,6 +190,7 @@ def test_linear():
 
 
 @pytest.mark.mpl_image_compare
+@pytest.mark.filterwarnings("ignore::pytest.PytestReturnNotNoneWarning")
 def test_mpl1():
 
     a = Dseqrecord(
@@ -201,10 +204,11 @@ def test_mpl1():
     asm = Assembly((a, b), limit=20)
     cps = asm.assemble_circular()
     cp = cps[0]
-    cp.figure_mpl()
+    return cp.figure_mpl()  # type: ignore
 
 
 @pytest.mark.mpl_image_compare
+@pytest.mark.filterwarnings("ignore::pytest.PytestReturnNotNoneWarning")
 def test_mpl2():
 
     x = Dseqrecord(
@@ -222,10 +226,11 @@ def test_mpl2():
     asm2 = Assembly((x, y, z), limit=20)
     cps2 = asm2.assemble_circular()
     cp2 = cps2[0]
-    cp2.figure_mpl()
+    return cp2.figure_mpl()  # type: ignore
 
 
 @pytest.mark.mpl_image_compare
+@pytest.mark.filterwarnings("ignore::pytest.PytestReturnNotNoneWarning")
 def test_mpl3():
 
     p = {}
@@ -302,4 +307,4 @@ def test_mpl3():
 
     cp3 = cps3[0]
 
-    cp3.figure_mpl()
+    return cp3.figure_mpl()  # type: ignore

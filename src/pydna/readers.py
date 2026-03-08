@@ -23,7 +23,7 @@ def read(data, ds=True, is_path=None):
         Dseqrecord objects, else Bio.SeqRecord objects.
     is_path : bool, optional
         If True, the data is treated as a path to a file. If False, the data is treated as a string (e.g. FASTA file content).
-        If None, the both are tried.
+        If None, both are tried.
 
     Returns
     -------
