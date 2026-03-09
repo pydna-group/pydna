@@ -712,31 +712,39 @@ def eq(*args, **kwargs):
 
 
 def cuts_overlap(left_cut, right_cut, seq_len):
+    """Return True if two cuts overlap on a circular sequence.
 
-    # Special cases:
+    Uses the standard split approach for circular ranges: wrapping ranges
+    (start > end) are split into two linear segments, then all segment
+    pairs are checked for overlap.
+    """
     if left_cut is None or right_cut is None or left_cut == right_cut:
         return False
 
-    # This block of code would not be necessary if the cuts were
-    # initially represented like this
     (left_watson, left_ovhg), _ = left_cut
     (right_watson, right_ovhg), _ = right_cut
-    # Position of the cut on the crick strands on the left and right
-    left_crick = left_watson - left_ovhg
-    right_crick = right_watson - right_ovhg
-    if left_crick >= seq_len:
-        left_crick -= seq_len
-        left_watson -= seq_len
-    if right_crick >= seq_len:
-        right_crick -= seq_len
-        right_watson -= seq_len
+    left_crick = (left_watson - left_ovhg) % seq_len
+    right_crick = (right_watson - right_ovhg) % seq_len
+    left_watson = left_watson % seq_len
+    right_watson = right_watson % seq_len
 
-    # Convert into ranges x and y and see if ranges overlap
-    x = sorted([left_watson, left_crick])
-    y = sorted([right_watson, right_crick])
-    # if (x[1] >= y[0]) != (y[1] <= x[0]):
-    #     breakpoint()
-    return (x[1] >= y[0]) != (y[1] <= x[0])  # (x[1] > y[0]) != (y[1] < x[0])
+    def arc_bounds(watson, crick, ovhg):
+        """Return (start, end) for the arc containing the overhang."""
+        if ovhg > 0:
+            return crick, watson  # arc from crick to watson
+        return watson, crick  # arc from watson to crick (may wrap)
+
+    def segments(start, end):
+        """Split circular range into linear segments."""
+        if start <= end:
+            return [(start, end)]
+        return [(start, end + seq_len), (start - seq_len, end)]
+
+    for s1 in segments(*arc_bounds(left_watson, left_crick, left_ovhg)):
+        for s2 in segments(*arc_bounds(right_watson, right_crick, right_ovhg)):
+            if s1[0] < s2[1] and s1[1] > s2[0]:
+                return True
+    return False
 
 
 def location_boundaries(loc: Union[SimpleLocation, CompoundLocation]):

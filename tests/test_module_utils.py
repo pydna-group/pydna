@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import pytest
+from pydna.utils import cuts_overlap
 
 
 def test_flatten():
@@ -340,3 +341,17 @@ def test_create_location():
 
     # Special case: start and end are the same, spans entire sequence
     assert str(create_location(5, 5, 10)) == "join{[5:10], [0:5]}"
+
+
+def test_cuts_overlap():
+
+    assert cuts_overlap(((10, 6), None), ((8, 2), None), 11)
+    assert cuts_overlap(((10, 6), None), ((1, -4), None), 11)
+    assert cuts_overlap(((10, 6), None), ((7, -6), None), 11)
+    assert cuts_overlap(((10, 6), None), ((7, 10), None), 11)
+    assert cuts_overlap(((10, 6), None), ((0, 3), None), 11)
+
+    assert not cuts_overlap(((5, 2), None), ((8, 2), None), 11)
+    assert not cuts_overlap(((5, 2), None), ((8, -2), None), 11)
+    assert not cuts_overlap(((5, 2), None), ((8, -6), None), 11)
+    assert not cuts_overlap(((5, 6), None), ((8, -2), None), 11)
