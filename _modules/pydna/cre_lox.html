@@ -331,7 +331,7 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Seq</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse_complement</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.sequence_regex</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_regex_site</span><span class="p">,</span> <span class="n">dseqrecord_finditer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">Location</span><span class="p">,</span> <span class="n">SimpleLocation</span><span class="p">,</span> <span class="n">SeqFeature</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shift_location</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shift_location</span><span class="p">,</span> <span class="n">deduplicate</span>
 
 <span class="c1"># We create a dictionary to map ambiguous bases to their consensus base</span>
 <span class="c1"># For example, ambigous_base_dict[&#39;ACGT&#39;] -&gt; &#39;N&#39;</span>
@@ -386,12 +386,7 @@ document.write(`
             <span class="n">value_y</span> <span class="o">=</span> <span class="n">match_y</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">value_x</span><span class="p">[</span><span class="mi">13</span><span class="p">:</span><span class="mi">21</span><span class="p">]</span> <span class="o">==</span> <span class="n">value_y</span><span class="p">[</span><span class="mi">13</span><span class="p">:</span><span class="mi">21</span><span class="p">]:</span>
                 <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">match_x</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">+</span> <span class="mi">13</span><span class="p">,</span> <span class="n">match_y</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">+</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-    <span class="c1"># Unique values (keeping the order)</span>
-    <span class="n">unique_out</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">unique_out</span><span class="p">:</span>
-            <span class="n">unique_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">unique_out</span></div>
+    <span class="k">return</span> <span class="n">deduplicate</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
 
 
 

@@ -1097,31 +1097,39 @@ document.write(`
 <div class="viewcode-block" id="cuts_overlap">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.cuts_overlap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cuts_overlap</span><span class="p">(</span><span class="n">left_cut</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return True if two cuts overlap on a circular sequence.</span>
 
-    <span class="c1"># Special cases:</span>
+<span class="sd">    Uses the standard split approach for circular ranges: wrapping ranges</span>
+<span class="sd">    (start &gt; end) are split into two linear segments, then all segment</span>
+<span class="sd">    pairs are checked for overlap.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">left_cut</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">right_cut</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">left_cut</span> <span class="o">==</span> <span class="n">right_cut</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="c1"># This block of code would not be necessary if the cuts were</span>
-    <span class="c1"># initially represented like this</span>
     <span class="p">(</span><span class="n">left_watson</span><span class="p">,</span> <span class="n">left_ovhg</span><span class="p">),</span> <span class="n">_</span> <span class="o">=</span> <span class="n">left_cut</span>
     <span class="p">(</span><span class="n">right_watson</span><span class="p">,</span> <span class="n">right_ovhg</span><span class="p">),</span> <span class="n">_</span> <span class="o">=</span> <span class="n">right_cut</span>
-    <span class="c1"># Position of the cut on the crick strands on the left and right</span>
-    <span class="n">left_crick</span> <span class="o">=</span> <span class="n">left_watson</span> <span class="o">-</span> <span class="n">left_ovhg</span>
-    <span class="n">right_crick</span> <span class="o">=</span> <span class="n">right_watson</span> <span class="o">-</span> <span class="n">right_ovhg</span>
-    <span class="k">if</span> <span class="n">left_crick</span> <span class="o">&gt;=</span> <span class="n">seq_len</span><span class="p">:</span>
-        <span class="n">left_crick</span> <span class="o">-=</span> <span class="n">seq_len</span>
-        <span class="n">left_watson</span> <span class="o">-=</span> <span class="n">seq_len</span>
-    <span class="k">if</span> <span class="n">right_crick</span> <span class="o">&gt;=</span> <span class="n">seq_len</span><span class="p">:</span>
-        <span class="n">right_crick</span> <span class="o">-=</span> <span class="n">seq_len</span>
-        <span class="n">right_watson</span> <span class="o">-=</span> <span class="n">seq_len</span>
+    <span class="n">left_crick</span> <span class="o">=</span> <span class="p">(</span><span class="n">left_watson</span> <span class="o">-</span> <span class="n">left_ovhg</span><span class="p">)</span> <span class="o">%</span> <span class="n">seq_len</span>
+    <span class="n">right_crick</span> <span class="o">=</span> <span class="p">(</span><span class="n">right_watson</span> <span class="o">-</span> <span class="n">right_ovhg</span><span class="p">)</span> <span class="o">%</span> <span class="n">seq_len</span>
+    <span class="n">left_watson</span> <span class="o">=</span> <span class="n">left_watson</span> <span class="o">%</span> <span class="n">seq_len</span>
+    <span class="n">right_watson</span> <span class="o">=</span> <span class="n">right_watson</span> <span class="o">%</span> <span class="n">seq_len</span>
 
-    <span class="c1"># Convert into ranges x and y and see if ranges overlap</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">left_watson</span><span class="p">,</span> <span class="n">left_crick</span><span class="p">])</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">right_watson</span><span class="p">,</span> <span class="n">right_crick</span><span class="p">])</span>
-    <span class="c1"># if (x[1] &gt;= y[0]) != (y[1] &lt;= x[0]):</span>
-    <span class="c1">#     breakpoint()</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># (x[1] &gt; y[0]) != (y[1] &lt; x[0])</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">arc_bounds</span><span class="p">(</span><span class="n">watson</span><span class="p">,</span> <span class="n">crick</span><span class="p">,</span> <span class="n">ovhg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return (start, end) for the arc containing the overhang.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ovhg</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">crick</span><span class="p">,</span> <span class="n">watson</span>  <span class="c1"># arc from crick to watson</span>
+        <span class="k">return</span> <span class="n">watson</span><span class="p">,</span> <span class="n">crick</span>  <span class="c1"># arc from watson to crick (may wrap)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">segments</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Split circular range into linear segments.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="n">seq_len</span><span class="p">),</span> <span class="p">(</span><span class="n">start</span> <span class="o">-</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">end</span><span class="p">)]</span>
+
+    <span class="k">for</span> <span class="n">s1</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">(</span><span class="o">*</span><span class="n">arc_bounds</span><span class="p">(</span><span class="n">left_watson</span><span class="p">,</span> <span class="n">left_crick</span><span class="p">,</span> <span class="n">left_ovhg</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">(</span><span class="o">*</span><span class="n">arc_bounds</span><span class="p">(</span><span class="n">right_watson</span><span class="p">,</span> <span class="n">right_crick</span><span class="p">,</span> <span class="n">right_ovhg</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">s1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">s2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">s1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">s2</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
 
 
 
@@ -1279,6 +1287,26 @@ document.write(`
         <span class="k">return</span> <span class="n">SimpleLocation</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">shift_location</span><span class="p">(</span><span class="n">SimpleLocation</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="n">lim</span><span class="p">,</span> <span class="n">strand</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lim</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="deduplicate">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.deduplicate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">deduplicate</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove duplicates from an iterable while preserving order.</span>
+
+<span class="sd">    &gt;&gt;&gt; deduplicate([3, 1, 2, 1, 3, 4])</span>
+<span class="sd">    [3, 1, 2, 4]</span>
+<span class="sd">    &gt;&gt;&gt; deduplicate([(1, 2), (3, 4), (1, 2)])</span>
+<span class="sd">    [(1, 2), (3, 4)]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">iterable</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
 
 </pre></div>
 

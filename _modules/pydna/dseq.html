@@ -359,6 +359,7 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rc</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">flatten</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">cuts_overlap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">deduplicate</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">basepair_dict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">dscode_to_watson_table</span>
@@ -370,6 +371,8 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">dscode_to_crick_tail_table</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">complement_table_for_dscode</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">letters_not_in_dscode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">ss_letters_watson</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">ss_letters_crick</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_parts</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">representation_tuple</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">dsbreaks</span>
@@ -393,6 +396,17 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="nb">bytearray</span> <span class="o">|</span> <span class="nb">memoryview</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
 
+<div class="viewcode-block" id="CircularBytes.shifted">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.CircularBytes.shifted">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shifted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shift</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;CircularBytes&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Shift the sequence by the given number of bases.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">shift</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">CircularBytes</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">shift</span><span class="p">:]</span> <span class="o">+</span> <span class="bp">self</span><span class="p">[:</span><span class="n">shift</span><span class="p">])</span></div>
+
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -411,17 +425,20 @@ document.write(`
 
             <span class="k">if</span> <span class="n">step</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">start</span>
-                <span class="n">stop</span> <span class="o">=</span> <span class="n">n</span> <span class="k">if</span> <span class="n">stop</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">stop</span>
+                <span class="k">if</span> <span class="n">stop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">stop</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">stop</span> <span class="o">=</span> <span class="n">n</span>
                 <span class="k">while</span> <span class="n">stop</span> <span class="o">&lt;=</span> <span class="n">start</span><span class="p">:</span>
                     <span class="n">stop</span> <span class="o">+=</span> <span class="n">n</span>
-                <span class="n">rng</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">start</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">start</span>
                 <span class="n">stop</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">stop</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">stop</span>
                 <span class="k">while</span> <span class="n">stop</span> <span class="o">&gt;=</span> <span class="n">start</span><span class="p">:</span>
                     <span class="n">stop</span> <span class="o">-=</span> <span class="n">n</span>
-                <span class="n">rng</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
 
+            <span class="n">rng</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
             <span class="n">limit</span> <span class="o">=</span> <span class="n">n</span> <span class="k">if</span> <span class="n">step</span> <span class="o">%</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">n</span> <span class="o">*</span> <span class="mi">2</span>
             <span class="n">out</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
             <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
@@ -487,6 +504,26 @@ document.write(`
         <span class="k">if</span> <span class="n">pos</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">pos</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
             <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">return</span> <span class="n">pos</span></div>
+
+
+<div class="viewcode-block" id="CircularBytes.replace_with">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.CircularBytes.replace_with">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">replace_with</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">replacement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;CircularBytes&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Replace the subsequence between start and end with the replacement.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shifted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shifted</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="n">start</span><span class="p">:</span>
+            <span class="n">end</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">replacement</span><span class="p">)</span> <span class="o">!=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Replacement length must match the length of the subsequence&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">shifted</span> <span class="o">=</span> <span class="n">CircularBytes</span><span class="p">(</span><span class="n">replacement</span> <span class="o">+</span> <span class="n">shifted</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">replacement</span><span class="p">)</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="n">shifted</span><span class="o">.</span><span class="n">shifted</span><span class="p">(</span><span class="o">-</span><span class="n">start</span><span class="p">)</span></div>
 </div>
 
 
@@ -865,7 +902,7 @@ document.write(`
                     <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">basepair_dict</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
                 <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Base mismatch in representation </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Base mismatch in representation: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Base mismatch in representation: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
             <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
 
@@ -1311,10 +1348,12 @@ document.write(`
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;DNA is not circular.&quot;</span><span class="p">)</span>
         <span class="n">shift</span> <span class="o">=</span> <span class="n">shift</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">shift</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">out</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">shift</span><span class="p">:]</span> <span class="o">+</span> <span class="bp">self</span><span class="p">[:</span><span class="n">shift</span><span class="p">])</span><span class="o">.</span><span class="n">looped</span><span class="p">()</span></div>
+            <span class="n">out</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">shift</span><span class="p">:]</span> <span class="o">+</span> <span class="n">out</span><span class="o">.</span><span class="n">_data</span><span class="p">[:</span><span class="n">shift</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">out</span></div>
 
 
 <div class="viewcode-block" id="Dseq.looped">
@@ -2791,14 +2830,22 @@ document.write(`
         <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">regex</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">cutfrom</span><span class="p">):</span>
 
             <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">lastgroup</span> <span class="o">==</span> <span class="s2">&quot;watson&quot;</span><span class="p">:</span>
-                <span class="n">cut1</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">+</span> <span class="n">spacer</span>
-                <span class="n">cut2</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">end</span><span class="p">()</span> <span class="o">+</span> <span class="n">spacer</span>
+                <span class="n">cut1</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">-</span> <span class="n">spacer</span>
+                <span class="n">cut2</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">end</span><span class="p">()</span> <span class="o">-</span> <span class="n">spacer</span>
                 <span class="n">watson_cuts</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cut1</span><span class="p">,</span> <span class="n">cut2</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">assert</span> <span class="n">m</span><span class="o">.</span><span class="n">lastgroup</span> <span class="o">==</span> <span class="s2">&quot;crick&quot;</span>
-                <span class="n">cut1</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">+</span> <span class="n">spacer</span>
-                <span class="n">cut2</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">end</span><span class="p">()</span> <span class="o">+</span> <span class="n">spacer</span>
+                <span class="n">cut1</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">-</span> <span class="n">spacer</span>
+                <span class="n">cut2</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">end</span><span class="p">()</span> <span class="o">-</span> <span class="n">spacer</span>
                 <span class="n">crick_cuts</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cut1</span><span class="p">,</span> <span class="n">cut2</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
+            <span class="n">watson_cuts</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span><span class="n">cut</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cut</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">cut</span> <span class="ow">in</span> <span class="n">watson_cuts</span> <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="n">crick_cuts</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span><span class="n">cut</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cut</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">cut</span> <span class="ow">in</span> <span class="n">crick_cuts</span> <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="p">]</span>
 
         <span class="k">return</span> <span class="n">watson_cuts</span><span class="p">,</span> <span class="n">crick_cuts</span></div>
 
@@ -2834,6 +2881,25 @@ document.write(`
 <span class="sd">        See get_ss_meltsites for melting of single stranded regions from</span>
 <span class="sd">        molecules.</span>
 
+<span class="sd">        Positive overhangs come from watson matches from regex_ds_melt_factory,</span>
+<span class="sd">        negative overhangs come from crick matches. That gives you a clue of</span>
+<span class="sd">        where the dsDNA part is located on each side:</span>
+
+<span class="sd">        ::</span>
+
+<span class="sd">            Watson cut - positive overhang (4, 3):</span>
+<span class="sd">            Crick cut - negative overhang (14, -2):</span>
+
+<span class="sd">               04          14</span>
+<span class="sd">               &gt;&lt;          &gt;&lt;</span>
+<span class="sd">            sDDD  DDDDDD  DDs</span>
+<span class="sd">             DDDssDDDDDDssDD</span>
+
+<span class="sd">        ``&gt;&lt;`` denotes the fact that the watson value of the cut represents the</span>
+<span class="sd">        position between letters, not the index of the letters themselves.</span>
+
+<span class="sd">        This information is used in the `shift_melt_cutsite_pairs` method.</span>
+
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt; from pydna.dseq import Dseq</span>
@@ -2851,7 +2917,7 @@ document.write(`
         <span class="k">if</span> <span class="n">length</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">tuple</span><span class="p">()</span>
 
-        <span class="n">regex</span> <span class="o">=</span> <span class="n">regex_ds_melt_factory</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
+        <span class="n">regex</span> <span class="o">=</span> <span class="n">regex_ds_melt_factory</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
             <span class="n">spacer</span> <span class="o">=</span> <span class="n">length</span>
@@ -2872,6 +2938,8 @@ document.write(`
 
             <span class="n">cuts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cut</span><span class="p">)</span>
 
+        <span class="c1"># Remove cuts from circular sequences starting in the padding</span>
+        <span class="n">cuts</span> <span class="o">=</span> <span class="p">[</span><span class="n">cut</span> <span class="k">for</span> <span class="n">cut</span> <span class="ow">in</span> <span class="n">cuts</span> <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">cut</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))]</span>
         <span class="k">return</span> <span class="n">cuts</span></div>
 
 
@@ -2989,8 +3057,19 @@ document.write(`
         <span class="n">cutsites</span> <span class="o">=</span> <span class="n">new</span><span class="o">.</span><span class="n">get_ds_meltsites</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
 
         <span class="n">cutsite_pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cutsite_pairs</span><span class="p">(</span><span class="n">cutsites</span><span class="p">)</span>
+        <span class="n">cutsite_pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shift_melt_cutsite_pairs</span><span class="p">(</span><span class="n">cutsite_pairs</span><span class="p">)</span>
 
-        <span class="n">result</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">new</span><span class="o">.</span><span class="n">apply_cut</span><span class="p">(</span><span class="o">*</span><span class="n">cutsite_pair</span><span class="p">)</span> <span class="k">for</span> <span class="n">cutsite_pair</span> <span class="ow">in</span> <span class="n">cutsite_pairs</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">new</span><span class="o">.</span><span class="n">apply_cut</span><span class="p">(</span><span class="o">*</span><span class="n">cutsite_pair</span><span class="p">,</span> <span class="n">allow_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">cutsite_pair</span> <span class="ow">in</span> <span class="n">cutsite_pairs</span>
+        <span class="p">)</span>
+        <span class="c1"># Special case for a case like circular AGEEGaGJJJg, where two ssDNAs should be returned.</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">circular</span>
+            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cutsite_pairs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+            <span class="ow">and</span> <span class="n">cuts_overlap</span><span class="p">(</span><span class="o">*</span><span class="n">cutsite_pairs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">new</span><span class="p">])</span> <span class="k">if</span> <span class="n">strands</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">result</span> <span class="k">else</span> <span class="n">result</span>
 
@@ -3117,26 +3196,28 @@ document.write(`
         <span class="n">crick_cutpairs</span> <span class="o">=</span> <span class="n">crick_cutpairs</span> <span class="ow">or</span> <span class="nb">list</span><span class="p">()</span>
         <span class="n">strands</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">new</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="n">CircularBytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">watson_cutpairs</span><span class="p">:</span>
             <span class="n">stuffer</span> <span class="o">=</span> <span class="n">new</span><span class="p">[</span><span class="n">x</span><span class="p">:</span><span class="n">y</span><span class="p">]</span>
             <span class="n">ss</span> <span class="o">=</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span><span class="n">new</span><span class="p">[</span><span class="n">x</span><span class="p">:</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_watson_tail_table</span><span class="p">))</span>
-            <span class="n">new</span><span class="p">[</span><span class="n">x</span><span class="p">:</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">stuffer</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_crick_tail_table</span><span class="p">)</span>
+            <span class="n">new</span> <span class="o">=</span> <span class="n">new</span><span class="o">.</span><span class="n">replace_with</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">stuffer</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_crick_tail_table</span><span class="p">))</span>
             <span class="n">strands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ss</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">crick_cutpairs</span><span class="p">:</span>
             <span class="n">stuffer</span> <span class="o">=</span> <span class="n">new</span><span class="p">[</span><span class="n">x</span><span class="p">:</span><span class="n">y</span><span class="p">]</span>
             <span class="n">ss</span> <span class="o">=</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span><span class="n">stuffer</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_crick_tail_table</span><span class="p">))</span>
-            <span class="n">new</span><span class="p">[</span><span class="n">x</span><span class="p">:</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">stuffer</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_watson_tail_table</span><span class="p">)</span>
+            <span class="n">new</span> <span class="o">=</span> <span class="n">new</span><span class="o">.</span><span class="n">replace_with</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">stuffer</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_watson_tail_table</span><span class="p">))</span>
             <span class="n">strands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ss</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span><span class="n">new</span><span class="p">),</span> <span class="n">strands</span></div>
+        <span class="k">return</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">new</span><span class="p">),</span> <span class="n">circular</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">),</span> <span class="n">strands</span></div>
 
 
 <div class="viewcode-block" id="Dseq.apply_cut">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.apply_cut">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">apply_cut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left_cut</span><span class="p">:</span> <span class="n">CutSiteType</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">:</span> <span class="n">CutSiteType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Dseq&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_cut</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">left_cut</span><span class="p">:</span> <span class="n">CutSiteType</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">:</span> <span class="n">CutSiteType</span><span class="p">,</span> <span class="n">allow_overlap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Dseq&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts a subfragment of the sequence between two cuts.</span>
 
 <span class="sd">        For more detail see the documentation of get_cutsite_pairs.</span>
@@ -3191,11 +3272,13 @@ document.write(`
 <span class="sd">            GttCTTAA</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">cuts_overlap</span><span class="p">(</span><span class="n">left_cut</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">allow_overlap</span> <span class="ow">and</span> <span class="n">cuts_overlap</span><span class="p">(</span><span class="n">left_cut</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cuts by </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> overlap.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">left_cut</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">right_cut</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
         <span class="n">left_watson</span><span class="p">,</span> <span class="n">left_crick</span><span class="p">,</span> <span class="n">ovhg_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cut_parameters</span><span class="p">(</span><span class="n">left_cut</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="n">right_watson</span><span class="p">,</span> <span class="n">right_crick</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cut_parameters</span><span class="p">(</span><span class="n">right_cut</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">Dseq</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">[</span><span class="n">left_watson</span><span class="p">:</span><span class="n">right_watson</span><span class="p">]</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">dscode_to_watson_table</span><span class="p">),</span>
             <span class="bp">self</span><span class="p">[</span><span class="n">left_crick</span><span class="p">:</span><span class="n">right_crick</span><span class="p">]</span>
@@ -3259,6 +3342,92 @@ document.write(`
             <span class="n">cutsites</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutsites</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cutsites</span><span class="p">,</span> <span class="n">cutsites</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span></div>
+
+
+<div class="viewcode-block" id="Dseq.shift_melt_cutsite">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.shift_melt_cutsite">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shift_melt_cutsite</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">cutsite</span><span class="p">:</span> <span class="n">CutSiteType</span><span class="p">,</span> <span class="n">is_right</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Shifts a melt cutsite pair so that it only comprises the dsDNA part.</span>
+
+<span class="sd">        See the documentation of get_ds_meltsites for more information.</span>
+
+<span class="sd">        For ovhg &gt; 0:</span>
+
+<span class="sd">                               xxxxxx &lt;- gap when cut is left?</span>
+<span class="sd">        gap when cut is right?-&gt;  xxxxxx</span>
+
+<span class="sd">        For ovhg &lt; 0, the opposite happens.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">cutsite</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">iter_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="p">(</span><span class="n">watson</span><span class="p">,</span> <span class="n">ovhg</span><span class="p">),</span> <span class="n">enz</span> <span class="o">=</span> <span class="n">cutsite</span>
+        <span class="n">ss_crick_bytes</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">ss_letters_crick</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">))</span>
+        <span class="n">ss_watson_bytes</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">ss_letters_watson</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">))</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">CircularBytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">within_sequence</span><span class="p">(</span><span class="n">pos</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="k">nonlocal</span> <span class="n">iter_count</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">n</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">iter_count</span> <span class="o">&lt;</span> <span class="n">n</span>
+                <span class="n">iter_count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="n">output</span>
+
+        <span class="k">if</span> <span class="n">ovhg</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">is_right</span><span class="p">:</span>
+                <span class="n">prev_pos</span> <span class="o">=</span> <span class="n">watson</span> <span class="o">-</span> <span class="n">ovhg</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="k">while</span> <span class="n">within_sequence</span><span class="p">(</span><span class="n">prev_pos</span><span class="p">)</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="n">prev_pos</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ss_watson_bytes</span><span class="p">:</span>
+                    <span class="n">ovhg</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">prev_pos</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">while</span> <span class="n">within_sequence</span><span class="p">(</span><span class="n">watson</span><span class="p">)</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="n">watson</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ss_crick_bytes</span><span class="p">:</span>
+                    <span class="n">ovhg</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">watson</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">ovhg</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">is_right</span><span class="p">:</span>
+                <span class="k">while</span> <span class="p">(</span>
+                    <span class="n">within_sequence</span><span class="p">(</span><span class="n">watson</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="n">watson</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ss_crick_bytes</span>
+                <span class="p">):</span>
+                    <span class="n">ovhg</span> <span class="o">-=</span> <span class="mi">1</span>
+                    <span class="n">watson</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">next_pos</span> <span class="o">=</span> <span class="n">watson</span> <span class="o">-</span> <span class="n">ovhg</span>
+                <span class="k">while</span> <span class="n">within_sequence</span><span class="p">(</span><span class="n">next_pos</span><span class="p">)</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="n">next_pos</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ss_watson_bytes</span><span class="p">:</span>
+                    <span class="n">ovhg</span> <span class="o">-=</span> <span class="mi">1</span>
+                    <span class="n">next_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
+            <span class="n">watson</span> <span class="o">%=</span> <span class="n">n</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">watson</span><span class="p">,</span> <span class="n">ovhg</span><span class="p">),</span> <span class="n">enz</span></div>
+
+
+<div class="viewcode-block" id="Dseq.shift_melt_cutsite_pairs">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.shift_melt_cutsite_pairs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shift_melt_cutsite_pairs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">cutsite_pairs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">CutSiteType</span><span class="p">,</span> <span class="n">CutSiteType</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">CutSiteType</span><span class="p">,</span> <span class="n">CutSiteType</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes a list of cutsite pairs that will be applied to a sequence with parts with ssDNA, and shifts them</span>
+<span class="sd">        so that they only comprise the dsDNA part.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">new_cutsite_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="ow">in</span> <span class="n">cutsite_pairs</span><span class="p">:</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shift_melt_cutsite</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shift_melt_cutsite</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">new_cutsite_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">(((</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
+            <span class="n">new_cutsite_pairs</span> <span class="o">=</span> <span class="n">deduplicate</span><span class="p">(</span><span class="n">new_cutsite_pairs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_cutsite_pairs</span></div>
 
 
 <div class="viewcode-block" id="Dseq.get_parts">

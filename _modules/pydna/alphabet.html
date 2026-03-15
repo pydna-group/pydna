@@ -1230,7 +1230,7 @@ document.write(`
 
 <div class="viewcode-block" id="regex_ds_melt_factory">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.alphabet.regex_ds_melt_factory">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">regex_ds_melt_factory</span><span class="p">(</span><span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">regex_ds_melt_factory</span><span class="p">(</span><span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">circular</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A regular expression for finding double-stranded regions flanked by single-stranded DNA</span>
 <span class="sd">    that can be melted to shed multiple double stranded fragments.</span>
@@ -1250,11 +1250,35 @@ document.write(`
 <span class="sd">        aaaG TTACAttt   &lt;-- &quot;TTA&quot; is found by the regex for length &lt;= 3</span>
 <span class="sd">        tttCTAAT Taaa</span>
 
+<span class="sd">    The name of the capture groups (watson and crick) identifies the ssDNA</span>
+<span class="sd">    strand on the left side of the dsDNA. For example:</span>
+
+<span class="sd">    ::</span>
+<span class="sd">        gCtC  CTTCtC  CTg</span>
+<span class="sd">         GaGAAGAAGaGAAGA</span>
+
+<span class="sd">    The first capture group CtC starts with ssDNA on the watson strand,</span>
+<span class="sd">    then dsDNA, then ssNDA on the crick strand and the match will be</span>
+<span class="sd">    ``{&#39;watson&#39;: b&#39;CtC&#39;, &#39;crick&#39;: None}``.</span>
+
+<span class="sd">    The second capture group CTg starts with ssDNA on the crick strand,</span>
+<span class="sd">    then dsDNA, then ssNDA on the watson strand and the match will be</span>
+<span class="sd">    ``{&#39;watson&#39;: None, &#39;crick&#39;: b&#39;CTg&#39;}``.</span>
+
+<span class="sd">    This can be slightly confusing if there are no overhangs, for example:</span>
+
+<span class="sd">    ::</span>
+<span class="sd">        CtC  CTTCtC  CT</span>
+<span class="sd">        GaGAAGAAGaGAAGA</span>
+
+<span class="sd">    Will give ``{&#39;watson&#39;: b&#39;CtC&#39;, &#39;crick&#39;: None}``, because it &quot;could have</span>
+<span class="sd">    started&quot; with the ssDNA on the watson strand, but not on the crick strand.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
 <span class="sd">    &gt;&gt;&gt; from pydna.dseq import Dseq</span>
-<span class="sd">    &gt;&gt;&gt; regex = regex_ds_melt_factory(3)</span>
+<span class="sd">    &gt;&gt;&gt; regex = regex_ds_melt_factory(3, False)</span>
 <span class="sd">    &gt;&gt;&gt; s = Dseq(&quot;aaaGFTTAIAttt&quot;)</span>
 <span class="sd">    &gt;&gt;&gt; s</span>
 <span class="sd">    Dseq(-13)</span>
@@ -1269,21 +1293,26 @@ document.write(`
 <span class="sd">    length : int</span>
 <span class="sd">        Max length of double stranded region flanked by single stranded</span>
 <span class="sd">        regions.</span>
+<span class="sd">    circular : bool</span>
+<span class="sd">        Whether the sequence is circular.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    TYPE</span>
+<span class="sd">    re.Pattern</span>
 <span class="sd">        regular expression object.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">start_if_not_circular</span> <span class="o">=</span> <span class="s2">&quot;|^&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">circular</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">end_if_not_circular</span> <span class="o">=</span> <span class="s2">&quot;|$&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">circular</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+
     <span class="n">regex</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;(?P&lt;watson&gt;((?&lt;=[</span><span class="si">{</span><span class="n">ss_letters_watson</span><span class="si">}</span><span class="s2">])|^)&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;(?P&lt;watson&gt;((?&lt;=[</span><span class="si">{</span><span class="n">ss_letters_watson</span><span class="si">}</span><span class="s2">])</span><span class="si">{</span><span class="n">start_if_not_circular</span><span class="si">}</span><span class="s2">)&quot;</span>
         <span class="sa">f</span><span class="s2">&quot;([</span><span class="si">{</span><span class="n">ds_letters</span><span class="si">}</span><span class="s2">]</span><span class="se">{{</span><span class="s2">1,</span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="se">}}</span><span class="s2">)&quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;((?=[^</span><span class="si">{</span><span class="n">ss_letters_watson</span><span class="si">}{</span><span class="n">ds_letters</span><span class="si">}</span><span class="s2">])|$))|&quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;(?P&lt;crick&gt;((?&lt;=[</span><span class="si">{</span><span class="n">ss_letters_crick</span><span class="si">}</span><span class="s2">])|^)&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;((?=[</span><span class="si">{</span><span class="n">ss_letters_crick</span><span class="si">}</span><span class="s2">])</span><span class="si">{</span><span class="n">end_if_not_circular</span><span class="si">}</span><span class="s2">))|&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;(?P&lt;crick&gt;((?&lt;=[</span><span class="si">{</span><span class="n">ss_letters_crick</span><span class="si">}</span><span class="s2">])</span><span class="si">{</span><span class="n">start_if_not_circular</span><span class="si">}</span><span class="s2">)&quot;</span>
         <span class="sa">f</span><span class="s2">&quot;([</span><span class="si">{</span><span class="n">ds_letters</span><span class="si">}</span><span class="s2">]</span><span class="se">{{</span><span class="s2">1,</span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="se">}}</span><span class="s2">)&quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;((?=[^</span><span class="si">{</span><span class="n">ss_letters_crick</span><span class="si">}{</span><span class="n">ds_letters</span><span class="si">}</span><span class="s2">])|$))&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;((?=[</span><span class="si">{</span><span class="n">ss_letters_watson</span><span class="si">}</span><span class="s2">])</span><span class="si">{</span><span class="n">end_if_not_circular</span><span class="si">}</span><span class="s2">))&quot;</span>
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">))</span></div>
