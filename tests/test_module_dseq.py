@@ -1754,3 +1754,38 @@ def test_melt_ss_dna():
 
         assert new_ds.melt_ss_dna(2)[1][0]._data == b"xe"
         assert new_ds.melt_ss_dna(2)[0] == product.shifted(shift)
+
+
+def test_join():
+
+    assert Dseq("").join([Dseq("a")] * 3) == Dseq("aaa")
+    assert Dseq("").join([Dseq("PaQ")] * 3) == Dseq.from_representation(
+        """
+        Dseq(-7)
+        GaGaGa
+         tCtCtC
+        """
+    )
+    assert Dseq("").join([Dseq("QaP")] * 3) == Dseq.from_representation(
+        """
+        Dseq(-7)
+         aGaGaG
+        CtCtCt
+        """
+    )
+    with pytest.raises(TypeError):
+        assert Dseq("").join([Dseq("PaQ"), Dseq("QaP")])
+    assert Dseq("PaQ").join([Dseq("PaQ"), Dseq("PaQ")]) == Dseq.from_representation(
+        """
+        Dseq(-7)
+        GaGaGa
+         tCtCtC
+        """
+    )
+    assert Dseq("PaQ").join([Dseq("PaQ")]) == Dseq.from_representation(
+        """
+        Dseq(-3)
+        Ga
+         tC
+        """
+    )

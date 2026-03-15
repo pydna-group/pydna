@@ -3056,3 +3056,30 @@ class Dseq(Seq):
 
         """
         return get_parts(self._data.decode("ascii"))
+
+    def join(self, fragments):
+        """
+        Join an iterable of Dseqs with this instance as the separator.
+
+        Example:
+
+        >>> sep = Dseq("a")
+        >>> joined = sep.join([Dseq("G"), Dseq("A"), Dseq("T"), Dseq("C")])
+        >>> joined
+        Dseq(-7)
+        GaAaTaC
+        CtTtAtG
+
+        """
+        it = iter(fragments)
+        try:
+            result = next(it)  # first element (no leading separator)
+        except StopIteration:
+            # Empty iterable -> return empty Dseq in analogy with
+            # str.join
+            return Dseq("")
+
+        # Interleave: result = first + sep + 2nd + sep + 3rd + ...
+        for x in it:
+            result = result + self + x
+        return result
