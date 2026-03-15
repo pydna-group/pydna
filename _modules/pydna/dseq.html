@@ -3533,6 +3533,36 @@ document.write(`
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_parts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Dseq.join">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.join">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fragments</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Join an iterable of Dseqs with this instance as the separator.</span>
+
+<span class="sd">        Example:</span>
+
+<span class="sd">        &gt;&gt;&gt; sep = Dseq(&quot;a&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; joined = sep.join([Dseq(&quot;G&quot;), Dseq(&quot;A&quot;), Dseq(&quot;T&quot;), Dseq(&quot;C&quot;)])</span>
+<span class="sd">        &gt;&gt;&gt; joined</span>
+<span class="sd">        Dseq(-7)</span>
+<span class="sd">        GaAaTaC</span>
+<span class="sd">        CtTtAtG</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">fragments</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>  <span class="c1"># first element (no leading separator)</span>
+        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+            <span class="c1"># Empty iterable -&gt; return empty Dseq in analogy with</span>
+            <span class="c1"># str.join</span>
+            <span class="k">return</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Interleave: result = first + sep + 2nd + sep + 3rd + ...</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">it</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">+</span> <span class="bp">self</span> <span class="o">+</span> <span class="n">x</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 </div>
 
 </pre></div>

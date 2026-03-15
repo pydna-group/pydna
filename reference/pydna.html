@@ -536,6 +536,7 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.shift_melt_cutsite"><code class="docutils literal notranslate"><span class="pre">Dseq.shift_melt_cutsite()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.shift_melt_cutsite_pairs"><code class="docutils literal notranslate"><span class="pre">Dseq.shift_melt_cutsite_pairs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.get_parts"><code class="docutils literal notranslate"><span class="pre">Dseq.get_parts()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.join"><code class="docutils literal notranslate"><span class="pre">Dseq.join()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.read"><code class="docutils literal notranslate"><span class="pre">read()</span></code></a></li>
@@ -804,6 +805,7 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.shift_melt_cutsite"><code class="docutils literal notranslate"><span class="pre">Dseq.shift_melt_cutsite()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.shift_melt_cutsite_pairs"><code class="docutils literal notranslate"><span class="pre">Dseq.shift_melt_cutsite_pairs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.get_parts"><code class="docutils literal notranslate"><span class="pre">Dseq.get_parts()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.join"><code class="docutils literal notranslate"><span class="pre">Dseq.join()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -4806,6 +4808,21 @@ single_watson=’’, single_crick=’’)</p>
 <dd class="field-odd"><p>namedtuple</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydna.all.Dseq.join">
+<span class="sig-name descname"><span class="pre">join</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fragments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/dseq.html#Dseq.join"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.Dseq.join" title="Link to this definition">#</a></dt>
+<dd><p>Join an iterable of Dseqs with this instance as the separator.</p>
+<p>Example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sep</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">joined</span> <span class="o">=</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">),</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">),</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">),</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">joined</span>
+<span class="go">Dseq(-7)</span>
+<span class="go">GaAaTaC</span>
+<span class="go">CtTtAtG</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -10746,6 +10763,21 @@ single_watson=’’, single_crick=’’)</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="pydna.dseq.Dseq.join">
+<span class="sig-name descname"><span class="pre">join</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fragments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/dseq.html#Dseq.join"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.dseq.Dseq.join" title="Link to this definition">#</a></dt>
+<dd><p>Join an iterable of Dseqs with this instance as the separator.</p>
+<p>Example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sep</span> <span class="o">=</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">joined</span> <span class="o">=</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">),</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">),</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">),</span> <span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">joined</span>
+<span class="go">Dseq(-7)</span>
+<span class="go">GaAaTaC</span>
+<span class="go">CtTtAtG</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -15826,6 +15858,7 @@ the location spans the entire sequence (it’s not empty).
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.shift_melt_cutsite"><code class="docutils literal notranslate"><span class="pre">Dseq.shift_melt_cutsite()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.shift_melt_cutsite_pairs"><code class="docutils literal notranslate"><span class="pre">Dseq.shift_melt_cutsite_pairs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.get_parts"><code class="docutils literal notranslate"><span class="pre">Dseq.get_parts()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.join"><code class="docutils literal notranslate"><span class="pre">Dseq.join()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.read"><code class="docutils literal notranslate"><span class="pre">read()</span></code></a></li>
@@ -16094,6 +16127,7 @@ the location spans the entire sequence (it’s not empty).
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.shift_melt_cutsite"><code class="docutils literal notranslate"><span class="pre">Dseq.shift_melt_cutsite()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.shift_melt_cutsite_pairs"><code class="docutils literal notranslate"><span class="pre">Dseq.shift_melt_cutsite_pairs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.get_parts"><code class="docutils literal notranslate"><span class="pre">Dseq.get_parts()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.join"><code class="docutils literal notranslate"><span class="pre">Dseq.join()</span></code></a></li>
 </ul>
 </li>
 </ul>
