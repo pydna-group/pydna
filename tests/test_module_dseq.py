@@ -1789,3 +1789,95 @@ def test_join():
          tC
         """
     )
+
+
+def tests_misc():
+    from pydna.dseq import Dseq
+    from Bio.Restriction import Acc65I, NlaIV, KpnI, NotI
+
+    assert Dseq("aa").cut(NotI) == ()
+
+    obj = Dseq("GGTACC")
+
+    obj_Acc65I = obj.cut(Acc65I)
+    obj_KpnI = obj.cut(KpnI)
+    obj_NlaIV = obj.cut(NlaIV)
+
+    assert obj_Acc65I == (Dseq("GQZFJ"), Dseq("PXEIC"))
+    assert obj_KpnI == (Dseq("GPXEI"), Dseq("QZFJC"))
+    assert obj_NlaIV == (Dseq("GGT"), Dseq("ACC"))
+
+    assert obj == Dseq("").join(obj_Acc65I)
+    cobj = obj.looped()
+
+    for i in range(len(cobj) + 1):
+        shifted_obj = cobj.shifted(i)
+
+        assert shifted_obj.cut(Acc65I) == (Dseq("").join(obj_Acc65I[::-1]),)
+        assert shifted_obj.cut(KpnI) == (Dseq("").join(obj_KpnI[::-1]),)
+        assert shifted_obj.cut(NlaIV) == (Dseq("").join(obj_NlaIV[::-1]),)
+
+    from Bio.Restriction import (
+        KpnI,
+        Acc65I,
+        NlaIV,
+    )
+
+    obj = Dseq("GGTACCnnnGGtaCC")
+
+    obj_Acc65I = obj.cut(Acc65I)
+    obj_KpnI = obj.cut(KpnI)
+    obj_NlaIV = obj.cut(NlaIV)
+
+    assert obj_Acc65I == (Dseq("GQZFJ"), Dseq("PXEICnnnGQzfJ"), Dseq("PxeIC"))
+    assert obj_KpnI == (Dseq("GPXEI"), Dseq("QZFJCnnnGPxeI"), Dseq("QzfJC"))
+    assert obj_NlaIV == (Dseq("GGT"), Dseq("ACCnnnGGt"), Dseq("aCC"))
+
+
+def test_shifted2():
+    from pydna.dseq import Dseq
+
+    a = Dseq("gatc", circular=True)
+
+    assert a.shifted(1) == Dseq("atcg", circular=True)
+
+    assert a.shifted(4) == a
+
+    b = Dseq("gatc", circular=False)
+    with pytest.raises(TypeError):
+        b.shifted(1)
+
+    # Shifted with zero gives a copy of the sequence, not the same sequence
+    assert a.shifted(0) == a
+    assert a.shifted(0) is not a
+
+    x = Dseq("TPGJG", circular=True)
+
+    s = """
+    TGG G
+    A CGC
+
+    GG GT
+     CGCA
+
+    G GTG
+    CGCA
+
+     GTGG
+    GCA C
+
+    GTGG
+    CA CG
+
+    TGG G
+    A CGC
+    """
+
+    lines = [l.strip() for l in s.splitlines() if l.strip()]
+    repr_strings = [
+        "{}\n{}".format(lines[i], lines[i + 1]) for i in range(0, len(lines), 2)
+    ]
+
+    for i in range(len(x)):
+        assert x.shifted(i)._data == x._data[i:] + x._data[:i]
+        repr_strings[i] == "\n".join(repr(x).splitlines()[1:])
