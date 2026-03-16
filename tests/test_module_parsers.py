@@ -441,3 +441,8 @@ def test_permissive_parser_malformed_LOCUS_line():
 
 def test_permissive_parser_base_count_misplaced():
     read(f"{test_files}/broken_genbank_files/base_count_misplaced.gb")
+
+
+def parse_protein_error():
+    with pytest.raises("AssertionError"):
+        parse("sequence-OST4-Genbank.gp")
