@@ -172,26 +172,17 @@ def embl_gb_fasta(text):
                     handle.close()
                     continue
                 else:
-                    # hack to pick up molecule_type from FASTA header line
-                    if "protein" in first_line:
-                        parsed.annotations["molecule_type"] = "protein"
-                        parsed.annotations["topology"] = "linear"
-                    else:
-                        parsed.annotations["molecule_type"] = "DNA"
-            # else:
-            #     if _re.match(r"LOCUS\s+(\S+)\s+(\S+)\s+aa", " ".join(first_line)):
-            #         parsed.annotations["molecule_type"] = "protein"
-            #         parsed.annotations["topology"] = "linear"
+                    # molecule_type is not set by the Biopython FASTA parser
+                    parsed.annotations["molecule_type"] = "DNA"
         handle.close()
         # hack to pick up topology from FASTA and malformed gb files
         first_line = chunk.splitlines()[0].lower().split()
         parsed.annotations["topology"] = "linear"
         if "circular" in first_line:
             parsed.annotations["topology"] = "circular"
-        # assert parsed.annotations.get("topology"), "topology must be set"
-        assert parsed.annotations.get("molecule_type"), "molecule_type  must be set"
-        if not parsed.annotations.get("molecule_type"):
-            print(parsed)
+        molecule_type = parsed.annotations.get("molecule_type")
+        assert molecule_type, "molecule_type must be set"
+        assert molecule_type != "protein", "molecule_type can not be 'protein'"
         result_list.append(parsed)
     return tuple(result_list)
 
