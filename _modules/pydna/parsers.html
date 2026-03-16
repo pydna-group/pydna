@@ -336,8 +336,10 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span>
-
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqIO.InsdcIO</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenBankScanner</span><span class="p">,</span> <span class="n">GenBankIterator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqRecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqRecord</span>
@@ -397,6 +399,85 @@ document.write(`
 
 
 
+<div class="viewcode-block" id="CustomGenBankScanner">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.CustomGenBankScanner">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomGenBankScanner</span><span class="p">(</span><span class="n">GenBankScanner</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A custom GenBank scanner that parses the LOCUS line and extracts the name, size, molecule_type, topology and date</span>
+<span class="sd">    from malformed GenBank files.</span>
+
+<span class="sd">    For example, the following line:</span>
+
+<span class="sd">    ```</span>
+<span class="sd">        LOCUS       pKM265       4536 bp    DNA   circular  SYN        21-JUN-2013</span>
+<span class="sd">    ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_feed_first_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">consumer</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+        <span class="c1"># A regex for</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="sa">r</span><span class="s2">&quot;(?i)LOCUS\s+(?P&lt;name&gt;\S+)\s+(?P&lt;size&gt;\d+ bp)\s+(?P&lt;molecule_type&gt;\S+)(?:\s+(?P&lt;topology&gt;circular|linear))?(?:\s+.+\s+)?(?P&lt;date&gt;\d+-\w+-\d+)?&quot;</span><span class="p">,</span>
+            <span class="n">line</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pragma: no cover - I don&#39;t think this can happen, but JIC</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;LOCUS line cannot be parsed&quot;</span><span class="p">)</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">molecule_type</span><span class="p">,</span> <span class="n">topology</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+
+        <span class="n">consumer</span><span class="o">.</span><span class="n">locus</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">consumer</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">size</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">consumer</span><span class="o">.</span><span class="n">molecule_type</span><span class="p">(</span><span class="n">molecule_type</span><span class="p">)</span>
+        <span class="n">consumer</span><span class="o">.</span><span class="n">topology</span><span class="p">(</span><span class="n">topology</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="n">topology</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">consumer</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">date</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="CustomGenBankIterator">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.CustomGenBankIterator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomGenBankIterator</span><span class="p">(</span><span class="n">GenBankIterator</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GenBankIterator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;GenBank&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">records</span> <span class="o">=</span> <span class="n">CustomGenBankScanner</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">parse_records</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="parse_genbank">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.parse_genbank">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_genbank</span><span class="p">(</span><span class="n">handle</span><span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SeqRecord</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Equivalent to SeqIO.read(handle, &quot;genbank&quot;) but with more permissive parsing for the LOCUS line. It also</span>
+<span class="sd">    removes BASE_COUNT lines that can be misplaced and anyway are not stored in the SeqRecord.annotations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">filtered_lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">handle</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;BASE COUNT&quot;</span><span class="p">):</span>
+            <span class="n">filtered_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="n">filtered_handle</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filtered_lines</span><span class="p">))</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># This may raise a ValueError such as &quot;LOCUS line does not contain space at position X&quot;</span>
+        <span class="c1"># then use the more permissive CustomGenBankIterator</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filtered_handle</span><span class="p">,</span> <span class="s2">&quot;genbank&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Sometimes the line is enough to parse the record, but not enough to parse the topology,</span>
+        <span class="c1"># then raise an error starting with &quot;LOCUS line does not contain&quot; to trigger the</span>
+        <span class="c1"># more permissive CustomGenBankIterator</span>
+        <span class="k">if</span> <span class="s2">&quot;topology&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;LOCUS line does not contain topology&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">parsed</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;LOCUS line does not contain&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">e</span>
+        <span class="n">filtered_handle</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;LOCUS line is wrongly formatted, we used a more permissive parser.&quot;</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">CustomGenBankIterator</span><span class="p">(</span><span class="n">filtered_handle</span><span class="p">))</span></div>
+
+
+
 <div class="viewcode-block" id="embl_gb_fasta">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.embl_gb_fasta">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">embl_gb_fasta</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
@@ -410,11 +491,9 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">chunks</span><span class="p">,</span> <span class="n">gaps</span> <span class="o">=</span> <span class="n">extract_from_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
     <span class="n">result_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="c1"># topology = &quot;linear&quot;</span>
 
     <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
         <span class="n">handle</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
-        <span class="c1"># circular = False</span>
         <span class="n">first_line</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">parsed</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s2">&quot;embl&quot;</span><span class="p">)</span>
@@ -422,7 +501,7 @@ document.write(`
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="n">handle</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">parsed</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s2">&quot;genbank&quot;</span><span class="p">)</span>
+                <span class="n">parsed</span> <span class="o">=</span> <span class="n">parse_genbank</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
                 <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;pydna_parse_sequence_file_format&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;genbank&quot;</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="n">handle</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -433,26 +512,17 @@ document.write(`
                     <span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
                     <span class="k">continue</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="c1"># hack to pick up molecule_type from FASTA header line</span>
-                    <span class="k">if</span> <span class="s2">&quot;protein&quot;</span> <span class="ow">in</span> <span class="n">first_line</span><span class="p">:</span>
-                        <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;protein&quot;</span>
-                        <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;topology&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;DNA&quot;</span>
-            <span class="c1"># else:</span>
-            <span class="c1">#     if _re.match(r&quot;LOCUS\s+(\S+)\s+(\S+)\s+aa&quot;, &quot; &quot;.join(first_line)):</span>
-            <span class="c1">#         parsed.annotations[&quot;molecule_type&quot;] = &quot;protein&quot;</span>
-            <span class="c1">#         parsed.annotations[&quot;topology&quot;] = &quot;linear&quot;</span>
+                    <span class="c1"># molecule_type is not set by the Biopython FASTA parser</span>
+                    <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;DNA&quot;</span>
         <span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="c1"># hack to pick up topology from FASTA and malformed gb files</span>
         <span class="n">first_line</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
         <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;topology&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>
         <span class="k">if</span> <span class="s2">&quot;circular&quot;</span> <span class="ow">in</span> <span class="n">first_line</span><span class="p">:</span>
             <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;topology&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;circular&quot;</span>
-        <span class="c1"># assert parsed.annotations.get(&quot;topology&quot;), &quot;topology must be set&quot;</span>
-        <span class="k">assert</span> <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">),</span> <span class="s2">&quot;molecule_type  must be set&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span>
+        <span class="n">molecule_type</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">molecule_type</span><span class="p">,</span> <span class="s2">&quot;molecule_type must be set&quot;</span>
+        <span class="k">assert</span> <span class="n">molecule_type</span> <span class="o">!=</span> <span class="s2">&quot;protein&quot;</span><span class="p">,</span> <span class="s2">&quot;molecule_type can not be &#39;protein&#39;&quot;</span>
         <span class="n">result_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parsed</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">result_list</span><span class="p">)</span></div>
 
@@ -460,7 +530,7 @@ document.write(`
 
 <div class="viewcode-block" id="parse">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.parse">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span> <span class="o">|</span> <span class="n">SeqRecord</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_path</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span> <span class="o">|</span> <span class="n">SeqRecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return *all* DNA sequences found in data.</span>
 
 <span class="sd">    If no sequences are found, an empty list is returned. This is a greedy</span>
@@ -489,6 +559,10 @@ document.write(`
 <span class="sd">        If False single stranded :class:`Bio.SeqRecord` [#]_ objects are</span>
 <span class="sd">        returned.</span>
 
+<span class="sd">    is_path : bool, optional</span>
+<span class="sd">        If True, the data is treated as a path to a file. If False, the data is treated as a string (e.g. FASTA file content).</span>
+<span class="sd">        If None, both are tried.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list</span>
@@ -512,37 +586,37 @@ document.write(`
     <span class="n">sequences</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># item is a path to a utf-8 encoded text file?</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">raw</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-            <span class="c1"># item was not a path, add sequences parsed from item</span>
-            <span class="n">raw</span> <span class="o">=</span> <span class="n">item</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># item was a readable text file, seqences are parsed from the file</span>
+        <span class="k">if</span> <span class="n">is_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">item</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="n">is_path</span><span class="p">:</span>
             <span class="n">path</span> <span class="o">=</span> <span class="n">item</span>
-        <span class="k">finally</span><span class="p">:</span>
-            <span class="n">newsequences</span> <span class="o">=</span> <span class="n">embl_gb_fasta</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">newsequences</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">ds</span> <span class="ow">and</span> <span class="n">path</span><span class="p">:</span>
-                    <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">UploadedFileSource</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
 
-                    <span class="n">result</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="o">.</span><span class="n">from_SeqRecord</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-                    <span class="n">result</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">UploadedFileSource</span><span class="p">(</span>
-                        <span class="n">file_name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>  <span class="c1"># we use str to handle PosixPath</span>
-                        <span class="n">sequence_file_format</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span>
-                            <span class="s2">&quot;pydna_parse_sequence_file_format&quot;</span>
-                        <span class="p">],</span>
-                        <span class="n">index_in_file</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                    <span class="p">)</span>
-                    <span class="n">sequences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-                    <span class="c1"># sequences.append(_GenbankFile.from_SeqRecord(s, path=path))</span>
-                <span class="k">elif</span> <span class="n">ds</span><span class="p">:</span>
-                    <span class="n">sequences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Dseqrecord</span><span class="o">.</span><span class="n">from_SeqRecord</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">sequences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">raw</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">raw</span> <span class="o">=</span> <span class="n">item</span>
+
+        <span class="n">newsequences</span> <span class="o">=</span> <span class="n">embl_gb_fasta</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">newsequences</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ds</span> <span class="ow">and</span> <span class="n">path</span><span class="p">:</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">UploadedFileSource</span>
+
+                <span class="n">result</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="o">.</span><span class="n">from_SeqRecord</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">UploadedFileSource</span><span class="p">(</span>
+                    <span class="n">file_name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>  <span class="c1"># we use str to handle PosixPath</span>
+                    <span class="n">sequence_file_format</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span>
+                        <span class="s2">&quot;pydna_parse_sequence_file_format&quot;</span>
+                    <span class="p">],</span>
+                    <span class="n">index_in_file</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">sequences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ds</span><span class="p">:</span>
+                <span class="n">sequences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Dseqrecord</span><span class="o">.</span><span class="n">from_SeqRecord</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sequences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">sequences</span></div>
 
 

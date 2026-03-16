@@ -338,7 +338,7 @@ document.write(`
 
 <div class="viewcode-block" id="read">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.read">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">read</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This function is similar the :func:`parse` function but expects one and only</span>
 <span class="sd">    one sequence or and exception is thrown.</span>
 
@@ -349,6 +349,9 @@ document.write(`
 <span class="sd">    ds : bool</span>
 <span class="sd">        Double stranded or single stranded DNA, if True return</span>
 <span class="sd">        Dseqrecord objects, else Bio.SeqRecord objects.</span>
+<span class="sd">    is_path : bool, optional</span>
+<span class="sd">        If True, the data is treated as a path to a file. If False, the data is treated as a string (e.g. FASTA file content).</span>
+<span class="sd">        If None, both are tried.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -367,7 +370,7 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="p">(</span><span class="n">result</span><span class="p">,)</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">result</span><span class="p">,)</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">is_path</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
 

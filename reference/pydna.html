@@ -1165,6 +1165,9 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pydna.parsers">pydna.parsers module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.parsers.extract_from_text"><code class="docutils literal notranslate"><span class="pre">extract_from_text()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.parsers.CustomGenBankScanner"><code class="docutils literal notranslate"><span class="pre">CustomGenBankScanner</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.parsers.CustomGenBankIterator"><code class="docutils literal notranslate"><span class="pre">CustomGenBankIterator</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.parsers.parse_genbank"><code class="docutils literal notranslate"><span class="pre">parse_genbank()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.parsers.embl_gb_fasta"><code class="docutils literal notranslate"><span class="pre">embl_gb_fasta()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.parsers.parse"><code class="docutils literal notranslate"><span class="pre">parse()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.parsers.parse_primers"><code class="docutils literal notranslate"><span class="pre">parse_primers()</span></code></a></li>
@@ -4829,7 +4832,7 @@ single_watson=’’, single_crick=’’)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.all.read">
-<span class="sig-prename descclassname"><span class="pre">pydna.all.</span></span><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/readers.html#read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.read" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.all.</span></span><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/readers.html#read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.read" title="Link to this definition">#</a></dt>
 <dd><p>This function is similar the <a class="reference internal" href="#pydna.all.parse" title="pydna.all.parse"><code class="xref py py-func docutils literal notranslate"><span class="pre">parse()</span></code></a> function but expects one and only
 one sequence or and exception is thrown.</p>
 <dl class="field-list simple">
@@ -4838,6 +4841,8 @@ one sequence or and exception is thrown.</p>
 <li><p><strong>data</strong> (<em>string</em>) – see below</p></li>
 <li><p><strong>ds</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Double stranded or single stranded DNA, if True return
 Dseqrecord objects, else Bio.SeqRecord objects.</p></li>
+<li><p><strong>is_path</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, the data is treated as a path to a file. If False, the data is treated as a string (e.g. FASTA file content).
+If None, both are tried.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -4864,7 +4869,7 @@ The usage is similar to the <code class="xref py py-func docutils literal notran
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.all.parse">
-<span class="sig-prename descclassname"><span class="pre">pydna.all.</span></span><span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqRecord.html#Bio.SeqRecord.SeqRecord" title="(in Biopython v1.86)"><span class="pre">SeqRecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/parsers.html#parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.parse" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.all.</span></span><span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqRecord.html#Bio.SeqRecord.SeqRecord" title="(in Biopython v1.86)"><span class="pre">SeqRecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/parsers.html#parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.parse" title="Link to this definition">#</a></dt>
 <dd><p>Return <em>all</em> DNA sequences found in data.</p>
 <p>If no sequences are found, an empty list is returned. This is a greedy
 function, use carefully.</p>
@@ -4888,6 +4893,8 @@ are allowed.</p></li>
 <li><p><strong>ds</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True double stranded <a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dseqrecord</span></code></a> objects are returned.
 If False single stranded <code class="xref py py-class docutils literal notranslate"><span class="pre">Bio.SeqRecord</span></code> <a class="footnote-reference brackets" href="#id19" id="id20" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a> objects are
 returned.</p></li>
+<li><p><strong>is_path</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, the data is treated as a path to a file. If False, the data is treated as a string (e.g. FASTA file content).
+If None, both are tried.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -11687,11 +11694,11 @@ the sense (Watson) strand is returned.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id39" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id42">20</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id50">20</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://www.dsimb.inserm.fr/~fuchs/M2BI/AnalSeq/Annexes/Sequences/Accession_Numbers.htm">http://www.dsimb.inserm.fr/~fuchs/M2BI/AnalSeq/Annexes/Sequences/Accession_Numbers.htm</a></p>
 </aside>
 <aside class="footnote brackets" id="id40" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id44">21</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id52">21</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://www.ncbi.nlm.nih.gov/books/NBK25499/#chapter4.EFetch">http://www.ncbi.nlm.nih.gov/books/NBK25499/#chapter4.EFetch</a></p>
 </aside>
 </aside>
@@ -13089,6 +13096,33 @@ a [<cite>PydanticSerializationError</cite>][pydantic_core.PydanticSerializationE
 <dd><p>docstring.</p>
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="pydna.parsers.CustomGenBankScanner">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pydna.parsers.</span></span><span class="sig-name descname"><span class="pre">CustomGenBankScanner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/parsers.html#CustomGenBankScanner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.parsers.CustomGenBankScanner" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://biopython.org/docs/latest/api/Bio.GenBank.Scanner.html#Bio.GenBank.Scanner.GenBankScanner" title="(in Biopython v1.86)"><code class="xref py py-class docutils literal notranslate"><span class="pre">GenBankScanner</span></code></a></p>
+<p>A custom GenBank scanner that parses the LOCUS line and extracts the name, size, molecule_type, topology and date
+from malformed GenBank files.</p>
+<p>For example, the following line:</p>
+<dl class="simple">
+<dt><a href="#id42"><span class="problematic" id="id43">``</span></a><a href="#id44"><span class="problematic" id="id45">`</span></a></dt><dd><p>LOCUS       pKM265       4536 bp    DNA   circular  SYN        21-JUN-2013</p>
+</dd>
+</dl>
+<p><a href="#id46"><span class="problematic" id="id47">``</span></a><a href="#id48"><span class="problematic" id="id49">`</span></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pydna.parsers.CustomGenBankIterator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pydna.parsers.</span></span><span class="sig-name descname"><span class="pre">CustomGenBankIterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/parsers.html#CustomGenBankIterator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.parsers.CustomGenBankIterator" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqIO.InsdcIO.html#Bio.SeqIO.InsdcIO.GenBankIterator" title="(in Biopython v1.86)"><code class="xref py py-class docutils literal notranslate"><span class="pre">GenBankIterator</span></code></a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.parsers.parse_genbank">
+<span class="sig-prename descclassname"><span class="pre">pydna.parsers.</span></span><span class="sig-name descname"><span class="pre">parse_genbank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/io.html#io.StringIO" title="(in Python v3.8)"><span class="pre">StringIO</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqRecord.html#Bio.SeqRecord.SeqRecord" title="(in Biopython v1.86)"><span class="pre">SeqRecord</span></a></span></span><a class="reference internal" href="../_modules/pydna/parsers.html#parse_genbank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.parsers.parse_genbank" title="Link to this definition">#</a></dt>
+<dd><p>Equivalent to SeqIO.read(handle, “genbank”) but with more permissive parsing for the LOCUS line. It also
+removes BASE_COUNT lines that can be misplaced and anyway are not stored in the SeqRecord.annotations.</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.parsers.embl_gb_fasta">
 <span class="sig-prename descclassname"><span class="pre">pydna.parsers.</span></span><span class="sig-name descname"><span class="pre">embl_gb_fasta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/parsers.html#embl_gb_fasta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.parsers.embl_gb_fasta" title="Link to this definition">#</a></dt>
@@ -13100,7 +13134,7 @@ annotations[“topology”]</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.parsers.parse">
-<span class="sig-prename descclassname"><span class="pre">pydna.parsers.</span></span><span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqRecord.html#Bio.SeqRecord.SeqRecord" title="(in Biopython v1.86)"><span class="pre">SeqRecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/parsers.html#parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.parsers.parse" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.parsers.</span></span><span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqRecord.html#Bio.SeqRecord.SeqRecord" title="(in Biopython v1.86)"><span class="pre">SeqRecord</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/parsers.html#parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.parsers.parse" title="Link to this definition">#</a></dt>
 <dd><p>Return <em>all</em> DNA sequences found in data.</p>
 <p>If no sequences are found, an empty list is returned. This is a greedy
 function, use carefully.</p>
@@ -13122,8 +13156,10 @@ are allowed.</p></li>
 </ol>
 </p></li>
 <li><p><strong>ds</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True double stranded <code class="xref py py-class docutils literal notranslate"><span class="pre">Dseqrecord</span></code> objects are returned.
-If False single stranded <code class="xref py py-class docutils literal notranslate"><span class="pre">Bio.SeqRecord</span></code> <a class="footnote-reference brackets" href="#id39" id="id42" role="doc-noteref"><span class="fn-bracket">[</span>20<span class="fn-bracket">]</span></a> objects are
+If False single stranded <code class="xref py py-class docutils literal notranslate"><span class="pre">Bio.SeqRecord</span></code> <a class="footnote-reference brackets" href="#id39" id="id50" role="doc-noteref"><span class="fn-bracket">[</span>20<span class="fn-bracket">]</span></a> objects are
 returned.</p></li>
+<li><p><strong>is_path</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, the data is treated as a path to a file. If False, the data is treated as a string (e.g. FASTA file content).
+If None, both are tried.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -13135,8 +13171,8 @@ returned.</p></li>
 </dl>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id43" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id46">22</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id51" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id54">22</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://biopython.org/wiki/SeqRecord">http://biopython.org/wiki/SeqRecord</a></p>
 </aside>
 </aside>
@@ -13722,7 +13758,7 @@ The default is callback.</p></li>
 <p>Provides two functions, read and read_primer.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.readers.read">
-<span class="sig-prename descclassname"><span class="pre">pydna.readers.</span></span><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/readers.html#read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.readers.read" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pydna.readers.</span></span><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/readers.html#read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.readers.read" title="Link to this definition">#</a></dt>
 <dd><p>This function is similar the <code class="xref py py-func docutils literal notranslate"><span class="pre">parse()</span></code> function but expects one and only
 one sequence or and exception is thrown.</p>
 <dl class="field-list simple">
@@ -13731,6 +13767,8 @@ one sequence or and exception is thrown.</p>
 <li><p><strong>data</strong> (<em>string</em>) – see below</p></li>
 <li><p><strong>ds</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Double stranded or single stranded DNA, if True return
 Dseqrecord objects, else Bio.SeqRecord objects.</p></li>
+<li><p><strong>is_path</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, the data is treated as a path to a file. If False, the data is treated as a string (e.g. FASTA file content).
+If None, both are tried.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -14127,7 +14165,7 @@ as a new Seq object.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pydna.seq.Seq.seguid">
 <span class="sig-name descname"><span class="pre">seguid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/pydna/seq.html#Seq.seguid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.seq.Seq.seguid" title="Link to this definition">#</a></dt>
-<dd><p>Url safe SEGUID <a class="footnote-reference brackets" href="#id40" id="id44" role="doc-noteref"><span class="fn-bracket">[</span>21<span class="fn-bracket">]</span></a> for the sequence.</p>
+<dd><p>Url safe SEGUID <a class="footnote-reference brackets" href="#id40" id="id52" role="doc-noteref"><span class="fn-bracket">[</span>21<span class="fn-bracket">]</span></a> for the sequence.</p>
 <p>This checksum is the same as seguid but with base64.urlsafe
 encoding instead of the normal base64. This means that
 the characters + and / are replaced with - and _ so that
@@ -14141,8 +14179,8 @@ the checksum can be part of a URL.</p>
 </div>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id45" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id48">23</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id53" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id56">23</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://wiki.christophchamp.com/index.php/SEGUID">http://wiki.christophchamp.com/index.php/SEGUID</a></p>
 </aside>
 </aside>
@@ -14621,7 +14659,7 @@ Selenocysteine with T for Threonine, which is biologically meaningless.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pydna.seq.ProteinSeq.seguid">
 <span class="sig-name descname"><span class="pre">seguid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/pydna/seq.html#ProteinSeq.seguid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.seq.ProteinSeq.seguid" title="Link to this definition">#</a></dt>
-<dd><p>Url safe SEGUID <a class="footnote-reference brackets" href="#id43" id="id46" role="doc-noteref"><span class="fn-bracket">[</span>22<span class="fn-bracket">]</span></a> for the sequence.</p>
+<dd><p>Url safe SEGUID <a class="footnote-reference brackets" href="#id51" id="id54" role="doc-noteref"><span class="fn-bracket">[</span>22<span class="fn-bracket">]</span></a> for the sequence.</p>
 <p>This checksum is the same as seguid but with base64.urlsafe
 encoding instead of the normal base64. This means that
 the characters + and / are replaced with - and _ so that
@@ -14635,8 +14673,8 @@ the checksum can be part of a URL.</p>
 </div>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id47" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id50">24</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id55" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id58">24</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://wiki.christophchamp.com/index.php/SEGUID">http://wiki.christophchamp.com/index.php/SEGUID</a></p>
 </aside>
 </aside>
@@ -14718,7 +14756,7 @@ nicer output in the IPython shell.</p>
 <span class="sig-name descname"><span class="pre">isorf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/seqrecord.html#SeqRecord.isorf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.seqrecord.SeqRecord.isorf" title="Link to this definition">#</a></dt>
 <dd><p>Detect if sequence is an open reading frame (orf) in the 5’-3’.</p>
 <p>direction.</p>
-<p>Translation tables are numbers according to the NCBI numbering <a class="footnote-reference brackets" href="#id45" id="id48" role="doc-noteref"><span class="fn-bracket">[</span>23<span class="fn-bracket">]</span></a>.</p>
+<p>Translation tables are numbers according to the NCBI numbering <a class="footnote-reference brackets" href="#id53" id="id56" role="doc-noteref"><span class="fn-bracket">[</span>23<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>table</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Sets the translation table, default is 1 (standard code)</p>
@@ -14745,8 +14783,8 @@ nicer output in the IPython shell.</p>
 </div>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id49" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id52">25</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id57" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id60">25</a><span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=c">http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=c</a></p>
 </aside>
 </aside>
@@ -14867,7 +14905,7 @@ the <a class="reference external" href="http://jorgensen.biology.utah.edu/wayned
 <dl class="py method">
 <dt class="sig sig-object py" id="pydna.seqrecord.SeqRecord.seguid">
 <span class="sig-name descname"><span class="pre">seguid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/seqrecord.html#SeqRecord.seguid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.seqrecord.SeqRecord.seguid" title="Link to this definition">#</a></dt>
-<dd><p>Return the url safe SEGUID <a class="footnote-reference brackets" href="#id47" id="id50" role="doc-noteref"><span class="fn-bracket">[</span>24<span class="fn-bracket">]</span></a> for the sequence.</p>
+<dd><p>Return the url safe SEGUID <a class="footnote-reference brackets" href="#id55" id="id58" role="doc-noteref"><span class="fn-bracket">[</span>24<span class="fn-bracket">]</span></a> for the sequence.</p>
 <p>This checksum is the same as seguid but with base64.urlsafe
 encoding instead of the normal base 64. This means that
 the characters + and / are replaced with - and _ so that
@@ -14881,7 +14919,7 @@ the checksum can be a part of and URL or a filename.</p>
 </div>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id51" role="doc-footnote">
+<aside class="footnote brackets" id="id59" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span>26<span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://wiki.christophchamp.com/index.php/SEGUID">http://wiki.christophchamp.com/index.php/SEGUID</a></p>
 </aside>
@@ -15023,7 +15061,7 @@ changed by passing a type as keyword with some other string value.</p>
 <span class="sig-name descname"><span class="pre">isorf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/seqrecord.html#ProteinSeqRecord.isorf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.seqrecord.ProteinSeqRecord.isorf" title="Link to this definition">#</a></dt>
 <dd><p>Detect if sequence is an open reading frame (orf) in the 5’-3’.</p>
 <p>direction.</p>
-<p>Translation tables are numbers according to the NCBI numbering <a class="footnote-reference brackets" href="#id49" id="id52" role="doc-noteref"><span class="fn-bracket">[</span>25<span class="fn-bracket">]</span></a>.</p>
+<p>Translation tables are numbers according to the NCBI numbering <a class="footnote-reference brackets" href="#id57" id="id60" role="doc-noteref"><span class="fn-bracket">[</span>25<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>table</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Sets the translation table, default is 1 (standard code)</p>
@@ -15050,7 +15088,7 @@ changed by passing a type as keyword with some other string value.</p>
 </div>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id53" role="doc-footnote">
+<aside class="footnote brackets" id="id61" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span>27<span class="fn-bracket">]</span></span>
 <p><a class="reference external" href="http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=c">http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=c</a></p>
 </aside>
@@ -16487,6 +16525,9 @@ the location spans the entire sequence (it’s not empty).
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pydna.parsers">pydna.parsers module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.parsers.extract_from_text"><code class="docutils literal notranslate"><span class="pre">extract_from_text()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.parsers.CustomGenBankScanner"><code class="docutils literal notranslate"><span class="pre">CustomGenBankScanner</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.parsers.CustomGenBankIterator"><code class="docutils literal notranslate"><span class="pre">CustomGenBankIterator</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.parsers.parse_genbank"><code class="docutils literal notranslate"><span class="pre">parse_genbank()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.parsers.embl_gb_fasta"><code class="docutils literal notranslate"><span class="pre">embl_gb_fasta()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.parsers.parse"><code class="docutils literal notranslate"><span class="pre">parse()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.parsers.parse_primers"><code class="docutils literal notranslate"><span class="pre">parse_primers()</span></code></a></li>
