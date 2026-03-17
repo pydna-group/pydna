@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import copy
 from pydna.opencloning_models import SequenceLocationStr
 from Bio.SeqFeature import SimpleLocation
 from pydna.utils import shift_location
@@ -38,8 +39,10 @@ from Bio.Seq import reverse_complement
 from Bio.Restriction import BsaI, EcoRI, SalI
 import textwrap
 import json
+import os
 
 # Examples that will be used in several tests ==============================================
+test_folder = os.path.join(os.path.dirname(__file__))
 
 
 # We use this to assign ids to objects in a deterministic way for testing
@@ -793,24 +796,59 @@ class ValidateTest(TestCase):
         with self.assertRaises(ValueError):
             wrong.source.validate(wrong)
 
-    def test_validate_annotation_source_not_implemented(self):
+        # Also works "high up" in the history
+        copy_golden_gate = copy.deepcopy(golden_gate_product)
+        copy_golden_gate.source.input[0].sequence = Dseqrecord("aaTTTAA")
+        with self.assertRaises(ValueError):
+            copy_golden_gate.validate_history(recursive=True)
+
+        # Works with primers as well
+        copy_pcr = copy.deepcopy(pcr_product)
+        copy_pcr.source.input[0].sequence = Primer("AATT")
+        with self.assertRaises(ValueError):
+            copy_pcr.validate_history(recursive=True)
+
+        # Same for CRISPR
+        copy_crispr = copy.deepcopy(crispr_product)
+        for i, inp in enumerate(copy_crispr.source.input):
+            if isinstance(inp.sequence, Primer):
+                index_of_primer = i
+                break
+
+        copy_crispr.source.input[index_of_primer].sequence = Primer("AATT")
+        with self.assertRaises(ValueError):
+            copy_crispr.validate_history(recursive=True)
+
+        # Same for hyrbidization
+        copy_hybridization = copy.deepcopy(product_oligo_hybridization)
+        copy_hybridization.source.input[0].sequence = Primer("AATT")
+        with self.assertRaises(ValueError):
+            copy_hybridization.validate_history(recursive=True)
+
+    def test_validate_annotation(self):
         from pydna.opencloning_models import AnnotationSource, SourceInput
 
         source = AnnotationSource(
             annotation_tool="plannotate",
             input=[SourceInput(sequence=Dseqrecord("ATGC"))],
         )
-        with self.assertRaises(NotImplementedError):
-            source.validate(Dseqrecord("ATGC"))
+        annotated_seq = Dseqrecord("ATGC")
+        annotated_seq.add_feature(0, 3, type_="gene", label="gene1")
+        source.validate(annotated_seq)
 
     def test_validate_polymerase_extension_not_implemented(self):
         from pydna.opencloning_models import PolymeraseExtensionSource, SourceInput
 
         source = PolymeraseExtensionSource(
-            input=[SourceInput(sequence=Dseqrecord("ATGC"))],
+            input=[
+                SourceInput(
+                    sequence=Dseqrecord(
+                        Dseq.from_full_sequence_and_overhangs("ATGC", -1, -1)
+                    )
+                )
+            ],
         )
-        with self.assertRaises(NotImplementedError):
-            source.validate(Dseqrecord("ATGC"))
+        source.validate(Dseqrecord("ATGC"))
 
     def test_validate_homologous_recombination(self):
         from pydna.assembly2 import homologous_recombination_integration
@@ -890,3 +928,12 @@ class ValidateTest(TestCase):
         products = in_vivo_assembly([f1, f2], limit=20, circular_only=True)
         for p in products:
             p.source.validate(p)
+
+    def test_validate_examples_opencloning(self):
+
+        for file in os.listdir(f"{test_folder}/examples_opencloning"):
+            with open(f"{test_folder}/examples_opencloning/{file}", "r") as f:
+                data = json.load(f)
+            cloning_strategy = CloningStrategy.model_validate(data)
+            for product in cloning_strategy.to_dseqrecords():
+                product.validate_history(recursive=True)

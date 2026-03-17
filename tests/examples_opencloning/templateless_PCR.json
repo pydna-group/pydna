@@ -1,0 +1,72 @@
+{
+  "sequences": [
+    {
+      "id": 1,
+      "type": "TextFileSequence",
+      "sequence_file_format": "genbank",
+      "overhang_crick_3prime": -59,
+      "overhang_watson_3prime": -59,
+      "file_content": "LOCUS       name                     139 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 agaactcaac cattacgggt ttgacgaata tagacgagat tcgcaattac ttgtctgatg\n       61 gattaccaag atgatgggct tggtgaaatg attgagtttt tggagggtat gcatgaagtt\n      121 taactcaaat atctcgtaa\n//"
+    },
+    {
+      "id": 2,
+      "type": "TextFileSequence",
+      "sequence_file_format": "genbank",
+      "overhang_crick_3prime": 0,
+      "overhang_watson_3prime": 0,
+      "file_content": "LOCUS       name                     139 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 agaactcaac cattacgggt ttgacgaata tagacgagat tcgcaattac ttgtctgatg\n       61 gattaccaag atgatgggct tggtgaaatg attgagtttt tggagggtat gcatgaagtt\n      121 taactcaaat atctcgtaa\n//"
+    }
+  ],
+  "sources": [
+    {
+      "id": 1,
+      "type": "OligoHybridizationSource",
+      "output_name": null,
+      "database_id": null,
+      "input": [
+        {
+          "type": "SourceInput",
+          "sequence": 3
+        },
+        {
+          "type": "SourceInput",
+          "sequence": 4
+        }
+      ],
+      "overhang_crick_3prime": -59
+    },
+    {
+      "id": 2,
+      "type": "PolymeraseExtensionSource",
+      "output_name": null,
+      "database_id": null,
+      "input": [
+        {
+          "type": "SourceInput",
+          "sequence": 1
+        }
+      ]
+    }
+  ],
+  "primers": [
+    {
+      "id": 3,
+      "type": "Primer",
+      "name": "fwd_hyb",
+      "database_id": null,
+      "sequence": "agaactcaaccattacgggtttgacgaatatagacgagattcgcaattacttgtctgatggattaccaagatgatgggct"
+    },
+    {
+      "id": 4,
+      "type": "Primer",
+      "name": "rvs_hyb",
+      "database_id": null,
+      "sequence": "ttacgagatatttgagttaaacttcatgcataccctccaaaaactcaatcatttcaccaagcccatcatcttggtaatcc"
+    }
+  ],
+  "description": "",
+  "files": null,
+  "schema_version": "1.0.0",
+  "backend_version": null,
+  "frontend_version": null
+}

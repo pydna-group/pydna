@@ -98,6 +98,7 @@ from pydna.types import CutSiteType, SubFragmentRepresentationAssembly
 from pydna.utils import create_location
 from typing import TYPE_CHECKING
 import Bio.Restriction as _restr_module
+from pydna.utils import deduplicate
 
 if TYPE_CHECKING:  # pragma: no cover
     from pydna.dseqrecord import Dseqrecord
@@ -313,11 +314,17 @@ def _source_input_from_model(
     if seq_obj is None:
         raise ValueError(f"Sequence/Primer with id {seq_id} not found")
     if isinstance(model, _AssemblyFragment):
+        # It's important to set stranded=False here, because that's
+        # how assembly2 creates locations.
         left_loc = (
-            Location.fromstring(model.left_location) if model.left_location else None
+            Location.fromstring(model.left_location, stranded=False)
+            if model.left_location
+            else None
         )
         right_loc = (
-            Location.fromstring(model.right_location) if model.right_location else None
+            Location.fromstring(model.right_location, stranded=False)
+            if model.right_location
+            else None
         )
         return AssemblyFragment(
             sequence=seq_obj,
@@ -454,14 +461,14 @@ class AssemblySource(Source):
         return AssemblySource(input=input_list, circular=is_circular)
 
     def _get_input_sequences(self) -> list["Dseqrecord"]:
-        """Return Dseqrecord inputs (excludes Primers), preserving order."""
+        """Return Dseqrecord inputs (excludes Primers), unique and preserving order."""
         from pydna.dseqrecord import Dseqrecord
 
         seqs: list[Dseqrecord] = []
         for inp in self.input:
             if isinstance(inp.sequence, Dseqrecord):
                 seqs.append(inp.sequence)
-        return seqs
+        return deduplicate(seqs)
 
     def _get_input_primers(self) -> list["Primer"]:
         """Return Primer inputs, preserving order."""
@@ -486,11 +493,7 @@ class AssemblySource(Source):
     def _validate_result_in_products(
         self, result: "Dseqrecord", products: list["Dseqrecord"]
     ) -> None:
-        # if not products:
-        #     raise ValueError(
-        #         f"No products were generated for {type(self).__name__} with id {get_id(self)}"
-        #     )
-        if not any(p.seq == result.seq for p in products):
+        if not any((p.seq == result.seq) and (p.source == self) for p in products):
             raise ValueError(
                 f"Result sequence does not match any of the {len(products)} "
                 f"product(s) from {type(self).__name__}"
@@ -751,10 +754,6 @@ class CreLoxRecombinationSource(AssemblySource):
         from pydna.assembly2 import cre_lox_integration, cre_lox_excision
 
         seqs = self._get_input_sequences()
-        print()
-        print(self)
-        print(seqs)
-        print()
         if len(seqs) == 1:
             products = cre_lox_excision(seqs[0])
         else:
@@ -955,9 +954,18 @@ class PolymeraseExtensionSource(Source):
     )
 
     def validate(self, result: "Dseqrecord") -> None:
-        raise NotImplementedError(
-            "validate() not implemented for PolymeraseExtensionSource"
-        )
+        from pydna.dseqrecord import Dseqrecord
+
+        if len(self.input) != 1:
+            raise ValueError("PolymeraseExtensionSource must have exactly one input")
+        if not isinstance(self.input[0].sequence, Dseqrecord):
+            raise ValueError(
+                f"PolymeraseExtensionSource input must be a Dseqrecord, got {type(self.input[0].sequence)}"
+            )
+        if self.input[0].sequence.seq.fill_in() != result.seq:
+            raise ValueError(
+                "PolymeraseExtensionSource input sequence does not match result"
+            )
 
 
 class AnnotationSource(Source):
@@ -970,7 +978,17 @@ class AnnotationSource(Source):
     ] = None
 
     def validate(self, result: "Dseqrecord") -> None:
-        raise NotImplementedError("validate() not implemented for AnnotationSource")
+        from pydna.dseqrecord import Dseqrecord
+
+        """Just validates that there is a single input, and that its sequence is the same as the result."""
+        if len(self.input) != 1:
+            raise ValueError("AnnotationSource must have exactly one input")
+        if not isinstance(self.input[0].sequence, Dseqrecord):
+            raise ValueError(
+                f"AnnotationSource input must be a Dseqrecord, got {type(self.input[0].sequence)}"
+            )
+        if self.input[0].sequence.seq != result.seq:
+            raise ValueError("AnnotationSource input sequence does not match result")
 
 
 class ReverseComplementSource(Source):
@@ -1102,7 +1120,9 @@ class CloningStrategy(_BaseCloningStrategy):
         seq_by_id: dict[int, Dseqrecord] = {}
         for text_seq in self.sequences:
             if not isinstance(text_seq, _TextFileSequence):
-                raise NotImplementedError("Only works with TextFileSequence objects")
+                raise NotImplementedError(
+                    f"Only works with TextFileSequence objects, got {type(text_seq)}"
+                )
             seq_by_id[text_seq.id] = read_dseqrecord_from_text_file_sequence(text_seq)
 
         # Build source lookup (source.id == output sequence id)
