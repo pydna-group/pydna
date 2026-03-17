@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from pydna.opencloning_models import SequenceLocationStr
 from Bio.SeqFeature import SimpleLocation
 from pydna.utils import shift_location
@@ -621,3 +622,107 @@ class NCBISequenceSourceTest(TestCase):
             coordinates=SimpleLocation(1, 10),
             repository_id="1234567890",
         )
+
+
+class RoundTripTest(TestCase):
+    """Test that Dseqrecords -> CloningStrategy JSON -> CloningStrategy -> Dseqrecords
+    produces objects with matching sequences and correct source types."""
+
+    def _round_trip(self, products):
+        cs = CloningStrategy.from_dseqrecords(products)
+        json_str = cs.model_dump_json()
+        cs2 = CloningStrategy.model_validate_json(json_str)
+        return cs2.to_dseqrecords()
+
+    def _assert_dseqrecord_equal(self, original, restored):
+        """Assert that two Dseqrecord objects have equal sequences and source types."""
+        self.assertEqual(str(original.seq).upper(), str(restored.seq).upper())
+        self.assertEqual(original.seq.ovhg, restored.seq.ovhg)
+        self.assertEqual(original.seq.watson_ovhg, restored.seq.watson_ovhg)
+        self.assertEqual(original.name, restored.name)
+
+    def _assert_source_type_matches(self, original, restored):
+        """Assert the source type is the same (or both None)."""
+        if original.source is None:
+            self.assertIsNone(restored.source)
+        else:
+            self.assertIsNotNone(restored.source)
+            self.assertEqual(type(original.source), type(restored.source))
+
+    def test_golden_gate_round_trip(self):
+        results = self._round_trip([golden_gate_product])
+        self.assertEqual(len(results), 1)
+        self._assert_dseqrecord_equal(golden_gate_product, results[0])
+        self._assert_source_type_matches(golden_gate_product, results[0])
+
+    def test_crispr_round_trip(self):
+        results = self._round_trip([crispr_product])
+        self.assertEqual(len(results), 1)
+        self._assert_dseqrecord_equal(crispr_product, results[0])
+        self._assert_source_type_matches(crispr_product, results[0])
+
+    def test_ligation_round_trip(self):
+        results = self._round_trip([ligation_product])
+        self.assertEqual(len(results), 1)
+        self._assert_dseqrecord_equal(ligation_product, results[0])
+        self._assert_source_type_matches(ligation_product, results[0])
+
+    def test_pcr_round_trip(self):
+        results = self._round_trip([pcr_product])
+        self.assertEqual(len(results), 1)
+        self._assert_dseqrecord_equal(pcr_product, results[0])
+        self._assert_source_type_matches(pcr_product, results[0])
+
+    def test_custom_cut_round_trip(self):
+        results = self._round_trip([custom_cut_product])
+        self.assertEqual(len(results), 1)
+        self._assert_dseqrecord_equal(custom_cut_product, results[0])
+        self._assert_source_type_matches(custom_cut_product, results[0])
+
+    def test_gateway_round_trip(self):
+        results = self._round_trip([product_gateway_BP])
+        self.assertEqual(len(results), 1)
+        self._assert_dseqrecord_equal(product_gateway_BP, results[0])
+        self._assert_source_type_matches(product_gateway_BP, results[0])
+
+    def test_oligo_hybridization_round_trip(self):
+        results = self._round_trip([product_oligo_hybridization])
+        self.assertEqual(len(results), 1)
+        self._assert_dseqrecord_equal(product_oligo_hybridization, results[0])
+        self._assert_source_type_matches(product_oligo_hybridization, results[0])
+
+    def test_multiple_products_round_trip(self):
+        products = [
+            golden_gate_product,
+            crispr_product,
+            ligation_product,
+            pcr_product,
+            custom_cut_product,
+            product_gateway_BP,
+        ]
+        results = self._round_trip(products)
+        self.assertEqual(len(results), len(products))
+        for orig, restored in zip(products, results):
+            self._assert_dseqrecord_equal(orig, restored)
+            self._assert_source_type_matches(orig, restored)
+
+    def test_registry_covers_all_source_subclasses(self):
+        """Verify the registry has entries for all Source subclasses with ClassVar TARGET_MODEL."""
+        from pydna.opencloning_models import _TARGET_MODEL_REGISTRY, Source
+
+        def _collect_subclasses(cls):
+            result = set()
+            for sub in cls.__subclasses__():
+                result.add(sub)
+                result.update(_collect_subclasses(sub))
+            return result
+
+        all_subclasses = _collect_subclasses(Source)
+        for cls in all_subclasses:
+            target = cls.__dict__.get("TARGET_MODEL")
+            if target is not None and not isinstance(target, property):
+                self.assertIn(
+                    target,
+                    _TARGET_MODEL_REGISTRY,
+                    f"{cls.__name__}'s TARGET_MODEL ({target}) not in registry",
+                )

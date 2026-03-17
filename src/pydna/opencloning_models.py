@@ -28,6 +28,7 @@ For these type of fields, you have to define a ``field_serializer`` method to se
 to the correct type.
 
 """
+
 from __future__ import annotations
 
 from typing import Optional, Union, Any, ClassVar, Type
@@ -96,6 +97,7 @@ from Bio.SeqIO.InsdcIO import _insdc_location_string as format_feature_location
 from pydna.types import CutSiteType, SubFragmentRepresentationAssembly
 from pydna.utils import create_location
 from typing import TYPE_CHECKING
+import Bio.Restriction as _restr_module
 
 if TYPE_CHECKING:  # pragma: no cover
     from pydna.dseqrecord import Dseqrecord
@@ -300,6 +302,32 @@ class AssemblyFragment(SourceInput):
         )
 
 
+def _source_input_from_model(
+    model: _SourceInput | _AssemblyFragment,
+    sequences: dict[int, "Dseqrecord"],
+    primers: dict[int, "Primer"],
+) -> SourceInput | AssemblyFragment:
+    """Convert a linkml SourceInput/AssemblyFragment model back to a pydna object."""
+    seq_id = model.sequence
+    seq_obj = sequences.get(seq_id) or primers.get(seq_id)
+    if seq_obj is None:
+        raise ValueError(f"Sequence/Primer with id {seq_id} not found")
+    if isinstance(model, _AssemblyFragment):
+        left_loc = (
+            Location.fromstring(model.left_location) if model.left_location else None
+        )
+        right_loc = (
+            Location.fromstring(model.right_location) if model.right_location else None
+        )
+        return AssemblyFragment(
+            sequence=seq_obj,
+            left_location=left_loc,
+            right_location=right_loc,
+            reverse_complemented=model.reverse_complemented,
+        )
+    return SourceInput(sequence=seq_obj)
+
+
 class Source(ConfiguredBaseModel):
     input: list[Union[SourceInput, AssemblyFragment]] = Field(default_factory=list)
     TARGET_MODEL: ClassVar[Type[_Source]] = _Source
@@ -314,6 +342,34 @@ class Source(ConfiguredBaseModel):
         model_dict = self.model_dump()
         model_dict["id"] = seq_id
         return self.TARGET_MODEL(**model_dict)
+
+    @classmethod
+    def _get_deserialization_overrides(cls, model, sequences, primers) -> dict:
+        """Return field overrides for from_pydantic_model. Subclasses override this
+        to handle fields that require custom deserialization logic."""
+        return {}
+
+    @classmethod
+    def from_pydantic_model(
+        cls,
+        model: _Source,
+        sequences: dict[int, "Dseqrecord"],
+        primers: dict[int, "Primer"],
+    ) -> "Source":
+        """Convert an opencloning_linkml Source model back to a pydna Source."""
+        overrides = cls._get_deserialization_overrides(model, sequences, primers)
+        kwargs = {}
+        for field_name in cls.__pydantic_fields__:
+            if field_name in overrides:
+                kwargs[field_name] = overrides[field_name]
+            elif field_name == "input":
+                kwargs["input"] = [
+                    _source_input_from_model(inp, sequences, primers)
+                    for inp in (model.input or [])
+                ]
+            elif hasattr(model, field_name):
+                kwargs[field_name] = getattr(model, field_name)
+        return cls(**kwargs)
 
     def to_unserialized_dict(self):
         """
@@ -455,6 +511,16 @@ class NCBISequenceSource(RepositoryIdSource):
     TARGET_MODEL: ClassVar[Type[_NCBISequenceSource]] = _NCBISequenceSource
     coordinates: SimpleLocation | None = None
 
+    @classmethod
+    def _get_deserialization_overrides(
+        cls, model: "_NCBISequenceSource", sequences, primers
+    ):
+        return {
+            "coordinates": (
+                Location.fromstring(model.coordinates) if model.coordinates else None
+            )
+        }
+
 
 class GenomeCoordinatesSource(NCBISequenceSource):
     TARGET_MODEL: ClassVar[Type[_GenomeCoordinatesSource]] = _GenomeCoordinatesSource
@@ -481,6 +547,14 @@ class RestrictionAndLigationSource(AssemblySource):
         self, restriction_enzymes: list[AbstractCut]
     ) -> list[str]:
         return [str(enzyme) for enzyme in restriction_enzymes]
+
+    @classmethod
+    def _get_deserialization_overrides(cls, model, sequences, primers):
+        return {
+            "restriction_enzymes": [
+                getattr(_restr_module, name) for name in model.restriction_enzymes
+            ]
+        }
 
 
 class GibsonAssemblySource(AssemblySource):
@@ -554,6 +628,33 @@ class RecombinaseSource(AssemblySource):
     ) -> list[_Recombinase]:
         return recombinases.to_opencloning_model()
 
+    @classmethod
+    def _get_deserialization_overrides(
+        cls, model: "_RecombinaseSource", sequences, primers
+    ):
+        from pydna.recombinase import (
+            RecombinaseCollection,
+            Recombinase as _RecombinaseClass,
+        )
+
+        recomb_objs = [
+            _RecombinaseClass(
+                site1=r.site1,
+                site2=r.site2,
+                site1_name=r.site1_name,
+                site2_name=r.site2_name,
+                name=r.name,
+            )
+            for r in model.recombinases
+        ]
+        return {
+            "recombinases": (
+                recomb_objs[0]
+                if len(recomb_objs) == 1
+                else RecombinaseCollection(recomb_objs)
+            )
+        }
+
 
 class SequenceCutSource(Source):
     left_edge: CutSiteType | None
@@ -603,6 +704,23 @@ class SequenceCutSource(Source):
 
         return has_enzyme(self.left_edge) or has_enzyme(self.right_edge)
 
+    @classmethod
+    def _get_deserialization_overrides(
+        cls, model: "_RestrictionEnzymeDigestionSource", sequences, primers
+    ):
+        def _model_to_cutsite(edge_model):
+            if edge_model is None:
+                return None
+            enzyme = None
+            if isinstance(edge_model, _RestrictionSequenceCut):
+                enzyme = getattr(_restr_module, edge_model.restriction_enzyme)
+            return ((edge_model.cut_watson, edge_model.overhang), enzyme)
+
+        return {
+            "left_edge": _model_to_cutsite(model.left_edge),
+            "right_edge": _model_to_cutsite(model.right_edge),
+        }
+
 
 class OligoHybridizationSource(Source):
     TARGET_MODEL: ClassVar[Type[_OligoHybridizationSource]] = _OligoHybridizationSource
@@ -628,6 +746,21 @@ class AnnotationSource(Source):
 
 class ReverseComplementSource(Source):
     TARGET_MODEL: ClassVar[Type[_ReverseComplementSource]] = _ReverseComplementSource
+
+
+def read_dseqrecord_from_text_file_sequence(seq: TextFileSequence) -> Dseqrecord:
+    from pydna.parsers import parse
+    from pydna.dseq import Dseq
+
+    out_dseq_record = parse(seq.file_content, ds=True)[0]
+    if seq.overhang_watson_3prime != 0 or seq.overhang_crick_3prime != 0:
+        out_dseq_record.seq = Dseq.from_full_sequence_and_overhangs(
+            str(out_dseq_record.seq),
+            seq.overhang_crick_3prime,
+            seq.overhang_watson_3prime,
+        )
+    out_dseq_record.id = str(seq.id)
+    return out_dseq_record
 
 
 class CloningStrategy(_BaseCloningStrategy):
@@ -704,3 +837,97 @@ class CloningStrategy(_BaseCloningStrategy):
             cs.reassign_ids()
             return super(CloningStrategy, cs).model_dump(*args, **kwargs)
         return super().model_dump(*args, **kwargs)
+
+    def get_ids_of_sequences_that_are_not_inputs(self) -> list[int]:
+        """
+        Get the ids of the sequences that are not inputs to any source.
+        """
+        return [
+            seq.id
+            for seq in self.sequences
+            if seq.id
+            not in [input.sequence for source in self.sources for input in source.input]
+        ]
+
+    def to_dseqrecords(self) -> list["Dseqrecord"]:
+        """
+        Convert the cloning strategy to a list of Dseqrecord objects.
+
+        Walks the dependency graph from terminal sequences (those not used as inputs
+        to any source) upward, reconstructing pydna Source objects and attaching them
+        to the parsed Dseqrecord objects.
+        """
+        from pydna.primer import Primer as _PrimerCls
+
+        # Build primer lookup
+        primer_by_id: dict[int, _PrimerCls] = {}
+        for p in self.primers or []:
+            primer_by_id[p.id] = _PrimerCls(p.sequence, name=p.name)
+
+        # Build sequence lookup by parsing TextFileSequence genbank content
+        seq_by_id: dict[int, Dseqrecord] = {}
+        for text_seq in self.sequences:
+            if not isinstance(text_seq, _TextFileSequence):
+                raise NotImplementedError("Only works with TextFileSequence objects")
+            seq_by_id[text_seq.id] = read_dseqrecord_from_text_file_sequence(text_seq)
+
+        # Build source lookup (source.id == output sequence id)
+        source_by_id: dict[int, _Source] = {s.id: s for s in self.sources}
+
+        # Resolve sources recursively
+        resolved: set[int] = set()
+
+        def resolve(seq_id: int):
+            if seq_id in resolved:
+                return
+            resolved.add(seq_id)
+
+            source_model = source_by_id.get(seq_id)
+            if source_model is None:
+                return
+
+            # Recursively resolve input sequences first
+            for inp in source_model.input or []:
+                if inp.sequence in seq_by_id:
+                    resolve(inp.sequence)
+
+            dseqr = seq_by_id[seq_id]
+
+            if isinstance(source_model, _ManuallyTypedSource):
+                dseqr.source = None
+                return
+
+            pydna_cls = _TARGET_MODEL_REGISTRY.get(type(source_model))
+            if pydna_cls is None:
+                return
+
+            dseqr.source = pydna_cls.from_pydantic_model(
+                source_model, seq_by_id, primer_by_id
+            )
+
+        terminal_ids = self.get_ids_of_sequences_that_are_not_inputs()
+        for sid in terminal_ids:
+            resolve(sid)
+
+        return [seq_by_id[sid] for sid in terminal_ids]
+
+
+def _build_target_model_registry() -> dict[type, type]:
+    """Build a mapping from opencloning_linkml Source types to pydna Source types."""
+    registry = {}
+
+    def _register(cls):
+        target = cls.__dict__.get("TARGET_MODEL")
+        if target is not None and not isinstance(target, property):
+            registry[target] = cls
+        for sub in cls.__subclasses__():
+            _register(sub)
+
+    _register(Source)
+    # SequenceCutSource uses @property for TARGET_MODEL, register manually
+    registry[_SequenceCutSource] = SequenceCutSource
+    registry[_RestrictionEnzymeDigestionSource] = SequenceCutSource
+    return registry
+
+
+_TARGET_MODEL_REGISTRY: dict[type, type] = _build_target_model_registry()
