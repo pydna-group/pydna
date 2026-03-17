@@ -751,6 +751,10 @@ class CreLoxRecombinationSource(AssemblySource):
         from pydna.assembly2 import cre_lox_integration, cre_lox_excision
 
         seqs = self._get_input_sequences()
+        print()
+        print(self)
+        print(seqs)
+        print()
         if len(seqs) == 1:
             products = cre_lox_excision(seqs[0])
         else:

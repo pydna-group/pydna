@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from pydna.assembly2 import homologous_recombination_integration
+from pydna.assembly2 import cre_lox_excision
+from pydna.cre_lox import LOXP_SEQUENCE
 from pydna.dseqrecord import Dseqrecord
 
-homology = "AAGTCCGTTCGTTTTACCTG"
-genome = Dseqrecord(f"aaaaaa{homology}cccc", name="genome")
-insert_seq = Dseqrecord(f"{homology}tttt{homology}", name="insert")
-products = homologous_recombination_integration(genome, [insert_seq], 20)
+genome = Dseqrecord(f"cccccc{LOXP_SEQUENCE}aaaa{LOXP_SEQUENCE}cccccc", name="genome")
+products = cre_lox_excision(genome)
+
 for p in products:
     p.source.validate(p)
