@@ -1458,6 +1458,32 @@ class Dseqrecord(SeqRecord):
             return ""
         return self.source.history_string(self)
 
+    def validate_history(self, recursive: bool = True) -> None:
+        """Validate the cloning history of this sequence by replaying operations.
+
+        Calls ``self.source.validate(self)`` to verify that the source's inputs
+        produce this sequence, then optionally recurses into input sequences.
+
+        Parameters
+        ----------
+        recursive : bool
+            If True (default), also validate the history of all input sequences.
+
+        Raises
+        ------
+        ValueError
+            If any step in the history produces a different sequence than expected.
+        NotImplementedError
+            If a source type does not support validation.
+        """
+        if self.source is None:
+            return
+        self.source.validate(self)
+        if recursive:
+            for inp in self.source.input:
+                if isinstance(inp.sequence, Dseqrecord):
+                    inp.sequence.validate_history(recursive=True)
+
     def join(self, fragments):
         """
         Join an iterable of Dseqrecords with this instance as the separator.

@@ -726,3 +726,167 @@ class RoundTripTest(TestCase):
                     _TARGET_MODEL_REGISTRY,
                     f"{cls.__name__}'s TARGET_MODEL ({target}) not in registry",
                 )
+
+
+class ValidateTest(TestCase):
+    """Test Source.validate() and Dseqrecord.validate_history()."""
+
+    def test_validate_golden_gate(self):
+        golden_gate_product.validate_history(recursive=True)
+
+    def test_validate_crispr(self):
+        crispr_product.validate_history(recursive=True)
+
+    def test_validate_ligation(self):
+        ligation_product.validate_history(recursive=True)
+
+    def test_validate_pcr(self):
+        pcr_product.validate_history(recursive=True)
+
+    def test_validate_cut(self):
+        custom_cut_product.validate_history(recursive=True)
+
+    def test_validate_gateway(self):
+        product_gateway_BP.validate_history(recursive=True)
+
+    def test_validate_oligo_hybridization(self):
+        product_oligo_hybridization.validate_history(recursive=True)
+
+    def test_validate_reverse_complement(self):
+        from pydna.opencloning_models import ReverseComplementSource, SourceInput
+
+        seq = Dseqrecord("ATGCATGC")
+        rc = seq.reverse_complement()
+        rc.source = ReverseComplementSource(input=[SourceInput(sequence=seq)])
+        rc.source.validate(rc)
+
+    def test_validate_restriction_enzyme_cut(self):
+        """Validate a restriction enzyme cut (SequenceCutSource with enzyme)."""
+        template = Dseqrecord("aaGAATTCcc")
+        products = template.cut(EcoRI)
+        for p in products:
+            p.source.validate(p)
+
+    def test_validate_no_source(self):
+        """validate_history on a Dseqrecord with no source should return silently."""
+        seq = Dseqrecord("ATGC")
+        seq.validate_history()
+
+    def test_validate_no_inputs(self):
+        """Source with no inputs (external) should return silently."""
+        from pydna.opencloning_models import UploadedFileSource
+
+        source = UploadedFileSource(
+            file_name="test.gb", index_in_file=0, sequence_file_format="genbank"
+        )
+        source.validate(Dseqrecord("ATGC"))
+
+    def test_validate_wrong_sequence_raises(self):
+        """Mutating the sequence should cause validate to raise ValueError."""
+
+        template = Dseqrecord("aaGAATTCcc")
+        products = template.cut(EcoRI)
+        product = products[0]
+        # Create a wrong result with a different sequence
+        wrong = Dseqrecord("aaTTTAA")
+        wrong.source = product.source
+        with self.assertRaises(ValueError):
+            wrong.source.validate(wrong)
+
+    def test_validate_annotation_source_not_implemented(self):
+        from pydna.opencloning_models import AnnotationSource, SourceInput
+
+        source = AnnotationSource(
+            annotation_tool="plannotate",
+            input=[SourceInput(sequence=Dseqrecord("ATGC"))],
+        )
+        with self.assertRaises(NotImplementedError):
+            source.validate(Dseqrecord("ATGC"))
+
+    def test_validate_polymerase_extension_not_implemented(self):
+        from pydna.opencloning_models import PolymeraseExtensionSource, SourceInput
+
+        source = PolymeraseExtensionSource(
+            input=[SourceInput(sequence=Dseqrecord("ATGC"))],
+        )
+        with self.assertRaises(NotImplementedError):
+            source.validate(Dseqrecord("ATGC"))
+
+    def test_validate_homologous_recombination(self):
+        from pydna.assembly2 import homologous_recombination_integration
+
+        homology = "AAGTCCGTTCGTTTTACCTG"
+        genome = Dseqrecord(f"aaaaaa{homology}cccc", name="genome")
+        insert_seq = Dseqrecord(f"{homology}tttt{homology}", name="insert")
+        products = homologous_recombination_integration(genome, [insert_seq], 20)
+        for p in products:
+            p.source.validate(p)
+
+    def test_validate_cre_lox_excision(self):
+        from pydna.assembly2 import cre_lox_excision
+        from pydna.cre_lox import LOXP_SEQUENCE
+
+        genome = Dseqrecord(
+            f"cccccc{LOXP_SEQUENCE}aaaa{LOXP_SEQUENCE}cccccc", name="genome"
+        )
+        products = cre_lox_excision(genome)
+        for p in products:
+            p.source.validate(p)
+
+    def test_validate_cre_lox_integration(self):
+        from pydna.assembly2 import cre_lox_integration
+        from pydna.cre_lox import LOXP_SEQUENCE
+
+        linear = Dseqrecord(f"cccccc{LOXP_SEQUENCE}aaaaa")
+        circular = Dseqrecord(f"{LOXP_SEQUENCE}bbbbb", circular=True)
+        products = cre_lox_integration(linear, [circular])
+        for p in products:
+            p.source.validate(p)
+
+    def test_validate_recombinase_excision(self):
+        from pydna.assembly2 import recombinase_excision
+        from pydna.recombinase import Recombinase
+
+        site1 = "ATGCCCTAAaaTT"
+        site2 = "AAaaTTTTTTTCCCT"
+        recombinase = Recombinase(site1, site2)
+        genome = Dseqrecord(
+            f"cccccc{site1.upper()}aaaa{site2.upper()}cccccc", name="genome"
+        )
+        products = recombinase_excision(genome, recombinase)
+        for p in products:
+            p.source.validate(p)
+
+    def test_validate_gibson_assembly(self):
+        from pydna.assembly2 import gibson_assembly
+
+        fragments = [
+            Dseqrecord("TTTTacgatAAtgctccCCCC", name="f1"),
+            Dseqrecord("CCCCtcatGGGG", name="f2"),
+            Dseqrecord("GGGGatataTTTT", name="f3"),
+        ]
+        products = gibson_assembly(fragments, limit=4)
+        for p in products:
+            p.source.validate(p)
+
+    def test_validate_in_fusion(self):
+        from pydna.assembly2 import in_fusion_assembly
+
+        fragments = [
+            Dseqrecord("TTTTacgatAAtgctccCCCC", name="f1"),
+            Dseqrecord("CCCCtcatGGGG", name="f2"),
+            Dseqrecord("GGGGatataTTTT", name="f3"),
+        ]
+        products = in_fusion_assembly(fragments, limit=4)
+        for p in products:
+            p.source.validate(p)
+
+    def test_validate_in_vivo_assembly(self):
+        from pydna.assembly2 import in_vivo_assembly
+
+        homology = "AAGTCCGTTCGTTTTACCTG"
+        f1 = Dseqrecord(f"{homology}aaaaaa{homology}", circular=True, name="f1")
+        f2 = Dseqrecord(f"{homology}ccccc{homology}", circular=True, name="f2")
+        products = in_vivo_assembly([f1, f2], limit=20, circular_only=True)
+        for p in products:
+            p.source.validate(p)

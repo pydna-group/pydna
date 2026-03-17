@@ -413,6 +413,19 @@ class Source(ConfiguredBaseModel):
             nx.generate_network_text(history_graph, with_labels=True, sources=[id(seq)])
         )
 
+    def validate(self, result: "Dseqrecord") -> None:
+        """Replay the cloning operation and verify the result sequence matches.
+
+        Raises ValueError if the result doesn't match any expected product.
+        Raises NotImplementedError for source types that don't support validation yet.
+        Sources with no inputs (external imports) return silently.
+        """
+        if not self.input:
+            return
+        raise NotImplementedError(
+            f"validate() not implemented for {type(self).__name__}"
+        )
+
 
 class AssemblySource(Source):
     circular: bool
@@ -439,6 +452,49 @@ class AssemblySource(Source):
             )
 
         return AssemblySource(input=input_list, circular=is_circular)
+
+    def _get_input_sequences(self) -> list["Dseqrecord"]:
+        """Return Dseqrecord inputs (excludes Primers), preserving order."""
+        from pydna.dseqrecord import Dseqrecord
+
+        seqs: list[Dseqrecord] = []
+        for inp in self.input:
+            if isinstance(inp.sequence, Dseqrecord):
+                seqs.append(inp.sequence)
+        return seqs
+
+    def _get_input_primers(self) -> list["Primer"]:
+        """Return Primer inputs, preserving order."""
+        from pydna.primer import Primer
+
+        return [inp.sequence for inp in self.input if isinstance(inp.sequence, Primer)]
+
+    def _minimal_assembly_overlap(self) -> int:
+        """Return the smallest overlap length across all AssemblyFragment locations."""
+        overlaps: list[int] = []
+        for inp in self.input:
+            if not isinstance(inp, AssemblyFragment):
+                continue
+            if inp.left_location is not None:
+                overlaps.append(len(inp.left_location))
+            if inp.right_location is not None:
+                overlaps.append(len(inp.right_location))
+        if not overlaps:
+            raise ValueError("Assembly is not complete")
+        return min(overlaps)
+
+    def _validate_result_in_products(
+        self, result: "Dseqrecord", products: list["Dseqrecord"]
+    ) -> None:
+        # if not products:
+        #     raise ValueError(
+        #         f"No products were generated for {type(self).__name__} with id {get_id(self)}"
+        #     )
+        if not any(p.seq == result.seq for p in products):
+            raise ValueError(
+                f"Result sequence does not match any of the {len(products)} "
+                f"product(s) from {type(self).__name__}"
+            )
 
 
 class DatabaseSource(Source):
@@ -556,13 +612,39 @@ class RestrictionAndLigationSource(AssemblySource):
             ]
         }
 
+    def validate(self, result: "Dseqrecord") -> None:
+        from pydna.assembly2 import restriction_ligation_assembly
+
+        products = restriction_ligation_assembly(
+            self._get_input_sequences(), self.restriction_enzymes
+        )
+        self._validate_result_in_products(result, products)
+
 
 class GibsonAssemblySource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_GibsonAssemblySource]] = _GibsonAssemblySource
 
+    def validate(self, result: "Dseqrecord") -> None:
+        from pydna.assembly2 import gibson_assembly
+
+        products = gibson_assembly(
+            self._get_input_sequences(),
+            limit=self._minimal_assembly_overlap(),
+        )
+        self._validate_result_in_products(result, products)
+
 
 class InFusionSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_InFusionSource]] = _InFusionSource
+
+    def validate(self, result: "Dseqrecord") -> None:
+        from pydna.assembly2 import in_fusion_assembly
+
+        products = in_fusion_assembly(
+            self._get_input_sequences(),
+            limit=self._minimal_assembly_overlap(),
+        )
+        self._validate_result_in_products(result, products)
 
 
 class OverlapExtensionPCRLigationSource(AssemblySource):
@@ -570,13 +652,42 @@ class OverlapExtensionPCRLigationSource(AssemblySource):
         _OverlapExtensionPCRLigationSource
     )
 
+    def validate(self, result: "Dseqrecord") -> None:
+        from pydna.assembly2 import fusion_pcr_assembly
+
+        products = fusion_pcr_assembly(
+            self._get_input_sequences(),
+            limit=self._minimal_assembly_overlap(),
+        )
+        self._validate_result_in_products(result, products)
+
 
 class InVivoAssemblySource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_InVivoAssemblySource]] = _InVivoAssemblySource
 
+    def validate(self, result: "Dseqrecord") -> None:
+        from pydna.assembly2 import in_vivo_assembly
+
+        products = in_vivo_assembly(
+            self._get_input_sequences(),
+            limit=self._minimal_assembly_overlap(),
+        )
+        self._validate_result_in_products(result, products)
+
 
 class LigationSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_LigationSource]] = _LigationSource
+
+    def validate(self, result: "Dseqrecord") -> None:
+        from pydna.assembly2 import ligation_assembly
+
+        overlap = self._minimal_assembly_overlap()
+        products = ligation_assembly(
+            self._get_input_sequences(),
+            allow_blunt=overlap == 0,
+            allow_partial_overlap=True,
+        )
+        self._validate_result_in_products(result, products)
 
 
 class GatewaySource(AssemblySource):
@@ -584,15 +695,51 @@ class GatewaySource(AssemblySource):
     reaction_type: GatewayReactionType
     greedy: bool = Field(default=False)
 
+    def validate(self, result: "Dseqrecord") -> None:
+        from pydna.assembly2 import gateway_assembly
+
+        products = gateway_assembly(
+            self._get_input_sequences(),
+            self.reaction_type,
+            self.greedy,
+        )
+        self._validate_result_in_products(result, products)
+
 
 class HomologousRecombinationSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_HomologousRecombinationSource]] = (
         _HomologousRecombinationSource
     )
 
+    def validate(self, result: "Dseqrecord") -> None:
+        from pydna.assembly2 import (
+            in_vivo_assembly,
+            homologous_recombination_integration,
+            homologous_recombination_excision,
+        )
+
+        seqs = self._get_input_sequences()
+        limit = self._minimal_assembly_overlap()
+        if len(seqs) == 1:
+            products = homologous_recombination_excision(seqs[0], limit)
+        elif seqs[0].seq.circular:
+            products = in_vivo_assembly(seqs, limit, circular_only=True)
+        else:
+            products = homologous_recombination_integration(seqs[0], seqs[1:], limit)
+        self._validate_result_in_products(result, products)
+
 
 class CRISPRSource(HomologousRecombinationSource):
     TARGET_MODEL: ClassVar[Type[_CRISPRSource]] = _CRISPRSource
+
+    def validate(self, result: "Dseqrecord") -> None:
+        from pydna.assembly2 import crispr_integration
+
+        seqs = self._get_input_sequences()
+        guides = self._get_input_primers()
+        limit = self._minimal_assembly_overlap()
+        products = crispr_integration(seqs[0], seqs[1:], guides, limit)
+        self._validate_result_in_products(result, products)
 
 
 class CreLoxRecombinationSource(AssemblySource):
@@ -600,10 +747,39 @@ class CreLoxRecombinationSource(AssemblySource):
         _CreLoxRecombinationSource
     )
 
+    def validate(self, result: "Dseqrecord") -> None:
+        from pydna.assembly2 import cre_lox_integration, cre_lox_excision
+
+        seqs = self._get_input_sequences()
+        if len(seqs) == 1:
+            products = cre_lox_excision(seqs[0])
+        else:
+            products = []
+            if not seqs[0].seq.circular:
+                products.extend(cre_lox_integration(seqs[0], seqs[1:]))
+            if not seqs[1].seq.circular:
+                products.extend(cre_lox_integration(seqs[1], seqs[:1]))
+        self._validate_result_in_products(result, products)
+
 
 class PCRSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_PCRSource]] = _PCRSource
     add_primer_features: bool = Field(default=False)
+
+    def validate(self, result: "Dseqrecord") -> None:
+        from pydna.assembly2 import pcr_assembly
+
+        seqs = self._get_input_sequences()
+        primers = self._get_input_primers()
+        limit = self._minimal_assembly_overlap()
+        products = pcr_assembly(
+            seqs[0],
+            primers[0],
+            primers[1],
+            limit=limit,
+            add_primer_features=self.add_primer_features,
+        )
+        self._validate_result_in_products(result, products)
 
 
 class RecombinaseSource(AssemblySource):
@@ -655,6 +831,24 @@ class RecombinaseSource(AssemblySource):
             )
         }
 
+    def validate(self, result: "Dseqrecord") -> None:
+        from pydna.assembly2 import recombinase_integration, recombinase_excision
+
+        seqs = self._get_input_sequences()
+        if len(seqs) == 1:
+            products = recombinase_excision(seqs[0], self.recombinases)
+        else:
+            products = []
+            if not seqs[0].seq.circular:
+                products.extend(
+                    recombinase_integration(seqs[0], seqs[1:], self.recombinases)
+                )
+            if not seqs[1].seq.circular:
+                products.extend(
+                    recombinase_integration(seqs[1], seqs[:1], self.recombinases)
+                )
+        self._validate_result_in_products(result, products)
+
 
 class SequenceCutSource(Source):
     left_edge: CutSiteType | None
@@ -704,6 +898,14 @@ class SequenceCutSource(Source):
 
         return has_enzyme(self.left_edge) or has_enzyme(self.right_edge)
 
+    def validate(self, result: "Dseqrecord") -> None:
+        parent = self.input[0].sequence
+        expected = parent.apply_cut(self.left_edge, self.right_edge)
+        if expected.seq != result.seq:
+            raise ValueError(
+                "Cut product does not match expected result from " "SequenceCutSource"
+            )
+
     @classmethod
     def _get_deserialization_overrides(
         cls, model: "_RestrictionEnzymeDigestionSource", sequences, primers
@@ -727,11 +929,31 @@ class OligoHybridizationSource(Source):
 
     overhang_crick_3prime: Optional[int] = None
 
+    def validate(self, result: "Dseqrecord") -> None:
+        from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization
+
+        fwd = self.input[0].sequence
+        rvs = self.input[1].sequence
+        annealing = min(len(fwd.seq), len(rvs.seq)) - abs(
+            self.overhang_crick_3prime or 0
+        )
+        products = oligonucleotide_hybridization(fwd, rvs, annealing)
+        if not any(p.seq == result.seq for p in products):
+            raise ValueError(
+                "Result sequence does not match any product from "
+                "OligoHybridizationSource"
+            )
+
 
 class PolymeraseExtensionSource(Source):
     TARGET_MODEL: ClassVar[Type[_PolymeraseExtensionSource]] = (
         _PolymeraseExtensionSource
     )
+
+    def validate(self, result: "Dseqrecord") -> None:
+        raise NotImplementedError(
+            "validate() not implemented for PolymeraseExtensionSource"
+        )
 
 
 class AnnotationSource(Source):
@@ -743,9 +965,17 @@ class AnnotationSource(Source):
         list[_AnnotationReport | _PlannotateAnnotationReport]
     ] = None
 
+    def validate(self, result: "Dseqrecord") -> None:
+        raise NotImplementedError("validate() not implemented for AnnotationSource")
+
 
 class ReverseComplementSource(Source):
     TARGET_MODEL: ClassVar[Type[_ReverseComplementSource]] = _ReverseComplementSource
+
+    def validate(self, result: "Dseqrecord") -> None:
+        expected = self.input[0].sequence.reverse_complement()
+        if expected.seq != result.seq:
+            raise ValueError("Reverse complement does not match expected result")
 
 
 def read_dseqrecord_from_text_file_sequence(seq: TextFileSequence) -> Dseqrecord:
