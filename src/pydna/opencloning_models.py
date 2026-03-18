@@ -376,7 +376,7 @@ class Source(ConfiguredBaseModel):
                     _source_input_from_model(inp, sequences, primers)
                     for inp in (model.input or [])
                 ]
-            elif hasattr(model, field_name):
+            else:
                 kwargs[field_name] = getattr(model, field_name)
         return cls(**kwargs)
 
