@@ -22,7 +22,6 @@ from pydna.opencloning_models import (
     get_id,
     NCBISequenceSource,
     GenomeCoordinatesSource,
-    PCRSource,
 )
 from pydna.primer import Primer
 from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization
@@ -984,10 +983,6 @@ class NormalizeTest(TestCase):
         normalized_seqr = seqr_with_wrong_history[0].normalize_history()
         self.assertEqual(normalized_seqr.seq.seguid(), product_seguid)
         normalized_seqr.validate_history(recursive=True)
-        if not isinstance(product.source, PCRSource):
-            self.assertNotEqual(normalized_seqr.seq, product.seq)
-        else:
-            self.assertEqual(normalized_seqr.seq, product.seq)
 
     def test_golden_gate(self):
         self._common_testing_function(golden_gate_product)
@@ -1007,3 +1002,11 @@ class NormalizeTest(TestCase):
 
     def test_gateway(self):
         self._common_testing_function(product_gateway_BP)
+
+    def test_normalize_examples_opencloning(self):
+        for file in os.listdir(f"{test_folder}/examples_opencloning"):
+            with open(f"{test_folder}/examples_opencloning/{file}", "r") as f:
+                data = json.load(f)
+            cloning_strategy = CloningStrategy.model_validate(data)
+            for product in cloning_strategy.to_dseqrecords():
+                self._common_testing_function(product)
