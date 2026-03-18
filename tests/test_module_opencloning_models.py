@@ -641,12 +641,13 @@ class RoundTripTest(TestCase):
         cs2 = CloningStrategy.model_validate_json(json_str)
         return cs2.to_dseqrecords()
 
-    def _assert_dseqrecord_equal(self, original, restored):
-        """Assert that two Dseqrecord objects have equal sequences and source types."""
-        self.assertEqual(str(original.seq).upper(), str(restored.seq).upper())
-        self.assertEqual(original.seq.ovhg, restored.seq.ovhg)
-        self.assertEqual(original.seq.watson_ovhg, restored.seq.watson_ovhg)
-        self.assertEqual(original.name, restored.name)
+    def _assert_dseqrecord_equal(self, original: Dseqrecord, restored: Dseqrecord):
+        """Assert that two Dseqrecord objects are equal."""
+        restored_copy = copy.deepcopy(restored)
+        restored_copy.id = original.id
+        self.assertEqual(original.seq, restored_copy.seq)
+        self.assertEqual(original.name, restored_copy.name)
+        self.assertEqual(original.format("genbank"), restored_copy.format("genbank"))
 
     def _assert_source_type_matches(self, original, restored):
         """Assert the source type is the same (or both None)."""

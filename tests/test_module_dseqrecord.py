@@ -2374,3 +2374,19 @@ def test_apply_cut2():
                     )
                 if strand is None:
                     assert new_locs == sorted(["[0:3]", "[0:4]", "[11:14]", "[10:14]"])
+
+
+def test_round_trip_format_genbank():
+    from pydna.dseqrecord import Dseqrecord
+    from pydna.readers import read
+
+    """
+    Ensures that when instantiating a Dseqrecord, then writing, then reading, then writing again, the two files are identical.
+
+    It requires setting {"source": "", "organism": "."} in the Dseqrecord annotations when instantiating the Dseqrecord.
+
+    """
+    dseqr = Dseqrecord("ATGCATGC")
+    str1 = dseqr.format("genbank")
+    dseqr2 = read(str1)
+    assert str1 == dseqr2.format("genbank")
