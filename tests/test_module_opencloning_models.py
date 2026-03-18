@@ -1,50 +1,72 @@
 # -*- coding: utf-8 -*-
 import copy
 from typing import Callable
-from pydna.opencloning_models import (
-    SequenceLocationStr,
-    read_dseqrecord_from_text_file_sequence,
-)
-from Bio.SeqFeature import SimpleLocation
-from pydna.utils import shift_location
-from pydna.dseqrecord import Dseqrecord
-from pydna.dseq import Dseq
 from unittest import TestCase
+
+from Bio.Restriction import BsaI, EcoRI, SalI
+from Bio.Seq import reverse_complement
+from Bio.SeqFeature import SimpleLocation
+from opencloning_linkml.datamodel import (
+    AnnotationReport,
+    AssemblyFragment as _AssemblyFragment,
+    AssemblySource as _AssemblySource,
+    Source as _Source,
+    SourceInput as _SourceInput,
+    TemplateSequence,
+)
+from pydantic import BaseModel, ValidationError
+
+from pydna.assembly2 import (
+    cre_lox_excision,
+    cre_lox_integration,
+    crispr_integration,
+    fusion_pcr_assembly,
+    gateway_assembly,
+    gibson_assembly,
+    golden_gate_assembly,
+    homologous_recombination_excision,
+    homologous_recombination_integration,
+    in_fusion_assembly,
+    in_vivo_assembly,
+    ligation_assembly,
+    pcr_assembly,
+    recombinase_excision,
+    recombinase_integration,
+)
+from pydna.cre_lox import LOXP_SEQUENCE
+from pydna.dseq import Dseq
+from pydna.dseqrecord import Dseqrecord
+from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization
 from pydna.opencloning_models import (
-    AssemblySource,
     AssemblyFragment,
+    AssemblySource,
+    CloningStrategy,
+    GenomeCoordinatesSource,
+    NCBISequenceSource,
+    PCRSource,
+    PrimerModel,
+    ReverseComplementSource,
+    SequenceLocationStr,
     Source,
     SourceInput,
     TextFileSequence,
-    PrimerModel,
-    CloningStrategy,
-    id_mode,
+    UploadedFileSource,
+    AnnotationSource,
+    PolymeraseExtensionSource,
+    _TARGET_MODEL_REGISTRY,
+    _source_input_from_model,
     get_id,
-    NCBISequenceSource,
-    GenomeCoordinatesSource,
+    id_mode,
+    read_dseqrecord_from_text_file_sequence,
 )
 from pydna.primer import Primer
-from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization
-from opencloning_linkml.datamodel import (
-    AssemblySource as _AssemblySource,
-    AssemblyFragment as _AssemblyFragment,
-    Source as _Source,
-    SourceInput as _SourceInput,
-)
-from pydantic import BaseModel, ValidationError
-from pydna.assembly2 import (
-    golden_gate_assembly,
-    crispr_integration,
-    ligation_assembly,
-    pcr_assembly,
-    gateway_assembly,
-)
-from Bio.Seq import reverse_complement
-from Bio.Restriction import BsaI, EcoRI, SalI
-import textwrap
+from pydna.recombinase import Recombinase
+from pydna.utils import shift_location
+
+import glob
 import json
 import os
-import glob
+import textwrap
 
 # Examples that will be used in several tests ==============================================
 test_folder = os.path.join(os.path.dirname(__file__))
@@ -157,6 +179,22 @@ product_oligo_hybridization, *rest = oligonucleotide_hybridization(
 )
 
 product_oligo_hybridization.name = "product_oligo_hybridization"
+
+
+# Recombinase example
+site1 = "ATGCCCTAAaaTT"
+site2 = "AAaaTTTTTTTCCCT"
+recombinase = Recombinase(site1, site2)
+genome = Dseqrecord(f"cccccc{site1.upper()}aaaa{site2.upper()}cccccc", name="genome")
+recombinase_products = recombinase_excision(genome, recombinase)
+recombinase_products[0].name = "excised_plasmid"
+recombinase_products[1].name = "remaining_genome"
+recombinase_product = recombinase_integration(
+    recombinase_products[1],
+    [recombinase_products[0]],
+    recombinase.get_reverse_recombinase(),
+)[0]
+recombinase_product.name = "reconstituted_locus"
 
 
 # ========================================================================================
@@ -571,6 +609,11 @@ class CloningStrategyTest(TestCase):
                 {int(a.id), int(c.id), int(d.id), int(e.id)},
             )
 
+            cs_dict = cs.model_dump()
+            seq_ids_dict = [seq["id"] for seq in cs_dict["sequences"]]
+            seq_ids_obj = [seq.id for seq in cs.sequences]
+            self.assertEqual(seq_ids_dict, seq_ids_obj)
+
 
 class IdModeTest(TestCase):
     def test_id_mode(self):
@@ -700,6 +743,12 @@ class RoundTripTest(TestCase):
         self._assert_dseqrecord_equal(product_oligo_hybridization, results[0])
         self._assert_source_type_matches(product_oligo_hybridization, results[0])
 
+    def test_recombinase_round_trip(self):
+        results = self._round_trip([recombinase_product])
+        self.assertEqual(len(results), 1)
+        self._assert_dseqrecord_equal(recombinase_product, results[0])
+        self._assert_source_type_matches(recombinase_product, results[0])
+
     def test_multiple_products_round_trip(self):
         products = [
             golden_gate_product,
@@ -717,7 +766,6 @@ class RoundTripTest(TestCase):
 
     def test_registry_covers_all_source_subclasses(self):
         """Verify the registry has entries for all Source subclasses with ClassVar TARGET_MODEL."""
-        from pydna.opencloning_models import _TARGET_MODEL_REGISTRY, Source
 
         def _collect_subclasses(cls):
             result = set()
@@ -761,9 +809,13 @@ class ValidateTest(TestCase):
     def test_validate_oligo_hybridization(self):
         product_oligo_hybridization.validate_history(recursive=True)
 
-    def test_validate_reverse_complement(self):
-        from pydna.opencloning_models import ReverseComplementSource, SourceInput
+    def test_validate_recombinase(self):
+        recombinase_product.validate_history(recursive=True)
 
+    def test_validate_custom_cut(self):
+        custom_cut_product.validate_history(recursive=True)
+
+    def test_validate_reverse_complement(self):
         seq = Dseqrecord("ATGCATGC")
         rc = seq.reverse_complement()
         rc.source = ReverseComplementSource(input=[SourceInput(sequence=seq)])
@@ -774,17 +826,15 @@ class ValidateTest(TestCase):
         template = Dseqrecord("aaGAATTCcc")
         products = template.cut(EcoRI)
         for p in products:
-            p.source.validate(p)
+            p.validate_history(recursive=True)
 
     def test_validate_no_source(self):
         """validate_history on a Dseqrecord with no source should return silently."""
         seq = Dseqrecord("ATGC")
-        seq.validate_history()
+        seq.validate_history(recursive=True)
 
     def test_validate_no_inputs(self):
         """Source with no inputs (external) should return silently."""
-        from pydna.opencloning_models import UploadedFileSource
-
         source = UploadedFileSource(
             file_name="test.gb", index_in_file=0, sequence_file_format="genbank"
         )
@@ -832,8 +882,6 @@ class ValidateTest(TestCase):
             copy_hybridization.validate_history(recursive=True)
 
     def test_validate_annotation(self):
-        from pydna.opencloning_models import AnnotationSource, SourceInput
-
         source = AnnotationSource(
             annotation_tool="plannotate",
             input=[SourceInput(sequence=Dseqrecord("ATGC"))],
@@ -842,98 +890,87 @@ class ValidateTest(TestCase):
         annotated_seq.add_feature(0, 3, type_="gene", label="gene1")
         source.validate(annotated_seq)
 
-    def test_validate_polymerase_extension_not_implemented(self):
-        from pydna.opencloning_models import PolymeraseExtensionSource, SourceInput
-
-        source = PolymeraseExtensionSource(
-            input=[
-                SourceInput(
-                    sequence=Dseqrecord(
-                        Dseq.from_full_sequence_and_overhangs("ATGC", -1, -1)
-                    )
-                )
-            ],
+        # error for different sequence
+        source2 = AnnotationSource(
+            annotation_tool="plannotate",
+            input=[SourceInput(sequence=Dseqrecord("ATG"))],
         )
-        source.validate(Dseqrecord("ATGC"))
+        with self.assertRaises(ValueError) as e:
+            source2.validate(annotated_seq)
+
+        self.assertIn(
+            "AnnotationSource input sequence does not match result", e.exception.args[0]
+        )
+
+        # error for primer
+        source3 = AnnotationSource(
+            annotation_tool="plannotate",
+            input=[SourceInput(sequence=Primer("AATT"))],
+        )
+        with self.assertRaises(ValueError) as e:
+            source3.validate(annotated_seq)
+        self.assertIn(
+            "AnnotationSource input must be a Dseqrecord", e.exception.args[0]
+        )
+
+    def test_validate_polymerase_extension(self):
+        prev_seq = Dseqrecord(Dseq.from_full_sequence_and_overhangs("ATGC", -1, -1))
+        new_seq = Dseqrecord("ATGC")
+        new_seq.source = PolymeraseExtensionSource(
+            input=[SourceInput(sequence=prev_seq)]
+        )
+        new_seq.validate_history(recursive=True)
+
+        # error for primer
+        new_seq.source.input[0].sequence = Primer("AATT")
+        with self.assertRaises(ValueError) as e:
+            new_seq.validate_history(recursive=True)
+        self.assertIn(
+            "PolymeraseExtensionSource input must be a Dseqrecord", e.exception.args[0]
+        )
 
     def test_validate_homologous_recombination(self):
-        from pydna.assembly2 import homologous_recombination_integration
-
         homology = "AAGTCCGTTCGTTTTACCTG"
         genome = Dseqrecord(f"aaaaaa{homology}cccc", name="genome")
         insert_seq = Dseqrecord(f"{homology}tttt{homology}", name="insert")
         products = homologous_recombination_integration(genome, [insert_seq], 20)
+        products = homologous_recombination_excision(products[0], 20)
         for p in products:
-            p.source.validate(p)
+            p.validate_history(recursive=True)
 
     def test_validate_cre_lox_excision(self):
-        from pydna.assembly2 import cre_lox_excision
-        from pydna.cre_lox import LOXP_SEQUENCE
-
         genome = Dseqrecord(
             f"cccccc{LOXP_SEQUENCE}aaaa{LOXP_SEQUENCE}cccccc", name="genome"
         )
         products = cre_lox_excision(genome)
         for p in products:
-            p.source.validate(p)
+            p.validate_history(recursive=True)
 
     def test_validate_cre_lox_integration(self):
-        from pydna.assembly2 import cre_lox_integration
-        from pydna.cre_lox import LOXP_SEQUENCE
-
         linear = Dseqrecord(f"cccccc{LOXP_SEQUENCE}aaaaa")
         circular = Dseqrecord(f"{LOXP_SEQUENCE}bbbbb", circular=True)
         products = cre_lox_integration(linear, [circular])
         for p in products:
-            p.source.validate(p)
+            p.validate_history(recursive=True)
 
-    def test_validate_recombinase_excision(self):
-        from pydna.assembly2 import recombinase_excision
-        from pydna.recombinase import Recombinase
-
-        site1 = "ATGCCCTAAaaTT"
-        site2 = "AAaaTTTTTTTCCCT"
-        recombinase = Recombinase(site1, site2)
-        genome = Dseqrecord(
-            f"cccccc{site1.upper()}aaaa{site2.upper()}cccccc", name="genome"
-        )
-        products = recombinase_excision(genome, recombinase)
-        for p in products:
-            p.source.validate(p)
-
-    def test_validate_gibson_assembly(self):
-        from pydna.assembly2 import gibson_assembly
-
+    def test_validate_gibson_like(self):
+        homology1 = "GAGTCTCC"
+        homology2 = "TCAGAAGT"
+        homology3 = "TTCTTCAG"
         fragments = [
-            Dseqrecord("TTTTacgatAAtgctccCCCC", name="f1"),
-            Dseqrecord("CCCCtcatGGGG", name="f2"),
-            Dseqrecord("GGGGatataTTTT", name="f3"),
+            Dseqrecord(f"{homology1}acgatAAtgctcc{homology2}", name="f1"),
+            Dseqrecord(f"{homology2}tcatGGGG{homology3}", name="f2"),
+            Dseqrecord(f"{homology3}atataTTTT{homology1}", name="f3"),
         ]
-        products = gibson_assembly(fragments, limit=4)
-        for p in products:
-            p.source.validate(p)
-
-    def test_validate_in_fusion(self):
-        from pydna.assembly2 import in_fusion_assembly
-
-        fragments = [
-            Dseqrecord("TTTTacgatAAtgctccCCCC", name="f1"),
-            Dseqrecord("CCCCtcatGGGG", name="f2"),
-            Dseqrecord("GGGGatataTTTT", name="f3"),
-        ]
-        products = in_fusion_assembly(fragments, limit=4)
-        for p in products:
-            p.source.validate(p)
-
-    def test_validate_in_vivo_assembly(self):
-        from pydna.assembly2 import in_vivo_assembly
-
-        homology = "AAGTCCGTTCGTTTTACCTG"
-        f1 = Dseqrecord(f"{homology}aaaaaa{homology}", circular=True, name="f1")
-        f2 = Dseqrecord(f"{homology}ccccc{homology}", circular=True, name="f2")
-        products = in_vivo_assembly([f1, f2], limit=20, circular_only=True)
-        for p in products:
-            p.source.validate(p)
+        for func in [
+            gibson_assembly,
+            in_fusion_assembly,
+            fusion_pcr_assembly,
+            in_vivo_assembly,
+        ]:
+            products = func(fragments, limit=8)
+            for p in products:
+                p.validate_history(recursive=True)
 
     def test_validate_examples_opencloning(self):
 
@@ -979,9 +1016,9 @@ class NormalizeTest(TestCase):
             cs = _replace_sequence(cs, seq_id, modify_seq)
         seqr_with_wrong_history = cs.to_dseqrecords()
         self.assertEqual(len(seqr_with_wrong_history), 1)
-        self.assertRaises(
-            ValueError, seqr_with_wrong_history[0].validate_history, recursive=True
-        )
+        with self.assertRaises(ValueError):
+            seqr_with_wrong_history[0].validate_history(recursive=True)
+
         normalized_seqr = seqr_with_wrong_history[0].normalize_history()
         self.assertEqual(normalized_seqr.seq.seguid(), product_seguid)
         normalized_seqr.validate_history(recursive=True)
@@ -1005,6 +1042,14 @@ class NormalizeTest(TestCase):
     def test_gateway(self):
         self._common_testing_function(product_gateway_BP)
 
+    def test_polymerase_extension(self):
+        prev_seq = Dseqrecord(Dseq.from_full_sequence_and_overhangs("ATTT", -1, -1))
+        new_seq = Dseqrecord("ATTT")
+        new_seq.source = PolymeraseExtensionSource(
+            input=[SourceInput(sequence=prev_seq)]
+        )
+        self._common_testing_function(new_seq)
+
     def test_normalize_examples_opencloning(self):
         for file in glob.glob(f"{test_folder}/examples_opencloning/*.json"):
             with open(file, "r") as f:
@@ -1012,3 +1057,115 @@ class NormalizeTest(TestCase):
             cloning_strategy = CloningStrategy.model_validate(data)
             for product in cloning_strategy.to_dseqrecords():
                 self._common_testing_function(product)
+
+    def test_normalize_error(self):
+        dummy_sequence = Dseqrecord("ATGC")
+        copy_golden_gate = copy.deepcopy(golden_gate_product)
+        copy_golden_gate.source.input[0].sequence = dummy_sequence
+        with self.assertRaises(ValueError):
+            copy_golden_gate.normalize_history()
+
+    def test_normalize_annotation_source(self):
+        for circular in [True, False]:
+            seq = Dseqrecord("ATTTT", circular=circular)
+            annotation_source = AnnotationSource(
+                annotation_tool="plannotate",
+                input=[SourceInput(sequence=seq)],
+                annotation_report=[AnnotationReport()],
+            )
+            source_no_report = copy.deepcopy(annotation_source)
+            source_no_report.annotation_report = []
+            mods = [
+                copy.deepcopy(seq),
+                seq.reverse_complement(),
+            ]
+            if circular:
+                mods.append(seq.shifted(15).reverse_complement())
+            for i, mod in enumerate(mods):
+                mod.source = annotation_source
+                newseq = mod.normalize_history()
+                self.assertEqual(newseq.seq, seq.seq)
+                if i == 0:
+                    self.assertEqual(newseq.source, annotation_source)
+                else:
+                    self.assertEqual(newseq.source, source_no_report)
+                self.assertEqual(newseq.source.input[0].sequence.seq, seq.seq)
+
+
+class MiscTests(TestCase):
+    """Miscellaneous tests to complete coverage."""
+
+    def test_source_input_from_model_error(self):
+        with self.assertRaises(ValueError):
+            _source_input_from_model(_SourceInput(sequence=1), {2: "blah"}, {3: "bluh"})
+
+    def test_source_raises_replay_products_error(self):
+        with self.assertRaises(NotImplementedError):
+            Source()._replay_products()
+
+    def test_minimal_assembly_overlap_error(self):
+        # If an incomplete assembly is passed for validation.
+        source = PCRSource(
+            input=[SourceInput(sequence=Dseqrecord("ATGC"))], circular=False
+        )
+        with self.assertRaises(ValueError) as e:
+            source._minimal_assembly_overlap()
+        self.assertEqual(str(e.exception), "Assembly is not complete")
+
+    def test_to_dseqrecords_fails_with_template_sequence(self):
+        with id_mode(use_python_internal_id=False):
+            cs = CloningStrategy.from_dseqrecords([Dseqrecord("ATGC", id="1")])
+            cs.sequences.append(TemplateSequence(id=23))
+            with self.assertRaises(NotImplementedError):
+                cs.to_dseqrecords()
+
+    def test_to_dseqrecords_fails_with_missing_source(self):
+        with id_mode(use_python_internal_id=False):
+            cs = CloningStrategy.from_dseqrecords([Dseqrecord("ATGC", id="1")])
+            cs.sources[0].id = 2
+            with self.assertRaises(ValueError) as e:
+                cs.to_dseqrecords()
+            self.assertEqual(str(e.exception), "Missing source for sequence 1")
+
+    def test_is_insertion_assembly_source(self):
+        loc = SimpleLocation(0, 3)
+        assembly_source = AssemblySource(
+            input=[
+                AssemblyFragment(
+                    sequence=Dseqrecord("ATGC"),
+                    left_location=loc,
+                    right_location=loc,
+                    reverse_complemented=False,
+                ),
+                AssemblyFragment(
+                    sequence=Dseqrecord("ATGC"),
+                    left_location=loc,
+                    right_location=loc,
+                    reverse_complemented=False,
+                ),
+            ],
+            circular=False,
+        )
+        self.assertFalse(assembly_source.is_insertion())
+        assembly_source.circular = True
+        self.assertFalse(assembly_source.is_insertion())
+
+        same_seq = Dseqrecord("ATGC")
+        assembly_source = AssemblySource(
+            input=[
+                AssemblyFragment(
+                    sequence=same_seq,
+                    left_location=None,
+                    right_location=loc,
+                    reverse_complemented=False,
+                ),
+                AssemblyFragment(
+                    sequence=same_seq,
+                    left_location=loc,
+                    right_location=None,
+                    reverse_complemented=False,
+                ),
+            ],
+            circular=False,
+        )
+        self.assertTrue(assembly_source.is_insertion())

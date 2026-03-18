@@ -534,6 +534,10 @@ class AssemblySource(Source):
             raise ValueError("Assembly is not complete")
         return min(overlaps)
 
+    def is_insertion(self) -> bool:
+        """Return True if the assembly is an insertion."""
+        return not self.circular and self.input[0].sequence is self.input[-1].sequence
+
     def _validate_result_in_products(
         self, result: "Dseqrecord", products: list["Dseqrecord"]
     ) -> None:
@@ -753,7 +757,6 @@ class HomologousRecombinationSource(AssemblySource):
 
     def _replay_products(self) -> list["Dseqrecord"]:
         from pydna.assembly2 import (
-            in_vivo_assembly,
             homologous_recombination_integration,
             homologous_recombination_excision,
         )
@@ -762,8 +765,6 @@ class HomologousRecombinationSource(AssemblySource):
         limit = self._minimal_assembly_overlap()
         if len(seqs) == 1:
             return homologous_recombination_excision(seqs[0], limit)
-        elif seqs[0].seq.circular:
-            return in_vivo_assembly(seqs, limit, circular_only=True)
         else:
             return homologous_recombination_integration(seqs[0], seqs[1:], limit)
 
@@ -792,12 +793,7 @@ class CreLoxRecombinationSource(AssemblySource):
         if len(seqs) == 1:
             return cre_lox_excision(seqs[0])
         else:
-            products = []
-            if not seqs[0].seq.circular:
-                products.extend(cre_lox_integration(seqs[0], seqs[1:]))
-            if not seqs[1].seq.circular:
-                products.extend(cre_lox_integration(seqs[1], seqs[:1]))
-            return products
+            return cre_lox_integration(seqs[0], seqs[1:])
 
 
 class PCRSource(AssemblySource):
@@ -875,16 +871,7 @@ class RecombinaseSource(AssemblySource):
         if len(seqs) == 1:
             return recombinase_excision(seqs[0], self.recombinases)
         else:
-            products = []
-            if not seqs[0].seq.circular:
-                products.extend(
-                    recombinase_integration(seqs[0], seqs[1:], self.recombinases)
-                )
-            if not seqs[1].seq.circular:
-                products.extend(
-                    recombinase_integration(seqs[1], seqs[:1], self.recombinases)
-                )
-            return products
+            return recombinase_integration(seqs[0], seqs[1:], self.recombinases)
 
 
 class SequenceCutSource(Source):
@@ -1013,20 +1000,6 @@ class PolymeraseExtensionSource(Source):
         result.source = self
         return [result]
 
-    def validate(self, result: "Dseqrecord") -> None:
-        from pydna.dseqrecord import Dseqrecord
-
-        if len(self.input) != 1:
-            raise ValueError("PolymeraseExtensionSource must have exactly one input")
-        if not isinstance(self.input[0].sequence, Dseqrecord):
-            raise ValueError(
-                f"PolymeraseExtensionSource input must be a Dseqrecord, got {type(self.input[0].sequence)}"
-            )
-        if self.input[0].sequence.seq.fill_in() != result.seq:
-            raise ValueError(
-                "PolymeraseExtensionSource input sequence does not match result"
-            )
-
 
 class AnnotationSource(Source):
     TARGET_MODEL: ClassVar[Type[_AnnotationSource]] = _AnnotationSource
@@ -1041,8 +1014,6 @@ class AnnotationSource(Source):
         """Just validates that there is a single input, and that its sequence is the same as the result."""
         from pydna.dseqrecord import Dseqrecord
 
-        if len(self.input) != 1:
-            raise ValueError("AnnotationSource must have exactly one input")
         if not isinstance(self.input[0].sequence, Dseqrecord):
             raise ValueError(
                 f"AnnotationSource input must be a Dseqrecord, got {type(self.input[0].sequence)}"
@@ -1063,8 +1034,15 @@ class AnnotationSource(Source):
         if input_sequence.seq == result.seq:
             return copy.deepcopy(result)
         if input_sequence.circular:
-            return result.synced(input_sequence.seq)
-        return result.reverse_complement()
+            # synced already handles reverse complementing
+            out_seq = result.synced(input_sequence.seq)
+        else:
+            out_seq = result.reverse_complement()
+        out_source = copy.deepcopy(self)
+        # Here we remove the annotation report, since it referenced original coordinates
+        out_source.annotation_report = []
+        out_seq.source = out_source
+        return out_seq
 
 
 class ReverseComplementSource(Source):
@@ -1223,7 +1201,7 @@ class CloningStrategy(_BaseCloningStrategy):
 
             source_model = source_by_id.get(seq_id)
             if source_model is None:
-                return
+                raise ValueError(f"Missing source for sequence {seq_id}")
 
             # Recursively resolve input sequences first
             for inp in source_model.input or []:
@@ -1237,7 +1215,7 @@ class CloningStrategy(_BaseCloningStrategy):
                 return
 
             pydna_cls = _TARGET_MODEL_REGISTRY.get(type(source_model))
-            if pydna_cls is None:
+            if pydna_cls is None:  # pragma: no cover
                 raise ValueError(f"Unknown source model type: {type(source_model)}")
 
             dseqr.source = pydna_cls.from_pydantic_model(
