@@ -609,10 +609,12 @@ class CloningStrategyTest(TestCase):
                 {int(a.id), int(c.id), int(d.id), int(e.id)},
             )
 
-            cs_dict = cs.model_dump()
-            seq_ids_dict = [seq["id"] for seq in cs_dict["sequences"]]
-            seq_ids_obj = [seq.id for seq in cs.sequences]
-            self.assertEqual(seq_ids_dict, seq_ids_obj)
+            cs_dict1 = cs.model_dump()
+            cs_dict2 = json.loads(cs.model_dump_json())
+            for cs_dict in [cs_dict1, cs_dict2]:
+                seq_ids_dict = [seq["id"] for seq in cs_dict["sequences"]]
+                seq_ids_obj = [seq.id for seq in cs.sequences]
+                self.assertEqual(seq_ids_dict, seq_ids_obj)
 
 
 class IdModeTest(TestCase):
@@ -1090,6 +1092,24 @@ class NormalizeTest(TestCase):
                 else:
                     self.assertEqual(newseq.source, source_no_report)
                 self.assertEqual(newseq.source.input[0].sequence.seq, seq.seq)
+
+    def test_normalize_annotation_source_errors(self):
+        seq = Dseqrecord("ATTTT")
+        annotation_source = AnnotationSource(
+            annotation_tool="plannotate",
+            input=[SourceInput(sequence=Dseqrecord("AA"))],
+            annotation_report=[AnnotationReport()],
+        )
+        with self.assertRaises(ValueError) as e:
+            annotation_source.normalize(seq)
+        self.assertEqual(
+            str(e.exception), "AnnotationSource input sequence does not match result"
+        )
+
+        annotation_source.input[0].sequence = Primer("AATT")
+        with self.assertRaises(ValueError) as e:
+            annotation_source.normalize(seq)
+        self.assertIn("AnnotationSource input must be a Dseqrecord", str(e.exception))
 
 
 class MiscTests(TestCase):
