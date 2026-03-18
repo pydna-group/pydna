@@ -932,14 +932,6 @@ class SequenceCutSource(Source):
             return list(parent.cut(*enzymes))
         return [parent.apply_cut(self.left_edge, self.right_edge)]
 
-    def validate(self, result: "Dseqrecord") -> None:
-        parent = self.input[0].sequence
-        expected = parent.apply_cut(self.left_edge, self.right_edge)
-        if expected.seq != result.seq:
-            raise ValueError(
-                "Cut product does not match expected result from " "SequenceCutSource"
-            )
-
     def normalize(self, result: "Dseqrecord") -> "Dseqrecord":
         parent = self.input[0].sequence
         if self._has_enzyme() or parent.seq == result.seq:
