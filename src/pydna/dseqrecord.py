@@ -199,7 +199,8 @@ class Dseqrecord(SeqRecord):
         self.map_target = None
         self.n = n  # amount, set to 5E-14 which is 5 pmols
         self.annotations.update({"molecule_type": "DNA"})
-        self.annotations.update({"source": "", "organism": "."})
+        self.annotations.setdefault("source", "")
+        self.annotations.setdefault("organism", ".")
         self.source = source
 
     @classmethod

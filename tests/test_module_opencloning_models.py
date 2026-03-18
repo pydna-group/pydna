@@ -45,6 +45,8 @@ from pydna.opencloning_models import (
     NCBISequenceSource,
     PCRSource,
     PrimerModel,
+    RepositoryIdSource,
+    SequenceCutSource,
     ReverseComplementSource,
     SequenceLocationStr,
     Source,
@@ -415,12 +417,30 @@ class SourceTest(TestCase):
 class AssemblySourceTest(TestCase):
 
     def test_input_field_validation(self):
-        source = AssemblySource(circular=True)
+        source = RepositoryIdSource(repository_id="1234567890")
         self.assertEqual(source.input, [])
+        self.assertRaises(ValidationError, AssemblySource, circular=True, input=[])
         self.assertRaises(
             ValidationError, AssemblySource, circular=True, input=["Hello", "World"]
         )
         self.assertRaises(ValidationError, AssemblySource, circular=True, input=None)
+        self.assertRaises(
+            ValidationError,
+            SequenceCutSource,
+            left_edge=None,
+            right_edge=None,
+            input=[
+                SourceInput(sequence=Dseqrecord("AATT")),
+                SourceInput(sequence=Dseqrecord("AATT")),
+            ],
+        )
+        self.assertRaises(
+            ValidationError,
+            SequenceCutSource,
+            left_edge=None,
+            right_edge=None,
+            input=[],
+        )
 
     def test_from_subfragment_representation(self):
         source = AssemblySource.from_subfragment_representation(

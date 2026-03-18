@@ -337,8 +337,9 @@ def _source_input_from_model(
 
 
 class Source(ConfiguredBaseModel):
-    input: list[Union[SourceInput, AssemblyFragment]] = Field(default_factory=list)
     TARGET_MODEL: ClassVar[Type[_Source]] = _Source
+    input: list[Union[SourceInput, AssemblyFragment]] = Field(default_factory=list)
+    database_id: Optional[int] = None
 
     @field_serializer("input")
     def serialize_input(
@@ -480,6 +481,9 @@ class Source(ConfiguredBaseModel):
 
 class AssemblySource(Source):
     circular: bool
+    input: list[Union[SourceInput, AssemblyFragment]] = Field(
+        default_factory=list, min_length=1
+    )
 
     TARGET_MODEL: ClassVar[Type[_AssemblySource]] = _AssemblySource
 
@@ -548,15 +552,24 @@ class AssemblySource(Source):
             )
 
 
+_empty_input_list = Field(
+    default_factory=list,
+    min_length=0,
+    max_length=0,
+    description="Must always be an empty list.",
+)
+
+
 class DatabaseSource(Source):
     TARGET_MODEL: ClassVar[Type[_DatabaseSource]] = _DatabaseSource
+    input: list[Union[SourceInput, AssemblyFragment]] = _empty_input_list
 
     database_id: int
 
 
 class UploadedFileSource(Source):
-
     TARGET_MODEL: ClassVar[Type[_UploadedFileSource]] = _UploadedFileSource
+    input: list[Union[SourceInput, AssemblyFragment]] = _empty_input_list
 
     file_name: str
     index_in_file: int
@@ -564,8 +577,8 @@ class UploadedFileSource(Source):
 
 
 class RepositoryIdSource(Source):
-
     TARGET_MODEL: ClassVar[Type[_RepositoryIdSource]] = _RepositoryIdSource
+    input: list[Union[SourceInput, AssemblyFragment]] = _empty_input_list
 
     repository_id: str
     # location: Location
@@ -577,12 +590,12 @@ class RepositoryIdSourceWithSequenceFileUrl(RepositoryIdSource):
     a sequence file url.
     """
 
+    input: list[Union[SourceInput, AssemblyFragment]] = _empty_input_list
     sequence_file_url: Optional[str] = None
 
 
 class AddgeneIdSource(RepositoryIdSourceWithSequenceFileUrl):
     TARGET_MODEL: ClassVar[Type[_AddgeneIdSource]] = _AddgeneIdSource
-
     addgene_sequence_type: Optional[AddgeneSequenceType] = None
 
 
@@ -877,6 +890,9 @@ class RecombinaseSource(AssemblySource):
 class SequenceCutSource(Source):
     left_edge: CutSiteType | None
     right_edge: CutSiteType | None
+    input: list[Union[SourceInput, AssemblyFragment]] = Field(
+        default_factory=list, min_length=1, max_length=1
+    )
 
     @property
     def TARGET_MODEL(self):
@@ -960,7 +976,9 @@ class SequenceCutSource(Source):
 
 class OligoHybridizationSource(Source):
     TARGET_MODEL: ClassVar[Type[_OligoHybridizationSource]] = _OligoHybridizationSource
-
+    input: list[Union[SourceInput]] = Field(
+        default_factory=list, min_length=2, max_length=2
+    )
     overhang_crick_3prime: Optional[int] = None
 
     def _replay_products(self) -> list["Dseqrecord"]:
@@ -977,6 +995,9 @@ class OligoHybridizationSource(Source):
 class PolymeraseExtensionSource(Source):
     TARGET_MODEL: ClassVar[Type[_PolymeraseExtensionSource]] = (
         _PolymeraseExtensionSource
+    )
+    input: list[Union[SourceInput]] = Field(
+        default_factory=list, min_length=1, max_length=1
     )
 
     def _replay_products(self) -> list["Dseqrecord"]:
@@ -995,7 +1016,9 @@ class PolymeraseExtensionSource(Source):
 
 class AnnotationSource(Source):
     TARGET_MODEL: ClassVar[Type[_AnnotationSource]] = _AnnotationSource
-
+    input: list[Union[SourceInput]] = Field(
+        default_factory=list, min_length=1, max_length=1
+    )
     annotation_tool: AnnotationTool
     annotation_tool_version: Optional[str] = None
     annotation_report: Optional[
@@ -1039,6 +1062,9 @@ class AnnotationSource(Source):
 
 class ReverseComplementSource(Source):
     TARGET_MODEL: ClassVar[Type[_ReverseComplementSource]] = _ReverseComplementSource
+    input: list[Union[SourceInput]] = Field(
+        default_factory=list, min_length=1, max_length=1
+    )
 
     def _replay_products(self) -> list["Dseqrecord"]:
         return [self.input[0].sequence.reverse_complement()]
