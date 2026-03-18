@@ -1484,6 +1484,31 @@ class Dseqrecord(SeqRecord):
                 if isinstance(inp.sequence, Dseqrecord):
                     inp.sequence.validate_history(recursive=True)
 
+    def normalize_history(self) -> "Dseqrecord":
+        """Normalize the cloning history by replaying operations with seguid matching.
+
+        Walks the history tree depth-first (inputs before self), normalizing
+        each step so that downstream replays use corrected inputs. This fixes
+        histories where input sequences were rotated or reverse-complemented
+        compared to what the source expects.
+
+        Returns
+        -------
+        Dseqrecord
+            A new Dseqrecord with corrected source and locations, preserving
+            name and id from the original.
+        """
+        if self.source is None:
+            return self
+
+        # First, recursively normalize all input sequences
+        for inp in self.source.input:
+            if isinstance(inp.sequence, Dseqrecord):
+                inp.sequence = inp.sequence.normalize_history()
+
+        # Then normalize this step
+        return self.source.normalize(self)
+
     def join(self, fragments):
         """
         Join an iterable of Dseqrecords with this instance as the separator.

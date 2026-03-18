@@ -99,6 +99,7 @@ from pydna.utils import create_location
 from typing import TYPE_CHECKING
 import Bio.Restriction as _restr_module
 from pydna.utils import deduplicate
+import copy
 
 if TYPE_CHECKING:  # pragma: no cover
     from pydna.dseqrecord import Dseqrecord
@@ -420,6 +421,37 @@ class Source(ConfiguredBaseModel):
             nx.generate_network_text(history_graph, with_labels=True, sources=[id(seq)])
         )
 
+    def _replay_products(self) -> list["Dseqrecord"]:
+        """Replay the cloning operation and return all possible products.
+
+        Subclasses must override this to provide the replay logic.
+        """
+        raise NotImplementedError(
+            f"_replay_products() not implemented for {type(self).__name__}"
+        )
+
+    def _validate_result_in_products(
+        self, result: "Dseqrecord", products: list["Dseqrecord"]
+    ) -> None:
+        if not any(p.seq == result.seq for p in products):
+            raise ValueError(
+                f"Result sequence does not match any of the {len(products)} "
+                f"product(s) from {type(self).__name__}"
+            )
+
+    def _find_product_by_seguid(
+        self, result: "Dseqrecord", products: list["Dseqrecord"]
+    ) -> "Dseqrecord":
+        """Find and return the product whose seguid matches result's seguid."""
+        target_seguid = result.seq.seguid()
+        for p in products:
+            if p.seq.seguid() == target_seguid:
+                return p
+        raise ValueError(
+            f"No product with matching seguid among {len(products)} "
+            f"product(s) from {type(self).__name__}"
+        )
+
     def validate(self, result: "Dseqrecord") -> None:
         """Replay the cloning operation and verify the result sequence matches.
 
@@ -429,9 +461,21 @@ class Source(ConfiguredBaseModel):
         """
         if not self.input:
             return
-        raise NotImplementedError(
-            f"validate() not implemented for {type(self).__name__}"
-        )
+        self._validate_result_in_products(result, self._replay_products())
+
+    def normalize(self, result: "Dseqrecord") -> "Dseqrecord":
+        """Replay the cloning operation and return the product matching result by seguid.
+
+        Uses seguid comparison which is invariant to rotation and orientation,
+        so it finds the correct product even if inputs were rotated or reverse-complemented.
+        Copies name and id from the original result onto the returned product.
+        """
+        if not self.input:
+            return result
+        product = self._find_product_by_seguid(result, self._replay_products())
+        product.name = result.name
+        product.id = result.id
+        return product
 
 
 class AssemblySource(Source):
@@ -615,39 +659,36 @@ class RestrictionAndLigationSource(AssemblySource):
             ]
         }
 
-    def validate(self, result: "Dseqrecord") -> None:
+    def _replay_products(self) -> list["Dseqrecord"]:
         from pydna.assembly2 import restriction_ligation_assembly
 
-        products = restriction_ligation_assembly(
+        return restriction_ligation_assembly(
             self._get_input_sequences(), self.restriction_enzymes
         )
-        self._validate_result_in_products(result, products)
 
 
 class GibsonAssemblySource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_GibsonAssemblySource]] = _GibsonAssemblySource
 
-    def validate(self, result: "Dseqrecord") -> None:
+    def _replay_products(self) -> list["Dseqrecord"]:
         from pydna.assembly2 import gibson_assembly
 
-        products = gibson_assembly(
+        return gibson_assembly(
             self._get_input_sequences(),
             limit=self._minimal_assembly_overlap(),
         )
-        self._validate_result_in_products(result, products)
 
 
 class InFusionSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_InFusionSource]] = _InFusionSource
 
-    def validate(self, result: "Dseqrecord") -> None:
+    def _replay_products(self) -> list["Dseqrecord"]:
         from pydna.assembly2 import in_fusion_assembly
 
-        products = in_fusion_assembly(
+        return in_fusion_assembly(
             self._get_input_sequences(),
             limit=self._minimal_assembly_overlap(),
         )
-        self._validate_result_in_products(result, products)
 
 
 class OverlapExtensionPCRLigationSource(AssemblySource):
@@ -655,42 +696,39 @@ class OverlapExtensionPCRLigationSource(AssemblySource):
         _OverlapExtensionPCRLigationSource
     )
 
-    def validate(self, result: "Dseqrecord") -> None:
+    def _replay_products(self) -> list["Dseqrecord"]:
         from pydna.assembly2 import fusion_pcr_assembly
 
-        products = fusion_pcr_assembly(
+        return fusion_pcr_assembly(
             self._get_input_sequences(),
             limit=self._minimal_assembly_overlap(),
         )
-        self._validate_result_in_products(result, products)
 
 
 class InVivoAssemblySource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_InVivoAssemblySource]] = _InVivoAssemblySource
 
-    def validate(self, result: "Dseqrecord") -> None:
+    def _replay_products(self) -> list["Dseqrecord"]:
         from pydna.assembly2 import in_vivo_assembly
 
-        products = in_vivo_assembly(
+        return in_vivo_assembly(
             self._get_input_sequences(),
             limit=self._minimal_assembly_overlap(),
         )
-        self._validate_result_in_products(result, products)
 
 
 class LigationSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_LigationSource]] = _LigationSource
 
-    def validate(self, result: "Dseqrecord") -> None:
+    def _replay_products(self) -> list["Dseqrecord"]:
         from pydna.assembly2 import ligation_assembly
 
         overlap = self._minimal_assembly_overlap()
-        products = ligation_assembly(
+        return ligation_assembly(
             self._get_input_sequences(),
             allow_blunt=overlap == 0,
             allow_partial_overlap=True,
         )
-        self._validate_result_in_products(result, products)
 
 
 class GatewaySource(AssemblySource):
@@ -698,15 +736,14 @@ class GatewaySource(AssemblySource):
     reaction_type: GatewayReactionType
     greedy: bool = Field(default=False)
 
-    def validate(self, result: "Dseqrecord") -> None:
+    def _replay_products(self) -> list["Dseqrecord"]:
         from pydna.assembly2 import gateway_assembly
 
-        products = gateway_assembly(
+        return gateway_assembly(
             self._get_input_sequences(),
             self.reaction_type,
             self.greedy,
         )
-        self._validate_result_in_products(result, products)
 
 
 class HomologousRecombinationSource(AssemblySource):
@@ -714,7 +751,7 @@ class HomologousRecombinationSource(AssemblySource):
         _HomologousRecombinationSource
     )
 
-    def validate(self, result: "Dseqrecord") -> None:
+    def _replay_products(self) -> list["Dseqrecord"]:
         from pydna.assembly2 import (
             in_vivo_assembly,
             homologous_recombination_integration,
@@ -724,25 +761,23 @@ class HomologousRecombinationSource(AssemblySource):
         seqs = self._get_input_sequences()
         limit = self._minimal_assembly_overlap()
         if len(seqs) == 1:
-            products = homologous_recombination_excision(seqs[0], limit)
+            return homologous_recombination_excision(seqs[0], limit)
         elif seqs[0].seq.circular:
-            products = in_vivo_assembly(seqs, limit, circular_only=True)
+            return in_vivo_assembly(seqs, limit, circular_only=True)
         else:
-            products = homologous_recombination_integration(seqs[0], seqs[1:], limit)
-        self._validate_result_in_products(result, products)
+            return homologous_recombination_integration(seqs[0], seqs[1:], limit)
 
 
 class CRISPRSource(HomologousRecombinationSource):
     TARGET_MODEL: ClassVar[Type[_CRISPRSource]] = _CRISPRSource
 
-    def validate(self, result: "Dseqrecord") -> None:
+    def _replay_products(self) -> list["Dseqrecord"]:
         from pydna.assembly2 import crispr_integration
 
         seqs = self._get_input_sequences()
         guides = self._get_input_primers()
         limit = self._minimal_assembly_overlap()
-        products = crispr_integration(seqs[0], seqs[1:], guides, limit)
-        self._validate_result_in_products(result, products)
+        return crispr_integration(seqs[0], seqs[1:], guides, limit)
 
 
 class CreLoxRecombinationSource(AssemblySource):
@@ -750,39 +785,38 @@ class CreLoxRecombinationSource(AssemblySource):
         _CreLoxRecombinationSource
     )
 
-    def validate(self, result: "Dseqrecord") -> None:
+    def _replay_products(self) -> list["Dseqrecord"]:
         from pydna.assembly2 import cre_lox_integration, cre_lox_excision
 
         seqs = self._get_input_sequences()
         if len(seqs) == 1:
-            products = cre_lox_excision(seqs[0])
+            return cre_lox_excision(seqs[0])
         else:
             products = []
             if not seqs[0].seq.circular:
                 products.extend(cre_lox_integration(seqs[0], seqs[1:]))
             if not seqs[1].seq.circular:
                 products.extend(cre_lox_integration(seqs[1], seqs[:1]))
-        self._validate_result_in_products(result, products)
+            return products
 
 
 class PCRSource(AssemblySource):
     TARGET_MODEL: ClassVar[Type[_PCRSource]] = _PCRSource
     add_primer_features: bool = Field(default=False)
 
-    def validate(self, result: "Dseqrecord") -> None:
+    def _replay_products(self) -> list["Dseqrecord"]:
         from pydna.assembly2 import pcr_assembly
 
         seqs = self._get_input_sequences()
         primers = self._get_input_primers()
         limit = self._minimal_assembly_overlap()
-        products = pcr_assembly(
+        return pcr_assembly(
             seqs[0],
             primers[0],
             primers[1],
             limit=limit,
             add_primer_features=self.add_primer_features,
         )
-        self._validate_result_in_products(result, products)
 
 
 class RecombinaseSource(AssemblySource):
@@ -834,12 +868,12 @@ class RecombinaseSource(AssemblySource):
             )
         }
 
-    def validate(self, result: "Dseqrecord") -> None:
+    def _replay_products(self) -> list["Dseqrecord"]:
         from pydna.assembly2 import recombinase_integration, recombinase_excision
 
         seqs = self._get_input_sequences()
         if len(seqs) == 1:
-            products = recombinase_excision(seqs[0], self.recombinases)
+            return recombinase_excision(seqs[0], self.recombinases)
         else:
             products = []
             if not seqs[0].seq.circular:
@@ -850,7 +884,7 @@ class RecombinaseSource(AssemblySource):
                 products.extend(
                     recombinase_integration(seqs[1], seqs[:1], self.recombinases)
                 )
-        self._validate_result_in_products(result, products)
+            return products
 
 
 class SequenceCutSource(Source):
@@ -901,6 +935,16 @@ class SequenceCutSource(Source):
 
         return has_enzyme(self.left_edge) or has_enzyme(self.right_edge)
 
+    def _replay_products(self) -> list["Dseqrecord"]:
+        parent = self.input[0].sequence
+        if self._has_enzyme():
+            enzymes = set()
+            for edge in (self.left_edge, self.right_edge):
+                if edge is not None and isinstance(edge[1], AbstractCut):
+                    enzymes.add(edge[1])
+            return list(parent.cut(*enzymes))
+        return [parent.apply_cut(self.left_edge, self.right_edge)]
+
     def validate(self, result: "Dseqrecord") -> None:
         parent = self.input[0].sequence
         expected = parent.apply_cut(self.left_edge, self.right_edge)
@@ -908,6 +952,14 @@ class SequenceCutSource(Source):
             raise ValueError(
                 "Cut product does not match expected result from " "SequenceCutSource"
             )
+
+    def normalize(self, result: "Dseqrecord") -> "Dseqrecord":
+        parent = self.input[0].sequence
+        if self._has_enzyme() or parent.seq == result.seq:
+            return super().normalize(result)
+        raise ValueError(
+            "SequenceCutSource must have an enzyme to be normalized if sequences differ"
+        )
 
     @classmethod
     def _get_deserialization_overrides(
@@ -932,7 +984,7 @@ class OligoHybridizationSource(Source):
 
     overhang_crick_3prime: Optional[int] = None
 
-    def validate(self, result: "Dseqrecord") -> None:
+    def _replay_products(self) -> list["Dseqrecord"]:
         from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization
 
         fwd = self.input[0].sequence
@@ -940,18 +992,26 @@ class OligoHybridizationSource(Source):
         annealing = min(len(fwd.seq), len(rvs.seq)) - abs(
             self.overhang_crick_3prime or 0
         )
-        products = oligonucleotide_hybridization(fwd, rvs, annealing)
-        if not any(p.seq == result.seq for p in products):
-            raise ValueError(
-                "Result sequence does not match any product from "
-                "OligoHybridizationSource"
-            )
+        return oligonucleotide_hybridization(fwd, rvs, annealing)
 
 
 class PolymeraseExtensionSource(Source):
     TARGET_MODEL: ClassVar[Type[_PolymeraseExtensionSource]] = (
         _PolymeraseExtensionSource
     )
+
+    def _replay_products(self) -> list["Dseqrecord"]:
+        from pydna.dseqrecord import Dseqrecord
+
+        inp = self.input[0].sequence
+        if not isinstance(inp, Dseqrecord):
+            raise ValueError(
+                f"PolymeraseExtensionSource input must be a Dseqrecord, got {type(inp)}"
+            )
+        result = copy.deepcopy(inp)
+        result.seq = result.seq.fill_in()
+        result.source = self
+        return [result]
 
     def validate(self, result: "Dseqrecord") -> None:
         from pydna.dseqrecord import Dseqrecord
@@ -990,14 +1050,28 @@ class AnnotationSource(Source):
         if self.input[0].sequence.seq != result.seq:
             raise ValueError("AnnotationSource input sequence does not match result")
 
+    def normalize(self, result: "Dseqrecord") -> "Dseqrecord":
+        from pydna.dseqrecord import Dseqrecord
+
+        input_sequence = self.input[0].sequence
+        if not isinstance(input_sequence, Dseqrecord):
+            raise ValueError(
+                f"AnnotationSource input must be a Dseqrecord, got {type(input_sequence)}"
+            )
+        if input_sequence.seq.seguid() != result.seq.seguid():
+            raise ValueError("AnnotationSource input sequence does not match result")
+        if input_sequence.seq == result.seq:
+            return copy.deepcopy(result)
+        if input_sequence.circular:
+            return result.synced(input_sequence.seq)
+        return result.reverse_complement()
+
 
 class ReverseComplementSource(Source):
     TARGET_MODEL: ClassVar[Type[_ReverseComplementSource]] = _ReverseComplementSource
 
-    def validate(self, result: "Dseqrecord") -> None:
-        expected = self.input[0].sequence.reverse_complement()
-        if expected.seq != result.seq:
-            raise ValueError("Reverse complement does not match expected result")
+    def _replay_products(self) -> list["Dseqrecord"]:
+        return [self.input[0].sequence.reverse_complement()]
 
 
 def read_dseqrecord_from_text_file_sequence(seq: TextFileSequence) -> Dseqrecord:
@@ -1099,6 +1173,17 @@ class CloningStrategy(_BaseCloningStrategy):
             for seq in self.sequences
             if seq.id
             not in [input.sequence for source in self.sources for input in source.input]
+        ]
+
+    def get_ids_of_sequences_that_are_inputs(self) -> list[int]:
+        """
+        Get the ids of the sequences that are inputs to any source.
+        """
+        return [
+            seq.id
+            for seq in self.sequences
+            if seq.id
+            in [input.sequence for source in self.sources for input in source.input]
         ]
 
     def to_dseqrecords(self) -> list["Dseqrecord"]:

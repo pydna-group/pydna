@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 import copy
-from pydna.opencloning_models import SequenceLocationStr
+from typing import Callable
+from pydna.opencloning_models import (
+    SequenceLocationStr,
+    read_dseqrecord_from_text_file_sequence,
+)
 from Bio.SeqFeature import SimpleLocation
 from pydna.utils import shift_location
 from pydna.dseqrecord import Dseqrecord
@@ -18,6 +22,7 @@ from pydna.opencloning_models import (
     get_id,
     NCBISequenceSource,
     GenomeCoordinatesSource,
+    PCRSource,
 )
 from pydna.primer import Primer
 from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization
@@ -937,3 +942,68 @@ class ValidateTest(TestCase):
             cloning_strategy = CloningStrategy.model_validate(data)
             for product in cloning_strategy.to_dseqrecords():
                 product.validate_history(recursive=True)
+
+
+def _replace_sequence(
+    cloning_strategy: CloningStrategy,
+    sequence_id: int,
+    modifier: Callable[[Dseqrecord], Dseqrecord],
+) -> CloningStrategy:
+    """Utility function for tests"""
+    model = next((s for s in cloning_strategy.sequences if s.id == sequence_id))
+    seqr = read_dseqrecord_from_text_file_sequence(model)
+    new_seqr = modifier(seqr)
+    new_model = TextFileSequence.from_dseqrecord(new_seqr)
+    new_model.id = model.id
+    cs_out = copy.deepcopy(cloning_strategy)
+    cs_out.sequences.remove(model)
+    cs_out.sequences.append(new_model)
+    return cs_out
+
+
+class NormalizeTest(TestCase):
+
+    def _common_testing_function(self, product: Dseqrecord):
+        product_seguid = product.seq.seguid()
+        cs = CloningStrategy.from_dseqrecords([product])
+
+        def modify_seq(seq: Dseqrecord) -> Dseqrecord:
+            if seq.circular:
+                return seq.shifted(15).reverse_complement()
+            else:
+                return seq.reverse_complement()
+
+        ids2replace = cs.get_ids_of_sequences_that_are_inputs()
+        for seq_id in ids2replace:
+            cs = _replace_sequence(cs, seq_id, modify_seq)
+        seqr_with_wrong_history = cs.to_dseqrecords()
+        self.assertEqual(len(seqr_with_wrong_history), 1)
+        self.assertRaises(
+            ValueError, seqr_with_wrong_history[0].validate_history, recursive=True
+        )
+        normalized_seqr = seqr_with_wrong_history[0].normalize_history()
+        self.assertEqual(normalized_seqr.seq.seguid(), product_seguid)
+        normalized_seqr.validate_history(recursive=True)
+        if not isinstance(product.source, PCRSource):
+            self.assertNotEqual(normalized_seqr.seq, product.seq)
+        else:
+            self.assertEqual(normalized_seqr.seq, product.seq)
+
+    def test_golden_gate(self):
+        self._common_testing_function(golden_gate_product)
+
+    def test_crispr(self):
+        self._common_testing_function(crispr_product)
+
+    def test_ligation(self):
+        self._common_testing_function(ligation_product)
+
+    def test_pcr(self):
+        self._common_testing_function(pcr_product)
+
+    def test_custom_cut(self):
+        with self.assertRaises(ValueError):
+            self._common_testing_function(custom_cut_product)
+
+    def test_gateway(self):
+        self._common_testing_function(product_gateway_BP)
