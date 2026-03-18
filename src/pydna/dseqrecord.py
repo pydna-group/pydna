@@ -485,7 +485,7 @@ class Dseqrecord(SeqRecord):
         ACCESSION   id
         VERSION     id
         KEYWORDS    .
-        SOURCE      .
+        SOURCE
           ORGANISM  .
                     .
         FEATURES             Location/Qualifiers

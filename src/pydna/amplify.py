@@ -186,6 +186,8 @@ class Anneal(object):  # ), metaclass=_Memoize):
         Description: pcr_product_p1_p2
         Number of features: 2
         /molecule_type=DNA
+        /source=
+        /organism=.
         Dseq(-1011)
         taca..gcac
         atgt..cgtg

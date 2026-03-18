@@ -1038,9 +1038,9 @@ class AnnotationSource(Source):
     ] = None
 
     def validate(self, result: "Dseqrecord") -> None:
+        """Just validates that there is a single input, and that its sequence is the same as the result."""
         from pydna.dseqrecord import Dseqrecord
 
-        """Just validates that there is a single input, and that its sequence is the same as the result."""
         if len(self.input) != 1:
             raise ValueError("AnnotationSource must have exactly one input")
         if not isinstance(self.input[0].sequence, Dseqrecord):
@@ -1238,7 +1238,7 @@ class CloningStrategy(_BaseCloningStrategy):
 
             pydna_cls = _TARGET_MODEL_REGISTRY.get(type(source_model))
             if pydna_cls is None:
-                return
+                raise ValueError(f"Unknown source model type: {type(source_model)}")
 
             dseqr.source = pydna_cls.from_pydantic_model(
                 source_model, seq_by_id, primer_by_id

@@ -44,6 +44,7 @@ from Bio.Restriction import BsaI, EcoRI, SalI
 import textwrap
 import json
 import os
+import glob
 
 # Examples that will be used in several tests ==============================================
 test_folder = os.path.join(os.path.dirname(__file__))
@@ -824,7 +825,7 @@ class ValidateTest(TestCase):
         with self.assertRaises(ValueError):
             copy_crispr.validate_history(recursive=True)
 
-        # Same for hyrbidization
+        # Same for hybridization
         copy_hybridization = copy.deepcopy(product_oligo_hybridization)
         copy_hybridization.source.input[0].sequence = Primer("AATT")
         with self.assertRaises(ValueError):
@@ -936,8 +937,8 @@ class ValidateTest(TestCase):
 
     def test_validate_examples_opencloning(self):
 
-        for file in os.listdir(f"{test_folder}/examples_opencloning"):
-            with open(f"{test_folder}/examples_opencloning/{file}", "r") as f:
+        for file in glob.glob(f"{test_folder}/examples_opencloning/*.json"):
+            with open(file, "r") as f:
                 data = json.load(f)
             cloning_strategy = CloningStrategy.model_validate(data)
             for product in cloning_strategy.to_dseqrecords():
@@ -1005,8 +1006,8 @@ class NormalizeTest(TestCase):
         self._common_testing_function(product_gateway_BP)
 
     def test_normalize_examples_opencloning(self):
-        for file in os.listdir(f"{test_folder}/examples_opencloning"):
-            with open(f"{test_folder}/examples_opencloning/{file}", "r") as f:
+        for file in glob.glob(f"{test_folder}/examples_opencloning/*.json"):
+            with open(file, "r") as f:
                 data = json.load(f)
             cloning_strategy = CloningStrategy.model_validate(data)
             for product in cloning_strategy.to_dseqrecords():
