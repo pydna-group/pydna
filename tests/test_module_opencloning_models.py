@@ -791,31 +791,39 @@ class ValidateTest(TestCase):
     """Test Source.validate() and Dseqrecord.validate_history()."""
 
     def test_validate_golden_gate(self):
-        golden_gate_product.validate_history(recursive=True)
+        golden_gate_product.validate_history()
 
     def test_validate_crispr(self):
-        crispr_product.validate_history(recursive=True)
+        crispr_product.validate_history()
 
     def test_validate_ligation(self):
-        ligation_product.validate_history(recursive=True)
+        ligation_product.validate_history()
 
     def test_validate_pcr(self):
-        pcr_product.validate_history(recursive=True)
+        pcr_product.validate_history()
 
     def test_validate_cut(self):
-        custom_cut_product.validate_history(recursive=True)
+        custom_cut_product.validate_history()
 
     def test_validate_gateway(self):
-        product_gateway_BP.validate_history(recursive=True)
+        product_gateway_BP.validate_history()
 
     def test_validate_oligo_hybridization(self):
-        product_oligo_hybridization.validate_history(recursive=True)
+        product_oligo_hybridization.validate_history()
 
     def test_validate_recombinase(self):
-        recombinase_product.validate_history(recursive=True)
+        recombinase_product.validate_history()
 
     def test_validate_custom_cut(self):
-        custom_cut_product.validate_history(recursive=True)
+        custom_cut_product.validate_history()
+
+    def test_validate_non_recursive(self):
+        copy_ligation_product = copy.deepcopy(ligation_product)
+        first_fragment = copy_ligation_product.source.input[0].sequence
+        first_fragment.source.input[0].sequence = Dseqrecord("ATGC")
+        with self.assertRaises(ValueError):
+            copy_ligation_product.validate_history()
+        copy_ligation_product.validate_history(recursive=False)
 
     def test_validate_reverse_complement(self):
         seq = Dseqrecord("ATGCATGC")
@@ -828,12 +836,12 @@ class ValidateTest(TestCase):
         template = Dseqrecord("aaGAATTCcc")
         products = template.cut(EcoRI)
         for p in products:
-            p.validate_history(recursive=True)
+            p.validate_history()
 
     def test_validate_no_source(self):
         """validate_history on a Dseqrecord with no source should return silently."""
         seq = Dseqrecord("ATGC")
-        seq.validate_history(recursive=True)
+        seq.validate_history()
 
     def test_validate_no_inputs(self):
         """Source with no inputs (external) should return silently."""
@@ -858,13 +866,13 @@ class ValidateTest(TestCase):
         copy_golden_gate = copy.deepcopy(golden_gate_product)
         copy_golden_gate.source.input[0].sequence = Dseqrecord("aaTTTAA")
         with self.assertRaises(ValueError):
-            copy_golden_gate.validate_history(recursive=True)
+            copy_golden_gate.validate_history()
 
         # Works with primers as well
         copy_pcr = copy.deepcopy(pcr_product)
         copy_pcr.source.input[0].sequence = Primer("AATT")
         with self.assertRaises(ValueError):
-            copy_pcr.validate_history(recursive=True)
+            copy_pcr.validate_history()
 
         # Same for CRISPR
         copy_crispr = copy.deepcopy(crispr_product)
@@ -875,13 +883,13 @@ class ValidateTest(TestCase):
 
         copy_crispr.source.input[index_of_primer].sequence = Primer("AATT")
         with self.assertRaises(ValueError):
-            copy_crispr.validate_history(recursive=True)
+            copy_crispr.validate_history()
 
         # Same for hybridization
         copy_hybridization = copy.deepcopy(product_oligo_hybridization)
         copy_hybridization.source.input[0].sequence = Primer("AATT")
         with self.assertRaises(ValueError):
-            copy_hybridization.validate_history(recursive=True)
+            copy_hybridization.validate_history()
 
     def test_validate_annotation(self):
         source = AnnotationSource(
@@ -921,12 +929,12 @@ class ValidateTest(TestCase):
         new_seq.source = PolymeraseExtensionSource(
             input=[SourceInput(sequence=prev_seq)]
         )
-        new_seq.validate_history(recursive=True)
+        new_seq.validate_history()
 
         # error for primer
         new_seq.source.input[0].sequence = Primer("AATT")
         with self.assertRaises(ValueError) as e:
-            new_seq.validate_history(recursive=True)
+            new_seq.validate_history()
         self.assertIn(
             "PolymeraseExtensionSource input must be a Dseqrecord", e.exception.args[0]
         )
@@ -938,7 +946,7 @@ class ValidateTest(TestCase):
         products = homologous_recombination_integration(genome, [insert_seq], 20)
         products = homologous_recombination_excision(products[0], 20)
         for p in products:
-            p.validate_history(recursive=True)
+            p.validate_history()
 
     def test_validate_cre_lox_excision(self):
         genome = Dseqrecord(
@@ -946,14 +954,14 @@ class ValidateTest(TestCase):
         )
         products = cre_lox_excision(genome)
         for p in products:
-            p.validate_history(recursive=True)
+            p.validate_history()
 
     def test_validate_cre_lox_integration(self):
         linear = Dseqrecord(f"cccccc{LOXP_SEQUENCE}aaaaa")
         circular = Dseqrecord(f"{LOXP_SEQUENCE}bbbbb", circular=True)
         products = cre_lox_integration(linear, [circular])
         for p in products:
-            p.validate_history(recursive=True)
+            p.validate_history()
 
     def test_validate_gibson_like(self):
         homology1 = "GAGTCTCC"
@@ -972,7 +980,7 @@ class ValidateTest(TestCase):
         ]:
             products = func(fragments, limit=8)
             for p in products:
-                p.validate_history(recursive=True)
+                p.validate_history()
 
     def test_validate_examples_opencloning(self):
 
@@ -981,7 +989,7 @@ class ValidateTest(TestCase):
                 data = json.load(f)
             cloning_strategy = CloningStrategy.model_validate(data)
             for product in cloning_strategy.to_dseqrecords():
-                product.validate_history(recursive=True)
+                product.validate_history()
 
 
 def _replace_sequence(
@@ -1019,11 +1027,11 @@ class NormalizeTest(TestCase):
         seqr_with_wrong_history = cs.to_dseqrecords()
         self.assertEqual(len(seqr_with_wrong_history), 1)
         with self.assertRaises(ValueError):
-            seqr_with_wrong_history[0].validate_history(recursive=True)
+            seqr_with_wrong_history[0].validate_history()
 
         normalized_seqr = seqr_with_wrong_history[0].normalize_history()
         self.assertEqual(normalized_seqr.seq.seguid(), product_seguid)
-        normalized_seqr.validate_history(recursive=True)
+        normalized_seqr.validate_history()
 
     def test_golden_gate(self):
         self._common_testing_function(golden_gate_product)
