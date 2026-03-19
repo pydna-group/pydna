@@ -1011,6 +1011,16 @@ class ValidateTest(TestCase):
             for product in cloning_strategy.to_dseqrecords():
                 product.validate_history()
 
+    def test_validate_cloning_strategy(self):
+        cs = CloningStrategy.from_dseqrecords([ligation_product])
+        cs.validate()
+        copy_ligation_product = copy.deepcopy(ligation_product)
+        for inp in copy_ligation_product.source.input:
+            inp.sequence = inp.sequence.reverse_complement()
+        cs2 = CloningStrategy.from_dseqrecords([copy_ligation_product])
+        with self.assertRaises(ValueError):
+            cs2.validate()
+
 
 def _replace_sequence(
     cloning_strategy: CloningStrategy,
@@ -1138,6 +1148,26 @@ class NormalizeTest(TestCase):
         with self.assertRaises(ValueError) as e:
             annotation_source.normalize(seq)
         self.assertIn("AnnotationSource input must be a Dseqrecord", str(e.exception))
+
+    def test_normalize_cloning_strategy(self):
+        # Just tests that this function just calls normalize_history on the sequences
+        # It uses ligation_product because for all file_contents to match, the ids must
+        # be assigned from the beginning.
+        with id_mode(use_python_internal_id=False):
+            cs = CloningStrategy.from_dseqrecords([ligation_product])
+            copy_ligation_product = copy.deepcopy(ligation_product)
+            for inp in copy_ligation_product.source.input:
+                this_id = inp.sequence.id
+                inp.sequence = inp.sequence.reverse_complement()
+                inp.sequence.id = this_id
+            cs_wrong = CloningStrategy.from_dseqrecords([copy_ligation_product])
+            cs_norm = cs_wrong.normalize()
+            cs_norm2 = CloningStrategy.from_dseqrecords(
+                [s.normalize_history() for s in cs_wrong.to_dseqrecords()]
+            )
+            self.assertEqual(cs_norm, cs_norm2)
+            self.assertEqual(cs, cs.normalize())
+            self.assertNotEqual(cs_norm, cs)
 
 
 class MiscTests(TestCase):

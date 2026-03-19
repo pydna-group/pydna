@@ -1246,6 +1246,20 @@ class CloningStrategy(_BaseCloningStrategy):
 
         return [seq_by_id[sid] for sid in terminal_ids]
 
+    def normalize(self) -> "CloningStrategy":
+        """
+        Normalize the cloning strategy by resolving the sources and sequences.
+        """
+        newseqrs = [s.normalize_history() for s in self.to_dseqrecords()]
+        return self.__class__.from_dseqrecords(newseqrs, self.description)
+
+    def validate(self) -> None:
+        """
+        Validate the cloning strategy by resolving the sources and sequences.
+        """
+        for seq in self.to_dseqrecords():
+            seq.validate_history()
+
 
 def _build_target_model_registry() -> dict[type, type]:
     """Build a mapping from opencloning_linkml Source types to pydna Source types."""
