@@ -527,6 +527,8 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">map_target</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>  <span class="c1"># amount, set to 5E-14 which is 5 pmols</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">:</span> <span class="s2">&quot;DNA&quot;</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;organism&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
 
 <div class="viewcode-block" id="Dseqrecord.from_string">
@@ -841,7 +843,7 @@ document.write(`
 <span class="sd">        ACCESSION   id</span>
 <span class="sd">        VERSION     id</span>
 <span class="sd">        KEYWORDS    .</span>
-<span class="sd">        SOURCE      .</span>
+<span class="sd">        SOURCE</span>
 <span class="sd">          ORGANISM  .</span>
 <span class="sd">                    .</span>
 <span class="sd">        FEATURES             Location/Qualifiers</span>
@@ -1889,6 +1891,63 @@ document.write(`
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">history_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Dseqrecord.validate_history">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.validate_history">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the cloning history of this sequence by replaying operations.</span>
+
+<span class="sd">        Calls ``self.source.validate(self)`` to verify that the source&#39;s inputs</span>
+<span class="sd">        produce this sequence, then optionally recurses into input sequences.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        recursive : bool</span>
+<span class="sd">            If True (default), also validate the history of all input sequences.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If any step in the history produces a different sequence than expected.</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If a source type does not support validation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">recursive</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">):</span>
+                    <span class="n">inp</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">validate_history</span><span class="p">(</span><span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Dseqrecord.normalize_history">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.normalize_history">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalize_history</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Dseqrecord&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Normalize the cloning history by replaying operations with seguid matching.</span>
+
+<span class="sd">        Walks the history tree depth-first (inputs before self), normalizing</span>
+<span class="sd">        each step so that downstream replays use corrected inputs. This fixes</span>
+<span class="sd">        histories where input sequences were rotated or reverse-complemented</span>
+<span class="sd">        compared to what the source expects.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dseqrecord</span>
+<span class="sd">            A new Dseqrecord with corrected source and locations, preserving</span>
+<span class="sd">            name and id from the original.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+        <span class="c1"># First, recursively normalize all input sequences</span>
+        <span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">):</span>
+                <span class="n">inp</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">normalize_history</span><span class="p">()</span>
+
+        <span class="c1"># Then normalize this step</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.join">
