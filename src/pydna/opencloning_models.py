@@ -508,7 +508,7 @@ class AssemblySource(Source):
         return AssemblySource(input=input_list, circular=is_circular)
 
     def _get_input_sequences(self, handle_insertion: bool = True) -> list["Dseqrecord"]:
-        """Return Dseqrecord inputs (excludes Primers), unique and preserving order."""
+        """Return Dseqrecord inputs (excludes Primers), preserving order, and handling insertion assemblies (removing the last fragment if the first and last are the same)."""
         from pydna.dseqrecord import Dseqrecord
 
         seqs: list[Dseqrecord] = []
@@ -559,6 +559,9 @@ class AssemblySource(Source):
         product.name = result.name
         product.id = result.id
         return product
+
+    def _replay_products(self, handle_insertion: bool = True) -> list["Dseqrecord"]:
+        super()._replay_products(handle_insertion=handle_insertion)
 
 
 _empty_input_list = Field(

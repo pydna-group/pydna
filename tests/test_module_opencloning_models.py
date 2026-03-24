@@ -1204,3 +1204,10 @@ class MiscTests(TestCase):
             with self.assertRaises(ValueError) as e:
                 cs.to_dseqrecords()
             self.assertEqual(str(e.exception), "Missing source for sequence 1")
+
+    def test_replay_products_error(self):
+        source = AssemblySource(
+            input=[SourceInput(sequence=Dseqrecord("ATGC"))], circular=False
+        )
+        with self.assertRaises(NotImplementedError):
+            source._replay_products()
