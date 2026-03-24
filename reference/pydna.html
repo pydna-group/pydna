@@ -974,7 +974,8 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.opencloning_models.AssemblySource.input"><code class="docutils literal notranslate"><span class="pre">AssemblySource.input</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.opencloning_models.AssemblySource.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">AssemblySource.TARGET_MODEL</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.opencloning_models.AssemblySource.from_subfragment_representation"><code class="docutils literal notranslate"><span class="pre">AssemblySource.from_subfragment_representation()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.opencloning_models.AssemblySource.is_insertion"><code class="docutils literal notranslate"><span class="pre">AssemblySource.is_insertion()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.opencloning_models.AssemblySource.validate"><code class="docutils literal notranslate"><span class="pre">AssemblySource.validate()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.opencloning_models.AssemblySource.normalize"><code class="docutils literal notranslate"><span class="pre">AssemblySource.normalize()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.opencloning_models.AssemblySource.model_config"><code class="docutils literal notranslate"><span class="pre">AssemblySource.model_config</span></code></a></li>
 </ul>
 </li>
@@ -12410,9 +12411,21 @@ Copies name and id from the original result onto the returned product.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pydna.opencloning_models.AssemblySource.is_insertion">
-<span class="sig-name descname"><span class="pre">is_insertion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/pydna/opencloning_models.html#AssemblySource.is_insertion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.opencloning_models.AssemblySource.is_insertion" title="Link to this definition">#</a></dt>
-<dd><p>Return True if the assembly is an insertion.</p>
+<dt class="sig sig-object py" id="pydna.opencloning_models.AssemblySource.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/pydna/opencloning_models.html#AssemblySource.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.opencloning_models.AssemblySource.validate" title="Link to this definition">#</a></dt>
+<dd><p>Replay the cloning operation and verify the result sequence matches.</p>
+<p>Raises ValueError if the result doesn’t match any expected product.
+Raises NotImplementedError for source types that don’t support validation yet.
+Sources with no inputs (external imports) return silently.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydna.opencloning_models.AssemblySource.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pydna.all.Dseqrecord" title="pydna.all.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></span><a class="reference internal" href="../_modules/pydna/opencloning_models.html#AssemblySource.normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.opencloning_models.AssemblySource.normalize" title="Link to this definition">#</a></dt>
+<dd><p>Replay the cloning operation and return the product matching result by seguid.</p>
+<p>Uses seguid comparison which is invariant to rotation and orientation,
+so it finds the correct product even if inputs were rotated or reverse-complemented.
+Copies name and id from the original result onto the returned product.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -16585,7 +16598,8 @@ the location spans the entire sequence (it’s not empty).
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.opencloning_models.AssemblySource.input"><code class="docutils literal notranslate"><span class="pre">AssemblySource.input</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.opencloning_models.AssemblySource.TARGET_MODEL"><code class="docutils literal notranslate"><span class="pre">AssemblySource.TARGET_MODEL</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.opencloning_models.AssemblySource.from_subfragment_representation"><code class="docutils literal notranslate"><span class="pre">AssemblySource.from_subfragment_representation()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.opencloning_models.AssemblySource.is_insertion"><code class="docutils literal notranslate"><span class="pre">AssemblySource.is_insertion()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.opencloning_models.AssemblySource.validate"><code class="docutils literal notranslate"><span class="pre">AssemblySource.validate()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.opencloning_models.AssemblySource.normalize"><code class="docutils literal notranslate"><span class="pre">AssemblySource.normalize()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.opencloning_models.AssemblySource.model_config"><code class="docutils literal notranslate"><span class="pre">AssemblySource.model_config</span></code></a></li>
 </ul>
 </li>

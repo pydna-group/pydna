@@ -424,7 +424,6 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_location</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_restr_module</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">deduplicate</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
@@ -822,7 +821,7 @@ document.write(`
         <span class="p">)</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Replay the cloning operation and return all possible products.</span>
 
 <span class="sd">        Subclasses must override this to provide the replay logic.</span>
@@ -834,7 +833,7 @@ document.write(`
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate_result_in_products</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="s2">&quot;Dseqrecord&quot;</span><span class="p">,</span> <span class="n">products</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">seq</span> <span class="o">==</span> <span class="n">result</span><span class="o">.</span><span class="n">seq</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">products</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">((</span><span class="n">p</span><span class="o">.</span><span class="n">seq</span> <span class="o">==</span> <span class="n">result</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">source</span> <span class="o">==</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">products</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Result sequence does not match any of the </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">products</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;product(s) from </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -920,15 +919,19 @@ document.write(`
         <span class="k">return</span> <span class="n">AssemblySource</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">input_list</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="n">is_circular</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_input_sequences</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return Dseqrecord inputs (excludes Primers), unique and preserving order.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_input_sequences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return Dseqrecord inputs (excludes Primers), preserving order, and handling insertion assemblies (removing the last fragment if the first and last are the same).&quot;&quot;&quot;</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
 
         <span class="n">seqs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">):</span>
                 <span class="n">seqs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">deduplicate</span><span class="p">(</span><span class="n">seqs</span><span class="p">)</span>
+
+        <span class="c1"># This is necessary for insertion assemblies, where the first and last fragment are the same.</span>
+        <span class="k">if</span> <span class="n">handle_insertion</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">seqs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">seqs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">seqs</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">seqs</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_input_primers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Primer&quot;</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return Primer inputs, preserving order.&quot;&quot;&quot;</span>
@@ -950,21 +953,33 @@ document.write(`
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Assembly is not complete&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">overlaps</span><span class="p">)</span>
 
-<div class="viewcode-block" id="AssemblySource.is_insertion">
-<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.AssemblySource.is_insertion">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_insertion</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return True if the assembly is an insertion.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span></div>
+<div class="viewcode-block" id="AssemblySource.validate">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.AssemblySource.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="s2">&quot;Dseqrecord&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replay_products</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validate_result_in_products</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">products</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">products</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replay_products</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validate_result_in_products</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">products</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_result_in_products</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="s2">&quot;Dseqrecord&quot;</span><span class="p">,</span> <span class="n">products</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">((</span><span class="n">p</span><span class="o">.</span><span class="n">seq</span> <span class="o">==</span> <span class="n">result</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">source</span> <span class="o">==</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">products</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Result sequence does not match any of the </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">products</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;product(s) from </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span></div>
+<div class="viewcode-block" id="AssemblySource.normalize">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.opencloning_models.AssemblySource.normalize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="s2">&quot;Dseqrecord&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Dseqrecord&quot;</span><span class="p">:</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replay_products</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">product</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_product_by_seguid</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">products</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">products</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replay_products</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">product</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_product_by_seguid</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">products</span><span class="p">)</span>
+        <span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">product</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">return</span> <span class="n">product</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_replay_products</span><span class="p">(</span><span class="n">handle_insertion</span><span class="o">=</span><span class="n">handle_insertion</span><span class="p">)</span></div>
 
 
 
@@ -1142,11 +1157,11 @@ document.write(`
             <span class="p">]</span>
         <span class="p">}</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">restriction_ligation_assembly</span>
 
         <span class="k">return</span> <span class="n">restriction_ligation_assembly</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">restriction_enzymes</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(</span><span class="n">handle_insertion</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">restriction_enzymes</span>
         <span class="p">)</span></div>
 
 
@@ -1156,11 +1171,11 @@ document.write(`
 <span class="k">class</span><span class="w"> </span><span class="nc">GibsonAssemblySource</span><span class="p">(</span><span class="n">AssemblySource</span><span class="p">):</span>
     <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_GibsonAssemblySource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_GibsonAssemblySource</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">gibson_assembly</span>
 
         <span class="k">return</span> <span class="n">gibson_assembly</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(</span><span class="n">handle_insertion</span><span class="p">),</span>
             <span class="n">limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_minimal_assembly_overlap</span><span class="p">(),</span>
         <span class="p">)</span></div>
 
@@ -1171,11 +1186,11 @@ document.write(`
 <span class="k">class</span><span class="w"> </span><span class="nc">InFusionSource</span><span class="p">(</span><span class="n">AssemblySource</span><span class="p">):</span>
     <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_InFusionSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_InFusionSource</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">in_fusion_assembly</span>
 
         <span class="k">return</span> <span class="n">in_fusion_assembly</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(</span><span class="n">handle_insertion</span><span class="p">),</span>
             <span class="n">limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_minimal_assembly_overlap</span><span class="p">(),</span>
         <span class="p">)</span></div>
 
@@ -1188,11 +1203,11 @@ document.write(`
         <span class="n">_OverlapExtensionPCRLigationSource</span>
     <span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">fusion_pcr_assembly</span>
 
         <span class="k">return</span> <span class="n">fusion_pcr_assembly</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(</span><span class="n">handle_insertion</span><span class="p">),</span>
             <span class="n">limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_minimal_assembly_overlap</span><span class="p">(),</span>
         <span class="p">)</span></div>
 
@@ -1203,11 +1218,11 @@ document.write(`
 <span class="k">class</span><span class="w"> </span><span class="nc">InVivoAssemblySource</span><span class="p">(</span><span class="n">AssemblySource</span><span class="p">):</span>
     <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_InVivoAssemblySource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_InVivoAssemblySource</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">in_vivo_assembly</span>
 
         <span class="k">return</span> <span class="n">in_vivo_assembly</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(</span><span class="n">handle_insertion</span><span class="p">),</span>
             <span class="n">limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_minimal_assembly_overlap</span><span class="p">(),</span>
         <span class="p">)</span></div>
 
@@ -1218,12 +1233,12 @@ document.write(`
 <span class="k">class</span><span class="w"> </span><span class="nc">LigationSource</span><span class="p">(</span><span class="n">AssemblySource</span><span class="p">):</span>
     <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_LigationSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_LigationSource</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">ligation_assembly</span>
 
         <span class="n">overlap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minimal_assembly_overlap</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">ligation_assembly</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(</span><span class="n">handle_insertion</span><span class="p">),</span>
             <span class="n">allow_blunt</span><span class="o">=</span><span class="n">overlap</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
             <span class="n">allow_partial_overlap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span></div>
@@ -1237,11 +1252,11 @@ document.write(`
     <span class="n">reaction_type</span><span class="p">:</span> <span class="n">GatewayReactionType</span>
     <span class="n">greedy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">gateway_assembly</span>
 
         <span class="k">return</span> <span class="n">gateway_assembly</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(</span><span class="n">handle_insertion</span><span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reaction_type</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">greedy</span><span class="p">,</span>
         <span class="p">)</span></div>
@@ -1255,13 +1270,13 @@ document.write(`
         <span class="n">_HomologousRecombinationSource</span>
     <span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
             <span class="n">homologous_recombination_integration</span><span class="p">,</span>
             <span class="n">homologous_recombination_excision</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">()</span>
+        <span class="n">seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(</span><span class="n">handle_insertion</span><span class="p">)</span>
         <span class="n">limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minimal_assembly_overlap</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">homologous_recombination_excision</span><span class="p">(</span><span class="n">seqs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">limit</span><span class="p">)</span>
@@ -1275,10 +1290,10 @@ document.write(`
 <span class="k">class</span><span class="w"> </span><span class="nc">CRISPRSource</span><span class="p">(</span><span class="n">HomologousRecombinationSource</span><span class="p">):</span>
     <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_CRISPRSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_CRISPRSource</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">crispr_integration</span>
 
-        <span class="n">seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">()</span>
+        <span class="n">seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(</span><span class="n">handle_insertion</span><span class="p">)</span>
         <span class="n">guides</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_primers</span><span class="p">()</span>
         <span class="n">limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minimal_assembly_overlap</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">crispr_integration</span><span class="p">(</span><span class="n">seqs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">seqs</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">guides</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span></div>
@@ -1292,10 +1307,10 @@ document.write(`
         <span class="n">_CreLoxRecombinationSource</span>
     <span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">cre_lox_integration</span><span class="p">,</span> <span class="n">cre_lox_excision</span>
 
-        <span class="n">seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">()</span>
+        <span class="n">seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(</span><span class="n">handle_insertion</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">cre_lox_excision</span><span class="p">(</span><span class="n">seqs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1309,10 +1324,10 @@ document.write(`
     <span class="n">TARGET_MODEL</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">_PCRSource</span><span class="p">]]</span> <span class="o">=</span> <span class="n">_PCRSource</span>
     <span class="n">add_primer_features</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">pcr_assembly</span>
 
-        <span class="n">seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">()</span>
+        <span class="n">seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(</span><span class="n">handle_insertion</span><span class="p">)</span>
         <span class="n">primers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_primers</span><span class="p">()</span>
         <span class="n">limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minimal_assembly_overlap</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">pcr_assembly</span><span class="p">(</span>
@@ -1379,10 +1394,10 @@ document.write(`
             <span class="p">)</span>
         <span class="p">}</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">recombinase_integration</span><span class="p">,</span> <span class="n">recombinase_excision</span>
 
-        <span class="n">seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">()</span>
+        <span class="n">seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(</span><span class="n">handle_insertion</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">recombinase_excision</span><span class="p">(</span><span class="n">seqs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">recombinases</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1599,7 +1614,9 @@ document.write(`
     <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()]</span></div>
+        <span class="n">out_seq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+        <span class="n">out_seq</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">out_seq</span><span class="p">]</span></div>
 
 
 
