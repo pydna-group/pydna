@@ -558,7 +558,6 @@ class Dseq(Seq):
                 try:
                     data.append(basepair_dict[w, c])
                 except KeyError as err:
-                    print(f"Base mismatch in representation {err}")
                     raise ValueError(f"Base mismatch in representation: {err}") from err
             data = "".join(data).strip()
             self._data = data.encode("ascii")
