@@ -1,4 +1,18 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# Copyright 2013-2023 by Björn Johansson.  All rights reserved.
+# This code is part of the Python-dna distribution and governed by its
+# license.  Please see the LICENSE.txt file that should have been included
+# as part of this package.
+"""Parse SnapGene .dna files and reconstruct their cloning history as
+:class:`~pydna.dseqrecord.Dseqrecord` objects.
+
+The single public entry point is :func:`parse_snapgene_history`, which reads a
+``.dna`` file, resolves every step recorded in its SnapGene history, and
+returns a ``Dseqrecord`` whose ``source`` attribute tree mirrors the full
+cloning provenance.
+"""
+
 from sgffp import SgffReader, SgffObject, SgffSegment, SgffFeature
 from sgffp.models.history import (
     SgffHistoryNode,
@@ -21,10 +35,8 @@ from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization
 from pydna.primer import Primer
 from Bio.SeqFeature import SeqFeature, SimpleLocation, CompoundLocation
 from pydna.dseqrecord import Dseqrecord
-import glob
 import os
 from pydna.opencloning_models import (
-    CloningStrategy,
     AssemblyFragment,
     Source,
     AddgeneIdSource,
@@ -98,7 +110,7 @@ def _feature_to_seqfeature(
     return SeqFeature(location=location, type=feature.type, qualifiers=qualifiers)
 
 
-def dseq_from_seq_properties(sequence: str, circular: bool, seq_props: dict) -> Dseq:
+def _dseq_from_seq_properties(sequence: str, circular: bool, seq_props: dict) -> Dseq:
     if circular:
         return Dseq(sequence, circular=True)
     elif (
@@ -118,7 +130,7 @@ def dseq_from_seq_properties(sequence: str, circular: bool, seq_props: dict) -> 
         return Dseq(sequence)
 
 
-def history_node_to_dseqrecord(sgff_object: SgffObject, node_id: str) -> Dseqrecord:
+def _history_node_to_dseqrecord(sgff_object: SgffObject, node_id: str) -> Dseqrecord:
     """Convert a history node to a Dseqrecord.
 
     Sequence comes from the history node, metadata from the tree node.
@@ -128,7 +140,7 @@ def history_node_to_dseqrecord(sgff_object: SgffObject, node_id: str) -> Dseqrec
 
     circular = tree_node.circular if tree_node else False
     seq_props = node.properties.get("AdditionalSequenceProperties")
-    seq = dseq_from_seq_properties(node.sequence, circular, seq_props)
+    seq = _dseq_from_seq_properties(node.sequence, circular, seq_props)
     seq_len = node.length
     name = tree_node.name if tree_node else f"node_{node_id}"
     name = re.sub(r"\s+", "_", name)  # Replace whitespace with underscores
@@ -158,7 +170,7 @@ def history_node_to_dseqrecord(sgff_object: SgffObject, node_id: str) -> Dseqrec
     return record
 
 
-def filter_assembly_fragments_that_are_sequences(
+def _filter_assembly_fragments_that_are_sequences(
     input_value: list[AssemblyFragment],
 ) -> list[AssemblyFragment]:
     return [
@@ -168,7 +180,7 @@ def filter_assembly_fragments_that_are_sequences(
     ]
 
 
-def get_enzyme_batch_from_input_summaries(
+def _get_enzyme_batch_from_input_summaries(
     input_summaries: list[SgffInputSummary],
 ) -> RestrictionBatch:
     enzyme_names = set(
@@ -186,23 +198,26 @@ def get_enzyme_batch_from_input_summaries(
         raise ValueError(f"Unknown enzymes: {enzyme_names}")
 
 
-def get_sequence_inputs(source: Source) -> list[Dseqrecord]:
-    """Auxiliary function to get the most ancestral sequences used as inputs. These will tipically be the immediate inputs,
-    but in a case where a restriction-ligation is turned into restriction, then ligation, we have to go up the tree to find the most ancestral sequences.
+def _get_sequence_inputs(source: Source) -> list[Dseqrecord]:
+    """Return the most ancestral sequences used as inputs.
+
+    These will typically be the immediate inputs, but when a
+    restriction-ligation is split into restriction then ligation we walk up
+    the tree to find the most ancestral sequences.
     """
     out_value = list()
-    for input_value in filter_assembly_fragments_that_are_sequences(source.input):
+    for input_value in _filter_assembly_fragments_that_are_sequences(source.input):
         if (
             input_value.sequence.source is None
             or len(input_value.sequence.source.input) == 0
         ):
             out_value.append(input_value.sequence)
         else:
-            out_value.extend(get_sequence_inputs(input_value.sequence.source))
+            out_value.extend(_get_sequence_inputs(input_value.sequence.source))
     return out_value
 
 
-def parseOligos(oligos: list[SgffHistoryOligo]) -> list[Primer]:
+def _parse_oligos(oligos: list[SgffHistoryOligo]) -> list[Primer]:
     return [
         Primer(oligo.sequence, name=oligo.name or f"oligo_{i + 1}")
         for i, oligo in enumerate(oligos)
@@ -211,12 +226,12 @@ def parseOligos(oligos: list[SgffHistoryOligo]) -> list[Primer]:
 
 # This can happen when ligation leaves overhangs (not perfectly
 # sealed, which is not handled by OpenCloning res-lig assembly)
-def get_restriction_input_combinations(
+def _get_restriction_input_combinations(
     input_sequences: list[Dseqrecord], node: SgffHistoryTreeNode
 ) -> list[list[Dseqrecord]]:
     digestion_products = list()
     for input_sequence, input_summary in zip(input_sequences, node.input_summaries):
-        rb = get_enzyme_batch_from_input_summaries([input_summary])
+        rb = _get_enzyme_batch_from_input_summaries([input_summary])
         digestion = input_sequence.cut(rb)
         if len(digestion) == 0:
             digestion_products.append([input_sequence])
@@ -225,11 +240,11 @@ def get_restriction_input_combinations(
     return list(itertools.product(*digestion_products))
 
 
-def source_from_tree_node(
+def _source_from_tree_node(
     expected_product: Dseqrecord, node: SgffHistoryTreeNode, sgff_object: SgffObject
 ) -> tuple[Source | None | int, list[SgffHistoryNode]]:
     input_sequences = [
-        history_node_to_dseqrecord(sgff_object, child.id) for child in node.children
+        _history_node_to_dseqrecord(sgff_object, child.id) for child in node.children
     ]
 
     expected_seguid = expected_product.seq.seguid()
@@ -246,15 +261,13 @@ def source_from_tree_node(
         else:
             return next((p for p in products if p.seq in expected_dseq_and_rc), None)
 
-    print(">>", node.operation)
-
     if node.operation in UNSUPPORTED_OPERATIONS:
         raise NotImplementedError(f"Operation {node.operation} not supported")
     elif node.operation == "amplifyFragment":
-        primers = parseOligos(node.oligos)
+        primers = _parse_oligos(node.oligos)
         products = pcr_assembly(input_sequences[0], *primers, limit=12)
     elif node.operation == "primerDirectedMutagenesis":
-        fwd_primer, *_ = parseOligos(node.oligos)
+        fwd_primer, *_ = _parse_oligos(node.oligos)
         rvs_primer = Primer(
             fwd_primer.seq.reverse_complement(), name=f"rvs_{fwd_primer.name}"
         )
@@ -284,7 +297,7 @@ def source_from_tree_node(
         "insertFragments",
         "ligateFragments",
     ]:
-        rb = get_enzyme_batch_from_input_summaries(node.input_summaries)
+        rb = _get_enzyme_batch_from_input_summaries(node.input_summaries)
         products = restriction_ligation_assembly(input_sequences, rb)
         if find_expected_product(products) is None:
             # Try a simple ligation if the restriction ligation failed
@@ -293,7 +306,7 @@ def source_from_tree_node(
             # Try restriction, then ligation if the simple ligation failed,
             # This can happen when ligation leaves overhangs (not perfectly
             # sealed, which is not handled by OpenCloning res-lig assembly)
-            digestion_products = get_restriction_input_combinations(
+            digestion_products = _get_restriction_input_combinations(
                 input_sequences, node
             )
             for combination in digestion_products:
@@ -303,13 +316,13 @@ def source_from_tree_node(
     elif node.operation == "linearize":
         input_sequences = [expected_product.looped()]
         input_sequences[0].source = None
-        rb = get_enzyme_batch_from_input_summaries(node.input_summaries)
+        rb = _get_enzyme_batch_from_input_summaries(node.input_summaries)
         if len(rb) == 0:
             warnings.warn("Stopped at linearize operation without enzymes")
             return None, []
         products = input_sequences[0].cut(rb)
     elif node.operation == "removeRestrictionFragment":
-        rb = get_enzyme_batch_from_input_summaries(node.input_summaries)
+        rb = _get_enzyme_batch_from_input_summaries(node.input_summaries)
         products = restriction_ligation_assembly(input_sequences, rb)
         if find_expected_product(products) is None:
             # This is using blunting as described here: https://www.neb.com/en-gb/applications/cloning-and-synthetic-biology/dna-end-modification/blunting
@@ -322,14 +335,14 @@ def source_from_tree_node(
         # It is possible that some inputs are restricted prior to the assembly.,
         # This can happen when ligation leaves overhangs (not perfectly
         # sealed, which is not handled by OpenCloning res-lig assembly)
-        for combination in get_restriction_input_combinations(input_sequences, node):
+        for combination in _get_restriction_input_combinations(input_sequences, node):
             products = GIBSON_LIKE_FUNCTION_DICT[node.operation](combination, 10)
             if find_expected_product(products) is not None:
                 break
     elif node.operation == "overlapFragments":
         products = fusion_pcr_assembly(input_sequences, limit=10)
     elif node.operation == "annealOligos":
-        primers = parseOligos(node.oligos)
+        primers = _parse_oligos(node.oligos)
         products = oligonucleotide_hybridization(*primers, 10)
     elif node.operation == "invalid":
         return None, []
@@ -343,7 +356,7 @@ def source_from_tree_node(
 
     # Return the children nodes in the same order as the inputs
     out_nodes = [None] * len(input_sequences)
-    for input_value in get_sequence_inputs(correct_product.source):
+    for input_value in _get_sequence_inputs(correct_product.source):
         idx = next(
             (i for i, seq in enumerate(input_sequences) if seq is input_value),
             None,
@@ -353,13 +366,13 @@ def source_from_tree_node(
     return correct_product.source, out_nodes
 
 
-def parse_history(
+def _parse_history(
     root_record: Dseqrecord, root_node: SgffHistoryTreeNode, sgff_object: SgffObject
-) -> Dseqrecord:
+) -> None:
     """Parse the history of a Dseqrecord, and edit it in place."""
     repeat = True
     while repeat:
-        source, out_nodes = source_from_tree_node(root_record, root_node, sgff_object)
+        source, out_nodes = _source_from_tree_node(root_record, root_node, sgff_object)
         repeat = source == -1
         if repeat:
             root_node = root_node.children[0]
@@ -367,12 +380,12 @@ def parse_history(
     root_record.source = source
     if source is None:
         return
-    for input_value in get_sequence_inputs(source):
+    for input_value in _get_sequence_inputs(source):
         node = out_nodes.pop(0)
-        parse_history(input_value, node, sgff_object)
+        _parse_history(input_value, node, sgff_object)
 
 
-def source_from_metadata(notes: SgffNotes) -> None | Source:
+def _source_from_metadata(notes: SgffNotes) -> None | Source:
     if notes.get("Comments") and (
         match := re.search(r"https://www.addgene.org/(\d+)", notes.get("Comments"))
     ):
@@ -383,32 +396,44 @@ def source_from_metadata(notes: SgffNotes) -> None | Source:
         return None
 
 
-# --- Test it ---
-for file in glob.glob("data/import_ncbi.dna"):
-    print(file)
-    if file == "data/blunt_linear_ligation.dna":
-        continue
+def parse_snapgene_history(filepath: str) -> Dseqrecord:
+    """Parse a SnapGene ``.dna`` file and return a :class:`~pydna.dseqrecord.Dseqrecord`
+    whose ``source`` attribute tree encodes the full cloning history.
 
-    root_record = parse_snapgene(file)[0]
-    root_record.name = os.path.basename(file)
-    sgff_object = SgffReader.from_file(file)
-    if sgff_object.notes.get("CustomMapLabel"):
-        root_record.name = sgff_object.notes.get("CustomMapLabel")
+    Parameters
+    ----------
+    filepath:
+        Path to the ``.dna`` file to parse.
+
+    Returns
+    -------
+    :class:`~pydna.dseqrecord.Dseqrecord`
+        The root sequence with its provenance tree resolved.
+
+    Raises
+    ------
+    NotImplementedError
+        If the file contains a cloning operation that is not yet supported.
+    ValueError
+        If a recorded operation cannot be reproduced (no matching product found).
+    """
+    root_record = parse_snapgene(filepath)[0]
+    sgff_object = SgffReader.from_file(filepath)
+
+    name = sgff_object.notes.get("CustomMapLabel") or os.path.basename(filepath)
+    root_record.name = re.sub(r"\s+", "_", name)
+
     seq_props = sgff_object.properties.get("AdditionalSequenceProperties")
-    try:
-        root_record.seq = dseq_from_seq_properties(
-            str(root_record.seq), root_record.circular, seq_props
-        )
+    # The biopython parser does not handle overhangs
+    root_record.seq = _dseq_from_seq_properties(
+        str(root_record.seq), root_record.circular, seq_props
+    )
 
-        if not sgff_object.has_history:
-            root_record.source = source_from_metadata(sgff_object.notes)
-        else:
-            parse_history(root_record, sgff_object.history.tree.root, sgff_object)
-    except NotImplementedError:
-        continue
+    if not sgff_object.has_history:
+        root_record.source = _source_from_metadata(sgff_object.notes)
+    else:
+        _parse_history(root_record, sgff_object.history.tree.root, sgff_object)
+
     root_record = root_record.normalize_history()
     root_record.validate_history()
-    cs = CloningStrategy.from_dseqrecords([root_record])
-    file_name = os.path.basename(file)
-    with open(f"output/{file_name.replace('.dna', '.json')}", "w") as f:
-        f.write(cs.model_dump_json(indent=2))
+    return root_record
