@@ -63,3 +63,5 @@ class TestSnapgeneHistoryParser(TestCase):
         self.assertIsInstance(seqr.source.input[0].sequence.source, AddgeneIdSource)
         seqr = seqr_dict["import_ncbi.dna"]
         self.assertIsInstance(seqr.source, NCBISequenceSource)
+        seqr = seqr_dict["import_addgene.dna"]
+        self.assertIsInstance(seqr.source, AddgeneIdSource)
