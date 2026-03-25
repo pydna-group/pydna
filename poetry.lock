@@ -4173,25 +4173,21 @@ pydivsufsort = ["pydivsufsort (<=0.0.14) ; python_version < \"3.9\"", "pydivsufs
 
 [[package]]
 name = "sgffp"
-version = "0.15.1"
+version = "0.15.2"
 description = "Read, write, and manipulate SnapGene files (.dna, .rna, .prot)"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-files = []
-develop = false
+files = [
+    {file = "sgffp-0.15.2-py3-none-any.whl", hash = "sha256:2dfa6b17826be2e7ebfc79d5733484ee967afcf7ff9b087cd07d85980c9497a3"},
+    {file = "sgffp-0.15.2.tar.gz", hash = "sha256:a61cb650142867763a49072d42f7ac4d86e190a086492ccf4f719f1af4c62d66"},
+]
 
 [package.dependencies]
 xmltodict = ">=0.14"
 
 [package.extras]
 dev = ["pytest (>=8.0)", "pytest-cov (>=4.0)"]
-
-[package.source]
-type = "git"
-url = "https://github.com/manulera/sgffp"
-reference = "dev"
-resolved_reference = "27acb8de92f3030cfe287e9503bc9014caee5bba"
 
 [[package]]
 name = "six"
@@ -4837,4 +4833,4 @@ primer-screen = ["pyahocorasick"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "ab25daaeae51cc21da9f374840beb501f5043377fbc7a9edf72ec308b4142198"
+content-hash = "9aca39da9fabcdf71f7cbb64e858b1b575512300cfa43fa3a8094d4062de337c"

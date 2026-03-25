@@ -62,7 +62,7 @@ scipy = [
 seguid = ">=0.0.5"
 regex = ">=2024.11.6,<2027.0.0"
 opencloning-linkml = "^1"
-sgffp = {git = "https://github.com/manulera/sgffp", rev = "dev"}
+sgffp = "^0.15.2"
 [tool.poetry.extras]
 clipboard = ["pyperclip"]
 download = ["pyparsing", "requests"]
