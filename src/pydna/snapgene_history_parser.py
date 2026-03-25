@@ -240,7 +240,29 @@ def _get_restriction_input_combinations(
     return list(itertools.product(*digestion_products))
 
 
-def _source_from_tree_node(
+def _restriction_ligation_with_fallbacks(
+    input_sequences: list[Dseqrecord],
+    node: SgffHistoryTreeNode,
+    find: callable,
+) -> list[Dseqrecord]:
+    """Try restriction-ligation, then plain ligation, then per-input digest + ligation."""
+    rb = _get_enzyme_batch_from_input_summaries(node.input_summaries)
+    products = restriction_ligation_assembly(input_sequences, rb)
+    if find(products) is not None:
+        return products
+    products = ligation_assembly(input_sequences)
+    if find(products) is not None:
+        return products
+    # Last resort: digest each input individually, then ligate
+    # (happens when ligation would leave overhangs)
+    for combination in _get_restriction_input_combinations(input_sequences, node):
+        products = ligation_assembly(combination)
+        if find(products) is not None:
+            return products
+    return products
+
+
+def _source_from_tree_node(  # noqa: C901
     expected_product: Dseqrecord, node: SgffHistoryTreeNode, sgff_object: SgffObject
 ) -> tuple[Source | None | int, list[SgffHistoryNode]]:
     input_sequences = [
@@ -297,22 +319,9 @@ def _source_from_tree_node(
         "insertFragments",
         "ligateFragments",
     ]:
-        rb = _get_enzyme_batch_from_input_summaries(node.input_summaries)
-        products = restriction_ligation_assembly(input_sequences, rb)
-        if find_expected_product(products) is None:
-            # Try a simple ligation if the restriction ligation failed
-            products = ligation_assembly(input_sequences)
-        if find_expected_product(products) is None:
-            # Try restriction, then ligation if the simple ligation failed,
-            # This can happen when ligation leaves overhangs (not perfectly
-            # sealed, which is not handled by OpenCloning res-lig assembly)
-            digestion_products = _get_restriction_input_combinations(
-                input_sequences, node
-            )
-            for combination in digestion_products:
-                products = ligation_assembly(combination)
-                if find_expected_product(products) is not None:
-                    break
+        products = _restriction_ligation_with_fallbacks(
+            input_sequences, node, find_expected_product
+        )
     elif node.operation == "linearize":
         input_sequences = [expected_product.looped()]
         input_sequences[0].source = None
@@ -355,13 +364,12 @@ def _source_from_tree_node(
         raise ValueError(f"No product found for expected SEGUID {expected_seguid}")
 
     # Return the children nodes in the same order as the inputs
+    input_index = {id(seq): i for i, seq in enumerate(input_sequences)}
     out_nodes = [None] * len(input_sequences)
     for input_value in _get_sequence_inputs(correct_product.source):
-        idx = next(
-            (i for i, seq in enumerate(input_sequences) if seq is input_value),
-            None,
-        )
-        out_nodes[idx] = node.children[idx]
+        idx = input_index.get(id(input_value))
+        if idx is not None:
+            out_nodes[idx] = node.children[idx]
 
     return correct_product.source, out_nodes
 
