@@ -9,6 +9,7 @@
 import glob
 from unittest import TestCase
 import os
+from pydna.opencloning_models import AddgeneIdSource, NCBISequenceSource
 from pydna.snapgene_history_parser import parse_snapgene_history
 
 TEST_FILES = glob.glob(
@@ -39,20 +40,26 @@ EXPECTED_VALUE_ERROR = [
 class TestSnapgeneHistoryParser(TestCase):
 
     def test_files_exist(self):
-        self.assertEqual(len(TEST_FILES), 42)
+        self.assertEqual(len(TEST_FILES), 43)
 
     def test_correctly_parsed(self):
+        seqr_dict = {}
         for file in TEST_FILES:
+            filename = os.path.basename(file)
             try:
-                parse_snapgene_history(file)
+                seqr_dict[filename] = parse_snapgene_history(file)
             except NotImplementedError as e:
-                filename = os.path.basename(file)
                 if filename not in METHOD_NOT_SUPPORTED:
                     raise AssertionError(f"File {filename} not supported") from e
             except ValueError as e:
-                filename = os.path.basename(file)
                 if (
                     filename not in EXPECTED_VALUE_ERROR
                     or "No product found for expected SEGUID" not in str(e)
                 ):
                     raise AssertionError(f"File {filename} not supported") from e
+
+        # Check special cases
+        seqr = seqr_dict["import_addgene_then_clone.dna"]
+        self.assertIsInstance(seqr.source.input[0].sequence.source, AddgeneIdSource)
+        seqr = seqr_dict["import_ncbi.dna"]
+        self.assertIsInstance(seqr.source, NCBISequenceSource)

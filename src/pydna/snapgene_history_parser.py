@@ -202,9 +202,11 @@ def _get_sequence_inputs(source: Source) -> list[Dseqrecord]:
     """Return the most ancestral sequences used as inputs.
 
     These will typically be the immediate inputs, but when a
-    restriction-ligation is split into restriction then ligation we walk up
+    restriction-ligation is split into restriction then ligation (see
+    _get_restriction_input_combinations), we walk up
     the tree to find the most ancestral sequences.
     """
+
     out_value = list()
     for input_value in _filter_assembly_fragments_that_are_sequences(source.input):
         if (
@@ -224,11 +226,15 @@ def _parse_oligos(oligos: list[SgffHistoryOligo]) -> list[Primer]:
     ]
 
 
-# This can happen when ligation leaves overhangs (not perfectly
-# sealed, which is not handled by OpenCloning res-lig assembly)
 def _get_restriction_input_combinations(
     input_sequences: list[Dseqrecord], node: SgffHistoryTreeNode
 ) -> list[list[Dseqrecord]]:
+    """Get all possible combinations of input sequences after digestion.
+
+    This is used to try different combinations of inputs to see if we can
+    find the expected product.
+    """
+
     digestion_products = list()
     for input_sequence, input_summary in zip(input_sequences, node.input_summaries):
         rb = _get_enzyme_batch_from_input_summaries([input_summary])
@@ -341,9 +347,7 @@ def _source_from_tree_node(  # noqa: C901
     elif node.operation == "gatewayBPCloning":
         products = gateway_assembly(input_sequences, "BP")
     elif node.operation in ["gibsonAssembly", "inFusionCloning", "hifiAssembly"]:
-        # It is possible that some inputs are restricted prior to the assembly.,
-        # This can happen when ligation leaves overhangs (not perfectly
-        # sealed, which is not handled by OpenCloning res-lig assembly)
+        # It is possible that some inputs are digested prior to the assembly.,
         for combination in _get_restriction_input_combinations(input_sequences, node):
             products = GIBSON_LIKE_FUNCTION_DICT[node.operation](combination, 10)
             if find_expected_product(products) is not None:
@@ -377,7 +381,8 @@ def _source_from_tree_node(  # noqa: C901
 def _parse_history(
     root_record: Dseqrecord, root_node: SgffHistoryTreeNode, sgff_object: SgffObject
 ) -> None:
-    """Parse the history of a Dseqrecord, and edit it in place."""
+    """Parse the history of a Dseqrecord, editing it in place."""
+
     repeat = True
     while repeat:
         source, out_nodes = _source_from_tree_node(root_record, root_node, sgff_object)
@@ -387,6 +392,11 @@ def _parse_history(
 
     root_record.source = source
     if source is None:
+        # We may be able to get the source from the metadata (e.g. AddGene ID or NCBI accession number)
+        if root_node.id in sgff_object.history.nodes:
+            root_record.source = _source_from_metadata(
+                sgff_object.history.nodes[root_node.id].content.notes
+            )
         return
     for input_value in _get_sequence_inputs(source):
         node = out_nodes.pop(0)
