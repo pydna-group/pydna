@@ -127,7 +127,7 @@ def _dseq_from_seq_properties(sequence: str, circular: bool, seq_props: dict) ->
             )
         except ValueError as e:
             raise NotImplementedError(f"Sequence not supported: {sequence}") from e
-    else:
+    else:  # pragma: no cover (I don't expect this to happen)
         return Dseq(sequence)
 
 
