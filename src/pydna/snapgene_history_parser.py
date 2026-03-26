@@ -41,6 +41,7 @@ from pydna.opencloning_models import (
     Source,
     AddgeneIdSource,
     NCBISequenceSource,
+    UploadedFileSource,
 )
 from Bio.Restriction.Restriction_Dictionary import rest_dict
 from Bio.Restriction import RestrictionBatch
@@ -397,6 +398,8 @@ def _parse_history(
             root_record.source = _source_from_metadata(
                 sgff_object.history.nodes[root_node.id].content.notes
             )
+        # Else, set the default source
+        root_record.source = _get_default_source(root_node.name)
         return
     for input_value in _get_sequence_inputs(source):
         node = out_nodes.pop(0)
@@ -412,6 +415,14 @@ def _source_from_metadata(notes: SgffNotes) -> None | Source:
         return NCBISequenceSource(repository_id=notes.get("AccessionNumber"))
     else:
         return None
+
+
+def _get_default_source(file_name: str) -> UploadedFileSource:
+    return UploadedFileSource(
+        file_name=file_name,
+        sequence_file_format="snapgene",
+        index_in_file=0,
+    )
 
 
 def parse_snapgene_history(filepath: str) -> Dseqrecord:
@@ -438,7 +449,7 @@ def parse_snapgene_history(filepath: str) -> Dseqrecord:
     root_record = parse_snapgene(filepath)[0]
     sgff_object = SgffReader.from_file(filepath)
 
-    name = sgff_object.notes.get("CustomMapLabel") or os.path.basename(filepath)
+    name = os.path.basename(filepath)
     root_record.name = re.sub(r"\s+", "_", name)
 
     seq_props = sgff_object.properties.get("AdditionalSequenceProperties")
@@ -452,6 +463,8 @@ def parse_snapgene_history(filepath: str) -> Dseqrecord:
     else:
         _parse_history(root_record, sgff_object.history.tree.root, sgff_object)
 
+    if root_record.source is None:
+        root_record.source = _get_default_source(name)
     root_record = root_record.normalize_history()
     root_record.validate_history()
     return root_record
