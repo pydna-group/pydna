@@ -34,7 +34,11 @@ import re
 import time
 import datetime
 from typing import Union, TYPE_CHECKING
-from pydna.opencloning_models import SequenceCutSource
+from pydna.opencloning_models import (
+    ReverseComplementSource,
+    SequenceCutSource,
+    SourceInput,
+)
 
 if TYPE_CHECKING:  # pragma: no cover
     from pydna.opencloning_models import Source
@@ -979,6 +983,7 @@ class Dseqrecord(SeqRecord):
         answer.id = self.id + "_rc"
         answer.seq.circular = self.seq.circular
         # answer.seq._linear = self.seq.linear
+        answer.source = ReverseComplementSource(input=[SourceInput(sequence=self)])
         return answer
 
     rc = reverse_complement

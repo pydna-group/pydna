@@ -44,7 +44,7 @@ EXPECTED_VALUE_ERROR = [
 class TestSnapgeneHistoryParser(TestCase):
 
     def test_files_exist(self):
-        self.assertEqual(len(TEST_FILES), 43)
+        self.assertEqual(len(TEST_FILES), 49)
 
     def test_correctly_parsed(self):
         seqr_dict = {}
@@ -90,6 +90,17 @@ class TestSnapgeneHistoryParser(TestCase):
             ["Stopped at change topology operation"],
         )
         del warning_dict["circularize.dna"]
+
+        # Manual editing warnings
+        for f in TEST_FILES:
+            basename = os.path.basename(f)
+            if basename.startswith("manual_"):
+                self.assertEqual(
+                    warning_dict[basename],
+                    ["Manual editing of sequences not supported"],
+                )
+                del warning_dict[basename]
+
         # Not other warning should remain
         for key in warning_dict:
             self.assertEqual(warning_dict[key], [])

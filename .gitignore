@@ -78,3 +78,6 @@ target/
 
 # mac files
 .DS_Store
+
+# Snapgene local file
+.sglock/

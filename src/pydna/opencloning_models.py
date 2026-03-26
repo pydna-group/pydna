@@ -1080,7 +1080,6 @@ class ReverseComplementSource(Source):
 
     def _replay_products(self) -> list["Dseqrecord"]:
         out_seq = self.input[0].sequence.reverse_complement()
-        out_seq.source = self
         return [out_seq]
 
 

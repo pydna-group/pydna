@@ -146,10 +146,13 @@ def _history_node_to_dseqrecord(sgff_object: SgffObject, node_id: str) -> Dseqre
     name = tree_node.name if tree_node else f"node_{node_id}"
     name = re.sub(r"\s+", "_", name)  # Replace whitespace with underscores
 
-    # Convert features from the node's content
-    features = [
-        _feature_to_seqfeature(feat, seq_len, circular) for feat in node.features
-    ]
+    features = []
+    if seq_len != 0:
+        # Convert features from the node's content, only if sequence is present,
+        # else the sequence is created by _source_from_tree_node
+        features = [
+            _feature_to_seqfeature(feat, seq_len, circular) for feat in node.features
+        ]
 
     annotations = {}
     annotations["topology"] = "circular" if circular else "linear"
@@ -176,6 +179,15 @@ def _filter_assembly_fragments_that_are_sequences(
     ]
 
 
+def _get_restriction_batch_from_enzyme_names(
+    enzyme_names: list[str],
+) -> RestrictionBatch:
+    if all(enz_name in rest_dict.keys() for enz_name in enzyme_names):
+        return RestrictionBatch(first=[e for e in enzyme_names])
+    else:  # pragma: no cover (I don't expect this to happen)
+        raise ValueError(f"Unknown enzymes: {enzyme_names}")
+
+
 def _get_enzyme_batch_from_input_summaries(
     input_summaries: list[SgffInputSummary],
 ) -> RestrictionBatch:
@@ -188,10 +200,7 @@ def _get_enzyme_batch_from_input_summaries(
     )
     # Sometimes they have Start or End tags, we remove them
     enzyme_names = enzyme_names.difference({"Start", "End"})
-    if all(enz_name in rest_dict.keys() for enz_name in enzyme_names):
-        return RestrictionBatch(first=[e for e in enzyme_names])
-    else:  # pragma: no cover (I don't expect this to happen)
-        raise ValueError(f"Unknown enzymes: {enzyme_names}")
+    return _get_restriction_batch_from_enzyme_names(enzyme_names)
 
 
 def _get_sequence_inputs(source: Source) -> list[Dseqrecord]:
@@ -240,6 +249,43 @@ def _get_restriction_input_combinations(
         else:
             digestion_products.append(digestion)
     return list(itertools.product(*digestion_products))
+
+
+def _handle_circularize_operation(
+    input_sequences: list[Dseqrecord],
+    node: SgffHistoryTreeNode,
+    sgff_object: SgffObject,
+    expected_product: Dseqrecord,
+) -> tuple[list[Dseqrecord], list[Dseqrecord]]:
+    """Handle the circularize operation."""
+    # This operation does not come with a sequence
+    assert len(input_sequences[0].seq) == 0
+    history_node = sgff_object.history.nodes[node.children[0].id]
+    seq_props = history_node.content.properties.get("AdditionalSequenceProperties")
+    if not (
+        seq_props.get("UpstreamEnzymeName") and seq_props.get("DownstreamEnzymeName")
+    ):  # pragma: no cover (I don't expect this to happen)
+        warnings.warn(
+            "Stopped at circularize operation without enzymes",
+            category=SnapgeneHistoryParserWarning,
+        )
+        return None, []
+
+    rb = _get_restriction_batch_from_enzyme_names(
+        [seq_props.get("UpstreamEnzymeName"), seq_props.get("DownstreamEnzymeName")]
+    )
+    original_fragments = expected_product.cut(rb)
+    if len(original_fragments) != 1:  # pragma: no cover (I don't expect this to happen)
+        warnings.warn(
+            "Stopped at circularize operation not coming from a single fragment",
+            category=SnapgeneHistoryParserWarning,
+        )
+        return None, []
+
+    input_sequences = [original_fragments[0]]
+    input_sequences[0].source = None
+    products = ligation_assembly(input_sequences, allow_blunt=True)
+    return input_sequences, products
 
 
 def _restriction_ligation_with_fallbacks(
@@ -303,7 +349,14 @@ def _source_from_tree_node(  # noqa: C901
         for pcr_product in pcr_products:
             pcr_product.name = "mutagenesis_pcr_product"
             products.extend(fusion_pcr_assembly([pcr_product], limit=6))
-    elif node.operation in ["changeStrandedness", "editDNAEnds", "changeMethylation"]:
+    elif node.operation in [
+        "changeStrandedness",
+        "editDNAEnds",
+        "changeMethylation",
+        "changePhosphorylation",
+        "setOrigin",  # Rotation of circular sequences
+        "newFileFromSelection",  # Selection of sequences from a file
+    ]:
         return -1, None
     elif node.operation == "changeTopology":
         if expected_product.circular:
@@ -331,6 +384,7 @@ def _source_from_tree_node(  # noqa: C901
             input_sequences, node, find_expected_product
         )
     elif node.operation == "linearize":
+        # Here the input_sequence comes empty, I guess because it can be inferred
         input_sequences = [expected_product.looped()]
         input_sequences[0].source = None
         rb = _get_enzyme_batch_from_input_summaries(node.input_summaries)
@@ -341,6 +395,10 @@ def _source_from_tree_node(  # noqa: C901
             )
             return None, []
         products = input_sequences[0].cut(rb)
+    elif node.operation == "circularize":
+        input_sequences, products = _handle_circularize_operation(
+            input_sequences, node, sgff_object, expected_product
+        )
     elif node.operation == "removeRestrictionFragment":
         rb = _get_enzyme_batch_from_input_summaries(node.input_summaries)
         products = restriction_ligation_assembly(input_sequences, rb)
@@ -364,6 +422,18 @@ def _source_from_tree_node(  # noqa: C901
         products = oligonucleotide_hybridization(*primers, 10)
     elif node.operation == "invalid":
         return None, []
+    elif node.operation in ["remove", "insert", "replace"]:
+        warnings.warn(
+            "Manual editing of sequences not supported",
+            category=SnapgeneHistoryParserWarning,
+        )
+        return None, []
+    elif node.operation == "flip":
+        # Here the input_sequence comes empty, I guess because it can be inferred
+        input_sequences = [expected_product.reverse_complement()]
+        input_sequences[0].source = None
+        input_sequences[0].name = node.name
+        products = [input_sequences[0].reverse_complement()]
     else:  # pragma: no cover (Tests will be updated when more are encountered)
         raise ValueError(f"Unknown operation: {node.operation}")
 

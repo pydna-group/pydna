@@ -848,7 +848,7 @@ class ValidateTest(TestCase):
     def test_validate_reverse_complement(self):
         seq = Dseqrecord("ATGCATGC")
         rc = seq.reverse_complement()
-        rc.source = ReverseComplementSource(input=[SourceInput(sequence=seq)])
+        self.assertIsInstance(rc.source, ReverseComplementSource)
         rc.source.validate(rc)
 
     def test_validate_restriction_enzyme_cut(self):
@@ -1159,6 +1159,7 @@ class NormalizeTest(TestCase):
             for inp in copy_ligation_product.source.input:
                 this_id = inp.sequence.id
                 inp.sequence = inp.sequence.reverse_complement()
+                inp.sequence.source = None
                 inp.sequence.id = this_id
             cs_wrong = CloningStrategy.from_dseqrecords([copy_ligation_product])
             cs_norm = cs_wrong.normalize()
