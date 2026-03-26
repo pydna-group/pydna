@@ -10,7 +10,11 @@ import glob
 from unittest import TestCase
 import os
 from pydna.opencloning_models import AddgeneIdSource, NCBISequenceSource
-from pydna.snapgene_history_parser import parse_snapgene_history
+from pydna.snapgene_history_parser import (
+    parse_snapgene_history,
+    SnapgeneHistoryParserWarning,
+)
+import warnings
 
 TEST_FILES = glob.glob(
     os.path.join(os.path.dirname(__file__), "snapgene_history_files", "*.dna")
@@ -44,10 +48,19 @@ class TestSnapgeneHistoryParser(TestCase):
 
     def test_correctly_parsed(self):
         seqr_dict = {}
+        warning_dict = {}
         for file in TEST_FILES:
             filename = os.path.basename(file)
             try:
-                seqr_dict[filename] = parse_snapgene_history(file)
+
+                with warnings.catch_warnings(record=True) as wlist:
+                    warnings.simplefilter("always")
+                    seqr_dict[filename] = parse_snapgene_history(file)
+                    warning_dict[filename] = [
+                        str(w.message)
+                        for w in wlist
+                        if issubclass(w.category, SnapgeneHistoryParserWarning)
+                    ]
             except NotImplementedError as e:
                 if filename not in METHOD_NOT_SUPPORTED:
                     raise AssertionError(f"File {filename} not supported") from e
@@ -65,3 +78,18 @@ class TestSnapgeneHistoryParser(TestCase):
         self.assertIsInstance(seqr.source, NCBISequenceSource)
         seqr = seqr_dict["import_addgene.dna"]
         self.assertIsInstance(seqr.source, AddgeneIdSource)
+
+        # Check warnings
+        self.assertEqual(
+            warning_dict["circularize_then_linearize_without_enzyme.dna"],
+            ["Stopped at linearize operation without enzymes"],
+        )
+        del warning_dict["circularize_then_linearize_without_enzyme.dna"]
+        self.assertEqual(
+            warning_dict["circularize.dna"],
+            ["Stopped at change topology operation"],
+        )
+        del warning_dict["circularize.dna"]
+        # Not other warning should remain
+        for key in warning_dict:
+            self.assertEqual(warning_dict[key], [])

@@ -67,9 +67,13 @@ GIBSON_LIKE_FUNCTION_DICT = {
 }
 
 
+class SnapgeneHistoryParserWarning(Warning):
+    pass
+
+
 def _segments_to_location(
     segments: list[SgffSegment], strand_int: int, seq_len: int, circular: bool
-) -> SimpleLocation | CompoundLocation | None:
+) -> SimpleLocation | CompoundLocation:
     """Convert SgffSegment list to a Biopython location."""
     locations = []
     for seg in segments:
@@ -82,8 +86,6 @@ def _segments_to_location(
         else:
             locations.append(SimpleLocation(seg.start, seg.end, strand=strand_int))
 
-    if not locations:
-        return None
     if len(locations) == 1:
         return locations[0]
     # For reverse strand, reverse order
@@ -94,12 +96,10 @@ def _segments_to_location(
 
 def _feature_to_seqfeature(
     feature: SgffFeature, seq_len: int, circular: bool
-) -> SeqFeature | None:
+) -> SeqFeature:
     """Convert an SgffFeature to a Biopython SeqFeature."""
     strand_int = STRAND_MAP.get(feature.strand, 0)
     location = _segments_to_location(feature.segments, strand_int, seq_len, circular)
-    if location is None:
-        return None
 
     # Convert qualifiers: Biopython expects lists as values
     qualifiers = {
@@ -147,18 +147,13 @@ def _history_node_to_dseqrecord(sgff_object: SgffObject, node_id: str) -> Dseqre
     name = re.sub(r"\s+", "_", name)  # Replace whitespace with underscores
 
     # Convert features from the node's content
-    features = []
-    for feat in node.features:
-        sf = _feature_to_seqfeature(feat, seq_len, circular)
-        if sf is not None:
-            features.append(sf)
+    features = [
+        _feature_to_seqfeature(feat, seq_len, circular) for feat in node.features
+    ]
 
     annotations = {}
     annotations["topology"] = "circular" if circular else "linear"
-    if tree_node:
-        annotations["molecule_type"] = "DNA"
-        if tree_node.strandedness:
-            annotations["molecule_type"] = f"{tree_node.strandedness}-stranded DNA"
+    annotations["molecule_type"] = "DNA"
 
     record = Dseqrecord(
         record=seq,
@@ -195,7 +190,7 @@ def _get_enzyme_batch_from_input_summaries(
     enzyme_names = enzyme_names.difference({"Start", "End"})
     if all(enz_name in rest_dict.keys() for enz_name in enzyme_names):
         return RestrictionBatch(first=[e for e in enzyme_names])
-    else:
+    else:  # pragma: no cover (I don't expect this to happen)
         raise ValueError(f"Unknown enzymes: {enzyme_names}")
 
 
@@ -314,11 +309,17 @@ def _source_from_tree_node(  # noqa: C901
         if expected_product.circular:
             input_sequences = [expected_product[: len(expected_product)]]
             products = ligation_assembly(input_sequences, True)
-            if len(products) == 0:
-                warnings.warn("Stopped at change topology operation")
+            if len(products) == 0:  # pragma: no cover (I don't expect this to happen)
+                warnings.warn(
+                    "Stopped at change topology operation",
+                    category=SnapgeneHistoryParserWarning,
+                )
                 return None, []
         else:
-            warnings.warn("Stopped at change topology operation")
+            warnings.warn(
+                "Stopped at change topology operation",
+                category=SnapgeneHistoryParserWarning,
+            )
             return None, []
     elif node.operation in [
         "insertFragment",
@@ -334,7 +335,10 @@ def _source_from_tree_node(  # noqa: C901
         input_sequences[0].source = None
         rb = _get_enzyme_batch_from_input_summaries(node.input_summaries)
         if len(rb) == 0:
-            warnings.warn("Stopped at linearize operation without enzymes")
+            warnings.warn(
+                "Stopped at linearize operation without enzymes",
+                category=SnapgeneHistoryParserWarning,
+            )
             return None, []
         products = input_sequences[0].cut(rb)
     elif node.operation == "removeRestrictionFragment":
@@ -360,7 +364,7 @@ def _source_from_tree_node(  # noqa: C901
         products = oligonucleotide_hybridization(*primers, 10)
     elif node.operation == "invalid":
         return None, []
-    else:
+    else:  # pragma: no cover (Tests will be updated when more are encountered)
         raise ValueError(f"Unknown operation: {node.operation}")
 
     correct_product = find_expected_product(products)
@@ -370,12 +374,7 @@ def _source_from_tree_node(  # noqa: C901
 
     # Return the children nodes in the same order as the inputs
     input_index = {id(seq): i for i, seq in enumerate(input_sequences)}
-    out_nodes = [None] * len(input_sequences)
-    for input_value in _get_sequence_inputs(correct_product.source):
-        idx = input_index.get(id(input_value))
-        if idx is not None:
-            out_nodes[idx] = node.children[idx]
-
+    out_nodes = [node.children[input_index.get(id(seq))] for seq in input_sequences]
     return correct_product.source, out_nodes
 
 
@@ -399,7 +398,8 @@ def _parse_history(
                 sgff_object.history.nodes[root_node.id].content.notes
             )
         # Else, set the default source
-        root_record.source = _get_default_source(root_node.name)
+        if root_record.source is None:
+            root_record.source = _get_default_source(root_node.name)
         return
     for input_value in _get_sequence_inputs(source):
         node = out_nodes.pop(0)
