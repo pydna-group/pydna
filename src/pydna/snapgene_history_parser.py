@@ -40,7 +40,6 @@ from pydna.opencloning_models import (
     AssemblyFragment,
     Source,
     AddgeneIdSource,
-    NCBISequenceSource,
     UploadedFileSource,
 )
 from Bio.Restriction.Restriction_Dictionary import rest_dict
@@ -481,8 +480,13 @@ def _source_from_metadata(notes: SgffNotes) -> None | Source:
         match := re.search(r"https://www.addgene.org/(\d+)", notes.get("Comments"))
     ):
         return AddgeneIdSource(repository_id=match.group(1))
-    elif notes.get("AccessionNumber"):
-        return NCBISequenceSource(repository_id=notes.get("AccessionNumber"))
+    # This works for sequences imported from NCBI in SnapGene
+    # The problem is that sequences coming from genbank
+    # files will also have an AccessionNumber, even if that is arbitrary (e.g. the name of
+    # the sequence). I don't think there is a reliable way to distinguish between the two
+    # without making a request to NCBI.
+    # elif notes.get("AccessionNumber"):
+    #     return NCBISequenceSource(repository_id=notes.get("AccessionNumber"))
     else:
         return None
 

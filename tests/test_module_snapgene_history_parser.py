@@ -9,7 +9,7 @@
 import glob
 from unittest import TestCase
 import os
-from pydna.opencloning_models import AddgeneIdSource, NCBISequenceSource
+from pydna.opencloning_models import AddgeneIdSource
 from pydna.snapgene_history_parser import (
     parse_snapgene_history,
     SnapgeneHistoryParserWarning,
@@ -74,8 +74,9 @@ class TestSnapgeneHistoryParser(TestCase):
         # Check special cases
         seqr = seqr_dict["import_addgene_then_clone.dna"]
         self.assertIsInstance(seqr.source.input[0].sequence.source, AddgeneIdSource)
-        seqr = seqr_dict["import_ncbi.dna"]
-        self.assertIsInstance(seqr.source, NCBISequenceSource)
+        # Can't do this anymore, (see _source_from_metadata)
+        # seqr = seqr_dict["import_ncbi.dna"]
+        # self.assertIsInstance(seqr.source, NCBISequenceSource)
         seqr = seqr_dict["import_addgene.dna"]
         self.assertIsInstance(seqr.source, AddgeneIdSource)
 
