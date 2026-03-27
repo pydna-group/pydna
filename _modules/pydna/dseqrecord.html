@@ -360,7 +360,11 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SequenceCutSource</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ReverseComplementSource</span><span class="p">,</span>
+    <span class="n">SequenceCutSource</span><span class="p">,</span>
+    <span class="n">SourceInput</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Source</span>
@@ -1375,6 +1379,7 @@ document.write(`
         <span class="n">answer</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">+</span> <span class="s2">&quot;_rc&quot;</span>
         <span class="n">answer</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">circular</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">circular</span>
         <span class="c1"># answer.seq._linear = self.seq.linear</span>
+        <span class="n">answer</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">ReverseComplementSource</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="p">[</span><span class="n">SourceInput</span><span class="p">(</span><span class="n">sequence</span><span class="o">=</span><span class="bp">self</span><span class="p">)])</span>
         <span class="k">return</span> <span class="n">answer</span></div>
 
 

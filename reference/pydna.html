@@ -1352,6 +1352,11 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.sequence_regex.dseqrecord_finditer"><code class="docutils literal notranslate"><span class="pre">dseqrecord_finditer()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pydna.snapgene_history_parser">pydna.snapgene_history_parser module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.snapgene_history_parser.SnapgeneHistoryParserWarning"><code class="docutils literal notranslate"><span class="pre">SnapgeneHistoryParserWarning</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.snapgene_history_parser.parse_snapgene_history"><code class="docutils literal notranslate"><span class="pre">parse_snapgene_history()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pydna.threading_timer_decorator_exit">pydna.threading_timer_decorator_exit module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.threading_timer_decorator_exit.cdquit"><code class="docutils literal notranslate"><span class="pre">cdquit()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.threading_timer_decorator_exit.exit_after"><code class="docutils literal notranslate"><span class="pre">exit_after()</span></code></a></li>
@@ -15441,6 +15446,45 @@ changed by passing a type as keyword with some other string value.</p>
 </dd></dl>
 
 </section>
+<section id="module-pydna.snapgene_history_parser">
+<span id="pydna-snapgene-history-parser-module"></span><h2>pydna.snapgene_history_parser module<a class="headerlink" href="#module-pydna.snapgene_history_parser" title="Link to this heading">#</a></h2>
+<p>Parse SnapGene .dna files and reconstruct their cloning history as
+<a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dseqrecord</span></code></a> objects.</p>
+<p>The single public entry point is <a class="reference internal" href="#pydna.snapgene_history_parser.parse_snapgene_history" title="pydna.snapgene_history_parser.parse_snapgene_history"><code class="xref py py-func docutils literal notranslate"><span class="pre">parse_snapgene_history()</span></code></a>, which reads a
+<code class="docutils literal notranslate"><span class="pre">.dna</span></code> file, resolves every step recorded in its SnapGene history, and
+returns a <code class="docutils literal notranslate"><span class="pre">Dseqrecord</span></code> whose <code class="docutils literal notranslate"><span class="pre">source</span></code> attribute tree mirrors the full
+cloning provenance.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="pydna.snapgene_history_parser.SnapgeneHistoryParserWarning">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pydna.snapgene_history_parser.</span></span><span class="sig-name descname"><span class="pre">SnapgeneHistoryParserWarning</span></span><a class="reference internal" href="../_modules/pydna/snapgene_history_parser.html#SnapgeneHistoryParserWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.snapgene_history_parser.SnapgeneHistoryParserWarning" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.8/library/exceptions.html#Warning" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Warning</span></code></a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.snapgene_history_parser.parse_snapgene_history">
+<span class="sig-prename descclassname"><span class="pre">pydna.snapgene_history_parser.</span></span><span class="sig-name descname"><span class="pre">parse_snapgene_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><span class="pre">Dseqrecord</span></a></span></span><a class="reference internal" href="../_modules/pydna/snapgene_history_parser.html#parse_snapgene_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.snapgene_history_parser.parse_snapgene_history" title="Link to this definition">#</a></dt>
+<dd><p>Parse a SnapGene <code class="docutils literal notranslate"><span class="pre">.dna</span></code> file and return a <a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dseqrecord</span></code></a>
+whose <code class="docutils literal notranslate"><span class="pre">source</span></code> attribute tree encodes the full cloning history.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepath</strong> – Path to the <code class="docutils literal notranslate"><span class="pre">.dna</span></code> file to parse.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The root sequence with its provenance tree resolved.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dseqrecord</span></code></a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3.8/library/exceptions.html#NotImplementedError" title="(in Python v3.8)"><strong>NotImplementedError</strong></a> – If the file contains a cloning operation that is not yet supported.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3.8/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If a recorded operation cannot be reproduced (no matching product found).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-pydna.threading_timer_decorator_exit">
 <span id="pydna-threading-timer-decorator-exit-module"></span><h2>pydna.threading_timer_decorator_exit module<a class="headerlink" href="#module-pydna.threading_timer_decorator_exit" title="Link to this heading">#</a></h2>
 <p>MIT License</p>
@@ -16974,6 +17018,11 @@ the location spans the entire sequence (it’s not empty).
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pydna.sequence_regex">pydna.sequence_regex module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.sequence_regex.compute_regex_site"><code class="docutils literal notranslate"><span class="pre">compute_regex_site()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.sequence_regex.dseqrecord_finditer"><code class="docutils literal notranslate"><span class="pre">dseqrecord_finditer()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pydna.snapgene_history_parser">pydna.snapgene_history_parser module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.snapgene_history_parser.SnapgeneHistoryParserWarning"><code class="docutils literal notranslate"><span class="pre">SnapgeneHistoryParserWarning</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.snapgene_history_parser.parse_snapgene_history"><code class="docutils literal notranslate"><span class="pre">parse_snapgene_history()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pydna.threading_timer_decorator_exit">pydna.threading_timer_decorator_exit module</a><ul class="nav section-nav flex-column">

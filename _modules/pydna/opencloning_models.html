@@ -1615,7 +1615,6 @@ document.write(`
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
         <span class="n">out_seq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
-        <span class="n">out_seq</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">out_seq</span><span class="p">]</span></div>
 
 
@@ -1776,7 +1775,9 @@ document.write(`
         <span class="c1"># Build primer lookup</span>
         <span class="n">primer_by_id</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">_PrimerCls</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">primers</span> <span class="ow">or</span> <span class="p">[]:</span>
-            <span class="n">primer_by_id</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">_PrimerCls</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">primer_obj</span> <span class="o">=</span> <span class="n">_PrimerCls</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">primer_obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">primer_by_id</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">primer_obj</span>
 
         <span class="c1"># Build sequence lookup by parsing TextFileSequence genbank content</span>
         <span class="n">seq_by_id</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>

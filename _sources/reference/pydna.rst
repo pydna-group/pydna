@@ -265,6 +265,14 @@ pydna.sequence\_regex module
    :show-inheritance:
    :undoc-members:
 
+pydna.snapgene\_history\_parser module
+--------------------------------------
+
+.. automodule:: pydna.snapgene_history_parser
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 pydna.threading\_timer\_decorator\_exit module
 ----------------------------------------------
 

@@ -1,0 +1,945 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pydna.snapgene_history_parser &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=b530ca2f" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydna/snapgene_history_parser';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../getting_started.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../reference/pydna.html">pydna package</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pydna.snapgene_history_parser</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># Copyright 2013-2023 by Björn Johansson.  All rights reserved.</span>
+<span class="c1"># This code is part of the Python-dna distribution and governed by its</span>
+<span class="c1"># license.  Please see the LICENSE.txt file that should have been included</span>
+<span class="c1"># as part of this package.</span>
+<span class="sd">&quot;&quot;&quot;Parse SnapGene .dna files and reconstruct their cloning history as</span>
+<span class="sd">:class:`~pydna.dseqrecord.Dseqrecord` objects.</span>
+
+<span class="sd">The single public entry point is :func:`parse_snapgene_history`, which reads a</span>
+<span class="sd">``.dna`` file, resolves every step recorded in its SnapGene history, and</span>
+<span class="sd">returns a ``Dseqrecord`` whose ``source`` attribute tree mirrors the full</span>
+<span class="sd">cloning provenance.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sgffp</span><span class="w"> </span><span class="kn">import</span> <span class="n">SgffReader</span><span class="p">,</span> <span class="n">SgffObject</span><span class="p">,</span> <span class="n">SgffSegment</span><span class="p">,</span> <span class="n">SgffFeature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sgffp.models.history</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SgffHistoryNode</span><span class="p">,</span>
+    <span class="n">SgffHistoryTreeNode</span><span class="p">,</span>
+    <span class="n">SgffInputSummary</span><span class="p">,</span>
+    <span class="n">SgffHistoryOligo</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">gibson_assembly</span><span class="p">,</span>
+    <span class="n">pcr_assembly</span><span class="p">,</span>
+    <span class="n">restriction_ligation_assembly</span><span class="p">,</span>
+    <span class="n">gateway_assembly</span><span class="p">,</span>
+    <span class="n">in_fusion_assembly</span><span class="p">,</span>
+    <span class="n">ligation_assembly</span><span class="p">,</span>
+    <span class="n">fusion_pcr_assembly</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.oligonucleotide_hybridization</span><span class="w"> </span><span class="kn">import</span> <span class="n">oligonucleotide_hybridization</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqFeature</span><span class="p">,</span> <span class="n">SimpleLocation</span><span class="p">,</span> <span class="n">CompoundLocation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AssemblyFragment</span><span class="p">,</span>
+    <span class="n">Source</span><span class="p">,</span>
+    <span class="n">AddgeneIdSource</span><span class="p">,</span>
+    <span class="n">UploadedFileSource</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction.Restriction_Dictionary</span><span class="w"> </span><span class="kn">import</span> <span class="n">rest_dict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.Restriction</span><span class="w"> </span><span class="kn">import</span> <span class="n">RestrictionBatch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_snapgene</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">flatten</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sgffp.models.notes</span><span class="w"> </span><span class="kn">import</span> <span class="n">SgffNotes</span>
+
+<span class="n">STRAND_MAP</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;+&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+<span class="n">UNSUPPORTED_OPERATIONS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;gcCloning&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;taCloning&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;topoTA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;topoDirectional&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;topoBlunt&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;destroyRestrictionFragment&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">GIBSON_LIKE_FUNCTION_DICT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;gibsonAssembly&quot;</span><span class="p">:</span> <span class="n">gibson_assembly</span><span class="p">,</span>
+    <span class="s2">&quot;inFusionCloning&quot;</span><span class="p">:</span> <span class="n">in_fusion_assembly</span><span class="p">,</span>
+    <span class="s2">&quot;hifiAssembly&quot;</span><span class="p">:</span> <span class="n">gibson_assembly</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="SnapgeneHistoryParserWarning">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.snapgene_history_parser.SnapgeneHistoryParserWarning">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SnapgeneHistoryParserWarning</span><span class="p">(</span><span class="ne">Warning</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_segments_to_location</span><span class="p">(</span>
+    <span class="n">segments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SgffSegment</span><span class="p">],</span> <span class="n">strand_int</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">circular</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SimpleLocation</span> <span class="o">|</span> <span class="n">CompoundLocation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert SgffSegment list to a Biopython location.&quot;&quot;&quot;</span>
+    <span class="n">locations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">seg</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;gap&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="c1"># Handle wrap-around for circular sequences</span>
+        <span class="k">if</span> <span class="n">circular</span> <span class="ow">and</span> <span class="n">seg</span><span class="o">.</span><span class="n">start</span> <span class="o">&gt;</span> <span class="n">seg</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
+            <span class="n">locations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SimpleLocation</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="n">strand_int</span><span class="p">))</span>
+            <span class="n">locations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SimpleLocation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="n">strand_int</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">locations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SimpleLocation</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="o">=</span><span class="n">strand_int</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">locations</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">locations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># For reverse strand, reverse order</span>
+    <span class="k">if</span> <span class="n">strand_int</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">locations</span> <span class="o">=</span> <span class="n">locations</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">CompoundLocation</span><span class="p">(</span><span class="n">locations</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_feature_to_seqfeature</span><span class="p">(</span>
+    <span class="n">feature</span><span class="p">:</span> <span class="n">SgffFeature</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">circular</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SeqFeature</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an SgffFeature to a Biopython SeqFeature.&quot;&quot;&quot;</span>
+    <span class="n">strand_int</span> <span class="o">=</span> <span class="n">STRAND_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">strand</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">location</span> <span class="o">=</span> <span class="n">_segments_to_location</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">segments</span><span class="p">,</span> <span class="n">strand_int</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">circular</span><span class="p">)</span>
+
+    <span class="c1"># Convert qualifiers: Biopython expects lists as values</span>
+    <span class="n">qualifiers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k</span><span class="p">:</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">feature</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">feature</span><span class="o">.</span><span class="n">name</span> <span class="ow">and</span> <span class="s2">&quot;label&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">qualifiers</span><span class="p">:</span>
+        <span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">feature</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">SeqFeature</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">feature</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">qualifiers</span><span class="o">=</span><span class="n">qualifiers</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_dseq_from_seq_properties</span><span class="p">(</span><span class="n">sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">circular</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">seq_props</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseq</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">circular</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Dseq</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span>
+        <span class="n">seq_props</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="ow">and</span> <span class="s2">&quot;UpstreamStickiness&quot;</span> <span class="ow">in</span> <span class="n">seq_props</span>
+        <span class="ow">and</span> <span class="s2">&quot;DownstreamStickiness&quot;</span> <span class="ow">in</span> <span class="n">seq_props</span>
+    <span class="p">):</span>
+        <span class="n">left_ovhg</span> <span class="o">=</span> <span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">seq_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;UpstreamStickiness&quot;</span><span class="p">))</span>
+        <span class="n">right_ovhg</span> <span class="o">=</span> <span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">seq_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DownstreamStickiness&quot;</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">from_full_sequence_and_overhangs</span><span class="p">(</span>
+                <span class="n">sequence</span><span class="p">,</span> <span class="n">left_ovhg</span><span class="p">,</span> <span class="n">right_ovhg</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sequence not supported: </span><span class="si">{</span><span class="n">sequence</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover (I don&#39;t expect this to happen)</span>
+        <span class="k">return</span> <span class="n">Dseq</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_history_node_to_dseqrecord</span><span class="p">(</span><span class="n">sgff_object</span><span class="p">:</span> <span class="n">SgffObject</span><span class="p">,</span> <span class="n">node_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseqrecord</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a history node to a Dseqrecord.</span>
+
+<span class="sd">    Sequence comes from the history node, metadata from the tree node.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">node</span><span class="p">:</span> <span class="n">SgffHistoryNode</span> <span class="o">=</span> <span class="n">sgff_object</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_id</span><span class="p">]</span>
+    <span class="n">tree_node</span> <span class="o">=</span> <span class="n">sgff_object</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">get_tree_node</span><span class="p">(</span><span class="n">node_id</span><span class="p">)</span>
+
+    <span class="n">circular</span> <span class="o">=</span> <span class="n">tree_node</span><span class="o">.</span><span class="n">circular</span> <span class="k">if</span> <span class="n">tree_node</span> <span class="k">else</span> <span class="kc">False</span>
+    <span class="n">seq_props</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AdditionalSequenceProperties&quot;</span><span class="p">)</span>
+    <span class="n">seq</span> <span class="o">=</span> <span class="n">_dseq_from_seq_properties</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="n">circular</span><span class="p">,</span> <span class="n">seq_props</span><span class="p">)</span>
+    <span class="n">seq_len</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">length</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">tree_node</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">tree_node</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;node_</span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>  <span class="c1"># Replace whitespace with underscores</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">seq_len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Convert features from the node&#39;s content, only if sequence is present,</span>
+        <span class="c1"># else the sequence is created by _source_from_tree_node</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">_feature_to_seqfeature</span><span class="p">(</span><span class="n">feat</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">circular</span><span class="p">)</span> <span class="k">for</span> <span class="n">feat</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">features</span>
+        <span class="p">]</span>
+
+    <span class="n">annotations</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;topology&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;circular&quot;</span> <span class="k">if</span> <span class="n">circular</span> <span class="k">else</span> <span class="s2">&quot;linear&quot;</span>
+    <span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;DNA&quot;</span>
+
+    <span class="n">record</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span>
+        <span class="n">record</span><span class="o">=</span><span class="n">seq</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+        <span class="n">annotations</span><span class="o">=</span><span class="n">annotations</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">record</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_filter_assembly_fragments_that_are_sequences</span><span class="p">(</span>
+    <span class="n">input_value</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AssemblyFragment</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">AssemblyFragment</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">fragment</span>
+        <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="n">input_value</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fragment</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">)</span>
+    <span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_restriction_batch_from_enzyme_names</span><span class="p">(</span>
+    <span class="n">enzyme_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RestrictionBatch</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">enz_name</span> <span class="ow">in</span> <span class="n">rest_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">for</span> <span class="n">enz_name</span> <span class="ow">in</span> <span class="n">enzyme_names</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">RestrictionBatch</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">enzyme_names</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover (I don&#39;t expect this to happen)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown enzymes: </span><span class="si">{</span><span class="n">enzyme_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_enzyme_batch_from_input_summaries</span><span class="p">(</span>
+    <span class="n">input_summaries</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SgffInputSummary</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RestrictionBatch</span><span class="p">:</span>
+    <span class="n">enzyme_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+        <span class="n">flatten</span><span class="p">([</span><span class="n">input_summary</span><span class="o">.</span><span class="n">enzyme_names</span> <span class="k">for</span> <span class="n">input_summary</span> <span class="ow">in</span> <span class="n">input_summaries</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="c1"># Sometimes enzymes come with &lt; &gt; around, we remove them</span>
+    <span class="n">enzyme_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+        <span class="n">enz_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">enz_name</span> <span class="ow">in</span> <span class="n">enzyme_names</span>
+    <span class="p">)</span>
+    <span class="c1"># Sometimes they have Start or End tags, we remove them</span>
+    <span class="n">enzyme_names</span> <span class="o">=</span> <span class="n">enzyme_names</span><span class="o">.</span><span class="n">difference</span><span class="p">({</span><span class="s2">&quot;Start&quot;</span><span class="p">,</span> <span class="s2">&quot;End&quot;</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">_get_restriction_batch_from_enzyme_names</span><span class="p">(</span><span class="n">enzyme_names</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_sequence_inputs</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="n">Source</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the most ancestral sequences used as inputs.</span>
+
+<span class="sd">    These will typically be the immediate inputs, but when a</span>
+<span class="sd">    restriction-ligation is split into restriction then ligation (see</span>
+<span class="sd">    _get_restriction_input_combinations), we walk up</span>
+<span class="sd">    the tree to find the most ancestral sequences.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">out_value</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">input_value</span> <span class="ow">in</span> <span class="n">_filter_assembly_fragments_that_are_sequences</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">input_value</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_value</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="p">):</span>
+            <span class="n">out_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_value</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out_value</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">_get_sequence_inputs</span><span class="p">(</span><span class="n">input_value</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">source</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">out_value</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_oligos</span><span class="p">(</span><span class="n">oligos</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SgffHistoryOligo</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Primer</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">Primer</span><span class="p">(</span><span class="n">oligo</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">oligo</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;oligo_</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">oligo</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">oligos</span><span class="p">)</span>
+    <span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_restriction_input_combinations</span><span class="p">(</span>
+    <span class="n">input_sequences</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span> <span class="n">node</span><span class="p">:</span> <span class="n">SgffHistoryTreeNode</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all possible combinations of input sequences after digestion.</span>
+
+<span class="sd">    This is used to try different combinations of inputs to see if we can</span>
+<span class="sd">    find the expected product.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">digestion_products</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">input_sequence</span><span class="p">,</span> <span class="n">input_summary</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">input_sequences</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">input_summaries</span><span class="p">):</span>
+        <span class="n">rb</span> <span class="o">=</span> <span class="n">_get_enzyme_batch_from_input_summaries</span><span class="p">([</span><span class="n">input_summary</span><span class="p">])</span>
+        <span class="n">digestion</span> <span class="o">=</span> <span class="n">input_sequence</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">rb</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">digestion</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">digestion_products</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">input_sequence</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">digestion_products</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">digestion</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">digestion_products</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_handle_circularize_operation</span><span class="p">(</span>
+    <span class="n">input_sequences</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
+    <span class="n">node</span><span class="p">:</span> <span class="n">SgffHistoryTreeNode</span><span class="p">,</span>
+    <span class="n">sgff_object</span><span class="p">:</span> <span class="n">SgffObject</span><span class="p">,</span>
+    <span class="n">expected_product</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle the circularize operation.&quot;&quot;&quot;</span>
+    <span class="c1"># This operation does not come with a sequence</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_sequences</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="n">history_node</span> <span class="o">=</span> <span class="n">sgff_object</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+    <span class="n">seq_props</span> <span class="o">=</span> <span class="n">history_node</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AdditionalSequenceProperties&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
+        <span class="n">seq_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;UpstreamEnzymeName&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">seq_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DownstreamEnzymeName&quot;</span><span class="p">)</span>
+    <span class="p">):</span>  <span class="c1"># pragma: no cover (I don&#39;t expect this to happen)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Stopped at circularize operation without enzymes&quot;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">SnapgeneHistoryParserWarning</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[]</span>
+
+    <span class="n">rb</span> <span class="o">=</span> <span class="n">_get_restriction_batch_from_enzyme_names</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">seq_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;UpstreamEnzymeName&quot;</span><span class="p">),</span> <span class="n">seq_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DownstreamEnzymeName&quot;</span><span class="p">)]</span>
+    <span class="p">)</span>
+    <span class="n">original_fragments</span> <span class="o">=</span> <span class="n">expected_product</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">rb</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">original_fragments</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># pragma: no cover (I don&#39;t expect this to happen)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Stopped at circularize operation not coming from a single fragment&quot;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">SnapgeneHistoryParserWarning</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[]</span>
+
+    <span class="n">input_sequences</span> <span class="o">=</span> <span class="p">[</span><span class="n">original_fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">input_sequences</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">ligation_assembly</span><span class="p">(</span><span class="n">input_sequences</span><span class="p">,</span> <span class="n">allow_blunt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">input_sequences</span><span class="p">,</span> <span class="n">products</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_restriction_ligation_with_fallbacks</span><span class="p">(</span>
+    <span class="n">input_sequences</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
+    <span class="n">node</span><span class="p">:</span> <span class="n">SgffHistoryTreeNode</span><span class="p">,</span>
+    <span class="n">find</span><span class="p">:</span> <span class="nb">callable</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Try restriction-ligation, then plain ligation, then per-input digest + ligation.&quot;&quot;&quot;</span>
+    <span class="n">rb</span> <span class="o">=</span> <span class="n">_get_enzyme_batch_from_input_summaries</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">input_summaries</span><span class="p">)</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">restriction_ligation_assembly</span><span class="p">(</span><span class="n">input_sequences</span><span class="p">,</span> <span class="n">rb</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">find</span><span class="p">(</span><span class="n">products</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">products</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">ligation_assembly</span><span class="p">(</span><span class="n">input_sequences</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">find</span><span class="p">(</span><span class="n">products</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">products</span>
+    <span class="c1"># Last resort: digest each input individually, then ligate</span>
+    <span class="c1"># (happens when ligation would leave overhangs)</span>
+    <span class="k">for</span> <span class="n">combination</span> <span class="ow">in</span> <span class="n">_get_restriction_input_combinations</span><span class="p">(</span><span class="n">input_sequences</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="n">ligation_assembly</span><span class="p">(</span><span class="n">combination</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">find</span><span class="p">(</span><span class="n">products</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">products</span>
+    <span class="k">return</span> <span class="n">products</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_source_from_tree_node</span><span class="p">(</span>  <span class="c1"># noqa: C901</span>
+    <span class="n">expected_product</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">SgffHistoryTreeNode</span><span class="p">,</span> <span class="n">sgff_object</span><span class="p">:</span> <span class="n">SgffObject</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Source</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">SgffHistoryNode</span><span class="p">]]:</span>
+    <span class="n">input_sequences</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">_history_node_to_dseqrecord</span><span class="p">(</span><span class="n">sgff_object</span><span class="p">,</span> <span class="n">child</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span>
+    <span class="p">]</span>
+
+    <span class="n">expected_seguid</span> <span class="o">=</span> <span class="n">expected_product</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">seguid</span><span class="p">()</span>
+    <span class="n">expected_dseq_and_rc</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">expected_product</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span>
+        <span class="n">expected_product</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_expected_product</span><span class="p">(</span><span class="n">products</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dseqrecord</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">expected_product</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">next</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">products</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">seguid</span><span class="p">()</span> <span class="o">==</span> <span class="n">expected_seguid</span><span class="p">),</span> <span class="kc">None</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">products</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">seq</span> <span class="ow">in</span> <span class="n">expected_dseq_and_rc</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="ow">in</span> <span class="n">UNSUPPORTED_OPERATIONS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Operation </span><span class="si">{</span><span class="n">node</span><span class="o">.</span><span class="n">operation</span><span class="si">}</span><span class="s2"> not supported&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s2">&quot;amplifyFragment&quot;</span><span class="p">:</span>
+        <span class="n">primers</span> <span class="o">=</span> <span class="n">_parse_oligos</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">oligos</span><span class="p">)</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="n">pcr_assembly</span><span class="p">(</span><span class="n">input_sequences</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">*</span><span class="n">primers</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s2">&quot;primerDirectedMutagenesis&quot;</span><span class="p">:</span>
+        <span class="n">fwd_primer</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">_parse_oligos</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">oligos</span><span class="p">)</span>
+        <span class="n">rvs_primer</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span>
+            <span class="n">fwd_primer</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;rvs_</span><span class="si">{</span><span class="n">fwd_primer</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="n">pcr_products</span> <span class="o">=</span> <span class="n">pcr_assembly</span><span class="p">(</span>
+            <span class="n">input_sequences</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fwd_primer</span><span class="p">,</span> <span class="n">rvs_primer</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span>
+        <span class="p">)</span>
+        <span class="c1"># They bundle also the fusion pcr on the same step</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">pcr_product</span> <span class="ow">in</span> <span class="n">pcr_products</span><span class="p">:</span>
+            <span class="n">pcr_product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;mutagenesis_pcr_product&quot;</span>
+            <span class="n">products</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">fusion_pcr_assembly</span><span class="p">([</span><span class="n">pcr_product</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">6</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="s2">&quot;changeStrandedness&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;editDNAEnds&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;changeMethylation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;changePhosphorylation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;setOrigin&quot;</span><span class="p">,</span>  <span class="c1"># Rotation of circular sequences</span>
+        <span class="s2">&quot;newFileFromSelection&quot;</span><span class="p">,</span>  <span class="c1"># Selection of sequences from a file</span>
+    <span class="p">]:</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s2">&quot;changeTopology&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">expected_product</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
+            <span class="n">input_sequences</span> <span class="o">=</span> <span class="p">[</span><span class="n">expected_product</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">expected_product</span><span class="p">)]]</span>
+            <span class="n">products</span> <span class="o">=</span> <span class="n">ligation_assembly</span><span class="p">(</span><span class="n">input_sequences</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">products</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># pragma: no cover (I don&#39;t expect this to happen)</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;Stopped at change topology operation&quot;</span><span class="p">,</span>
+                    <span class="n">category</span><span class="o">=</span><span class="n">SnapgeneHistoryParserWarning</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Stopped at change topology operation&quot;</span><span class="p">,</span>
+                <span class="n">category</span><span class="o">=</span><span class="n">SnapgeneHistoryParserWarning</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[]</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="s2">&quot;insertFragment&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;goldenGateAssembly&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;insertFragments&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ligateFragments&quot;</span><span class="p">,</span>
+    <span class="p">]:</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="n">_restriction_ligation_with_fallbacks</span><span class="p">(</span>
+            <span class="n">input_sequences</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">find_expected_product</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s2">&quot;linearize&quot;</span><span class="p">:</span>
+        <span class="c1"># Here the input_sequence comes empty, I guess because it can be inferred</span>
+        <span class="n">input_sequences</span> <span class="o">=</span> <span class="p">[</span><span class="n">expected_product</span><span class="o">.</span><span class="n">looped</span><span class="p">()]</span>
+        <span class="n">input_sequences</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">rb</span> <span class="o">=</span> <span class="n">_get_enzyme_batch_from_input_summaries</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">input_summaries</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rb</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Stopped at linearize operation without enzymes&quot;</span><span class="p">,</span>
+                <span class="n">category</span><span class="o">=</span><span class="n">SnapgeneHistoryParserWarning</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[]</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="n">input_sequences</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">rb</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s2">&quot;circularize&quot;</span><span class="p">:</span>
+        <span class="n">input_sequences</span><span class="p">,</span> <span class="n">products</span> <span class="o">=</span> <span class="n">_handle_circularize_operation</span><span class="p">(</span>
+            <span class="n">input_sequences</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">sgff_object</span><span class="p">,</span> <span class="n">expected_product</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s2">&quot;removeRestrictionFragment&quot;</span><span class="p">:</span>
+        <span class="n">rb</span> <span class="o">=</span> <span class="n">_get_enzyme_batch_from_input_summaries</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">input_summaries</span><span class="p">)</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="n">restriction_ligation_assembly</span><span class="p">(</span><span class="n">input_sequences</span><span class="p">,</span> <span class="n">rb</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">find_expected_product</span><span class="p">(</span><span class="n">products</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># This is using blunting as described here: https://www.neb.com/en-gb/applications/cloning-and-synthetic-biology/dna-end-modification/blunting</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Blunting not supported for </span><span class="si">{</span><span class="n">node</span><span class="o">.</span><span class="n">operation</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s2">&quot;gatewayLRCloning&quot;</span><span class="p">:</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="n">gateway_assembly</span><span class="p">(</span><span class="n">input_sequences</span><span class="p">,</span> <span class="s2">&quot;LR&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s2">&quot;gatewayBPCloning&quot;</span><span class="p">:</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="n">gateway_assembly</span><span class="p">(</span><span class="n">input_sequences</span><span class="p">,</span> <span class="s2">&quot;BP&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;gibsonAssembly&quot;</span><span class="p">,</span> <span class="s2">&quot;inFusionCloning&quot;</span><span class="p">,</span> <span class="s2">&quot;hifiAssembly&quot;</span><span class="p">]:</span>
+        <span class="c1"># It is possible that some inputs are digested prior to the assembly.,</span>
+        <span class="k">for</span> <span class="n">combination</span> <span class="ow">in</span> <span class="n">_get_restriction_input_combinations</span><span class="p">(</span><span class="n">input_sequences</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+            <span class="n">products</span> <span class="o">=</span> <span class="n">GIBSON_LIKE_FUNCTION_DICT</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">operation</span><span class="p">](</span><span class="n">combination</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">find_expected_product</span><span class="p">(</span><span class="n">products</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">break</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s2">&quot;overlapFragments&quot;</span><span class="p">:</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="n">fusion_pcr_assembly</span><span class="p">(</span><span class="n">input_sequences</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s2">&quot;annealOligos&quot;</span><span class="p">:</span>
+        <span class="n">primers</span> <span class="o">=</span> <span class="n">_parse_oligos</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">oligos</span><span class="p">)</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="n">oligonucleotide_hybridization</span><span class="p">(</span><span class="o">*</span><span class="n">primers</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s2">&quot;invalid&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[]</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;remove&quot;</span><span class="p">,</span> <span class="s2">&quot;insert&quot;</span><span class="p">,</span> <span class="s2">&quot;replace&quot;</span><span class="p">]:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Manual editing of sequences not supported&quot;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">SnapgeneHistoryParserWarning</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[]</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s2">&quot;flip&quot;</span><span class="p">:</span>
+        <span class="c1"># Here the input_sequence comes empty, I guess because it can be inferred</span>
+        <span class="n">input_sequences</span> <span class="o">=</span> <span class="p">[</span><span class="n">expected_product</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()]</span>
+        <span class="n">input_sequences</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">input_sequences</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_sequences</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()]</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover (Tests will be updated when more are encountered)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown operation: </span><span class="si">{</span><span class="n">node</span><span class="o">.</span><span class="n">operation</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">correct_product</span> <span class="o">=</span> <span class="n">find_expected_product</span><span class="p">(</span><span class="n">products</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">correct_product</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No product found for expected SEGUID </span><span class="si">{</span><span class="n">expected_seguid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Return the children nodes in the same order as the inputs</span>
+    <span class="n">input_index</span> <span class="o">=</span> <span class="p">{</span><span class="nb">id</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">seq</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_sequences</span><span class="p">)}</span>
+    <span class="n">out_nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">input_index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">seq</span><span class="p">))]</span> <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">input_sequences</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">correct_product</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">out_nodes</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_history</span><span class="p">(</span>
+    <span class="n">root_record</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">root_node</span><span class="p">:</span> <span class="n">SgffHistoryTreeNode</span><span class="p">,</span> <span class="n">sgff_object</span><span class="p">:</span> <span class="n">SgffObject</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse the history of a Dseqrecord, editing it in place.&quot;&quot;&quot;</span>
+
+    <span class="n">repeat</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">while</span> <span class="n">repeat</span><span class="p">:</span>
+        <span class="n">source</span><span class="p">,</span> <span class="n">out_nodes</span> <span class="o">=</span> <span class="n">_source_from_tree_node</span><span class="p">(</span><span class="n">root_record</span><span class="p">,</span> <span class="n">root_node</span><span class="p">,</span> <span class="n">sgff_object</span><span class="p">)</span>
+        <span class="n">repeat</span> <span class="o">=</span> <span class="n">source</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="n">repeat</span><span class="p">:</span>
+            <span class="n">root_node</span> <span class="o">=</span> <span class="n">root_node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">root_record</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
+    <span class="k">if</span> <span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># We may be able to get the source from the metadata (e.g. AddGene ID or NCBI accession number)</span>
+        <span class="k">if</span> <span class="n">root_node</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">sgff_object</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="n">root_record</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">_source_from_metadata</span><span class="p">(</span>
+                <span class="n">sgff_object</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">root_node</span><span class="o">.</span><span class="n">id</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">notes</span>
+            <span class="p">)</span>
+        <span class="c1"># Else, set the default source</span>
+        <span class="k">if</span> <span class="n">root_record</span><span class="o">.</span><span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">root_record</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">_get_default_source</span><span class="p">(</span><span class="n">root_node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">for</span> <span class="n">input_value</span> <span class="ow">in</span> <span class="n">_get_sequence_inputs</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">out_nodes</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">_parse_history</span><span class="p">(</span><span class="n">input_value</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">sgff_object</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_source_from_metadata</span><span class="p">(</span><span class="n">notes</span><span class="p">:</span> <span class="n">SgffNotes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Source</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">notes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Comments&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+        <span class="n">match</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;https://www.addgene.org/(\d+)&quot;</span><span class="p">,</span> <span class="n">notes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Comments&quot;</span><span class="p">))</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">AddgeneIdSource</span><span class="p">(</span><span class="n">repository_id</span><span class="o">=</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="c1"># This works for sequences imported from NCBI in SnapGene</span>
+    <span class="c1"># The problem is that sequences coming from genbank</span>
+    <span class="c1"># files will also have an AccessionNumber, even if that is arbitrary (e.g. the name of</span>
+    <span class="c1"># the sequence). I don&#39;t think there is a reliable way to distinguish between the two</span>
+    <span class="c1"># without making a request to NCBI.</span>
+    <span class="c1"># elif notes.get(&quot;AccessionNumber&quot;):</span>
+    <span class="c1">#     return NCBISequenceSource(repository_id=notes.get(&quot;AccessionNumber&quot;))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_default_source</span><span class="p">(</span><span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UploadedFileSource</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">UploadedFileSource</span><span class="p">(</span>
+        <span class="n">file_name</span><span class="o">=</span><span class="n">file_name</span><span class="p">,</span>
+        <span class="n">sequence_file_format</span><span class="o">=</span><span class="s2">&quot;snapgene&quot;</span><span class="p">,</span>
+        <span class="n">index_in_file</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="parse_snapgene_history">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.snapgene_history_parser.parse_snapgene_history">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_snapgene_history</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dseqrecord</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse a SnapGene ``.dna`` file and return a :class:`~pydna.dseqrecord.Dseqrecord`</span>
+<span class="sd">    whose ``source`` attribute tree encodes the full cloning history.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filepath:</span>
+<span class="sd">        Path to the ``.dna`` file to parse.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`~pydna.dseqrecord.Dseqrecord`</span>
+<span class="sd">        The root sequence with its provenance tree resolved.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    NotImplementedError</span>
+<span class="sd">        If the file contains a cloning operation that is not yet supported.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If a recorded operation cannot be reproduced (no matching product found).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">root_record</span> <span class="o">=</span> <span class="n">parse_snapgene</span><span class="p">(</span><span class="n">filepath</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">sgff_object</span> <span class="o">=</span> <span class="n">SgffReader</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+    <span class="n">root_record</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="n">seq_props</span> <span class="o">=</span> <span class="n">sgff_object</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AdditionalSequenceProperties&quot;</span><span class="p">)</span>
+    <span class="c1"># The biopython parser does not handle overhangs</span>
+    <span class="n">root_record</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">_dseq_from_seq_properties</span><span class="p">(</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">root_record</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="n">root_record</span><span class="o">.</span><span class="n">circular</span><span class="p">,</span> <span class="n">seq_props</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sgff_object</span><span class="o">.</span><span class="n">has_history</span><span class="p">:</span>
+        <span class="n">root_record</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">_source_from_metadata</span><span class="p">(</span><span class="n">sgff_object</span><span class="o">.</span><span class="n">notes</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_parse_history</span><span class="p">(</span><span class="n">root_record</span><span class="p">,</span> <span class="n">sgff_object</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">sgff_object</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">root_record</span><span class="o">.</span><span class="n">source</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">root_record</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">_get_default_source</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">root_record</span> <span class="o">=</span> <span class="n">root_record</span><span class="o">.</span><span class="n">normalize_history</span><span class="p">()</span>
+    <span class="n">root_record</span><span class="o">.</span><span class="n">validate_history</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">root_record</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
