@@ -1,49 +1,75 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# Copyright 2013-2023 by Björn Johansson.  All rights reserved.
-# This code is part of the Python-dna distribution and governed by its
-# license.  Please see the LICENSE.txt file that should have been included
-# as part of this package.
-"""Provides the Dseq class for handling double stranded DNA sequences.
-
-Dseq is a subclass of :class:`Bio.Seq.Seq`. The Dseq class
-is mostly useful as a part of the :class:`pydna.dseqrecord.Dseqrecord` class
-which can hold more meta data.
-
-The Dseq class support the notion of circular and linear DNA topology.
+"""
+Utilities for CRISPR/Cas target searching and protospacer extraction.
 """
 
 from abc import ABC, abstractmethod
 import re
+from typing import Any, List, Type
 from pydna.utils import rc
 
 
 class _cas(ABC):
-    scaffold = "ND"
-    pam = "ND"
-    size = 0
-    fst5 = 0
-    fst3 = 0
+    """
+    Abstract base class for CRISPR-associated nucleases.
+    pam, scaffold and cut location is set by a subclass
+    such as Cas9 below.
 
-    def __init__(self, protospacer):
-        self.protospacer = protospacer.upper()
+    The meaning of size, fst5 and fst3 are the same as for the restriciton
+    enzymes in the Biopython restriction module (Bio.Restriction).
+    """
+
+    scaffold: str = "ND"
+    pam: str = "ND"
+    size: int = 0
+    fst5: int = 0
+    fst3: int = 0
+
+    def __init__(self, protospacer: str) -> None:
+        """
+        Initialize the nuclease with a protospacer sequence.
+        The sequence is a string. Use the protospacer function
+        to extract a sequence from a Dseqrecord.
+
+        Args:
+            protospacer: Protospacer sequence used to build the search pattern.
+        """
+        self.protospacer: str = protospacer.upper()
         self.compsite = re.compile(
             f"(?=(?P<watson>{self.protospacer}{self.pam}))|(?=(?P<crick>{rc(self.pam)}{rc(self.protospacer)}))",
             re.UNICODE,
         )
 
     @abstractmethod
-    def search(self, dna, linear=True):
-        """To override in subclass."""
+    def search(self, dna: Any, linear: bool = True) -> List[int]:
+        """
+        Search for target sites in a DNA sequence.
+
+        Args:
+            dna: DNA sequence or sequence-like object.
+            linear: Whether the DNA is linear.
+
+        Returns:
+            A list of cut site positions.
+        """
         pass
 
-    def __repr__(self):
+    def __repr__(self) -> str:
+        """
+        Return a compact representation of the Cas9+gRNA nuclease instance.
+
+        Returns:
+            String representation with abbreviated protospacer.
+        """
         return f"{type(self).__name__}({self.protospacer[:3]}..{self.protospacer[-3:]})"
 
     @abstractmethod
-    def __str__(self):
-        """To override in subclass."""
+    def __str__(self) -> str:
+        """
+        Return a string representation of the guide and scaffold.
+        """
         pass
 
 
@@ -56,44 +82,53 @@ class cas9(_cas):
 
             ---protospacer------
                             -fst3
-            fst5             |-|
-            |--------------|
+            fst5
+            |---------------|-
                                 PAM
-        5-NNGGAAGAGTAATACACTA-AAANGGNN-3
-        ||||||||||||||||||| ||||||||
-        3-NNCCTTCTCATTATGTGAT-TTTNCCNN-5
+       5'-NNGGAAGAGTAATACACTA-AAANGGNN-3'
+          ||||||||||||||||||| ||||||||
+       3'-NNCCTTCTCATTATGTGAT-TTTNCCNN-5'
             ||||||||||||||||| |||
-        5-GGAAGAGTAATACACTA-AAAg-u-a-a-g-g  Scaffold
+         5'-GGAAGAGTAATACACTA-AAAg-u-a-a-g-g-3'  Scaffold
             ---gRNA spacer---    u-a
-                                u-a
-                                u-a
-                                u-a
-                                a-u
-                                g-u-g
-                                a    a
-                                g-c-a
-                                c-g
-                                u-a
-                                a-u
-                                g   a  tetraloop
-                                a-a
+                                 u-a
+                                 u-a
+                                 u-a
+                                 a-u
+                                 g-u-g
+                                 a    a
+                                 g-c-a
+                                 c-g
+                                 u-a
+                                 a-u
+                                 g   a  tetraloop
+                                  a-a
     """
 
-    scaffold = "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGG"
-    pam = ".GG"
-    size = 20
-    fst5 = 17
-    fst3 = -3
-    ovhg = fst5 - (size + fst3)
+    scaffold: str = "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGG"
+    pam: str = ".GG"
+    size: int = 20
+    fst5: int = 17
+    fst3: int = -3
+    ovhg: int = fst5 - (size + fst3)
 
-    def search(self, dna, linear=True):
-        """docstring."""
+    def search(self, dna, linear: bool = True) -> List[int]:
+        """
+        Search for Cas9 target sites in a DNA sequence.
+
+        Args:
+            dna: string, Bio.Seq.Seq or pydna.dseq.Dseq
+            linear: Whether the DNA is linear or circular.
+
+        Returns:
+            A list of cut site positions.
+        """
         dna = str(dna).upper()
         if linear:
             dna = dna
         else:
             dna = dna + dna[1 : self.size]
-        results = []
+        results: List[int] = []
         for mobj in self.compsite.finditer(dna):
             w, c = mobj.groups()
             if w:
@@ -102,25 +137,39 @@ class cas9(_cas):
                 results.append(mobj.start("crick") + len(self.pam) + 1 - self.fst3)
         return results
 
-    def __str__(self):
-        """docstring."""
+    def __str__(self) -> str:
+        """
+        Return the guide RNA protospacer and scaffold as FASTA-like string.
+        """
         return f">{type(self).__name__} protospacer scaffold\n{self.protospacer} {self.scaffold}"
 
 
-def protospacer(guide_construct, cas=cas9):
-    """docstring."""
-    in_watson = [
-        mobj.group("ps")
-        for mobj in re.finditer(
-            f"(?P<ps>.{{{cas.size}}})(?:{cas.scaffold})",
-            str(guide_construct.seq).upper(),
+def protospacer(guide_construct, cas: Type[_cas] = cas9) -> List[str]:
+    """
+    Extract protospacer sequences from a guide construct. This can for example
+    be a plasmid containing the guide construct. This function returns a
+    list since a several protospacers can be present.
+
+    Args:
+        guide_construct: Sequence construct containing protospacer and scaffold.
+        cas: CRISPR nuclease class defining spacer size and scaffold.
+
+    Returns:
+        A list of protospacer sequences found in Watson and Crick orientations.
+    """
+    if guide_construct.circular:
+        total_length = cas.size + len(cas.scaffold)
+        guide_construct = guide_construct[:] + guide_construct[: total_length - 1]
+
+    result = []
+
+    for s in guide_construct.seq.watson.upper(), guide_construct.seq.crick.upper():
+        result.extend(
+            mobj.group("ps")
+            for mobj in re.finditer(
+                f"(?P<ps>.{{{cas.size}}})(?:{cas.scaffold})",
+                s,
+            )
         )
-    ]
-    in_crick = [
-        rc(mobj.group("ps"))
-        for mobj in re.finditer(
-            f"(?:{rc(cas.scaffold)})(?P<ps>.{{{cas.size}}})",
-            str(guide_construct.seq).upper(),
-        )
-    ]
-    return in_watson + in_crick
+
+    return result
