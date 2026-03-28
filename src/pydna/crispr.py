@@ -4,11 +4,19 @@
 """
 Utilities for CRISPR/Cas target searching and protospacer extraction.
 """
-
-from abc import ABC, abstractmethod
 import re
-from typing import Any, List, Type
+from abc import ABC
+from abc import abstractmethod
+from typing import Type
+from typing import TYPE_CHECKING
+from typing import List
 from pydna.utils import rc
+from typing import TypeVar
+
+if TYPE_CHECKING:
+    from pydna.dseqrecord import Dseqrecord
+
+DseqrecordType = TypeVar("DseqrecordType", bound="Dseqrecord")
 
 
 class _cas(ABC):
@@ -43,16 +51,30 @@ class _cas(ABC):
         )
 
     @abstractmethod
-    def search(self, dna: Any, linear: bool = True) -> List[int]:
-        """
-        Search for target sites in a DNA sequence.
+    def search(self, dna, linear: bool = True) -> List[int]:
+        """Return a list of cutting sites of the enzyme in the sequence.
 
-        Args:
-            dna: DNA sequence or sequence-like object.
-            linear: Whether the DNA is linear.
+        dna must be an instance of:
 
-        Returns:
-            A list of cut site positions.
+            - pydna.dseq.Dseq
+            - Bio.Seq.Seq
+            - Bio.Seq.MutableSeq
+
+        pydna.dseqrecord.Dseqrecord or Bio.SeqRecord.SeqRecord will not work.
+        This limitation is by design t omirror enzymes in the
+        Biopython Bio.Restriction class
+
+        The linear argument is laso there for compatibility with the
+        Biopython Bio.Restriction class.
+
+        An important caveat is that search ignores the circular property of
+        pydna.dseq.Dseq.
+
+        If linear is False, the restriction sites that span over the boundaries
+        will be included.
+
+        The positions are the first base of the 3' fragment,
+        i.e. the first base after the position the enzyme will cut.
         """
         pass
 
@@ -144,7 +166,7 @@ class cas9(_cas):
         return f">{type(self).__name__} protospacer scaffold\n{self.protospacer} {self.scaffold}"
 
 
-def protospacer(guide_construct, cas: Type[_cas] = cas9) -> List[str]:
+def protospacer(guide_construct: DseqrecordType, cas: Type[_cas] = cas9) -> List[str]:
     """
     Extract protospacer sequences from a guide construct. This can for example
     be a plasmid containing the guide construct. This function returns a
