@@ -8037,85 +8037,101 @@ the <code class="xref py py-class docutils literal notranslate"><span class="pre
 </section>
 <section id="module-pydna.crispr">
 <span id="pydna-crispr-module"></span><h2>pydna.crispr module<a class="headerlink" href="#module-pydna.crispr" title="Link to this heading">#</a></h2>
-<p>Provides the Dseq class for handling double stranded DNA sequences.</p>
-<p>Dseq is a subclass of <a class="reference external" href="https://biopython.org/docs/latest/api/Bio.Seq.html#Bio.Seq.Seq" title="(in Biopython v1.86)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Bio.Seq.Seq</span></code></a>. The Dseq class
-is mostly useful as a part of the <a class="reference internal" href="#pydna.dseqrecord.Dseqrecord" title="pydna.dseqrecord.Dseqrecord"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydna.dseqrecord.Dseqrecord</span></code></a> class
-which can hold more meta data.</p>
-<p>The Dseq class support the notion of circular and linear DNA topology.</p>
+<p>Utilities for CRISPR/Cas target searching and protospacer extraction.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pydna.crispr.cas9">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pydna.crispr.</span></span><span class="sig-name descname"><span class="pre">cas9</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protospacer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/crispr.html#cas9"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.crispr.cas9" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pydna.crispr.</span></span><span class="sig-name descname"><span class="pre">cas9</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protospacer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/crispr.html#cas9"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.crispr.cas9" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_cas</span></code></p>
 <p>docstring.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="o">|----</span><span class="n">size</span><span class="o">----------|</span>
-
-    <span class="o">---</span><span class="n">protospacer</span><span class="o">------</span>
-                    <span class="o">-</span><span class="n">fst3</span>
-    <span class="n">fst5</span>             <span class="o">|-|</span>
-    <span class="o">|--------------|</span>
-                        <span class="n">PAM</span>
-<span class="mi">5</span><span class="o">-</span><span class="n">NNGGAAGAGTAATACACTA</span><span class="o">-</span><span class="n">AAANGGNN</span><span class="o">-</span><span class="mi">3</span>
-<span class="o">|||||||||||||||||||</span> <span class="o">||||||||</span>
-<span class="mi">3</span><span class="o">-</span><span class="n">NNCCTTCTCATTATGTGAT</span><span class="o">-</span><span class="n">TTTNCCNN</span><span class="o">-</span><span class="mi">5</span>
-    <span class="o">|||||||||||||||||</span> <span class="o">|||</span>
-<span class="mi">5</span><span class="o">-</span><span class="n">GGAAGAGTAATACACTA</span><span class="o">-</span><span class="n">AAAg</span><span class="o">-</span><span class="n">u</span><span class="o">-</span><span class="n">a</span><span class="o">-</span><span class="n">a</span><span class="o">-</span><span class="n">g</span><span class="o">-</span><span class="n">g</span>  <span class="n">Scaffold</span>
-    <span class="o">---</span><span class="n">gRNA</span> <span class="n">spacer</span><span class="o">---</span>    <span class="n">u</span><span class="o">-</span><span class="n">a</span>
-                        <span class="n">u</span><span class="o">-</span><span class="n">a</span>
-                        <span class="n">u</span><span class="o">-</span><span class="n">a</span>
-                        <span class="n">u</span><span class="o">-</span><span class="n">a</span>
-                        <span class="n">a</span><span class="o">-</span><span class="n">u</span>
-                        <span class="n">g</span><span class="o">-</span><span class="n">u</span><span class="o">-</span><span class="n">g</span>
-                        <span class="n">a</span>    <span class="n">a</span>
-                        <span class="n">g</span><span class="o">-</span><span class="n">c</span><span class="o">-</span><span class="n">a</span>
-                        <span class="n">c</span><span class="o">-</span><span class="n">g</span>
-                        <span class="n">u</span><span class="o">-</span><span class="n">a</span>
-                        <span class="n">a</span><span class="o">-</span><span class="n">u</span>
-                        <span class="n">g</span>   <span class="n">a</span>  <span class="n">tetraloop</span>
-                        <span class="n">a</span><span class="o">-</span><span class="n">a</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>     <span class="n">fst5</span>              <span class="o">--|</span><span class="n">fst3</span>
+     <span class="o">|----------------</span>
+                          <span class="n">PAM</span>
+<span class="mi">5</span><span class="s1">&#39;-NNGGAAGAGTAATACACTA-AAANGGNN-3&#39;</span>
+   <span class="o">|||||||||||||||||||</span> <span class="o">||||||||</span>
+<span class="mi">3</span><span class="s1">&#39;-NNCCTTCTCATTATGTGAT-TTTNCCNN-5&#39;</span>
+     <span class="o">|||||||||||||||||</span> <span class="o">|||</span>
+  <span class="mi">5</span><span class="s1">&#39;-GGAAGAGTAATACACTA AAA-g-u-a-a-g-g-3&#39;</span>  <span class="n">Scaffold</span> <span class="p">(</span><span class="n">lower</span> <span class="n">case</span><span class="p">)</span>
+     <span class="o">---</span><span class="n">gRNA</span> <span class="n">spacer</span><span class="o">-------</span> <span class="n">u</span><span class="o">-</span><span class="n">a</span>
+                           <span class="n">u</span><span class="o">-</span><span class="n">a</span>
+                           <span class="n">u</span><span class="o">-</span><span class="n">a</span>
+                           <span class="n">u</span><span class="o">-</span><span class="n">a</span>
+                           <span class="n">a</span><span class="o">-</span><span class="n">u</span>
+                           <span class="n">g</span><span class="o">-</span><span class="n">u</span><span class="o">-</span><span class="n">g</span>
+                           <span class="n">a</span>    <span class="n">a</span>
+                           <span class="n">g</span><span class="o">-</span><span class="n">c</span><span class="o">-</span><span class="n">a</span>
+                           <span class="n">c</span><span class="o">-</span><span class="n">g</span>
+                           <span class="n">u</span><span class="o">-</span><span class="n">a</span>
+                           <span class="n">a</span><span class="o">-</span><span class="n">u</span>
+                           <span class="n">g</span>   <span class="n">a</span>
+                            <span class="n">a</span><span class="o">-</span><span class="n">a</span>
 </pre></div>
 </div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pydna.crispr.cas9.scaffold">
-<span class="sig-name descname"><span class="pre">scaffold</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGG'</span></span><a class="headerlink" href="#pydna.crispr.cas9.scaffold" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">scaffold</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGG'</span></span><a class="headerlink" href="#pydna.crispr.cas9.scaffold" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pydna.crispr.cas9.pam">
-<span class="sig-name descname"><span class="pre">pam</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'.GG'</span></span><a class="headerlink" href="#pydna.crispr.cas9.pam" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">pam</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'.GG'</span></span><a class="headerlink" href="#pydna.crispr.cas9.pam" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pydna.crispr.cas9.size">
-<span class="sig-name descname"><span class="pre">size</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">20</span></span><a class="headerlink" href="#pydna.crispr.cas9.size" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">size</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">20</span></span><a class="headerlink" href="#pydna.crispr.cas9.size" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pydna.crispr.cas9.fst5">
-<span class="sig-name descname"><span class="pre">fst5</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">17</span></span><a class="headerlink" href="#pydna.crispr.cas9.fst5" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">fst5</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">17</span></span><a class="headerlink" href="#pydna.crispr.cas9.fst5" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pydna.crispr.cas9.fst3">
-<span class="sig-name descname"><span class="pre">fst3</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-3</span></span><a class="headerlink" href="#pydna.crispr.cas9.fst3" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">fst3</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-3</span></span><a class="headerlink" href="#pydna.crispr.cas9.fst3" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pydna.crispr.cas9.ovhg">
-<span class="sig-name descname"><span class="pre">ovhg</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#pydna.crispr.cas9.ovhg" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">ovhg</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#pydna.crispr.cas9.ovhg" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pydna.crispr.cas9.search">
-<span class="sig-name descname"><span class="pre">search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dna</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/crispr.html#cas9.search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.crispr.cas9.search" title="Link to this definition">#</a></dt>
-<dd><p>docstring.</p>
+<span class="sig-name descname"><span class="pre">search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dna</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/crispr.html#cas9.search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.crispr.cas9.search" title="Link to this definition">#</a></dt>
+<dd><p>Search for Cas9 target sites in a DNA sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dna</strong> – string, Bio.Seq.Seq or pydna.dseq.Dseq</p></li>
+<li><p><strong>linear</strong> – Whether the DNA is linear or circular.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of cut site positions.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.crispr.protospacer">
-<span class="sig-prename descclassname"><span class="pre">pydna.crispr.</span></span><span class="sig-name descname"><span class="pre">protospacer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guide_construct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">cas9</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/crispr.html#protospacer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.crispr.protospacer" title="Link to this definition">#</a></dt>
-<dd><p>docstring.</p>
+<span class="sig-prename descclassname"><span class="pre">pydna.crispr.</span></span><span class="sig-name descname"><span class="pre">protospacer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guide_construct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DseqrecordType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Type" title="(in Python v3.8)"><span class="pre">Type</span></a><span class="p"><span class="pre">[</span></span><span class="pre">_cas</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">cas9</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.List" title="(in Python v3.8)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/crispr.html#protospacer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.crispr.protospacer" title="Link to this definition">#</a></dt>
+<dd><p>Extract protospacer sequences from a guide construct. This can for example
+be a plasmid containing the guide construct. This function returns a
+list since a several protospacers can be present.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>guide_construct</strong> – Sequence construct containing protospacer and scaffold.</p></li>
+<li><p><strong>cas</strong> – CRISPR nuclease class defining spacer size and scaffold.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of protospacer sequences found in Watson and Crick orientations.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

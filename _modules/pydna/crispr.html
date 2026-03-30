@@ -327,50 +327,96 @@ document.write(`
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="c1"># Copyright 2013-2023 by Björn Johansson.  All rights reserved.</span>
-<span class="c1"># This code is part of the Python-dna distribution and governed by its</span>
-<span class="c1"># license.  Please see the LICENSE.txt file that should have been included</span>
-<span class="c1"># as part of this package.</span>
-<span class="sd">&quot;&quot;&quot;Provides the Dseq class for handling double stranded DNA sequences.</span>
-
-<span class="sd">Dseq is a subclass of :class:`Bio.Seq.Seq`. The Dseq class</span>
-<span class="sd">is mostly useful as a part of the :class:`pydna.dseqrecord.Dseqrecord` class</span>
-<span class="sd">which can hold more meta data.</span>
-
-<span class="sd">The Dseq class support the notion of circular and linear DNA topology.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utilities for CRISPR/Cas target searching and protospacer extraction.</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Type</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeVar</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+
+<span class="n">DseqrecordType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;DseqrecordType&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">)</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">_cas</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-    <span class="n">scaffold</span> <span class="o">=</span> <span class="s2">&quot;ND&quot;</span>
-    <span class="n">pam</span> <span class="o">=</span> <span class="s2">&quot;ND&quot;</span>
-    <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">fst5</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">fst3</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract base class for CRISPR-associated nucleases.</span>
+<span class="sd">    pam, scaffold and cut location is set by a subclass</span>
+<span class="sd">    such as Cas9 below.</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protospacer</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">protospacer</span> <span class="o">=</span> <span class="n">protospacer</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">compsite</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;(?=(?P&lt;watson&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">protospacer</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">pam</span><span class="si">}</span><span class="s2">))|(?=(?P&lt;crick&gt;</span><span class="si">{</span><span class="n">rc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pam</span><span class="p">)</span><span class="si">}{</span><span class="n">rc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">protospacer</span><span class="p">)</span><span class="si">}</span><span class="s2">))&quot;</span><span class="p">,</span>
-            <span class="n">re</span><span class="o">.</span><span class="n">UNICODE</span><span class="p">,</span>
-        <span class="p">)</span>
+<span class="sd">    The meaning of size, fst5 and fst3 are the same as for the restriciton</span>
+<span class="sd">    enzymes in the Biopython restriction module (Bio.Restriction).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">scaffold</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ND&quot;</span>
+    <span class="n">pam</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ND&quot;</span>
+    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">fst5</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">fst3</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protospacer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the nuclease with a protospacer sequence.</span>
+<span class="sd">        The sequence is a string. Use the protospacer function</span>
+<span class="sd">        to extract a sequence from a Dseqrecord.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            protospacer: Protospacer sequence used to build the search pattern.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.sequence_regex</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_regex_site</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">protospacer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">protospacer</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compsite</span> <span class="o">=</span> <span class="n">compute_regex_site</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">protospacer</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">pam</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dna</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;To override in subclass.&quot;&quot;&quot;</span>
-        <span class="k">pass</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dna</span><span class="p">,</span> <span class="n">linear</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a list of cutting sites of the enzyme in the sequence.</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="sd">        dna must be an instance of:</span>
+
+<span class="sd">            - pydna.dseq.Dseq</span>
+<span class="sd">            - Bio.Seq.Seq</span>
+<span class="sd">            - Bio.Seq.MutableSeq</span>
+
+<span class="sd">        pydna.dseqrecord.Dseqrecord or Bio.SeqRecord.SeqRecord will not work.</span>
+<span class="sd">        This limitation is by design t omirror enzymes in the</span>
+<span class="sd">        Biopython Bio.Restriction class</span>
+
+<span class="sd">        The linear argument is laso there for compatibility with the</span>
+<span class="sd">        Biopython Bio.Restriction class.</span>
+
+<span class="sd">        An important caveat is that search ignores the circular property of</span>
+<span class="sd">        pydna.dseq.Dseq.</span>
+
+<span class="sd">        If linear is False, the restriction sites that span over the boundaries</span>
+<span class="sd">        will be included.</span>
+
+<span class="sd">        The positions are the first base of the 3&#39; fragment,</span>
+<span class="sd">        i.e. the first base after the position the enzyme will cut.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>  <span class="c1"># pragma: no cover</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a compact representation of the Cas9+gRNA nuclease instance.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            String representation with abbreviated protospacer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">protospacer</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">..</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">protospacer</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span><span class="si">}</span><span class="s2">)&quot;</span>
 
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;To override in subclass.&quot;&quot;&quot;</span>
-        <span class="k">pass</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the guide RNA protospacer and scaffold as FASTA-like string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&gt;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> protospacer scaffold</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">protospacer</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scaffold</span><span class="si">}</span><span class="s2">&quot;</span>
 
 
 <div class="viewcode-block" id="cas9">
@@ -380,84 +426,99 @@ document.write(`
 
 <span class="sd">    .. code-block::</span>
 
-<span class="sd">            |----size----------|</span>
 
-<span class="sd">            ---protospacer------</span>
-<span class="sd">                            -fst3</span>
-<span class="sd">            fst5             |-|</span>
-<span class="sd">            |--------------|</span>
-<span class="sd">                                PAM</span>
-<span class="sd">        5-NNGGAAGAGTAATACACTA-AAANGGNN-3</span>
-<span class="sd">        ||||||||||||||||||| ||||||||</span>
-<span class="sd">        3-NNCCTTCTCATTATGTGAT-TTTNCCNN-5</span>
+<span class="sd">            fst5              --|fst3</span>
+<span class="sd">            |----------------</span>
+<span class="sd">                                 PAM</span>
+<span class="sd">       5&#39;-NNGGAAGAGTAATACACTA-AAANGGNN-3&#39;</span>
+<span class="sd">          ||||||||||||||||||| ||||||||</span>
+<span class="sd">       3&#39;-NNCCTTCTCATTATGTGAT-TTTNCCNN-5&#39;</span>
 <span class="sd">            ||||||||||||||||| |||</span>
-<span class="sd">        5-GGAAGAGTAATACACTA-AAAg-u-a-a-g-g  Scaffold</span>
-<span class="sd">            ---gRNA spacer---    u-a</span>
-<span class="sd">                                u-a</span>
-<span class="sd">                                u-a</span>
-<span class="sd">                                u-a</span>
-<span class="sd">                                a-u</span>
-<span class="sd">                                g-u-g</span>
-<span class="sd">                                a    a</span>
-<span class="sd">                                g-c-a</span>
-<span class="sd">                                c-g</span>
-<span class="sd">                                u-a</span>
-<span class="sd">                                a-u</span>
-<span class="sd">                                g   a  tetraloop</span>
-<span class="sd">                                a-a</span>
+<span class="sd">         5&#39;-GGAAGAGTAATACACTA AAA-g-u-a-a-g-g-3&#39;  Scaffold (lower case)</span>
+<span class="sd">            ---gRNA spacer------- u-a</span>
+<span class="sd">                                  u-a</span>
+<span class="sd">                                  u-a</span>
+<span class="sd">                                  u-a</span>
+<span class="sd">                                  a-u</span>
+<span class="sd">                                  g-u-g</span>
+<span class="sd">                                  a    a</span>
+<span class="sd">                                  g-c-a</span>
+<span class="sd">                                  c-g</span>
+<span class="sd">                                  u-a</span>
+<span class="sd">                                  a-u</span>
+<span class="sd">                                  g   a</span>
+<span class="sd">                                   a-a</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">scaffold</span> <span class="o">=</span> <span class="s2">&quot;GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGG&quot;</span>
-    <span class="n">pam</span> <span class="o">=</span> <span class="s2">&quot;.GG&quot;</span>
-    <span class="n">size</span> <span class="o">=</span> <span class="mi">20</span>
-    <span class="n">fst5</span> <span class="o">=</span> <span class="mi">17</span>
-    <span class="n">fst3</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span>
-    <span class="n">ovhg</span> <span class="o">=</span> <span class="n">fst5</span> <span class="o">-</span> <span class="p">(</span><span class="n">size</span> <span class="o">+</span> <span class="n">fst3</span><span class="p">)</span>
+    <span class="n">scaffold</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGG&quot;</span>
+    <span class="n">pam</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.GG&quot;</span>
+    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">fst5</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">17</span>
+    <span class="n">fst3</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span>
+    <span class="n">ovhg</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">fst5</span> <span class="o">-</span> <span class="p">(</span><span class="n">size</span> <span class="o">+</span> <span class="n">fst3</span><span class="p">)</span>
 
 <div class="viewcode-block" id="cas9.search">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.crispr.cas9.search">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dna</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
-        <span class="n">dna</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">dna</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">linear</span><span class="p">:</span>
-            <span class="n">dna</span> <span class="o">=</span> <span class="n">dna</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">dna</span> <span class="o">=</span> <span class="n">dna</span> <span class="o">+</span> <span class="n">dna</span><span class="p">[</span><span class="mi">1</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">]</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">mobj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compsite</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">dna</span><span class="p">):</span>
-            <span class="n">w</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">mobj</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">w</span><span class="p">:</span>
-                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mobj</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s2">&quot;watson&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fst5</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">c</span><span class="p">:</span>
-                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mobj</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="s2">&quot;crick&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pam</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">fst3</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dna</span><span class="p">,</span> <span class="n">linear</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search for Cas9 target sites in a DNA sequence.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dna: string, Bio.Seq.Seq or pydna.dseq.Dseq</span>
+<span class="sd">            linear: Whether the DNA is linear or circular.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of cut site positions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.sequence_regex</span><span class="w"> </span><span class="kn">import</span> <span class="n">dseqrecord_finditer</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">dna</span><span class="p">,</span> <span class="s2">&quot;_data&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span>
+        <span class="n">results</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">dna</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="p">(</span><span class="ow">not</span> <span class="n">linear</span><span class="p">))</span>
+        <span class="n">matches_fwd</span> <span class="o">=</span> <span class="n">dseqrecord_finditer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compsite</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+        <span class="n">matches_rev</span> <span class="o">=</span> <span class="n">dseqrecord_finditer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compsite</span><span class="p">,</span> <span class="n">query</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">mobj</span> <span class="ow">in</span> <span class="n">matches_fwd</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">mobj</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fst5</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">dna</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">mobj</span> <span class="ow">in</span> <span class="n">matches_rev</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">dna</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">mobj</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fst5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">dna</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">results</span></div>
-
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&gt;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> protospacer scaffold</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">protospacer</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scaffold</span><span class="si">}</span><span class="s2">&quot;</span></div>
+</div>
 
 
 
 <div class="viewcode-block" id="protospacer">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.crispr.protospacer">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">protospacer</span><span class="p">(</span><span class="n">guide_construct</span><span class="p">,</span> <span class="n">cas</span><span class="o">=</span><span class="n">cas9</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
-    <span class="n">in_watson</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">mobj</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;ps&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">mobj</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;(?P&lt;ps&gt;.</span><span class="se">{{</span><span class="si">{</span><span class="n">cas</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="se">}}</span><span class="s2">)(?:</span><span class="si">{</span><span class="n">cas</span><span class="o">.</span><span class="n">scaffold</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
-            <span class="nb">str</span><span class="p">(</span><span class="n">guide_construct</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">protospacer</span><span class="p">(</span><span class="n">guide_construct</span><span class="p">:</span> <span class="n">DseqrecordType</span><span class="p">,</span> <span class="n">cas</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">_cas</span><span class="p">]</span> <span class="o">=</span> <span class="n">cas9</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract protospacer sequences from a guide construct. This can for example</span>
+<span class="sd">    be a plasmid containing the guide construct. This function returns a</span>
+<span class="sd">    list since a several protospacers can be present.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        guide_construct: Sequence construct containing protospacer and scaffold.</span>
+<span class="sd">        cas: CRISPR nuclease class defining spacer size and scaffold.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of protospacer sequences found in Watson and Crick orientations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">guide_construct</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
+        <span class="n">total_length</span> <span class="o">=</span> <span class="n">cas</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">cas</span><span class="o">.</span><span class="n">scaffold</span><span class="p">)</span>
+        <span class="n">guide_construct</span> <span class="o">=</span> <span class="n">guide_construct</span><span class="p">[:]</span> <span class="o">+</span> <span class="n">guide_construct</span><span class="p">[:</span> <span class="n">total_length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">guide_construct</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">watson</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">guide_construct</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">crick</span><span class="o">.</span><span class="n">upper</span><span class="p">():</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+            <span class="n">mobj</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;ps&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">mobj</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;(?P&lt;ps&gt;.</span><span class="se">{{</span><span class="si">{</span><span class="n">cas</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="se">}}</span><span class="s2">)(?:</span><span class="si">{</span><span class="n">cas</span><span class="o">.</span><span class="n">scaffold</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                <span class="n">s</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="p">)</span>
-    <span class="p">]</span>
-    <span class="n">in_crick</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">rc</span><span class="p">(</span><span class="n">mobj</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;ps&quot;</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">mobj</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;(?:</span><span class="si">{</span><span class="n">rc</span><span class="p">(</span><span class="n">cas</span><span class="o">.</span><span class="n">scaffold</span><span class="p">)</span><span class="si">}</span><span class="s2">)(?P&lt;ps&gt;.</span><span class="se">{{</span><span class="si">{</span><span class="n">cas</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="se">}}</span><span class="s2">)&quot;</span><span class="p">,</span>
-            <span class="nb">str</span><span class="p">(</span><span class="n">guide_construct</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
-        <span class="p">)</span>
-    <span class="p">]</span>
-    <span class="k">return</span> <span class="n">in_watson</span> <span class="o">+</span> <span class="n">in_crick</span></div>
+
+    <span class="k">return</span> <span class="n">result</span></div>
 
 </pre></div>
 
