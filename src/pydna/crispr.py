@@ -11,7 +11,6 @@ from abc import abstractmethod
 from typing import Type
 from typing import TYPE_CHECKING
 from typing import List
-from pydna.utils import rc
 from typing import TypeVar
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -45,11 +44,10 @@ class _cas(ABC):
         Args:
             protospacer: Protospacer sequence used to build the search pattern.
         """
+        from pydna.sequence_regex import compute_regex_site
+
         self.protospacer: str = protospacer.upper()
-        self.compsite = re.compile(
-            f"(?=(?P<watson>{self.protospacer}{self.pam}))|(?=(?P<crick>{rc(self.pam)}{rc(self.protospacer)}))",
-            re.UNICODE,
-        )
+        self.compsite = compute_regex_site(f"{self.protospacer}{self.pam}")
 
     @abstractmethod
     def search(self, dna, linear: bool = True) -> List[int]:
@@ -142,22 +140,19 @@ class cas9(_cas):
         Returns:
             A list of cut site positions.
         """
+        from pydna.dseqrecord import Dseqrecord
+        from pydna.sequence_regex import dseqrecord_finditer
+
         if not hasattr(dna, "_data"):
             raise TypeError
-        dna = str(dna).upper()
-        if linear:
-            d = dna
-        else:
-            d = dna + dna[: len(dna) - 1]
         results: List[int] = []
-        for mobj in self.compsite.finditer(d):
-            w, c = mobj.groups()
-            if w:
-                results.append((mobj.start("watson") + 1 + self.fst5) % len(dna))
-            if c:
-                results.append(
-                    (mobj.start("crick") + len(self.pam) + 1 - self.fst3) % len(dna)
-                )
+        query = Dseqrecord(dna, circular=(not linear))
+        matches_fwd = dseqrecord_finditer(self.compsite, query)
+        matches_rev = dseqrecord_finditer(self.compsite, query.reverse_complement())
+        for mobj in matches_fwd:
+            results.append((mobj.start() + 1 + self.fst5) % len(dna))
+        for mobj in matches_rev:
+            results.append((mobj.start() + len(self.pam) + 1 - self.fst3) % len(dna))
         return results
 
 
