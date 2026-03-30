@@ -3,6 +3,7 @@
 
 """
 Utilities for CRISPR/Cas target searching and protospacer extraction.
+
 """
 import re
 from abc import ABC
@@ -13,7 +14,7 @@ from typing import List
 from pydna.utils import rc
 from typing import TypeVar
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from pydna.dseqrecord import Dseqrecord
 
 DseqrecordType = TypeVar("DseqrecordType", bound="Dseqrecord")
@@ -76,7 +77,7 @@ class _cas(ABC):
         The positions are the first base of the 3' fragment,
         i.e. the first base after the position the enzyme will cut.
         """
-        pass
+        raise NotImplementedError  # pragma: no cover
 
     def __repr__(self) -> str:
         """
@@ -87,12 +88,11 @@ class _cas(ABC):
         """
         return f"{type(self).__name__}({self.protospacer[:3]}..{self.protospacer[-3:]})"
 
-    @abstractmethod
     def __str__(self) -> str:
         """
-        Return a string representation of the guide and scaffold.
+        Return the guide RNA protospacer and scaffold as FASTA-like string.
         """
-        pass
+        return f">{type(self).__name__} protospacer scaffold\n{self.protospacer} {self.scaffold}"
 
 
 class cas9(_cas):
@@ -100,31 +100,28 @@ class cas9(_cas):
 
     .. code-block::
 
-            |----size----------|
 
-            ---protospacer------
-                            -fst3
-            fst5
-            |---------------|-
-                                PAM
+            fst5              --|fst3
+            |----------------
+                                 PAM
        5'-NNGGAAGAGTAATACACTA-AAANGGNN-3'
           ||||||||||||||||||| ||||||||
        3'-NNCCTTCTCATTATGTGAT-TTTNCCNN-5'
             ||||||||||||||||| |||
-         5'-GGAAGAGTAATACACTA-AAAg-u-a-a-g-g-3'  Scaffold
-            ---gRNA spacer---    u-a
-                                 u-a
-                                 u-a
-                                 u-a
-                                 a-u
-                                 g-u-g
-                                 a    a
-                                 g-c-a
-                                 c-g
-                                 u-a
-                                 a-u
-                                 g   a  tetraloop
-                                  a-a
+         5'-GGAAGAGTAATACACTA AAA-g-u-a-a-g-g-3'  Scaffold (lower case)
+            ---gRNA spacer------- u-a
+                                  u-a
+                                  u-a
+                                  u-a
+                                  a-u
+                                  g-u-g
+                                  a    a
+                                  g-c-a
+                                  c-g
+                                  u-a
+                                  a-u
+                                  g   a
+                                   a-a
     """
 
     scaffold: str = "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGG"
@@ -145,25 +142,23 @@ class cas9(_cas):
         Returns:
             A list of cut site positions.
         """
+        if not hasattr(dna, "_data"):
+            raise TypeError
         dna = str(dna).upper()
         if linear:
-            dna = dna
+            d = dna
         else:
-            dna = dna + dna[1 : self.size]
+            d = dna + dna[: len(dna) - 1]
         results: List[int] = []
-        for mobj in self.compsite.finditer(dna):
+        for mobj in self.compsite.finditer(d):
             w, c = mobj.groups()
             if w:
-                results.append(mobj.start("watson") + 1 + self.fst5)
+                results.append((mobj.start("watson") + 1 + self.fst5) % len(dna))
             if c:
-                results.append(mobj.start("crick") + len(self.pam) + 1 - self.fst3)
+                results.append(
+                    (mobj.start("crick") + len(self.pam) + 1 - self.fst3) % len(dna)
+                )
         return results
-
-    def __str__(self) -> str:
-        """
-        Return the guide RNA protospacer and scaffold as FASTA-like string.
-        """
-        return f">{type(self).__name__} protospacer scaffold\n{self.protospacer} {self.scaffold}"
 
 
 def protospacer(guide_construct: DseqrecordType, cas: Type[_cas] = cas9) -> List[str]:

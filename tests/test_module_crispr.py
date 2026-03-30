@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import pytest
+from Bio.Restriction import BamHI
 from pydna.dseqrecord import Dseqrecord
 from pydna.dseq import Dseq
 from Bio.Restriction import SapI
@@ -8,6 +10,10 @@ from pydna.parsers import parse_primers
 from pydna.crispr import cas9, protospacer
 from pydna.assembly import Assembly
 from textwrap import dedent
+from Bio.Seq import Seq
+from Bio.Seq import MutableSeq
+from Bio.SeqRecord import SeqRecord
+from Bio.Restriction import FormattedSeq
 
 
 def test_crispr():
@@ -27,15 +33,15 @@ def test_crispr():
     )
 
     sgr_text = "GTTACTTTACCCGACGTCCCgttttagagctagaaatagcaagttaaaataagg"
-    target = "GTTACTTTACCCGACGTCCCaGG"
+    target_string = "GTTACTTTACCCGACGTCCCaGG"
 
     for _sg, _tgt in [
-        (sgr_text, target),
-        (sgr_text.upper(), target.lower()),
-        (sgr_text.lower(), target.upper()),
+        (sgr_text, target_string),
+        (sgr_text.upper(), target_string.lower()),
+        (sgr_text.lower(), target_string.upper()),
     ]:
         containing_sgRNA = Dseqrecord(sgr_text)
-        target = Dseqrecord(target)
+        target = Dseqrecord(target_string)
 
         assert [
             f.seq
@@ -59,9 +65,48 @@ def test_crispr():
             a.rc(),
         ]
 
-    assert target.cut(cas9("GTTACTTTACCCGACGTCCC")) == target.cut(
-        cas9("GTTACTTTACCCGACGTCCC".lower())
+    c9 = cas9("GTTACTTTACCCGACGTCCC")
+
+    assert (
+        str(c9)
+        == ">cas9 protospacer scaffold\nGTTACTTTACCCGACGTCCC GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGG"
     )
+
+    assert target.cut(c9) == target.cut(cas9("GTTACTTTACCCGACGTCCC".lower()))
+
+    with pytest.raises(TypeError):
+        BamHI.search("GGATCC")
+
+    assert BamHI.search(Seq("GGATCC")) == [2]
+    assert BamHI.search(MutableSeq("GGATCC")) == [2]
+    assert BamHI.search(Dseq("GGATCC")) == [2]
+    with pytest.raises(TypeError):
+        assert BamHI.search(SeqRecord("GGATCC")) == [2]
+    with pytest.raises(TypeError):
+        assert BamHI.search(FormattedSeq("GGATCC")) == [2]
+    with pytest.raises(TypeError):
+        assert BamHI.search(Dseqrecord("GGATCC")) == [2]
+    assert BamHI.search(Seq("GATCCG"), linear=False) == [1]
+    assert BamHI.search(MutableSeq("GATCCG"), linear=False) == [1]
+    assert BamHI.search(Dseq("GATCCG"), linear=False) == [1]
+    assert BamHI.search(Dseq("GATCCG", circular=True), linear=True) == []
+
+    with pytest.raises(TypeError):
+        c9.search(target_string)
+    assert c9.search(Seq(target_string)) == [18]
+    assert c9.search(MutableSeq(target_string)) == [18]
+    assert c9.search(Dseq(target_string)) == [18]
+    with pytest.raises(TypeError):
+        assert c9.search(SeqRecord(target_string)) == [18]
+    with pytest.raises(TypeError):
+        assert c9.search(FormattedSeq(target_string)) == [18]
+    with pytest.raises(TypeError):
+        assert c9.search(Dseqrecord(target_string)) == [18]
+    rotated_target_string = target_string[1:] + target_string[0]
+    assert c9.search(Seq(rotated_target_string), linear=False) == [17]
+    assert c9.search(MutableSeq(rotated_target_string), linear=False) == [17]
+    assert c9.search(Dseq(rotated_target_string), linear=False) == [17]
+    assert c9.search(Dseq("ggat", circular=True), linear=True) == []
 
 
 def test_crispr_torulaspora():
