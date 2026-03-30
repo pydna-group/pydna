@@ -339,3 +339,17 @@ def test_crispr_torulaspora():
     )
 
     assert deleted.seq == final_deletion.seq
+
+
+def test_cut():
+    seq = Dseqrecord("ttCATTACTGTTTGCATTGAACaGGCCC", circular=True)
+    enz = cas9("CATTACTGTTTGCATTGAAC")
+    expected = set([Dseq("AACAGGCCCTTCATTACTGTTTGCATTG").seguid()])
+
+    for shift in range(len(seq)):
+        seq_shifted = seq.shifted(shift)
+        for rc in [False, True]:
+            seq_shifted_rc = seq_shifted.reverse_complement() if rc else seq_shifted
+            products = seq_shifted_rc.cut(enz)
+            seguids = set(f.seq.seguid() for f in products)
+            assert seguids == expected

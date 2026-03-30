@@ -150,9 +150,9 @@ class cas9(_cas):
         matches_fwd = dseqrecord_finditer(self.compsite, query)
         matches_rev = dseqrecord_finditer(self.compsite, query.reverse_complement())
         for mobj in matches_fwd:
-            results.append((mobj.start() + 1 + self.fst5) % len(dna))
+            results.append((mobj.start() + self.fst5 + 1) % len(dna))
         for mobj in matches_rev:
-            results.append((mobj.start() + len(self.pam) + 1 - self.fst3) % len(dna))
+            results.append((len(dna) - (mobj.start() + self.fst5) + 1) % len(dna))
         return results
 
 
