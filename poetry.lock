@@ -4790,4 +4790,4 @@ primer-screen = ["pyahocorasick"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "96b2929057aec5df39b47e142b944cef9add997142416e43c4df315fdabbbd72"
+content-hash = "d1ba46d524d44b26def8119e416649878179595113dff1e7caf6d978bba52587"
