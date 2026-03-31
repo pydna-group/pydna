@@ -77,7 +77,7 @@ jobs:
         if: matrix.fresh-install == 'true'
 
       - name: 🔩 Install with Poetry
-        run: poetry install --all-extras
+        run: poetry cache clear --all && poetry install --all-extras
 
       - name: 🔎 poetry run python run_test.py
         # Don't run tests if we're just checking hooks

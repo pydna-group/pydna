@@ -36,7 +36,7 @@ jobs:
         run: poetry config --list
 
       - name: 🔩 Install with Poetry
-        run: poetry install --all-extras --with docs
+        run: poetry cache clear --all && poetry install --all-extras --with docs
 
       - name: Build documentation
         run: |
