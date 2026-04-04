@@ -559,9 +559,6 @@
                     <span class="ow">and</span> <span class="n">start2</span> <span class="o">+</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node2</span><span class="p">][</span><span class="s2">&quot;length&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">ft</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span>
                 <span class="p">]</span>
 
-                <span class="c1"># for feat in feats:</span>
-                <span class="c1">#     feat.location += -start1</span>
-
                 <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span>
                     <span class="n">node1</span><span class="p">,</span>
                     <span class="n">node2</span><span class="p">,</span>  <span class="c1"># nodes (strings)</span>
@@ -584,7 +581,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span> <span class="o">=</span> <span class="n">algorithm</span>
 
     <span class="nd">@exit_after</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;pydna_assembly_limit&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)))</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">assemble_linear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">assemble_linear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">)</span>
 
         <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">([</span><span class="s2">&quot;begin&quot;</span><span class="p">,</span> <span class="s2">&quot;begin_rc&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="s2">&quot;end_rc&quot;</span><span class="p">],</span> <span class="n">length</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
