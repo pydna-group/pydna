@@ -245,9 +245,6 @@ class Assembly(object):
                     and start2 + G.nodes[node2]["length"] >= ft.location.end
                 ]
 
-                # for feat in feats:
-                #     feat.location += -start1
-
                 G.add_edge(
                     node1,
                     node2,  # nodes (strings)
@@ -270,7 +267,7 @@ class Assembly(object):
         self.algorithm = algorithm
 
     @exit_after(int(os.getenv("pydna_assembly_limit", 10)))
-    def assemble_linear(self, start=None, end=None, max_nodes=None):
+    def assemble_linear(self, max_nodes=None):
         G = nx.MultiDiGraph(self.G)
 
         G.add_nodes_from(["begin", "begin_rc", "end", "end_rc"], length=0)
