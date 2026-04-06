@@ -3084,7 +3084,42 @@ class Dseq(Seq):
         return result
 
     def get_left_end_as_cutsite(self) -> CutSiteType:
-        """Returns the left end of the sequence as a cutsite."""
+        """Return the left (5′ Watson) terminus as a cutsite.
+
+        The result has the same shape as entries from :meth:`get_cutsites`:
+        ``((cut_watson, ovhg), None)``, using :attr:`left_ovhg` for the stagger.
+
+        Raises
+        ------
+        ValueError
+            If the sequence is circular
+
+        Examples
+        --------
+        Blunt left end:
+
+        >>> from pydna.dseq import Dseq
+        >>> Dseq("AAA", "TTT", ovhg=0).get_left_end_as_cutsite()
+        ((0, 0), None)
+
+        Crick 5' overhang on the left (positive ``ovhg``):
+
+        >>> Dseq("AA", "TTT", ovhg=1).get_left_end_as_cutsite()
+        ((1, 1), None)
+
+        Watson 5' overhang on the left (negative ``ovhg``):
+
+        >>> Dseq("AAA", "TT", ovhg=-1).get_left_end_as_cutsite()
+        ((0, -1), None)
+
+        Circular molecules have no ends:
+
+        >>> Dseq("aaa", "ttt", circular=True).get_left_end_as_cutsite()
+        Traceback (most recent call last):
+        ...
+        ValueError: Circular sequences do not have a left end
+        """
+
         if self.circular:
             raise ValueError("Circular sequences do not have a left end")
         if self.ovhg > 0:
@@ -3092,7 +3127,41 @@ class Dseq(Seq):
         return ((0, self.left_ovhg), None)
 
     def get_right_end_as_cutsite(self) -> CutSiteType:
-        """Returns the right end of the sequence as a cutsite."""
+        """Return the right (3' Watson) terminus as a cutsite.
+
+        The result has the same shape as entries from :meth:`get_cutsites`:
+        ``((cut_watson, ovhg), None)``, using :attr:`right_ovhg` for the stagger.
+
+        Raises
+        ------
+        ValueError
+            If the sequence is circular
+
+        Examples
+        --------
+        Blunt right end:
+
+        >>> from pydna.dseq import Dseq
+        >>> Dseq("AAA", "TTT", ovhg=0).get_right_end_as_cutsite()
+        ((3, 0), None)
+
+        Watson 3' overhang on the right (positive ``right_ovhg``):
+
+        >>> Dseq("AAA", "TT", ovhg=0).get_right_end_as_cutsite()
+        ((3, 1), None)
+
+        Watson 3' overhang on the right (negative ``right_ovhg``):
+
+        >>> Dseq("AA", "TTT", ovhg=0).get_right_end_as_cutsite()
+        ((2, -1), None)
+
+        Circular molecules have no ends:
+
+        >>> Dseq("aaa", "ttt", circular=True).get_right_end_as_cutsite()
+        Traceback (most recent call last):
+        ...
+        ValueError: Circular sequences do not have a right end
+        """
         if self.circular:
             raise ValueError("Circular sequences do not have a right end")
         if self.right_ovhg > 0:

@@ -2269,12 +2269,12 @@ def restriction_ligation_assembly(
     AATTCaaaGTCGACacctG
     TTAAGtttCAGCTGtggaC
 
-    Note that passing a pre-cut fragment will not work.
+    Note that passing a pre-cut fragment also works.
 
     >>> restriction_products = insert.cut([EcoRI, SalI])
     >>> cut_insert = restriction_products[1]
     >>> restriction_ligation_assembly([backbone, cut_insert], [EcoRI, SalI], circular_only=True)
-    []
+    [Dseqrecord(o22), Dseqrecord(o19)]
 
     It also works with a single fragment, for circularization:
 
