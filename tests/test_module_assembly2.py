@@ -1026,6 +1026,26 @@ def test_restriction_ligation_algorithm():
             seqrA, seqrB.shifted(shift), [EcoRI], False
         ) == [(1, index_in_circular, 4)]
 
+    # Accepts already cut fragments
+    seqrA = Dseqrecord("aaGAATTCaaaGAATTCaa")
+    f1, f2, f3 = seqrA.cut([EcoRI])
+
+    assert assembly.restriction_ligation_overlap(f1, seqrA, [EcoRI]) == [
+        (3, 3, 4),
+        (3, 12, 4),
+    ]
+    assert assembly.restriction_ligation_overlap(seqrA, f3, [EcoRI]) == [
+        (3, 0, 4),
+        (12, 0, 4),
+    ]
+
+    # Orientation matters
+    assert assembly.restriction_ligation_overlap(f3, seqrA, [EcoRI]) == []
+    assert assembly.restriction_ligation_overlap(seqrA, f1, [EcoRI]) == []
+
+    assert len(assembly.restriction_ligation_overlap(seqrA, f2, [EcoRI])) == 2
+    assert len(assembly.restriction_ligation_overlap(f2, seqrA, [EcoRI])) == 2
+
 
 def test_pcr_assembly_normal():
 

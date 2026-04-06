@@ -3082,3 +3082,19 @@ class Dseq(Seq):
         for x in it:
             result = result + self + x
         return result
+
+    def get_left_end_as_cutsite(self) -> CutSiteType:
+        """Returns the left end of the sequence as a cutsite."""
+        if self.circular:
+            raise ValueError("Circular sequences do not have a left end")
+        if self.ovhg > 0:
+            return ((self.left_ovhg, self.left_ovhg), None)
+        return ((0, self.left_ovhg), None)
+
+    def get_right_end_as_cutsite(self) -> CutSiteType:
+        """Returns the right end of the sequence as a cutsite."""
+        if self.circular:
+            raise ValueError("Circular sequences do not have a right end")
+        if self.right_ovhg > 0:
+            return ((len(self), self.right_ovhg), None)
+        return ((len(self) + self.right_ovhg, self.right_ovhg), None)

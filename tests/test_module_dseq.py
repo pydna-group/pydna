@@ -1025,6 +1025,45 @@ def test_left_end_position():
         assert dseq.left_end_position() == expected
 
 
+def test_get_left_end_as_cutsite():
+
+    test_cases = [
+        ("AAA", "TT", -1, ((0, -1), None)),
+        ("AA", "TTT", 1, ((1, 1), None)),
+        ("AAA", "TTT", 0, ((0, 0), None)),
+    ]
+    for watson, crick, ovhg, expected in test_cases:
+        dseq = Dseq(watson, crick, ovhg=ovhg, circular=False)
+        assert dseq.get_left_end_as_cutsite() == expected
+        dseq.fill_in()
+        assert dseq.apply_cut(expected, None) == dseq
+
+    dseq = Dseq("aaa", "ttt", circular=True)
+    with pytest.raises(ValueError, match="Circular sequences do not have a left end"):
+        dseq.get_left_end_as_cutsite()
+
+
+def test_get_right_end_as_cutsite():
+
+    # Same watson/crick as test_right_end_position; right cutsite uses right_ovhg (Watson 3′ stagger)
+    test_cases = [
+        ("AAA", "TT", 0, ((3, 1), None)),
+        ("AA", "TTT", 0, ((2, -1), None)),
+        ("AAA", "TTT", 0, ((3, 0), None)),
+        ("AAA", "TT", -1, ((3, 0), None)),
+        ("AAA", "TT", 1, ((4, 2), None)),
+    ]
+    for watson, crick, ovhg, expected in test_cases:
+        dseq = Dseq(watson, crick, ovhg=ovhg, circular=False)
+        assert dseq.get_right_end_as_cutsite() == expected
+        dseq._fill_in_right(nucleotides="ACGT")
+        assert dseq.apply_cut(None, expected) == dseq
+
+    dseq = Dseq("aaa", "ttt", circular=True)
+    with pytest.raises(ValueError, match="Circular sequences do not have a right end"):
+        dseq.get_right_end_as_cutsite()
+
+
 def test_apply_cut():
 
     seq = Dseq("aaGAATTCaa", circular=False)
