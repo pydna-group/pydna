@@ -79,11 +79,6 @@ class Assembly(object):
         The shortest shared homology to be considered
     algorithm : function, optional
         The algorithm used to determine the shared sequences.
-    max_nodes : int
-        The maximum number of nodes in the graph. This can be tweaked to
-        manage sequences with a high number of shared sub sequences.
-
-
 
     Examples
     --------
@@ -267,7 +262,7 @@ class Assembly(object):
         self.algorithm = algorithm
 
     @exit_after(int(os.getenv("pydna_assembly_limit", 10)))
-    def assemble_linear(self, max_nodes=None):
+    def assemble_linear(self):
         G = nx.MultiDiGraph(self.G)
 
         G.add_nodes_from(["begin", "begin_rc", "end", "end_rc"], length=0)
@@ -335,16 +330,12 @@ class Assembly(object):
                 name=lastfragmentrc["name"],
             )
 
-        max_nodes = max_nodes or len(self.fragments)
-
         linearpaths = list(
             itertools.chain(
-                nx.all_simple_paths(nx.DiGraph(G), "begin", "end", cutoff=max_nodes),
-                nx.all_simple_paths(nx.DiGraph(G), "begin", "end_rc", cutoff=max_nodes),
-                nx.all_simple_paths(nx.DiGraph(G), "begin_rc", "end", cutoff=max_nodes),
-                nx.all_simple_paths(
-                    nx.DiGraph(G), "begin_rc", "end_rc", cutoff=max_nodes
-                ),
+                nx.all_simple_paths(nx.DiGraph(G), "begin", "end"),
+                nx.all_simple_paths(nx.DiGraph(G), "begin", "end_rc"),
+                nx.all_simple_paths(nx.DiGraph(G), "begin_rc", "end"),
+                nx.all_simple_paths(nx.DiGraph(G), "begin_rc", "end_rc"),
             )
         )
 
@@ -404,10 +395,10 @@ class Assembly(object):
         )
 
     @exit_after(int(os.getenv("pydna_assembly_limit", 10)))
-    def assemble_circular(self, length_bound=None):
+    def assemble_circular(self):
         cps = {}  # circular assembly
         cpsrc = {}
-        cpaths = sorted(nx.simple_cycles(self.G, length_bound=length_bound), key=len)
+        cpaths = sorted(nx.simple_cycles(self.G), key=len)
         cpaths_sorted = []
         for cpath in cpaths:
             order, node = min((self.G.nodes[node]["order"], node) for node in cpath)
