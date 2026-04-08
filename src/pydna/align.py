@@ -37,22 +37,22 @@ def align(seq1, seq2):
             seq = "".join(current["from"])
             s, e = current["start"], current["end"]
             if s == e:
-                edits.append(f"Delete {seq} at position {s}")
+                edits.append(f"Insert {seq} at position {s}")
             else:
-                edits.append(f"Delete {seq} at position {s}-{e}")
+                edits.append(f"Insert {seq} at position {s}-{e}")
 
         elif current["type"] == "ins":
             seq = "".join(current["to"])
-            edits.append(f"Insert {seq} after position {current['after']}")
+            edits.append(f"Delete {seq} after position {current['after']}")
 
         elif current["type"] == "sub":
             frm = "".join(current["from"])
             to = "".join(current["to"])
             s, e = current["start"], current["end"]
             if s == e:
-                edits.append(f"Substitute {frm} → {to} at position {s}")
+                edits.append(f"Substitute {to} → {frm} at position {s}")
             else:
-                edits.append(f"Substitute {frm} → {to} from position {s} to {e}")
+                edits.append(f"Substitute {to} → {frm} from position {s} to {e}")
 
         current = None
 

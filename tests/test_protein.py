@@ -122,7 +122,9 @@ def test_protein_inserts():
     assert to_hgvs(canonical, query) == "[9_10insRQ;19_20insQ]"
 
 
+
 def test_protein3():
+
 
     target = "MKTAYIAKQ  ISFVKSHFSR ".replace(" ", "")
     query = "MKTAYIAKQRQISFVKSHFSRQ"
@@ -158,5 +160,7 @@ def test_protein_insert_substitute_delete():
         "Substitute QRQ → KKK from position 10 to 12",
         "Delete Q after position 22",
     ]
+
     canonical, _ = extract_sequence(query, target)
     assert to_hgvs(canonical, target) == "[9_11K[4];22del]"
+
