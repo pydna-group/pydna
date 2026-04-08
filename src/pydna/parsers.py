@@ -182,7 +182,6 @@ def embl_gb_fasta(text):
             parsed.annotations["topology"] = "circular"
         molecule_type = parsed.annotations.get("molecule_type")
         assert molecule_type, "molecule_type must be set"
-        assert molecule_type != "protein", "molecule_type can not be 'protein'"
         result_list.append(parsed)
     return tuple(result_list)
 
@@ -258,6 +257,9 @@ def parse(data, ds=True, is_path=None) -> list[Dseqrecord | SeqRecord]:
 
         newsequences = embl_gb_fasta(raw)
         for s in newsequences:
+            assert (
+                s.annotations.get("molecule_type") != "protein"
+            ), "molecule_type can not be 'protein'"
             if ds and path:
                 from pydna.opencloning_models import UploadedFileSource
 
@@ -318,7 +320,7 @@ def parse_proteins(data):
     from pydna.seqrecord import ProteinSeqRecord as _ProteinSeqRecord
 
     new = []
-    for s in parse(data, ds=False):
+    for s in embl_gb_fasta(data):
         obj = _ProteinSeqRecord("")
         obj.__dict__.update(s.__dict__)
         obj.seq = _ProteinSeq(obj.seq)
