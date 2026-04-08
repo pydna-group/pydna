@@ -3,6 +3,7 @@
 from Bio import SeqIO
 from io import StringIO
 from pydna.parsers import parse_proteins
+from pydna.align import align
 
 fasta_sequence = """\
 >sp|P12345|MY_PROT Some protein description
@@ -79,3 +80,71 @@ def test_genpept_protein():
     assert pydna_protein.__dict__.keys() == biopython_protein.__dict__.keys() | {
         "map_target"
     }
+
+
+def test_same_protein():
+
+    target = "MKTAYIAKKKKKISFVKSHFSR"
+    query = "MKTAYIAKKKKKISFVKSHFSR"
+
+    aln, editlist = align(target, query)
+
+    assert str(aln) == (
+        "target            0 MKTAYIAKKKKKISFVKSHFSR 22\n"
+        "                  0 |||||||||||||||||||||| 22\n"
+        "query             0 MKTAYIAKKKKKISFVKSHFSR 22\n"
+    )
+
+    assert editlist == []
+
+
+def test_protein_inserts():
+
+    target = "MKTAYIAKQRQISFVKSHFSRQ"
+    query = "MKTAYIAKQISFVKSHFSR"
+
+    aln, editlist = align(target, query)
+
+    assert str(aln) == (
+        "target            0 MKTAYIAKQRQISFVKSHFSRQ 22\n"
+        "                  0 ||||||||--|||||||||||- 22\n"
+        "query             0 MKTAYIAK--QISFVKSHFSR- 19\n"
+    )
+
+    assert editlist == ["Insert QR at position 9-10", "Insert Q at position 22"]
+
+
+def test_protein3():
+
+    target = "MKTAYIAKQISFVKSHFSR"
+    query = "MKTAYIAKQRQISFVKSHFSRQ"
+
+    aln, editlist = align(target, query)
+
+    assert str(aln) == (
+        "target            0 MKTAYIAK--QISFVKSHFSR- 19\n"
+        "                  0 ||||||||--|||||||||||- 22\n"
+        "query             0 MKTAYIAKQRQISFVKSHFSRQ 22\n"
+    )
+
+    assert editlist == ["Delete QR after position 8", "Delete Q after position 19"]
+
+
+def test_protein_insert_substitute_delete():
+
+    target = "MKTAYIAKKKKKISFVKSHFSR"
+    query = "MKTAYIAKQRQISFVKSHFSRQ"
+
+    aln, editlist = align(target, query)
+
+    assert str(aln) == (
+        "target            0 MKTAYIAKKKKKISFVKSHFSR- 22\n"
+        "                  0 |||||||-|...||||||||||- 23\n"
+        "query             0 MKTAYIA-KQRQISFVKSHFSRQ 22\n"
+    )
+
+    assert editlist == [
+        "Insert K at position 8",
+        "Substitute QRQ → KKK from position 10 to 12",
+        "Delete Q after position 22",
+    ]
