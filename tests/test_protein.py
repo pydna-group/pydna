@@ -8,7 +8,6 @@ from pydna.parsers import parse_proteins
 from algebra.extractor import extract_sequence
 from algebra.extractor import to_hgvs
 
-
 fasta_sequence = """\
 >sp|P12345|MY_PROT Some protein description
 MTEYKLVVVGAGGVGKSALTIQLIQNHFVDEYDPTIEDSYRKQ
@@ -122,9 +121,7 @@ def test_protein_inserts():
     assert to_hgvs(canonical, query) == "[9_10insRQ;19_20insQ]"
 
 
-
 def test_protein3():
-
 
     target = "MKTAYIAKQ  ISFVKSHFSR ".replace(" ", "")
     query = "MKTAYIAKQRQISFVKSHFSRQ"
@@ -163,4 +160,3 @@ def test_protein_insert_substitute_delete():
 
     canonical, _ = extract_sequence(query, target)
     assert to_hgvs(canonical, target) == "[9_11K[4];22del]"
-
