@@ -18,9 +18,13 @@ class Primer(SeqRecord):
         self, record, *args, amplicon=None, position=None, footprint=0, **kwargs
     ):
         if hasattr(record, "features"):  # Seqrecord
+            assert not hasattr(
+                record.seq, "watson"
+            ), "Primer can not be double stranded"
             self.__dict__.update(record.__dict__)
             self.__dict__.update(kwargs)
         elif hasattr(record, "transcribe"):  # Seq
+            record.__class__ = Seq
             super().__init__(record, *args, **kwargs)
         else:  # string?
             super().__init__(Seq(record), *args, **kwargs)
