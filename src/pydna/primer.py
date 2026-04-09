@@ -23,8 +23,7 @@ class Primer(SeqRecord):
             if hasattr(record.seq, "watson"):
                 self.seq = Seq(record.seq)
         elif hasattr(record, "transcribe"):  # Seq
-            record.__class__ = Seq
-            super().__init__(record, *args, **kwargs)
+            super().__init__(Seq(record._data), *args, **kwargs)
         else:  # string?
             super().__init__(Seq(record), *args, **kwargs)
         self.amplicon = amplicon
