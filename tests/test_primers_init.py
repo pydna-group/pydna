@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import pytest
 
 from pydna.seq import Seq as pydnaSeq
 from pydna.primer import Primer
@@ -19,5 +18,4 @@ def test_primer_init():
 
     assert type(loc.extract(parsed_primer).seq) == pydnaSeq
 
-    with pytest.raises(AssertionError):
-        Primer(Dseqrecord("AAAAA", id="primer"))
+    assert type(Primer(Dseqrecord("AAAAA", id="primer")).seq) == pydnaSeq
