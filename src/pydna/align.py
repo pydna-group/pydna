@@ -8,8 +8,10 @@ from Bio.Align.substitution_matrices import load
 aligner = PairwiseAligner()
 aligner.mode = "global"
 aligner.substitution_matrix = load("BLOSUM62")
-aligner.open_gap_score = -10
-aligner.extend_gap_score = -0.5
+aligner.match_score = 1
+aligner.mismatch_score = -1
+aligner.open_gap_score = -5
+aligner.extend_gap_score = -1
 
 
 def align(seq1, seq2):
