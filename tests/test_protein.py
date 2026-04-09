@@ -4,6 +4,8 @@ from Bio import SeqIO
 from io import StringIO
 from pydna.parsers import parse_proteins
 from pydna.align import align
+from algebra.extractor import extract_sequence
+from algebra.extractor import to_hgvs
 
 fasta_sequence = """\
 >sp|P12345|MY_PROT Some protein description
@@ -96,12 +98,14 @@ def test_same_protein():
     )
 
     assert editlist == []
+    canonical, _ = extract_sequence(query, target)
+    assert to_hgvs(canonical, query) == "="
 
 
 def test_protein_inserts():
 
     target = "MKTAYIAKQRQISFVKSHFSRQ"
-    query = "MKTAYIAKQISFVKSHFSR"
+    query = "MKTAYIAKQ  ISFVKSHFSR ".replace(" ", "")
 
     aln, editlist = align(target, query)
 
@@ -112,11 +116,13 @@ def test_protein_inserts():
     )
 
     assert editlist == ["Insert QR at position 9-10", "Insert Q at position 22"]
+    canonical, _ = extract_sequence(query, target)
+    assert to_hgvs(canonical, query) == "[9_10insRQ;19_20insQ]"
 
 
 def test_protein3():
 
-    target = "MKTAYIAKQISFVKSHFSR"
+    target = "MKTAYIAKQ  ISFVKSHFSR ".replace(" ", "")
     query = "MKTAYIAKQRQISFVKSHFSRQ"
 
     aln, editlist = align(target, query)
@@ -128,6 +134,8 @@ def test_protein3():
     )
 
     assert editlist == ["Delete QR after position 8", "Delete Q after position 19"]
+    canonical, _ = extract_sequence(query, target)
+    assert to_hgvs(canonical, query) == "[10_11del;22del]"
 
 
 def test_protein_insert_substitute_delete():
@@ -148,3 +156,5 @@ def test_protein_insert_substitute_delete():
         "Substitute QRQ → KKK from position 10 to 12",
         "Delete Q after position 22",
     ]
+    canonical, _ = extract_sequence(query, target)
+    assert to_hgvs(canonical, target) == "[9_11K[4];22del]"
