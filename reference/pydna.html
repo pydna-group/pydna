@@ -525,6 +525,8 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.shift_melt_cutsite_pairs"><code class="docutils literal notranslate"><span class="pre">Dseq.shift_melt_cutsite_pairs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.get_parts"><code class="docutils literal notranslate"><span class="pre">Dseq.get_parts()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.join"><code class="docutils literal notranslate"><span class="pre">Dseq.join()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.get_left_end_as_cutsite"><code class="docutils literal notranslate"><span class="pre">Dseq.get_left_end_as_cutsite()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.get_right_end_as_cutsite"><code class="docutils literal notranslate"><span class="pre">Dseq.get_right_end_as_cutsite()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.read"><code class="docutils literal notranslate"><span class="pre">read()</span></code></a></li>
@@ -794,6 +796,8 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.shift_melt_cutsite_pairs"><code class="docutils literal notranslate"><span class="pre">Dseq.shift_melt_cutsite_pairs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.get_parts"><code class="docutils literal notranslate"><span class="pre">Dseq.get_parts()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.join"><code class="docutils literal notranslate"><span class="pre">Dseq.join()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.get_left_end_as_cutsite"><code class="docutils literal notranslate"><span class="pre">Dseq.get_left_end_as_cutsite()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.get_right_end_as_cutsite"><code class="docutils literal notranslate"><span class="pre">Dseq.get_right_end_as_cutsite()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -4884,6 +4888,80 @@ single_watson=’’, single_crick=’’)</p>
 </div>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="pydna.all.Dseq.get_left_end_as_cutsite">
+<span class="sig-name descname"><span class="pre">get_left_end_as_cutsite</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">AbstractCut</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">_cas</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/dseq.html#Dseq.get_left_end_as_cutsite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.Dseq.get_left_end_as_cutsite" title="Link to this definition">#</a></dt>
+<dd><p>Return the left (5′ Watson) terminus as a cutsite.</p>
+<p>The result has the same shape as entries from <a class="reference internal" href="#pydna.all.Dseq.get_cutsites" title="pydna.all.Dseq.get_cutsites"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_cutsites()</span></code></a>:
+<code class="docutils literal notranslate"><span class="pre">((cut_watson,</span> <span class="pre">ovhg),</span> <span class="pre">None)</span></code>, using <a class="reference internal" href="#pydna.all.Dseq.left_ovhg" title="pydna.all.Dseq.left_ovhg"><code class="xref py py-attr docutils literal notranslate"><span class="pre">left_ovhg</span></code></a> for the stagger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If the sequence is circular</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Blunt left end:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;TTT&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">get_left_end_as_cutsite</span><span class="p">()</span>
+<span class="go">((0, 0), None)</span>
+</pre></div>
+</div>
+<p>Crick 5’ overhang on the left (positive <code class="docutils literal notranslate"><span class="pre">ovhg</span></code>):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;AA&quot;</span><span class="p">,</span> <span class="s2">&quot;TTT&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">get_left_end_as_cutsite</span><span class="p">()</span>
+<span class="go">((1, 1), None)</span>
+</pre></div>
+</div>
+<p>Watson 5’ overhang on the left (negative <code class="docutils literal notranslate"><span class="pre">ovhg</span></code>):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;TT&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">get_left_end_as_cutsite</span><span class="p">()</span>
+<span class="go">((0, -1), None)</span>
+</pre></div>
+</div>
+<p>Circular molecules have no ends:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span><span class="p">,</span> <span class="s2">&quot;ttt&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">get_left_end_as_cutsite</span><span class="p">()</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ValueError</span>: <span class="n">Circular sequences do not have a left end</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydna.all.Dseq.get_right_end_as_cutsite">
+<span class="sig-name descname"><span class="pre">get_right_end_as_cutsite</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">AbstractCut</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">_cas</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/dseq.html#Dseq.get_right_end_as_cutsite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.all.Dseq.get_right_end_as_cutsite" title="Link to this definition">#</a></dt>
+<dd><p>Return the right (3’ Watson) terminus as a cutsite.</p>
+<p>The result has the same shape as entries from <a class="reference internal" href="#pydna.all.Dseq.get_cutsites" title="pydna.all.Dseq.get_cutsites"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_cutsites()</span></code></a>:
+<code class="docutils literal notranslate"><span class="pre">((cut_watson,</span> <span class="pre">ovhg),</span> <span class="pre">None)</span></code>, using <a class="reference internal" href="#pydna.all.Dseq.right_ovhg" title="pydna.all.Dseq.right_ovhg"><code class="xref py py-attr docutils literal notranslate"><span class="pre">right_ovhg</span></code></a> for the stagger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If the sequence is circular</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Blunt right end:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;TTT&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">get_right_end_as_cutsite</span><span class="p">()</span>
+<span class="go">((3, 0), None)</span>
+</pre></div>
+</div>
+<p>Watson 3’ overhang on the right (positive <code class="docutils literal notranslate"><span class="pre">right_ovhg</span></code>):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;TT&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">get_right_end_as_cutsite</span><span class="p">()</span>
+<span class="go">((3, 1), None)</span>
+</pre></div>
+</div>
+<p>Watson 3’ overhang on the right (negative <code class="docutils literal notranslate"><span class="pre">right_ovhg</span></code>):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;AA&quot;</span><span class="p">,</span> <span class="s2">&quot;TTT&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">get_right_end_as_cutsite</span><span class="p">()</span>
+<span class="go">((2, -1), None)</span>
+</pre></div>
+</div>
+<p>Circular molecules have no ends:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span><span class="p">,</span> <span class="s2">&quot;ttt&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">get_right_end_as_cutsite</span><span class="p">()</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ValueError</span>: <span class="n">Circular sequences do not have a right end</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -7243,11 +7321,11 @@ reversed insert (<code class="docutils literal notranslate"><span class="pre">tg
 <span class="go">TTAAGtttCAGCTGtggaC</span>
 </pre></div>
 </div>
-<p>Note that passing a pre-cut fragment will not work.</p>
+<p>Note that passing a pre-cut fragment also works.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">restriction_products</span> <span class="o">=</span> <span class="n">insert</span><span class="o">.</span><span class="n">cut</span><span class="p">([</span><span class="n">EcoRI</span><span class="p">,</span> <span class="n">SalI</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cut_insert</span> <span class="o">=</span> <span class="n">restriction_products</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">restriction_ligation_assembly</span><span class="p">([</span><span class="n">backbone</span><span class="p">,</span> <span class="n">cut_insert</span><span class="p">],</span> <span class="p">[</span><span class="n">EcoRI</span><span class="p">,</span> <span class="n">SalI</span><span class="p">],</span> <span class="n">circular_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="go">[]</span>
+<span class="go">[Dseqrecord(o22), Dseqrecord(o19)]</span>
 </pre></div>
 </div>
 <p>It also works with a single fragment, for circularization:</p>
@@ -10851,6 +10929,80 @@ single_watson=’’, single_crick=’’)</p>
 <span class="go">Dseq(-7)</span>
 <span class="go">GaAaTaC</span>
 <span class="go">CtTtAtG</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydna.dseq.Dseq.get_left_end_as_cutsite">
+<span class="sig-name descname"><span class="pre">get_left_end_as_cutsite</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">AbstractCut</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">_cas</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/dseq.html#Dseq.get_left_end_as_cutsite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.dseq.Dseq.get_left_end_as_cutsite" title="Link to this definition">#</a></dt>
+<dd><p>Return the left (5′ Watson) terminus as a cutsite.</p>
+<p>The result has the same shape as entries from <a class="reference internal" href="#pydna.dseq.Dseq.get_cutsites" title="pydna.dseq.Dseq.get_cutsites"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_cutsites()</span></code></a>:
+<code class="docutils literal notranslate"><span class="pre">((cut_watson,</span> <span class="pre">ovhg),</span> <span class="pre">None)</span></code>, using <a class="reference internal" href="#pydna.dseq.Dseq.left_ovhg" title="pydna.dseq.Dseq.left_ovhg"><code class="xref py py-attr docutils literal notranslate"><span class="pre">left_ovhg</span></code></a> for the stagger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If the sequence is circular</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Blunt left end:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;TTT&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">get_left_end_as_cutsite</span><span class="p">()</span>
+<span class="go">((0, 0), None)</span>
+</pre></div>
+</div>
+<p>Crick 5’ overhang on the left (positive <code class="docutils literal notranslate"><span class="pre">ovhg</span></code>):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;AA&quot;</span><span class="p">,</span> <span class="s2">&quot;TTT&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">get_left_end_as_cutsite</span><span class="p">()</span>
+<span class="go">((1, 1), None)</span>
+</pre></div>
+</div>
+<p>Watson 5’ overhang on the left (negative <code class="docutils literal notranslate"><span class="pre">ovhg</span></code>):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;TT&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">get_left_end_as_cutsite</span><span class="p">()</span>
+<span class="go">((0, -1), None)</span>
+</pre></div>
+</div>
+<p>Circular molecules have no ends:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span><span class="p">,</span> <span class="s2">&quot;ttt&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">get_left_end_as_cutsite</span><span class="p">()</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ValueError</span>: <span class="n">Circular sequences do not have a left end</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydna.dseq.Dseq.get_right_end_as_cutsite">
+<span class="sig-name descname"><span class="pre">get_right_end_as_cutsite</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/typing.html#typing.Tuple" title="(in Python v3.8)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">AbstractCut</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">_cas</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydna/dseq.html#Dseq.get_right_end_as_cutsite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.dseq.Dseq.get_right_end_as_cutsite" title="Link to this definition">#</a></dt>
+<dd><p>Return the right (3’ Watson) terminus as a cutsite.</p>
+<p>The result has the same shape as entries from <a class="reference internal" href="#pydna.dseq.Dseq.get_cutsites" title="pydna.dseq.Dseq.get_cutsites"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_cutsites()</span></code></a>:
+<code class="docutils literal notranslate"><span class="pre">((cut_watson,</span> <span class="pre">ovhg),</span> <span class="pre">None)</span></code>, using <a class="reference internal" href="#pydna.dseq.Dseq.right_ovhg" title="pydna.dseq.Dseq.right_ovhg"><code class="xref py py-attr docutils literal notranslate"><span class="pre">right_ovhg</span></code></a> for the stagger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If the sequence is circular</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Blunt right end:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseq</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseq</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;TTT&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">get_right_end_as_cutsite</span><span class="p">()</span>
+<span class="go">((3, 0), None)</span>
+</pre></div>
+</div>
+<p>Watson 3’ overhang on the right (positive <code class="docutils literal notranslate"><span class="pre">right_ovhg</span></code>):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;TT&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">get_right_end_as_cutsite</span><span class="p">()</span>
+<span class="go">((3, 1), None)</span>
+</pre></div>
+</div>
+<p>Watson 3’ overhang on the right (negative <code class="docutils literal notranslate"><span class="pre">right_ovhg</span></code>):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;AA&quot;</span><span class="p">,</span> <span class="s2">&quot;TTT&quot;</span><span class="p">,</span> <span class="n">ovhg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">get_right_end_as_cutsite</span><span class="p">()</span>
+<span class="go">((2, -1), None)</span>
+</pre></div>
+</div>
+<p>Circular molecules have no ends:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Dseq</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span><span class="p">,</span> <span class="s2">&quot;ttt&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">get_right_end_as_cutsite</span><span class="p">()</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ValueError</span>: <span class="n">Circular sequences do not have a right end</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -16207,6 +16359,8 @@ the location spans the entire sequence (it’s not empty).
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.shift_melt_cutsite_pairs"><code class="docutils literal notranslate"><span class="pre">Dseq.shift_melt_cutsite_pairs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.get_parts"><code class="docutils literal notranslate"><span class="pre">Dseq.get_parts()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.join"><code class="docutils literal notranslate"><span class="pre">Dseq.join()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.get_left_end_as_cutsite"><code class="docutils literal notranslate"><span class="pre">Dseq.get_left_end_as_cutsite()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.Dseq.get_right_end_as_cutsite"><code class="docutils literal notranslate"><span class="pre">Dseq.get_right_end_as_cutsite()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.all.read"><code class="docutils literal notranslate"><span class="pre">read()</span></code></a></li>
@@ -16476,6 +16630,8 @@ the location spans the entire sequence (it’s not empty).
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.shift_melt_cutsite_pairs"><code class="docutils literal notranslate"><span class="pre">Dseq.shift_melt_cutsite_pairs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.get_parts"><code class="docutils literal notranslate"><span class="pre">Dseq.get_parts()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.join"><code class="docutils literal notranslate"><span class="pre">Dseq.join()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.get_left_end_as_cutsite"><code class="docutils literal notranslate"><span class="pre">Dseq.get_left_end_as_cutsite()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.dseq.Dseq.get_right_end_as_cutsite"><code class="docutils literal notranslate"><span class="pre">Dseq.get_right_end_as_cutsite()</span></code></a></li>
 </ul>
 </li>
 </ul>

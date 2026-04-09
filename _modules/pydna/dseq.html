@@ -3548,6 +3548,97 @@
         <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">it</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">+</span> <span class="bp">self</span> <span class="o">+</span> <span class="n">x</span>
         <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="Dseq.get_left_end_as_cutsite">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.get_left_end_as_cutsite">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_left_end_as_cutsite</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CutSiteType</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the left (5′ Watson) terminus as a cutsite.</span>
+
+<span class="sd">        The result has the same shape as entries from :meth:`get_cutsites`:</span>
+<span class="sd">        ``((cut_watson, ovhg), None)``, using :attr:`left_ovhg` for the stagger.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the sequence is circular</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        Blunt left end:</span>
+
+<span class="sd">        &gt;&gt;&gt; from pydna.dseq import Dseq</span>
+<span class="sd">        &gt;&gt;&gt; Dseq(&quot;AAA&quot;, &quot;TTT&quot;, ovhg=0).get_left_end_as_cutsite()</span>
+<span class="sd">        ((0, 0), None)</span>
+
+<span class="sd">        Crick 5&#39; overhang on the left (positive ``ovhg``):</span>
+
+<span class="sd">        &gt;&gt;&gt; Dseq(&quot;AA&quot;, &quot;TTT&quot;, ovhg=1).get_left_end_as_cutsite()</span>
+<span class="sd">        ((1, 1), None)</span>
+
+<span class="sd">        Watson 5&#39; overhang on the left (negative ``ovhg``):</span>
+
+<span class="sd">        &gt;&gt;&gt; Dseq(&quot;AAA&quot;, &quot;TT&quot;, ovhg=-1).get_left_end_as_cutsite()</span>
+<span class="sd">        ((0, -1), None)</span>
+
+<span class="sd">        Circular molecules have no ends:</span>
+
+<span class="sd">        &gt;&gt;&gt; Dseq(&quot;aaa&quot;, &quot;ttt&quot;, circular=True).get_left_end_as_cutsite()</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">        ValueError: Circular sequences do not have a left end</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Circular sequences do not have a left end&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ovhg</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">left_ovhg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_ovhg</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_ovhg</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Dseq.get_right_end_as_cutsite">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseq.get_right_end_as_cutsite">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_right_end_as_cutsite</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CutSiteType</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the right (3&#39; Watson) terminus as a cutsite.</span>
+
+<span class="sd">        The result has the same shape as entries from :meth:`get_cutsites`:</span>
+<span class="sd">        ``((cut_watson, ovhg), None)``, using :attr:`right_ovhg` for the stagger.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the sequence is circular</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        Blunt right end:</span>
+
+<span class="sd">        &gt;&gt;&gt; from pydna.dseq import Dseq</span>
+<span class="sd">        &gt;&gt;&gt; Dseq(&quot;AAA&quot;, &quot;TTT&quot;, ovhg=0).get_right_end_as_cutsite()</span>
+<span class="sd">        ((3, 0), None)</span>
+
+<span class="sd">        Watson 3&#39; overhang on the right (positive ``right_ovhg``):</span>
+
+<span class="sd">        &gt;&gt;&gt; Dseq(&quot;AAA&quot;, &quot;TT&quot;, ovhg=0).get_right_end_as_cutsite()</span>
+<span class="sd">        ((3, 1), None)</span>
+
+<span class="sd">        Watson 3&#39; overhang on the right (negative ``right_ovhg``):</span>
+
+<span class="sd">        &gt;&gt;&gt; Dseq(&quot;AA&quot;, &quot;TTT&quot;, ovhg=0).get_right_end_as_cutsite()</span>
+<span class="sd">        ((2, -1), None)</span>
+
+<span class="sd">        Circular molecules have no ends:</span>
+
+<span class="sd">        &gt;&gt;&gt; Dseq(&quot;aaa&quot;, &quot;ttt&quot;, circular=True).get_right_end_as_cutsite()</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">        ValueError: Circular sequences do not have a right end</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Circular sequences do not have a right end&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_ovhg</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_ovhg</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_ovhg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_ovhg</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
 </div>
 
 </pre></div>
