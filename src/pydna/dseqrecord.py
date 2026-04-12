@@ -812,19 +812,19 @@ class Dseqrecord(SeqRecord):
 
     def __add__(self, other):
         if hasattr(other, "seq") and hasattr(other.seq, "watson"):
+            # other is likely another Dseqrecord
             other = copy.deepcopy(other)
-            other_five_prime = other.seq.five_prime_end()
-            if other_five_prime[0] == "5'":
-                # add other.seq.ovhg
-                for f in other.features:
-                    f.location = f.location + other.seq.ovhg
-            elif other_five_prime[0] == "3'":
-                # subtract other.seq.ovhg (sign change)
-                for f in other.features:
-                    f.location = f.location + (-other.seq.ovhg)
-
+            newseq = self.seq + other.seq
+            # offset is the length of the self Dseq object added to the
+            # other Dseq object minus the sum of each length
+            # offset is <= 0
+            offset = len(newseq) - (len(self) + len(other))
+            for f in other.features:
+                # adding an integer to a feature location shifts it.
+                f.location = f.location + offset
             answer = Dseqrecord(SeqRecord.__add__(self, other))
             answer.n = min(self.n, other.n)
+            answer.seq = newseq
         else:
             answer = Dseqrecord(SeqRecord.__add__(self, Dseqrecord(other)))
             answer.n = self.n
