@@ -812,7 +812,8 @@ class Dseqrecord(SeqRecord):
 
     def __add__(self, other):
         if hasattr(other, "seq") and hasattr(other.seq, "watson"):
-            # other is likely another Dseqrecord
+            # other is likely another Dseqrecord with a Dseq object
+            # deepcopy is necessary since we will change other's features
             other = copy.deepcopy(other)
             newseq = self.seq + other.seq
             # offset is the length of the self Dseq object added to the
@@ -822,12 +823,13 @@ class Dseqrecord(SeqRecord):
             for f in other.features:
                 # adding an integer to a feature location shifts it.
                 f.location = f.location + offset
-            answer = Dseqrecord(SeqRecord.__add__(self, other))
-            answer.n = min(self.n, other.n)
-            answer.seq = newseq
         else:
-            answer = Dseqrecord(SeqRecord.__add__(self, Dseqrecord(other)))
-            answer.n = self.n
+            # If other is not a Dseqrecord with a Dseq object, the Dseq class
+            # handles the result of adding for consistency.
+            newseq = self.seq + other
+        answer = Dseqrecord(SeqRecord.__add__(self, other))
+        answer.n = min(self.n, getattr(other, "n", self.n))
+        answer.seq = newseq
         return answer
 
     def __mul__(self, number):
