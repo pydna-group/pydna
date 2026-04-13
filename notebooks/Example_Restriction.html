@@ -991,8 +991,8 @@ ORIGIN
 <span class="n">amplicon</span> <span class="o">=</span> <span class="n">primer_design</span><span class="p">(</span><span class="n">pombe_chromosome_I</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">gene</span><span class="p">):</span><span class="nb">max</span><span class="p">(</span><span class="n">gene</span><span class="p">)],</span> <span class="n">target_tm</span><span class="o">=</span><span class="mi">55</span><span class="p">)</span>
 
 <span class="n">fwd_align</span><span class="p">,</span> <span class="n">rvs_align</span> <span class="o">=</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">primers</span><span class="p">()</span>
-<span class="n">fwd_primer_ase1</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;ACCATGTCGAC&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">fwd_align</span> <span class="c1"># Adding a SalI cut site</span>
-<span class="n">rvs_primer_ase1</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;GGCGCGCCAT&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">rvs_align</span> <span class="c1"># Adding a AscI cut site</span>
+<span class="n">fwd_primer_ase1</span> <span class="o">=</span> <span class="s2">&quot;ACCATGTCGAC&quot;</span> <span class="o">+</span> <span class="n">fwd_align</span> <span class="c1"># Adding a SalI cut site</span>
+<span class="n">rvs_primer_ase1</span> <span class="o">=</span> <span class="s2">&quot;GGCGCGCCAT&quot;</span> <span class="o">+</span> <span class="n">rvs_align</span> <span class="c1"># Adding a AscI cut site</span>
 
 <span class="c1"># Printing out the primers</span>
 
@@ -1022,7 +1022,7 @@ GGCGCGCCATTAAAAGCCTTCTTCTCCC , Tm:  58.36015907667411
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LOCUS       2263bp_PCR_prod         2263 bp    DNA     linear   UNK 01-JAN-1980
-DEFINITION  pcr_product_description_description.
+DEFINITION  pcr_product_f2242 CU329670.1_r2242 CU329670.1.
 ACCESSION   2263bp
 VERSION     2263bp
 DBLINK      BioProject: PRJNA13836
@@ -1053,13 +1053,13 @@ FEATURES             Location/Qualifiers
                      NVPLSPPKQRVVNEHALNIMSEKLQRTNLKEQTPEMDIENSSQNLPFSPMKISPIRASP
                      VKTIPSSPSPTTNIFSAPLNNITNCTPMEDEWGEEGF&quot;
      primer_bind     12..31
-                     /label=&quot;name&quot;
+                     /label=&quot;f2242&quot;
                      /PCR_conditions=&quot;primer
                      sequence:ACCATGTCGACATGCAAACAGTAATGATGGA&quot;
                      /ApEinfo_fwdcolor=&quot;#baffa3&quot;
                      /ApEinfo_revcolor=&quot;#ffbaba&quot;
      primer_bind     complement(2236..2254)
-                     /label=&quot;name&quot;
+                     /label=&quot;r2242&quot;
                      /PCR_conditions=&quot;primer
                      sequence:GGCGCGCCATTAAAAGCCTTCTTCTCCC&quot;
                      /ApEinfo_fwdcolor=&quot;#baffa3&quot;
@@ -1252,13 +1252,13 @@ FEATURES             Location/Qualifiers
                      NVPLSPPKQRVVNEHALNIMSEKLQRTNLKEQTPEMDIENSSQNLPFSPMKISPIRASP
                      VKTIPSSPSPTTNIFSAPLNNITNCTPMEDEWGEEGF&quot;
      primer_bind     3918..3937
-                     /label=&quot;name&quot;
+                     /label=&quot;f2242&quot;
                      /PCR_conditions=&quot;primer
                      sequence:ACCATGTCGACATGCAAACAGTAATGATGGA&quot;
                      /ApEinfo_fwdcolor=&quot;#baffa3&quot;
                      /ApEinfo_revcolor=&quot;#ffbaba&quot;
      primer_bind     complement(6142..6160)
-                     /label=&quot;name&quot;
+                     /label=&quot;r2242&quot;
                      /PCR_conditions=&quot;primer
                      sequence:GGCGCGCCATTAAAAGCCTTCTTCTCCC&quot;
                      /ApEinfo_fwdcolor=&quot;#baffa3&quot;

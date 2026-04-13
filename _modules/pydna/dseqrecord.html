@@ -1168,22 +1168,24 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;seq&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="s2">&quot;watson&quot;</span><span class="p">):</span>
+            <span class="c1"># other is likely another Dseqrecord with a Dseq object</span>
+            <span class="c1"># deepcopy is necessary since we will change other&#39;s features</span>
             <span class="n">other</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-            <span class="n">other_five_prime</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">five_prime_end</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">other_five_prime</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;5&#39;&quot;</span><span class="p">:</span>
-                <span class="c1"># add other.seq.ovhg</span>
-                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span>
-            <span class="k">elif</span> <span class="n">other_five_prime</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;3&#39;&quot;</span><span class="p">:</span>
-                <span class="c1"># subtract other.seq.ovhg (sign change)</span>
-                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="n">other</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">ovhg</span><span class="p">)</span>
-
-            <span class="n">answer</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">SeqRecord</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span>
-            <span class="n">answer</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">newseq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">seq</span>
+            <span class="c1"># offset is the length of the self Dseq object added to the</span>
+            <span class="c1"># other Dseq object minus the sum of each length</span>
+            <span class="c1"># offset is &lt;= 0</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">newseq</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
+                <span class="c1"># adding an integer to a feature location shifts it.</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="n">offset</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">answer</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">SeqRecord</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
-            <span class="n">answer</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span>
+            <span class="c1"># If other is not a Dseqrecord with a Dseq object, the Dseq class</span>
+            <span class="c1"># handles the result of adding for consistency.</span>
+            <span class="n">newseq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span> <span class="o">+</span> <span class="n">other</span>
+        <span class="n">answer</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">SeqRecord</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span>
+        <span class="n">answer</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">))</span>
+        <span class="n">answer</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">newseq</span>
         <span class="k">return</span> <span class="n">answer</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
