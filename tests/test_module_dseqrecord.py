@@ -375,10 +375,10 @@ def test_revcomp():
     assert rc.features[0].location.strand is None
 
 
-def test_m():
+# def test_m():
 
-    s = Dseqrecord("A" * 5000)
-    assert f"{s.m():.3e}" == "1.544e-07"
+#     s = Dseqrecord("A" * 5000)
+#     assert f"{s.m():.3e}" == "1.544e-07"
 
 
 def test_extract_feature():

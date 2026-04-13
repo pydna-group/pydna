@@ -137,7 +137,7 @@ class Dseqrecord(SeqRecord):
         record,
         *args,
         circular=None,
-        n=5e-14,  # mol ( = 0.05 pmol)
+        # n=5e-14,  # mol ( = 0.05 pmol)
         source=None,
         **kwargs,
     ):
@@ -201,7 +201,7 @@ class Dseqrecord(SeqRecord):
             raise ValueError("don't know what to do with {}".format(record))
 
         self.map_target = None
-        self.n = n  # amount, set to 5E-14 which is 5 pmols
+        # self.n = n  # amount, set to 5E-14 which is 5 pmols
         self.annotations.update({"molecule_type": "DNA"})
         self.annotations.setdefault("source", "")
         self.annotations.setdefault("organism", ".")
@@ -270,11 +270,11 @@ class Dseqrecord(SeqRecord):
         Use :meth:`looped`"""
         return self.seq.circular
 
-    def m(self):
-        """This method returns the mass of the DNA molecule in grams. This is
-        calculated as the product between the molecular weight of the Dseq object
-        and the"""
-        return self.seq.mw() * self.n  # Da(g/mol) * mol = g
+    #    def m(self):
+    #        """This method returns the mass of the DNA molecule in grams. This is
+    #        calculated as the product between the molecular weight of the Dseq object
+    #        and the"""
+    #        return self.seq.mw() * self.n  # Da(g/mol) * mol = g
 
     def extract_feature(self, n):
         """Extracts a feature and creates a new Dseqrecord object.
@@ -828,7 +828,7 @@ class Dseqrecord(SeqRecord):
             # handles the result of adding for consistency.
             newseq = self.seq + other
         answer = Dseqrecord(SeqRecord.__add__(self, other))
-        answer.n = min(self.n, getattr(other, "n", self.n))
+        # answer.n = min(self.n, getattr(other, "n", self.n))
         answer.seq = newseq
         return answer
 

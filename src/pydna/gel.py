@@ -28,11 +28,18 @@ def interpolator(mwstd):
 
 
 def gel(
-    samples=None, gel_length=600, margin=50, interpolator=interpolator(mwstd=_mwstd)
+    samples=None,
+    weights=None,
+    gel_length=600,
+    margin=50,
+    interpolator=interpolator(mwstd=_mwstd),
 ):
     import numpy as np
     from PIL import Image
     from PIL import ImageDraw
+
+    if weights is None:
+        weights = [[5e-14 for band in lane] for lane in samples]
 
     """docstring."""
     max_intensity = 256
