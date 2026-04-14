@@ -1842,7 +1842,6 @@ class Assembly:
             for pair in zipped:
                 pairs.extend(list(itertools.product(*pair)))
             allowed_location_pairs[node] = pairs
-            # print(node, allowed_location_pairs[node])
         fragment_assembly = edge_representation2subfragment_representation(
             assembly, is_circular
         )
