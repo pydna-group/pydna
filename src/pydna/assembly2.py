@@ -20,6 +20,7 @@ from pydna.utils import (
     sum_is_sticky,
     limit_iterator,
     create_location,
+    deduplicate,
 )
 from pydna._pretty import pretty_str as ps
 from pydna.common_sub_strings import common_sub_strings as common_sub_strings_str
@@ -213,6 +214,13 @@ def restriction_ligation_overlap(
     #         cuts_x.append(((len(seqx), 0), None))
     #     if not seqy.circular:
     #         cuts_y.append(((0, 0), None))
+
+    if partial:
+        warnings.warn(
+            "Partial overlaps can return wrong products, see https://github.com/pydna-group/pydna/issues/426",
+            category=UserWarning,
+            stacklevel=2,
+        )
 
     # Include edges that are not blunt ends
     if not seqx.circular and seqx.seq.right_ovhg != 0:
@@ -1812,37 +1820,29 @@ class Assembly:
 
         We would only want assemblies that contain subfragments start-x, x-y, y-z, z-end, and not start-x, y-end, for instance.
         The latter would indicate that the fragment was partially digested.
+
+        This does NOT work for partial overlaps, see https://github.com/pydna-group/pydna/issues/426 and get_locations_on_fragments.
         """
 
         locations_on_fragments = self.get_locations_on_fragments()
-        for node in locations_on_fragments:
-            fragment_len = len(self.fragments[abs(node) - 1])
-            for side in ["left", "right"]:
-                locations_on_fragments[node][side] = gather_overlapping_locations(
-                    locations_on_fragments[node][side], fragment_len
-                )
-
         allowed_location_pairs = dict()
         for node in locations_on_fragments:
+            fragment_len = len(self.fragments[abs(node) - 1])
+            locations = (
+                locations_on_fragments[node]["left"]
+                + locations_on_fragments[node]["right"]
+            )
+            gathered = gather_overlapping_locations(locations, fragment_len)
+            gathered = [tuple(deduplicate(group, hashable=False)) for group in gathered]
             if not is_circular:
-                # We add the existing ends of the fragment
-                left = [(None,)] + locations_on_fragments[node]["left"]
-                right = locations_on_fragments[node]["right"] + [(None,)]
-
+                zipped = zip([(None,)] + gathered, gathered + [(None,)], strict=True)
             else:
-                # For circular assemblies, we add the first location at the end
-                # to allow for the last edge to be used
-                left = locations_on_fragments[node]["left"]
-                right = (
-                    locations_on_fragments[node]["right"][1:]
-                    + locations_on_fragments[node]["right"][:1]
-                )
-
+                zipped = zip(gathered, gathered[1:] + gathered[:1], strict=True)
             pairs = list()
-            for pair in zip(left, right):
-                pairs += list(itertools.product(*pair))
+            for pair in zipped:
+                pairs.extend(list(itertools.product(*pair)))
             allowed_location_pairs[node] = pairs
-
+            # print(node, allowed_location_pairs[node])
         fragment_assembly = edge_representation2subfragment_representation(
             assembly, is_circular
         )

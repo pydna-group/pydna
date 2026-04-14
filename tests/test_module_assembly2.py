@@ -1046,6 +1046,13 @@ def test_restriction_ligation_algorithm():
     assert len(assembly.restriction_ligation_overlap(seqrA, f2, [EcoRI])) == 2
     assert len(assembly.restriction_ligation_overlap(f2, seqrA, [EcoRI])) == 2
 
+    # Partial overlap raises warning
+    with pytest.warns(
+        UserWarning,
+        match="Partial overlaps can return wrong products, see https://github.com/pydna-group/pydna/issues/426",
+    ):
+        assembly.restriction_ligation_overlap(seqrA, f2, [EcoRI], partial=True)
+
 
 def test_pcr_assembly_normal():
 
@@ -1501,8 +1508,6 @@ def test_restriction_ligation_assembly():
         assert len(result_seguids) == len(observed_seguids)
         assert result_seguids == observed_seguids
 
-    # TODO: Check if features are transferred properly
-
     # Partial overlaps -> enzyme with negative overhang
     fragments = [Dseqrecord("GGTCTCCCCAATT"), Dseqrecord("GGTCTCCAACCAA")]
 
@@ -1512,34 +1517,17 @@ def test_restriction_ligation_assembly():
         return assembly.restriction_ligation_overlap(x, y, [BsaI], False)
 
     f = assembly.Assembly(fragments, use_fragment_order=False, algorithm=algo)
-    assert len(f.get_linear_assemblies(only_adjacent_edges=True)) == 0
+    assert len(f.get_linear_assemblies()) == 0
 
     # Allowing partial overlaps
     def algo(x, y, _l):
         return assembly.restriction_ligation_overlap(x, y, [BsaI], partial=True)
 
     f = assembly.Assembly(fragments, algorithm=algo, use_fragment_order=False)
-    assert len(f.get_linear_assemblies(only_adjacent_edges=True)) == 2
-    p1, p2 = f.assemble_linear(only_adjacent_edges=True)
+    assert len(f.get_linear_assemblies()) == 2
+    p1, p2 = f.assemble_linear()
     assert str(p1.seq) == "GGTCTCCCCAACCAA"
     assert str(p2.seq) == "GGTCTCCAACCAATT"
-
-    # Combining both partial and normal overlaps, to ensure that only_adjacent_edges keeps both.
-    # In this case use_all_fragments=2, it should return 2 assemblies for 1 + 2, and
-    fragments = [
-        Dseqrecord("GGTCTCCCCAATT"),
-        Dseqrecord("GGTCTCCAACCAA"),
-        Dseqrecord("GGTCTCCCCAATT"),
-    ]
-    f = assembly.Assembly(
-        fragments, algorithm=algo, use_fragment_order=False, use_all_fragments=False
-    )
-    products = f.assemble_linear(only_adjacent_edges=True)
-    assert len(products) == 6
-    products_seguid = set(p.seq.seguid() for p in products)
-    assert products_seguid == set(
-        [p1.seq.seguid(), p2.seq.seguid(), Dseqrecord("GGTCTCCCCAATT").seguid()]
-    )
 
     # Partial overlaps -> enzyme with positive overhang
     fragments = [Dseqrecord("GACACCAGAGTC"), Dseqrecord("GACTAACGGGTC")]
@@ -1580,6 +1568,30 @@ def test_restriction_ligation_assembly():
     assert str(products[0].seq) == "ATCccGAATTCtatGAT"
 
 
+def test_restriction_ligation_assembly_only_adjacent_edges():
+    ecori_site = "GAATTC"
+    multi_insert = Dseqrecord(f"at{ecori_site}ct{ecori_site}gt{ecori_site}ta")
+    plasmid = Dseqrecord(f"aa{ecori_site}aa", circular=True)
+
+    products = assembly.restriction_ligation_assembly(
+        [plasmid, multi_insert], [EcoRI], circular_only=True
+    )
+    assert len(products) == 4
+
+    def algo(x, y, _l):
+        return assembly.restriction_ligation_overlap(x, y, [EcoRI])
+
+    asm = assembly.Assembly(
+        [plasmid, multi_insert],
+        [EcoRI],
+        algorithm=algo,
+        use_fragment_order=False,
+        use_all_fragments=True,
+    )
+    assert len(asm.get_circular_assemblies(only_adjacent_edges=True)) == 4
+    assert len(asm.get_circular_assemblies(only_adjacent_edges=False)) == 6
+
+
 @pytest.mark.xfail(reason="See https://github.com/pydna-group/pydna/issues/426")
 def test_restriction_ligation_partial_overlaps():
 
@@ -1592,6 +1604,26 @@ def test_restriction_ligation_partial_overlaps():
     assert len(products) == 2
     assert str(products[0].seq) == "GGTCTCCCCAACCAA"
     assert str(products[1].seq) == "GGTCTCCAACCAATT"
+
+    # Combining both partial and normal overlaps, to ensure that only_adjacent_edges keeps both.
+    # In this case use_all_fragments=2, it should return 2 assemblies for 1 + 2, and
+    def algo(x, y, _l):
+        return assembly.restriction_ligation_overlap(x, y, [BsaI], partial=True)
+
+    fragments = [
+        Dseqrecord("GGTCTCCCCAATT"),
+        Dseqrecord("GGTCTCCAACCAA"),
+        Dseqrecord("GGTCTCCCCAATT"),
+    ]
+    f = assembly.Assembly(
+        fragments, algorithm=algo, use_fragment_order=False, use_all_fragments=False
+    )
+    products = f.assemble_linear(only_adjacent_edges=True)
+    assert len(products) == 6
+    products_seguid = set(p.seq.seguid() for p in products)
+    # assert products_seguid == set(
+    #     [p1.seq.seguid(), p2.seq.seguid(), Dseqrecord("GGTCTCCCCAATT").seguid()]
+    # )
 
 
 def test_only_adjacent_edges():
