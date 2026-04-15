@@ -17,20 +17,20 @@ from opencloning_linkml.datamodel import (
 from pydantic import BaseModel, ValidationError
 
 from pydna.assembly2 import (
-    cre_lox_excision,
+    cre_lox_excision_or_inversion,
     cre_lox_integration,
     crispr_integration,
     fusion_pcr_assembly,
     gateway_assembly,
     gibson_assembly,
     golden_gate_assembly,
-    homologous_recombination_excision,
+    homologous_recombination_excision_or_inversion,
     homologous_recombination_integration,
     in_fusion_assembly,
     in_vivo_assembly,
     ligation_assembly,
     pcr_assembly,
-    recombinase_excision,
+    recombinase_excision_or_inversion,
     recombinase_integration,
 )
 from pydna.cre_lox import LOXP_SEQUENCE
@@ -188,7 +188,7 @@ site1 = "ATGCCCTAAaaTT"
 site2 = "AAaaTTTTTTTCCCT"
 recombinase = Recombinase(site1, site2)
 genome = Dseqrecord(f"cccccc{site1.upper()}aaaa{site2.upper()}cccccc", name="genome")
-recombinase_products = recombinase_excision(genome, recombinase)
+recombinase_products = recombinase_excision_or_inversion(genome, recombinase)
 recombinase_products[0].name = "excised_plasmid"
 recombinase_products[1].name = "remaining_genome"
 recombinase_product = recombinase_integration(
@@ -964,7 +964,7 @@ class ValidateTest(TestCase):
         genome = Dseqrecord(f"aaaaaa{homology}cccc", name="genome")
         insert_seq = Dseqrecord(f"{homology}tttt{homology}", name="insert")
         products = homologous_recombination_integration(genome, [insert_seq], 20)
-        products = homologous_recombination_excision(products[0], 20)
+        products = homologous_recombination_excision_or_inversion(products[0], 20)
         for p in products:
             p.validate_history()
 
@@ -972,7 +972,7 @@ class ValidateTest(TestCase):
         genome = Dseqrecord(
             f"cccccc{LOXP_SEQUENCE}aaaa{LOXP_SEQUENCE}cccccc", name="genome"
         )
-        products = cre_lox_excision(genome)
+        products = cre_lox_excision_or_inversion(genome)
         for p in products:
             p.validate_history()
 

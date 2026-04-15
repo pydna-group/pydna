@@ -2678,7 +2678,7 @@ def common_handle_insertion_fragments(
     return [genome] + inserts
 
 
-def common_function_excision_products(
+def common_function_excision_or_inversion_products(
     genome: Dseqrecord, limit: int | None, algorithm: Callable
 ) -> list[Dseqrecord]:
     """Common function to avoid code duplication for excision products.
@@ -2698,7 +2698,7 @@ def common_function_excision_products(
         List of excised DNA molecules
     """
     asm = SingleFragmentAssembly([genome], limit, algorithm)
-    return asm.assemble_circular() + asm.assemble_insertion()
+    return asm.assemble_circular() + asm.assemble_insertion() + asm.assemble_inversion()
 
 
 def homologous_recombination_integration(
@@ -2755,7 +2755,7 @@ def homologous_recombination_integration(
     return _recast_sources(products, HomologousRecombinationSource)
 
 
-def homologous_recombination_excision(
+def homologous_recombination_excision_or_inversion(
     genome: Dseqrecord, limit: int = 40
 ) -> list[Dseqrecord]:
     """Returns the products resulting from the excision of a fragment from the genome through
@@ -2788,8 +2788,22 @@ def homologous_recombination_excision(
     >>> products
     [Dseqrecord(o25), Dseqrecord(-32)]
     """
-    products = common_function_excision_products(genome, limit, common_sub_strings)
+    products = common_function_excision_or_inversion_products(
+        genome, limit, common_sub_strings
+    )
     return _recast_sources(products, HomologousRecombinationSource)
+
+
+def homologous_recombination_excision(
+    genome: Dseqrecord, limit: int = 40
+) -> list[Dseqrecord]:
+    warnings.warn(
+        "`homologous_recombination_excision` is deprecated and will be removed in a future "
+        "version; use `homologous_recombination_excision_or_inversion` instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return homologous_recombination_excision_or_inversion(genome, limit)
 
 
 def cre_lox_integration(
@@ -2852,8 +2866,8 @@ def cre_lox_integration(
     return _recast_sources(products, CreLoxRecombinationSource)
 
 
-def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
-    """Returns the products for CRE-lox excision.
+def cre_lox_excision_or_inversion(genome: Dseqrecord) -> list[Dseqrecord]:
+    """Returns the products for CRE-lox excision or inversion.
 
     Parameters
     ----------
@@ -2871,7 +2885,7 @@ def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
     Below an example of reversible integration and excision.
 
     >>> from pydna.dseqrecord import Dseqrecord
-    >>> from pydna.assembly2 import cre_lox_integration, cre_lox_excision
+    >>> from pydna.assembly2 import cre_lox_integration, cre_lox_excision_or_inversion
     >>> from pydna.cre_lox import LOXP_SEQUENCE
     >>> a = Dseqrecord(f"cccccc{LOXP_SEQUENCE}aaaaa")
     >>> b = Dseqrecord(f"{LOXP_SEQUENCE}bbbbb", circular=True)
@@ -2880,7 +2894,7 @@ def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
     >>> res = cre_lox_integration(a, [b])
     >>> res
     [Dseqrecord(-84)]
-    >>> res2 = cre_lox_excision(res[0])
+    >>> res2 = cre_lox_excision_or_inversion(res[0])
     >>> res2
     [Dseqrecord(o39), Dseqrecord(-45)]
 
@@ -2895,19 +2909,31 @@ def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
     >>> res = cre_lox_integration(a, [b])
     >>> res
     [Dseqrecord(-84)]
-    >>> res2 = cre_lox_excision(res[0])
+    >>> res2 = cre_lox_excision_or_inversion(res[0])
     >>> res2
     [Dseqrecord(o39), Dseqrecord(-45)]
     """
-    products = common_function_excision_products(genome, None, cre_loxP_overlap)
+    products = common_function_excision_or_inversion_products(
+        genome, None, cre_loxP_overlap
+    )
     return _recast_sources(products, CreLoxRecombinationSource)
 
 
-def recombinase_excision(
+def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
+    warnings.warn(
+        "`cre_lox_excision` is deprecated and will be removed in a future version; use "
+        "`cre_lox_excision_or_inversion` instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return cre_lox_excision_or_inversion(genome)
+
+
+def recombinase_excision_or_inversion(
     genome: Dseqrecord,
     recombinase: Recombinase | RecombinaseCollection,
 ) -> list[Dseqrecord]:
-    """Returns the products for recombinase-mediated excision.
+    """Returns the products for recombinase-mediated excision or inversion.
 
     Parameters
     ----------
@@ -2921,9 +2947,24 @@ def recombinase_excision(
     list[Dseqrecord]
         List containing excised plasmid and remaining genome sequence.
     """
-    products = common_function_excision_products(genome, None, recombinase.overlap)
+    products = common_function_excision_or_inversion_products(
+        genome, None, recombinase.overlap
+    )
     products = [recombinase.annotate(p) for p in products]
     return _recast_sources(products, RecombinaseSource, recombinases=recombinase)
+
+
+def recombinase_excision(
+    genome: Dseqrecord,
+    recombinase: Recombinase | RecombinaseCollection,
+) -> list[Dseqrecord]:
+    warnings.warn(
+        "`recombinase_excision` is deprecated and will be removed in a future version; use "
+        "`recombinase_excision_or_inversion` instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return recombinase_excision_or_inversion(genome, recombinase)
 
 
 def recombinase_integration(

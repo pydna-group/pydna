@@ -2716,6 +2716,25 @@ def test_in_vivo_assembly():
             assert products_str == expected_outputs
 
 
+def test_homologous_recombination_excision_deprecated_alias_warns_and_matches_new_name():
+    homology = "AAGTCCGTTCGTTTTACCTG"
+    genome = Dseqrecord(f"aaaaaa{homology}cccc", name="genome")
+    insert = Dseqrecord(f"{homology}tttt{homology}", name="insert")
+    integrated = assembly.homologous_recombination_integration(genome, [insert], 20)[0]
+
+    with pytest.warns(
+        DeprecationWarning, match="homologous_recombination_excision_or_inversion"
+    ):
+        products_old = assembly.homologous_recombination_excision(integrated, 20)
+    products_new = assembly.homologous_recombination_excision_or_inversion(
+        integrated, 20
+    )
+
+    assert [p.seq.seguid() for p in products_old] == [
+        p.seq.seguid() for p in products_new
+    ]
+
+
 def test_gateway_assembly():
 
     attB1 = "ACAACTTTGTACAAAAAAGCAGAAG"

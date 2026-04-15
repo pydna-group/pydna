@@ -5,8 +5,9 @@ from pydna.dseqrecord import Dseqrecord
 from pydna.dseq import Dseq
 from pydna.assembly2 import (
     Assembly,
-    recombinase_integration,
     recombinase_excision,
+    recombinase_integration,
+    recombinase_excision_or_inversion,
 )
 from pydna.recombinase import (
     _recombinase_homology_offset_and_length,
@@ -251,13 +252,28 @@ def test_recombinase_excision():
     rec = Recombinase(site1, site2)
     genome = Dseqrecord(f"cccccc{site1.upper()}tttt{site2.upper()}aaaaa")
 
-    products = recombinase_excision(genome, rec)
+    products = recombinase_excision_or_inversion(genome, rec)
     assert len(products) == 2
     assert products[0].seq.upper() == Dseq("AACTttttAA".upper())
     assert (
         products[1].seq.upper()
         == Dseq("ccccccATGCCCTAAAATTTTTTTCCCTaaaaa", circular=True).upper()
     )
+
+
+def test_recombinase_excision_deprecated_alias_warns_and_matches_new_name():
+    site1 = "ATGCCCTAAaaCT"
+    site2 = "AAaaTTTTTTTCCCT"
+    rec = Recombinase(site1, site2)
+    genome = Dseqrecord(f"cccccc{site1.upper()}tttt{site2.upper()}aaaaa")
+
+    with pytest.warns(DeprecationWarning, match="recombinase_excision_or_inversion"):
+        products_old = recombinase_excision(genome, rec)
+    products_new = recombinase_excision_or_inversion(genome, rec)
+
+    assert [p.seq.seguid() for p in products_old] == [
+        p.seq.seguid() for p in products_new
+    ]
 
 
 def test_recombinase_integration_excision_reversibility():
@@ -272,7 +288,7 @@ def test_recombinase_integration_excision_reversibility():
     assert len(products) == 1
     integrated = products[0]
 
-    excised = recombinase_excision(integrated, rec)
+    excised = recombinase_excision_or_inversion(integrated, rec)
     assert len(excised) == 2
 
     assert excised[1].seq.seguid() == genome.seq.seguid()
