@@ -1827,14 +1827,14 @@ class Assembly:
         locations_on_fragments = self.get_locations_on_fragments()
         allowed_location_pairs = dict()
         for node in locations_on_fragments:
-            fragment_len = len(self.fragments[abs(node) - 1])
+            fragment = self.fragments[abs(node) - 1]
             locations = (
                 locations_on_fragments[node]["left"]
                 + locations_on_fragments[node]["right"]
             )
-            gathered = gather_overlapping_locations(locations, fragment_len)
+            gathered = gather_overlapping_locations(locations, len(fragment))
             gathered = [tuple(deduplicate(group, hashable=False)) for group in gathered]
-            if not is_circular:
+            if not fragment.circular:
                 zipped = zip([(None,)] + gathered, gathered + [(None,)], strict=True)
             else:
                 zipped = zip(gathered, gathered[1:] + gathered[:1], strict=True)
