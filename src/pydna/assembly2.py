@@ -2154,8 +2154,12 @@ def common_function_assembly_products(
         output_assemblies += filter_linear_subassemblies(
             asm.get_linear_assemblies(only_adjacent_edges), output_assemblies, frags
         )
-    if not circular_only and len(frags) == 1:
-        output_assemblies += asm.get_insertion_assemblies()
+    if len(frags) == 1:
+        if not circular_only:
+            output_assemblies += asm.get_insertion_assemblies()
+            output_assemblies += asm.get_inversion_assemblies()
+        elif frags[0].circular:
+            output_assemblies += asm.get_inversion_assemblies()
 
     if filter_results_function:
         output_assemblies = [a for a in output_assemblies if filter_results_function(a)]
@@ -3037,6 +3041,20 @@ def recombinase_integration(
     fragments = common_handle_insertion_fragments(genome, inserts)
     products = common_function_integration_products(
         fragments, None, recombinase.overlap
+    )
+    products = [recombinase.annotate(p) for p in products]
+    return _recast_sources(products, RecombinaseSource, recombinases=recombinase)
+
+
+def recombinase_assembly(
+    frags: list[Dseqrecord],
+    recombinase: Recombinase | RecombinaseCollection,
+    circular_only: bool = False,
+) -> list[Dseqrecord]:
+    """Returns the products of a recombinase assembly (assuming no sequence is a genome)"""
+
+    products = common_function_assembly_products(
+        frags, None, recombinase.overlap, circular_only
     )
     products = [recombinase.annotate(p) for p in products]
     return _recast_sources(products, RecombinaseSource, recombinases=recombinase)

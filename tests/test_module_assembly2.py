@@ -1545,19 +1545,26 @@ def test_restriction_ligation_assembly():
 
     # Single fragment assemblies
 
-    f1 = Dseqrecord("aaGAATTCtttGAATTCaa", circular=True)
+    f1 = Dseqrecord("aaGAATTCtccGAATTCaa", circular=True)
     products = assembly.restriction_ligation_assembly([f1], [EcoRI], circular_only=True)
-    assert len(products) == 2
+    assert len(products) == 3
+    assert all(p.circular for p in products)
     assert str(products[0].seq) == "AATTCaaaaG"
-    assert str(products[1].seq) == "AATTCtttG"
+    assert str(products[1].seq) == "AATTCtccG"
+    # Inversion product
+    assert (
+        products[2].seq.seguid() == Dseq("aaGAATTCggaGAATTCaa", circular=True).seguid()
+    )
 
-    f1 = Dseqrecord("aaGAATTCtttGAATTCaa", circular=False)
+    f1 = Dseqrecord("aaGAATTCtccGAATTCaa", circular=False)
     products = assembly.restriction_ligation_assembly(
         [f1], [EcoRI], circular_only=False
     )
-    assert len(products) == 2
-    assert str(products[1].seq) == "aaGAATTCaa"
-    assert str(products[0].seq) == "AATTCtttG"
+    assert len(products) == 3
+    assert products[0].seq == Dseq("AATTCtccG", circular=True)
+    assert products[1].seq == Dseq("aaGAATTCaa")
+    # Inversion product
+    assert products[2].seq == Dseq("aaGAATTCggaGAATTCaa")
 
     # Mixing blunt and normal overhangs
     fragments = [Dseqrecord("aaaGATATCccGAATTCaa"), Dseqrecord("cgcGATATCataGAATTCtta")]

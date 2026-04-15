@@ -8,6 +8,7 @@ from pydna.assembly2 import (
     recombinase_excision,
     recombinase_integration,
     recombinase_excision_or_inversion,
+    recombinase_assembly,
 )
 from pydna.recombinase import (
     _recombinase_homology_offset_and_length,
@@ -419,7 +420,37 @@ def test_inversion_recombinase():
     assert len(prods) == 1
     assert str(prods[0].seq) == expected
 
+    # Same results with assembly function
+    assert prods == recombinase_assembly([seq1], rec)
+
     seq1 = seq1.looped()
     prods = recombinase_excision_or_inversion(seq1, rec)
     assert len(prods) == 1
     assert prods[0].seq.seguid() == Dseq(expected, circular=True).seguid()
+    # Same results with assembly function
+    assert prods == recombinase_assembly([seq1], rec)
+
+
+def test_recombinase_assembly():
+    attL = "AAAttGCGC"
+    attR = "TATttCCAA"
+    attLR = "AAAttCCAA"
+    attRL = "TATttGCGC"
+
+    seq1 = Dseqrecord(f"ggg{attL}aaa")
+    seq2 = Dseqrecord(f"ccc{attR}ttt")
+    rec = Recombinase(attL, attR)
+
+    prods = recombinase_assembly([seq1, seq2], rec)
+    assert len(prods) == 2
+    assert str(prods[0].seq) == f"ggg{attLR}ttt"
+    assert str(prods[1].seq) == f"ccc{attRL}aaa"
+
+    # Circular sequences should merge
+    seq1 = seq1.looped()
+    seq2 = seq2.looped()
+    prods = recombinase_assembly([seq1, seq2], rec)
+    assert len(prods) == 1
+    assert (
+        prods[0].seguid() == Dseq(f"ggg{attLR}tttccc{attRL}aaa", circular=True).seguid()
+    )
