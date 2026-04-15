@@ -1520,6 +1520,25 @@ class Assembly:
             possibilities += this_path
         return possibilities
 
+    def _filter_cycles(self, cycles) -> list[list[int]]:
+        # We apply constraints early because cycles can become combinatorially large.
+        if self.use_all_fragments:
+            cycles = [c for c in cycles if len(c) == len(self.fragments)]
+
+        # Remove cycles with duplicate fragments (e.g. [1, 2, -1]).
+        return [c for c in cycles if len(c) == len(set(map(abs, c)))]
+
+    def _validate_max_assemblies(
+        self, cycles: list[list[int]], max_assemblies: int
+    ) -> None:
+        possible_assembly_number = self.get_possible_assembly_number(
+            [c + c[:1] for c in cycles]
+        )
+        if possible_assembly_number > max_assemblies:
+            raise ValueError(
+                f"Too many assemblies ({possible_assembly_number} pre-validation) to assemble"
+            )
+
     def get_circular_assemblies(
         self, only_adjacent_edges: bool = False, max_assemblies: int = 50
     ) -> list[EdgeRepresentationAssembly]:
@@ -1537,19 +1556,8 @@ class Assembly:
         sorted_cycles = filter(lambda x: x[0] > 0, sorted_cycles)
         # cycles.simple_cycles returns lists [1,2,3] not assemblies, see self.cycle2circular_assemblies
 
-        # We apply constrains already here because sometimes the combinatorial explosion is too large
-        if self.use_all_fragments:
-            sorted_cycles = [c for c in sorted_cycles if len(c) == len(self.fragments)]
-
-        # Remove cycles with duplicates
-        sorted_cycles = [c for c in sorted_cycles if len(c) == len(set(map(abs, c)))]
-        possible_assembly_number = self.get_possible_assembly_number(
-            [c + c[:1] for c in sorted_cycles]
-        )
-        if possible_assembly_number > max_assemblies:
-            raise ValueError(
-                f"Too many assemblies ({possible_assembly_number} pre-validation) to assemble"
-            )
+        sorted_cycles = self._filter_cycles(sorted_cycles)
+        self._validate_max_assemblies(sorted_cycles, max_assemblies)
 
         assemblies = sum(
             map(lambda x: self.node_path2assembly_list(x, True), sorted_cycles), []
@@ -1703,22 +1711,8 @@ class Assembly:
             )
 
         cycles = limit_iterator(nx.cycles.simple_cycles(self.G), 10000)
-
-        # We apply constrains already here because sometimes the combinatorial explosion is too large
-        if self.use_all_fragments:
-            cycles = [c for c in cycles if len(c) == len(self.fragments)]
-
-        # Remove cycles with duplicates
-        cycles = [c for c in cycles if len(c) == len(set(map(abs, c)))]
-
-        possible_assembly_number = self.get_possible_assembly_number(
-            [c + c[:1] for c in cycles]
-        )
-
-        if possible_assembly_number > max_assemblies:
-            raise ValueError(
-                f"Too many assemblies ({possible_assembly_number} pre-validation) to assemble"
-            )
+        cycles = self._filter_cycles(cycles)
+        self._validate_max_assemblies(cycles, max_assemblies)
 
         # We find cycles first
         iterator = limit_iterator(nx.cycles.simple_cycles(self.G), 10000)
@@ -1964,7 +1958,7 @@ class SingleFragmentAssembly(Assembly):
     An assembly that represents the circularisation or splicing of a single fragment.
     """
 
-    def __init__(self, frags: [Dseqrecord], limit=25, algorithm=common_sub_strings):
+    def __init__(self, frags: list[Dseqrecord], limit=25, algorithm=common_sub_strings):
 
         if len(frags) != 1:
             raise ValueError(
@@ -1974,15 +1968,20 @@ class SingleFragmentAssembly(Assembly):
         self.G = nx.MultiDiGraph()
         frag = frags[0]
         # Add positive and negative nodes for forward and reverse fragments
+        frag_rc = frag.reverse_complement()
         self.G.add_node(1, seq=frag)
+        self.G.add_node(-1, seq=frag_rc)
 
-        matches = algorithm(frag, frag, limit)
-        # Remove matches where the whole sequence matches
-        matches = [match for match in matches if match[2] != len(frag)]
-
-        for match in matches:
-            self.add_edges_from_match(match, 1, 1, frag, frag)
-
+        for inputs, orientations in [
+            ([frag, frag], [1, 1]),
+            ([frag, frag_rc], [1, -1]),
+            ([frag_rc, frag], [-1, 1]),
+        ]:
+            matches = algorithm(*inputs, limit)
+            # Remove matches where the whole sequence matches
+            matches = [match for match in matches if match[2] != len(frag)]
+            for match in matches:
+                self.add_edges_from_match(match, *orientations, *inputs)
         # To avoid duplicated outputs
         while (-1, -1) in self.G.edges():
             self.G.remove_edges_from([(-1, -1)])
@@ -2011,6 +2010,17 @@ class SingleFragmentAssembly(Assembly):
             if self.assembly_is_valid(self.fragments, a, True, self.use_all_fragments)
         ]
 
+    def _splicing_assembly_filter(self, x):
+        # We don't want the same location twice
+        if x[0][2] == x[0][3]:
+            return False
+        # We don't want to get overlap only (e.g. GAATTCcatGAATTC giving GAATTC)
+        left_start, _ = location_boundaries(x[0][2])
+        _, right_end = location_boundaries(x[0][3])
+        if left_start == 0 and right_end == len(self.fragments[0]):
+            return False
+        return True
+
     def get_insertion_assemblies(
         self, only_adjacent_edges: bool = False, max_assemblies: int = 50
     ) -> list[EdgeRepresentationAssembly]:
@@ -2021,20 +2031,8 @@ class SingleFragmentAssembly(Assembly):
                 "only_adjacent_edges not implemented for insertion assemblies"
             )
 
-        def splicing_assembly_filter(x):
-            # We don't want the same location twice
-            if x[0][2] == x[0][3]:
-                return False
-            # We don't want to get overlap only (e.g. GAATTCcatGAATTC giving GAATTC)
-            left_start, _ = location_boundaries(x[0][2])
-            _, right_end = location_boundaries(x[0][3])
-            if left_start == 0 and right_end == len(self.fragments[0]):
-                return False
-            return True
-
-        # We don't want the same location twice
         assemblies = filter(
-            splicing_assembly_filter,
+            self._splicing_assembly_filter,
             super().get_insertion_assemblies(max_assemblies=max_assemblies),
         )
         return [
@@ -2047,6 +2045,39 @@ class SingleFragmentAssembly(Assembly):
 
     def get_linear_assemblies(self):
         raise NotImplementedError("Linear assembly does not make sense")
+
+    def _inversion_assembly_filter(self, x: EdgeRepresentationAssembly) -> bool:
+        # We don't want the same location twice
+        left, right = x
+        frag_len = len(self.fragments[0])
+        # Right topology
+        if left[2] == right[2]._flip(frag_len) and left[3] == right[3]._flip(frag_len):
+            # Remove duplicates:
+            inversion_start, _ = location_boundaries(left[2])
+            inversion_end, _ = location_boundaries(right[3])
+            return inversion_start < inversion_end
+        return False
+
+    def get_inversion_assemblies(
+        self, max_assemblies: int = 50
+    ) -> list[EdgeRepresentationAssembly]:
+        """Returns assemblies that invert a part inside the fragment."""
+        cycles = limit_iterator(nx.cycles.simple_cycles(self.G), 10000)
+        if [1, -1] not in cycles:
+            return []
+        cycles = [[1, -1]]
+        self._validate_max_assemblies(cycles, max_assemblies)
+        assemblies = sum(
+            map(lambda x: self.node_path2assembly_list(x, True), cycles), []
+        )
+        return list(filter(self._inversion_assembly_filter, assemblies))
+
+    def assemble_inversion(self, max_assemblies: int = 50) -> list[Dseqrecord]:
+        assemblies = self.get_inversion_assemblies(max_assemblies)
+        is_insertion = not self.fragments[0].circular
+        return [
+            assemble(self.fragments, a, is_insertion=is_insertion) for a in assemblies
+        ]
 
 
 def common_function_assembly_products(
