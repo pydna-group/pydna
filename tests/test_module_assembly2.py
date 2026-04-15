@@ -2989,3 +2989,35 @@ def test_terminal_overlap():
 def test_terminal_overlap_error():
     with pytest.raises(ValueError):
         assembly.terminal_overlap(Dseqrecord("A"), Dseqrecord("A"), trim_ends="dummy")
+
+
+def test_inversion_homologous_recombination():
+    hom = "ACAACTTTGTACAAAAAAGCAGAAG"
+
+    seq1 = Dseqrecord("ggg" + hom + "cca" + reverse_complement(hom) + "tttt")
+    seq1.add_feature(3, len("ggg" + hom), strand=1, label=["hom1"])
+    seq1.add_feature(
+        len("ggg" + hom + "cca"),
+        len("ggg" + hom + "cca" + hom),
+        strand=-1,
+        label=["hom2"],
+    )
+    seq1.add_feature(
+        len("ggg" + hom), len("ggg" + hom) + 3, strand=1, label=["payload"]
+    )
+
+    prods = assembly.homologous_recombination_excision_or_inversion(seq1, limit=20)
+    expected = (
+        "ggg" + hom + reverse_complement("cca") + reverse_complement(hom) + "tttt"
+    )
+    assert len(prods) == 1
+    assert str(prods[0].seq) == expected
+    payload_feature = next(
+        f for f in prods[0].features if f.qualifiers["label"] == ["payload"]
+    )
+    assert payload_feature.location.strand == -1
+
+    seq1 = seq1.looped()
+    prods = assembly.homologous_recombination_excision_or_inversion(seq1, limit=20)
+    assert len(prods) == 1
+    assert prods[0].seq.seguid() == Dseq(expected, circular=True).seguid()

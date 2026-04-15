@@ -14,7 +14,7 @@ from pydna.recombinase import (
     Recombinase,
     RecombinaseCollection,
 )
-
+from Bio.Seq import reverse_complement
 
 # ---------------------------------------------------------------------------
 # _recombinase_homology_offset_and_length
@@ -164,7 +164,6 @@ def test_degenerate_site():
 
 def test_reverse_complement_sites():
     """Sites on the reverse strand should be detected."""
-    from Bio.Seq import reverse_complement
 
     site1 = "ATGCCCTAAaaTT"
     site2 = "AAaaTTTTTTTCCCT"
@@ -402,3 +401,25 @@ def test_recombinase_collection_in_assembly_functions():
     seq2 = Dseqrecord(f"ggg{site2.upper()}ttt{site4.upper()}ttt")
     products = recombinase_integration(seq, [seq2], collection)
     assert len(products) == 1
+
+
+def test_inversion_recombinase():
+    attL = "AAAttGCGC"
+    attR = "TATttCCAA"
+    attLR = "AAAttCCAA"
+    attRL = "TATttGCGC"
+
+    seq1 = Dseqrecord("ggg" + attL + "cca" + reverse_complement(attR) + "tttt")
+    rec = Recombinase(attL, attR)
+
+    prods = recombinase_excision_or_inversion(seq1, rec)
+    expected = (
+        "ggg" + attLR + reverse_complement("cca") + reverse_complement(attRL) + "tttt"
+    )
+    assert len(prods) == 1
+    assert str(prods[0].seq) == expected
+
+    seq1 = seq1.looped()
+    prods = recombinase_excision_or_inversion(seq1, rec)
+    assert len(prods) == 1
+    assert prods[0].seq.seguid() == Dseq(expected, circular=True).seguid()

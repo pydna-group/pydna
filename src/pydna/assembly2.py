@@ -2061,7 +2061,39 @@ class SingleFragmentAssembly(Assembly):
     def get_inversion_assemblies(
         self, max_assemblies: int = 50
     ) -> list[EdgeRepresentationAssembly]:
-        """Returns assemblies that invert a part inside the fragment."""
+        """
+        Returns assemblies that invert a part inside the fragment.
+
+        For example, in homologous recombination, in a sequence where
+        homology is ``GAAAGG`` (reversse-complemented ``CCTTC``)
+        the ``acc`` contained within the homology following sequence:
+
+        ``aaGAAGGaccCCTTCcc``
+
+        Will be inverted to:
+
+        ``aaGAAGGggtCCTTCcc``
+
+        It works the same for circular sequences
+
+        Examples
+        --------
+        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.assembly2 import SingleFragmentAssembly
+        >>> seq1 = Dseqrecord("aaGAAGGaccCCTTCcc")
+        >>> prod = SingleFragmentAssembly([seq1], limit=5).assemble_inversion()[0]
+        >>> prod.seq
+        Dseq(-17)
+        aaGAAGGggtCCTTCcc
+        ttCTTCCccaGGAAGgg
+        >>> seq1 = seq1.looped()
+        >>> prod = SingleFragmentAssembly([seq1], limit=5).assemble_inversion()[0]
+        >>> prod.seq
+        Dseq(o17)
+        CCTTCccaaGAAGGggt
+        GGAAGggttCTTCCcca
+        """
+
         cycles = limit_iterator(nx.cycles.simple_cycles(self.G), 10000)
         if [1, -1] not in cycles:
             return []
