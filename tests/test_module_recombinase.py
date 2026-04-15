@@ -419,6 +419,7 @@ def test_inversion_recombinase():
     )
     assert len(prods) == 1
     assert str(prods[0].seq) == expected
+    prods[0].validate_history()
 
     # Same results with assembly function
     assert prods == recombinase_assembly([seq1], rec)
@@ -429,6 +430,7 @@ def test_inversion_recombinase():
     assert prods[0].seq.seguid() == Dseq(expected, circular=True).seguid()
     # Same results with assembly function
     assert prods == recombinase_assembly([seq1], rec)
+    prods[0].validate_history()
 
 
 def test_recombinase_assembly():
