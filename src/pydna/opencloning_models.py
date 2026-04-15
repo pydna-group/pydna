@@ -892,14 +892,16 @@ class RecombinaseSource(AssemblySource):
     def _replay_products(self, handle_insertion: bool = True) -> list["Dseqrecord"]:
         from pydna.assembly2 import (
             recombinase_integration,
-            recombinase_excision_or_inversion,
+            recombinase_assembly,
         )
 
         seqs = self._get_input_sequences(handle_insertion)
         if len(seqs) == 1:
-            return recombinase_excision_or_inversion(seqs[0], self.recombinases)
+            return recombinase_assembly(seqs, self.recombinases)
         else:
-            return recombinase_integration(seqs[0], seqs[1:], self.recombinases)
+            return recombinase_integration(
+                seqs[0], seqs[1:], self.recombinases
+            ) + recombinase_assembly(seqs, self.recombinases)
 
 
 class SequenceCutSource(Source):
