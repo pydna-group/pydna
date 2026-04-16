@@ -1568,6 +1568,38 @@ def test_restriction_ligation_assembly():
     assert str(products[0].seq) == "ATCccGAATTCtatGAT"
 
 
+def test_restriction_ligation_assembly_partially_digested():
+
+    backbone = Dseqrecord("cccGAATTCaaaGTCGACccc")
+    insert = Dseqrecord("ggGAATTCaggtGTCGACgg")
+    products = assembly.restriction_ligation_assembly(
+        [backbone, insert], [EcoRI, SalI], circular_only=True
+    )
+    restriction_products = insert.cut([EcoRI, SalI])
+    cut_insert = restriction_products[1]
+    products2 = assembly.restriction_ligation_assembly(
+        [backbone, cut_insert], [EcoRI, SalI], circular_only=True
+    )
+    assert len(products) == 1
+    assert products == products2
+
+    # Also in circular
+    backbone = Dseqrecord("cccGAATTCaaaGTCGACccc", circular=True)
+    products_no_precut = assembly.restriction_ligation_assembly(
+        [backbone, insert], [EcoRI, SalI]
+    )
+    assert len(products_no_precut) == 2
+    product_seguids = set(p.seguid() for p in products_no_precut)
+    for shift in range(len(backbone)):
+        backbone_shifted = backbone.shifted(shift)
+        products3 = assembly.restriction_ligation_assembly(
+            [backbone_shifted, cut_insert], [EcoRI, SalI]
+        )
+        assert len(products3) == 2
+        product_seguids3 = set(p.seguid() for p in products3)
+        assert product_seguids3 == product_seguids
+
+
 def test_restriction_ligation_assembly_only_adjacent_edges():
     ecori_site = "GAATTC"
     multi_insert = Dseqrecord(f"at{ecori_site}ct{ecori_site}gt{ecori_site}ta")

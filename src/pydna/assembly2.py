@@ -2240,6 +2240,18 @@ def partially_digested_seqs_in_restriction_ligation_assembly(
             allowed_pairs.append(
                 (cutsite_to_location(cs1, len(seq)), cutsite_to_location(cs2, len(seq)))
             )
+        # If the location is the edge of a pre-restricted / hybridized fragment
+        # it cannot be partially digested
+        if (
+            inp.left_location is not None
+            and location_boundaries(inp.left_location)[0] == 0
+            and seq.left_ovhg != 0
+        ) or (
+            inp.right_location is not None
+            and location_boundaries(inp.right_location)[1] == len(seq)
+            and seq.right_ovhg != 0
+        ):
+            continue
         if (inp.left_location, inp.right_location) not in allowed_pairs:
             out.append(inp.sequence)
     return out
