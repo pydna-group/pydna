@@ -912,7 +912,7 @@ def deduplicate(iterable, hashable=True):
     return result
 
 
-def cutsite_to_location(cutsite: CutSiteType | None, seq_len: int) -> Location | None:
+def cutsite_to_location(cutsite: CutSiteType, seq_len: int) -> Location | None:
     """Convert a cutsite to a location."""
     if cutsite is None:
         return None
