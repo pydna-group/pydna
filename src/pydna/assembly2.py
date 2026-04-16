@@ -2289,7 +2289,7 @@ def in_vivo_assembly(
 def partially_digested_seqs_in_restriction_ligation_assembly(
     product: Dseqrecord,
 ) -> list[Dseqrecord]:
-    """Returns a list of sequences that are partially digested in an restriction-ligation assembly product.
+    """Returns a list of sequences that are partially digested in a restriction-ligation assembly product.
 
     TODO: For this to work for partial overlaps in the future, it should check for overlapping the left
     and right allowed locations rather than being identical, but tricky to also support blunt-end enzymes.
@@ -2411,6 +2411,8 @@ def restriction_ligation_assembly(
             filtered.append(p)
         else:
             partially_seqs.extend(these_seqs)
+    # Dedupe by id:
+    partially_seqs = deduplicate(partially_seqs, hashable=False)
     if len(partially_seqs) > 0:
         formatted_seqs = ", ".join(
             [f"Seq {seq.name} (id: {seq.id})" for seq in partially_seqs]

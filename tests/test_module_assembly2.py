@@ -1612,12 +1612,13 @@ def test_restriction_ligation_assembly_only_adjacent_edges():
     multi_insert = Dseqrecord(f"at{ecori_site}ct{ecori_site}gt{ecori_site}ta")
     plasmid = Dseqrecord(f"aa{ecori_site}aa", circular=True)
 
-    with pytest.warns(UserWarning) as warning_info:
-        products = assembly.restriction_ligation_assembly(
-            [plasmid, multi_insert], [EcoRI], circular_only=True
-        )
-    assert len(warning_info.list) == 1
-    assert "partially digested products" in warning_info.list[0].message.args[0]
+    # This does not give a warning, because it's picked up by only_adjacent_edges=True
+    # this is better because the partial digest is there to mostly to warn about
+    # internal cutsites from Type IIS restriction enzymes that may not produce any edge
+    # see https://github.com/pydna-group/pydna/issues/426
+    products = assembly.restriction_ligation_assembly(
+        [plasmid, multi_insert], [EcoRI], circular_only=True
+    )
     assert len(products) == 4
 
     def algo(x, y, _l):
@@ -1625,7 +1626,7 @@ def test_restriction_ligation_assembly_only_adjacent_edges():
 
     asm = assembly.Assembly(
         [plasmid, multi_insert],
-        [EcoRI],
+        None,
         algorithm=algo,
         use_fragment_order=False,
         use_all_fragments=True,
