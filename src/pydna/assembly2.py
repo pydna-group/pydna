@@ -21,6 +21,7 @@ from pydna.utils import (
     limit_iterator,
     create_location,
     deduplicate,
+    cutsite_to_location,
 )
 from pydna._pretty import pretty_str as ps
 from pydna.common_sub_strings import common_sub_strings as common_sub_strings_str
@@ -2218,6 +2219,32 @@ def in_vivo_assembly(
     return _recast_sources(products, InVivoAssemblySource)
 
 
+def partially_digested_seqs_in_restriction_ligation_assembly(
+    product: Dseqrecord,
+) -> list[Dseqrecord]:
+    """Returns a list of sequences that are partially digested in an restriction-ligation assembly product.
+
+    TODO: For this to work for partial overlaps in the future, it should check for overlapping the left
+    and right allowed locations rather than being identical, but tricky to also support blunt-end enzymes.
+    """
+    out = []
+    enzymes = product.source.restriction_enzymes
+    for inp in product.source.input:
+        seq = inp.sequence.seq
+        if inp.reverse_complemented:
+            seq = seq.reverse_complement()
+        cutsites = seq.get_cutsites(*enzymes)
+        cutsite_pairs = seq.get_cutsite_pairs(cutsites)
+        allowed_pairs = []
+        for cs1, cs2 in cutsite_pairs:
+            allowed_pairs.append(
+                (cutsite_to_location(cs1, len(seq)), cutsite_to_location(cs2, len(seq)))
+            )
+        if (inp.left_location, inp.right_location) not in allowed_pairs:
+            out.append(inp.sequence)
+    return out
+
+
 def restriction_ligation_assembly(
     frags: list[Dseqrecord],
     enzymes: list["AbstractCut"],
@@ -2290,11 +2317,31 @@ def restriction_ligation_assembly(
         return restriction_ligation_overlap(x, y, enzymes, False, allow_blunt)
 
     products = common_function_assembly_products(
-        frags, None, algorithm_fn, circular_only, only_adjacent_edges=True
+        frags, None, algorithm_fn, circular_only, only_adjacent_edges=False
     )
-    return _recast_sources(
+
+    out = _recast_sources(
         products, RestrictionAndLigationSource, restriction_enzymes=enzymes
     )
+
+    filtered = []
+    partially_seqs = []
+    for p in out:
+        these_seqs = partially_digested_seqs_in_restriction_ligation_assembly(p)
+        if len(these_seqs) == 0:
+            filtered.append(p)
+        else:
+            partially_seqs.extend(these_seqs)
+    if len(partially_seqs) > 0:
+        formatted_seqs = ", ".join(
+            [f"Seq {seq.name} (id: {seq.id})" for seq in partially_seqs]
+        )
+        warnings.warn(
+            f"{len(partially_seqs)} partially digested products were filtered out: {formatted_seqs}",
+            stacklevel=2,
+            category=UserWarning,
+        )
+    return filtered
 
 
 def golden_gate_assembly(

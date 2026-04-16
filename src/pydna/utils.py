@@ -11,7 +11,7 @@ import keyword
 import collections
 import itertools
 from copy import deepcopy
-
+from pydna.types import CutSiteType
 import sys
 import random
 import subprocess
@@ -910,3 +910,14 @@ def deduplicate(iterable, hashable=True):
                 seen.append(item)
             result.append(item)
     return result
+
+
+def cutsite_to_location(cutsite: CutSiteType, seq_len: int) -> Location | None:
+    """Convert a cutsite to a location."""
+    if cutsite is None:
+        return None
+    watson, ovhg = cutsite[0]
+    if ovhg < 0:
+        return shift_location(SimpleLocation(watson, watson - ovhg, None), 0, seq_len)
+    else:
+        return shift_location(SimpleLocation(watson - ovhg, watson, None), 0, seq_len)

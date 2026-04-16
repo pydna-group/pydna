@@ -1573,9 +1573,12 @@ def test_restriction_ligation_assembly_only_adjacent_edges():
     multi_insert = Dseqrecord(f"at{ecori_site}ct{ecori_site}gt{ecori_site}ta")
     plasmid = Dseqrecord(f"aa{ecori_site}aa", circular=True)
 
-    products = assembly.restriction_ligation_assembly(
-        [plasmid, multi_insert], [EcoRI], circular_only=True
-    )
+    with pytest.warns(UserWarning) as warning_info:
+        products = assembly.restriction_ligation_assembly(
+            [plasmid, multi_insert], [EcoRI], circular_only=True
+        )
+    assert len(warning_info.list) == 1
+    assert "partially digested products" in warning_info.list[0].message.args[0]
     assert len(products) == 4
 
     def algo(x, y, _l):
@@ -1590,6 +1593,31 @@ def test_restriction_ligation_assembly_only_adjacent_edges():
     )
     assert len(asm.get_circular_assemblies(only_adjacent_edges=True)) == 4
     assert len(asm.get_circular_assemblies(only_adjacent_edges=False)) == 6
+
+    # Internal EcoRV cutsite (would not be solved by only_adjacent_edges=True,
+    # because the cutsite is not part of an edge)
+
+    f1 = Dseqrecord("aaGAATTCaaGATATCaaGAATTCaa")
+    f2 = Dseqrecord("cccGAATTCccc", circular=True)
+
+    assert (
+        len(
+            assembly.restriction_ligation_assembly(
+                [f1, f2], [EcoRI], circular_only=True
+            )
+        )
+        == 2
+    )
+
+    with pytest.warns(UserWarning):
+        assert (
+            len(
+                assembly.restriction_ligation_assembly(
+                    [f1, f2], [EcoRI, EcoRV], circular_only=True
+                )
+            )
+            == 0
+        )
 
 
 @pytest.mark.xfail(reason="See https://github.com/pydna-group/pydna/issues/426")

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import pytest
-from pydna.utils import cuts_overlap
+from pydna.utils import cuts_overlap, cutsite_to_location
 
 
 def test_flatten():
@@ -355,3 +355,23 @@ def test_cuts_overlap():
     assert not cuts_overlap(((5, 2), None), ((8, -2), None), 11)
     assert not cuts_overlap(((5, 2), None), ((8, -6), None), 11)
     assert not cuts_overlap(((5, 6), None), ((8, -2), None), 11)
+
+
+def test_cutsite_to_location():
+
+    seq_len = 11
+
+    assert cutsite_to_location(None, seq_len) is None
+
+    # Positive overhang: interval [watson - ovhg, watson), normalized modulo seq_len
+    assert str(cutsite_to_location(((10, 6), None), seq_len)) == "[4:10]"
+    assert str(cutsite_to_location(((5, 2), None), seq_len)) == "[3:5]"
+
+    # Negative overhang: interval [watson, watson - ovhg) may wrap the origin
+    assert str(cutsite_to_location(((10, -6), None), seq_len)) == "join{[10:11], [0:5]}"
+
+    # Coordinates below zero before normalization wrap on a circular length
+    assert str(cutsite_to_location(((2, 4), None), seq_len)) == "join{[9:11], [0:2]}"
+
+    # Zero overhang: empty interval at watson
+    assert str(cutsite_to_location(((5, 0), None), seq_len)) == "[5:5]"
