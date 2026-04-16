@@ -1545,19 +1545,26 @@ def test_restriction_ligation_assembly():
 
     # Single fragment assemblies
 
-    f1 = Dseqrecord("aaGAATTCtttGAATTCaa", circular=True)
+    f1 = Dseqrecord("aaGAATTCtccGAATTCaa", circular=True)
     products = assembly.restriction_ligation_assembly([f1], [EcoRI], circular_only=True)
-    assert len(products) == 2
+    assert len(products) == 3
+    assert all(p.circular for p in products)
     assert str(products[0].seq) == "AATTCaaaaG"
-    assert str(products[1].seq) == "AATTCtttG"
+    assert str(products[1].seq) == "AATTCtccG"
+    # Inversion product
+    assert (
+        products[2].seq.seguid() == Dseq("aaGAATTCggaGAATTCaa", circular=True).seguid()
+    )
 
-    f1 = Dseqrecord("aaGAATTCtttGAATTCaa", circular=False)
+    f1 = Dseqrecord("aaGAATTCtccGAATTCaa", circular=False)
     products = assembly.restriction_ligation_assembly(
         [f1], [EcoRI], circular_only=False
     )
-    assert len(products) == 2
-    assert str(products[1].seq) == "aaGAATTCaa"
-    assert str(products[0].seq) == "AATTCtttG"
+    assert len(products) == 3
+    assert products[0].seq == Dseq("AATTCtccG", circular=True)
+    assert products[1].seq == Dseq("aaGAATTCaa")
+    # Inversion product
+    assert products[2].seq == Dseq("aaGAATTCggaGAATTCaa")
 
     # Mixing blunt and normal overhangs
     fragments = [Dseqrecord("aaaGATATCccGAATTCaa"), Dseqrecord("cgcGATATCataGAATTCtta")]
@@ -1605,12 +1612,13 @@ def test_restriction_ligation_assembly_only_adjacent_edges():
     multi_insert = Dseqrecord(f"at{ecori_site}ct{ecori_site}gt{ecori_site}ta")
     plasmid = Dseqrecord(f"aa{ecori_site}aa", circular=True)
 
-    with pytest.warns(UserWarning) as warning_info:
-        products = assembly.restriction_ligation_assembly(
-            [plasmid, multi_insert], [EcoRI], circular_only=True
-        )
-    assert len(warning_info.list) == 1
-    assert "partially digested products" in warning_info.list[0].message.args[0]
+    # This does not give a warning, because it's picked up by only_adjacent_edges=True
+    # this is better because the partial digest is there to mostly to warn about
+    # internal cutsites from Type IIS restriction enzymes that may not produce any edge
+    # see https://github.com/pydna-group/pydna/issues/426
+    products = assembly.restriction_ligation_assembly(
+        [plasmid, multi_insert], [EcoRI], circular_only=True
+    )
     assert len(products) == 4
 
     def algo(x, y, _l):
@@ -1618,7 +1626,7 @@ def test_restriction_ligation_assembly_only_adjacent_edges():
 
     asm = assembly.Assembly(
         [plasmid, multi_insert],
-        [EcoRI],
+        None,
         algorithm=algo,
         use_fragment_order=False,
         use_all_fragments=True,
@@ -2716,6 +2724,25 @@ def test_in_vivo_assembly():
             assert products_str == expected_outputs
 
 
+def test_homologous_recombination_excision_deprecated_alias_warns_and_matches_new_name():
+    homology = "AAGTCCGTTCGTTTTACCTG"
+    genome = Dseqrecord(f"aaaaaa{homology}cccc", name="genome")
+    insert = Dseqrecord(f"{homology}tttt{homology}", name="insert")
+    integrated = assembly.homologous_recombination_integration(genome, [insert], 20)[0]
+
+    with pytest.warns(
+        DeprecationWarning, match="homologous_recombination_excision_or_inversion"
+    ):
+        products_old = assembly.homologous_recombination_excision(integrated, 20)
+    products_new = assembly.homologous_recombination_excision_or_inversion(
+        integrated, 20
+    )
+
+    assert [p.seq.seguid() for p in products_old] == [
+        p.seq.seguid() for p in products_new
+    ]
+
+
 def test_gateway_assembly():
 
     attB1 = "ACAACTTTGTACAAAAAAGCAGAAG"
@@ -2970,3 +2997,35 @@ def test_terminal_overlap():
 def test_terminal_overlap_error():
     with pytest.raises(ValueError):
         assembly.terminal_overlap(Dseqrecord("A"), Dseqrecord("A"), trim_ends="dummy")
+
+
+def test_inversion_homologous_recombination():
+    hom = "ACAACTTTGTACAAAAAAGCAGAAG"
+
+    seq1 = Dseqrecord("ggg" + hom + "cca" + reverse_complement(hom) + "tttt")
+    seq1.add_feature(3, len("ggg" + hom), strand=1, label=["hom1"])
+    seq1.add_feature(
+        len("ggg" + hom + "cca"),
+        len("ggg" + hom + "cca" + hom),
+        strand=-1,
+        label=["hom2"],
+    )
+    seq1.add_feature(
+        len("ggg" + hom), len("ggg" + hom) + 3, strand=1, label=["payload"]
+    )
+
+    prods = assembly.homologous_recombination_excision_or_inversion(seq1, limit=20)
+    expected = (
+        "ggg" + hom + reverse_complement("cca") + reverse_complement(hom) + "tttt"
+    )
+    assert len(prods) == 1
+    assert str(prods[0].seq) == expected
+    payload_feature = next(
+        f for f in prods[0].features if f.qualifiers["label"] == ["payload"]
+    )
+    assert payload_feature.location.strand == -1
+
+    seq1 = seq1.looped()
+    prods = assembly.homologous_recombination_excision_or_inversion(seq1, limit=20)
+    assert len(prods) == 1
+    assert prods[0].seq.seguid() == Dseq(expected, circular=True).seguid()

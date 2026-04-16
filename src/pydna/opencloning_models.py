@@ -783,13 +783,13 @@ class HomologousRecombinationSource(AssemblySource):
     def _replay_products(self, handle_insertion: bool = True) -> list["Dseqrecord"]:
         from pydna.assembly2 import (
             homologous_recombination_integration,
-            homologous_recombination_excision,
+            homologous_recombination_excision_or_inversion,
         )
 
         seqs = self._get_input_sequences(handle_insertion)
         limit = self._minimal_assembly_overlap()
         if len(seqs) == 1:
-            return homologous_recombination_excision(seqs[0], limit)
+            return homologous_recombination_excision_or_inversion(seqs[0], limit)
         else:
             return homologous_recombination_integration(seqs[0], seqs[1:], limit)
 
@@ -812,11 +812,11 @@ class CreLoxRecombinationSource(AssemblySource):
     )
 
     def _replay_products(self, handle_insertion: bool = True) -> list["Dseqrecord"]:
-        from pydna.assembly2 import cre_lox_integration, cre_lox_excision
+        from pydna.assembly2 import cre_lox_integration, cre_lox_excision_or_inversion
 
         seqs = self._get_input_sequences(handle_insertion)
         if len(seqs) == 1:
-            return cre_lox_excision(seqs[0])
+            return cre_lox_excision_or_inversion(seqs[0])
         else:
             return cre_lox_integration(seqs[0], seqs[1:])
 
@@ -890,13 +890,18 @@ class RecombinaseSource(AssemblySource):
         }
 
     def _replay_products(self, handle_insertion: bool = True) -> list["Dseqrecord"]:
-        from pydna.assembly2 import recombinase_integration, recombinase_excision
+        from pydna.assembly2 import (
+            recombinase_integration,
+            recombinase_assembly,
+        )
 
         seqs = self._get_input_sequences(handle_insertion)
         if len(seqs) == 1:
-            return recombinase_excision(seqs[0], self.recombinases)
+            return recombinase_assembly(seqs, self.recombinases)
         else:
-            return recombinase_integration(seqs[0], seqs[1:], self.recombinases)
+            return recombinase_integration(
+                seqs[0], seqs[1:], self.recombinases
+            ) + recombinase_assembly(seqs, self.recombinases)
 
 
 class SequenceCutSource(Source):

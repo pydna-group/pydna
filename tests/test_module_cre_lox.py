@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
 from pydna.cre_lox import cre_loxP_overlap, annotate_loxP_sites
+from pydna.assembly2 import cre_lox_excision_or_inversion
+from Bio.Seq import reverse_complement
 from pydna.dseqrecord import Dseqrecord
 from pydna.parsers import parse
 import os
@@ -60,3 +63,16 @@ class TestCreLox(unittest.TestCase):
         # Check that re-annotating does not add more features
         seq_annotated2 = annotate_loxP_sites(seq)
         self.assertEqual(len(seq_annotated2.features), 6)
+
+    def test_cre_lox_excision_or_inversion(self):
+        seq1 = Dseqrecord(
+            f"cccc{loxP_sequence}ttggca{reverse_complement(loxP_sequence)}aaaaa"
+        )
+        prods = cre_lox_excision_or_inversion(seq1)
+        assert len(prods) == 1
+        expected = f"cccc{loxP_sequence}tgccaa{reverse_complement(loxP_sequence)}aaaaa"
+        assert str(prods[0].seq) == expected
+        seq1 = seq1.looped()
+        prods = cre_lox_excision_or_inversion(seq1)
+        assert len(prods) == 1
+        assert prods[0].seq.seguid() == Dseqrecord(expected, circular=True).seguid()

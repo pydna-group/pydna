@@ -1520,6 +1520,25 @@ class Assembly:
             possibilities += this_path
         return possibilities
 
+    def _filter_cycles(self, cycles) -> list[list[int]]:
+        # We apply constraints early because cycles can become combinatorially large.
+        if self.use_all_fragments:
+            cycles = [c for c in cycles if len(c) == len(self.fragments)]
+
+        # Remove cycles with duplicate fragments (e.g. [1, 2, -1]).
+        return [c for c in cycles if len(c) == len(set(map(abs, c)))]
+
+    def _validate_max_assemblies(
+        self, cycles: list[list[int]], max_assemblies: int
+    ) -> None:
+        possible_assembly_number = self.get_possible_assembly_number(
+            [c + c[:1] for c in cycles]
+        )
+        if possible_assembly_number > max_assemblies:
+            raise ValueError(
+                f"Too many assemblies ({possible_assembly_number} pre-validation) to assemble"
+            )
+
     def get_circular_assemblies(
         self, only_adjacent_edges: bool = False, max_assemblies: int = 50
     ) -> list[EdgeRepresentationAssembly]:
@@ -1537,19 +1556,8 @@ class Assembly:
         sorted_cycles = filter(lambda x: x[0] > 0, sorted_cycles)
         # cycles.simple_cycles returns lists [1,2,3] not assemblies, see self.cycle2circular_assemblies
 
-        # We apply constrains already here because sometimes the combinatorial explosion is too large
-        if self.use_all_fragments:
-            sorted_cycles = [c for c in sorted_cycles if len(c) == len(self.fragments)]
-
-        # Remove cycles with duplicates
-        sorted_cycles = [c for c in sorted_cycles if len(c) == len(set(map(abs, c)))]
-        possible_assembly_number = self.get_possible_assembly_number(
-            [c + c[:1] for c in sorted_cycles]
-        )
-        if possible_assembly_number > max_assemblies:
-            raise ValueError(
-                f"Too many assemblies ({possible_assembly_number} pre-validation) to assemble"
-            )
+        sorted_cycles = self._filter_cycles(sorted_cycles)
+        self._validate_max_assemblies(sorted_cycles, max_assemblies)
 
         assemblies = sum(
             map(lambda x: self.node_path2assembly_list(x, True), sorted_cycles), []
@@ -1703,22 +1711,8 @@ class Assembly:
             )
 
         cycles = limit_iterator(nx.cycles.simple_cycles(self.G), 10000)
-
-        # We apply constrains already here because sometimes the combinatorial explosion is too large
-        if self.use_all_fragments:
-            cycles = [c for c in cycles if len(c) == len(self.fragments)]
-
-        # Remove cycles with duplicates
-        cycles = [c for c in cycles if len(c) == len(set(map(abs, c)))]
-
-        possible_assembly_number = self.get_possible_assembly_number(
-            [c + c[:1] for c in cycles]
-        )
-
-        if possible_assembly_number > max_assemblies:
-            raise ValueError(
-                f"Too many assemblies ({possible_assembly_number} pre-validation) to assemble"
-            )
+        cycles = self._filter_cycles(cycles)
+        self._validate_max_assemblies(cycles, max_assemblies)
 
         # We find cycles first
         iterator = limit_iterator(nx.cycles.simple_cycles(self.G), 10000)
@@ -1964,7 +1958,7 @@ class SingleFragmentAssembly(Assembly):
     An assembly that represents the circularisation or splicing of a single fragment.
     """
 
-    def __init__(self, frags: [Dseqrecord], limit=25, algorithm=common_sub_strings):
+    def __init__(self, frags: list[Dseqrecord], limit=25, algorithm=common_sub_strings):
 
         if len(frags) != 1:
             raise ValueError(
@@ -1974,15 +1968,20 @@ class SingleFragmentAssembly(Assembly):
         self.G = nx.MultiDiGraph()
         frag = frags[0]
         # Add positive and negative nodes for forward and reverse fragments
+        frag_rc = frag.reverse_complement()
         self.G.add_node(1, seq=frag)
+        self.G.add_node(-1, seq=frag_rc)
 
-        matches = algorithm(frag, frag, limit)
-        # Remove matches where the whole sequence matches
-        matches = [match for match in matches if match[2] != len(frag)]
-
-        for match in matches:
-            self.add_edges_from_match(match, 1, 1, frag, frag)
-
+        for inputs, orientations in [
+            ([frag, frag], [1, 1]),
+            ([frag, frag_rc], [1, -1]),
+            ([frag_rc, frag], [-1, 1]),
+        ]:
+            matches = algorithm(*inputs, limit)
+            # Remove matches where the whole sequence matches
+            matches = [match for match in matches if match[2] != len(frag)]
+            for match in matches:
+                self.add_edges_from_match(match, *orientations, *inputs)
         # To avoid duplicated outputs
         while (-1, -1) in self.G.edges():
             self.G.remove_edges_from([(-1, -1)])
@@ -2011,6 +2010,17 @@ class SingleFragmentAssembly(Assembly):
             if self.assembly_is_valid(self.fragments, a, True, self.use_all_fragments)
         ]
 
+    def _splicing_assembly_filter(self, x):
+        # We don't want the same location twice
+        if x[0][2] == x[0][3]:
+            return False
+        # We don't want to get overlap only (e.g. GAATTCcatGAATTC giving GAATTC)
+        left_start, _ = location_boundaries(x[0][2])
+        _, right_end = location_boundaries(x[0][3])
+        if left_start == 0 and right_end == len(self.fragments[0]):
+            return False
+        return True
+
     def get_insertion_assemblies(
         self, only_adjacent_edges: bool = False, max_assemblies: int = 50
     ) -> list[EdgeRepresentationAssembly]:
@@ -2021,20 +2031,8 @@ class SingleFragmentAssembly(Assembly):
                 "only_adjacent_edges not implemented for insertion assemblies"
             )
 
-        def splicing_assembly_filter(x):
-            # We don't want the same location twice
-            if x[0][2] == x[0][3]:
-                return False
-            # We don't want to get overlap only (e.g. GAATTCcatGAATTC giving GAATTC)
-            left_start, _ = location_boundaries(x[0][2])
-            _, right_end = location_boundaries(x[0][3])
-            if left_start == 0 and right_end == len(self.fragments[0]):
-                return False
-            return True
-
-        # We don't want the same location twice
         assemblies = filter(
-            splicing_assembly_filter,
+            self._splicing_assembly_filter,
             super().get_insertion_assemblies(max_assemblies=max_assemblies),
         )
         return [
@@ -2047,6 +2045,71 @@ class SingleFragmentAssembly(Assembly):
 
     def get_linear_assemblies(self):
         raise NotImplementedError("Linear assembly does not make sense")
+
+    def _inversion_assembly_filter(self, x: EdgeRepresentationAssembly) -> bool:
+        # We don't want the same location twice
+        left, right = x
+        frag_len = len(self.fragments[0])
+        # Right topology
+        if left[2] == right[2]._flip(frag_len) and left[3] == right[3]._flip(frag_len):
+            # Remove duplicates:
+            inversion_start, _ = location_boundaries(left[2])
+            inversion_end, _ = location_boundaries(right[3])
+            return inversion_start < inversion_end
+        return False
+
+    def get_inversion_assemblies(
+        self, max_assemblies: int = 50
+    ) -> list[EdgeRepresentationAssembly]:
+        """
+        Returns assemblies that invert a part inside the fragment.
+
+        For example, in homologous recombination, in a sequence where
+        homology is ``GAAAGG`` (reversse-complemented ``CCTTC``)
+        the ``acc`` contained within the homology following sequence:
+
+        ``aaGAAGGaccCCTTCcc``
+
+        Will be inverted to:
+
+        ``aaGAAGGggtCCTTCcc``
+
+        It works the same for circular sequences
+
+        Examples
+        --------
+        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.assembly2 import SingleFragmentAssembly
+        >>> seq1 = Dseqrecord("aaGAAGGaccCCTTCcc")
+        >>> prod = SingleFragmentAssembly([seq1], limit=5).assemble_inversion()[0]
+        >>> prod.seq
+        Dseq(-17)
+        aaGAAGGggtCCTTCcc
+        ttCTTCCccaGGAAGgg
+        >>> seq1 = seq1.looped()
+        >>> prod = SingleFragmentAssembly([seq1], limit=5).assemble_inversion()[0]
+        >>> prod.seq
+        Dseq(o17)
+        CCTTCccaaGAAGGggt
+        GGAAGggttCTTCCcca
+        """
+
+        cycles = limit_iterator(nx.cycles.simple_cycles(self.G), 10000)
+        if [1, -1] not in cycles:
+            return []
+        cycles = [[1, -1]]
+        self._validate_max_assemblies(cycles, max_assemblies)
+        assemblies = sum(
+            map(lambda x: self.node_path2assembly_list(x, True), cycles), []
+        )
+        return list(filter(self._inversion_assembly_filter, assemblies))
+
+    def assemble_inversion(self, max_assemblies: int = 50) -> list[Dseqrecord]:
+        assemblies = self.get_inversion_assemblies(max_assemblies)
+        is_insertion = not self.fragments[0].circular
+        return [
+            assemble(self.fragments, a, is_insertion=is_insertion) for a in assemblies
+        ]
 
 
 def common_function_assembly_products(
@@ -2091,8 +2154,12 @@ def common_function_assembly_products(
         output_assemblies += filter_linear_subassemblies(
             asm.get_linear_assemblies(only_adjacent_edges), output_assemblies, frags
         )
-    if not circular_only and len(frags) == 1:
-        output_assemblies += asm.get_insertion_assemblies()
+    if len(frags) == 1:
+        if not circular_only:
+            output_assemblies += asm.get_insertion_assemblies()
+            output_assemblies += asm.get_inversion_assemblies()
+        elif frags[0].circular:
+            output_assemblies += asm.get_inversion_assemblies()
 
     if filter_results_function:
         output_assemblies = [a for a in output_assemblies if filter_results_function(a)]
@@ -2222,7 +2289,7 @@ def in_vivo_assembly(
 def partially_digested_seqs_in_restriction_ligation_assembly(
     product: Dseqrecord,
 ) -> list[Dseqrecord]:
-    """Returns a list of sequences that are partially digested in an restriction-ligation assembly product.
+    """Returns a list of sequences that are partially digested in a restriction-ligation assembly product.
 
     TODO: For this to work for partial overlaps in the future, it should check for overlapping the left
     and right allowed locations rather than being identical, but tricky to also support blunt-end enzymes.
@@ -2329,7 +2396,7 @@ def restriction_ligation_assembly(
         return restriction_ligation_overlap(x, y, enzymes, False, allow_blunt)
 
     products = common_function_assembly_products(
-        frags, None, algorithm_fn, circular_only, only_adjacent_edges=False
+        frags, None, algorithm_fn, circular_only, only_adjacent_edges=True
     )
 
     out = _recast_sources(
@@ -2344,6 +2411,8 @@ def restriction_ligation_assembly(
             filtered.append(p)
         else:
             partially_seqs.extend(these_seqs)
+    # Dedupe by id:
+    partially_seqs = deduplicate(partially_seqs, hashable=False)
     if len(partially_seqs) > 0:
         formatted_seqs = ", ".join(
             [f"Seq {seq.name} (id: {seq.id})" for seq in partially_seqs]
@@ -2647,7 +2716,7 @@ def common_handle_insertion_fragments(
     return [genome] + inserts
 
 
-def common_function_excision_products(
+def common_function_excision_or_inversion_products(
     genome: Dseqrecord, limit: int | None, algorithm: Callable
 ) -> list[Dseqrecord]:
     """Common function to avoid code duplication for excision products.
@@ -2667,7 +2736,7 @@ def common_function_excision_products(
         List of excised DNA molecules
     """
     asm = SingleFragmentAssembly([genome], limit, algorithm)
-    return asm.assemble_circular() + asm.assemble_insertion()
+    return asm.assemble_circular() + asm.assemble_insertion() + asm.assemble_inversion()
 
 
 def homologous_recombination_integration(
@@ -2724,7 +2793,7 @@ def homologous_recombination_integration(
     return _recast_sources(products, HomologousRecombinationSource)
 
 
-def homologous_recombination_excision(
+def homologous_recombination_excision_or_inversion(
     genome: Dseqrecord, limit: int = 40
 ) -> list[Dseqrecord]:
     """Returns the products resulting from the excision of a fragment from the genome through
@@ -2757,8 +2826,22 @@ def homologous_recombination_excision(
     >>> products
     [Dseqrecord(o25), Dseqrecord(-32)]
     """
-    products = common_function_excision_products(genome, limit, common_sub_strings)
+    products = common_function_excision_or_inversion_products(
+        genome, limit, common_sub_strings
+    )
     return _recast_sources(products, HomologousRecombinationSource)
+
+
+def homologous_recombination_excision(
+    genome: Dseqrecord, limit: int = 40
+) -> list[Dseqrecord]:
+    warnings.warn(
+        "`homologous_recombination_excision` is deprecated and will be removed in a future "
+        "version; use `homologous_recombination_excision_or_inversion` instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return homologous_recombination_excision_or_inversion(genome, limit)
 
 
 def cre_lox_integration(
@@ -2821,8 +2904,8 @@ def cre_lox_integration(
     return _recast_sources(products, CreLoxRecombinationSource)
 
 
-def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
-    """Returns the products for CRE-lox excision.
+def cre_lox_excision_or_inversion(genome: Dseqrecord) -> list[Dseqrecord]:
+    """Returns the products for CRE-lox excision or inversion.
 
     Parameters
     ----------
@@ -2840,7 +2923,7 @@ def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
     Below an example of reversible integration and excision.
 
     >>> from pydna.dseqrecord import Dseqrecord
-    >>> from pydna.assembly2 import cre_lox_integration, cre_lox_excision
+    >>> from pydna.assembly2 import cre_lox_integration, cre_lox_excision_or_inversion
     >>> from pydna.cre_lox import LOXP_SEQUENCE
     >>> a = Dseqrecord(f"cccccc{LOXP_SEQUENCE}aaaaa")
     >>> b = Dseqrecord(f"{LOXP_SEQUENCE}bbbbb", circular=True)
@@ -2849,7 +2932,7 @@ def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
     >>> res = cre_lox_integration(a, [b])
     >>> res
     [Dseqrecord(-84)]
-    >>> res2 = cre_lox_excision(res[0])
+    >>> res2 = cre_lox_excision_or_inversion(res[0])
     >>> res2
     [Dseqrecord(o39), Dseqrecord(-45)]
 
@@ -2864,19 +2947,31 @@ def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
     >>> res = cre_lox_integration(a, [b])
     >>> res
     [Dseqrecord(-84)]
-    >>> res2 = cre_lox_excision(res[0])
+    >>> res2 = cre_lox_excision_or_inversion(res[0])
     >>> res2
     [Dseqrecord(o39), Dseqrecord(-45)]
     """
-    products = common_function_excision_products(genome, None, cre_loxP_overlap)
+    products = common_function_excision_or_inversion_products(
+        genome, None, cre_loxP_overlap
+    )
     return _recast_sources(products, CreLoxRecombinationSource)
 
 
-def recombinase_excision(
+def cre_lox_excision(genome: Dseqrecord) -> list[Dseqrecord]:
+    warnings.warn(
+        "`cre_lox_excision` is deprecated and will be removed in a future version; use "
+        "`cre_lox_excision_or_inversion` instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return cre_lox_excision_or_inversion(genome)
+
+
+def recombinase_excision_or_inversion(
     genome: Dseqrecord,
     recombinase: Recombinase | RecombinaseCollection,
 ) -> list[Dseqrecord]:
-    """Returns the products for recombinase-mediated excision.
+    """Returns the products for recombinase-mediated excision or inversion.
 
     Parameters
     ----------
@@ -2890,9 +2985,24 @@ def recombinase_excision(
     list[Dseqrecord]
         List containing excised plasmid and remaining genome sequence.
     """
-    products = common_function_excision_products(genome, None, recombinase.overlap)
+    products = common_function_excision_or_inversion_products(
+        genome, None, recombinase.overlap
+    )
     products = [recombinase.annotate(p) for p in products]
     return _recast_sources(products, RecombinaseSource, recombinases=recombinase)
+
+
+def recombinase_excision(
+    genome: Dseqrecord,
+    recombinase: Recombinase | RecombinaseCollection,
+) -> list[Dseqrecord]:
+    warnings.warn(
+        "`recombinase_excision` is deprecated and will be removed in a future version; use "
+        "`recombinase_excision_or_inversion` instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return recombinase_excision_or_inversion(genome, recombinase)
 
 
 def recombinase_integration(
@@ -2933,6 +3043,20 @@ def recombinase_integration(
     fragments = common_handle_insertion_fragments(genome, inserts)
     products = common_function_integration_products(
         fragments, None, recombinase.overlap
+    )
+    products = [recombinase.annotate(p) for p in products]
+    return _recast_sources(products, RecombinaseSource, recombinases=recombinase)
+
+
+def recombinase_assembly(
+    frags: list[Dseqrecord],
+    recombinase: Recombinase | RecombinaseCollection,
+    circular_only: bool = False,
+) -> list[Dseqrecord]:
+    """Returns the products of a recombinase assembly (assuming no sequence is a genome)"""
+
+    products = common_function_assembly_products(
+        frags, None, recombinase.overlap, circular_only
     )
     products = [recombinase.annotate(p) for p in products]
     return _recast_sources(products, RecombinaseSource, recombinases=recombinase)

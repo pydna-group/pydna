@@ -5,15 +5,17 @@ from pydna.dseqrecord import Dseqrecord
 from pydna.dseq import Dseq
 from pydna.assembly2 import (
     Assembly,
-    recombinase_integration,
     recombinase_excision,
+    recombinase_integration,
+    recombinase_excision_or_inversion,
+    recombinase_assembly,
 )
 from pydna.recombinase import (
     _recombinase_homology_offset_and_length,
     Recombinase,
     RecombinaseCollection,
 )
-
+from Bio.Seq import reverse_complement
 
 # ---------------------------------------------------------------------------
 # _recombinase_homology_offset_and_length
@@ -163,7 +165,6 @@ def test_degenerate_site():
 
 def test_reverse_complement_sites():
     """Sites on the reverse strand should be detected."""
-    from Bio.Seq import reverse_complement
 
     site1 = "ATGCCCTAAaaTT"
     site2 = "AAaaTTTTTTTCCCT"
@@ -251,13 +252,28 @@ def test_recombinase_excision():
     rec = Recombinase(site1, site2)
     genome = Dseqrecord(f"cccccc{site1.upper()}tttt{site2.upper()}aaaaa")
 
-    products = recombinase_excision(genome, rec)
+    products = recombinase_excision_or_inversion(genome, rec)
     assert len(products) == 2
     assert products[0].seq.upper() == Dseq("AACTttttAA".upper())
     assert (
         products[1].seq.upper()
         == Dseq("ccccccATGCCCTAAAATTTTTTTCCCTaaaaa", circular=True).upper()
     )
+
+
+def test_recombinase_excision_deprecated_alias_warns_and_matches_new_name():
+    site1 = "ATGCCCTAAaaCT"
+    site2 = "AAaaTTTTTTTCCCT"
+    rec = Recombinase(site1, site2)
+    genome = Dseqrecord(f"cccccc{site1.upper()}tttt{site2.upper()}aaaaa")
+
+    with pytest.warns(DeprecationWarning, match="recombinase_excision_or_inversion"):
+        products_old = recombinase_excision(genome, rec)
+    products_new = recombinase_excision_or_inversion(genome, rec)
+
+    assert [p.seq.seguid() for p in products_old] == [
+        p.seq.seguid() for p in products_new
+    ]
 
 
 def test_recombinase_integration_excision_reversibility():
@@ -272,7 +288,7 @@ def test_recombinase_integration_excision_reversibility():
     assert len(products) == 1
     integrated = products[0]
 
-    excised = recombinase_excision(integrated, rec)
+    excised = recombinase_excision_or_inversion(integrated, rec)
     assert len(excised) == 2
 
     assert excised[1].seq.seguid() == genome.seq.seguid()
@@ -386,3 +402,57 @@ def test_recombinase_collection_in_assembly_functions():
     seq2 = Dseqrecord(f"ggg{site2.upper()}ttt{site4.upper()}ttt")
     products = recombinase_integration(seq, [seq2], collection)
     assert len(products) == 1
+
+
+def test_inversion_recombinase():
+    attL = "AAAttGCGC"
+    attR = "TATttCCAA"
+    attLR = "AAAttCCAA"
+    attRL = "TATttGCGC"
+
+    seq1 = Dseqrecord("ggg" + attL + "cca" + reverse_complement(attR) + "tttt")
+    rec = Recombinase(attL, attR)
+
+    prods = recombinase_excision_or_inversion(seq1, rec)
+    expected = (
+        "ggg" + attLR + reverse_complement("cca") + reverse_complement(attRL) + "tttt"
+    )
+    assert len(prods) == 1
+    assert str(prods[0].seq) == expected
+    prods[0].validate_history()
+
+    # Same results with assembly function
+    assert prods == recombinase_assembly([seq1], rec)
+
+    seq1 = seq1.looped()
+    prods = recombinase_excision_or_inversion(seq1, rec)
+    assert len(prods) == 1
+    assert prods[0].seq.seguid() == Dseq(expected, circular=True).seguid()
+    # Same results with assembly function
+    assert prods == recombinase_assembly([seq1], rec)
+    prods[0].validate_history()
+
+
+def test_recombinase_assembly():
+    attL = "AAAttGCGC"
+    attR = "TATttCCAA"
+    attLR = "AAAttCCAA"
+    attRL = "TATttGCGC"
+
+    seq1 = Dseqrecord(f"ggg{attL}aaa")
+    seq2 = Dseqrecord(f"ccc{attR}ttt")
+    rec = Recombinase(attL, attR)
+
+    prods = recombinase_assembly([seq1, seq2], rec)
+    assert len(prods) == 2
+    assert str(prods[0].seq) == f"ggg{attLR}ttt"
+    assert str(prods[1].seq) == f"ccc{attRL}aaa"
+
+    # Circular sequences should merge
+    seq1 = seq1.looped()
+    seq2 = seq2.looped()
+    prods = recombinase_assembly([seq1, seq2], rec)
+    assert len(prods) == 1
+    assert (
+        prods[0].seguid() == Dseq(f"ggg{attLR}tttccc{attRL}aaa", circular=True).seguid()
+    )
