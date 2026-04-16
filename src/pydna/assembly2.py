@@ -2396,7 +2396,7 @@ def restriction_ligation_assembly(
         return restriction_ligation_overlap(x, y, enzymes, False, allow_blunt)
 
     products = common_function_assembly_products(
-        frags, None, algorithm_fn, circular_only, only_adjacent_edges=False
+        frags, None, algorithm_fn, circular_only, only_adjacent_edges=True
     )
 
     out = _recast_sources(
