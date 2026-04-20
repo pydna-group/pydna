@@ -480,9 +480,9 @@ of the cloning strategy like below. See an example in <a class="reference extern
     <span class="n">ligation_assembly</span><span class="p">,</span>
     <span class="n">gateway_assembly</span><span class="p">,</span>
     <span class="n">homologous_recombination_integration</span><span class="p">,</span>
-    <span class="n">homologous_recombination_excision</span><span class="p">,</span>
+    <span class="n">homologous_recombination_excision_or_inversion</span><span class="p">,</span>
     <span class="n">cre_lox_integration</span><span class="p">,</span>
-    <span class="n">cre_lox_excision</span><span class="p">,</span>
+    <span class="n">cre_lox_excision_or_inversion</span><span class="p">,</span>
     <span class="n">pcr_assembly</span><span class="p">,</span>
     <span class="n">crispr_integration</span><span class="p">,</span>
 <span class="p">)</span>
@@ -677,7 +677,7 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <span class="n">insert</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">gggg</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="n">integration_product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">homologous_recombination_integration</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="p">[</span><span class="n">insert</span><span class="p">],</span> <span class="mi">20</span><span class="p">)</span>
 
-<span class="n">excision_product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">homologous_recombination_excision</span><span class="p">(</span><span class="n">integration_product</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">excision_product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">homologous_recombination_excision_or_inversion</span><span class="p">(</span><span class="n">integration_product</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 
 <span class="n">genome</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;genome&quot;</span>
 <span class="n">insert</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;insert&quot;</span>
@@ -713,7 +713,7 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <span class="n">a</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cccccc</span><span class="si">{</span><span class="n">LOXP_SEQUENCE</span><span class="si">}</span><span class="s2">aaaaa&quot;</span><span class="p">)</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">LOXP_SEQUENCE</span><span class="si">}</span><span class="s2">bbbbb&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">integration_product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">cre_lox_integration</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="n">b</span><span class="p">])</span>
-<span class="n">excision_product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">cre_lox_excision</span><span class="p">(</span><span class="n">integration_product</span><span class="p">)</span>
+<span class="n">excision_product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">cre_lox_excision_or_inversion</span><span class="p">(</span><span class="n">integration_product</span><span class="p">)</span>
 
 <span class="n">a</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;genome&quot;</span>
 <span class="n">b</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;plasmid&quot;</span>

@@ -1098,9 +1098,9 @@ tttGCATGCGTGTggggGCATGCGTGTttt
 <p>We can also simulate the opposite process, an excission, and recover the original inputs (plasmid and gneome)</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">homologous_recombination_excision</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">homologous_recombination_excision_or_inversion</span>
 
-<span class="n">products</span> <span class="o">=</span> <span class="n">homologous_recombination_excision</span><span class="p">(</span><span class="n">transformed_genome</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">products</span> <span class="o">=</span> <span class="n">homologous_recombination_excision_or_inversion</span><span class="p">(</span><span class="n">transformed_genome</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">products</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>

@@ -1259,13 +1259,13 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
             <span class="n">homologous_recombination_integration</span><span class="p">,</span>
-            <span class="n">homologous_recombination_excision</span><span class="p">,</span>
+            <span class="n">homologous_recombination_excision_or_inversion</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(</span><span class="n">handle_insertion</span><span class="p">)</span>
         <span class="n">limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_minimal_assembly_overlap</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">homologous_recombination_excision</span><span class="p">(</span><span class="n">seqs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">limit</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">homologous_recombination_excision_or_inversion</span><span class="p">(</span><span class="n">seqs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">limit</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">homologous_recombination_integration</span><span class="p">(</span><span class="n">seqs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">seqs</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">limit</span><span class="p">)</span></div>
 
@@ -1294,11 +1294,11 @@
     <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">cre_lox_integration</span><span class="p">,</span> <span class="n">cre_lox_excision</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">cre_lox_integration</span><span class="p">,</span> <span class="n">cre_lox_excision_or_inversion</span>
 
         <span class="n">seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(</span><span class="n">handle_insertion</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">cre_lox_excision</span><span class="p">(</span><span class="n">seqs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">cre_lox_excision_or_inversion</span><span class="p">(</span><span class="n">seqs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">cre_lox_integration</span><span class="p">(</span><span class="n">seqs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">seqs</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span></div>
 
@@ -1381,13 +1381,18 @@
         <span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_replay_products</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle_insertion</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Dseqrecord&quot;</span><span class="p">]:</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">recombinase_integration</span><span class="p">,</span> <span class="n">recombinase_excision</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+            <span class="n">recombinase_integration</span><span class="p">,</span>
+            <span class="n">recombinase_assembly</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="n">seqs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_sequences</span><span class="p">(</span><span class="n">handle_insertion</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">recombinase_excision</span><span class="p">(</span><span class="n">seqs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">recombinases</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">recombinase_assembly</span><span class="p">(</span><span class="n">seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">recombinases</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">recombinase_integration</span><span class="p">(</span><span class="n">seqs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">seqs</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="bp">self</span><span class="o">.</span><span class="n">recombinases</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="n">recombinase_integration</span><span class="p">(</span>
+                <span class="n">seqs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">seqs</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="bp">self</span><span class="o">.</span><span class="n">recombinases</span>
+            <span class="p">)</span> <span class="o">+</span> <span class="n">recombinase_assembly</span><span class="p">(</span><span class="n">seqs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">recombinases</span><span class="p">)</span></div>
 
 
 

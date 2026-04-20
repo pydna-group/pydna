@@ -332,6 +332,8 @@
     <span class="n">sum_is_sticky</span><span class="p">,</span>
     <span class="n">limit_iterator</span><span class="p">,</span>
     <span class="n">create_location</span><span class="p">,</span>
+    <span class="n">deduplicate</span><span class="p">,</span>
+    <span class="n">cutsite_to_location</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">ps</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.common_sub_strings</span><span class="w"> </span><span class="kn">import</span> <span class="n">common_sub_strings</span> <span class="k">as</span> <span class="n">common_sub_strings_str</span>
@@ -533,6 +535,13 @@
     <span class="c1">#         cuts_x.append(((len(seqx), 0), None))</span>
     <span class="c1">#     if not seqy.circular:</span>
     <span class="c1">#         cuts_y.append(((0, 0), None))</span>
+
+    <span class="k">if</span> <span class="n">partial</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Partial overlaps can return wrong products, see https://github.com/pydna-group/pydna/issues/426&quot;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="c1"># Include edges that are not blunt ends</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">seqx</span><span class="o">.</span><span class="n">circular</span> <span class="ow">and</span> <span class="n">seqx</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">right_ovhg</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -1936,6 +1945,25 @@
         <span class="k">return</span> <span class="n">possibilities</span></div>
 
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_filter_cycles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cycles</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+        <span class="c1"># We apply constraints early because cycles can become combinatorially large.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_all_fragments</span><span class="p">:</span>
+            <span class="n">cycles</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cycles</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">)]</span>
+
+        <span class="c1"># Remove cycles with duplicate fragments (e.g. [1, 2, -1]).</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cycles</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">abs</span><span class="p">,</span> <span class="n">c</span><span class="p">)))]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_max_assemblies</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">cycles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">max_assemblies</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">possible_assembly_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_possible_assembly_number</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">c</span> <span class="o">+</span> <span class="n">c</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cycles</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">possible_assembly_number</span> <span class="o">&gt;</span> <span class="n">max_assemblies</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Too many assemblies (</span><span class="si">{</span><span class="n">possible_assembly_number</span><span class="si">}</span><span class="s2"> pre-validation) to assemble&quot;</span>
+            <span class="p">)</span>
+
 <div class="viewcode-block" id="Assembly.get_circular_assemblies">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.Assembly.get_circular_assemblies">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_circular_assemblies</span><span class="p">(</span>
@@ -1955,19 +1983,8 @@
         <span class="n">sorted_cycles</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">sorted_cycles</span><span class="p">)</span>
         <span class="c1"># cycles.simple_cycles returns lists [1,2,3] not assemblies, see self.cycle2circular_assemblies</span>
 
-        <span class="c1"># We apply constrains already here because sometimes the combinatorial explosion is too large</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_all_fragments</span><span class="p">:</span>
-            <span class="n">sorted_cycles</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">sorted_cycles</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">)]</span>
-
-        <span class="c1"># Remove cycles with duplicates</span>
-        <span class="n">sorted_cycles</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">sorted_cycles</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">abs</span><span class="p">,</span> <span class="n">c</span><span class="p">)))]</span>
-        <span class="n">possible_assembly_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_possible_assembly_number</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">c</span> <span class="o">+</span> <span class="n">c</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">sorted_cycles</span><span class="p">]</span>
-        <span class="p">)</span>
-        <span class="k">if</span> <span class="n">possible_assembly_number</span> <span class="o">&gt;</span> <span class="n">max_assemblies</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Too many assemblies (</span><span class="si">{</span><span class="n">possible_assembly_number</span><span class="si">}</span><span class="s2"> pre-validation) to assemble&quot;</span>
-            <span class="p">)</span>
+        <span class="n">sorted_cycles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_cycles</span><span class="p">(</span><span class="n">sorted_cycles</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_max_assemblies</span><span class="p">(</span><span class="n">sorted_cycles</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">)</span>
 
         <span class="n">assemblies</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
             <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_path2assembly_list</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">sorted_cycles</span><span class="p">),</span> <span class="p">[]</span>
@@ -2130,22 +2147,8 @@
             <span class="p">)</span>
 
         <span class="n">cycles</span> <span class="o">=</span> <span class="n">limit_iterator</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">cycles</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">),</span> <span class="mi">10000</span><span class="p">)</span>
-
-        <span class="c1"># We apply constrains already here because sometimes the combinatorial explosion is too large</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_all_fragments</span><span class="p">:</span>
-            <span class="n">cycles</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cycles</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">)]</span>
-
-        <span class="c1"># Remove cycles with duplicates</span>
-        <span class="n">cycles</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cycles</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">abs</span><span class="p">,</span> <span class="n">c</span><span class="p">)))]</span>
-
-        <span class="n">possible_assembly_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_possible_assembly_number</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">c</span> <span class="o">+</span> <span class="n">c</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cycles</span><span class="p">]</span>
-        <span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">possible_assembly_number</span> <span class="o">&gt;</span> <span class="n">max_assemblies</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Too many assemblies (</span><span class="si">{</span><span class="n">possible_assembly_number</span><span class="si">}</span><span class="s2"> pre-validation) to assemble&quot;</span>
-            <span class="p">)</span>
+        <span class="n">cycles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_cycles</span><span class="p">(</span><span class="n">cycles</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_max_assemblies</span><span class="p">(</span><span class="n">cycles</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">)</span>
 
         <span class="c1"># We find cycles first</span>
         <span class="n">iterator</span> <span class="o">=</span> <span class="n">limit_iterator</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">cycles</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">),</span> <span class="mi">10000</span><span class="p">)</span>
@@ -2263,37 +2266,28 @@
 
 <span class="sd">        We would only want assemblies that contain subfragments start-x, x-y, y-z, z-end, and not start-x, y-end, for instance.</span>
 <span class="sd">        The latter would indicate that the fragment was partially digested.</span>
+
+<span class="sd">        This does NOT work for partial overlaps, see https://github.com/pydna-group/pydna/issues/426 and get_locations_on_fragments.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">locations_on_fragments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_locations_on_fragments</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">locations_on_fragments</span><span class="p">:</span>
-            <span class="n">fragment_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
-            <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">]:</span>
-                <span class="n">locations_on_fragments</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">side</span><span class="p">]</span> <span class="o">=</span> <span class="n">gather_overlapping_locations</span><span class="p">(</span>
-                    <span class="n">locations_on_fragments</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">side</span><span class="p">],</span> <span class="n">fragment_len</span>
-                <span class="p">)</span>
-
         <span class="n">allowed_location_pairs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">locations_on_fragments</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_circular</span><span class="p">:</span>
-                <span class="c1"># We add the existing ends of the fragment</span>
-                <span class="n">left</span> <span class="o">=</span> <span class="p">[(</span><span class="kc">None</span><span class="p">,)]</span> <span class="o">+</span> <span class="n">locations_on_fragments</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;left&quot;</span><span class="p">]</span>
-                <span class="n">right</span> <span class="o">=</span> <span class="n">locations_on_fragments</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;right&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="kc">None</span><span class="p">,)]</span>
-
+            <span class="n">fragment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">locations</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">locations_on_fragments</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;left&quot;</span><span class="p">]</span>
+                <span class="o">+</span> <span class="n">locations_on_fragments</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;right&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">gathered</span> <span class="o">=</span> <span class="n">gather_overlapping_locations</span><span class="p">(</span><span class="n">locations</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">fragment</span><span class="p">))</span>
+            <span class="n">gathered</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">deduplicate</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">hashable</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">gathered</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">fragment</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
+                <span class="n">zipped</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">([(</span><span class="kc">None</span><span class="p">,)]</span> <span class="o">+</span> <span class="n">gathered</span><span class="p">,</span> <span class="n">gathered</span> <span class="o">+</span> <span class="p">[(</span><span class="kc">None</span><span class="p">,)],</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># For circular assemblies, we add the first location at the end</span>
-                <span class="c1"># to allow for the last edge to be used</span>
-                <span class="n">left</span> <span class="o">=</span> <span class="n">locations_on_fragments</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;left&quot;</span><span class="p">]</span>
-                <span class="n">right</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">locations_on_fragments</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;right&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
-                    <span class="o">+</span> <span class="n">locations_on_fragments</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">&quot;right&quot;</span><span class="p">][:</span><span class="mi">1</span><span class="p">]</span>
-                <span class="p">)</span>
-
+                <span class="n">zipped</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">gathered</span><span class="p">,</span> <span class="n">gathered</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">gathered</span><span class="p">[:</span><span class="mi">1</span><span class="p">],</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
-                <span class="n">pairs</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">pair</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">zipped</span><span class="p">:</span>
+                <span class="n">pairs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">pair</span><span class="p">)))</span>
             <span class="n">allowed_location_pairs</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">pairs</span>
-
         <span class="n">fragment_assembly</span> <span class="o">=</span> <span class="n">edge_representation2subfragment_representation</span><span class="p">(</span>
             <span class="n">assembly</span><span class="p">,</span> <span class="n">is_circular</span>
         <span class="p">)</span>
@@ -2434,7 +2428,7 @@
 <span class="sd">    An assembly that represents the circularisation or splicing of a single fragment.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frags</span><span class="p">:</span> <span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">common_sub_strings</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span> <span class="n">limit</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="n">common_sub_strings</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">frags</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -2444,15 +2438,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">()</span>
         <span class="n">frag</span> <span class="o">=</span> <span class="n">frags</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="c1"># Add positive and negative nodes for forward and reverse fragments</span>
+        <span class="n">frag_rc</span> <span class="o">=</span> <span class="n">frag</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">seq</span><span class="o">=</span><span class="n">frag</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">seq</span><span class="o">=</span><span class="n">frag_rc</span><span class="p">)</span>
 
-        <span class="n">matches</span> <span class="o">=</span> <span class="n">algorithm</span><span class="p">(</span><span class="n">frag</span><span class="p">,</span> <span class="n">frag</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
-        <span class="c1"># Remove matches where the whole sequence matches</span>
-        <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span><span class="n">match</span> <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span> <span class="k">if</span> <span class="n">match</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">frag</span><span class="p">)]</span>
-
-        <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_edges_from_match</span><span class="p">(</span><span class="n">match</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">frag</span><span class="p">,</span> <span class="n">frag</span><span class="p">)</span>
-
+        <span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">orientations</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="p">([</span><span class="n">frag</span><span class="p">,</span> <span class="n">frag</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>
+            <span class="p">([</span><span class="n">frag</span><span class="p">,</span> <span class="n">frag_rc</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="p">([</span><span class="n">frag_rc</span><span class="p">,</span> <span class="n">frag</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>
+        <span class="p">]:</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="n">algorithm</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+            <span class="c1"># Remove matches where the whole sequence matches</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span><span class="n">match</span> <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span> <span class="k">if</span> <span class="n">match</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">frag</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_edges_from_match</span><span class="p">(</span><span class="n">match</span><span class="p">,</span> <span class="o">*</span><span class="n">orientations</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">)</span>
         <span class="c1"># To avoid duplicated outputs</span>
         <span class="k">while</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">remove_edges_from</span><span class="p">([(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
@@ -2484,6 +2483,17 @@
         <span class="p">]</span></div>
 
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_splicing_assembly_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># We don&#39;t want the same location twice</span>
+        <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="c1"># We don&#39;t want to get overlap only (e.g. GAATTCcatGAATTC giving GAATTC)</span>
+        <span class="n">left_start</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">right_end</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">left_start</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">right_end</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
 <div class="viewcode-block" id="SingleFragmentAssembly.get_insertion_assemblies">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.SingleFragmentAssembly.get_insertion_assemblies">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_insertion_assemblies</span><span class="p">(</span>
@@ -2496,20 +2506,8 @@
                 <span class="s2">&quot;only_adjacent_edges not implemented for insertion assemblies&quot;</span>
             <span class="p">)</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">splicing_assembly_filter</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-            <span class="c1"># We don&#39;t want the same location twice</span>
-            <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="kc">False</span>
-            <span class="c1"># We don&#39;t want to get overlap only (e.g. GAATTCcatGAATTC giving GAATTC)</span>
-            <span class="n">left_start</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">right_end</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">left_start</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">right_end</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-                <span class="k">return</span> <span class="kc">False</span>
-            <span class="k">return</span> <span class="kc">True</span>
-
-        <span class="c1"># We don&#39;t want the same location twice</span>
         <span class="n">assemblies</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span>
-            <span class="n">splicing_assembly_filter</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_splicing_assembly_filter</span><span class="p">,</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_insertion_assemblies</span><span class="p">(</span><span class="n">max_assemblies</span><span class="o">=</span><span class="n">max_assemblies</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span>
@@ -2525,6 +2523,77 @@
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.SingleFragmentAssembly.get_linear_assemblies">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_linear_assemblies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Linear assembly does not make sense&quot;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_inversion_assembly_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">EdgeRepresentationAssembly</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># We don&#39;t want the same location twice</span>
+        <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">frag_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="c1"># Right topology</span>
+        <span class="k">if</span> <span class="n">left</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">right</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">_flip</span><span class="p">(</span><span class="n">frag_len</span><span class="p">)</span> <span class="ow">and</span> <span class="n">left</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="n">right</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">_flip</span><span class="p">(</span><span class="n">frag_len</span><span class="p">):</span>
+            <span class="c1"># Remove duplicates:</span>
+            <span class="n">inversion_start</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">inversion_end</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">right</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">inversion_start</span> <span class="o">&lt;</span> <span class="n">inversion_end</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="SingleFragmentAssembly.get_inversion_assemblies">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.SingleFragmentAssembly.get_inversion_assemblies">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_inversion_assemblies</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">EdgeRepresentationAssembly</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns assemblies that invert a part inside the fragment.</span>
+
+<span class="sd">        For example, in homologous recombination, in a sequence where</span>
+<span class="sd">        homology is ``GAAAGG`` (reversse-complemented ``CCTTC``)</span>
+<span class="sd">        the ``acc`` contained within the homology following sequence:</span>
+
+<span class="sd">        ``aaGAAGGaccCCTTCcc``</span>
+
+<span class="sd">        Will be inverted to:</span>
+
+<span class="sd">        ``aaGAAGGggtCCTTCcc``</span>
+
+<span class="sd">        It works the same for circular sequences</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
+<span class="sd">        &gt;&gt;&gt; from pydna.assembly2 import SingleFragmentAssembly</span>
+<span class="sd">        &gt;&gt;&gt; seq1 = Dseqrecord(&quot;aaGAAGGaccCCTTCcc&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; prod = SingleFragmentAssembly([seq1], limit=5).assemble_inversion()[0]</span>
+<span class="sd">        &gt;&gt;&gt; prod.seq</span>
+<span class="sd">        Dseq(-17)</span>
+<span class="sd">        aaGAAGGggtCCTTCcc</span>
+<span class="sd">        ttCTTCCccaGGAAGgg</span>
+<span class="sd">        &gt;&gt;&gt; seq1 = seq1.looped()</span>
+<span class="sd">        &gt;&gt;&gt; prod = SingleFragmentAssembly([seq1], limit=5).assemble_inversion()[0]</span>
+<span class="sd">        &gt;&gt;&gt; prod.seq</span>
+<span class="sd">        Dseq(o17)</span>
+<span class="sd">        CCTTCccaaGAAGGggt</span>
+<span class="sd">        GGAAGggttCTTCCcca</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">cycles</span> <span class="o">=</span> <span class="n">limit_iterator</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">cycles</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">),</span> <span class="mi">10000</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cycles</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">cycles</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_max_assemblies</span><span class="p">(</span><span class="n">cycles</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">)</span>
+        <span class="n">assemblies</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+            <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_path2assembly_list</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">cycles</span><span class="p">),</span> <span class="p">[]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inversion_assembly_filter</span><span class="p">,</span> <span class="n">assemblies</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="SingleFragmentAssembly.assemble_inversion">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.SingleFragmentAssembly.assemble_inversion">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">assemble_inversion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
+        <span class="n">assemblies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_inversion_assemblies</span><span class="p">(</span><span class="n">max_assemblies</span><span class="p">)</span>
+        <span class="n">is_insertion</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">circular</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">assemble</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">is_insertion</span><span class="o">=</span><span class="n">is_insertion</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">assemblies</span>
+        <span class="p">]</span></div>
 </div>
 
 
@@ -2573,8 +2642,12 @@
         <span class="n">output_assemblies</span> <span class="o">+=</span> <span class="n">filter_linear_subassemblies</span><span class="p">(</span>
             <span class="n">asm</span><span class="o">.</span><span class="n">get_linear_assemblies</span><span class="p">(</span><span class="n">only_adjacent_edges</span><span class="p">),</span> <span class="n">output_assemblies</span><span class="p">,</span> <span class="n">frags</span>
         <span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">circular_only</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">frags</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">output_assemblies</span> <span class="o">+=</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_insertion_assemblies</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">frags</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">circular_only</span><span class="p">:</span>
+            <span class="n">output_assemblies</span> <span class="o">+=</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_insertion_assemblies</span><span class="p">()</span>
+            <span class="n">output_assemblies</span> <span class="o">+=</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_inversion_assemblies</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">frags</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
+            <span class="n">output_assemblies</span> <span class="o">+=</span> <span class="n">asm</span><span class="o">.</span><span class="n">get_inversion_assemblies</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">filter_results_function</span><span class="p">:</span>
         <span class="n">output_assemblies</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">output_assemblies</span> <span class="k">if</span> <span class="n">filter_results_function</span><span class="p">(</span><span class="n">a</span><span class="p">)]</span>
@@ -2714,6 +2787,47 @@
 
 
 
+<div class="viewcode-block" id="partially_digested_seqs_in_restriction_ligation_assembly">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.partially_digested_seqs_in_restriction_ligation_assembly">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">partially_digested_seqs_in_restriction_ligation_assembly</span><span class="p">(</span>
+    <span class="n">product</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a list of sequences that are partially digested in a restriction-ligation assembly product.</span>
+
+<span class="sd">    TODO: For this to work for partial overlaps in the future, it should check for overlapping the left</span>
+<span class="sd">    and right allowed locations rather than being identical, but tricky to also support blunt-end enzymes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">enzymes</span> <span class="o">=</span> <span class="n">product</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">restriction_enzymes</span>
+    <span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">product</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">seq</span>
+        <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">reverse_complemented</span><span class="p">:</span>
+            <span class="n">seq</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+        <span class="n">cutsites</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">get_cutsites</span><span class="p">(</span><span class="o">*</span><span class="n">enzymes</span><span class="p">)</span>
+        <span class="n">cutsite_pairs</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">get_cutsite_pairs</span><span class="p">(</span><span class="n">cutsites</span><span class="p">)</span>
+        <span class="n">allowed_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cs1</span><span class="p">,</span> <span class="n">cs2</span> <span class="ow">in</span> <span class="n">cutsite_pairs</span><span class="p">:</span>
+            <span class="n">allowed_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">cutsite_to_location</span><span class="p">(</span><span class="n">cs1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)),</span> <span class="n">cutsite_to_location</span><span class="p">(</span><span class="n">cs2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)))</span>
+            <span class="p">)</span>
+        <span class="c1"># If the location is the edge of a pre-restricted / hybridized fragment</span>
+        <span class="c1"># it cannot be partially digested</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">inp</span><span class="o">.</span><span class="n">left_location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">left_location</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="ow">and</span> <span class="n">seq</span><span class="o">.</span><span class="n">left_ovhg</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="n">inp</span><span class="o">.</span><span class="n">right_location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">right_location</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">seq</span><span class="o">.</span><span class="n">right_ovhg</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">left_location</span><span class="p">,</span> <span class="n">inp</span><span class="o">.</span><span class="n">right_location</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allowed_pairs</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
 <div class="viewcode-block" id="restriction_ligation_assembly">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.restriction_ligation_assembly">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">restriction_ligation_assembly</span><span class="p">(</span>
@@ -2790,9 +2904,31 @@
     <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_assembly_products</span><span class="p">(</span>
         <span class="n">frags</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algorithm_fn</span><span class="p">,</span> <span class="n">circular_only</span><span class="p">,</span> <span class="n">only_adjacent_edges</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
-    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="n">_recast_sources</span><span class="p">(</span>
         <span class="n">products</span><span class="p">,</span> <span class="n">RestrictionAndLigationSource</span><span class="p">,</span> <span class="n">restriction_enzymes</span><span class="o">=</span><span class="n">enzymes</span>
-    <span class="p">)</span></div>
+    <span class="p">)</span>
+
+    <span class="n">filtered</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">partially_seqs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+        <span class="n">these_seqs</span> <span class="o">=</span> <span class="n">partially_digested_seqs_in_restriction_ligation_assembly</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">these_seqs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">filtered</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">partially_seqs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">these_seqs</span><span class="p">)</span>
+    <span class="c1"># Dedupe by id:</span>
+    <span class="n">partially_seqs</span> <span class="o">=</span> <span class="n">deduplicate</span><span class="p">(</span><span class="n">partially_seqs</span><span class="p">,</span> <span class="n">hashable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">partially_seqs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">formatted_seqs</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Seq </span><span class="si">{</span><span class="n">seq</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> (id: </span><span class="si">{</span><span class="n">seq</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">partially_seqs</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">partially_seqs</span><span class="p">)</span><span class="si">}</span><span class="s2"> partially digested products were filtered out: </span><span class="si">{</span><span class="n">formatted_seqs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">filtered</span></div>
 
 
 
@@ -3105,9 +3241,9 @@
 
 
 
-<div class="viewcode-block" id="common_function_excision_products">
-<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.common_function_excision_products">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">common_function_excision_products</span><span class="p">(</span>
+<div class="viewcode-block" id="common_function_excision_or_inversion_products">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.common_function_excision_or_inversion_products">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">common_function_excision_or_inversion_products</span><span class="p">(</span>
     <span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">:</span> <span class="n">Callable</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Common function to avoid code duplication for excision products.</span>
@@ -3127,7 +3263,7 @@
 <span class="sd">        List of excised DNA molecules</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">asm</span> <span class="o">=</span> <span class="n">SingleFragmentAssembly</span><span class="p">([</span><span class="n">genome</span><span class="p">],</span> <span class="n">limit</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">asm</span><span class="o">.</span><span class="n">assemble_circular</span><span class="p">()</span> <span class="o">+</span> <span class="n">asm</span><span class="o">.</span><span class="n">assemble_insertion</span><span class="p">()</span></div>
+    <span class="k">return</span> <span class="n">asm</span><span class="o">.</span><span class="n">assemble_circular</span><span class="p">()</span> <span class="o">+</span> <span class="n">asm</span><span class="o">.</span><span class="n">assemble_insertion</span><span class="p">()</span> <span class="o">+</span> <span class="n">asm</span><span class="o">.</span><span class="n">assemble_inversion</span><span class="p">()</span></div>
 
 
 
@@ -3188,9 +3324,9 @@
 
 
 
-<div class="viewcode-block" id="homologous_recombination_excision">
-<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.homologous_recombination_excision">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">homologous_recombination_excision</span><span class="p">(</span>
+<div class="viewcode-block" id="homologous_recombination_excision_or_inversion">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.homologous_recombination_excision_or_inversion">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">homologous_recombination_excision_or_inversion</span><span class="p">(</span>
     <span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products resulting from the excision of a fragment from the genome through</span>
@@ -3223,8 +3359,25 @@
 <span class="sd">    &gt;&gt;&gt; products</span>
 <span class="sd">    [Dseqrecord(o25), Dseqrecord(-32)]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_excision_products</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">common_sub_strings</span><span class="p">)</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_excision_or_inversion_products</span><span class="p">(</span>
+        <span class="n">genome</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">common_sub_strings</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">HomologousRecombinationSource</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="homologous_recombination_excision">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.homologous_recombination_excision">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">homologous_recombination_excision</span><span class="p">(</span>
+    <span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="s2">&quot;`homologous_recombination_excision` is deprecated and will be removed in a future &quot;</span>
+        <span class="s2">&quot;version; use `homologous_recombination_excision_or_inversion` instead.&quot;</span><span class="p">,</span>
+        <span class="ne">DeprecationWarning</span><span class="p">,</span>
+        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">homologous_recombination_excision_or_inversion</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span></div>
 
 
 
@@ -3291,10 +3444,10 @@
 
 
 
-<div class="viewcode-block" id="cre_lox_excision">
-<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.cre_lox_excision">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">cre_lox_excision</span><span class="p">(</span><span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for CRE-lox excision.</span>
+<div class="viewcode-block" id="cre_lox_excision_or_inversion">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.cre_lox_excision_or_inversion">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cre_lox_excision_or_inversion</span><span class="p">(</span><span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for CRE-lox excision or inversion.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -3312,7 +3465,7 @@
 <span class="sd">    Below an example of reversible integration and excision.</span>
 
 <span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
-<span class="sd">    &gt;&gt;&gt; from pydna.assembly2 import cre_lox_integration, cre_lox_excision</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.assembly2 import cre_lox_integration, cre_lox_excision_or_inversion</span>
 <span class="sd">    &gt;&gt;&gt; from pydna.cre_lox import LOXP_SEQUENCE</span>
 <span class="sd">    &gt;&gt;&gt; a = Dseqrecord(f&quot;cccccc{LOXP_SEQUENCE}aaaaa&quot;)</span>
 <span class="sd">    &gt;&gt;&gt; b = Dseqrecord(f&quot;{LOXP_SEQUENCE}bbbbb&quot;, circular=True)</span>
@@ -3321,7 +3474,7 @@
 <span class="sd">    &gt;&gt;&gt; res = cre_lox_integration(a, [b])</span>
 <span class="sd">    &gt;&gt;&gt; res</span>
 <span class="sd">    [Dseqrecord(-84)]</span>
-<span class="sd">    &gt;&gt;&gt; res2 = cre_lox_excision(res[0])</span>
+<span class="sd">    &gt;&gt;&gt; res2 = cre_lox_excision_or_inversion(res[0])</span>
 <span class="sd">    &gt;&gt;&gt; res2</span>
 <span class="sd">    [Dseqrecord(o39), Dseqrecord(-45)]</span>
 
@@ -3336,22 +3489,37 @@
 <span class="sd">    &gt;&gt;&gt; res = cre_lox_integration(a, [b])</span>
 <span class="sd">    &gt;&gt;&gt; res</span>
 <span class="sd">    [Dseqrecord(-84)]</span>
-<span class="sd">    &gt;&gt;&gt; res2 = cre_lox_excision(res[0])</span>
+<span class="sd">    &gt;&gt;&gt; res2 = cre_lox_excision_or_inversion(res[0])</span>
 <span class="sd">    &gt;&gt;&gt; res2</span>
 <span class="sd">    [Dseqrecord(o39), Dseqrecord(-45)]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_excision_products</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cre_loxP_overlap</span><span class="p">)</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_excision_or_inversion_products</span><span class="p">(</span>
+        <span class="n">genome</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cre_loxP_overlap</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">CreLoxRecombinationSource</span><span class="p">)</span></div>
 
 
 
-<div class="viewcode-block" id="recombinase_excision">
-<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.recombinase_excision">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">recombinase_excision</span><span class="p">(</span>
+<div class="viewcode-block" id="cre_lox_excision">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.cre_lox_excision">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cre_lox_excision</span><span class="p">(</span><span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="s2">&quot;`cre_lox_excision` is deprecated and will be removed in a future version; use &quot;</span>
+        <span class="s2">&quot;`cre_lox_excision_or_inversion` instead.&quot;</span><span class="p">,</span>
+        <span class="ne">DeprecationWarning</span><span class="p">,</span>
+        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">cre_lox_excision_or_inversion</span><span class="p">(</span><span class="n">genome</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="recombinase_excision_or_inversion">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.recombinase_excision_or_inversion">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">recombinase_excision_or_inversion</span><span class="p">(</span>
     <span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
     <span class="n">recombinase</span><span class="p">:</span> <span class="n">Recombinase</span> <span class="o">|</span> <span class="n">RecombinaseCollection</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for recombinase-mediated excision.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products for recombinase-mediated excision or inversion.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -3365,9 +3533,27 @@
 <span class="sd">    list[Dseqrecord]</span>
 <span class="sd">        List containing excised plasmid and remaining genome sequence.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_excision_products</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">recombinase</span><span class="o">.</span><span class="n">overlap</span><span class="p">)</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_excision_or_inversion_products</span><span class="p">(</span>
+        <span class="n">genome</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">recombinase</span><span class="o">.</span><span class="n">overlap</span>
+    <span class="p">)</span>
     <span class="n">products</span> <span class="o">=</span> <span class="p">[</span><span class="n">recombinase</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">products</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">RecombinaseSource</span><span class="p">,</span> <span class="n">recombinases</span><span class="o">=</span><span class="n">recombinase</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="recombinase_excision">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.recombinase_excision">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">recombinase_excision</span><span class="p">(</span>
+    <span class="n">genome</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
+    <span class="n">recombinase</span><span class="p">:</span> <span class="n">Recombinase</span> <span class="o">|</span> <span class="n">RecombinaseCollection</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="s2">&quot;`recombinase_excision` is deprecated and will be removed in a future version; use &quot;</span>
+        <span class="s2">&quot;`recombinase_excision_or_inversion` instead.&quot;</span><span class="p">,</span>
+        <span class="ne">DeprecationWarning</span><span class="p">,</span>
+        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">recombinase_excision_or_inversion</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">recombinase</span><span class="p">)</span></div>
 
 
 
@@ -3411,6 +3597,23 @@
     <span class="n">fragments</span> <span class="o">=</span> <span class="n">common_handle_insertion_fragments</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="n">inserts</span><span class="p">)</span>
     <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_integration_products</span><span class="p">(</span>
         <span class="n">fragments</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">recombinase</span><span class="o">.</span><span class="n">overlap</span>
+    <span class="p">)</span>
+    <span class="n">products</span> <span class="o">=</span> <span class="p">[</span><span class="n">recombinase</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">products</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">RecombinaseSource</span><span class="p">,</span> <span class="n">recombinases</span><span class="o">=</span><span class="n">recombinase</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="recombinase_assembly">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.assembly2.recombinase_assembly">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">recombinase_assembly</span><span class="p">(</span>
+    <span class="n">frags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
+    <span class="n">recombinase</span><span class="p">:</span> <span class="n">Recombinase</span> <span class="o">|</span> <span class="n">RecombinaseCollection</span><span class="p">,</span>
+    <span class="n">circular_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the products of a recombinase assembly (assuming no sequence is a genome)&quot;&quot;&quot;</span>
+
+    <span class="n">products</span> <span class="o">=</span> <span class="n">common_function_assembly_products</span><span class="p">(</span>
+        <span class="n">frags</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">recombinase</span><span class="o">.</span><span class="n">overlap</span><span class="p">,</span> <span class="n">circular_only</span>
     <span class="p">)</span>
     <span class="n">products</span> <span class="o">=</span> <span class="p">[</span><span class="n">recombinase</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">products</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">_recast_sources</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">RecombinaseSource</span><span class="p">,</span> <span class="n">recombinases</span><span class="o">=</span><span class="n">recombinase</span><span class="p">)</span></div>
