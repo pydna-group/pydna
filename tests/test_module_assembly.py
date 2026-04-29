@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # flake8: noqa: B950
 
+from importlib import reload
 from pydna import assembly
 from pydna.dseqrecord import Dseqrecord
 from pydna.parsers import parse
@@ -16,6 +17,15 @@ from Bio.Restriction import AjiI, AgeI
 from Bio.Restriction import SalI
 from pydna.assembly import Assembly
 from Bio.Restriction import AatII
+import pytest
+
+
+def test_deprecated_warning():
+    with pytest.warns(
+        DeprecationWarning,
+        match="The module pydna.assembly is deprecated and will be removed in a future version. Use pydna.assembly2 instead.",
+    ):
+        reload(assembly)
 
 
 def test_built():
