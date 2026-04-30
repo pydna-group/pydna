@@ -39,9 +39,7 @@ This module uses `pyahocorasick`:
     PyPI: https://pypi.python.org/pypi/pyahocorasick
 """
 
-
-# TODO: circular templates
-
+from operator import attrgetter
 from itertools import product
 from itertools import combinations
 from itertools import pairwise
@@ -324,16 +322,20 @@ def forward_primers(
         values are lists with primer locations.
 
     """
+    assert primer_list, "primer_list must not be empty."
 
     # if no automaton is given, we make one.
     automaton = automaton or make_automaton(primer_list, limit=limit)
 
     # The limit is taken from automaton stats.
+    # If the automaton is given, the limit argument will be ignored.
     limit = automaton.get_stats()["longest_word"]
 
     # A defaultdict of lists is used to collect primer locations since
     # different primers can anneal in the same place.
     fps = defaultdict(list)
+
+    seq = seq[:] + seq[: limit - 1] if seq.circular else seq
 
     for end_index, ids in automaton.iter(str(seq.seq).upper()):
         for i in ids:
@@ -344,7 +346,7 @@ def forward_primers(
 
 def reverse_primers(
     seq: Dseqrecord,
-    primer_list: list[Primer] | tuple[Primer],
+    primer_list: Sequence[Primer | None],
     limit: int = 16,
     automaton: ahocorasick.Automaton = None,
 ) -> dict[int, list[int]]:
@@ -403,6 +405,8 @@ def reverse_primers(
         values are lists with primer locations.
 
     """
+    assert primer_list, "primer_list must not be empty."
+
     # if no automaton is given, we make one.
     automaton = automaton or make_automaton(primer_list, limit=limit)
 
@@ -413,6 +417,7 @@ def reverse_primers(
     # A defaultdict of lists is used to collect primer locations since
     # different primers can anneal in the same place.
     rps = defaultdict(list)
+    seq = seq[:] + seq[: limit - 1] if seq.circular else seq
     ln = len(seq)
 
     # We use the reverse complement of the sequence instead of taking the
@@ -426,7 +431,7 @@ def reverse_primers(
 
 def primer_pairs(
     seq: Dseqrecord,
-    primer_list: list[Primer] | tuple[Primer],
+    primer_list: Sequence[Primer | None],
     short: int = 500,
     long: int = 2000,
     limit: int = 16,
@@ -483,24 +488,26 @@ def primer_pairs(
         List of tuples (index_fp, position_fp, index_rp, position_rp, size)
 
     """
+    assert primer_list, "primer_list must not be empty."
+
+    # if no automaton is given, we make one.
     automaton = automaton or make_automaton(primer_list, limit=limit)
+
+    # The limit is taken from automaton stats.
+    # If the automaton is given, the limit argument will be ignored.
     limit = automaton.get_stats()["longest_word"]
 
     # Unique forward primers are collected
     fps = {
         fp: pos[0]
-        for fp, pos in forward_primers(
-            seq, primer_list, limit=limit, automaton=automaton
-        ).items()
+        for fp, pos in forward_primers(seq, primer_list, automaton=automaton).items()
         if len(pos) == 1
     }
 
     # Unique reverse primers are collected
     rps = {
         rp: pos[0]
-        for rp, pos in reverse_primers(
-            seq, primer_list, limit=limit, automaton=automaton
-        ).items()
+        for rp, pos in reverse_primers(seq, primer_list, automaton=automaton).items()
         if len(pos) == 1
     }
     products = []
@@ -512,13 +519,30 @@ def primer_pairs(
             # If the size falls within long and short, the data is kept.
             if short <= size <= long and fposition <= rposition:
                 products.append(amplicon_tuple(fp, rp, fposition, rposition, size))
+    # if sequence is circular we also look at forward primers that sits after the
+    # reverse primer and amplify across the origin
+    if seq.circular:
+        ln = len(seq)
+        for fp, fposition in fps.items():
+            for rp, rposition in rps.items():
+                if fposition > rposition:
+                    size = (
+                        len(primer_list[fp])
+                        + rposition
+                        + (ln - fposition)
+                        + len(primer_list[rp])
+                    )
+                    if short <= size <= long:
+                        products.append(
+                            amplicon_tuple(fp, rp, fposition, rposition, size)
+                        )
     return products
 
 
 def flanking_primer_pairs(
     seq: Dseqrecord,
-    primer_list: list[Primer] | tuple[Primer],
-    target: tuple[int, int],
+    primer_list: Sequence[Primer | None],
+    target: tuple[int, int] = (None, None),
     limit: int = 16,
     automaton: ahocorasick.Automaton = None,
 ) -> list[amplicon_tuple[int, int, int, int, int]]:
@@ -561,11 +585,10 @@ def flanking_primer_pairs(
 
     """
 
-    automaton = automaton or make_automaton(primer_list, limit=limit)
-    limit = automaton.get_stats()["longest_word"]
-
     begin, end = target
 
+    assert begin is not None, "begin has to be set."
+    assert end is not None, "end has to be set."
     assert begin < end, "begin has to be smaller than end."
 
     amplicons = primer_pairs(
@@ -579,15 +602,22 @@ def flanking_primer_pairs(
     products = []
 
     for amplicon in amplicons:
-        if amplicon.fposition >= begin and end <= amplicon.rposition:
+        if amplicon.fposition <= begin and end <= amplicon.rposition:
             products.append(amplicon)
+    if seq.circular:
+        for amplicon in amplicons:
+            if amplicon.fposition > amplicon.rposition:
+                if (amplicon.fposition <= begin or begin <= amplicon.rposition) and (
+                    amplicon.fposition <= end or end <= amplicon.rposition
+                ):
+                    products.append(amplicon)
 
-    return products[::-1]
+    return sorted(products, key=attrgetter("size"))  # results sorted by size
 
 
 def diff_primer_pairs(
     sequences: list[Dseqrecord] | tuple[Dseqrecord],
-    primer_list: list[Primer] | tuple[Primer],
+    primer_list: Sequence[Primer | None],
     short: int = 500,
     long: int = 1500,
     limit: int = 16,
@@ -703,7 +733,7 @@ def diff_primer_pairs(
 
 def diff_primer_triplets(
     sequences: list[Dseqrecord] | tuple[Dseqrecord],
-    primer_list: list[Primer] | tuple[Primer],
+    primer_list: Sequence[Primer | None],
     limit: int = 16,
     short: int = 500,
     long: int = 1500,
