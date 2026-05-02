@@ -11,6 +11,7 @@ from Bio.SeqFeature import (
 )
 from Bio.SeqRecord import SeqRecord
 from pydna.assembly import Assembly
+from pydna.assembly2 import Assembly as Assembly2
 from pydna.dseqrecord import Dseqrecord
 
 
@@ -57,10 +58,14 @@ def test_cut_dbik():
     )
 
     asm = Assembly([Dseqrecord(bb), Dseqrecord(ins)], limit=ovl)
+    asm2 = Assembly2([Dseqrecord(bb), Dseqrecord(ins)], limit=ovl)
+
     prod1, prod2 = asm.assemble_circular()
+    prod3, *_ = asm2.assemble_circular()
 
     prod1.name = "bb_ins1"
     prod2.name = "bb_ins2"
+    prod3.name = "bb_ins3"
 
     cds_feat1 = next(
         f for f in prod1.features if f.qualifiers.get("label", [""])[0] == "myCDS"
@@ -85,3 +90,26 @@ def test_cut_dbik():
     )
     assert cds_feat2.location.strand == -1
     assert [p.strand for p in cds_feat2.location.parts] == [-1]
+
+    cds_feat3 = next(
+        f for f in prod3.features if f.qualifiers.get("label", [""])[0] == "myCDS"
+    )
+
+    assert cds_feat3.location == CompoundLocation(
+        [
+            SimpleLocation(ExactPosition(210), ExactPosition(360), strand=1),
+            SimpleLocation(ExactPosition(0), ExactPosition(30), strand=1),
+        ],
+        "join",
+    )
+    assert cds_feat3.location.strand == 1
+    assert [p.strand for p in cds_feat3.location.parts] == [1, 1]
+
+    assert cds_feat3 == cds_feat1
+
+    assert (
+        prod1.seguid()
+        == prod2.seguid()
+        == prod3.seguid()
+        == "cdseguid=EN8cEkWMLtmYLWqha4Kf2dQHz8A"
+    )
