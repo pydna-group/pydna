@@ -30,6 +30,7 @@ import pytest
 from Bio.Seq import reverse_complement
 from pydna.primer import Primer
 import os
+import textwrap
 
 test_files = os.path.join(os.path.dirname(__file__))
 
@@ -2939,6 +2940,30 @@ def test_pcr_assembly():
     primer_fwd = Primer("ACGTACGT")
     products = assembly.pcr_assembly(template, primer_fwd, primer_fwd, limit=8)
     assert len(products) == 1
+
+
+def test_pcr_assembly_figure():
+    template = Dseqrecord("AAAtacactcaccgtctatcattatctactatcgactgtatcatctgatagcacTTT")
+    template_circ = template.looped()
+
+    p1 = Primer("CCCtacactcaccgtctatcattatc")
+    p2 = Primer("GGGgtgctatcagatgatacagtcg")
+
+    product = assembly.pcr_assembly(template, p1, p2)[0]
+    product_circ = assembly.pcr_assembly(template_circ, p1, p2)[0]
+
+    fig = textwrap.dedent(
+        """\
+       5tacactcaccgtctatcattatc...cgactgtatcatctgatagcac3
+                                  ||||||||||||||||||||||
+                                 3gctgacatagtagactatcgtgGGG5
+    5CCCtacactcaccgtctatcattatc3
+        |||||||||||||||||||||||
+       3atgtgagtggcagatagtaatag...gctgacatagtagactatcgtg5"""
+    )
+
+    assert product.figure() == fig
+    assert product_circ.figure() == fig
 
 
 def test_terminal_overlap():
