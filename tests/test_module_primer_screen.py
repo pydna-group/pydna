@@ -132,6 +132,13 @@ def test_flanking_primer_pairs():
     ]
     assert result == answer
 
+    result = flanking_primer_pairs(pIL68, pl, target=(550, 1200), automaton=atm)
+
+    answer = [
+        amplicon_tuple(fp=1215, rp=594, fposition=266, rposition=1689, size=1474),
+        amplicon_tuple(fp=1215, rp=607, fposition=266, rposition=2157, size=1946),
+    ]
+
 
 def test_diff_primer_pairs():
 
