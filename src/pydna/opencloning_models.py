@@ -95,7 +95,7 @@ from typing import List
 from Bio.SeqIO.InsdcIO import _insdc_location_string as format_feature_location
 
 from pydna.types import CutSiteType, SubFragmentRepresentationAssembly
-from pydna.utils import create_location
+from pydna.utils import create_location, location_boundaries
 from typing import TYPE_CHECKING
 import Bio.Restriction as _restr_module
 import copy
@@ -479,7 +479,7 @@ class Source(ConfiguredBaseModel):
         product.id = result.id
         return product
 
-    def figure(self):
+    def figure(self, fig_type=None):
         return None
 
 
@@ -567,6 +567,37 @@ class AssemblySource(Source):
 
     def _replay_products(self, handle_insertion: bool = True) -> list["Dseqrecord"]:
         super()._replay_products(handle_insertion=handle_insertion)
+
+    def _detailed_figure(self) -> str:
+        shift = 0
+        print_list = []
+        # With this filter, we exclude things such as guide RNAs
+        for inp in filter(lambda x: isinstance(x, AssemblyFragment), self.input):
+            seq = inp.sequence.seq
+            if inp.reverse_complemented:
+                seq = seq.reverse_complement()
+
+            if inp.left_location is not None:
+                shift -= location_boundaries(inp.left_location)[0]
+
+            print_list.append((shift, seq))
+            if inp.right_location is not None:
+                shift += location_boundaries(inp.right_location)[0]
+                location = inp.right_location
+                if inp.reverse_complemented:
+                    location = location._flip(len(seq))
+                overlap = str(location.extract(seq)).upper()
+                print_list.append((shift, overlap))
+
+        min_shift = min(print_list, key=lambda x: x[0])[0]
+        fig = list()
+        for shift, seq in print_list:
+            fig.append("{}{}".format(" " * (shift - min_shift), seq))
+        return pretty_str("\n".join(fig))
+
+    def figure(self, fig_type=None):
+        if fig_type == "detailed":
+            return self._detailed_figure()
 
 
 _empty_input_list = Field(
@@ -844,7 +875,7 @@ class PCRSource(AssemblySource):
             add_primer_features=self.add_primer_features,
         )
 
-    def figure(self):
+    def figure(self, fig_type=None):
 
         fp = self.input[0].sequence
         rp = self.input[2].sequence

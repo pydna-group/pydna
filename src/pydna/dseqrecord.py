@@ -1190,11 +1190,13 @@ class Dseqrecord(SeqRecord):
         self._copy_to_clipboard("fasta")
         return None
 
-    def figure(self, feature=0, highlight="\x1b[48;5;11m", plain="\x1b[0m"):
+    def figure(
+        self, feature=0, highlight="\x1b[48;5;11m", plain="\x1b[0m", fig_type=None
+    ):
         """docstring."""
 
         if self.source is not None:
-            source_figure = self.source.figure()
+            source_figure = self.source.figure(fig_type=fig_type)
             if source_figure is not None:
                 return source_figure
 
