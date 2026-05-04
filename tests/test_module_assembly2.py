@@ -3098,7 +3098,7 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatact
         |                    /\\
         |                    15-
         |                       |
-         ----------------------- """
+         -----------------------"""
     figure_rc = """\
          -|aaa|14
         |      \/
@@ -3111,7 +3111,7 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatact
         |                       /\\
         |                       15-
         |                          |
-         -------------------------- """
+         --------------------------"""
     detailed_figure = """\
      |||||||||||||||
     tcgatgctatactgtgCCNCCtgtgctgtgctcta
@@ -3124,3 +3124,61 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatact
     assert textwrap.dedent(detailed_figure) == x_rc.figure(fig_type="detailed")
     assert textwrap.dedent(figure) == x.figure()
     assert textwrap.dedent(figure_rc) == x_rc.figure()
+
+    # Works with circular inputs as well
+    a = Dseqrecord("tattctggctgtataAAAAACtgtgctgtgctcta").looped()
+    b = Dseqrecord("tgtgctgtgctctaCCCCCCtattctggctgtata").looped()
+
+    a.name = "aaa"  # 1234567890123456
+    b.name = "bbb"
+
+    # Product where entire plasmid gets integrated into the otther plasmid
+    figure_single_site = """\
+             -|aaa|15
+            |      \/
+            |      /\\
+            |      15|bbb|15
+            |             \/
+            |             /\\
+            |             15-
+            |                |
+             ----------------"""
+
+    # Product where two different homology regions are used
+    figure_multi_site = """\
+             -|aaa|14
+            |      \/
+            |      /\\
+            |      14|bbb|15
+            |             \/
+            |             /\\
+            |             15-
+            |                |
+             ----------------"""
+
+    detailed_figure_single_site = """\
+        |||||||||||||||
+        tattctggctgtataAAAAACtgtgctgtgctcta
+        TATTCTGGCTGTATA
+        tattctggctgtatatgtgctgtgctctaCCCCCC
+        TATTCTGGCTGTATA"""
+
+    detailed_figure_multi_site = """\
+        |||||||||||||||
+        tattctggctgtataAAAAACtgtgctgtgctcta
+                             TGTGCTGTGCTCTA
+                             tgtgctgtgctctaCCCCCCtattctggctgtata
+                                                 TATTCTGGCTGTATA"""
+
+    for shift in range(len(a)):
+        a_shifted = a.shifted(shift)
+        asm2 = assembly.Assembly((a_shifted, b), limit=14)
+        p1, _, p2, _ = asm2.assemble_circular()
+        assert p1.figure() == textwrap.dedent(figure_single_site)
+        assert p2.figure() == textwrap.dedent(figure_multi_site)
+        assert p1.figure(fig_type="detailed") == textwrap.dedent(
+            detailed_figure_single_site
+        )
+        assert p2.figure(fig_type="detailed") == textwrap.dedent(
+            detailed_figure_multi_site
+        )

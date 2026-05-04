@@ -95,7 +95,7 @@ from typing import List
 from Bio.SeqIO.InsdcIO import _insdc_location_string as format_feature_location
 
 from pydna.types import CutSiteType, SubFragmentRepresentationAssembly
-from pydna.utils import create_location, location_boundaries
+from pydna.utils import create_location, location_boundaries, shift_location
 from typing import TYPE_CHECKING
 import Bio.Restriction as _restr_module
 import copy
@@ -575,21 +575,30 @@ class AssemblySource(Source):
         for i, inp in enumerate(
             filter(lambda x: isinstance(x, AssemblyFragment), self.input)
         ):
+            inp: AssemblyFragment
+            left_location = inp.left_location
+            right_location = inp.right_location
             seq = inp.sequence.seq
             if inp.reverse_complemented:
                 seq = seq.reverse_complement()
 
-            if inp.left_location is not None:
-                shift -= location_boundaries(inp.left_location)[0]
+            if seq.circular:
+                rotate = location_boundaries(left_location)[0]
+                seq = seq.shifted(rotate)
+                left_location = shift_location(left_location, -rotate, len(seq))
+                right_location = shift_location(right_location, -rotate, len(seq))
+
+            if left_location is not None:
+                shift -= location_boundaries(left_location)[0]
                 # For circular assemblies
                 if i == 0:
-                    print_list.append((-shift, "|" * len(inp.left_location)))
+                    print_list.append((-shift, "|" * len(left_location)))
                     shift = 0
 
             print_list.append((shift, seq))
-            if inp.right_location is not None:
-                shift += location_boundaries(inp.right_location)[0]
-                overlap = str(inp.right_location.extract(seq)).upper()
+            if right_location is not None:
+                shift += location_boundaries(right_location)[0]
+                overlap = str(right_location.extract(seq)).upper()
                 print_list.append((shift, overlap))
 
         min_shift = min(print_list, key=lambda x: x[0])[0]
@@ -631,9 +640,9 @@ class AssemblySource(Source):
             fig[0] = " " + fig[0]
             for i in range(1, len(fig)):
                 fig[i] = "|" + fig[i]
-            fig[-1] = fig[-1] + "- "
-            fig.append("|" + " " * (len(fig[-1]) - 2) + "|")
-            fig.append(" " + "-" * (len(fig[-1]) - 2) + " ")
+            fig[-1] = fig[-1] + "-"
+            fig.append("|" + " " * (len(fig[-1]) - 1) + "|")
+            fig.append(" " + "-" * (len(fig[-1]) - 2))
 
         return pretty_str("\n".join(fig))
 
