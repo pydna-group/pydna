@@ -2942,6 +2942,17 @@ def test_pcr_assembly():
     assert len(products) == 1
 
 
+def test_is_amplicon():
+    template = Dseqrecord("AAAtacactcaccgtctatcattatctactatcgactgtatcatctgatagcacTTT")
+
+    p1 = Primer("CCCtacactcaccgtctatcattatc")
+    p2 = Primer("GGGgtgctatcagatgatacagtcg")
+
+    product = assembly.pcr_assembly(template, p1, p2)[0]
+    assert product.is_amplicon()
+    assert not template.is_amplicon()
+
+
 def test_pcr_assembly_figure():
     template = Dseqrecord("AAAtacactcaccgtctatcattatctactatcgactgtatcatctgatagcacTTT")
     template_circ = template.looped()

@@ -99,3 +99,5 @@ def test_program_assembly2():
     """
     fig = dedent(fig).strip()
     assert str(tm.dbd_program(prod)) == fig
+
+    pytest.raises(ValueError, tm.dbd_program, template)

@@ -17,7 +17,7 @@ from pydna._pretty import pretty_str as ps
 
 from typing import Union, TYPE_CHECKING
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from pydna.amplicon import Amplicon
     from pydna.dseqrecord import Dseqrecord
 
