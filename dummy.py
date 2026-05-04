@@ -29,17 +29,17 @@ b.name = "bbb"
 c.name = "ccc"
 asm = Assembly((a, b, c), limit=14)
 asm2 = Assembly2((a, b, c), limit=14)
-x = asm.assemble_linear()[0]
+x = asm.assemble_linear()[1]
 x2 = asm2.assemble_linear()[0]
 # print(x.features)
 # print(x)
 answer = "aaa|14\n    \\/\n    /\\\n    14|bbb|15\n           \\/\n           /\\\n           15|ccc"
 
-print(x.detailed_figure())
-print(x2.figure(fig_type="detailed"))
+# print(x.figure())
+# print(x2.figure())
 
 x = asm.assemble_circular()[0]
 x2 = asm2.assemble_circular()[0]
 
-print(x.detailed_figure())
-print(x2.figure(fig_type="detailed"))
+print(x.figure())
+print(x2.figure())

@@ -3058,43 +3058,60 @@ def test_inversion_homologous_recombination():
 
 def test_assembly_figure():
     a = Dseqrecord("tcgatgctatactgtgCCNCCtgtgctgtgctcta")
-    a.add_feature(0, 10, label="a_feat")
-    a_feat_seq = a.features[0].extract(a)
-    # 12345678901234
     b = Dseqrecord("tgtgctgtgctctaTTTTTTTtattctggctgtatcCCCCCC")
-    b.add_feature(0, 10, label="b_feat")
-    b_feat_seq = b.features[0].extract(b)
-
-    # 123456789012345
     c = Dseqrecord(
         "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatactgtgttt"
     )
-    c.add_feature(0, 10, label="c_feat")
-    c_feat_seq = c.features[0].extract(c)
 
-    feature_sequences = {
-        "a_feat": a_feat_seq,
-        "b_feat": b_feat_seq,
-        "c_feat": c_feat_seq,
-    }
-
-    a.name = "aaa"  # 1234567890123456
+    a.name = "aaa"
     b.name = "bbb"
     c.name = "ccc"
+
     asm = assembly.Assembly((a, b, c), limit=14)
+    asm_rc = assembly.Assembly((a, b.reverse_complement(), c), limit=14)
     x = asm.assemble_linear()[0]
+    x_rc = asm_rc.assemble_linear()[0]
     figure = "aaa|14\n    \\/\n    /\\\n    14|bbb|15\n           \\/\n           /\\\n           15|ccc"
+    figure_rc = "aaa|14\n    \\/\n    /\\\n    14|bbb_rc|15\n              \\/\n              /\\\n              15|ccc"
     detailed_figure = """\
     tcgatgctatactgtgCCNCCtgtgctgtgctcta
                          TGTGCTGTGCTCTA
                          tgtgctgtgctctaTTTTTTTtattctggctgtatcCCCCCC
                                               TATTCTGGCTGTATC
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatactgtgttt
-    """
-    # assert figure == x.figure()
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatactgtgttt"""
+    assert figure == x.figure()
+    assert figure_rc == x_rc.figure()
     assert textwrap.dedent(detailed_figure) == x.figure(fig_type="detailed")
+    assert textwrap.dedent(detailed_figure) == x_rc.figure(fig_type="detailed")
 
     x = asm.assemble_circular()[0]
+    x_rc = asm_rc.assemble_circular()[0]
+    figure = """\
+         -|aaa|14
+        |      \/
+        |      /\\
+        |      14|bbb|15
+        |             \/
+        |             /\\
+        |             15|ccc|15
+        |                    \/
+        |                    /\\
+        |                    15-
+        |                       |
+         ----------------------- """
+    figure_rc = """\
+         -|aaa|14
+        |      \/
+        |      /\\
+        |      14|bbb_rc|15
+        |                \/
+        |                /\\
+        |                15|ccc|15
+        |                       \/
+        |                       /\\
+        |                       15-
+        |                          |
+         -------------------------- """
     detailed_figure = """\
      |||||||||||||||
     tcgatgctatactgtgCCNCCtgtgctgtgctcta
@@ -3102,6 +3119,8 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatact
                          tgtgctgtgctctaTTTTTTTtattctggctgtatcCCCCCC
                                               TATTCTGGCTGTATC
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatactgtgttt
-                                                                    CGATGCTATACTGTG
-    """
+                                                                    CGATGCTATACTGTG"""
     assert textwrap.dedent(detailed_figure) == x.figure(fig_type="detailed")
+    assert textwrap.dedent(detailed_figure) == x_rc.figure(fig_type="detailed")
+    assert textwrap.dedent(figure) == x.figure()
+    assert textwrap.dedent(figure_rc) == x_rc.figure()
