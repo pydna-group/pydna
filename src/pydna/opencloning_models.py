@@ -572,13 +572,19 @@ class AssemblySource(Source):
         shift = 0
         print_list = []
         # With this filter, we exclude things such as guide RNAs
-        for inp in filter(lambda x: isinstance(x, AssemblyFragment), self.input):
+        for i, inp in enumerate(
+            filter(lambda x: isinstance(x, AssemblyFragment), self.input)
+        ):
             seq = inp.sequence.seq
             if inp.reverse_complemented:
                 seq = seq.reverse_complement()
 
             if inp.left_location is not None:
                 shift -= location_boundaries(inp.left_location)[0]
+                # For circular assemblies
+                if i == 0:
+                    print_list.append((-shift, "|" * len(inp.left_location)))
+                    shift = 0
 
             print_list.append((shift, seq))
             if inp.right_location is not None:
@@ -593,7 +599,7 @@ class AssemblySource(Source):
         fig = list()
         for shift, seq in print_list:
             fig.append("{}{}".format(" " * (shift - min_shift), seq))
-        return pretty_str("\n".join(fig))
+        return pretty_str("\n".join(fig) + "\n")
 
     def figure(self, fig_type=None):
         if fig_type == "detailed":

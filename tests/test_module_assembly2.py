@@ -3054,3 +3054,54 @@ def test_inversion_homologous_recombination():
     prods = assembly.homologous_recombination_excision_or_inversion(seq1, limit=20)
     assert len(prods) == 1
     assert prods[0].seq.seguid() == Dseq(expected, circular=True).seguid()
+
+
+def test_assembly_figure():
+    a = Dseqrecord("tcgatgctatactgtgCCNCCtgtgctgtgctcta")
+    a.add_feature(0, 10, label="a_feat")
+    a_feat_seq = a.features[0].extract(a)
+    # 12345678901234
+    b = Dseqrecord("tgtgctgtgctctaTTTTTTTtattctggctgtatcCCCCCC")
+    b.add_feature(0, 10, label="b_feat")
+    b_feat_seq = b.features[0].extract(b)
+
+    # 123456789012345
+    c = Dseqrecord(
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatactgtgttt"
+    )
+    c.add_feature(0, 10, label="c_feat")
+    c_feat_seq = c.features[0].extract(c)
+
+    feature_sequences = {
+        "a_feat": a_feat_seq,
+        "b_feat": b_feat_seq,
+        "c_feat": c_feat_seq,
+    }
+
+    a.name = "aaa"  # 1234567890123456
+    b.name = "bbb"
+    c.name = "ccc"
+    asm = assembly.Assembly((a, b, c), limit=14)
+    x = asm.assemble_linear()[0]
+    figure = "aaa|14\n    \\/\n    /\\\n    14|bbb|15\n           \\/\n           /\\\n           15|ccc"
+    detailed_figure = """\
+    tcgatgctatactgtgCCNCCtgtgctgtgctcta
+                         TGTGCTGTGCTCTA
+                         tgtgctgtgctctaTTTTTTTtattctggctgtatcCCCCCC
+                                              TATTCTGGCTGTATC
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatactgtgttt
+    """
+    # assert figure == x.figure()
+    assert textwrap.dedent(detailed_figure) == x.figure(fig_type="detailed")
+
+    x = asm.assemble_circular()[0]
+    detailed_figure = """\
+     |||||||||||||||
+    tcgatgctatactgtgCCNCCtgtgctgtgctcta
+                         TGTGCTGTGCTCTA
+                         tgtgctgtgctctaTTTTTTTtattctggctgtatcCCCCCC
+                                              TATTCTGGCTGTATC
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatactgtgttt
+                                                                    CGATGCTATACTGTG
+    """
+    assert textwrap.dedent(detailed_figure) == x.figure(fig_type="detailed")
