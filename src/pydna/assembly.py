@@ -134,6 +134,7 @@ class Assembly(object):
             }
             for f, frc in zip(fragments, (f.rc() for f in frags))
         }
+
         # The nodemap dict holds nodes and their reverse complements
         nodemap = {
             "begin": "end",
@@ -314,7 +315,6 @@ class Assembly(object):
                 seq=lastfragment["mixed"],
                 name=lastfragment["name"],
             )
-            # breakpoint()
 
         # add edges from nodes in last reverse complement sequence to "end_rc"
         lastfragmentrc = self.rcfragments[lastfragment["mixed"]]
@@ -452,10 +452,14 @@ class Assembly(object):
                             f.location = CompoundLocation(
                                 (
                                     SimpleLocation(
-                                        f.location.start, ExactPosition(len(ct))
+                                        f.location.start,
+                                        ExactPosition(len(ct)),
+                                        f.location.strand,
                                     ),
                                     SimpleLocation(
-                                        ExactPosition(0), f.location.end - len(ct)
+                                        ExactPosition(0),
+                                        f.location.end - len(ct),
+                                        f.location.strand,
                                     ),
                                 )
                             )
