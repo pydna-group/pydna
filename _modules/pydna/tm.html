@@ -327,6 +327,12 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">ps</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplicon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Amplicon</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+
 <span class="c1"># See the documentation for Bio.SeqUtils.MeltingTemp for more details</span>
 <span class="c1"># The 10X Taq Buffer with (NH4)2SO4 is commercialized by companies like</span>
 <span class="c1"># ThermoFisher, although we make it ourselves</span>
@@ -471,7 +477,7 @@
 
 <div class="viewcode-block" id="program">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.tm.program">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">program</span><span class="p">(</span><span class="n">amplicon</span><span class="p">,</span> <span class="n">tm</span><span class="o">=</span><span class="n">tm_default</span><span class="p">,</span> <span class="n">ta</span><span class="o">=</span><span class="n">ta_default</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">program</span><span class="p">(</span><span class="n">amplicon</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Amplicon&quot;</span><span class="p">,</span> <span class="s2">&quot;Dseqrecord&quot;</span><span class="p">],</span> <span class="n">tm</span><span class="o">=</span><span class="n">tm_default</span><span class="p">,</span> <span class="n">ta</span><span class="o">=</span><span class="n">ta_default</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Returns a string containing a text representation of a suggested</span>
 <span class="sd">    PCR program using Taq or similar polymerase.</span>
 
@@ -484,6 +490,21 @@
 <span class="sd">     |    |       30s         |    |1051bp</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplicon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Amplicon</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCRSource</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">amplicon</span><span class="p">,</span> <span class="n">Amplicon</span><span class="p">):</span>
+        <span class="n">fwd_footprint</span> <span class="o">=</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">footprint</span>
+        <span class="n">rev_footprint</span> <span class="o">=</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">footprint</span>
+    <span class="k">elif</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">source</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">PCRSource</span><span class="p">):</span>
+        <span class="n">fwd_footprint</span> <span class="o">=</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">right_location</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+        <span class="n">rev_footprint</span> <span class="o">=</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">left_location</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+            <span class="n">amplicon</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Amplicon must be an Amplicon or a Dseqrecord with PCRSource, got </span><span class="si">{</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">amplicon</span><span class="p">),</span><span class="w"> </span><span class="nb">type</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">source</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
 
     <span class="n">taq_extension_rate</span> <span class="o">=</span> <span class="mi">45</span>  <span class="c1"># seconds/kB PCR product length (1min/kb)</span>
     <span class="n">extension_time_taq</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">taq_extension_rate</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">amplicon</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">))</span>
@@ -501,14 +522,14 @@
             <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span>
             <span class="n">ta</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span>
                 <span class="n">ta</span><span class="p">(</span>
-                    <span class="n">amplicon</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">footprint</span><span class="p">,</span>
-                    <span class="n">amplicon</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">footprint</span><span class="p">,</span>
+                    <span class="n">fwd_footprint</span><span class="p">,</span>
+                    <span class="n">rev_footprint</span><span class="p">,</span>
                     <span class="nb">str</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span>
                 <span class="p">),</span>
                 <span class="mi">1</span><span class="p">,</span>
             <span class="p">),</span>
-            <span class="n">tmf</span><span class="o">=</span><span class="n">tm</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">footprint</span><span class="p">),</span>
-            <span class="n">tmr</span><span class="o">=</span><span class="n">tm</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">footprint</span><span class="p">),</span>
+            <span class="n">tmf</span><span class="o">=</span><span class="n">tm</span><span class="p">(</span><span class="n">fwd_footprint</span><span class="p">),</span>
+            <span class="n">tmr</span><span class="o">=</span><span class="n">tm</span><span class="p">(</span><span class="n">rev_footprint</span><span class="p">),</span>
             <span class="n">GC</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">gc</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span><span class="p">),</span>
             <span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">extension_time_taq</span><span class="p">,</span> <span class="mi">60</span><span class="p">)),</span>
         <span class="p">)</span>
@@ -523,7 +544,7 @@
 
 <div class="viewcode-block" id="dbd_program">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.tm.dbd_program">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">dbd_program</span><span class="p">(</span><span class="n">amplicon</span><span class="p">,</span> <span class="n">tm</span><span class="o">=</span><span class="n">tm_dbd</span><span class="p">,</span> <span class="n">ta</span><span class="o">=</span><span class="n">ta_dbd</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dbd_program</span><span class="p">(</span><span class="n">amplicon</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Amplicon&quot;</span><span class="p">,</span> <span class="s2">&quot;Dseqrecord&quot;</span><span class="p">],</span> <span class="n">tm</span><span class="o">=</span><span class="n">tm_dbd</span><span class="p">,</span> <span class="n">ta</span><span class="o">=</span><span class="n">ta_dbd</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Text representation of a suggested PCR program.</span>
 
 <span class="sd">    Using a polymerase with a DNA binding domain such as Pfu-Sso7d.</span>
@@ -544,6 +565,9 @@
 <span class="sd">     |    |      3:45|5min|15058bp</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.amplicon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Amplicon</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCRSource</span>
+
     <span class="n">PfuSso7d_extension_rate</span> <span class="o">=</span> <span class="mi">15</span>  <span class="c1"># seconds/kB PCR product</span>
     <span class="n">extension_time_PfuSso7d</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
         <span class="mi">10</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">PfuSso7d_extension_rate</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">amplicon</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
@@ -556,8 +580,21 @@
     <span class="c1"># Ta calculation for enzymes with dsDNA binding domains like phusion or Pfu-Sso7d</span>
     <span class="c1"># https://www.finnzymes.fi/tm_determination.html</span>
 
-    <span class="n">tmf</span> <span class="o">=</span> <span class="n">tm</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">footprint</span><span class="p">)</span>
-    <span class="n">tmr</span> <span class="o">=</span> <span class="n">tm</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">footprint</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">amplicon</span><span class="p">,</span> <span class="n">Amplicon</span><span class="p">):</span>
+        <span class="n">fwd_footprint</span> <span class="o">=</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">footprint</span>
+        <span class="n">rev_footprint</span> <span class="o">=</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">footprint</span>
+    <span class="k">elif</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">source</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">PCRSource</span><span class="p">):</span>
+        <span class="n">fwd_footprint</span> <span class="o">=</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">right_location</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+        <span class="n">rev_footprint</span> <span class="o">=</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">input</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">left_location</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+            <span class="n">amplicon</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Amplicon must be an Amplicon or a Dseqrecord with PCRSource, got </span><span class="si">{</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">amplicon</span><span class="p">),</span><span class="w"> </span><span class="nb">type</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">source</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">tmf</span> <span class="o">=</span> <span class="n">tm</span><span class="p">(</span><span class="n">fwd_footprint</span><span class="p">)</span>
+    <span class="n">tmr</span> <span class="o">=</span> <span class="n">tm</span><span class="p">(</span><span class="n">rev_footprint</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">tmf</span> <span class="o">&gt;=</span> <span class="mf">69.0</span> <span class="ow">and</span> <span class="n">tmr</span> <span class="o">&gt;=</span> <span class="mf">69.0</span><span class="p">:</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span>
@@ -589,8 +626,8 @@
                 <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">amplicon</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span>
                 <span class="n">ta</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span>
                     <span class="n">ta</span><span class="p">(</span>
-                        <span class="n">amplicon</span><span class="o">.</span><span class="n">forward_primer</span><span class="o">.</span><span class="n">footprint</span><span class="p">,</span>
-                        <span class="n">amplicon</span><span class="o">.</span><span class="n">reverse_primer</span><span class="o">.</span><span class="n">footprint</span><span class="p">,</span>
+                        <span class="n">fwd_footprint</span><span class="p">,</span>
+                        <span class="n">rev_footprint</span><span class="p">,</span>
                         <span class="n">amplicon</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span>
                     <span class="p">),</span>
                     <span class="mi">1</span><span class="p">,</span>

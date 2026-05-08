@@ -350,6 +350,7 @@
     <span class="n">ReverseComplementSource</span><span class="p">,</span>
     <span class="n">SequenceCutSource</span><span class="p">,</span>
     <span class="n">SourceInput</span><span class="p">,</span>
+    <span class="n">PCRSource</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
@@ -1595,8 +1596,94 @@
 
 <div class="viewcode-block" id="Dseqrecord.figure">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.figure">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">figure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">highlight</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\x1b</span><span class="s2">[48;5;11m&quot;</span><span class="p">,</span> <span class="n">plain</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\x1b</span><span class="s2">[0m&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">figure</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">highlight</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\x1b</span><span class="s2">[48;5;11m&quot;</span><span class="p">,</span> <span class="n">plain</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\x1b</span><span class="s2">[0m&quot;</span><span class="p">,</span> <span class="n">fig_type</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A function to return a figure of the sequence.</span>
+
+<span class="sd">        Returns a string representation of the figure, which is different depending on the source.</span>
+<span class="sd">        * If the source is an ``Assembly`` object, it returns a compact figure of the assembly by</span>
+<span class="sd">        default, and a detailed figure if ``fig_type=&quot;detailed&quot;``.</span>
+<span class="sd">        * If the source is a ``PCRSource`` object, it returns a figure of the PCR alignment.</span>
+<span class="sd">        * Else, it returns a compact figure of the sequence.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        feature : int</span>
+<span class="sd">            The feature to highlight.</span>
+<span class="sd">        highlight : str</span>
+<span class="sd">            The color to highlight the feature.</span>
+<span class="sd">        plain : str</span>
+<span class="sd">            The color to plain the feature.</span>
+<span class="sd">        fig_type : str or None</span>
+<span class="sd">            The type of figure to return, only relevant if the source is an ``Assembly`` object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            A string representation of the figure.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
+<span class="sd">        &gt;&gt;&gt; from pydna.assembly2 import in_vivo_assembly, pcr_assembly</span>
+<span class="sd">        &gt;&gt;&gt; from pydna.primer import Primer</span>
+<span class="sd">        &gt;&gt;&gt; # Generic example</span>
+<span class="sd">        &gt;&gt;&gt; a = Dseqrecord(&quot;tcgatgctatactgtgCCNCCtgtgctgtgctcta&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; a.add_feature(x=0, y=10, type_=&quot;gene&quot;, label=&quot;my_gene&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; a.add_feature(x=12, y=15, type_=&quot;CDS&quot;, label=&quot;my_gene2&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; print(a.figure()) # doctest: +SKIP</span>
+<span class="sd">        Dseqrecord(-35)</span>
+<span class="sd">        tcgatgctatactgtgCCNCCtgtgctgtgctcta</span>
+<span class="sd">        agctacgatatgacacGGNGGacacgacacgagat</span>
+<span class="sd">        &gt;&gt;&gt; # Assembly example</span>
+<span class="sd">        &gt;&gt;&gt; a = Dseqrecord(&quot;tcgatgctatactgtgCCNCCtgtgctgtgctcta&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; b = Dseqrecord(&quot;tgtgctgtgctctaTTTTTTTtattctggctgtatcCCCCCC&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; c = Dseqrecord(&quot;GtattctggctgtatcGGGGGtacgatgctatactgtgttt&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; a.name = &quot;aaa&quot;</span>
+<span class="sd">        &gt;&gt;&gt; b.name = &quot;bbb&quot;</span>
+<span class="sd">        &gt;&gt;&gt; c.name = &quot;ccc&quot;</span>
+<span class="sd">        &gt;&gt;&gt; (prod,) = in_vivo_assembly([a, b, c], 14)</span>
+<span class="sd">        &gt;&gt;&gt; print(prod.figure())</span>
+<span class="sd">        -|aaa|14</span>
+<span class="sd">        |      \\/</span>
+<span class="sd">        |      /\\</span>
+<span class="sd">        |      14|bbb|15</span>
+<span class="sd">        |             \\/</span>
+<span class="sd">        |             /\\</span>
+<span class="sd">        |             15|ccc|15</span>
+<span class="sd">        |                    \\/</span>
+<span class="sd">        |                    /\\</span>
+<span class="sd">        |                    15-</span>
+<span class="sd">        |                       |</span>
+<span class="sd">        -----------------------</span>
+<span class="sd">        &gt;&gt;&gt; print(prod.figure(fig_type=&quot;detailed&quot;))</span>
+<span class="sd">        |||||||||||||||</span>
+<span class="sd">        tcgatgctatactgtgCCNCCtgtgctgtgctcta</span>
+<span class="sd">                            TGTGCTGTGCTCTA</span>
+<span class="sd">                            tgtgctgtgctctaTTTTTTTtattctggctgtatcCCCCCC</span>
+<span class="sd">                                                TATTCTGGCTGTATC</span>
+<span class="sd">                                                GtattctggctgtatcGGGGGtacgatgctatactgtgttt</span>
+<span class="sd">                                                                        CGATGCTATACTGTG</span>
+<span class="sd">        &gt;&gt;&gt; # PCR example</span>
+<span class="sd">        &gt;&gt;&gt; template = Dseqrecord(&quot;AAAtacactcaccgtctatcattatctactatcgactgtatcatctgatagcacTTT&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; p1 = Primer(&quot;CCCtacactcaccgtctatcattatc&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; p2 = Primer(&quot;GGGgtgctatcagatgatacagtcg&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; product = pcr_assembly(template, p1, p2)[0]</span>
+<span class="sd">        &gt;&gt;&gt; print(product.figure())</span>
+<span class="sd">        5tacactcaccgtctatcattatc...cgactgtatcatctgatagcac3</span>
+<span class="sd">                                    ||||||||||||||||||||||</span>
+<span class="sd">                                    3gctgacatagtagactatcgtgGGG5</span>
+<span class="sd">        5CCCtacactcaccgtctatcattatc3</span>
+<span class="sd">            |||||||||||||||||||||||</span>
+<span class="sd">        3atgtgagtggcagatagtaatag...gctgacatagtagactatcgtg5</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">source_figure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fig_type</span><span class="o">=</span><span class="n">fig_type</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">source_figure</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">source_figure</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
             <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span>
             <span class="n">locations</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
@@ -1973,6 +2060,13 @@
         <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">it</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">+</span> <span class="bp">self</span> <span class="o">+</span> <span class="n">x</span>
         <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="Dseqrecord.is_amplicon">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Dseqrecord.is_amplicon">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_amplicon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if the sequence is the product of a PCR&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">PCRSource</span><span class="p">)</span></div>
 </div>
 
 </pre></div>
