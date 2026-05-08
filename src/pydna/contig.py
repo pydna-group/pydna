@@ -117,10 +117,10 @@ class Contig(Dseqrecord):
             nodeposition = edges[0][2]["piece"].start
             nodelength = len(v)
             mylist = [[nodeposition, "|" * nodelength]] + mylist
+            firstpos = 0
         else:
             mylist = mylist[:-1]
-
-        firstpos = -1 * min(0, min(mylist)[0])
+            firstpos = -1 * min(0, min(mylist)[0])
 
         for p, s in mylist:
             fig += "{}{}\n".format(" " * (p + firstpos), s)
