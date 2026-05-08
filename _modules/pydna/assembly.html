@@ -448,6 +448,7 @@
             <span class="p">}</span>
             <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">frc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">rc</span><span class="p">()</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">frags</span><span class="p">))</span>
         <span class="p">}</span>
+
         <span class="c1"># The nodemap dict holds nodes and their reverse complements</span>
         <span class="n">nodemap</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;begin&quot;</span><span class="p">:</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span>
@@ -628,7 +629,6 @@
                 <span class="n">seq</span><span class="o">=</span><span class="n">lastfragment</span><span class="p">[</span><span class="s2">&quot;mixed&quot;</span><span class="p">],</span>
                 <span class="n">name</span><span class="o">=</span><span class="n">lastfragment</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
             <span class="p">)</span>
-            <span class="c1"># breakpoint()</span>
 
         <span class="c1"># add edges from nodes in last reverse complement sequence to &quot;end_rc&quot;</span>
         <span class="n">lastfragmentrc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rcfragments</span><span class="p">[</span><span class="n">lastfragment</span><span class="p">[</span><span class="s2">&quot;mixed&quot;</span><span class="p">]]</span>
@@ -766,10 +766,14 @@
                             <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">CompoundLocation</span><span class="p">(</span>
                                 <span class="p">(</span>
                                     <span class="n">SimpleLocation</span><span class="p">(</span>
-                                        <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">ExactPosition</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">))</span>
+                                        <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span>
+                                        <span class="n">ExactPosition</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">)),</span>
+                                        <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span><span class="p">,</span>
                                     <span class="p">),</span>
                                     <span class="n">SimpleLocation</span><span class="p">(</span>
-                                        <span class="n">ExactPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
+                                        <span class="n">ExactPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                                        <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">),</span>
+                                        <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span><span class="p">,</span>
                                     <span class="p">),</span>
                                 <span class="p">)</span>
                             <span class="p">)</span>
