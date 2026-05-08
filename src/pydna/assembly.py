@@ -62,6 +62,14 @@ import itertools
 
 from pydna.threading_timer_decorator_exit import exit_after
 
+import warnings
+
+warnings.warn(
+    "The module pydna.assembly is deprecated and will be removed in a future version. Use pydna.assembly2 instead.",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
 
 class Assembly(object):
     """Assembly of a list of linear DNA fragments into linear or circular
