@@ -374,6 +374,14 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.threading_timer_decorator_exit</span><span class="w"> </span><span class="kn">import</span> <span class="n">exit_after</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+    <span class="s2">&quot;The module pydna.assembly is deprecated and will be removed in a future version. Use pydna.assembly2 instead.&quot;</span><span class="p">,</span>
+    <span class="ne">DeprecationWarning</span><span class="p">,</span>
+    <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+
 
 <div class="viewcode-block" id="Assembly">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.Assembly">[docs]</a>
