@@ -30,6 +30,7 @@ import pytest
 from Bio.Seq import reverse_complement
 from pydna.primer import Primer
 import os
+import textwrap
 
 test_files = os.path.join(os.path.dirname(__file__))
 
@@ -2941,6 +2942,41 @@ def test_pcr_assembly():
     assert len(products) == 1
 
 
+def test_is_amplicon():
+    template = Dseqrecord("AAAtacactcaccgtctatcattatctactatcgactgtatcatctgatagcacTTT")
+
+    p1 = Primer("CCCtacactcaccgtctatcattatc")
+    p2 = Primer("GGGgtgctatcagatgatacagtcg")
+
+    product = assembly.pcr_assembly(template, p1, p2)[0]
+    assert product.is_amplicon()
+    assert not template.is_amplicon()
+
+
+def test_pcr_assembly_figure():
+    template = Dseqrecord("AAAtacactcaccgtctatcattatctactatcgactgtatcatctgatagcacTTT")
+    template_circ = template.looped()
+
+    p1 = Primer("CCCtacactcaccgtctatcattatc")
+    p2 = Primer("GGGgtgctatcagatgatacagtcg")
+
+    product = assembly.pcr_assembly(template, p1, p2)[0]
+    product_circ = assembly.pcr_assembly(template_circ, p1, p2)[0]
+
+    fig = textwrap.dedent(
+        """\
+       5tacactcaccgtctatcattatc...cgactgtatcatctgatagcac3
+                                  ||||||||||||||||||||||
+                                 3gctgacatagtagactatcgtgGGG5
+    5CCCtacactcaccgtctatcattatc3
+        |||||||||||||||||||||||
+       3atgtgagtggcagatagtaatag...gctgacatagtagactatcgtg5"""
+    )
+
+    assert product.figure() == fig
+    assert product_circ.figure() == fig
+
+
 def test_terminal_overlap():
 
     # The loop is just to show that the left overhang of the x sequence
@@ -3029,3 +3065,131 @@ def test_inversion_homologous_recombination():
     prods = assembly.homologous_recombination_excision_or_inversion(seq1, limit=20)
     assert len(prods) == 1
     assert prods[0].seq.seguid() == Dseq(expected, circular=True).seguid()
+
+
+def test_assembly_figure():
+    a = Dseqrecord("tcgatgctatactgtgCCNCCtgtgctgtgctcta")
+    b = Dseqrecord("tgtgctgtgctctaTTTTTTTtattctggctgtatcCCCCCC")
+    c = Dseqrecord(
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatactgtgttt"
+    )
+
+    a.name = "aaa"
+    b.name = "bbb"
+    c.name = "ccc"
+
+    asm = assembly.Assembly((a, b, c), limit=14)
+    asm_rc = assembly.Assembly((a, b.reverse_complement(), c), limit=14)
+    x = asm.assemble_linear()[0]
+    x_rc = asm_rc.assemble_linear()[0]
+    figure = "aaa|14\n    \\/\n    /\\\n    14|bbb|15\n           \\/\n           /\\\n           15|ccc"
+    figure_rc = "aaa|14\n    \\/\n    /\\\n    14|bbb_rc|15\n              \\/\n              /\\\n              15|ccc"
+    detailed_figure = """\
+    tcgatgctatactgtgCCNCCtgtgctgtgctcta
+                         TGTGCTGTGCTCTA
+                         tgtgctgtgctctaTTTTTTTtattctggctgtatcCCCCCC
+                                              TATTCTGGCTGTATC
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatactgtgttt"""
+    assert figure == x.figure()
+    assert figure_rc == x_rc.figure()
+    assert textwrap.dedent(detailed_figure) == x.figure(fig_type="detailed")
+    assert textwrap.dedent(detailed_figure) == x_rc.figure(fig_type="detailed")
+
+    x = asm.assemble_circular()[0]
+    x_rc = asm_rc.assemble_circular()[0]
+    figure = """\
+         -|aaa|14
+        |      \/
+        |      /\\
+        |      14|bbb|15
+        |             \/
+        |             /\\
+        |             15|ccc|15
+        |                    \/
+        |                    /\\
+        |                    15-
+        |                       |
+         -----------------------"""
+    figure_rc = """\
+         -|aaa|14
+        |      \/
+        |      /\\
+        |      14|bbb_rc|15
+        |                \/
+        |                /\\
+        |                15|ccc|15
+        |                       \/
+        |                       /\\
+        |                       15-
+        |                          |
+         --------------------------"""
+    detailed_figure = """\
+     |||||||||||||||
+    tcgatgctatactgtgCCNCCtgtgctgtgctcta
+                         TGTGCTGTGCTCTA
+                         tgtgctgtgctctaTTTTTTTtattctggctgtatcCCCCCC
+                                              TATTCTGGCTGTATC
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatactgtgttt
+                                                                    CGATGCTATACTGTG"""
+    assert textwrap.dedent(detailed_figure) == x.figure(fig_type="detailed")
+    assert textwrap.dedent(detailed_figure) == x_rc.figure(fig_type="detailed")
+    assert textwrap.dedent(figure) == x.figure()
+    assert textwrap.dedent(figure_rc) == x_rc.figure()
+
+    # Works with circular inputs as well
+    a = Dseqrecord("tattctggctgtataAAAAACtgtgctgtgctcta").looped()
+    b = Dseqrecord("tgtgctgtgctctaCCCCCCtattctggctgtata").looped()
+
+    a.name = "aaa"  # 1234567890123456
+    b.name = "bbb"
+
+    # Product where entire plasmid gets integrated into the otther plasmid
+    figure_single_site = """\
+             -|aaa|15
+            |      \/
+            |      /\\
+            |      15|bbb|15
+            |             \/
+            |             /\\
+            |             15-
+            |                |
+             ----------------"""
+
+    # Product where two different homology regions are used
+    figure_multi_site = """\
+             -|aaa|14
+            |      \/
+            |      /\\
+            |      14|bbb|15
+            |             \/
+            |             /\\
+            |             15-
+            |                |
+             ----------------"""
+
+    detailed_figure_single_site = """\
+        |||||||||||||||
+        tattctggctgtataAAAAACtgtgctgtgctcta
+        TATTCTGGCTGTATA
+        tattctggctgtatatgtgctgtgctctaCCCCCC
+        TATTCTGGCTGTATA"""
+
+    detailed_figure_multi_site = """\
+        |||||||||||||||
+        tattctggctgtataAAAAACtgtgctgtgctcta
+                             TGTGCTGTGCTCTA
+                             tgtgctgtgctctaCCCCCCtattctggctgtata
+                                                 TATTCTGGCTGTATA"""
+
+    for shift in range(len(a)):
+        a_shifted = a.shifted(shift)
+        asm2 = assembly.Assembly((a_shifted, b), limit=14)
+        p1, _, p2, _ = asm2.assemble_circular()
+        assert p1.figure() == textwrap.dedent(figure_single_site)
+        assert p2.figure() == textwrap.dedent(figure_multi_site)
+        assert p1.figure(fig_type="detailed") == textwrap.dedent(
+            detailed_figure_single_site
+        )
+        assert p2.figure(fig_type="detailed") == textwrap.dedent(
+            detailed_figure_multi_site
+        )

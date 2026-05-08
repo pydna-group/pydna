@@ -95,10 +95,12 @@ from typing import List
 from Bio.SeqIO.InsdcIO import _insdc_location_string as format_feature_location
 
 from pydna.types import CutSiteType, SubFragmentRepresentationAssembly
-from pydna.utils import create_location
+from pydna.utils import create_location, location_boundaries, shift_location
 from typing import TYPE_CHECKING
 import Bio.Restriction as _restr_module
 import copy
+import textwrap
+from pydna._pretty import pretty_str
 
 if TYPE_CHECKING:  # pragma: no cover
     from pydna.dseqrecord import Dseqrecord
@@ -477,6 +479,9 @@ class Source(ConfiguredBaseModel):
         product.id = result.id
         return product
 
+    def figure(self, fig_type=None):
+        return None
+
 
 class AssemblySource(Source):
     circular: bool
@@ -562,6 +567,84 @@ class AssemblySource(Source):
 
     def _replay_products(self, handle_insertion: bool = True) -> list["Dseqrecord"]:
         super()._replay_products(handle_insertion=handle_insertion)
+
+    def _detailed_figure(self) -> str:
+        shift = 0
+        print_list = []
+        # With this filter, we exclude things such as guide RNAs
+        for i, inp in enumerate(
+            filter(lambda x: isinstance(x, AssemblyFragment), self.input)
+        ):
+            inp: AssemblyFragment
+            left_location = inp.left_location
+            right_location = inp.right_location
+            seq = inp.sequence.seq
+            if inp.reverse_complemented:
+                seq = seq.reverse_complement()
+
+            if seq.circular:
+                rotate = location_boundaries(left_location)[0]
+                seq = seq.shifted(rotate)
+                left_location = shift_location(left_location, -rotate, len(seq))
+                right_location = shift_location(right_location, -rotate, len(seq))
+
+            if left_location is not None:
+                shift -= location_boundaries(left_location)[0]
+                # For circular assemblies
+                if i == 0:
+                    print_list.append((-shift, "|" * len(left_location)))
+                    shift = 0
+
+            print_list.append((shift, seq))
+            if right_location is not None:
+                shift += location_boundaries(right_location)[0]
+                overlap = str(right_location.extract(seq)).upper()
+                print_list.append((shift, overlap))
+
+        min_shift = min(print_list, key=lambda x: x[0])[0]
+        fig = list()
+        for shift, seq in print_list:
+            fig.append("{}{}".format(" " * (shift - min_shift), seq))
+        return pretty_str("\n".join(fig))
+
+    def figure(self, fig_type=None):
+        if fig_type == "detailed":
+            return self._detailed_figure()
+
+        print_list = []
+        for i, inp in enumerate(
+            filter(lambda x: isinstance(x, AssemblyFragment), self.input)
+        ):
+            left_overlap = len(inp.left_location) if inp.left_location else 0
+            right_overlap = len(inp.right_location) if inp.right_location else 0
+            name = inp.sequence.name
+            print_list.append((left_overlap, name, right_overlap))
+
+        fig = list()
+        shift = 0
+        for i, (left_overlap, name, right_overlap) in enumerate(print_list):
+            left_part = str(left_overlap) + "|" if left_overlap else ""
+            if self.circular and i == 0:
+                left_part = "-|"
+            left_part += name
+            right_part = "|" + str(right_overlap) if right_overlap else ""
+            fig.append("{}{}".format(" " * shift, left_part + right_part))
+            # +1 for the eventual "|"
+            shift += len(left_part) + 1
+            if right_overlap:
+                fig.append("{}{}".format(" " * shift, "\\/"))
+                fig.append("{}{}".format(" " * shift, "/\\"))
+
+        if self.circular:
+            fig.append("{}{}".format(" " * shift, print_list[0][0]))
+            fig[0] = " " + fig[0]
+            for i in range(1, len(fig)):
+                fig[i] = "|" + fig[i]
+            fig[-1] = fig[-1] + "-"
+            fig.append("|" + " " * (len(fig[-1]) - 1) + "|")
+            fig.append(" " + "-" * (len(fig[-1]) - 2))
+
+        return pretty_str("\n".join(fig))
 
 
 _empty_input_list = Field(
@@ -838,6 +921,35 @@ class PCRSource(AssemblySource):
             limit=limit,
             add_primer_features=self.add_primer_features,
         )
+
+    def figure(self, fig_type=None):
+
+        fp = self.input[0].sequence
+        rp = self.input[2].sequence
+        tp = self.input[1].sequence
+        fp_fp = len(self.input[0].right_location)
+        rp_fp = len(self.input[2].left_location)
+        fp_position = self.input[1].left_location.end
+        rp_position = self.input[1].right_location.start
+
+        ft = len(fp) - fp_fp  # forward tail length
+
+        # rt = len(rp) - rp_fp  # reverse tail length
+        faz = tp[fp_position - fp_fp : fp_position].seq
+        raz = tp[rp_position : rp_position + rp_fp].seq
+        sp3 = " " * (len(fp.seq) + 3)
+        # breakpoint()
+        fzc = tp.seq.crick[::-1][fp_position - fp_fp : fp_position]
+        rzc = tp.seq.crick[::-1][rp_position : rp_position + rp_fp]
+        f = f"""
+            {" " * ft}5{faz}...{raz}3
+             {sp3}{"|" * rp_fp}
+            {sp3}3{rp.seq[::-1]}5
+            5{fp.seq}3
+             {"|" * fp_fp:>{len(fp)}}
+            {" " * ft}3{fzc}...{rzc}5
+            """
+        return pretty_str(textwrap.dedent(f).strip("\n"))
 
 
 class RecombinaseSource(AssemblySource):

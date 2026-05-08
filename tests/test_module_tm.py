@@ -3,10 +3,14 @@
 # flake8: noqa: B950
 
 import pytest
+from pydna.assembly2 import pcr_assembly
+from pydna import tm
+from pydna.dseqrecord import Dseqrecord
+from pydna.primer import Primer
+from textwrap import dedent
 
 
 def test_tms():
-    from pydna import tm
 
     # args = []
     # kwargs = {"key": "value"}
@@ -41,7 +45,6 @@ def test_tms():
 
 @pytest.mark.skip(reason="Some kind of server error.")
 def test_tm_neb():
-    from pydna import tm
     import requests
     from unittest.mock import patch
 
@@ -63,3 +66,39 @@ def test_tm_neb():
             tm.tm_neb("blah")
 
         assert "Could not connect to NEB API" in str(excinfo.value)
+
+
+def test_program_assembly2():
+    template = Dseqrecord(
+        "GCGTCCAGCGGCTGCCCGAGGCGCCAAGTG"
+        + "GATC" * 360
+        + "CCCGGGCCGAGCCCGCATCTGAGGCCGCCGCGGGC"
+    )
+
+    p1 = Primer("GCGTCCAGCGGCTGCCCGAGG")
+    p2 = Primer("GCCCGCGGCGGCCTCAGATGCGG")
+
+    prod = pcr_assembly(template, p1, p2)[0]
+
+    fig = r"""
+    |95°C|95°C               |    |tmf:77.1
+    |____|_____          72°C|72°C|tmr:80.9
+    |3min|30s  \ 64.6°C _____|____|45s/kb
+    |    |      \______/ 1:07|5min|GC 51%
+    |    |       30s         |    |1505bp
+    """
+    fig = dedent(fig).strip()
+    assert str(tm.program(prod)) == fig
+
+    fig = r"""
+    |98°C|98°C      |    |tmf:71.6
+    |____|____      |    |tmr:75.3
+    |30s |10s \ 72°C|72°C|15s/kb
+    |    |     \____|____|GC 51%
+    |    |      0:22|5min|1505bp
+    """
+    fig = dedent(fig).strip()
+    assert str(tm.dbd_program(prod)) == fig
+
+    pytest.raises(ValueError, tm.dbd_program, template)
+    pytest.raises(ValueError, tm.program, template)

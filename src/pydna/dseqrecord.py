@@ -38,6 +38,7 @@ from pydna.opencloning_models import (
     ReverseComplementSource,
     SequenceCutSource,
     SourceInput,
+    PCRSource,
 )
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -1189,8 +1190,94 @@ class Dseqrecord(SeqRecord):
         self._copy_to_clipboard("fasta")
         return None
 
-    def figure(self, feature=0, highlight="\x1b[48;5;11m", plain="\x1b[0m"):
-        """docstring."""
+    def figure(
+        self, feature=0, highlight="\x1b[48;5;11m", plain="\x1b[0m", fig_type=None
+    ):
+        """A function to return a figure of the sequence.
+
+        Returns a string representation of the figure, which is different depending on the source.
+        * If the source is an ``Assembly`` object, it returns a compact figure of the assembly by
+        default, and a detailed figure if ``fig_type="detailed"``.
+        * If the source is a ``PCRSource`` object, it returns a figure of the PCR alignment.
+        * Else, it returns a compact figure of the sequence.
+
+        Parameters
+        ----------
+        feature : int
+            The feature to highlight.
+        highlight : str
+            The color to highlight the feature.
+        plain : str
+            The color to plain the feature.
+        fig_type : str or None
+            The type of figure to return, only relevant if the source is an ``Assembly`` object.
+
+        Returns
+        -------
+        str
+            A string representation of the figure.
+
+        Examples
+        --------
+        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.assembly2 import in_vivo_assembly, pcr_assembly
+        >>> from pydna.primer import Primer
+        >>> # Generic example
+        >>> a = Dseqrecord("tcgatgctatactgtgCCNCCtgtgctgtgctcta")
+        >>> a.add_feature(x=0, y=10, type_="gene", label="my_gene")
+        >>> a.add_feature(x=12, y=15, type_="CDS", label="my_gene2")
+        >>> print(a.figure()) # doctest: +SKIP
+        Dseqrecord(-35)
+        tcgatgctatactgtgCCNCCtgtgctgtgctcta
+        agctacgatatgacacGGNGGacacgacacgagat
+        >>> # Assembly example
+        >>> a = Dseqrecord("tcgatgctatactgtgCCNCCtgtgctgtgctcta")
+        >>> b = Dseqrecord("tgtgctgtgctctaTTTTTTTtattctggctgtatcCCCCCC")
+        >>> c = Dseqrecord("GtattctggctgtatcGGGGGtacgatgctatactgtgttt")
+        >>> a.name = "aaa"
+        >>> b.name = "bbb"
+        >>> c.name = "ccc"
+        >>> (prod,) = in_vivo_assembly([a, b, c], 14)
+        >>> print(prod.figure())
+        -|aaa|14
+        |      \\/
+        |      /\\
+        |      14|bbb|15
+        |             \\/
+        |             /\\
+        |             15|ccc|15
+        |                    \\/
+        |                    /\\
+        |                    15-
+        |                       |
+        -----------------------
+        >>> print(prod.figure(fig_type="detailed"))
+        |||||||||||||||
+        tcgatgctatactgtgCCNCCtgtgctgtgctcta
+                            TGTGCTGTGCTCTA
+                            tgtgctgtgctctaTTTTTTTtattctggctgtatcCCCCCC
+                                                TATTCTGGCTGTATC
+                                                GtattctggctgtatcGGGGGtacgatgctatactgtgttt
+                                                                        CGATGCTATACTGTG
+        >>> # PCR example
+        >>> template = Dseqrecord("AAAtacactcaccgtctatcattatctactatcgactgtatcatctgatagcacTTT")
+        >>> p1 = Primer("CCCtacactcaccgtctatcattatc")
+        >>> p2 = Primer("GGGgtgctatcagatgatacagtcg")
+        >>> product = pcr_assembly(template, p1, p2)[0]
+        >>> print(product.figure())
+        5tacactcaccgtctatcattatc...cgactgtatcatctgatagcac3
+                                    ||||||||||||||||||||||
+                                    3gctgacatagtagactatcgtgGGG5
+        5CCCtacactcaccgtctatcattatc3
+            |||||||||||||||||||||||
+        3atgtgagtggcagatagtaatag...gctgacatagtagactatcgtg5
+        """
+
+        if self.source is not None:
+            source_figure = self.source.figure(fig_type=fig_type)
+            if source_figure is not None:
+                return source_figure
+
         if self.features:
             f = self.features[feature]
             locations = sorted(
@@ -1546,3 +1633,7 @@ class Dseqrecord(SeqRecord):
         for x in it:
             result = result + self + x
         return result
+
+    def is_amplicon(self):
+        """Returns True if the sequence is the product of a PCR"""
+        return self.source is not None and isinstance(self.source, PCRSource)

@@ -15,6 +15,12 @@ from Bio.SeqUtils import gc_fraction
 import textwrap
 from pydna._pretty import pretty_str as ps
 
+from typing import Union, TYPE_CHECKING
+
+if TYPE_CHECKING:  # pragma: no cover
+    from pydna.amplicon import Amplicon
+    from pydna.dseqrecord import Dseqrecord
+
 # See the documentation for Bio.SeqUtils.MeltingTemp for more details
 # The 10X Taq Buffer with (NH4)2SO4 is commercialized by companies like
 # ThermoFisher, although we make it ourselves
@@ -142,7 +148,7 @@ def ta_dbd(fp, rp, seq, tm=tm_dbd, tm_product=None):
     return min((tm(fp), tm(rp))) + 3
 
 
-def program(amplicon, tm=tm_default, ta=ta_default):
+def program(amplicon: Union["Amplicon", "Dseqrecord"], tm=tm_default, ta=ta_default):
     r"""Returns a string containing a text representation of a suggested
     PCR program using Taq or similar polymerase.
 
@@ -155,6 +161,21 @@ def program(amplicon, tm=tm_default, ta=ta_default):
      |    |       30s         |    |1051bp
 
     """
+    from pydna.amplicon import Amplicon
+    from pydna.opencloning_models import PCRSource
+
+    if isinstance(amplicon, Amplicon):
+        fwd_footprint = amplicon.forward_primer.footprint
+        rev_footprint = amplicon.reverse_primer.footprint
+    elif amplicon.source is not None and isinstance(amplicon.source, PCRSource):
+        fwd_footprint = amplicon.source.input[0].right_location.extract(amplicon.seq)
+        rev_footprint = amplicon.source.input[2].left_location.extract(
+            amplicon.seq.reverse_complement()
+        )
+    else:
+        raise ValueError(
+            f"Amplicon must be an Amplicon or a Dseqrecord with PCRSource, got {(type(amplicon), type(amplicon.source))}"
+        )
 
     taq_extension_rate = 45  # seconds/kB PCR product length (1min/kb)
     extension_time_taq = max(30, int(taq_extension_rate * len(amplicon) / 1000))
@@ -172,14 +193,14 @@ def program(amplicon, tm=tm_default, ta=ta_default):
             size=len(amplicon.seq),
             ta=round(
                 ta(
-                    amplicon.forward_primer.footprint,
-                    amplicon.reverse_primer.footprint,
+                    fwd_footprint,
+                    rev_footprint,
                     str(amplicon.seq),
                 ),
                 1,
             ),
-            tmf=tm(amplicon.forward_primer.footprint),
-            tmr=tm(amplicon.reverse_primer.footprint),
+            tmf=tm(fwd_footprint),
+            tmr=tm(rev_footprint),
             GC=int(amplicon.gc() * 100),
             *map(int, divmod(extension_time_taq, 60)),
         )
@@ -191,7 +212,7 @@ def program(amplicon, tm=tm_default, ta=ta_default):
 taq_program = program
 
 
-def dbd_program(amplicon, tm=tm_dbd, ta=ta_dbd):
+def dbd_program(amplicon: Union["Amplicon", "Dseqrecord"], tm=tm_dbd, ta=ta_dbd):
     r"""Text representation of a suggested PCR program.
 
     Using a polymerase with a DNA binding domain such as Pfu-Sso7d.
@@ -212,6 +233,9 @@ def dbd_program(amplicon, tm=tm_dbd, ta=ta_dbd):
      |    |      3:45|5min|15058bp
 
     """
+    from pydna.amplicon import Amplicon
+    from pydna.opencloning_models import PCRSource
+
     PfuSso7d_extension_rate = 15  # seconds/kB PCR product
     extension_time_PfuSso7d = max(
         10, int(PfuSso7d_extension_rate * len(amplicon) / 1000)
@@ -224,8 +248,21 @@ def dbd_program(amplicon, tm=tm_dbd, ta=ta_dbd):
     # Ta calculation for enzymes with dsDNA binding domains like phusion or Pfu-Sso7d
     # https://www.finnzymes.fi/tm_determination.html
 
-    tmf = tm(amplicon.forward_primer.footprint)
-    tmr = tm(amplicon.reverse_primer.footprint)
+    if isinstance(amplicon, Amplicon):
+        fwd_footprint = amplicon.forward_primer.footprint
+        rev_footprint = amplicon.reverse_primer.footprint
+    elif amplicon.source is not None and isinstance(amplicon.source, PCRSource):
+        fwd_footprint = amplicon.source.input[0].right_location.extract(amplicon.seq)
+        rev_footprint = amplicon.source.input[2].left_location.extract(
+            amplicon.seq.reverse_complement()
+        )
+    else:
+        raise ValueError(
+            f"Amplicon must be an Amplicon or a Dseqrecord with PCRSource, got {(type(amplicon), type(amplicon.source))}"
+        )
+
+    tmf = tm(fwd_footprint)
+    tmr = tm(rev_footprint)
 
     if tmf >= 69.0 and tmr >= 69.0:
         f = textwrap.dedent(
@@ -257,8 +294,8 @@ def dbd_program(amplicon, tm=tm_dbd, ta=ta_dbd):
                 size=len(amplicon.seq),
                 ta=round(
                     ta(
-                        amplicon.forward_primer.footprint,
-                        amplicon.reverse_primer.footprint,
+                        fwd_footprint,
+                        rev_footprint,
                         amplicon.seq,
                     ),
                     1,
