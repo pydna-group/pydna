@@ -194,33 +194,63 @@ def test_diff_primer_triplets_2():
 
     s = primers[0] + "aaa" + primers[1].rc()
 
+    # >51_TefTermFwd A.gos 20-mer
+    # CAGATGCGAAGTTAAGTGCG
+    # >82_MSW_fwd this primer sits inside the loxP of pUG6
+    # TCCTTGACAGTCTTGACG
+
+    # CAGATGCGAAGTTAAGTGCG
+    # ||||||||||||||||||||
+    # CAGATGCGAAGTTAAGTGCGaaaCGTCAAGACTGTCAAGGA
+    # GTCTACGCTTCAATTCACGCtttGCAGTTCTGACAGTTCCT
+    #                        ||||||||||||||||||
+    #                        GCAGTTCTGACAGTTCCT
+
     s = "CAGATGCGAAGTTAAGTGCGaaaCGTCAAGACTGTCAAGGA"
 
     assert primer_pairs(Dseqrecord(s), pl, short=0) == [
         amplicon_tuple(fp=51, rp=82, fposition=20, rposition=23, size=41)
     ]
 
-    # >51_TefTermFwd A.gos 20-mer
-    # CAGATGCGAAGTTAAGTGCG
+    assert primer_pairs(Dseqrecord(s, circular=True), pl, short=0) == [
+        amplicon_tuple(fp=51, rp=82, fposition=20, rposition=23, size=41)
+    ]
 
-    # >82_MSW_fwd this primer sits inside the loxP of pUG6
-    # TCCTTGACAGTCTTGACG
-
-    #      CAGATGCGAAGTTAAGTGCG
-    # AAGGACAGATGCGAAGTTAAGTGCGaaaCGTCAAGACTGTC
-    #                             CGTCAAGACTGTCAAGGA
+    #      CAGATGCGAAGTTAAGTGCG>
+    #      ||||||||||||||||||||
+    # AAGGACAGATGCGAAGTTAAGTGCGaaaCGTCAAGACTGTC                       Circular template
+    # TTCCTGTCTACGCTTCAATTCACGCtttGCAGTTCTGACAG
+    #                                          AAGGACAGATGCGAAGTTAAGTGCGaaaCGTCAAGACTGTC
+    #                                          TTCCTGTCTACGCTTCAATTCACGCtttGCAGTTCTGACAG
+    #                             ||||||||||||||||||
+    #                            <GCAGTTCTGACAGTTCCT
 
     assert primer_pairs(Dseqrecord(s[-5:] + s[:-5], circular=True), pl, short=0) == [
         amplicon_tuple(fp=51, rp=82, fposition=25, rposition=28, size=41)
     ]
 
+    #                                     CAGATGCGAAGTTAAGTGCG>
+    #                                     ||||||||||||||||||||
+    # GCGAAGTTAAGTGCGaaaCGTCAAGACTGTCAAGGACAGAT                        Circular template
+    # CGCTTCAATTCACGCtttGCAGTTCTGACAGTTCCTGTCTA
+    #                                          GCGAAGTTAAGTGCGaaaCGTCAAGACTGTCAAGGACAGAT
+    #                                          CGCTTCAATTCACGCtttGCAGTTCTGACAGTTCCTGTCTA
+    #                   ||||||||||||||||||
+    #                  <GCAGTTCTGACAGTTCCT
+
     assert primer_pairs(Dseqrecord(s[5:] + s[:5], circular=True), pl, short=0) == [
         amplicon_tuple(fp=51, rp=82, fposition=56, rposition=18, size=41)
     ]
 
+    # CTCACTTGAAGTAATG
+    # ||||||||||||||||
+    # CTCACTTGAAGTAATGTATCGTGCACCTACCAAACCTCT
+    # GAGTGAACTTCATTACATAGCACGTGGATGGTTTGGAGA
+    #                        ||||||||||||||||
+    #                        GTGGATGGTTTGGAGA
+
     f = Primer("CTCACTTGAAGTAATG", name="1")
     r = Primer("AGAGGTTTGGTAGGTG", name="2")
-
     t = Dseqrecord("CTCACTTGAAGTAATGTATCGTGCACCTACCAAACCTCT")
 
     automaton = make_automaton([f, r])
@@ -229,12 +259,41 @@ def test_diff_primer_triplets_2():
         amplicon_tuple(fp=0, rp=1, fposition=16, rposition=23, size=39)
     ]
 
+    #                        CTCACTTGAAGTAATG>
+    #                        ||||||||||||||||
+    # TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG   Linear template
+    # ATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCATTAC   No product
+    #        ||||||||||||||||
+    #        GTGGATGGTTTGGAGA
+
     t = Dseqrecord("TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG")
 
     assert primer_pairs(t, [f, r], automaton=automaton, short=0) == []
+
+    #                        CTCACTTGAAGTAATG>
+    #                        ||||||||||||||||
+    # TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG   Circular template
+    # ATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCATTAC   On product across the ori
+    #        ||||||||||||||||
+    #       <GTGGATGGTTTGGAGA
 
     t = Dseqrecord("TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG", circular=True)
 
     assert primer_pairs(t, [f, r], automaton=automaton, short=0) == [
         amplicon_tuple(fp=0, rp=1, fposition=39, rposition=7, size=39)
+    ]
+
+    #                           CTCACTTGAAGTAATG>
+    #                           ||||||||||||||||           Circular template
+    # ATGTATCGTGCACCTACCAAACCTCTCTCACTTGAAGTA              On product across the ori
+    # TACATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCAT
+    #                                        ATGTATCGTGCACCTACCAAACCTCTCTCACTTGAAGTA
+    #                                        TACATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCAT
+    #           ||||||||||||||||
+    #          <GTGGATGGTTTGGAGA
+
+    t = Dseqrecord("ATGTATCGTGCACCTACCAAACCTCTCTCACTTGAAGTA", circular=True)
+
+    assert primer_pairs(t, [f, r], automaton=automaton, short=0) == [
+        amplicon_tuple(fp=0, rp=1, fposition=42, rposition=10, size=39)
     ]
