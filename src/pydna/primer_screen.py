@@ -44,8 +44,6 @@ from itertools import product
 from itertools import combinations
 from itertools import pairwise
 from collections import defaultdict
-
-# from collections import Counter
 from collections import namedtuple
 from collections.abc import Callable
 from collections.abc import Sequence
@@ -335,7 +333,7 @@ def forward_primers(
     # A defaultdict of lists is used to collect primer locations since
     # different primers can anneal in the same place.
     fps = defaultdict(list)
-
+    # if seq is circular, we have to look across the origin of the sequence
     seq = seq[:] + seq[: limit - 1] if seq.circular else seq
 
     for end_index, ids in automaton.iter(str(seq.seq).upper()):
@@ -418,6 +416,7 @@ def reverse_primers(
     # A defaultdict of lists is used to collect primer locations since
     # different primers can anneal in the same place.
     rps = defaultdict(list)
+    # if seq is circular, we have to look across the origin of the sequence
     seq = seq[:] + seq[: limit - 1] if seq.circular else seq
     ln = len(seq)
 
