@@ -44,7 +44,8 @@ from itertools import product
 from itertools import combinations
 from itertools import pairwise
 from collections import defaultdict
-from collections import Counter
+
+# from collections import Counter
 from collections import namedtuple
 from collections.abc import Callable
 from collections.abc import Sequence
@@ -534,7 +535,9 @@ def primer_pairs(
                     )
                     if short <= size <= long:
                         products.append(
-                            amplicon_tuple(fp, rp, fposition, rposition, size)
+                            amplicon_tuple(
+                                fp, rp, fposition % len(seq), rposition % len(seq), size
+                            )
                         )
     return products
 
@@ -606,11 +609,12 @@ def flanking_primer_pairs(
             products.append(amplicon)
     if seq.circular:
         for amplicon in amplicons:
-            if amplicon.fposition > amplicon.rposition:
-                if (amplicon.fposition <= begin or begin <= amplicon.rposition) and (
-                    amplicon.fposition <= end or end <= amplicon.rposition
-                ):
-                    products.append(amplicon)
+            if (
+                amplicon.fposition > amplicon.rposition
+                and begin >= amplicon.fposition % len(seq)
+                and end <= amplicon.rposition % len(seq)
+            ):
+                products.append(amplicon)
 
     return sorted(products, key=attrgetter("size"))  # results sorted by size
 
@@ -754,10 +758,15 @@ def diff_primer_triplets(
     ::
 
          1>        <2
-        -------NNNNNNNNN----  sequenceA
+        -------AAAAAAAAA----  sequenceA
 
          1>     <3
-        -------XXXXX--------  sequenceB
+        -------BBBBB--------  sequenceB
+
+        ...
+
+         1>      <3
+        -------NNNNN--------  sequenceN-1
 
 
 
@@ -806,58 +815,76 @@ def diff_primer_triplets(
 
     automaton = automaton or make_automaton(primer_list, limit=limit)
     limit = automaton.get_stats()["longest_word"]
-    number_of_sequences = len(sequences)
-    pp = {}
-    # pp = { seq1: [(a,b,c,d,e), ...], seq2: [(i,j,k,l,m), ... ]}
+    # number_of_sequences = len(sequences)
+    sequence_set = set(sequences)
+    # primer pairs for each sequence are collected together with the
+    # primer pairs in a defaultdict(list) where the key of a frozenset
+    # of the primer pair numbers.
 
-    # All primer pairs for each sequence are collected.
+    pairs = defaultdict(list)
+
     for seq in sequences:
-        pp[seq] = primer_pairs(
+        pps = primer_pairs(
             seq, primer_list, short=short, long=long, limit=limit, automaton=automaton
         )
+        for pp in pps:
+            pairs[frozenset((pp.fp, pp.rp))].append((seq, pp))
 
-    # We count all the times a specific pair occurs
-    pair_counter = Counter()
+    # All collected primer pairs are compared and collected if they share a
+    # primer (a trio). The trios are collected in another defaultdict(list)
 
-    for seq, tuples in pp.items():
-        for t in tuples:
-            pair = frozenset(t[:2])  # first two integers, unordered
-            pair_counter[pair] += 1
+    trios = defaultdict(list)
 
-    # Pick pairs that appear more than once.
-    pairs_to_remove = {pair for pair, count in pair_counter.items() if count > 1}
+    for keys in combinations(pairs, 2):
+        union = frozenset().union(*keys)
+        if len(union) == 3:
+            for key in keys:
+                trios[union].extend(pairs[key])
 
-    # Remove pairs that appear more than once.
-    for seq in pp:
-        pp[seq] = [t for t in pp[seq] if frozenset(t[:2]) not in pairs_to_remove]
+    intermediate_result = []
 
-    primertrios = defaultdict(dict)
+    # Each key, value pair in trios look like this:
+    #
+    #   frozenset({1,2,3}) = [(seq1, pair1), (seq2, pair2), ... (seqN, pairN)]
+    #
+    # seq is a Dseqrecord
+    # pair is an amplicon_tuple(fp, rp, fposition, rposition, size)
+    #
+    # We loop through all values in trios and filter:
+    # - at least one primer pair for each sequence
+    # - visible differences between band sizes = callback true for all pairs if product sizes
+    #
+    # collect in intermediate_result.
 
-    for seq1, seq2 in combinations(sequences, 2):
-        for fp1, rp1, *_, size1 in pp[seq1]:
-            for fp2, rp2, *_, size2 in pp[seq2]:
-                primertrio = frozenset((fp1, rp1, fp2, rp2))
-                if len(primertrio) == 3 and callback(size1, size2):
-                    if primertrios[primertrio]:
-                        del primertrios[primertrio]
-                    else:
-                        primertrios[primertrio][size1] = (fp1, rp1, seq1)
-                        primertrios[primertrio][size2] = (fp2, rp2, seq2)
+    for seq_primer_tuples in trios.values():
+        templates = []
+        sizes = []
+        for seq, pair in seq_primer_tuples:
+            templates.append(seq)
+            sizes.append(pair.size)
 
-    result = []
-    for primertrio, seqd in primertrios.items():
-        if len(seqd) == number_of_sequences and set(sequences) == set(
-            s for *_, s in seqd.values()
+        if sequence_set == set(templates) and all(
+            callback(x, y) for x, y in combinations(sizes, 2)
         ):
-            result.append(
-                (
-                    closest_diff(seqd.keys()),
-                    tuple(
-                        primer_tuple(s, fp, rp, size)
-                        for size, (fp, rp, s) in seqd.items()
-                    ),
-                )
-            )
+            intermediate_result.append((closest_diff(sizes), seq_primer_tuples))
 
-    result.sort(key=lambda item: item[0], reverse=True)
-    return [b for a, b in result]
+    # The closest difference between any two product sizes is also collected
+    # so we can sort results for primer combos that produce the largest
+    # product differences:
+
+    # sorting in-place for closest difference in reverse
+    intermediate_result.sort(key=lambda item: item[0], reverse=True)
+
+    # remove the closest difference as it is no lionger needed.
+    intermediate_result = [b for a, b in intermediate_result]
+
+    # Express result as a list of tuples of primer tuples
+
+    primer_tuple_list = []
+
+    for tuple_list in intermediate_result:
+        primer_tuple_list.append(
+            tuple(primer_tuple(s, at.fp, at.rp, at.size) for s, at in tuple_list)
+        )
+
+    return primer_tuple_list

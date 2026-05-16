@@ -14,6 +14,7 @@ from pydna.amplify import pcr
 from pydna.parsers import parse_primers
 from pydna.dseqrecord import Dseqrecord
 
+from pydna.primer_screen import closest_diff
 from pydna.primer_screen import make_automaton
 from pydna.primer_screen import forward_primers
 from pydna.primer_screen import reverse_primers
@@ -82,6 +83,14 @@ pIL75 = read(test_files / "pIL75.gb")
 atm = None
 
 
+def test_closest_diff():
+
+    assert closest_diff([1, 5, 7, 11, 19]) == 2
+
+    with pytest.raises(ValueError):
+        closest_diff([5])
+
+
 def test_automaton():
 
     atm = make_automaton(pl)
@@ -122,133 +131,7 @@ def test_primer_pairs():
     ]
     assert result == answer
 
-
-def test_flanking_primer_pairs():
-    result = flanking_primer_pairs(kan, pl, target=(550, 1200), automaton=atm)
-
-    answer = [
-        amplicon_tuple(fp=701, rp=1564, fposition=534, rposition=1940, size=1450),
-        amplicon_tuple(fp=701, rp=149, fposition=534, rposition=2306, size=1822),
-    ]
-    assert result == answer
-
-    result = flanking_primer_pairs(pIL68, pl, target=(550, 1200), automaton=atm)
-
-    answer = [
-        amplicon_tuple(fp=1215, rp=594, fposition=266, rposition=1689, size=1474),
-        amplicon_tuple(fp=1215, rp=607, fposition=266, rposition=2157, size=1946),
-    ]
-
-    # CTCACTTGAAGTAATG
-    # ||||||||||||||||
-    # CTCACTTGAAGTAATGTATCGTGCACCTACCAAACCTCT
-    # GAGTGAACTTCATTACATAGCACGTGGATGGTTTGGAGA
-    #                        ||||||||||||||||
-    #                        GTGGATGGTTTGGAGA
-
-    f = Primer("CTCACTTGAAGTAATG", name="1")
-    r = Primer("AGAGGTTTGGTAGGTG", name="2")
-    t = Dseqrecord("CTCACTTGAAGTAATGTATCGTGCACCTACCAAACCTCT")
-
-    automaton = make_automaton([f, r])
-
-    assert flanking_primer_pairs(t, [f, r], target=(16, 23), automaton=automaton) == [
-        amplicon_tuple(fp=0, rp=1, fposition=16, rposition=23, size=39)
-    ]
-
-    #                        CTCACTTGAAGTAATG>
-    #                        ||||||||||||||||
-    # TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG   Linear template
-    # ATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCATTAC   No product
-    #        ||||||||||||||||
-    #       <GTGGATGGTTTGGAGA
-
-    t = Dseqrecord("TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG")
-
-    assert flanking_primer_pairs(t, [f, r], target=(1, 6), automaton=automaton) == []
-
-    #                        CTCACTTGAAGTAATG>
-    #                        ||||||||||||||||
-    # TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG   Circular template
-    # ATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCATTAC   On product across the ori
-    #        ||||||||||||||||
-    #       <GTGGATGGTTTGGAGA
-
-    t = Dseqrecord("TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG", circular=True)
-
-    assert flanking_primer_pairs(t, [f, r], target=(1, 6), automaton=automaton) == [
-        amplicon_tuple(fp=0, rp=1, fposition=39, rposition=7, size=39)
-    ]
-
-    #                           CTCACTTGAAGTAATG>
-    #                           ||||||||||||||||           Circular template
-    # ATGTATCGTGCACCTACCAAACCTCTCTCACTTGAAGTA              On product across the ori
-    # TACATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCAT
-    #                                        ATGTATCGTGCACCTACCAAACCTCTCTCACTTGAAGTA
-    #                                        TACATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCAT
-    #           ||||||||||||||||
-    #          <GTGGATGGTTTGGAGA
-
-    t = Dseqrecord("ATGTATCGTGCACCTACCAAACCTCTCTCACTTGAAGTA", circular=True)
-
-    assert flanking_primer_pairs(t, [f, r], target=(1, 6), automaton=automaton) == [
-        amplicon_tuple(fp=0, rp=1, fposition=42, rposition=10, size=39)
-    ]
-
-
-def test_diff_primer_pairs():
-
-    results = diff_primer_pairs((nat, kan), pl, automaton=atm)
-
-    assert results == [
-        (
-            primer_tuple(seq=nat, fp=82, rp=149, size=944),
-            primer_tuple(seq=kan, fp=82, rp=149, size=1181),
-        ),
-    ]
-
-
-def test_diff_primer_triplets_1():
-
-    results = diff_primer_triplets((wt, kan), pl, automaton=atm)
-
-    assert results == [
-        (
-            primer_tuple(seq=wt, fp=701, rp=700, size=724),
-            primer_tuple(seq=kan, fp=701, rp=1564, size=1450),
-        ),
-    ]
-
-
-def test_diff_primer_triplets_2():
-
-    triplets = diff_primer_triplets([pIL68, pIL75], pl)
-
-    assert len(triplets) == 2
-
-    answer = [
-        (
-            primer_tuple(seq=pIL68, fp=1215, rp=594, size=1474),
-            primer_tuple(seq=pIL75, fp=51, rp=594, size=548),
-        ),
-        (
-            primer_tuple(seq=pIL68, fp=1215, rp=594, size=1474),
-            primer_tuple(seq=pIL75, fp=255, rp=594, size=1005),
-        ),
-    ]
-
-    assert triplets == answer
-
-    assert len(pcr(pl[1215], pl[594], pIL68)) == 1474
-    assert len(pcr(pl[51], pl[594], pIL75)) == 548
-
-    with pytest.raises(ValueError, match="No PCR product!"):
-        pcr(pl[51], pl[594], pIL68)
-
-    with pytest.raises(ValueError, match="No PCR product!"):
-        pcr(pl[1215], pl[594], pIL75)
-
-    s = primers[0] + "aaa" + primers[1].rc()
+    s = str(primers[0].seq + "aaa" + primers[1].rc().seq)
 
     # >51_TefTermFwd A.gos 20-mer
     # CAGATGCGAAGTTAAGTGCG
@@ -295,5 +178,197 @@ def test_diff_primer_triplets_2():
     #                  <GCAGTTCTGACAGTTCCT
 
     assert primer_pairs(Dseqrecord(s[5:] + s[:5], circular=True), pl, short=0) == [
-        amplicon_tuple(fp=51, rp=82, fposition=56, rposition=18, size=41)
+        amplicon_tuple(fp=51, rp=82, fposition=15, rposition=18, size=41)
     ]
+
+    # amplicon_tuple(fp=51, rp=82, fposition=15, rposition=18, size=41) !=
+    # amplicon_tuple(fp=51, rp=82, fposition=56, rposition=18, size=41)
+
+    # CTCACTTGAAGTAATG
+    # ||||||||||||||||
+    # CTCACTTGAAGTAATGTATCGTGCACCTACCAAACCTCT
+    # GAGTGAACTTCATTACATAGCACGTGGATGGTTTGGAGA
+    #                        ||||||||||||||||
+    #                        GTGGATGGTTTGGAGA
+
+    f = Primer("CTCACTTGAAGTAATG", name="1")
+    r = Primer("AGAGGTTTGGTAGGTG", name="2")
+    t = Dseqrecord("CTCACTTGAAGTAATGTATCGTGCACCTACCAAACCTCT")
+
+    automaton = make_automaton([f, r])
+
+    assert primer_pairs(t, [f, r], automaton=automaton, short=0) == [
+        amplicon_tuple(fp=0, rp=1, fposition=16, rposition=23, size=39)
+    ]
+
+    #                        CTCACTTGAAGTAATG>
+    #                        ||||||||||||||||
+    # TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG   Linear template
+    # ATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCATTAC   No product
+    #        ||||||||||||||||
+    #        GTGGATGGTTTGGAGA
+
+    t = Dseqrecord("TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG")
+
+    assert primer_pairs(t, [f, r], automaton=automaton, short=0) == []
+
+    #                        CTCACTTGAAGTAATG>
+    #                        ||||||||||||||||
+    # TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG   Circular template
+    # ATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCATTAC   On product across the ori
+    #        ||||||||||||||||
+    #       <GTGGATGGTTTGGAGA
+
+    t = Dseqrecord("TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG", circular=True)
+
+    assert primer_pairs(t, [f, r], automaton=automaton, short=0) == [
+        amplicon_tuple(fp=0, rp=1, fposition=0, rposition=7, size=39)
+    ]
+
+    #                           CTCACTTGAAGTAATG>
+    #                           ||||||||||||||||           Circular template
+    # ATGTATCGTGCACCTACCAAACCTCTCTCACTTGAAGTA              On product across the ori
+    # TACATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCAT
+    #                                        ATGTATCGTGCACCTACCAAACCTCTCTCACTTGAAGTA
+    #                                        TACATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCAT
+    #           ||||||||||||||||
+    #          <GTGGATGGTTTGGAGA
+
+    t = Dseqrecord("ATGTATCGTGCACCTACCAAACCTCTCTCACTTGAAGTA", circular=True)
+
+    assert primer_pairs(t, [f, r], automaton=automaton, short=0) == [
+        amplicon_tuple(fp=0, rp=1, fposition=3, rposition=10, size=39)
+    ]
+
+
+def test_flanking_primer_pairs():
+    result = flanking_primer_pairs(kan, pl, target=(550, 1200), automaton=atm)
+
+    answer = [
+        amplicon_tuple(fp=701, rp=1564, fposition=534, rposition=1940, size=1450),
+        amplicon_tuple(fp=701, rp=149, fposition=534, rposition=2306, size=1822),
+    ]
+    assert result == answer
+
+    result = flanking_primer_pairs(pIL68, pl, target=(550, 1200), automaton=atm)
+
+    answer = [
+        amplicon_tuple(fp=1215, rp=594, fposition=266, rposition=1689, size=1474),
+        amplicon_tuple(fp=1215, rp=607, fposition=266, rposition=2157, size=1946),
+    ]
+
+    # CTCACTTGAAGTAATG
+    # ||||||||||||||||
+    # CTCACTTGAAGTAATGTATCGTGCACCTACCAAACCTCT
+    # GAGTGAACTTCATTACATAGCACGTGGATGGTTTGGAGA
+    #                        ||||||||||||||||
+    #                        GTGGATGGTTTGGAGA
+
+    f = Primer("CTCACTTGAAGTAATG", name="1")
+    r = Primer("AGAGGTTTGGTAGGTG", name="2")
+    t = Dseqrecord("CTCACTTGAAGTAATGTATCGTGCACCTACCAAACCTCT")
+
+    automaton = make_automaton([f, r])
+
+    assert flanking_primer_pairs(t, [f, r], target=(16, 23), automaton=automaton) == [
+        amplicon_tuple(fp=0, rp=1, fposition=16, rposition=23, size=39)
+    ]
+    assert flanking_primer_pairs(t, [f, r], target=(17, 23), automaton=automaton) == [
+        amplicon_tuple(fp=0, rp=1, fposition=16, rposition=23, size=39)
+    ]
+    assert flanking_primer_pairs(t, [f, r], target=(16, 22), automaton=automaton) == [
+        amplicon_tuple(fp=0, rp=1, fposition=16, rposition=23, size=39)
+    ]
+    assert flanking_primer_pairs(t, [f, r], target=(15, 23), automaton=automaton) == []
+    assert flanking_primer_pairs(t, [f, r], target=(16, 24), automaton=automaton) == []
+
+    #                        CTCACTTGAAGTAATG>
+    #                        ||||||||||||||||
+    # TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG   Linear template
+    # ATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCATTAC   No product
+    #        ||||||||||||||||
+    #       <GTGGATGGTTTGGAGA
+
+    t = Dseqrecord("TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG")
+
+    assert flanking_primer_pairs(t, [f, r], target=(0, 7), automaton=automaton) == []
+    assert flanking_primer_pairs(t, [f, r], target=(1, 6), automaton=automaton) == []
+
+    #                        CTCACTTGAAGTAATG>
+    #                        ||||||||||||||||
+    # TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG   Circular template
+    # ATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCATTAC   On product across the ori
+    #        ||||||||||||||||
+    #       <GTGGATGGTTTGGAGA
+
+    t = Dseqrecord("TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG", circular=True)
+
+    assert flanking_primer_pairs(t, [f, r], target=(1, 6), automaton=automaton) == [
+        amplicon_tuple(fp=0, rp=1, fposition=0, rposition=7, size=39)
+    ]
+
+    #                           CTCACTTGAAGTAATG>
+    #                           ||||||||||||||||           Circular template
+    # ATGTATCGTGCACCTACCAAACCTCTCTCACTTGAAGTA              On product across the ori
+    # TACATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCAT
+    #                                        ATGTATCGTGCACCTACCAAACCTCTCTCACTTGAAGTA
+    #                                        TACATAGCACGTGGATGGTTTGGAGAGAGTGAACTTCAT
+    #           ||||||||||||||||
+    #          <GTGGATGGTTTGGAGA
+
+    t = Dseqrecord("ATGTATCGTGCACCTACCAAACCTCTCTCACTTGAAGTA", circular=True)
+
+    assert flanking_primer_pairs(t, [f, r], target=(0, 6), automaton=automaton) == []
+    assert flanking_primer_pairs(t, [f, r], target=(3, 9), automaton=automaton) == [
+        amplicon_tuple(fp=0, rp=1, fposition=3, rposition=10, size=39)
+    ]
+
+
+def test_diff_primer_pairs():
+
+    results = diff_primer_pairs((nat, kan), pl, automaton=atm)
+
+    assert results == [
+        (
+            primer_tuple(seq=nat, fp=82, rp=149, size=944),
+            primer_tuple(seq=kan, fp=82, rp=149, size=1181),
+        ),
+    ]
+
+
+def test_diff_primer_triplets():
+
+    results = diff_primer_triplets((wt, kan), pl, automaton=atm)
+
+    assert results == [
+        (
+            primer_tuple(seq=wt, fp=701, rp=700, size=724),
+            primer_tuple(seq=kan, fp=701, rp=1564, size=1450),
+        ),
+    ]
+
+    triplets = diff_primer_triplets([pIL68, pIL75], pl)
+
+    assert len(triplets) == 2
+
+    answer = [
+        (
+            primer_tuple(seq=pIL68, fp=1215, rp=594, size=1474),
+            primer_tuple(seq=pIL75, fp=51, rp=594, size=548),
+        ),
+        (
+            primer_tuple(seq=pIL68, fp=1215, rp=594, size=1474),
+            primer_tuple(seq=pIL75, fp=255, rp=594, size=1005),
+        ),
+    ]
+
+    assert triplets == answer
+
+    assert len(pcr(pl[1215], pl[594], pIL68)) == 1474
+    assert len(pcr(pl[51], pl[594], pIL75)) == 548
+
+    with pytest.raises(ValueError, match="No PCR product!"):
+        pcr(pl[51], pl[594], pIL68)
+
+    with pytest.raises(ValueError, match="No PCR product!"):
+        pcr(pl[1215], pl[594], pIL75)
