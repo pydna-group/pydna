@@ -42,7 +42,6 @@ This module uses `pyahocorasick`:
 from operator import attrgetter
 from itertools import product
 from itertools import combinations
-from itertools import pairwise
 from collections import defaultdict
 from collections import namedtuple
 from collections.abc import Callable
@@ -70,15 +69,17 @@ amplicon_tuple = namedtuple(
 primer_tuple = namedtuple(typename="primer_tuple", field_names="seq, fp, rp, size")
 
 
-def closest_diff(nums: list[int]) -> int:
+def closest_pair_and_diff(nums: list[int]) -> int:
     """
     Smallest difference between two consecutive integers in a sorted list.
 
-    Given a list of integers eg. 1, 5, 7, 11, 19, return the smallest
-    absolute difference, in this case 7-5 = 2.
+    Given a list of integers eg. 1, 5, 7, 11, 19, return the consequtive pair
+    with the smallest difference and the difference. If more than one pair
+    gives the same difference, return the larger pair.
 
-    >>> closest_diff([1, 5, 7, 11, 19])
-    2
+    >>> nums = [1, 5, 7, 11, 19, 21]
+    >>> closest_pair_and_diff(nums)
+    ((19, 21), 2)
 
 
     Parameters
@@ -97,19 +98,11 @@ def closest_diff(nums: list[int]) -> int:
         Diff, always >= 0.
 
     """
-    if len(nums) < 2:
-        raise ValueError("Need at least two numbers")
-
-    nums = sorted(nums)
-    min_diff = float("inf")
-
-    for a, b in zip(nums, nums[1:]):
-        diff = abs(a - b)
-        if diff < min_diff:
-            min_diff = diff
-            x, y = a, b
-
-    return abs(x - y)
+    assert len(nums) > 1, "Need at least two numbers"
+    nums.sort()
+    diff_dict = {b - a: (a, b) for a, b in zip(nums, nums[1:])}
+    diff = min(diff_dict.keys())
+    return diff_dict[diff], diff
 
 
 def expand_iupac_to_dna(seq: str) -> list[str]:
@@ -696,42 +689,38 @@ def diff_primer_pairs(
 
     automaton = automaton or make_automaton(primer_list, limit=limit)
     limit = automaton.get_stats()["longest_word"]
-    primer_pair_dict = defaultdict(dict)
+    primer_pair_dict = defaultdict(list)
+
+    sequences = list(dict.fromkeys(sequences))
     number_of_sequences = len(sequences)
 
+    # primer pairs from all sequences are collected in a defaultdict.
+    #
     for seq in sequences:
-
-        for fp, rp, *_, size in primer_pairs(
+        for pp in primer_pairs(
             seq, primer_list, short=short, long=long, limit=limit, automaton=automaton
         ):
-
-            primer_pair_dict[frozenset((fp, rp))][size] = fp, rp, seq
-
-    primer_pair_dict = {
-        k: v for k, v in primer_pair_dict.items() if len(v) == number_of_sequences
-    }
-
-    primer_pair_dict = {
-        k: v
-        for k, v in primer_pair_dict.items()
-        if all(callback(a, b) for a, b in pairwise(v.keys()))
-    }
+            primer_pair_dict[frozenset((pp.fp, pp.rp))].append((pp, seq))
 
     result = []
-
-    for primer_pair, seqd in primer_pair_dict.items():
-        result.append(
-            (
-                closest_diff(seqd.keys()),
-                tuple(
-                    primer_tuple(s, fp, rp, size) for size, (fp, rp, s) in seqd.items()
-                ),
-            )
-        )
-
+    for k, v in primer_pair_dict.items():
+        # verify one pcr product per sequence
+        if len(v) == number_of_sequences:
+            # we need the closest pair to see if the bands are likely to resolve
+            closest_pair, diff = closest_pair_and_diff([pp.size for pp, _ in v])
+            if callback(*closest_pair):
+                # we add the diff here so we can sort the results by this value
+                # we normally want a large difference in size
+                result.append(
+                    (
+                        diff,
+                        tuple(
+                            primer_tuple(seq, pp.fp, pp.rp, pp.size) for pp, seq in v
+                        ),
+                    )
+                )
     result.sort(reverse=True)
-
-    return [b for a, b in result]
+    return [pts for diff, pts in result]
 
 
 def diff_primer_triplets(
@@ -767,7 +756,8 @@ def diff_primer_triplets(
          1>      <3
         -------NNNNN--------  sequenceN-1
 
-
+         2>      <3
+        -AA----NNNNN--------  sequenceN
 
     The callback function is used to give a score for the PCR products. This score can
     be used to decide if a collection of PCR products are likely to migrate to distinct
@@ -815,57 +805,61 @@ def diff_primer_triplets(
     automaton = automaton or make_automaton(primer_list, limit=limit)
     limit = automaton.get_stats()["longest_word"]
     # number_of_sequences = len(sequences)
+    sequences = list(dict.fromkeys(sequences))
     sequence_set = set(sequences)
     # primer pairs for each sequence are collected together with the
     # primer pairs in a defaultdict(list) where the key of a frozenset
     # of the primer pair numbers.
 
-    pairs = defaultdict(list)
+    pairs = defaultdict(dict)
 
     for seq in sequences:
-        pps = primer_pairs(
+        primerpairs_for_one_sequence = primer_pairs(
             seq, primer_list, short=short, long=long, limit=limit, automaton=automaton
         )
-        for pp in pps:
-            pairs[frozenset((pp.fp, pp.rp))].append((seq, pp))
+        for pp in primerpairs_for_one_sequence:
+            pairs[seq][pp.fp, pp.rp] = pp
+
+    trios = defaultdict(list)
 
     # All collected primer pairs are compared and collected if they share a
     # primer (a trio). The trios are collected in another defaultdict(list)
 
-    trios = defaultdict(list)
+    for one, two in combinations(pairs, 2):
+        for p1, pt1 in pairs[one].items():
+            for p2, pt2 in pairs[two].items():
+                if len(trio := frozenset(p1 + p2)) == 3:
+                    trios[trio].extend(((one, pt1), (two, pt2)))
 
-    for keys in combinations(pairs, 2):
-        union = frozenset().union(*keys)
-        if len(union) == 3:
-            for key in keys:
-                trios[union].extend(pairs[key])
-
-    intermediate_result = []
+    # We loop through all values in trios and filter:
+    # at least one primer pair for each sequence
+    trios = {
+        trio: values
+        for trio, values in trios.items()
+        # filter dict for trios that have a PCR product from all sequences
+        if set(s for s, _ in values) == sequence_set
+    }
 
     # Each key, value pair in trios look like this:
     #
-    #   frozenset({1,2,3}) = [(seq1, pair1), (seq2, pair2), ... (seqN, pairN)]
+    #   trios[(1,2,3)] = [(seq1, pair1), (seq2, pair2), ... (seqN, pairN)]
     #
-    # seq is a Dseqrecord
-    # pair is an amplicon_tuple(fp, rp, fposition, rposition, size)
+    # (1,2,3) is a triplet of primer numbers (integers)
+    # seq1 .. seqN are sequences fed to the function
+    # pair1 .. pairN is an amplicon_tuple(fp, rp, fposition, rposition, size)
     #
-    # We loop through all values in trios and filter:
-    # - at least one primer pair for each sequence
     # - visible differences between band sizes = callback true for all pairs if product sizes
     #
     # collect in intermediate_result.
 
-    for seq_primer_tuples in trios.values():
-        templates = []
-        sizes = []
-        for seq, pair in seq_primer_tuples:
-            templates.append(seq)
-            sizes.append(pair.size)
+    intermediate_result = []
 
-        if sequence_set == set(templates) and all(
-            callback(x, y) for x, y in combinations(sizes, 2)
-        ):
-            intermediate_result.append((closest_diff(sizes), seq_primer_tuples))
+    for seq_primer_tuples in trios.values():
+        closest_pair, diff = closest_pair_and_diff(
+            [pair.size for seq, pair in seq_primer_tuples]
+        )
+        if callback(*closest_pair):
+            intermediate_result.append((diff, seq_primer_tuples))
 
     # The closest difference between any two product sizes is also collected
     # so we can sort results for primer combos that produce the largest

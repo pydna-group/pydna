@@ -14,7 +14,7 @@ from pydna.amplify import pcr
 from pydna.parsers import parse_primers
 from pydna.dseqrecord import Dseqrecord
 
-from pydna.primer_screen import closest_diff
+from pydna.primer_screen import closest_pair_and_diff
 from pydna.primer_screen import make_automaton
 from pydna.primer_screen import forward_primers
 from pydna.primer_screen import reverse_primers
@@ -25,9 +25,7 @@ from pydna.primer_screen import diff_primer_triplets
 from pydna.primer_screen import primer_tuple
 from pydna.primer_screen import amplicon_tuple
 
-
 test_files = pathlib.Path(os.path.join(os.path.dirname(__file__)))
-
 
 primers = parse_primers(
     """
@@ -83,12 +81,13 @@ pIL75 = read(test_files / "pIL75.gb")
 atm = None
 
 
-def test_closest_diff():
+def test_closest_pair_and_diff():
 
-    assert closest_diff([1, 5, 7, 11, 19]) == 2
+    assert closest_pair_and_diff([1, 5, 7, 11, 19]) == ((5, 7), 2)
+    assert closest_pair_and_diff([1, 5, 7, 17, 19]) == ((17, 19), 2)
 
-    with pytest.raises(ValueError):
-        closest_diff([5])
+    with pytest.raises(AssertionError):
+        closest_pair_and_diff([5])
 
 
 def test_automaton():
@@ -338,31 +337,38 @@ def test_diff_primer_pairs():
 
 def test_diff_primer_triplets():
 
-    results = diff_primer_triplets((wt, kan), pl, automaton=atm)
-
-    assert results == [
+    triplets1 = diff_primer_triplets((wt, kan), pl, automaton=atm)
+    assert len(triplets1) == 1
+    results = [
         (
             primer_tuple(seq=wt, fp=701, rp=700, size=724),
             primer_tuple(seq=kan, fp=701, rp=1564, size=1450),
         ),
     ]
+    assert triplets1 == results
 
-    triplets = diff_primer_triplets([pIL68, pIL75], pl)
-
-    assert len(triplets) == 2
-
+    triplets2 = diff_primer_triplets([pIL68, pIL75], pl)
+    assert len(triplets2) == 4
     answer = [
         (
             primer_tuple(seq=pIL68, fp=1215, rp=594, size=1474),
             primer_tuple(seq=pIL75, fp=51, rp=594, size=548),
         ),
         (
+            primer_tuple(seq=pIL68, fp=595, rp=607, size=546),
+            primer_tuple(seq=pIL75, fp=255, rp=607, size=1467),
+        ),
+        (
             primer_tuple(seq=pIL68, fp=1215, rp=594, size=1474),
             primer_tuple(seq=pIL75, fp=255, rp=594, size=1005),
         ),
+        (
+            primer_tuple(seq=pIL68, fp=595, rp=607, size=546),
+            primer_tuple(seq=pIL75, fp=51, rp=607, size=1010),
+        ),
     ]
 
-    assert triplets == answer
+    assert triplets2 == answer
 
     assert len(pcr(pl[1215], pl[594], pIL68)) == 1474
     assert len(pcr(pl[51], pl[594], pIL75)) == 548
