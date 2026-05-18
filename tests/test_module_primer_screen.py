@@ -13,7 +13,7 @@ from pydna.readers import read
 from pydna.amplify import pcr
 from pydna.parsers import parse_primers
 from pydna.dseqrecord import Dseqrecord
-
+from pydna.primer_screen import contained
 from pydna.primer_screen import closest_pair_and_diff
 from pydna.primer_screen import make_automaton
 from pydna.primer_screen import forward_primers
@@ -78,6 +78,25 @@ pIL68 = read(test_files / "pIL68.gb")
 pIL75 = read(test_files / "pIL75.gb")
 
 atm = None
+
+
+def test_contained():
+    assert contained(4, 7, 4, 8, 10, circular=True) is True
+    assert contained(5, 8, 4, 8, 10, circular=True) is True
+    assert contained(4, 8, 4, 8, 10, circular=True) is True
+
+    assert contained(4, 7, 4, 8, 10, circular=False) is True
+    assert contained(5, 8, 4, 8, 10, circular=False) is True
+    assert contained(4, 8, 4, 8, 10, circular=False) is True
+
+    assert contained(9, 10, 9, 1, 10, circular=True) is True
+    assert contained(9, 1, 9, 1, 10, circular=True) is True
+    assert contained(0, 1, 9, 1, 10, circular=True) is True
+
+    assert contained(1, 5, 6, 38, 39, circular=True) is False
+    assert contained(1, 5, 38, 6, 39, circular=True) is True
+
+    assert contained(1, 5, 6, 38, 1, circular=True) is False
 
 
 def test_closest_pair_and_diff():
