@@ -376,6 +376,15 @@ def test_diff_primer_pairs():
         ),
     ]
 
+    f = Primer("CTCACTTGAAGTAATG", name="1")
+    r = Primer("AGAGGTTTGGTAGGTG", name="2")
+
+    t1 = Dseqrecord("CTCACTTGAAGTAATGtaTCGTGCACCTACCAAACCTCT")
+    t2 = Dseqrecord("CTCACTTGAAGTAATGccTCGTGCACCTACCAAACCTCT")
+    automaton2 = make_automaton([f, r])
+
+    assert diff_primer_pairs((t1, t2), [f, r], automaton=automaton2) == []
+
 
 def test_diff_primer_triplets():
 
@@ -420,3 +429,13 @@ def test_diff_primer_triplets():
 
     with pytest.raises(ValueError, match="No PCR product!"):
         pcr(pl[1215], pl[594], pIL75)
+
+    f = Primer("CTCACTTGAAGTAATG", name="1")
+    r = Primer("AGAGGTTTGGTAGGTG", name="2")
+    r2 = Primer("AAGCATAACACACGTA", name="2")
+
+    t1 = Dseqrecord("CTCACTTGAAGTAATGtaTCGTGCACCTACCAAACCTCT")
+    t2 = Dseqrecord("CTCACTTGAAGTAATGccAGCTATACGTGTGTTATGCTT")
+    automaton2 = make_automaton([f, r, r2])
+
+    assert diff_primer_pairs((t1, t2), [f, r, r2], automaton=automaton2) == []
