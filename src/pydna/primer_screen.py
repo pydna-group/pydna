@@ -69,6 +69,63 @@ amplicon_tuple = namedtuple(
 primer_tuple = namedtuple(typename="primer_tuple", field_names="seq, fp, rp, size")
 
 
+def contained(a: int, b: int, x: int, y: int, L: int, circular=True) -> bool:
+    """
+    Test whether interval (a, b) is contained in interval (x, y)
+    in a sequence of length L. The sequence may be linear or circular.
+
+    Coordinates must satisfy 0 <= coordinate <= L.
+
+    If circular=False, intervals are treated as ordinary linear intervals.
+
+    If circular=True, intervals are treated as directed circular intervals:
+    - (4, 8) means 4 -> 8
+    - (9, 1) means 9 -> L -> 0 -> 1
+    """
+
+    assert L >= 1, "L must be a positive integer"
+
+    def valid_coordinate(n: int) -> bool:
+        return 0 <= n <= L
+
+    if not all(valid_coordinate(n) for n in (a, b, x, y)):
+        return False
+
+    if not circular:
+        assert a <= b, "In a linear interval, a <= b"
+        assert x <= y, "In a linear interval, x <= y"
+        return x <= a and b <= y
+
+    def unwrap(start: int, end: int) -> tuple[int, int]:
+        """
+        Convert a circular interval into a linear interval.
+
+        Examples with L=10:
+        (4, 8) -> (4, 8)
+        (9, 1) -> (9, 11)
+        (9, 10) -> (9, 10)
+        """
+        start = start % L
+        end = end % L
+
+        if end < start:
+            end += L
+
+        return start, end
+
+    aa, bb = unwrap(a, b)
+    xx, yy = unwrap(x, y)
+
+    for shift in (-L, 0, L):
+        aaa = aa + shift
+        bbb = bb + shift
+
+        if xx <= aaa and bbb <= yy:
+            return True
+
+    return False
+
+
 def closest_pair_and_diff(nums: list[int]) -> int:
     """
     Smallest difference between two consecutive integers in a sorted list.
@@ -584,7 +641,6 @@ def flanking_primer_pairs(
 
     assert begin is not None, "begin has to be set."
     assert end is not None, "end has to be set."
-    assert begin < end, "begin has to be smaller than end."
 
     amplicons = primer_pairs(
         seq,
@@ -597,16 +653,15 @@ def flanking_primer_pairs(
     products = []
 
     for amplicon in amplicons:
-        if amplicon.fposition <= begin and end <= amplicon.rposition:
+        if contained(
+            begin,
+            end,
+            amplicon.fposition,
+            amplicon.rposition,
+            len(seq),
+            circular=seq.circular,
+        ):
             products.append(amplicon)
-    if seq.circular:
-        for amplicon in amplicons:
-            if (
-                amplicon.fposition > amplicon.rposition
-                and begin >= amplicon.fposition % len(seq)
-                and end <= amplicon.rposition % len(seq)
-            ):
-                products.append(amplicon)
 
     return sorted(products, key=attrgetter("size"))  # results sorted by size
 

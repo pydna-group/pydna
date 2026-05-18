@@ -77,7 +77,6 @@ kan = read(test_files / "fas2__KanMX4_locus.gb")
 pIL68 = read(test_files / "pIL68.gb")
 pIL75 = read(test_files / "pIL75.gb")
 
-
 atm = None
 
 
@@ -132,6 +131,8 @@ def test_primer_pairs():
 
     s = str(primers[0].seq + "aaa" + primers[1].rc().seq)
 
+    assert s == "CAGATGCGAAGTTAAGTGCGaaaCGTCAAGACTGTCAAGGA"
+
     # >51_TefTermFwd A.gos 20-mer
     # CAGATGCGAAGTTAAGTGCG
     # >82_MSW_fwd this primer sits inside the loxP of pUG6
@@ -143,8 +144,6 @@ def test_primer_pairs():
     # GTCTACGCTTCAATTCACGCtttGCAGTTCTGACAGTTCCT
     #                        ||||||||||||||||||
     #                        GCAGTTCTGACAGTTCCT
-
-    s = "CAGATGCGAAGTTAAGTGCGaaaCGTCAAGACTGTCAAGGA"
 
     assert primer_pairs(Dseqrecord(s), pl, short=0) == [
         amplicon_tuple(fp=51, rp=82, fposition=20, rposition=23, size=41)
@@ -193,10 +192,9 @@ def test_primer_pairs():
     f = Primer("CTCACTTGAAGTAATG", name="1")
     r = Primer("AGAGGTTTGGTAGGTG", name="2")
     t = Dseqrecord("CTCACTTGAAGTAATGTATCGTGCACCTACCAAACCTCT")
+    automaton2 = make_automaton([f, r])
 
-    automaton = make_automaton([f, r])
-
-    assert primer_pairs(t, [f, r], automaton=automaton, short=0) == [
+    assert primer_pairs(t, [f, r], automaton=automaton2, short=0) == [
         amplicon_tuple(fp=0, rp=1, fposition=16, rposition=23, size=39)
     ]
 
@@ -209,7 +207,7 @@ def test_primer_pairs():
 
     t = Dseqrecord("TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG")
 
-    assert primer_pairs(t, [f, r], automaton=automaton, short=0) == []
+    assert primer_pairs(t, [f, r], automaton=automaton2, short=0) == []
 
     #                        CTCACTTGAAGTAATG>
     #                        ||||||||||||||||
@@ -220,7 +218,7 @@ def test_primer_pairs():
 
     t = Dseqrecord("TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG", circular=True)
 
-    assert primer_pairs(t, [f, r], automaton=automaton, short=0) == [
+    assert primer_pairs(t, [f, r], automaton=automaton2, short=0) == [
         amplicon_tuple(fp=0, rp=1, fposition=0, rposition=7, size=39)
     ]
 
@@ -235,7 +233,7 @@ def test_primer_pairs():
 
     t = Dseqrecord("ATGTATCGTGCACCTACCAAACCTCTCTCACTTGAAGTA", circular=True)
 
-    assert primer_pairs(t, [f, r], automaton=automaton, short=0) == [
+    assert primer_pairs(t, [f, r], automaton=automaton2, short=0) == [
         amplicon_tuple(fp=0, rp=1, fposition=3, rposition=10, size=39)
     ]
 
@@ -266,20 +264,19 @@ def test_flanking_primer_pairs():
     f = Primer("CTCACTTGAAGTAATG", name="1")
     r = Primer("AGAGGTTTGGTAGGTG", name="2")
     t = Dseqrecord("CTCACTTGAAGTAATGTATCGTGCACCTACCAAACCTCT")
+    automaton2 = make_automaton([f, r])
 
-    automaton = make_automaton([f, r])
-
-    assert flanking_primer_pairs(t, [f, r], target=(16, 23), automaton=automaton) == [
+    assert flanking_primer_pairs(t, [f, r], target=(16, 23), automaton=automaton2) == [
         amplicon_tuple(fp=0, rp=1, fposition=16, rposition=23, size=39)
     ]
-    assert flanking_primer_pairs(t, [f, r], target=(17, 23), automaton=automaton) == [
+    assert flanking_primer_pairs(t, [f, r], target=(17, 23), automaton=automaton2) == [
         amplicon_tuple(fp=0, rp=1, fposition=16, rposition=23, size=39)
     ]
-    assert flanking_primer_pairs(t, [f, r], target=(16, 22), automaton=automaton) == [
+    assert flanking_primer_pairs(t, [f, r], target=(16, 22), automaton=automaton2) == [
         amplicon_tuple(fp=0, rp=1, fposition=16, rposition=23, size=39)
     ]
-    assert flanking_primer_pairs(t, [f, r], target=(15, 23), automaton=automaton) == []
-    assert flanking_primer_pairs(t, [f, r], target=(16, 24), automaton=automaton) == []
+    assert flanking_primer_pairs(t, [f, r], target=(15, 23), automaton=automaton2) == []
+    assert flanking_primer_pairs(t, [f, r], target=(16, 24), automaton=automaton2) == []
 
     #                        CTCACTTGAAGTAATG>
     #                        ||||||||||||||||
@@ -290,8 +287,8 @@ def test_flanking_primer_pairs():
 
     t = Dseqrecord("TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG")
 
-    assert flanking_primer_pairs(t, [f, r], target=(0, 7), automaton=automaton) == []
-    assert flanking_primer_pairs(t, [f, r], target=(1, 6), automaton=automaton) == []
+    assert flanking_primer_pairs(t, [f, r], target=(0, 7), automaton=automaton2) == []
+    assert flanking_primer_pairs(t, [f, r], target=(1, 6), automaton=automaton2) == []
 
     #                        CTCACTTGAAGTAATG>
     #                        ||||||||||||||||
@@ -302,9 +299,35 @@ def test_flanking_primer_pairs():
 
     t = Dseqrecord("TATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATG", circular=True)
 
-    assert flanking_primer_pairs(t, [f, r], target=(1, 6), automaton=automaton) == [
+    assert flanking_primer_pairs(t, [f, r], target=(1, 6), automaton=automaton2) == [
         amplicon_tuple(fp=0, rp=1, fposition=0, rposition=7, size=39)
     ]
+
+    #                       CTCACTTGAAGTAATG>
+    #                       ||||||||||||||||
+    # ATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATGT   Circular template
+    # TAGCACGTGGATGGTTTGGAGAGAGTGAACTTCATTACA  On product across the ori
+    #       ||||||||||||||||
+    #      <GTGGATGGTTTGGAGA
+
+    t = Dseqrecord("ATCGTGCACCTACCAAACCTCTCTCACTTGAAGTAATGT", circular=True)
+
+    answer = amplicon_tuple(fp=0, rp=1, fposition=38, rposition=6, size=39)
+
+    assert flanking_primer_pairs(t, [f, r], target=(1, 5), automaton=automaton2) == [
+        answer
+    ]
+    assert flanking_primer_pairs(t, [f, r], target=(0, 5), automaton=automaton2) == [
+        answer
+    ]
+    assert flanking_primer_pairs(t, [f, r], target=(39, 5), automaton=automaton2) == [
+        answer
+    ]
+    assert flanking_primer_pairs(t, [f, r], target=(38, 6), automaton=automaton2) == [
+        answer
+    ]
+    assert flanking_primer_pairs(t, [f, r], target=(37, 6), automaton=automaton2) == []
+    assert flanking_primer_pairs(t, [f, r], target=(38, 7), automaton=automaton2) == []
 
     #                           CTCACTTGAAGTAATG>
     #                           ||||||||||||||||           Circular template
@@ -317,8 +340,8 @@ def test_flanking_primer_pairs():
 
     t = Dseqrecord("ATGTATCGTGCACCTACCAAACCTCTCTCACTTGAAGTA", circular=True)
 
-    assert flanking_primer_pairs(t, [f, r], target=(0, 6), automaton=automaton) == []
-    assert flanking_primer_pairs(t, [f, r], target=(3, 9), automaton=automaton) == [
+    assert flanking_primer_pairs(t, [f, r], target=(0, 6), automaton=automaton2) == []
+    assert flanking_primer_pairs(t, [f, r], target=(3, 9), automaton=automaton2) == [
         amplicon_tuple(fp=0, rp=1, fposition=3, rposition=10, size=39)
     ]
 
