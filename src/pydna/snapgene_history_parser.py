@@ -421,7 +421,15 @@ def _source_from_tree_node(  # noqa: C901
         products = oligonucleotide_hybridization(*primers, 10)
     elif node.operation == "invalid":
         return None, []
-    elif node.operation in ["remove", "insert", "replace","insertReverseTranslation","insertCodons","insertRestrictionSite","insertFeature"]:
+    elif node.operation in [
+        "remove",
+        "insert",
+        "replace",
+        "insertReverseTranslation",
+        "insertCodons",
+        "insertRestrictionSite",
+        "insertFeature",
+    ]:
         warnings.warn(
             "Manual editing of sequences not supported",
             category=SnapgeneHistoryParserWarning,
