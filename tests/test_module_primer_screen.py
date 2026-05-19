@@ -98,6 +98,10 @@ def test_contained():
 
     assert contained(1, 5, 6, 38, 1, circular=True) is False
 
+    # Overlaps but not contained
+    assert contained(1, 5, 2, 8, 39, circular=True) is False
+    assert contained(1, 5, 8, 2, 39, circular=True) is False
+
 
 def test_closest_pair_and_diff():
 
