@@ -142,8 +142,8 @@ def _history_node_to_dseqrecord(sgff_object: SgffObject, node_id: str) -> Dseqre
     seq_props = node.properties.get("AdditionalSequenceProperties")
     seq = _dseq_from_seq_properties(node.sequence, circular, seq_props)
     seq_len = node.length
-    name = tree_node.name if tree_node else f"node_{node_id}"
-    name = re.sub(r"\s+", "_", name)  # Replace whitespace with underscores
+    original_name = tree_node.name if tree_node else f"node_{node_id}"
+    name = re.sub(r"\s+", "_", original_name)  # Replace whitespace with underscores
 
     features = []
     if seq_len != 0:
@@ -165,6 +165,7 @@ def _history_node_to_dseqrecord(sgff_object: SgffObject, node_id: str) -> Dseqre
         features=features,
         annotations=annotations,
     )
+    record.dbxrefs.append(f"snapgene_history_parser_name:{original_name}")
     return record
 
 
@@ -532,6 +533,7 @@ def parse_snapgene_history(filepath: str) -> Dseqrecord:
     sgff_object = SgffReader.from_file(filepath)
 
     name = os.path.basename(filepath)
+    root_record.dbxrefs.append(f"snapgene_history_parser_name:{name}")
     root_record.name = re.sub(r"\s+", "_", name)
 
     seq_props = sgff_object.properties.get("AdditionalSequenceProperties")
