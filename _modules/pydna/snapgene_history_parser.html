@@ -736,7 +736,15 @@
         <span class="n">products</span> <span class="o">=</span> <span class="n">oligonucleotide_hybridization</span><span class="p">(</span><span class="o">*</span><span class="n">primers</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="s2">&quot;invalid&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[]</span>
-    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;remove&quot;</span><span class="p">,</span> <span class="s2">&quot;insert&quot;</span><span class="p">,</span> <span class="s2">&quot;replace&quot;</span><span class="p">]:</span>
+    <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">operation</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="s2">&quot;remove&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;insert&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;replace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;insertReverseTranslation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;insertCodons&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;insertRestrictionSite&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;insertFeature&quot;</span><span class="p">,</span>
+    <span class="p">]:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s2">&quot;Manual editing of sequences not supported&quot;</span><span class="p">,</span>
             <span class="n">category</span><span class="o">=</span><span class="n">SnapgeneHistoryParserWarning</span><span class="p">,</span>
