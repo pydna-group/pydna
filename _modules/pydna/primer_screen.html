@@ -351,14 +351,10 @@
 <span class="sd">    PyPI: https://pypi.python.org/pypi/pyahocorasick</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-
-<span class="c1"># TODO: circular templates</span>
-
+<span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">attrgetter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">combinations</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">pairwise</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
@@ -385,17 +381,79 @@
 <span class="n">primer_tuple</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="n">typename</span><span class="o">=</span><span class="s2">&quot;primer_tuple&quot;</span><span class="p">,</span> <span class="n">field_names</span><span class="o">=</span><span class="s2">&quot;seq, fp, rp, size&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="closest_diff">
-<a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.closest_diff">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">closest_diff</span><span class="p">(</span><span class="n">nums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="contained">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.contained">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">contained</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test whether interval (a, b) is contained in interval (x, y)</span>
+<span class="sd">    in a sequence of length L. The sequence may be linear or circular.</span>
+
+<span class="sd">    Coordinates must satisfy 0 &lt;= coordinate &lt;= L.</span>
+
+<span class="sd">    If circular=False, intervals are treated as ordinary linear intervals.</span>
+
+<span class="sd">    If circular=True, intervals are treated as directed circular intervals:</span>
+<span class="sd">    - (4, 8) means 4 -&gt; 8</span>
+<span class="sd">    - (9, 1) means 9 -&gt; L -&gt; 0 -&gt; 1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="n">L</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;L must be a positive integer&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">valid_coordinate</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="n">L</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">valid_coordinate</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">circular</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">,</span> <span class="s2">&quot;In a linear interval, a &lt;= b&quot;</span>
+        <span class="k">assert</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;In a linear interval, x &lt;= y&quot;</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">a</span> <span class="ow">and</span> <span class="n">b</span> <span class="o">&lt;=</span> <span class="n">y</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">unwrap</span><span class="p">(</span><span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert a circular interval into a linear interval.</span>
+
+<span class="sd">        Examples with L=10:</span>
+<span class="sd">        (4, 8) -&gt; (4, 8)</span>
+<span class="sd">        (9, 1) -&gt; (9, 11)</span>
+<span class="sd">        (9, 10) -&gt; (9, 10)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">%</span> <span class="n">L</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">end</span> <span class="o">%</span> <span class="n">L</span>
+
+        <span class="k">if</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="n">start</span><span class="p">:</span>
+            <span class="n">end</span> <span class="o">+=</span> <span class="n">L</span>
+
+        <span class="k">return</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span>
+
+    <span class="n">aa</span><span class="p">,</span> <span class="n">bb</span> <span class="o">=</span> <span class="n">unwrap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span> <span class="o">=</span> <span class="n">unwrap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="p">(</span><span class="o">-</span><span class="n">L</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">L</span><span class="p">):</span>
+        <span class="n">aaa</span> <span class="o">=</span> <span class="n">aa</span> <span class="o">+</span> <span class="n">shift</span>
+        <span class="n">bbb</span> <span class="o">=</span> <span class="n">bb</span> <span class="o">+</span> <span class="n">shift</span>
+
+        <span class="k">if</span> <span class="n">xx</span> <span class="o">&lt;=</span> <span class="n">aaa</span> <span class="ow">and</span> <span class="n">bbb</span> <span class="o">&lt;=</span> <span class="n">yy</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="closest_pair_and_diff">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.closest_pair_and_diff">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">closest_pair_and_diff</span><span class="p">(</span><span class="n">nums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Smallest difference between two consecutive integers in a sorted list.</span>
 
-<span class="sd">    Given a list of integers eg. 1, 5, 7, 11, 19, return the smallest</span>
-<span class="sd">    absolute difference, in this case 7-5 = 2.</span>
+<span class="sd">    Given a list of integers eg. 1, 5, 7, 11, 19, return the consequtive pair</span>
+<span class="sd">    with the smallest difference and the difference. If more than one pair</span>
+<span class="sd">    gives the same difference, return the larger pair.</span>
 
-<span class="sd">    &gt;&gt;&gt; closest_diff([1, 5, 7, 11, 19])</span>
-<span class="sd">    2</span>
+<span class="sd">    &gt;&gt;&gt; nums = [1, 5, 7, 11, 19, 21]</span>
+<span class="sd">    &gt;&gt;&gt; closest_pair_and_diff(nums)</span>
+<span class="sd">    ((19, 21), 2)</span>
 
 
 <span class="sd">    Parameters</span>
@@ -414,19 +472,11 @@
 <span class="sd">        Diff, always &gt;= 0.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Need at least two numbers&quot;</span><span class="p">)</span>
-
-    <span class="n">nums</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
-    <span class="n">min_diff</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">nums</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-        <span class="n">diff</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">diff</span> <span class="o">&lt;</span> <span class="n">min_diff</span><span class="p">:</span>
-            <span class="n">min_diff</span> <span class="o">=</span> <span class="n">diff</span>
-            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span>
-
-    <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span></div>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Need at least two numbers&quot;</span>
+    <span class="n">nums</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">diff_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">:</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">nums</span><span class="p">[</span><span class="mi">1</span><span class="p">:])}</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">diff_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">diff_dict</span><span class="p">[</span><span class="n">diff</span><span class="p">],</span> <span class="n">diff</span></div>
 
 
 
@@ -650,16 +700,20 @@
 <span class="sd">        values are lists with primer locations.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">primer_list</span><span class="p">,</span> <span class="s2">&quot;primer_list must not be empty.&quot;</span>
 
     <span class="c1"># if no automaton is given, we make one.</span>
     <span class="n">automaton</span> <span class="o">=</span> <span class="n">automaton</span> <span class="ow">or</span> <span class="n">make_automaton</span><span class="p">(</span><span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
 
     <span class="c1"># The limit is taken from automaton stats.</span>
+    <span class="c1"># If the automaton is given, the limit argument will be ignored.</span>
     <span class="n">limit</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()[</span><span class="s2">&quot;longest_word&quot;</span><span class="p">]</span>
 
     <span class="c1"># A defaultdict of lists is used to collect primer locations since</span>
     <span class="c1"># different primers can anneal in the same place.</span>
     <span class="n">fps</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="c1"># if seq is circular, we have to look across the origin of the sequence</span>
+    <span class="n">seq</span> <span class="o">=</span> <span class="n">seq</span><span class="p">[:]</span> <span class="o">+</span> <span class="n">seq</span><span class="p">[:</span> <span class="n">limit</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">seq</span><span class="o">.</span><span class="n">circular</span> <span class="k">else</span> <span class="n">seq</span>
 
     <span class="k">for</span> <span class="n">end_index</span><span class="p">,</span> <span class="n">ids</span> <span class="ow">in</span> <span class="n">automaton</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">seq</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()):</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
@@ -673,7 +727,7 @@
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.reverse_primers">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">reverse_primers</span><span class="p">(</span>
     <span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
-    <span class="n">primer_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Primer</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Primer</span><span class="p">],</span>
+    <span class="n">primer_list</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Primer</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
     <span class="n">automaton</span><span class="p">:</span> <span class="n">ahocorasick</span><span class="o">.</span><span class="n">Automaton</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
@@ -732,6 +786,8 @@
 <span class="sd">        values are lists with primer locations.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">primer_list</span><span class="p">,</span> <span class="s2">&quot;primer_list must not be empty.&quot;</span>
+
     <span class="c1"># if no automaton is given, we make one.</span>
     <span class="n">automaton</span> <span class="o">=</span> <span class="n">automaton</span> <span class="ow">or</span> <span class="n">make_automaton</span><span class="p">(</span><span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
 
@@ -742,6 +798,8 @@
     <span class="c1"># A defaultdict of lists is used to collect primer locations since</span>
     <span class="c1"># different primers can anneal in the same place.</span>
     <span class="n">rps</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="c1"># if seq is circular, we have to look across the origin of the sequence</span>
+    <span class="n">seq</span> <span class="o">=</span> <span class="n">seq</span><span class="p">[:]</span> <span class="o">+</span> <span class="n">seq</span><span class="p">[:</span> <span class="n">limit</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">seq</span><span class="o">.</span><span class="n">circular</span> <span class="k">else</span> <span class="n">seq</span>
     <span class="n">ln</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
 
     <span class="c1"># We use the reverse complement of the sequence instead of taking the</span>
@@ -758,7 +816,7 @@
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.primer_pairs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">primer_pairs</span><span class="p">(</span>
     <span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
-    <span class="n">primer_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Primer</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Primer</span><span class="p">],</span>
+    <span class="n">primer_list</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Primer</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span>
     <span class="n">short</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
     <span class="n">long</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
@@ -815,24 +873,26 @@
 <span class="sd">        List of tuples (index_fp, position_fp, index_rp, position_rp, size)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">primer_list</span><span class="p">,</span> <span class="s2">&quot;primer_list must not be empty.&quot;</span>
+
+    <span class="c1"># if no automaton is given, we make one.</span>
     <span class="n">automaton</span> <span class="o">=</span> <span class="n">automaton</span> <span class="ow">or</span> <span class="n">make_automaton</span><span class="p">(</span><span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+
+    <span class="c1"># The limit is taken from automaton stats.</span>
+    <span class="c1"># If the automaton is given, the limit argument will be ignored.</span>
     <span class="n">limit</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()[</span><span class="s2">&quot;longest_word&quot;</span><span class="p">]</span>
 
     <span class="c1"># Unique forward primers are collected</span>
     <span class="n">fps</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">fp</span><span class="p">:</span> <span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">fp</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">forward_primers</span><span class="p">(</span>
-            <span class="n">seq</span><span class="p">,</span> <span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span> <span class="n">automaton</span><span class="o">=</span><span class="n">automaton</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">fp</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">forward_primers</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">primer_list</span><span class="p">,</span> <span class="n">automaton</span><span class="o">=</span><span class="n">automaton</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
     <span class="p">}</span>
 
     <span class="c1"># Unique reverse primers are collected</span>
     <span class="n">rps</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">rp</span><span class="p">:</span> <span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">rp</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">reverse_primers</span><span class="p">(</span>
-            <span class="n">seq</span><span class="p">,</span> <span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span> <span class="n">automaton</span><span class="o">=</span><span class="n">automaton</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">rp</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">reverse_primers</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">primer_list</span><span class="p">,</span> <span class="n">automaton</span><span class="o">=</span><span class="n">automaton</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
     <span class="p">}</span>
     <span class="n">products</span> <span class="o">=</span> <span class="p">[]</span>
@@ -844,6 +904,25 @@
             <span class="c1"># If the size falls within long and short, the data is kept.</span>
             <span class="k">if</span> <span class="n">short</span> <span class="o">&lt;=</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="n">long</span> <span class="ow">and</span> <span class="n">fposition</span> <span class="o">&lt;=</span> <span class="n">rposition</span><span class="p">:</span>
                 <span class="n">products</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">amplicon_tuple</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="n">fposition</span><span class="p">,</span> <span class="n">rposition</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
+    <span class="c1"># if sequence is circular we also look at forward primers that sits after the</span>
+    <span class="c1"># reverse primer and amplify across the origin</span>
+    <span class="k">if</span> <span class="n">seq</span><span class="o">.</span><span class="n">circular</span><span class="p">:</span>
+        <span class="n">ln</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fposition</span> <span class="ow">in</span> <span class="n">fps</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">rp</span><span class="p">,</span> <span class="n">rposition</span> <span class="ow">in</span> <span class="n">rps</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">fposition</span> <span class="o">&gt;</span> <span class="n">rposition</span><span class="p">:</span>
+                    <span class="n">size</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="nb">len</span><span class="p">(</span><span class="n">primer_list</span><span class="p">[</span><span class="n">fp</span><span class="p">])</span>
+                        <span class="o">+</span> <span class="n">rposition</span>
+                        <span class="o">+</span> <span class="p">(</span><span class="n">ln</span> <span class="o">-</span> <span class="n">fposition</span><span class="p">)</span>
+                        <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">primer_list</span><span class="p">[</span><span class="n">rp</span><span class="p">])</span>
+                    <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">short</span> <span class="o">&lt;=</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="n">long</span><span class="p">:</span>
+                        <span class="n">products</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">amplicon_tuple</span><span class="p">(</span>
+                                <span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="n">fposition</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">),</span> <span class="n">rposition</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">),</span> <span class="n">size</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
     <span class="k">return</span> <span class="n">products</span></div>
 
 
@@ -852,8 +931,8 @@
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.flanking_primer_pairs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">flanking_primer_pairs</span><span class="p">(</span>
     <span class="n">seq</span><span class="p">:</span> <span class="n">Dseqrecord</span><span class="p">,</span>
-    <span class="n">primer_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Primer</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Primer</span><span class="p">],</span>
-    <span class="n">target</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+    <span class="n">primer_list</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Primer</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span>
+    <span class="n">target</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
     <span class="n">automaton</span><span class="p">:</span> <span class="n">ahocorasick</span><span class="o">.</span><span class="n">Automaton</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">amplicon_tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
@@ -896,12 +975,10 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">automaton</span> <span class="o">=</span> <span class="n">automaton</span> <span class="ow">or</span> <span class="n">make_automaton</span><span class="p">(</span><span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
-    <span class="n">limit</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()[</span><span class="s2">&quot;longest_word&quot;</span><span class="p">]</span>
-
     <span class="n">begin</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">target</span>
 
-    <span class="k">assert</span> <span class="n">begin</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">,</span> <span class="s2">&quot;begin has to be smaller than end.&quot;</span>
+    <span class="k">assert</span> <span class="n">begin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;begin has to be set.&quot;</span>
+    <span class="k">assert</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;end has to be set.&quot;</span>
 
     <span class="n">amplicons</span> <span class="o">=</span> <span class="n">primer_pairs</span><span class="p">(</span>
         <span class="n">seq</span><span class="p">,</span>
@@ -914,10 +991,17 @@
     <span class="n">products</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">amplicon</span> <span class="ow">in</span> <span class="n">amplicons</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">fposition</span> <span class="o">&gt;=</span> <span class="n">begin</span> <span class="ow">and</span> <span class="n">end</span> <span class="o">&lt;=</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">rposition</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">contained</span><span class="p">(</span>
+            <span class="n">begin</span><span class="p">,</span>
+            <span class="n">end</span><span class="p">,</span>
+            <span class="n">amplicon</span><span class="o">.</span><span class="n">fposition</span><span class="p">,</span>
+            <span class="n">amplicon</span><span class="o">.</span><span class="n">rposition</span><span class="p">,</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">),</span>
+            <span class="n">circular</span><span class="o">=</span><span class="n">seq</span><span class="o">.</span><span class="n">circular</span><span class="p">,</span>
+        <span class="p">):</span>
             <span class="n">products</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">amplicon</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">products</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;size&quot;</span><span class="p">))</span>  <span class="c1"># results sorted by size</span></div>
 
 
 
@@ -925,7 +1009,7 @@
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.diff_primer_pairs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">diff_primer_pairs</span><span class="p">(</span>
     <span class="n">sequences</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
-    <span class="n">primer_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Primer</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Primer</span><span class="p">],</span>
+    <span class="n">primer_list</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Primer</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span>
     <span class="n">short</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
     <span class="n">long</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1500</span><span class="p">,</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
@@ -1001,42 +1085,38 @@
 
     <span class="n">automaton</span> <span class="o">=</span> <span class="n">automaton</span> <span class="ow">or</span> <span class="n">make_automaton</span><span class="p">(</span><span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
     <span class="n">limit</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()[</span><span class="s2">&quot;longest_word&quot;</span><span class="p">]</span>
-    <span class="n">primer_pair_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">primer_pair_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+
+    <span class="n">sequences</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">sequences</span><span class="p">))</span>
     <span class="n">number_of_sequences</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
 
+    <span class="c1"># primer pairs from all sequences are collected in a defaultdict.</span>
+    <span class="c1">#</span>
     <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">:</span>
-
-        <span class="k">for</span> <span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">primer_pairs</span><span class="p">(</span>
+        <span class="k">for</span> <span class="n">pp</span> <span class="ow">in</span> <span class="n">primer_pairs</span><span class="p">(</span>
             <span class="n">seq</span><span class="p">,</span> <span class="n">primer_list</span><span class="p">,</span> <span class="n">short</span><span class="o">=</span><span class="n">short</span><span class="p">,</span> <span class="n">long</span><span class="o">=</span><span class="n">long</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span> <span class="n">automaton</span><span class="o">=</span><span class="n">automaton</span>
         <span class="p">):</span>
-
-            <span class="n">primer_pair_dict</span><span class="p">[</span><span class="nb">frozenset</span><span class="p">((</span><span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">))][</span><span class="n">size</span><span class="p">]</span> <span class="o">=</span> <span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="n">seq</span>
-
-    <span class="n">primer_pair_dict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">primer_pair_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="n">number_of_sequences</span>
-    <span class="p">}</span>
-
-    <span class="n">primer_pair_dict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">k</span><span class="p">:</span> <span class="n">v</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">primer_pair_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">callback</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">pairwise</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-    <span class="p">}</span>
+            <span class="n">primer_pair_dict</span><span class="p">[</span><span class="nb">frozenset</span><span class="p">((</span><span class="n">pp</span><span class="o">.</span><span class="n">fp</span><span class="p">,</span> <span class="n">pp</span><span class="o">.</span><span class="n">rp</span><span class="p">))]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">pp</span><span class="p">,</span> <span class="n">seq</span><span class="p">))</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">primer_pair</span><span class="p">,</span> <span class="n">seqd</span> <span class="ow">in</span> <span class="n">primer_pair_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">(</span>
-                <span class="n">closest_diff</span><span class="p">(</span><span class="n">seqd</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
-                <span class="nb">tuple</span><span class="p">(</span>
-                    <span class="n">primer_tuple</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="k">for</span> <span class="n">size</span><span class="p">,</span> <span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="ow">in</span> <span class="n">seqd</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-                <span class="p">),</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
-
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">primer_pair_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># verify one pcr product per sequence</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="n">number_of_sequences</span><span class="p">:</span>
+            <span class="c1"># we need the closest pair to see if the bands are likely to resolve</span>
+            <span class="n">closest_pair</span><span class="p">,</span> <span class="n">diff</span> <span class="o">=</span> <span class="n">closest_pair_and_diff</span><span class="p">([</span><span class="n">pp</span><span class="o">.</span><span class="n">size</span> <span class="k">for</span> <span class="n">pp</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">v</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">callback</span><span class="p">(</span><span class="o">*</span><span class="n">closest_pair</span><span class="p">):</span>
+                <span class="c1"># we add the diff here so we can sort the results by this value</span>
+                <span class="c1"># we normally want a large difference in size</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="n">diff</span><span class="p">,</span>
+                        <span class="nb">tuple</span><span class="p">(</span>
+                            <span class="n">primer_tuple</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">pp</span><span class="o">.</span><span class="n">fp</span><span class="p">,</span> <span class="n">pp</span><span class="o">.</span><span class="n">rp</span><span class="p">,</span> <span class="n">pp</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="k">for</span> <span class="n">pp</span><span class="p">,</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">v</span>
+                        <span class="p">),</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
     <span class="n">result</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="p">[</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="p">[</span><span class="n">pts</span> <span class="k">for</span> <span class="n">diff</span><span class="p">,</span> <span class="n">pts</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span></div>
 
 
 
@@ -1044,7 +1124,7 @@
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.primer_screen.diff_primer_triplets">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">diff_primer_triplets</span><span class="p">(</span>
     <span class="n">sequences</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
-    <span class="n">primer_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Primer</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Primer</span><span class="p">],</span>
+    <span class="n">primer_list</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Primer</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
     <span class="n">short</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
     <span class="n">long</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1500</span><span class="p">,</span>
@@ -1065,12 +1145,18 @@
 <span class="sd">    ::</span>
 
 <span class="sd">         1&gt;        &lt;2</span>
-<span class="sd">        -------NNNNNNNNN----  sequenceA</span>
+<span class="sd">        -------AAAAAAAAA----  sequenceA</span>
 
 <span class="sd">         1&gt;     &lt;3</span>
-<span class="sd">        -------XXXXX--------  sequenceB</span>
+<span class="sd">        -------BBBBB--------  sequenceB</span>
 
+<span class="sd">        ...</span>
 
+<span class="sd">         1&gt;      &lt;3</span>
+<span class="sd">        -------NNNNN--------  sequenceN-1</span>
+
+<span class="sd">         2&gt;      &lt;3</span>
+<span class="sd">        -AA----NNNNN--------  sequenceN</span>
 
 <span class="sd">    The callback function is used to give a score for the PCR products. This score can</span>
 <span class="sd">    be used to decide if a collection of PCR products are likely to migrate to distinct</span>
@@ -1117,61 +1203,83 @@
 
     <span class="n">automaton</span> <span class="o">=</span> <span class="n">automaton</span> <span class="ow">or</span> <span class="n">make_automaton</span><span class="p">(</span><span class="n">primer_list</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
     <span class="n">limit</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()[</span><span class="s2">&quot;longest_word&quot;</span><span class="p">]</span>
-    <span class="n">number_of_sequences</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
-    <span class="n">pp</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="c1"># pp = { seq1: [(a,b,c,d,e), ...], seq2: [(i,j,k,l,m), ... ]}</span>
+    <span class="c1"># number_of_sequences = len(sequences)</span>
+    <span class="n">sequences</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">sequences</span><span class="p">))</span>
+    <span class="n">sequence_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+    <span class="c1"># primer pairs for each sequence are collected together with the</span>
+    <span class="c1"># primer pairs in a defaultdict(list) where the key of a frozenset</span>
+    <span class="c1"># of the primer pair numbers.</span>
 
-    <span class="c1"># All primer pairs for each sequence are collected.</span>
+    <span class="n">pairs</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+
     <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">:</span>
-        <span class="n">pp</span><span class="p">[</span><span class="n">seq</span><span class="p">]</span> <span class="o">=</span> <span class="n">primer_pairs</span><span class="p">(</span>
+        <span class="n">primerpairs_for_one_sequence</span> <span class="o">=</span> <span class="n">primer_pairs</span><span class="p">(</span>
             <span class="n">seq</span><span class="p">,</span> <span class="n">primer_list</span><span class="p">,</span> <span class="n">short</span><span class="o">=</span><span class="n">short</span><span class="p">,</span> <span class="n">long</span><span class="o">=</span><span class="n">long</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span> <span class="n">automaton</span><span class="o">=</span><span class="n">automaton</span>
         <span class="p">)</span>
+        <span class="k">for</span> <span class="n">pp</span> <span class="ow">in</span> <span class="n">primerpairs_for_one_sequence</span><span class="p">:</span>
+            <span class="n">pairs</span><span class="p">[</span><span class="n">seq</span><span class="p">][</span><span class="n">pp</span><span class="o">.</span><span class="n">fp</span><span class="p">,</span> <span class="n">pp</span><span class="o">.</span><span class="n">rp</span><span class="p">]</span> <span class="o">=</span> <span class="n">pp</span>
 
-    <span class="c1"># We count all the times a specific pair occurs</span>
-    <span class="n">pair_counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+    <span class="n">trios</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">seq</span><span class="p">,</span> <span class="n">tuples</span> <span class="ow">in</span> <span class="n">pp</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tuples</span><span class="p">:</span>
-            <span class="n">pair</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">t</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># first two integers, unordered</span>
-            <span class="n">pair_counter</span><span class="p">[</span><span class="n">pair</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="c1"># All collected primer pairs are compared and collected if they share a</span>
+    <span class="c1"># primer (a trio). The trios are collected in another defaultdict(list)</span>
 
-    <span class="c1"># Pick pairs that appear more than once.</span>
-    <span class="n">pairs_to_remove</span> <span class="o">=</span> <span class="p">{</span><span class="n">pair</span> <span class="k">for</span> <span class="n">pair</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">pair_counter</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">one</span><span class="p">,</span> <span class="n">two</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">p1</span><span class="p">,</span> <span class="n">pt1</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">[</span><span class="n">one</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">p2</span><span class="p">,</span> <span class="n">pt2</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">[</span><span class="n">two</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">trio</span> <span class="o">:=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">p1</span> <span class="o">+</span> <span class="n">p2</span><span class="p">))</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">trios</span><span class="p">[</span><span class="n">trio</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(((</span><span class="n">one</span><span class="p">,</span> <span class="n">pt1</span><span class="p">),</span> <span class="p">(</span><span class="n">two</span><span class="p">,</span> <span class="n">pt2</span><span class="p">)))</span>
 
-    <span class="c1"># Remove pairs that appear more than once.</span>
-    <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">pp</span><span class="p">:</span>
-        <span class="n">pp</span><span class="p">[</span><span class="n">seq</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">pp</span><span class="p">[</span><span class="n">seq</span><span class="p">]</span> <span class="k">if</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">t</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pairs_to_remove</span><span class="p">]</span>
+    <span class="c1"># We loop through all values in trios and filter:</span>
+    <span class="c1"># at least one primer pair for each sequence</span>
+    <span class="n">trios</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">trio</span><span class="p">:</span> <span class="n">values</span>
+        <span class="k">for</span> <span class="n">trio</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">trios</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="c1"># filter dict for trios that have a PCR product from all sequences</span>
+        <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="n">sequence_set</span>
+    <span class="p">}</span>
 
-    <span class="n">primertrios</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="c1"># Each key, value pair in trios look like this:</span>
+    <span class="c1">#</span>
+    <span class="c1">#   trios[(1,2,3)] = [(seq1, pair1), (seq2, pair2), ... (seqN, pairN)]</span>
+    <span class="c1">#</span>
+    <span class="c1"># (1,2,3) is a triplet of primer numbers (integers)</span>
+    <span class="c1"># seq1 .. seqN are sequences fed to the function</span>
+    <span class="c1"># pair1 .. pairN is an amplicon_tuple(fp, rp, fposition, rposition, size)</span>
+    <span class="c1">#</span>
+    <span class="c1"># - visible differences between band sizes = callback true for all pairs if product sizes</span>
+    <span class="c1">#</span>
+    <span class="c1"># collect in intermediate_result.</span>
 
-    <span class="k">for</span> <span class="n">seq1</span><span class="p">,</span> <span class="n">seq2</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">sequences</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">fp1</span><span class="p">,</span> <span class="n">rp1</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">size1</span> <span class="ow">in</span> <span class="n">pp</span><span class="p">[</span><span class="n">seq1</span><span class="p">]:</span>
-            <span class="k">for</span> <span class="n">fp2</span><span class="p">,</span> <span class="n">rp2</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">size2</span> <span class="ow">in</span> <span class="n">pp</span><span class="p">[</span><span class="n">seq2</span><span class="p">]:</span>
-                <span class="n">primertrio</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">((</span><span class="n">fp1</span><span class="p">,</span> <span class="n">rp1</span><span class="p">,</span> <span class="n">fp2</span><span class="p">,</span> <span class="n">rp2</span><span class="p">))</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">primertrio</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">callback</span><span class="p">(</span><span class="n">size1</span><span class="p">,</span> <span class="n">size2</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="n">primertrios</span><span class="p">[</span><span class="n">primertrio</span><span class="p">]:</span>
-                        <span class="k">del</span> <span class="n">primertrios</span><span class="p">[</span><span class="n">primertrio</span><span class="p">]</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">primertrios</span><span class="p">[</span><span class="n">primertrio</span><span class="p">][</span><span class="n">size1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fp1</span><span class="p">,</span> <span class="n">rp1</span><span class="p">,</span> <span class="n">seq1</span><span class="p">)</span>
-                        <span class="n">primertrios</span><span class="p">[</span><span class="n">primertrio</span><span class="p">][</span><span class="n">size2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fp2</span><span class="p">,</span> <span class="n">rp2</span><span class="p">,</span> <span class="n">seq2</span><span class="p">)</span>
+    <span class="n">intermediate_result</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">primertrio</span><span class="p">,</span> <span class="n">seqd</span> <span class="ow">in</span> <span class="n">primertrios</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqd</span><span class="p">)</span> <span class="o">==</span> <span class="n">number_of_sequences</span> <span class="ow">and</span> <span class="nb">set</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span>
-            <span class="n">s</span> <span class="k">for</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">seqd</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-        <span class="p">):</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="p">(</span>
-                    <span class="n">closest_diff</span><span class="p">(</span><span class="n">seqd</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
-                    <span class="nb">tuple</span><span class="p">(</span>
-                        <span class="n">primer_tuple</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
-                        <span class="k">for</span> <span class="n">size</span><span class="p">,</span> <span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">rp</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="ow">in</span> <span class="n">seqd</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-                    <span class="p">),</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
+    <span class="k">for</span> <span class="n">seq_primer_tuples</span> <span class="ow">in</span> <span class="n">trios</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="n">closest_pair</span><span class="p">,</span> <span class="n">diff</span> <span class="o">=</span> <span class="n">closest_pair_and_diff</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">pair</span><span class="o">.</span><span class="n">size</span> <span class="k">for</span> <span class="n">seq</span><span class="p">,</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">seq_primer_tuples</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">callback</span><span class="p">(</span><span class="o">*</span><span class="n">closest_pair</span><span class="p">):</span>
+            <span class="n">intermediate_result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">diff</span><span class="p">,</span> <span class="n">seq_primer_tuples</span><span class="p">))</span>
 
-    <span class="n">result</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span></div>
+    <span class="c1"># The closest difference between any two product sizes is also collected</span>
+    <span class="c1"># so we can sort results for primer combos that produce the largest</span>
+    <span class="c1"># product differences:</span>
+
+    <span class="c1"># sorting in-place for closest difference in reverse</span>
+    <span class="n">intermediate_result</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># remove the closest difference as it is no lionger needed.</span>
+    <span class="n">intermediate_result</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">intermediate_result</span><span class="p">]</span>
+
+    <span class="c1"># Express result as a list of tuples of primer tuples</span>
+
+    <span class="n">primer_tuple_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">tuple_list</span> <span class="ow">in</span> <span class="n">intermediate_result</span><span class="p">:</span>
+        <span class="n">primer_tuple_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="nb">tuple</span><span class="p">(</span><span class="n">primer_tuple</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">at</span><span class="o">.</span><span class="n">fp</span><span class="p">,</span> <span class="n">at</span><span class="o">.</span><span class="n">rp</span><span class="p">,</span> <span class="n">at</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">at</span> <span class="ow">in</span> <span class="n">tuple_list</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">primer_tuple_list</span></div>
 
 </pre></div>
 
