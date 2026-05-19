@@ -39,14 +39,10 @@ This module uses `pyahocorasick`:
     PyPI: https://pypi.python.org/pypi/pyahocorasick
 """
 
-
-# TODO: circular templates
-
+from operator import attrgetter
 from itertools import product
 from itertools import combinations
-from itertools import pairwise
 from collections import defaultdict
-from collections import Counter
 from collections import namedtuple
 from collections.abc import Callable
 from collections.abc import Sequence
@@ -73,15 +69,74 @@ amplicon_tuple = namedtuple(
 primer_tuple = namedtuple(typename="primer_tuple", field_names="seq, fp, rp, size")
 
 
-def closest_diff(nums: list[int]) -> int:
+def contained(a: int, b: int, x: int, y: int, L: int, circular=True) -> bool:
+    """
+    Test whether interval (a, b) is contained in interval (x, y)
+    in a sequence of length L. The sequence may be linear or circular.
+
+    Coordinates must satisfy 0 <= coordinate <= L.
+
+    If circular=False, intervals are treated as ordinary linear intervals.
+
+    If circular=True, intervals are treated as directed circular intervals:
+    - (4, 8) means 4 -> 8
+    - (9, 1) means 9 -> L -> 0 -> 1
+    """
+
+    assert L >= 1, "L must be a positive integer"
+
+    def valid_coordinate(n: int) -> bool:
+        return 0 <= n <= L
+
+    if not all(valid_coordinate(n) for n in (a, b, x, y)):
+        return False
+
+    if not circular:
+        assert a <= b, "In a linear interval, a <= b"
+        assert x <= y, "In a linear interval, x <= y"
+        return x <= a and b <= y
+
+    def unwrap(start: int, end: int) -> tuple[int, int]:
+        """
+        Convert a circular interval into a linear interval.
+
+        Examples with L=10:
+        (4, 8) -> (4, 8)
+        (9, 1) -> (9, 11)
+        (9, 10) -> (9, 10)
+        """
+        start = start % L
+        end = end % L
+
+        if end < start:
+            end += L
+
+        return start, end
+
+    aa, bb = unwrap(a, b)
+    xx, yy = unwrap(x, y)
+
+    for shift in (-L, 0, L):
+        aaa = aa + shift
+        bbb = bb + shift
+
+        if xx <= aaa and bbb <= yy:
+            return True
+
+    return False
+
+
+def closest_pair_and_diff(nums: list[int]) -> int:
     """
     Smallest difference between two consecutive integers in a sorted list.
 
-    Given a list of integers eg. 1, 5, 7, 11, 19, return the smallest
-    absolute difference, in this case 7-5 = 2.
+    Given a list of integers eg. 1, 5, 7, 11, 19, return the consequtive pair
+    with the smallest difference and the difference. If more than one pair
+    gives the same difference, return the larger pair.
 
-    >>> closest_diff([1, 5, 7, 11, 19])
-    2
+    >>> nums = [1, 5, 7, 11, 19, 21]
+    >>> closest_pair_and_diff(nums)
+    ((19, 21), 2)
 
 
     Parameters
@@ -100,19 +155,11 @@ def closest_diff(nums: list[int]) -> int:
         Diff, always >= 0.
 
     """
-    if len(nums) < 2:
-        raise ValueError("Need at least two numbers")
-
-    nums = sorted(nums)
-    min_diff = float("inf")
-
-    for a, b in zip(nums, nums[1:]):
-        diff = abs(a - b)
-        if diff < min_diff:
-            min_diff = diff
-            x, y = a, b
-
-    return abs(x - y)
+    assert len(nums) > 1, "Need at least two numbers"
+    nums.sort()
+    diff_dict = {b - a: (a, b) for a, b in zip(nums, nums[1:])}
+    diff = min(diff_dict.keys())
+    return diff_dict[diff], diff
 
 
 def expand_iupac_to_dna(seq: str) -> list[str]:
@@ -324,16 +371,20 @@ def forward_primers(
         values are lists with primer locations.
 
     """
+    assert primer_list, "primer_list must not be empty."
 
     # if no automaton is given, we make one.
     automaton = automaton or make_automaton(primer_list, limit=limit)
 
     # The limit is taken from automaton stats.
+    # If the automaton is given, the limit argument will be ignored.
     limit = automaton.get_stats()["longest_word"]
 
     # A defaultdict of lists is used to collect primer locations since
     # different primers can anneal in the same place.
     fps = defaultdict(list)
+    # if seq is circular, we have to look across the origin of the sequence
+    seq = seq[:] + seq[: limit - 1] if seq.circular else seq
 
     for end_index, ids in automaton.iter(str(seq.seq).upper()):
         for i in ids:
@@ -344,7 +395,7 @@ def forward_primers(
 
 def reverse_primers(
     seq: Dseqrecord,
-    primer_list: list[Primer] | tuple[Primer],
+    primer_list: Sequence[Primer | None],
     limit: int = 16,
     automaton: ahocorasick.Automaton = None,
 ) -> dict[int, list[int]]:
@@ -403,6 +454,8 @@ def reverse_primers(
         values are lists with primer locations.
 
     """
+    assert primer_list, "primer_list must not be empty."
+
     # if no automaton is given, we make one.
     automaton = automaton or make_automaton(primer_list, limit=limit)
 
@@ -413,6 +466,8 @@ def reverse_primers(
     # A defaultdict of lists is used to collect primer locations since
     # different primers can anneal in the same place.
     rps = defaultdict(list)
+    # if seq is circular, we have to look across the origin of the sequence
+    seq = seq[:] + seq[: limit - 1] if seq.circular else seq
     ln = len(seq)
 
     # We use the reverse complement of the sequence instead of taking the
@@ -426,7 +481,7 @@ def reverse_primers(
 
 def primer_pairs(
     seq: Dseqrecord,
-    primer_list: list[Primer] | tuple[Primer],
+    primer_list: Sequence[Primer | None],
     short: int = 500,
     long: int = 2000,
     limit: int = 16,
@@ -483,24 +538,26 @@ def primer_pairs(
         List of tuples (index_fp, position_fp, index_rp, position_rp, size)
 
     """
+    assert primer_list, "primer_list must not be empty."
+
+    # if no automaton is given, we make one.
     automaton = automaton or make_automaton(primer_list, limit=limit)
+
+    # The limit is taken from automaton stats.
+    # If the automaton is given, the limit argument will be ignored.
     limit = automaton.get_stats()["longest_word"]
 
     # Unique forward primers are collected
     fps = {
         fp: pos[0]
-        for fp, pos in forward_primers(
-            seq, primer_list, limit=limit, automaton=automaton
-        ).items()
+        for fp, pos in forward_primers(seq, primer_list, automaton=automaton).items()
         if len(pos) == 1
     }
 
     # Unique reverse primers are collected
     rps = {
         rp: pos[0]
-        for rp, pos in reverse_primers(
-            seq, primer_list, limit=limit, automaton=automaton
-        ).items()
+        for rp, pos in reverse_primers(seq, primer_list, automaton=automaton).items()
         if len(pos) == 1
     }
     products = []
@@ -512,13 +569,32 @@ def primer_pairs(
             # If the size falls within long and short, the data is kept.
             if short <= size <= long and fposition <= rposition:
                 products.append(amplicon_tuple(fp, rp, fposition, rposition, size))
+    # if sequence is circular we also look at forward primers that sits after the
+    # reverse primer and amplify across the origin
+    if seq.circular:
+        ln = len(seq)
+        for fp, fposition in fps.items():
+            for rp, rposition in rps.items():
+                if fposition > rposition:
+                    size = (
+                        len(primer_list[fp])
+                        + rposition
+                        + (ln - fposition)
+                        + len(primer_list[rp])
+                    )
+                    if short <= size <= long:
+                        products.append(
+                            amplicon_tuple(
+                                fp, rp, fposition % len(seq), rposition % len(seq), size
+                            )
+                        )
     return products
 
 
 def flanking_primer_pairs(
     seq: Dseqrecord,
-    primer_list: list[Primer] | tuple[Primer],
-    target: tuple[int, int],
+    primer_list: Sequence[Primer | None],
+    target: tuple[int, int] = (None, None),
     limit: int = 16,
     automaton: ahocorasick.Automaton = None,
 ) -> list[amplicon_tuple[int, int, int, int, int]]:
@@ -561,12 +637,10 @@ def flanking_primer_pairs(
 
     """
 
-    automaton = automaton or make_automaton(primer_list, limit=limit)
-    limit = automaton.get_stats()["longest_word"]
-
     begin, end = target
 
-    assert begin < end, "begin has to be smaller than end."
+    assert begin is not None, "begin has to be set."
+    assert end is not None, "end has to be set."
 
     amplicons = primer_pairs(
         seq,
@@ -579,15 +653,22 @@ def flanking_primer_pairs(
     products = []
 
     for amplicon in amplicons:
-        if amplicon.fposition >= begin and end <= amplicon.rposition:
+        if contained(
+            begin,
+            end,
+            amplicon.fposition,
+            amplicon.rposition,
+            len(seq),
+            circular=seq.circular,
+        ):
             products.append(amplicon)
 
-    return products[::-1]
+    return sorted(products, key=attrgetter("size"))  # results sorted by size
 
 
 def diff_primer_pairs(
     sequences: list[Dseqrecord] | tuple[Dseqrecord],
-    primer_list: list[Primer] | tuple[Primer],
+    primer_list: Sequence[Primer | None],
     short: int = 500,
     long: int = 1500,
     limit: int = 16,
@@ -663,47 +744,43 @@ def diff_primer_pairs(
 
     automaton = automaton or make_automaton(primer_list, limit=limit)
     limit = automaton.get_stats()["longest_word"]
-    primer_pair_dict = defaultdict(dict)
+    primer_pair_dict = defaultdict(list)
+
+    sequences = list(dict.fromkeys(sequences))
     number_of_sequences = len(sequences)
 
+    # primer pairs from all sequences are collected in a defaultdict.
+    #
     for seq in sequences:
-
-        for fp, rp, *_, size in primer_pairs(
+        for pp in primer_pairs(
             seq, primer_list, short=short, long=long, limit=limit, automaton=automaton
         ):
-
-            primer_pair_dict[frozenset((fp, rp))][size] = fp, rp, seq
-
-    primer_pair_dict = {
-        k: v for k, v in primer_pair_dict.items() if len(v) == number_of_sequences
-    }
-
-    primer_pair_dict = {
-        k: v
-        for k, v in primer_pair_dict.items()
-        if all(callback(a, b) for a, b in pairwise(v.keys()))
-    }
+            primer_pair_dict[frozenset((pp.fp, pp.rp))].append((pp, seq))
 
     result = []
-
-    for primer_pair, seqd in primer_pair_dict.items():
-        result.append(
-            (
-                closest_diff(seqd.keys()),
-                tuple(
-                    primer_tuple(s, fp, rp, size) for size, (fp, rp, s) in seqd.items()
-                ),
-            )
-        )
-
+    for k, v in primer_pair_dict.items():
+        # verify one pcr product per sequence
+        if len(v) == number_of_sequences:
+            # we need the closest pair to see if the bands are likely to resolve
+            closest_pair, diff = closest_pair_and_diff([pp.size for pp, _ in v])
+            if callback(*closest_pair):
+                # we add the diff here so we can sort the results by this value
+                # we normally want a large difference in size
+                result.append(
+                    (
+                        diff,
+                        tuple(
+                            primer_tuple(seq, pp.fp, pp.rp, pp.size) for pp, seq in v
+                        ),
+                    )
+                )
     result.sort(reverse=True)
-
-    return [b for a, b in result]
+    return [pts for diff, pts in result]
 
 
 def diff_primer_triplets(
     sequences: list[Dseqrecord] | tuple[Dseqrecord],
-    primer_list: list[Primer] | tuple[Primer],
+    primer_list: Sequence[Primer | None],
     limit: int = 16,
     short: int = 500,
     long: int = 1500,
@@ -724,12 +801,18 @@ def diff_primer_triplets(
     ::
 
          1>        <2
-        -------NNNNNNNNN----  sequenceA
+        -------AAAAAAAAA----  sequenceA
 
          1>     <3
-        -------XXXXX--------  sequenceB
+        -------BBBBB--------  sequenceB
 
+        ...
 
+         1>      <3
+        -------NNNNN--------  sequenceN-1
+
+         2>      <3
+        -AA----NNNNN--------  sequenceN
 
     The callback function is used to give a score for the PCR products. This score can
     be used to decide if a collection of PCR products are likely to migrate to distinct
@@ -776,58 +859,80 @@ def diff_primer_triplets(
 
     automaton = automaton or make_automaton(primer_list, limit=limit)
     limit = automaton.get_stats()["longest_word"]
-    number_of_sequences = len(sequences)
-    pp = {}
-    # pp = { seq1: [(a,b,c,d,e), ...], seq2: [(i,j,k,l,m), ... ]}
+    # number_of_sequences = len(sequences)
+    sequences = list(dict.fromkeys(sequences))
+    sequence_set = set(sequences)
+    # primer pairs for each sequence are collected together with the
+    # primer pairs in a defaultdict(list) where the key of a frozenset
+    # of the primer pair numbers.
 
-    # All primer pairs for each sequence are collected.
+    pairs = defaultdict(dict)
+
     for seq in sequences:
-        pp[seq] = primer_pairs(
+        primerpairs_for_one_sequence = primer_pairs(
             seq, primer_list, short=short, long=long, limit=limit, automaton=automaton
         )
+        for pp in primerpairs_for_one_sequence:
+            pairs[seq][pp.fp, pp.rp] = pp
 
-    # We count all the times a specific pair occurs
-    pair_counter = Counter()
+    trios = defaultdict(list)
 
-    for seq, tuples in pp.items():
-        for t in tuples:
-            pair = frozenset(t[:2])  # first two integers, unordered
-            pair_counter[pair] += 1
+    # All collected primer pairs are compared and collected if they share a
+    # primer (a trio). The trios are collected in another defaultdict(list)
 
-    # Pick pairs that appear more than once.
-    pairs_to_remove = {pair for pair, count in pair_counter.items() if count > 1}
+    for one, two in combinations(pairs, 2):
+        for p1, pt1 in pairs[one].items():
+            for p2, pt2 in pairs[two].items():
+                if len(trio := frozenset(p1 + p2)) == 3:
+                    trios[trio].extend(((one, pt1), (two, pt2)))
 
-    # Remove pairs that appear more than once.
-    for seq in pp:
-        pp[seq] = [t for t in pp[seq] if frozenset(t[:2]) not in pairs_to_remove]
+    # We loop through all values in trios and filter:
+    # at least one primer pair for each sequence
+    trios = {
+        trio: values
+        for trio, values in trios.items()
+        # filter dict for trios that have a PCR product from all sequences
+        if set(s for s, _ in values) == sequence_set
+    }
 
-    primertrios = defaultdict(dict)
+    # Each key, value pair in trios look like this:
+    #
+    #   trios[(1,2,3)] = [(seq1, pair1), (seq2, pair2), ... (seqN, pairN)]
+    #
+    # (1,2,3) is a triplet of primer numbers (integers)
+    # seq1 .. seqN are sequences fed to the function
+    # pair1 .. pairN is an amplicon_tuple(fp, rp, fposition, rposition, size)
+    #
+    # - visible differences between band sizes = callback true for all pairs if product sizes
+    #
+    # collect in intermediate_result.
 
-    for seq1, seq2 in combinations(sequences, 2):
-        for fp1, rp1, *_, size1 in pp[seq1]:
-            for fp2, rp2, *_, size2 in pp[seq2]:
-                primertrio = frozenset((fp1, rp1, fp2, rp2))
-                if len(primertrio) == 3 and callback(size1, size2):
-                    if primertrios[primertrio]:
-                        del primertrios[primertrio]
-                    else:
-                        primertrios[primertrio][size1] = (fp1, rp1, seq1)
-                        primertrios[primertrio][size2] = (fp2, rp2, seq2)
+    intermediate_result = []
 
-    result = []
-    for primertrio, seqd in primertrios.items():
-        if len(seqd) == number_of_sequences and set(sequences) == set(
-            s for *_, s in seqd.values()
-        ):
-            result.append(
-                (
-                    closest_diff(seqd.keys()),
-                    tuple(
-                        primer_tuple(s, fp, rp, size)
-                        for size, (fp, rp, s) in seqd.items()
-                    ),
-                )
-            )
+    for seq_primer_tuples in trios.values():
+        closest_pair, diff = closest_pair_and_diff(
+            [pair.size for seq, pair in seq_primer_tuples]
+        )
+        if callback(*closest_pair):
+            intermediate_result.append((diff, seq_primer_tuples))
 
-    result.sort(key=lambda item: item[0], reverse=True)
-    return [b for a, b in result]
+    # The closest difference between any two product sizes is also collected
+    # so we can sort results for primer combos that produce the largest
+    # product differences:
+
+    # sorting in-place for closest difference in reverse
+    intermediate_result.sort(key=lambda item: item[0], reverse=True)
+
+    # remove the closest difference as it is no lionger needed.
+    intermediate_result = [b for a, b in intermediate_result]
+
+    # Express result as a list of tuples of primer tuples
+
+    primer_tuple_list = []
+
+    for tuple_list in intermediate_result:
+        primer_tuple_list.append(
+            tuple(primer_tuple(s, at.fp, at.rp, at.size) for s, at in tuple_list)
+        )
+
+    return primer_tuple_list

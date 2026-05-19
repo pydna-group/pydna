@@ -1,11 +1,12 @@
-LOCUS       pIL68                   4852 bp    DNA     circular     07-NOV-2025
+LOCUS       pIL68                   4852 bp    DNA     circular     29-APR-2026
 DEFINITION  .
 ACCESSION   .
 VERSION     .
 KEYWORDS    .
-SOURCE      
+SOURCE
   ORGANISM  . .
-COMMENT     
+COMMENT
+COMMENT
 COMMENT     ApEinfo:methylated:1
 FEATURES             Location/Qualifiers
      misc_feature    complement(join(4533..4568,4570..4582))
@@ -338,8 +339,8 @@ ORIGIN
         1 tcgcgcgttt cggtgatgac ggtgaaaacc tctgacacat gcagctcccg gagacggtca
        61 cagcttgtct gtaagcggat gccgggagca gacaagcccg tcagggcgcg tcagcgggtg
       121 ttggcgggtg tcggggctgg cttaactatg cggcatcaga gcagattgta ctgagagtgc
-      181 accataccac agcttttcaa ttcaattcat catttttttt ttattctttt ttttgatttc
-      241 ggtttctttg aaattttttt gattcggtaa tctccgaaca gaaggaagaa cgaaggaagg
+      181 accataccac agcttttcaa ttcaattcat catttttttt ttattctttt ttttgatttC
+      241 GGTTTCTTTG AAATTTTTTT GATTCGgtaa tctccgaaca gaaggaagaa cgaaggaagg
       301 agcacagact tagattggta tatatacgca tatgtagtgt tgaagaaaca tgaaattgcc
       361 cagtattctt aacccaactg cacagaacaa aaacctgcag gaaacgaaga taaatcatgt
       421 cgaaagctac atataaggaa cgtgctgcta ctcatcctag tcctgttgct gccaagctat
@@ -363,7 +364,7 @@ ORIGIN
      1501 agagtccact attaaagaac gtggactcca acgtcaaagg gcgaaaaacc gtctatcagg
      1561 gcgatggccc actacgtgaa ccatcaccct aatcaagttt tttggggtcg aggtgccgta
      1621 aagcactaaa tcggaaccct aaagggagcc cccgatttag agcttgacgg ggaaagccgg
-     1681 cgaacgtggc gagaaaggaa gggaagaaag cgaaaggagc gggcgctagg gcgctggcaa
+     1681 cgaacgtggC GAGAAAGGAA GGGAAGAAAG CGAaaggagc gggcgctagg gcgctggcaa
      1741 gtgtagcggt cacgctgcgc gtaaccacca cacccgccgc gcttaatgcg ccgctacagg
      1801 gcgcgtcgcg ccattcgcca ttcaggctgc gcaactgttg ggaagggcga tcggtgcggg
      1861 cctcttcgct attacgccag ctggcgaaag ggggatgtgc tgcaaggcga ttaagttggg
