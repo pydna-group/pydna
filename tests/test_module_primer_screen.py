@@ -387,7 +387,16 @@ def test_diff_primer_pairs():
     t2 = Dseqrecord("CTCACTTGAAGTAATGccTCGTGCACCTACCAAACCTCT")
     automaton2 = make_automaton([f, r])
 
-    assert diff_primer_pairs((t1, t2), [f, r], automaton=automaton2) == []
+    # Returns emty list, since the two products are identical, so Callback is false
+    assert diff_primer_pairs((t1, t2), [f, r], automaton=automaton2, short=0) == []
+
+    s = primers[0] + "aaa" + primers[1].rc()
+
+    s = "CAGATGCGAAGTTAAGTGCGaaaCGTCAAGACTGTCAAGGA"
+
+    assert primer_pairs(Dseqrecord(s), pl, short=0) == [
+        amplicon_tuple(fp=51, rp=82, fposition=20, rposition=23, size=41)
+    ]
 
 
 def test_diff_primer_triplets():
@@ -436,10 +445,11 @@ def test_diff_primer_triplets():
 
     f = Primer("CTCACTTGAAGTAATG", name="1")
     r = Primer("AGAGGTTTGGTAGGTG", name="2")
-    r2 = Primer("AAGCATAACACACGTA", name="2")
-
+    r2 = Primer("AAGCATAACACACGTA", name="2a")
     t1 = Dseqrecord("CTCACTTGAAGTAATGtaTCGTGCACCTACCAAACCTCT")
-    t2 = Dseqrecord("CTCACTTGAAGTAATGccAGCTATACGTGTGTTATGCTT")
-    automaton2 = make_automaton([f, r, r2])
+    t3 = Dseqrecord("CTCACTTGAAGTAATGccAGCTATACGTGTGTTATGCTT")
+    automaton3 = make_automaton([f, r, r2])
 
-    assert diff_primer_pairs((t1, t2), [f, r, r2], automaton=automaton2) == []
+    assert (
+        diff_primer_triplets((t1, t3), [f, r, r2], automaton=automaton3, short=0) == []
+    )
