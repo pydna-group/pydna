@@ -435,7 +435,14 @@ class Source(ConfiguredBaseModel):
     def _validate_result_in_products(
         self, result: "Dseqrecord", products: list["Dseqrecord"]
     ) -> None:
-        if not any((p.seq == result.seq) and (p.source == self) for p in products):
+        # This has to be a shallow copy, because the source object points to
+        # parent sequences. We don't want to copy them, but also the equality
+        # check would fail.
+        self_without_db_id = copy.copy(self)
+        self_without_db_id.database_id = None
+        if not any(
+            (p.seq == result.seq) and (p.source == self_without_db_id) for p in products
+        ):
             raise ValueError(
                 f"Result sequence does not match any of the {len(products)} "
                 f"product(s) from {type(self).__name__}"
