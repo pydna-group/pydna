@@ -754,33 +754,132 @@ def location_boundaries(loc: Union[SimpleLocation, CompoundLocation]):
         return loc.parts[0].start, loc.parts[-1].end
 
 
+LocationOverlap = collections.namedtuple(
+    "LocationOverlap", ["right_overlap", "left_overlap", "contained"]
+)
+"""Result of :func:`location_overlap`.
+
+``right_overlap`` and ``left_overlap`` are the number of overlapping basepairs
+at each junction of ``loc1`` (see :func:`location_overlap`), and ``contained``
+is True when one location is fully contained in the other.
+"""
+
+_IntervalOverlap = collections.namedtuple(
+    "_IntervalOverlap",
+    ["right_overlap", "left_overlap", "contained_1_in_2", "contained_2_in_1"],
+)
+
+
+def _directed_interval_overlap(start1, end1, start2, end2, seq_len):
+    """Overlap between two directed circular intervals (arcs).
+
+    Each interval is a directed arc going forward (in increasing coordinate
+    direction) from ``start`` to ``end`` on a circle of length ``seq_len``,
+    wrapping the origin when ``start > end``. Coordinates are half-open, so the
+    arc covers the basepairs ``[start, end)`` modulo ``seq_len``.
+
+    On a circle two arcs may overlap at up to two disjoint junctions, so the
+    overlap at each junction of arc 1 is reported separately:
+
+    - ``right_overlap``: basepairs shared at arc 1's right end / arc 2's left
+      end (arc 1 upstream at that junction).
+    - ``left_overlap``: basepairs shared at arc 1's left end / arc 2's right
+      end (arc 2 upstream at that junction).
+    - ``contained_1_in_2``: True when arc 1 is fully contained in arc 2.
+    - ``contained_2_in_1``: True when arc 2 is fully contained in arc 1.
+
+    When one arc is contained in the other (or they are equal) the per-junction
+    overlaps are reported as ``0`` and the relevant containment flag is set; the
+    overlap length is then ``min(len(arc1), len(arc2))``.
+    """
+    len1 = (end1 - start1) % seq_len
+    len2 = (end2 - start2) % seq_len
+
+    if len1 == 0 or len2 == 0:
+        return _IntervalOverlap(0, 0, False, False)
+
+    # Place arc 1 at [0, len1) and arc 2 relative to it. Two copies of arc 2
+    # (the direct placement and one wrapped copy) are enough to capture every
+    # circular overlap, since both arcs are at most seq_len long. The copies
+    # are seq_len apart and half-open, so their pieces never double count.
+    offset = (start2 - start1) % seq_len
+    pieces = []
+    for base in (offset, offset - seq_len):
+        lo = max(0, base)
+        hi = min(len1, base + len2)
+        if lo < hi:
+            pieces.append((lo, hi))
+
+    magnitude = sum(hi - lo for lo, hi in pieces)
+
+    if magnitude == 0:
+        return _IntervalOverlap(0, 0, False, False)
+
+    contained_1_in_2 = magnitude == len1
+    contained_2_in_1 = magnitude == len2
+
+    if contained_1_in_2 or contained_2_in_1:
+        return _IntervalOverlap(0, 0, contained_1_in_2, contained_2_in_1)
+
+    # Partial overlap: a piece touching arc 1's left end (lo == 0) is overlap
+    # at arc 1's left, a piece touching its right end (hi == len1) is overlap
+    # at the right. When not contained, every piece touches exactly one end, so
+    # the two values together account for the whole overlap (and both are
+    # non-zero only in the rare two-junction case).
+    left_overlap = sum(hi - lo for lo, hi in pieces if lo == 0)
+    right_overlap = sum(hi - lo for lo, hi in pieces if hi == len1)
+
+    return _IntervalOverlap(right_overlap, left_overlap, False, False)
+
+
+def location_overlap(
+    loc1: Union[SimpleLocation, CompoundLocation],
+    loc2: Union[SimpleLocation, CompoundLocation],
+    seq_len,
+) -> LocationOverlap:
+    """Overlap between two locations on a (possibly circular) sequence.
+
+    Locations may span the origin (when their start is greater than their end)
+    and be in any position relative to each other. Because two arcs on a circle
+    can overlap at up to two disjoint junctions, the overlap at each junction of
+    ``loc1`` is reported separately in a :class:`LocationOverlap` namedtuple
+    ``(right_overlap, left_overlap, contained)``:
+
+    - ``right_overlap``: basepairs shared on the right side of ``loc1`` and the
+      left side of ``loc2`` (``loc1`` is upstream at that junction).
+    - ``left_overlap``: basepairs shared on the left side of ``loc1`` and the
+      right side of ``loc2`` (``loc2`` is upstream at that junction).
+    - ``contained``: True when one location is fully contained in the other (or
+      they are equal). In that case the per-junction values are ``0`` and the
+      overlap length is ``min(len(loc1), len(loc2))``.
+
+    For an ordinary single-junction overlap exactly one of ``right_overlap`` /
+    ``left_overlap`` is non-zero; a signed overlap can be recovered as
+    ``right_overlap - left_overlap``. The two values are both non-zero only when
+    the arcs interleave around the circle and overlap at both junctions, which
+    requires their lengths to sum to more than ``seq_len``.
+    """
+    start1, end1 = location_boundaries(loc1)
+    start2, end2 = location_boundaries(loc2)
+    result = _directed_interval_overlap(start1, end1, start2, end2, seq_len)
+    return LocationOverlap(
+        result.right_overlap,
+        result.left_overlap,
+        result.contained_1_in_2 or result.contained_2_in_1,
+    )
+
+
 def locations_overlap(
     loc1: Union[SimpleLocation, CompoundLocation],
     loc2: Union[SimpleLocation, CompoundLocation],
     seq_len,
-):
-    start1, end1 = location_boundaries(loc1)
-    start2, end2 = location_boundaries(loc2)
+) -> bool:
+    """Return True if two locations overlap on a (possibly circular) sequence.
 
-    boundaries1 = [(start1, end1)]
-    boundaries2 = [(start2, end2)]
-
-    if start1 > end1:
-        boundaries1 = [
-            [start1, end1 + seq_len],
-            [start1 - seq_len, end1],
-        ]
-    if start2 > end2:
-        boundaries2 = [
-            [start2, end2 + seq_len],
-            [start2 - seq_len, end2],
-        ]
-
-    for b1, b2 in itertools.product(boundaries1, boundaries2):
-        if b1[0] < b2[1] and b1[1] > b2[0]:
-            return True
-
-    return False
+    See :func:`location_overlap` for the underlying per-junction overlaps.
+    """
+    result = location_overlap(loc1, loc2, seq_len)
+    return result.right_overlap > 0 or result.left_overlap > 0 or result.contained
 
 
 def sum_is_sticky(

@@ -2453,6 +2453,121 @@ def test_format_insertion_assembly():
     assert assembly_planner.format_insertion_assembly(asm_wrong) is None
 
 
+def test_format_insertion_assembly_edge_case():
+    from pydna.utils import shift_location, locations_overlap, create_location
+
+    seq_len = 20
+    # fragment 1 must be linear (the function returns early otherwise)
+    frag1 = Dseqrecord("a" * seq_len)
+    frag2 = Dseqrecord("c" * seq_len)
+    planner = assembly.Assembly([frag1, frag2])
+
+    def loc(start, end):
+        return create_location(start, end, seq_len)
+
+    def build(f1_1, f2_1, f2_2, f1_2):
+        return [
+            (1, 2, loc(*f1_1), loc(*f2_1)),
+            (2, 1, loc(*f2_2), loc(*f1_2)),
+        ]
+
+    # loc_f1_1 and loc_f2_1 anneal, so they are always trimmed by the same
+    # per-side amounts (max of the two fragments' per-side overlaps), keeping
+    # equal lengths.
+    # (loc_f1_1, loc_f1_2, loc_f2_1, loc_f2_2, expected_f1_1, expected_f2_1)
+    cases = [
+        # Overlap on the right of both _1 arms -> trim the right end by 2
+        ((8, 12), (10, 14), (8, 12), (10, 14), (8, 10), (8, 10)),
+        # Both loc_f1_2 and loc_f2_2 span the origin -> overlap on the left of
+        # both _1 arms -> trim the left end by 2
+        ((8, 12), (14, 10), (8, 12), (14, 10), (10, 12), (10, 12)),
+        # frag2 has a larger right overlap (2) than frag1 (1), so both arms
+        # are trimmed by 2 on the right to keep equal lengths.
+        ((8, 12), (11, 15), (8, 12), (10, 14), (8, 10), (8, 10)),
+    ]
+
+    for f1_1, f1_2, f2_1, f2_2, exp_f1_1, exp_f2_1 in cases:
+        asm = build(f1_1, f2_1, f2_2, f1_2)
+
+        # At shift 0 loc_f1_1 starts before loc_f1_2, so there is no reversal:
+        # the trimmed _1 arms are in the first edge and the second edge is kept.
+        result = planner.format_insertion_assembly_edge_case(asm)
+        assert result[0][2] == loc(*exp_f1_1)
+        assert result[0][3] == loc(*exp_f2_1)
+        assert result[1] == asm[1]
+        assert not locations_overlap(result[0][2], result[1][3], seq_len)
+        assert not locations_overlap(result[0][3], result[1][2], seq_len)
+
+        # Across the circle, the trimmed arms must never overlap their
+        # counterparts, whichever way the coordinate-based sort orders them.
+        for shift in range(seq_len):
+            shifted = [
+                (
+                    u,
+                    v,
+                    shift_location(lu, shift, seq_len),
+                    shift_location(lv, shift, seq_len),
+                )
+                for (u, v, lu, lv) in asm
+            ]
+            res = planner.format_insertion_assembly_edge_case(shifted)
+            assert not locations_overlap(res[0][2], res[1][3], seq_len)
+            assert not locations_overlap(res[0][3], res[1][2], seq_len)
+
+    # Case of overlap on both ends (circular)
+    seq_len2 = 50
+    frag2 = Dseqrecord("A" * seq_len2)
+    planner = assembly.Assembly([frag1, frag2])
+    both = ((8, 12), (11, 9), (8, 12), (16, 34), (9, 11), (9, 11))
+    f1_1, f1_2, f2_1, f2_2, exp_f1_1, exp_f2_1 = both
+    asm = build(f1_1, f2_1, f2_2, f1_2)
+    result = planner.format_insertion_assembly_edge_case(asm)
+    assert result[0][2] == loc(*exp_f1_1)
+    assert result[0][3] == loc(*exp_f2_1)
+    assert result[1] == asm[1]
+    assert not locations_overlap(result[0][2], result[1][3], seq_len)
+    assert not locations_overlap(result[0][3], result[1][2], seq_len2)
+
+
+def test_single_site_integration_location_collapse():
+    """Two inserts that extend the shared homology by different flanking bases
+    must integrate at the same site and yield the same homology locations.
+    This is to avoid trimming, which would make one location very small.
+
+    Without collapsing, the below examples would give the below, due to trimming,
+    instead they should give the bottom one only.
+
+    insert: tATGCAAATtaATGCAAATa
+    (1, None, [0:1]) (0, [0:1], [11:20]) (1, [1:10], None)
+    insert: tATGCAAATtcATGCAAATc
+    (1, None, [0:9]) (0, [0:9], [11:19]) (1, [1:9], None)
+
+
+    """
+    homology = "ATGCAAAT"
+    genome = Dseqrecord(f"t{homology}ac")
+    insert1 = Dseqrecord(f"t{homology}ta{homology}a")
+    insert2 = Dseqrecord(f"t{homology}tc{homology}c")
+
+    def annotations(insert):
+        products = assembly.homologous_recombination_integration(genome, [insert], 6)
+        assert len(products) == 1
+        return [
+            (str(i.left_location), str(i.right_location))
+            for i in products[0].source.input
+        ]
+
+    ann1 = annotations(insert1)
+    ann2 = annotations(insert2)
+    assert ann1 == ann2
+    # The genome homology is a single region used at both junctions.
+    assert ann1 == [
+        ("None", "[1:9]"),
+        ("[1:9]", "[11:19]"),
+        ("[1:9]", "None"),
+    ]
+
+
 def test_zip_leftwards():
     seq = Dseqrecord("AAAAACGTCCCGT")
     primer = Dseqrecord("ACGTCCCGT")
@@ -2678,6 +2793,18 @@ def test_insertion_edge_case():
         assert len(product_seqs) == 4
         assert "cccgagggggaatcgaa" in product_seqs
 
+    genome = Dseqrecord("CCGAGGGGAATC")
+    del_G = Dseqrecord("CCGAGGGAATC")
+    add_G = Dseqrecord("CCGAGGGGGAATC")
+
+    for repair_template, expected_seq in zip(
+        [del_G, add_G], ["CCGAGGGAATC", "CCGAGGGGGAATC"]
+    ):
+        products = assembly.homologous_recombination_integration(
+            genome, [repair_template], 4
+        )
+        assert [str(p.seq) for p in products] == [expected_seq]
+
 
 def test_common_sub_strings():
 
@@ -2898,7 +3025,8 @@ def test_crispr_integration_edge_case():
     insert = Dseqrecord(f"{homology1}acaa{homology1}")
 
     products = assembly.crispr_integration(genome, [insert], [guide], 40)
-    assert len(products) == 2
+    assert len(products) == 1
+    assert str(products[0].seq) == f"aaaaaa{homology1}acaa{homology1}tttttttt"
 
 
 def test_pcr_assembly():
@@ -3193,3 +3321,30 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatact
         assert p2.figure(fig_type="detailed") == textwrap.dedent(
             detailed_figure_multi_site
         )
+
+
+@pytest.mark.xfail
+def test_integration_edge_case_collection():
+    # Inconsistent results
+    homology1 = "ATGCAAAT"
+    seq1 = Dseqrecord(f"g{homology1}gg{homology1}g")
+    seq2 = Dseqrecord(f"{homology1}")
+    products1 = assembly.homologous_recombination_integration(seq2, [seq1], 6)
+    products2 = assembly.homologous_recombination_integration(seq1, [seq2], 6)
+    assert len(products1) == len(products2) == 1
+
+    # Too many results? perhaps wrong products
+
+    homology1 = "ATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATT"
+    insert = Dseqrecord(f"{homology1}", circular=True)
+
+    genome = Dseqrecord(f"aaaaaa{homology1}aattggaac{homology1}tttttttt")
+
+    products = assembly.homologous_recombination_integration(genome, [insert], 40)
+
+
+def test_common_core_and_trims_edge_case():
+    loc1 = SimpleLocation(0, 10)
+    loc2 = SimpleLocation(20, 30)
+    seq_len = 20
+    assert assembly._common_core_and_trims(loc1, loc2, seq_len) is None
