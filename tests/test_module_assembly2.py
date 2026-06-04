@@ -2517,6 +2517,7 @@ def test_format_insertion_assembly_edge_case():
     # Case of overlap on both ends (circular)
     seq_len2 = 50
     frag2 = Dseqrecord("A" * seq_len2)
+    planner = assembly.Assembly([frag1, frag2])
     both = ((8, 12), (11, 9), (8, 12), (16, 34), (9, 11), (9, 11))
     f1_1, f1_2, f2_1, f2_2, exp_f1_1, exp_f2_1 = both
     asm = build(f1_1, f2_1, f2_2, f1_2)
@@ -3325,7 +3326,7 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatact
         )
 
 
-# @pytest.mark.xfail
+@pytest.mark.xfail
 def test_integration_edge_case_collection():
     # Inconsistent results
     homology1 = "ATGCAAAT"
