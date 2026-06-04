@@ -17,6 +17,7 @@ from pydna.utils import (
     flatten,
     location_boundaries,
     locations_overlap,
+    location_overlap,
     sum_is_sticky,
     limit_iterator,
     create_location,
@@ -1665,30 +1666,25 @@ class Assembly:
             return same_assembly
         fragment2 = self.fragments[abs(f2) - 1]
 
-        # Extract boundaries
-        f2_1_start, _ = location_boundaries(loc_f2_1)
-        f2_2_start, f2_2_end = location_boundaries(loc_f2_2)
-        f1_1_start, _ = location_boundaries(loc_f1_1)
-        f1_2_start, f1_2_end = location_boundaries(loc_f1_2)
+        # Trim the first homology arm on each fragment so it no longer overlaps
+        # the second one. loc_f1_1 and loc_f2_1 anneal, so they must stay the
+        # same length: both are trimmed by the same amount on each side.
+        # Per-side trim = max of the two fragments' per-side overlaps, so that
+        # the larger overlap wins and both arms are in sync. This correctly
+        # handles cases where the two fragments have overlaps on different sides.
+        overlap1 = location_overlap(loc_f1_1, loc_f1_2, len(fragment1))
+        overlap2 = location_overlap(loc_f2_1, loc_f2_2, len(fragment2))
+        trim_right = max(overlap1.right_overlap, overlap2.right_overlap)
+        trim_left = max(overlap1.left_overlap, overlap2.left_overlap)
 
-        overlap_diff = len(fragment1[f1_1_start:f1_2_end]) - len(
-            fragment2[f2_1_start:f2_2_end]
+        f1_1_start, f1_1_end = location_boundaries(loc_f1_1)
+        f2_1_start, f2_1_end = location_boundaries(loc_f2_1)
+        new_loc_f1_1 = create_location(
+            f1_1_start + trim_left, f1_1_end - trim_right, len(fragment1)
         )
-
-        # Safeguard
-        if overlap_diff == 0:  # pragma: no cover
-            raise AssertionError("Overlap is 0")
-
-        if overlap_diff > 0:
-            new_loc_f1_1 = create_location(
-                f1_1_start, f1_2_start - overlap_diff, len(fragment1)
-            )
-            new_loc_f2_1 = create_location(f2_1_start, f2_2_start, len(fragment2))
-        else:
-            new_loc_f2_1 = create_location(
-                f2_1_start, f2_2_start + overlap_diff, len(fragment2)
-            )
-            new_loc_f1_1 = create_location(f1_1_start, f1_2_start, len(fragment1))
+        new_loc_f2_1 = create_location(
+            f2_1_start + trim_left, f2_1_end - trim_right, len(fragment2)
+        )
 
         new_assembly = [
             (f1, f2, new_loc_f1_1, new_loc_f2_1),

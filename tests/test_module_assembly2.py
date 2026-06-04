@@ -2453,6 +2453,68 @@ def test_format_insertion_assembly():
     assert assembly_planner.format_insertion_assembly(asm_wrong) is None
 
 
+def test_format_insertion_assembly_edge_case():
+    from pydna.utils import shift_location, locations_overlap, create_location
+
+    seq_len = 20
+    # fragment 1 must be linear (the function returns early otherwise)
+    frag1 = Dseqrecord("a" * seq_len)
+    frag2 = Dseqrecord("c" * seq_len)
+    planner = assembly.Assembly([frag1, frag2])
+
+    def loc(start, end):
+        return create_location(start, end, seq_len)
+
+    def build(f1_1, f2_1, f2_2, f1_2):
+        return [
+            (1, 2, loc(*f1_1), loc(*f2_1)),
+            (2, 1, loc(*f2_2), loc(*f1_2)),
+        ]
+
+    # loc_f1_1 and loc_f2_1 anneal, so they are always trimmed by the same
+    # per-side amounts (max of the two fragments' per-side overlaps), keeping
+    # equal lengths.
+    # (loc_f1_1, loc_f1_2, loc_f2_1, loc_f2_2, expected_f1_1, expected_f2_1)
+    cases = [
+        # Overlap on the right of both _1 arms -> trim the right end by 2
+        ((8, 12), (10, 14), (8, 12), (10, 14), (8, 10), (8, 10)),
+        # Both loc_f1_2 and loc_f2_2 span the origin -> overlap on the left of
+        # both _1 arms -> trim the left end by 2
+        ((8, 12), (14, 10), (8, 12), (14, 10), (10, 12), (10, 12)),
+        # frag2 has a larger right overlap (2) than frag1 (1), so both arms
+        # are trimmed by 2 on the right to keep equal lengths.
+        ((8, 12), (11, 15), (8, 12), (10, 14), (8, 10), (8, 10)),
+    ]
+
+    for f1_1, f1_2, f2_1, f2_2, exp_f1_1, exp_f2_1 in cases:
+        asm = build(f1_1, f2_1, f2_2, f1_2)
+
+        # At shift 0 loc_f1_1 starts before loc_f1_2, so there is no reversal:
+        # the trimmed _1 arms are in the first edge and the second edge is kept.
+        result = planner.format_insertion_assembly_edge_case(asm)
+        assert result[0][2] == loc(*exp_f1_1)
+        assert result[0][3] == loc(*exp_f2_1)
+        assert result[1] == asm[1]
+        assert not locations_overlap(result[0][2], result[1][3], seq_len)
+        assert not locations_overlap(result[0][3], result[1][2], seq_len)
+
+        # Across the circle, the trimmed arms must never overlap their
+        # counterparts, whichever way the coordinate-based sort orders them.
+        for shift in range(seq_len):
+            shifted = [
+                (
+                    u,
+                    v,
+                    shift_location(lu, shift, seq_len),
+                    shift_location(lv, shift, seq_len),
+                )
+                for (u, v, lu, lv) in asm
+            ]
+            res = planner.format_insertion_assembly_edge_case(shifted)
+            assert not locations_overlap(res[0][2], res[1][3], seq_len)
+            assert not locations_overlap(res[0][3], res[1][2], seq_len)
+
+
 def test_zip_leftwards():
     seq = Dseqrecord("AAAAACGTCCCGT")
     primer = Dseqrecord("ACGTCCCGT")
