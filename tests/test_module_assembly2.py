@@ -3025,7 +3025,8 @@ def test_crispr_integration_edge_case():
     insert = Dseqrecord(f"{homology1}acaa{homology1}")
 
     products = assembly.crispr_integration(genome, [insert], [guide], 40)
-    assert len(products) == 2
+    assert len(products) == 1
+    assert str(products[0].seq) == f"aaaaaa{homology1}acaa{homology1}tttttttt"
 
 
 def test_pcr_assembly():
