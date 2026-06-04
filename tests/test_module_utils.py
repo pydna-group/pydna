@@ -321,6 +321,70 @@ def test_locations_overlap():
             assert not locations_overlap(main_shifted, loc_shifted, 20)
 
 
+def test_location_overlap():
+    from pydna.utils import location_overlap, locations_overlap, shift_location
+    from Bio.SeqFeature import SimpleLocation
+
+    #         0123456789
+    # main         =====          (5, 10)
+    # right         =====         (6, 11) -> overlaps main's right / its left
+    # left        =====           (4, 9)  -> overlaps main's left / its right
+    # inner         ==            (6, 8)  -> contained in main
+    # exact        =====          (5, 10) -> equal to main
+    # greater    =========        (3, 12) -> contains main
+    main = SimpleLocation(5, 10)
+
+    # (location, expected right_overlap, expected left_overlap, contained)
+    # with `main` as loc1
+    cases = [
+        (SimpleLocation(6, 11), 4, 0, False),  # main upstream -> right junction
+        (SimpleLocation(4, 9), 0, 4, False),  # loc2 upstream -> left junction
+        (SimpleLocation(6, 8), 0, 0, True),  # loc2 contained in main
+        (SimpleLocation(5, 10), 0, 0, True),  # equal
+        (SimpleLocation(3, 12), 0, 0, True),  # main contained in loc2
+        (SimpleLocation(0, 5), 0, 0, False),  # adjacent, no overlap
+        (SimpleLocation(11, 15), 0, 0, False),  # disjoint, no overlap
+    ]
+
+    for loc, expected_right, expected_left, expected_contained in cases:
+        # The result is invariant under rotation of the whole sequence,
+        # including positions that span the origin.
+        for shift in range(20):
+            main_shifted = shift_location(main, shift, 20)
+            loc_shifted = shift_location(loc, shift, 20)
+            result = location_overlap(main_shifted, loc_shifted, 20)
+            assert result.right_overlap == expected_right
+            assert result.left_overlap == expected_left
+            assert result.contained is expected_contained
+
+            # Swapping the arguments swaps the two junctions of loc1 (a right
+            # overlap of main becomes a left overlap of loc and vice versa).
+            # The containment flag is unchanged.
+            swapped = location_overlap(loc_shifted, main_shifted, 20)
+            assert swapped.right_overlap == expected_left
+            assert swapped.left_overlap == expected_right
+            assert swapped.contained is expected_contained
+
+            # The boolean helper agrees with the per-junction result.
+            assert locations_overlap(main_shifted, loc_shifted, 20) == (
+                expected_right > 0 or expected_left > 0 or expected_contained
+            )
+
+    # Two disjoint overlap regions on a circle: an origin-spanning arc (4 -> 2,
+    # i.e. covering [4, 10) and [0, 2)) overlaps [0, 6) at both of its ends, so
+    # both junctions report 2 bp and the arcs are not contained in each other.
+    loc1 = SimpleLocation(0, 6)
+    loc2 = shift_location(SimpleLocation(0, 8), 4, 10)  # boundaries (4, 2)
+    for shift in range(10):
+        l1 = shift_location(loc1, shift, 10)
+        l2 = shift_location(loc2, shift, 10)
+        result = location_overlap(l1, l2, 10)
+        assert result.right_overlap == 2
+        assert result.left_overlap == 2
+        assert result.contained is False
+        assert locations_overlap(l1, l2, 10) is True
+
+
 def test_create_location():
     from pydna.utils import create_location
 

@@ -49,6 +49,7 @@ from collections.abc import Sequence
 
 from pydna.dseqrecord import Dseqrecord
 from pydna.primer import Primer
+from pydna.utils import _directed_interval_overlap
 
 import ahocorasick
 
@@ -96,34 +97,9 @@ def contained(a: int, b: int, x: int, y: int, L: int, circular=True) -> bool:
         assert x <= y, "In a linear interval, x <= y"
         return x <= a and b <= y
 
-    def unwrap(start: int, end: int) -> tuple[int, int]:
-        """
-        Convert a circular interval into a linear interval.
-
-        Examples with L=10:
-        (4, 8) -> (4, 8)
-        (9, 1) -> (9, 11)
-        (9, 10) -> (9, 10)
-        """
-        start = start % L
-        end = end % L
-
-        if end < start:
-            end += L
-
-        return start, end
-
-    aa, bb = unwrap(a, b)
-    xx, yy = unwrap(x, y)
-
-    for shift in (-L, 0, L):
-        aaa = aa + shift
-        bbb = bb + shift
-
-        if xx <= aaa and bbb <= yy:
-            return True
-
-    return False
+    # The directed circular interval (a, b) is contained in (x, y) when arc 1
+    # is fully contained in arc 2 (see pydna.utils._directed_interval_overlap).
+    return bool(_directed_interval_overlap(a, b, x, y, L).contained_1_in_2)
 
 
 def closest_pair_and_diff(nums: list[int]) -> int:
