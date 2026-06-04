@@ -3024,11 +3024,7 @@ def test_crispr_integration_edge_case():
 
     insert = Dseqrecord(f"{homology1}acaa{homology1}")
 
-    products = assembly.homologous_recombination_integration(genome, [insert], 40)
-    print()
-    for p in products:
-        print(p.seq.seguid())
-        print(p.seq)
+    products = assembly.crispr_integration(genome, [insert], [guide], 40)
     assert len(products) == 2
 
 
