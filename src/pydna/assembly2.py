@@ -1676,8 +1676,7 @@ class Assembly:
             return same_assembly
         (f1, f2, loc_f1_1, loc_f2_1), (_f2, _f1, loc_f2_2, loc_f1_2) = assembly
 
-        if f1 != _f1 or _f2 != f2:
-            return same_assembly
+        assert f1 == _f1 and _f2 == f2
 
         fragment1 = self.fragments[abs(f1) - 1]
         fragment2 = self.fragments[abs(f2) - 1]

@@ -3340,3 +3340,10 @@ def test_integration_edge_case_collection():
     genome = Dseqrecord(f"aaaaaa{homology1}aattggaac{homology1}tttttttt")
 
     products = assembly.homologous_recombination_integration(genome, [insert], 40)
+
+
+def test_common_core_and_trims_edge_case():
+    loc1 = SimpleLocation(0, 10)
+    loc2 = SimpleLocation(20, 30)
+    seq_len = 20
+    assert assembly._common_core_and_trims(loc1, loc2, seq_len) is None
