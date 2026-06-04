@@ -1129,35 +1129,137 @@
 
 
 
+<span class="n">LocationOverlap</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span>
+    <span class="s2">&quot;LocationOverlap&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;right_overlap&quot;</span><span class="p">,</span> <span class="s2">&quot;left_overlap&quot;</span><span class="p">,</span> <span class="s2">&quot;contained&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;Result of :func:`location_overlap`.</span>
+
+<span class="sd">``right_overlap`` and ``left_overlap`` are the number of overlapping basepairs</span>
+<span class="sd">at each junction of ``loc1`` (see :func:`location_overlap`), and ``contained``</span>
+<span class="sd">is True when one location is fully contained in the other.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">_IntervalOverlap</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span>
+    <span class="s2">&quot;_IntervalOverlap&quot;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s2">&quot;right_overlap&quot;</span><span class="p">,</span> <span class="s2">&quot;left_overlap&quot;</span><span class="p">,</span> <span class="s2">&quot;contained_1_in_2&quot;</span><span class="p">,</span> <span class="s2">&quot;contained_2_in_1&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_directed_interval_overlap</span><span class="p">(</span><span class="n">start1</span><span class="p">,</span> <span class="n">end1</span><span class="p">,</span> <span class="n">start2</span><span class="p">,</span> <span class="n">end2</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Overlap between two directed circular intervals (arcs).</span>
+
+<span class="sd">    Each interval is a directed arc going forward (in increasing coordinate</span>
+<span class="sd">    direction) from ``start`` to ``end`` on a circle of length ``seq_len``,</span>
+<span class="sd">    wrapping the origin when ``start &gt; end``. Coordinates are half-open, so the</span>
+<span class="sd">    arc covers the basepairs ``[start, end)`` modulo ``seq_len``.</span>
+
+<span class="sd">    On a circle two arcs may overlap at up to two disjoint junctions, so the</span>
+<span class="sd">    overlap at each junction of arc 1 is reported separately:</span>
+
+<span class="sd">    - ``right_overlap``: basepairs shared at arc 1&#39;s right end / arc 2&#39;s left</span>
+<span class="sd">      end (arc 1 upstream at that junction).</span>
+<span class="sd">    - ``left_overlap``: basepairs shared at arc 1&#39;s left end / arc 2&#39;s right</span>
+<span class="sd">      end (arc 2 upstream at that junction).</span>
+<span class="sd">    - ``contained_1_in_2``: True when arc 1 is fully contained in arc 2.</span>
+<span class="sd">    - ``contained_2_in_1``: True when arc 2 is fully contained in arc 1.</span>
+
+<span class="sd">    When one arc is contained in the other (or they are equal) the per-junction</span>
+<span class="sd">    overlaps are reported as ``0`` and the relevant containment flag is set; the</span>
+<span class="sd">    overlap length is then ``min(len(arc1), len(arc2))``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">len1</span> <span class="o">=</span> <span class="p">(</span><span class="n">end1</span> <span class="o">-</span> <span class="n">start1</span><span class="p">)</span> <span class="o">%</span> <span class="n">seq_len</span>
+    <span class="n">len2</span> <span class="o">=</span> <span class="p">(</span><span class="n">end2</span> <span class="o">-</span> <span class="n">start2</span><span class="p">)</span> <span class="o">%</span> <span class="n">seq_len</span>
+
+    <span class="k">if</span> <span class="n">len1</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">len2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_IntervalOverlap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Place arc 1 at [0, len1) and arc 2 relative to it. Two copies of arc 2</span>
+    <span class="c1"># (the direct placement and one wrapped copy) are enough to capture every</span>
+    <span class="c1"># circular overlap, since both arcs are at most seq_len long. The copies</span>
+    <span class="c1"># are seq_len apart and half-open, so their pieces never double count.</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">start2</span> <span class="o">-</span> <span class="n">start1</span><span class="p">)</span> <span class="o">%</span> <span class="n">seq_len</span>
+    <span class="n">pieces</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">offset</span> <span class="o">-</span> <span class="n">seq_len</span><span class="p">):</span>
+        <span class="n">lo</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+        <span class="n">hi</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">len1</span><span class="p">,</span> <span class="n">base</span> <span class="o">+</span> <span class="n">len2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lo</span> <span class="o">&lt;</span> <span class="n">hi</span><span class="p">:</span>
+            <span class="n">pieces</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span><span class="p">))</span>
+
+    <span class="n">magnitude</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span> <span class="k">for</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="ow">in</span> <span class="n">pieces</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">magnitude</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_IntervalOverlap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">contained_1_in_2</span> <span class="o">=</span> <span class="n">magnitude</span> <span class="o">==</span> <span class="n">len1</span>
+    <span class="n">contained_2_in_1</span> <span class="o">=</span> <span class="n">magnitude</span> <span class="o">==</span> <span class="n">len2</span>
+
+    <span class="k">if</span> <span class="n">contained_1_in_2</span> <span class="ow">or</span> <span class="n">contained_2_in_1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_IntervalOverlap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">contained_1_in_2</span><span class="p">,</span> <span class="n">contained_2_in_1</span><span class="p">)</span>
+
+    <span class="c1"># Partial overlap: a piece touching arc 1&#39;s left end (lo == 0) is overlap</span>
+    <span class="c1"># at arc 1&#39;s left, a piece touching its right end (hi == len1) is overlap</span>
+    <span class="c1"># at the right. When not contained, every piece touches exactly one end, so</span>
+    <span class="c1"># the two values together account for the whole overlap (and both are</span>
+    <span class="c1"># non-zero only in the rare two-junction case).</span>
+    <span class="n">left_overlap</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span> <span class="k">for</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="ow">in</span> <span class="n">pieces</span> <span class="k">if</span> <span class="n">lo</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">right_overlap</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span> <span class="k">for</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="ow">in</span> <span class="n">pieces</span> <span class="k">if</span> <span class="n">hi</span> <span class="o">==</span> <span class="n">len1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_IntervalOverlap</span><span class="p">(</span><span class="n">right_overlap</span><span class="p">,</span> <span class="n">left_overlap</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="location_overlap">
+<a class="viewcode-back" href="../../reference/pydna.html#pydna.all.location_overlap">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">location_overlap</span><span class="p">(</span>
+    <span class="n">loc1</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SimpleLocation</span><span class="p">,</span> <span class="n">CompoundLocation</span><span class="p">],</span>
+    <span class="n">loc2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SimpleLocation</span><span class="p">,</span> <span class="n">CompoundLocation</span><span class="p">],</span>
+    <span class="n">seq_len</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LocationOverlap</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Overlap between two locations on a (possibly circular) sequence.</span>
+
+<span class="sd">    Locations may span the origin (when their start is greater than their end)</span>
+<span class="sd">    and be in any position relative to each other. Because two arcs on a circle</span>
+<span class="sd">    can overlap at up to two disjoint junctions, the overlap at each junction of</span>
+<span class="sd">    ``loc1`` is reported separately in a :class:`LocationOverlap` namedtuple</span>
+<span class="sd">    ``(right_overlap, left_overlap, contained)``:</span>
+
+<span class="sd">    - ``right_overlap``: basepairs shared on the right side of ``loc1`` and the</span>
+<span class="sd">      left side of ``loc2`` (``loc1`` is upstream at that junction).</span>
+<span class="sd">    - ``left_overlap``: basepairs shared on the left side of ``loc1`` and the</span>
+<span class="sd">      right side of ``loc2`` (``loc2`` is upstream at that junction).</span>
+<span class="sd">    - ``contained``: True when one location is fully contained in the other (or</span>
+<span class="sd">      they are equal). In that case the per-junction values are ``0`` and the</span>
+<span class="sd">      overlap length is ``min(len(loc1), len(loc2))``.</span>
+
+<span class="sd">    For an ordinary single-junction overlap exactly one of ``right_overlap`` /</span>
+<span class="sd">    ``left_overlap`` is non-zero; a signed overlap can be recovered as</span>
+<span class="sd">    ``right_overlap - left_overlap``. The two values are both non-zero only when</span>
+<span class="sd">    the arcs interleave around the circle and overlap at both junctions, which</span>
+<span class="sd">    requires their lengths to sum to more than ``seq_len``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start1</span><span class="p">,</span> <span class="n">end1</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">loc1</span><span class="p">)</span>
+    <span class="n">start2</span><span class="p">,</span> <span class="n">end2</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">loc2</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">_directed_interval_overlap</span><span class="p">(</span><span class="n">start1</span><span class="p">,</span> <span class="n">end1</span><span class="p">,</span> <span class="n">start2</span><span class="p">,</span> <span class="n">end2</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">LocationOverlap</span><span class="p">(</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">right_overlap</span><span class="p">,</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">left_overlap</span><span class="p">,</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">contained_1_in_2</span> <span class="ow">or</span> <span class="n">result</span><span class="o">.</span><span class="n">contained_2_in_1</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="locations_overlap">
 <a class="viewcode-back" href="../../reference/pydna.html#pydna.all.locations_overlap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">locations_overlap</span><span class="p">(</span>
     <span class="n">loc1</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SimpleLocation</span><span class="p">,</span> <span class="n">CompoundLocation</span><span class="p">],</span>
     <span class="n">loc2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SimpleLocation</span><span class="p">,</span> <span class="n">CompoundLocation</span><span class="p">],</span>
     <span class="n">seq_len</span><span class="p">,</span>
-<span class="p">):</span>
-    <span class="n">start1</span><span class="p">,</span> <span class="n">end1</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">loc1</span><span class="p">)</span>
-    <span class="n">start2</span><span class="p">,</span> <span class="n">end2</span> <span class="o">=</span> <span class="n">location_boundaries</span><span class="p">(</span><span class="n">loc2</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return True if two locations overlap on a (possibly circular) sequence.</span>
 
-    <span class="n">boundaries1</span> <span class="o">=</span> <span class="p">[(</span><span class="n">start1</span><span class="p">,</span> <span class="n">end1</span><span class="p">)]</span>
-    <span class="n">boundaries2</span> <span class="o">=</span> <span class="p">[(</span><span class="n">start2</span><span class="p">,</span> <span class="n">end2</span><span class="p">)]</span>
-
-    <span class="k">if</span> <span class="n">start1</span> <span class="o">&gt;</span> <span class="n">end1</span><span class="p">:</span>
-        <span class="n">boundaries1</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">[</span><span class="n">start1</span><span class="p">,</span> <span class="n">end1</span> <span class="o">+</span> <span class="n">seq_len</span><span class="p">],</span>
-            <span class="p">[</span><span class="n">start1</span> <span class="o">-</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">end1</span><span class="p">],</span>
-        <span class="p">]</span>
-    <span class="k">if</span> <span class="n">start2</span> <span class="o">&gt;</span> <span class="n">end2</span><span class="p">:</span>
-        <span class="n">boundaries2</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">[</span><span class="n">start2</span><span class="p">,</span> <span class="n">end2</span> <span class="o">+</span> <span class="n">seq_len</span><span class="p">],</span>
-            <span class="p">[</span><span class="n">start2</span> <span class="o">-</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">end2</span><span class="p">],</span>
-        <span class="p">]</span>
-
-    <span class="k">for</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">boundaries1</span><span class="p">,</span> <span class="n">boundaries2</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">b1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">b2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">b1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">b2</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-
-    <span class="k">return</span> <span class="kc">False</span></div>
+<span class="sd">    See :func:`location_overlap` for the underlying per-junction overlaps.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">location_overlap</span><span class="p">(</span><span class="n">loc1</span><span class="p">,</span> <span class="n">loc2</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">right_overlap</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">result</span><span class="o">.</span><span class="n">left_overlap</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">result</span><span class="o">.</span><span class="n">contained</span></div>
 
 
 

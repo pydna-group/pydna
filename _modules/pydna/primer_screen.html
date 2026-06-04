@@ -361,6 +361,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.primer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Primer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_directed_interval_overlap</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">ahocorasick</span>
 
@@ -410,34 +411,9 @@
         <span class="k">assert</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;In a linear interval, x &lt;= y&quot;</span>
         <span class="k">return</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">a</span> <span class="ow">and</span> <span class="n">b</span> <span class="o">&lt;=</span> <span class="n">y</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">unwrap</span><span class="p">(</span><span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Convert a circular interval into a linear interval.</span>
-
-<span class="sd">        Examples with L=10:</span>
-<span class="sd">        (4, 8) -&gt; (4, 8)</span>
-<span class="sd">        (9, 1) -&gt; (9, 11)</span>
-<span class="sd">        (9, 10) -&gt; (9, 10)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">%</span> <span class="n">L</span>
-        <span class="n">end</span> <span class="o">=</span> <span class="n">end</span> <span class="o">%</span> <span class="n">L</span>
-
-        <span class="k">if</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="n">start</span><span class="p">:</span>
-            <span class="n">end</span> <span class="o">+=</span> <span class="n">L</span>
-
-        <span class="k">return</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span>
-
-    <span class="n">aa</span><span class="p">,</span> <span class="n">bb</span> <span class="o">=</span> <span class="n">unwrap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span> <span class="o">=</span> <span class="n">unwrap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="p">(</span><span class="o">-</span><span class="n">L</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">L</span><span class="p">):</span>
-        <span class="n">aaa</span> <span class="o">=</span> <span class="n">aa</span> <span class="o">+</span> <span class="n">shift</span>
-        <span class="n">bbb</span> <span class="o">=</span> <span class="n">bb</span> <span class="o">+</span> <span class="n">shift</span>
-
-        <span class="k">if</span> <span class="n">xx</span> <span class="o">&lt;=</span> <span class="n">aaa</span> <span class="ow">and</span> <span class="n">bbb</span> <span class="o">&lt;=</span> <span class="n">yy</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-
-    <span class="k">return</span> <span class="kc">False</span></div>
+    <span class="c1"># The directed circular interval (a, b) is contained in (x, y) when arc 1</span>
+    <span class="c1"># is fully contained in arc 2 (see pydna.utils._directed_interval_overlap).</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">_directed_interval_overlap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span><span class="o">.</span><span class="n">contained_1_in_2</span><span class="p">)</span></div>
 
 
 

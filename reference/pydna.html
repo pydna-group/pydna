@@ -1409,6 +1409,13 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.eq"><code class="docutils literal notranslate"><span class="pre">eq()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.cuts_overlap"><code class="docutils literal notranslate"><span class="pre">cuts_overlap()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.location_boundaries"><code class="docutils literal notranslate"><span class="pre">location_boundaries()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.LocationOverlap"><code class="docutils literal notranslate"><span class="pre">LocationOverlap</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.LocationOverlap.contained"><code class="docutils literal notranslate"><span class="pre">LocationOverlap.contained</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.LocationOverlap.left_overlap"><code class="docutils literal notranslate"><span class="pre">LocationOverlap.left_overlap</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.LocationOverlap.right_overlap"><code class="docutils literal notranslate"><span class="pre">LocationOverlap.right_overlap</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.location_overlap"><code class="docutils literal notranslate"><span class="pre">location_overlap()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.locations_overlap"><code class="docutils literal notranslate"><span class="pre">locations_overlap()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.sum_is_sticky"><code class="docutils literal notranslate"><span class="pre">sum_is_sticky()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.limit_iterator"><code class="docutils literal notranslate"><span class="pre">limit_iterator()</span></code></a></li>
@@ -16383,10 +16390,65 @@ pairs are checked for overlap.</p>
 <span class="sig-prename descclassname"><span class="pre">pydna.utils.</span></span><span class="sig-name descname"><span class="pre">location_boundaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqFeature.html#Bio.SeqFeature.SimpleLocation" title="(in Biopython v1.87)"><span class="pre">SimpleLocation</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqFeature.html#Bio.SeqFeature.CompoundLocation" title="(in Biopython v1.87)"><span class="pre">CompoundLocation</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/utils.html#location_boundaries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.utils.location_boundaries" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="pydna.utils.LocationOverlap">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pydna.utils.</span></span><span class="sig-name descname"><span class="pre">LocationOverlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">right_overlap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_overlap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contained</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pydna.utils.LocationOverlap" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a></p>
+<p>Result of <a class="reference internal" href="#pydna.utils.location_overlap" title="pydna.utils.location_overlap"><code class="xref py py-func docutils literal notranslate"><span class="pre">location_overlap()</span></code></a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">right_overlap</span></code> and <code class="docutils literal notranslate"><span class="pre">left_overlap</span></code> are the number of overlapping basepairs
+at each junction of <code class="docutils literal notranslate"><span class="pre">loc1</span></code> (see <a class="reference internal" href="#pydna.utils.location_overlap" title="pydna.utils.location_overlap"><code class="xref py py-func docutils literal notranslate"><span class="pre">location_overlap()</span></code></a>), and <code class="docutils literal notranslate"><span class="pre">contained</span></code>
+is True when one location is fully contained in the other.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydna.utils.LocationOverlap.contained">
+<span class="sig-name descname"><span class="pre">contained</span></span><a class="headerlink" href="#pydna.utils.LocationOverlap.contained" title="Link to this definition">#</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydna.utils.LocationOverlap.left_overlap">
+<span class="sig-name descname"><span class="pre">left_overlap</span></span><a class="headerlink" href="#pydna.utils.LocationOverlap.left_overlap" title="Link to this definition">#</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydna.utils.LocationOverlap.right_overlap">
+<span class="sig-name descname"><span class="pre">right_overlap</span></span><a class="headerlink" href="#pydna.utils.LocationOverlap.right_overlap" title="Link to this definition">#</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydna.utils.location_overlap">
+<span class="sig-prename descclassname"><span class="pre">pydna.utils.</span></span><span class="sig-name descname"><span class="pre">location_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loc1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqFeature.html#Bio.SeqFeature.SimpleLocation" title="(in Biopython v1.87)"><span class="pre">SimpleLocation</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqFeature.html#Bio.SeqFeature.CompoundLocation" title="(in Biopython v1.87)"><span class="pre">CompoundLocation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">loc2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqFeature.html#Bio.SeqFeature.SimpleLocation" title="(in Biopython v1.87)"><span class="pre">SimpleLocation</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqFeature.html#Bio.SeqFeature.CompoundLocation" title="(in Biopython v1.87)"><span class="pre">CompoundLocation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_len</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pydna.utils.LocationOverlap" title="pydna.utils.LocationOverlap"><span class="pre">LocationOverlap</span></a></span></span><a class="reference internal" href="../_modules/pydna/utils.html#location_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.utils.location_overlap" title="Link to this definition">#</a></dt>
+<dd><p>Overlap between two locations on a (possibly circular) sequence.</p>
+<p>Locations may span the origin (when their start is greater than their end)
+and be in any position relative to each other. Because two arcs on a circle
+can overlap at up to two disjoint junctions, the overlap at each junction of
+<code class="docutils literal notranslate"><span class="pre">loc1</span></code> is reported separately in a <a class="reference internal" href="#pydna.utils.LocationOverlap" title="pydna.utils.LocationOverlap"><code class="xref py py-class docutils literal notranslate"><span class="pre">LocationOverlap</span></code></a> namedtuple
+<code class="docutils literal notranslate"><span class="pre">(right_overlap,</span> <span class="pre">left_overlap,</span> <span class="pre">contained)</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">right_overlap</span></code>: basepairs shared on the right side of <code class="docutils literal notranslate"><span class="pre">loc1</span></code> and the
+left side of <code class="docutils literal notranslate"><span class="pre">loc2</span></code> (<code class="docutils literal notranslate"><span class="pre">loc1</span></code> is upstream at that junction).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">left_overlap</span></code>: basepairs shared on the left side of <code class="docutils literal notranslate"><span class="pre">loc1</span></code> and the
+right side of <code class="docutils literal notranslate"><span class="pre">loc2</span></code> (<code class="docutils literal notranslate"><span class="pre">loc2</span></code> is upstream at that junction).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">contained</span></code>: True when one location is fully contained in the other (or
+they are equal). In that case the per-junction values are <code class="docutils literal notranslate"><span class="pre">0</span></code> and the
+overlap length is <code class="docutils literal notranslate"><span class="pre">min(len(loc1),</span> <span class="pre">len(loc2))</span></code>.</p></li>
+</ul>
+<p>For an ordinary single-junction overlap exactly one of <code class="docutils literal notranslate"><span class="pre">right_overlap</span></code> /
+<code class="docutils literal notranslate"><span class="pre">left_overlap</span></code> is non-zero; a signed overlap can be recovered as
+<code class="docutils literal notranslate"><span class="pre">right_overlap</span> <span class="pre">-</span> <span class="pre">left_overlap</span></code>. The two values are both non-zero only when
+the arcs interleave around the circle and overlap at both junctions, which
+requires their lengths to sum to more than <code class="docutils literal notranslate"><span class="pre">seq_len</span></code>.</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.utils.locations_overlap">
-<span class="sig-prename descclassname"><span class="pre">pydna.utils.</span></span><span class="sig-name descname"><span class="pre">locations_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loc1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqFeature.html#Bio.SeqFeature.SimpleLocation" title="(in Biopython v1.87)"><span class="pre">SimpleLocation</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqFeature.html#Bio.SeqFeature.CompoundLocation" title="(in Biopython v1.87)"><span class="pre">CompoundLocation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">loc2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqFeature.html#Bio.SeqFeature.SimpleLocation" title="(in Biopython v1.87)"><span class="pre">SimpleLocation</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqFeature.html#Bio.SeqFeature.CompoundLocation" title="(in Biopython v1.87)"><span class="pre">CompoundLocation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_len</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydna/utils.html#locations_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.utils.locations_overlap" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">pydna.utils.</span></span><span class="sig-name descname"><span class="pre">locations_overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loc1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqFeature.html#Bio.SeqFeature.SimpleLocation" title="(in Biopython v1.87)"><span class="pre">SimpleLocation</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqFeature.html#Bio.SeqFeature.CompoundLocation" title="(in Biopython v1.87)"><span class="pre">CompoundLocation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">loc2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqFeature.html#Bio.SeqFeature.SimpleLocation" title="(in Biopython v1.87)"><span class="pre">SimpleLocation</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://biopython.org/docs/latest/api/Bio.SeqFeature.html#Bio.SeqFeature.CompoundLocation" title="(in Biopython v1.87)"><span class="pre">CompoundLocation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_len</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/pydna/utils.html#locations_overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydna.utils.locations_overlap" title="Link to this definition">#</a></dt>
+<dd><p>Return True if two locations overlap on a (possibly circular) sequence.</p>
+<p>See <a class="reference internal" href="#pydna.utils.location_overlap" title="pydna.utils.location_overlap"><code class="xref py py-func docutils literal notranslate"><span class="pre">location_overlap()</span></code></a> for the underlying per-junction overlaps.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pydna.utils.sum_is_sticky">
@@ -17529,6 +17591,13 @@ the location spans the entire sequence (it’s not empty).
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.eq"><code class="docutils literal notranslate"><span class="pre">eq()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.cuts_overlap"><code class="docutils literal notranslate"><span class="pre">cuts_overlap()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.location_boundaries"><code class="docutils literal notranslate"><span class="pre">location_boundaries()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.LocationOverlap"><code class="docutils literal notranslate"><span class="pre">LocationOverlap</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.LocationOverlap.contained"><code class="docutils literal notranslate"><span class="pre">LocationOverlap.contained</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.LocationOverlap.left_overlap"><code class="docutils literal notranslate"><span class="pre">LocationOverlap.left_overlap</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.LocationOverlap.right_overlap"><code class="docutils literal notranslate"><span class="pre">LocationOverlap.right_overlap</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.location_overlap"><code class="docutils literal notranslate"><span class="pre">location_overlap()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.locations_overlap"><code class="docutils literal notranslate"><span class="pre">locations_overlap()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.sum_is_sticky"><code class="docutils literal notranslate"><span class="pre">sum_is_sticky()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydna.utils.limit_iterator"><code class="docutils literal notranslate"><span class="pre">limit_iterator()</span></code></a></li>
