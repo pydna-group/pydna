@@ -2514,6 +2514,19 @@ def test_format_insertion_assembly_edge_case():
             assert not locations_overlap(res[0][2], res[1][3], seq_len)
             assert not locations_overlap(res[0][3], res[1][2], seq_len)
 
+    # Case of overlap on both ends (circular)
+    seq_len2 = 50
+    frag2 = Dseqrecord("A" * seq_len2)
+    both = ((8, 12), (11, 9), (8, 12), (16, 34), (9, 11), (9, 11))
+    f1_1, f1_2, f2_1, f2_2, exp_f1_1, exp_f2_1 = both
+    asm = build(f1_1, f2_1, f2_2, f1_2)
+    result = planner.format_insertion_assembly_edge_case(asm)
+    assert result[0][2] == loc(*exp_f1_1)
+    assert result[0][3] == loc(*exp_f2_1)
+    assert result[1] == asm[1]
+    assert not locations_overlap(result[0][2], result[1][3], seq_len)
+    assert not locations_overlap(result[0][3], result[1][2], seq_len2)
+
 
 def test_zip_leftwards():
     seq = Dseqrecord("AAAAACGTCCCGT")
