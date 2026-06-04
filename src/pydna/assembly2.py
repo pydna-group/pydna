@@ -98,6 +98,43 @@ def gather_overlapping_locations(
     return groups
 
 
+# Minimum overlap (as a fraction of the shorter arm) for two overlapping
+# homology arms on the same fragment to be considered the *same* region and
+# collapsed into one, rather than two distinct regions that should be trimmed
+# apart. See ``Assembly.format_insertion_assembly_edge_case``. This is a first
+# approximation and may be refined as more edge cases are collected.
+_SINGLE_SITE_COLLAPSE_TOLERANCE = 0.5
+
+
+def _common_core_and_trims(
+    loc1: Location, loc2: Location, seq_len: int
+) -> "tuple[Location, tuple[int, int], tuple[int, int]] | None":
+    """Common core (intersection) of two overlapping arms on the same fragment.
+
+    Returns ``(core, (trim_left_1, trim_right_1), (trim_left_2, trim_right_2))``
+    where ``core`` is the location shared by ``loc1`` and ``loc2`` and the trims
+    are the per-side basepairs to remove from each arm to reach the core. The
+    trims can be applied to each arm's annealing partner on the other fragment
+    to keep equal annealing lengths.
+
+    Returns ``None`` for origin-spanning arms (unsupported here; the caller
+    falls back to trimming). Genome arms in an integration are linear and do
+    not wrap, so this covers the realistic single-site cases.
+    """
+    s1, e1 = location_boundaries(loc1)
+    s2, e2 = location_boundaries(loc2)
+    if s1 >= e1 or s2 >= e2:
+        return None
+    core_start = max(s1, s2)
+    core_end = min(e1, e2)
+    if core_start >= core_end:
+        return None
+    core = create_location(core_start, core_end, seq_len)
+    trims1 = (core_start - s1, e1 - core_end)
+    trims2 = (core_start - s2, e2 - core_end)
+    return core, trims1, trims2
+
+
 def ends_from_cutsite(
     cutsite: CutSiteType, seq: Dseq
 ) -> tuple[tuple[str, str], tuple[str, str]]:
@@ -1637,20 +1674,20 @@ class Assembly:
 
         if len(assembly) != 2:
             return same_assembly
-        ((f1, f2, loc_f1_1, loc_f2_1), (_f2, _f1, loc_f2_2, loc_f1_2)) = assembly
+        (f1, f2, loc_f1_1, loc_f2_1), (_f2, _f1, loc_f2_2, loc_f1_2) = assembly
 
         if f1 != _f1 or _f2 != f2:
-            return same_assembly
-
-        if loc_f2_1 == loc_f2_2 or loc_f1_2 == loc_f1_1:
             return same_assembly
 
         fragment1 = self.fragments[abs(f1) - 1]
         fragment2 = self.fragments[abs(f2) - 1]
 
+        if loc_f2_1 == loc_f2_2 or loc_f1_2 == loc_f1_1:
+            return same_assembly
+
         if not locations_overlap(
             loc_f1_1, loc_f1_2, len(fragment1)
-        ) or not locations_overlap(loc_f2_2, loc_f2_1, len(fragment2)):
+        ) and not locations_overlap(loc_f2_2, loc_f2_1, len(fragment2)):
             return same_assembly
 
         # Sort to make compatible with insertion assembly
@@ -1659,21 +1696,65 @@ class Assembly:
         else:
             new_assembly = same_assembly[:]
 
-        ((f1, f2, loc_f1_1, loc_f2_1), (_f2, _f1, loc_f2_2, loc_f1_2)) = new_assembly
+        (f1, f2, loc_f1_1, loc_f2_1), (_f2, _f1, loc_f2_2, loc_f1_2) = new_assembly
 
         fragment1 = self.fragments[abs(f1) - 1]
         if fragment1.circular:
             return same_assembly
         fragment2 = self.fragments[abs(f2) - 1]
 
-        # Trim the first homology arm on each fragment so it no longer overlaps
-        # the second one. loc_f1_1 and loc_f2_1 anneal, so they must stay the
-        # same length: both are trimmed by the same amount on each side.
-        # Per-side trim = max of the two fragments' per-side overlaps, so that
-        # the larger overlap wins and both arms are in sync. This correctly
-        # handles cases where the two fragments have overlaps on different sides.
         overlap1 = location_overlap(loc_f1_1, loc_f1_2, len(fragment1))
         overlap2 = location_overlap(loc_f2_1, loc_f2_2, len(fragment2))
+
+        def _arms_overlap(ov):
+            return ov.contained or ov.right_overlap > 0 or ov.left_overlap > 0
+
+        # Collapse (single-site integration): one fragment carries a single
+        # homology region (its two arms coincide) while the other carries two
+        # distinct copies (its arms are disjoint). The two coinciding arms are
+        # really the same region, off by a few bp of incidental flanking
+        # homology, so we make them identical (their common core) instead of
+        # trimming them apart, which keeps the annotation stable across inserts
+        # that extend the homology differently. We only collapse when the
+        # overlapping fragment is fragment1 (the linear genome in an
+        # integration); otherwise we fall back to trimming.
+        collapse = (
+            _arms_overlap(overlap1)
+            and not _arms_overlap(overlap2)
+            and (
+                overlap1.contained
+                or (overlap1.right_overlap + overlap1.left_overlap)
+                >= _SINGLE_SITE_COLLAPSE_TOLERANCE * min(len(loc_f1_1), len(loc_f1_2))
+            )
+        )
+        core_info = (
+            _common_core_and_trims(loc_f1_1, loc_f1_2, len(fragment1))
+            if collapse
+            else None
+        )
+
+        if core_info is not None:
+            core, (trim_left_1, trim_right_1), (trim_left_2, trim_right_2) = core_info
+            f2_1_start, f2_1_end = location_boundaries(loc_f2_1)
+            f2_2_start, f2_2_end = location_boundaries(loc_f2_2)
+            new_loc_f2_1 = create_location(
+                f2_1_start + trim_left_1, f2_1_end - trim_right_1, len(fragment2)
+            )
+            new_loc_f2_2 = create_location(
+                f2_2_start + trim_left_2, f2_2_end - trim_right_2, len(fragment2)
+            )
+            return [
+                (f1, f2, core, new_loc_f2_1),
+                (f2, f1, new_loc_f2_2, core),
+            ]
+
+        # Trim the first homology arm on each fragment so it no longer overlaps
+        # the second one (two distinct regions whose matches overlap, issue
+        # #329). loc_f1_1 and loc_f2_1 anneal, so they must stay the same
+        # length: both are trimmed by the same amount on each side. Per-side
+        # trim = max of the two fragments' per-side overlaps, so that the larger
+        # overlap wins and both arms are in sync. This correctly handles cases
+        # where the two fragments have overlaps on different sides.
         trim_right = max(overlap1.right_overlap, overlap2.right_overlap)
         trim_left = max(overlap1.left_overlap, overlap2.left_overlap)
 

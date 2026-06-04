@@ -2528,6 +2528,45 @@ def test_format_insertion_assembly_edge_case():
     assert not locations_overlap(result[0][3], result[1][2], seq_len2)
 
 
+def test_single_site_integration_location_collapse():
+    """Two inserts that extend the shared homology by different flanking bases
+    must integrate at the same site and yield the same homology locations.
+    This is to avoid trimming, which would make one location very small.
+
+    Without collapsing, the below examples would give the below, due to trimming,
+    instead they should give the bottom one only.
+
+    insert: tATGCAAATtaATGCAAATa
+    (1, None, [0:1]) (0, [0:1], [11:20]) (1, [1:10], None)
+    insert: tATGCAAATtcATGCAAATc
+    (1, None, [0:9]) (0, [0:9], [11:19]) (1, [1:9], None)
+
+
+    """
+    homology = "ATGCAAAT"
+    genome = Dseqrecord(f"t{homology}ac")
+    insert1 = Dseqrecord(f"t{homology}ta{homology}a")
+    insert2 = Dseqrecord(f"t{homology}tc{homology}c")
+
+    def annotations(insert):
+        products = assembly.homologous_recombination_integration(genome, [insert], 6)
+        assert len(products) == 1
+        return [
+            (str(i.left_location), str(i.right_location))
+            for i in products[0].source.input
+        ]
+
+    ann1 = annotations(insert1)
+    ann2 = annotations(insert2)
+    assert ann1 == ann2
+    # The genome homology is a single region used at both junctions.
+    assert ann1 == [
+        ("None", "[1:9]"),
+        ("[1:9]", "[11:19]"),
+        ("[1:9]", "None"),
+    ]
+
+
 def test_zip_leftwards():
     seq = Dseqrecord("AAAAACGTCCCGT")
     primer = Dseqrecord("ACGTCCCGT")
@@ -2753,6 +2792,18 @@ def test_insertion_edge_case():
         assert len(product_seqs) == 4
         assert "cccgagggggaatcgaa" in product_seqs
 
+    genome = Dseqrecord("CCGAGGGGAATC")
+    del_G = Dseqrecord("CCGAGGGAATC")
+    add_G = Dseqrecord("CCGAGGGGGAATC")
+
+    for repair_template, expected_seq in zip(
+        [del_G, add_G], ["CCGAGGGAATC", "CCGAGGGGGAATC"]
+    ):
+        products = assembly.homologous_recombination_integration(
+            genome, [repair_template], 4
+        )
+        assert [str(p.seq) for p in products] == [expected_seq]
+
 
 def test_common_sub_strings():
 
@@ -2972,7 +3023,11 @@ def test_crispr_integration_edge_case():
 
     insert = Dseqrecord(f"{homology1}acaa{homology1}")
 
-    products = assembly.crispr_integration(genome, [insert], [guide], 40)
+    products = assembly.homologous_recombination_integration(genome, [insert], 40)
+    print()
+    for p in products:
+        print(p.seq.seguid())
+        print(p.seq)
     assert len(products) == 2
 
 
@@ -3268,3 +3323,23 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatact
         assert p2.figure(fig_type="detailed") == textwrap.dedent(
             detailed_figure_multi_site
         )
+
+
+# @pytest.mark.xfail
+def test_integration_edge_case_collection():
+    # Inconsistent results
+    homology1 = "ATGCAAAT"
+    seq1 = Dseqrecord(f"g{homology1}gg{homology1}g")
+    seq2 = Dseqrecord(f"{homology1}")
+    products1 = assembly.homologous_recombination_integration(seq2, [seq1], 6)
+    products2 = assembly.homologous_recombination_integration(seq1, [seq2], 6)
+    assert len(products1) == len(products2) == 1
+
+    # Too many results? perhaps wrong products
+
+    homology1 = "ATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATT"
+    insert = Dseqrecord(f"{homology1}", circular=True)
+
+    genome = Dseqrecord(f"aaaaaa{homology1}aattggaac{homology1}tttttttt")
+
+    products = assembly.homologous_recombination_integration(genome, [insert], 40)
