@@ -282,13 +282,17 @@ def parse_primers(data):
     return [Primer(x) for x in parse(data, ds=False)]
 
 
-def parse_snapgene(file_path: str) -> list[Dseqrecord]:
+def parse_snapgene(
+    file_data: str | bytes | io.BytesIO, file_name: str = ""
+) -> list[Dseqrecord]:
     """Parse a SnapGene file and return a Dseqrecord object.
 
     Parameters
     ----------
-    file_path : str
-        The path to the SnapGene file to parse.
+    file_data : str, bytes, or io.BytesIO
+        The SnapGene file to parse. A string is treated as a file path;
+        bytes are wrapped in a :class:`io.BytesIO` buffer; a
+        :class:`io.BytesIO` object is passed directly to Biopython.
 
     Returns
     -------
@@ -296,16 +300,33 @@ def parse_snapgene(file_path: str) -> list[Dseqrecord]:
         The parsed SnapGene file as a Dseqrecord object.
 
     """
-    with open(file_path, "rb") as f:
-        parsed_seq = next(SeqIO.parse(f, "snapgene"))
+    if isinstance(file_data, str):
+        handle = open(file_data, "rb")
+        close_handle = True
+        file_name = file_name or file_data
+    elif isinstance(file_data, bytes):
+        handle = io.BytesIO(file_data)
+        close_handle = False
+    else:
+        file_data.seek(0)
+        handle = file_data
+        file_name = file_name or getattr(file_data, "name", "")
+        close_handle = False
+
+    try:
+        parsed_seq = next(SeqIO.parse(handle, "snapgene"))
         circular = (
             "topology" in parsed_seq.annotations.keys()
             and parsed_seq.annotations["topology"] == "circular"
         )
+        parsed_seq.annotations["pydna_parse_sequence_file_format"] = "snapgene"
 
         source = UploadedFileSource(
-            file_name=str(file_path),
+            file_name=file_name,
             sequence_file_format="snapgene",
             index_in_file=0,
         )
         return [Dseqrecord(parsed_seq, circular=circular, source=source)]
+    finally:
+        if close_handle:
+            handle.close()
