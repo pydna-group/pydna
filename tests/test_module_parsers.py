@@ -4,6 +4,7 @@
 test parse
 """
 
+import io
 import os
 
 from Bio.SeqIO import parse as BPparse
@@ -392,22 +393,37 @@ def proteins():
 
 
 def test_parse_snapgene():
+    circular_file = os.path.join(test_files, "gateway_manual_cloning/pDONRtm201.dna")
+    linear_file = os.path.join(
+        test_files, "gateway_manual_cloning/pcr_product-attP1_1-attP2_1.dna"
+    )
+
+    with open(circular_file, "rb") as f:
+        circular_bytes = f.read()
+    with open(linear_file, "rb") as f:
+        linear_bytes = f.read()
+
     # Parse circular snapgene file
-    seq = parse_snapgene(
-        os.path.join(test_files, "gateway_manual_cloning/pDONRtm201.dna")
-    )[0]
-    assert seq.circular
-    assert len(seq) == 4470
-    assert seq.source.sequence_file_format == "snapgene"
+    for circular_input in (
+        circular_file,
+        circular_bytes,
+        io.BytesIO(circular_bytes),
+    ):
+        seq = parse_snapgene(circular_input, file_name="dummy.dna")[0]
+        assert seq.circular
+        assert len(seq) == 4470
+        assert seq.source.sequence_file_format == "snapgene"
+        assert seq.source.file_name == "dummy.dna"
+        assert seq.source.sequence_file_format == "snapgene"
+
+    assert parse_snapgene(circular_file)[0].source.file_name == circular_file
+    assert parse_snapgene(circular_bytes)[0].source.file_name == ""
 
     # Parse linear snapgene file
-    seq = parse_snapgene(
-        os.path.join(
-            test_files, "gateway_manual_cloning/pcr_product-attP1_1-attP2_1.dna"
-        )
-    )[0]
-    assert not seq.circular
-    assert len(seq) == 2304
+    for linear_input in (linear_file, linear_bytes, io.BytesIO(linear_bytes)):
+        seq = parse_snapgene(linear_input)[0]
+        assert not seq.circular
+        assert len(seq) == 2304
 
 
 def test_parse_is_path():
