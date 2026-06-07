@@ -1,4 +1,8 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# SPDX-FileCopyrightText: 2013 Björn Johansson
+# SPDX-License-Identifier: BSD-3-Clause
+
 import textwrap
 import networkx as nx
 from pydna._pretty import pretty_str as ps

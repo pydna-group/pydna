@@ -1,4 +1,8 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# SPDX-FileCopyrightText: 2013 Björn Johansson
+# SPDX-License-Identifier: BSD-3-Clause
+
 """
 Improved implementation of the assembly module. To see a list of issues with the previous implementation,
 see [issues tagged with fixed-with-new-assembly-model](https://github.com/pydna-group/pydna/issues?q=is%3Aissue%20state%3Aopen%20label%3Afixed-with-new-assembly-model)
