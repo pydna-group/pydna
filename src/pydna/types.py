@@ -1,4 +1,8 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# SPDX-FileCopyrightText: 2013 Björn Johansson
+# SPDX-License-Identifier: BSD-3-Clause
+
 """
 Types used in the pydna package.
 """

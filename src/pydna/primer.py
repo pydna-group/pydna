@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Copyright 2013-2023 by Björn Johansson.  All rights reserved.
-# This code is part of the Python-dna distribution and governed by its
-# license.  Please see the LICENSE.txt file that should have been included
-# as part of this package.
+# SPDX-FileCopyrightText: 2013 Björn Johansson
+# SPDX-License-Identifier: BSD-3-Clause
 
 """This module provide the Primer class that is a subclass of the biopython SeqRecord."""
 
