@@ -17,11 +17,9 @@ from pydna.snapgene_history_parser import (
     SnapgeneHistoryParserWarning,
 )
 
-TEST_FILES = sorted(
-    glob.glob(
-        os.path.join(os.path.dirname(__file__), "snapgene_history_files", "*.dna")
-    )
-)
+TEST_FOLDER = os.path.join(os.path.dirname(__file__), "snapgene_history_files")
+
+TEST_FILES = sorted(glob.glob(os.path.join(TEST_FOLDER, "*.dna")))
 
 METHOD_NOT_SUPPORTED = [
     "topo_ta_cloning.dna",
@@ -93,3 +91,18 @@ class TestSnapgeneHistoryParser:
             expected_warnings = []
 
         assert file_warnings == expected_warnings
+
+    def test_parse_snapgene_history_from_bytes(self):
+        example_file = os.path.join(TEST_FOLDER, "circularize.dna")
+        with open(example_file, "rb") as f:
+            bytes_data = f.read()
+        seqr = parse_snapgene_history(bytes_data, file_name="circularize.dna")
+        assert seqr.name == "circularize"
+
+        # Can overwrite file_name, even for files
+        seqr = parse_snapgene_history(example_file, file_name="overwrite.dna")
+        assert seqr.name == "overwrite"
+
+        # Otherwise takes from file name
+        seqr = parse_snapgene_history(example_file)
+        assert seqr.name == "circularize"
