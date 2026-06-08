@@ -294,6 +294,10 @@ def _restriction_ligation_with_fallbacks(
 ) -> list[Dseqrecord]:
     """Try restriction-ligation, then plain ligation, then per-input digest + ligation."""
     rb = _get_enzyme_batch_from_input_summaries(node.input_summaries)
+
+    if len(rb) == 0:
+        return ligation_assembly(input_sequences, allow_blunt=True)
+
     products = restriction_ligation_assembly(input_sequences, rb)
     if find(products) is not None:
         return products
@@ -306,6 +310,10 @@ def _restriction_ligation_with_fallbacks(
         products = ligation_assembly(combination)
         if find(products) is not None:
             return products
+    # Try blunt ligation
+    products = ligation_assembly(input_sequences, allow_blunt=True)
+    if find(products) is not None:
+        return products
     return products
 
 
@@ -421,6 +429,12 @@ def _source_from_tree_node(  # noqa: C901
         products = oligonucleotide_hybridization(*primers, 10)
     elif node.operation == "invalid":
         return None, []
+    elif node.operation == "flip":
+        # Here the input_sequence comes empty, I guess because it can be inferred
+        input_sequences = [expected_product.reverse_complement()]
+        input_sequences[0].source = None
+        input_sequences[0].name = node.name
+        products = [input_sequences[0].reverse_complement()]
     elif node.operation in [
         "remove",
         "insert",
@@ -435,14 +449,12 @@ def _source_from_tree_node(  # noqa: C901
             category=SnapgeneHistoryParserWarning,
         )
         return None, []
-    elif node.operation == "flip":
-        # Here the input_sequence comes empty, I guess because it can be inferred
-        input_sequences = [expected_product.reverse_complement()]
-        input_sequences[0].source = None
-        input_sequences[0].name = node.name
-        products = [input_sequences[0].reverse_complement()]
     else:  # pragma: no cover (Tests will be updated when more are encountered)
-        raise ValueError(f"Unknown operation: {node.operation}")
+        warnings.warn(
+            f"Unknown operation: {node.operation}",
+            category=SnapgeneHistoryParserWarning,
+        )
+        return None, []
 
     correct_product = find_expected_product(products)
 
