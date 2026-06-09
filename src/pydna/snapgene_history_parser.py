@@ -142,7 +142,7 @@ def _history_node_to_dseqrecord(sgff_object: SgffObject, node_id: str) -> Dseqre
     seq_props = node.properties.get("AdditionalSequenceProperties")
     seq = _dseq_from_seq_properties(node.sequence, circular, seq_props)
     seq_len = node.length
-    name = tree_node.name if tree_node else f"node_{node_id}"
+    name = tree_node.name.removesuffix(".dna") if tree_node else f"node_{node_id}"
     name = re.sub(r"\s+", "_", name)  # Replace whitespace with underscores
 
     features = []
@@ -294,6 +294,10 @@ def _restriction_ligation_with_fallbacks(
 ) -> list[Dseqrecord]:
     """Try restriction-ligation, then plain ligation, then per-input digest + ligation."""
     rb = _get_enzyme_batch_from_input_summaries(node.input_summaries)
+
+    if len(rb) == 0:
+        return ligation_assembly(input_sequences, allow_blunt=True)
+
     products = restriction_ligation_assembly(input_sequences, rb)
     if find(products) is not None:
         return products
@@ -306,6 +310,10 @@ def _restriction_ligation_with_fallbacks(
         products = ligation_assembly(combination)
         if find(products) is not None:
             return products
+    # Try blunt ligation
+    products = ligation_assembly(input_sequences, allow_blunt=True)
+    if find(products) is not None:
+        return products
     return products
 
 
@@ -421,6 +429,12 @@ def _source_from_tree_node(  # noqa: C901
         products = oligonucleotide_hybridization(*primers, 10)
     elif node.operation == "invalid":
         return None, []
+    elif node.operation == "flip":
+        # Here the input_sequence comes empty, I guess because it can be inferred
+        input_sequences = [expected_product.reverse_complement()]
+        input_sequences[0].source = None
+        input_sequences[0].name = node.name
+        products = [input_sequences[0].reverse_complement()]
     elif node.operation in [
         "remove",
         "insert",
@@ -435,14 +449,12 @@ def _source_from_tree_node(  # noqa: C901
             category=SnapgeneHistoryParserWarning,
         )
         return None, []
-    elif node.operation == "flip":
-        # Here the input_sequence comes empty, I guess because it can be inferred
-        input_sequences = [expected_product.reverse_complement()]
-        input_sequences[0].source = None
-        input_sequences[0].name = node.name
-        products = [input_sequences[0].reverse_complement()]
     else:  # pragma: no cover (Tests will be updated when more are encountered)
-        raise ValueError(f"Unknown operation: {node.operation}")
+        warnings.warn(
+            f"Unknown operation: {node.operation}",
+            category=SnapgeneHistoryParserWarning,
+        )
+        return None, []
 
     correct_product = find_expected_product(products)
 
@@ -507,14 +519,17 @@ def _get_default_source(file_name: str) -> UploadedFileSource:
     )
 
 
-def parse_snapgene_history(filepath: str) -> Dseqrecord:
+def parse_snapgene_history(data: str | bytes, file_name: str = "") -> Dseqrecord:
     """Parse a SnapGene ``.dna`` file and return a :class:`~pydna.dseqrecord.Dseqrecord`
     whose ``source`` attribute tree encodes the full cloning history.
 
     Parameters
     ----------
-    filepath:
-        Path to the ``.dna`` file to parse.
+    data: str | bytes
+        Path to the ``.dna`` file to parse or bytes of the file content.
+
+    file_name: str
+        The name of the file to use for the source. If data is str, it will be taken from the file name.
 
     Returns
     -------
@@ -528,11 +543,15 @@ def parse_snapgene_history(filepath: str) -> Dseqrecord:
     ValueError
         If a recorded operation cannot be reproduced (no matching product found).
     """
-    root_record = parse_snapgene(filepath)[0]
-    sgff_object = SgffReader.from_file(filepath)
+    root_record = parse_snapgene(data)[0]
 
-    name = os.path.basename(filepath)
-    root_record.name = re.sub(r"\s+", "_", name)
+    if isinstance(data, bytes):
+        sgff_object = SgffReader.from_bytes(data)
+    else:
+        sgff_object = SgffReader.from_file(data)
+        file_name = os.path.basename(data) if not file_name else file_name
+
+    root_record.name = re.sub(r"\s+", "_", file_name).removesuffix(".dna")
 
     seq_props = sgff_object.properties.get("AdditionalSequenceProperties")
     # The biopython parser does not handle overhangs
@@ -546,7 +565,7 @@ def parse_snapgene_history(filepath: str) -> Dseqrecord:
         _parse_history(root_record, sgff_object.history.tree.root, sgff_object)
 
     if root_record.source is None:
-        root_record.source = _get_default_source(name)
+        root_record.source = _get_default_source(file_name)
     root_record = root_record.normalize_history()
     root_record.validate_history()
     return root_record

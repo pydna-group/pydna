@@ -7,18 +7,19 @@
 """Tests for pydna.snapgene_history_parser."""
 
 import glob
-from unittest import TestCase
 import os
+import warnings
+
+import pytest
 from pydna.opencloning_models import AddgeneIdSource
 from pydna.snapgene_history_parser import (
     parse_snapgene_history,
     SnapgeneHistoryParserWarning,
 )
-import warnings
 
-TEST_FILES = glob.glob(
-    os.path.join(os.path.dirname(__file__), "snapgene_history_files", "*.dna")
-)[::-1]
+TEST_FOLDER = os.path.join(os.path.dirname(__file__), "snapgene_history_files")
+
+TEST_FILES = sorted(glob.glob(os.path.join(TEST_FOLDER, "*.dna")))
 
 METHOD_NOT_SUPPORTED = [
     "topo_ta_cloning.dna",
@@ -41,67 +42,67 @@ EXPECTED_VALUE_ERROR = [
 ]
 
 
-class TestSnapgeneHistoryParser(TestCase):
+class TestSnapgeneHistoryParser:
 
     def test_files_exist(self):
-        self.assertEqual(len(TEST_FILES), 49)
+        assert len(TEST_FILES) == 50
 
-    def test_correctly_parsed(self):
-        seqr_dict = {}
-        warning_dict = {}
-        for file in TEST_FILES:
-            filename = os.path.basename(file)
-            try:
-
-                with warnings.catch_warnings(record=True) as wlist:
-                    warnings.simplefilter("always")
-                    seqr_dict[filename] = parse_snapgene_history(file)
-                    warning_dict[filename] = [
-                        str(w.message)
-                        for w in wlist
-                        if issubclass(w.category, SnapgeneHistoryParserWarning)
-                    ]
-            except NotImplementedError as e:
-                if filename not in METHOD_NOT_SUPPORTED:
-                    raise AssertionError(f"File {filename} not supported") from e
-            except ValueError as e:
-                if (
-                    filename not in EXPECTED_VALUE_ERROR
-                    or "No product found for expected SEGUID" not in str(e)
-                ):
-                    raise AssertionError(f"File {filename} not supported") from e
+    @pytest.mark.parametrize("file", TEST_FILES, ids=os.path.basename)
+    def test_correctly_parsed(self, file):
+        filename = os.path.basename(file)
+        try:
+            with warnings.catch_warnings(record=True) as wlist:
+                warnings.simplefilter("always")
+                seqr = parse_snapgene_history(file)
+                file_warnings = [
+                    str(w.message)
+                    for w in wlist
+                    if issubclass(w.category, SnapgeneHistoryParserWarning)
+                ]
+        except NotImplementedError as e:
+            if filename not in METHOD_NOT_SUPPORTED:
+                raise AssertionError(f"File {filename} not supported") from e
+            return
+        except ValueError as e:
+            if (
+                filename not in EXPECTED_VALUE_ERROR
+                or "No product found for expected SEGUID" not in str(e)
+            ):
+                raise AssertionError(f"File {filename} not supported") from e
+            return
 
         # Check special cases
-        seqr = seqr_dict["import_addgene_then_clone.dna"]
-        self.assertIsInstance(seqr.source.input[0].sequence.source, AddgeneIdSource)
+        if filename == "import_addgene_then_clone.dna":
+            assert isinstance(seqr.source.input[0].sequence.source, AddgeneIdSource)
         # Can't do this anymore, (see _source_from_metadata)
-        # seqr = seqr_dict["import_ncbi.dna"]
-        # self.assertIsInstance(seqr.source, NCBISequenceSource)
-        seqr = seqr_dict["import_addgene.dna"]
-        self.assertIsInstance(seqr.source, AddgeneIdSource)
+        # if filename == "import_ncbi.dna":
+        #     assert isinstance(seqr.source, NCBISequenceSource)
+        if filename == "import_addgene.dna":
+            assert isinstance(seqr.source, AddgeneIdSource)
 
         # Check warnings
-        self.assertEqual(
-            warning_dict["circularize_then_linearize_without_enzyme.dna"],
-            ["Stopped at linearize operation without enzymes"],
-        )
-        del warning_dict["circularize_then_linearize_without_enzyme.dna"]
-        self.assertEqual(
-            warning_dict["circularize.dna"],
-            ["Stopped at change topology operation"],
-        )
-        del warning_dict["circularize.dna"]
+        if filename == "circularize_then_linearize_without_enzyme.dna":
+            expected_warnings = ["Stopped at linearize operation without enzymes"]
+        elif filename == "circularize.dna":
+            expected_warnings = ["Stopped at change topology operation"]
+        elif filename.startswith("manual_"):
+            expected_warnings = ["Manual editing of sequences not supported"]
+        else:
+            expected_warnings = []
 
-        # Manual editing warnings
-        for f in TEST_FILES:
-            basename = os.path.basename(f)
-            if basename.startswith("manual_"):
-                self.assertEqual(
-                    warning_dict[basename],
-                    ["Manual editing of sequences not supported"],
-                )
-                del warning_dict[basename]
+        assert file_warnings == expected_warnings
 
-        # Not other warning should remain
-        for key in warning_dict:
-            self.assertEqual(warning_dict[key], [])
+    def test_parse_snapgene_history_from_bytes(self):
+        example_file = os.path.join(TEST_FOLDER, "circularize.dna")
+        with open(example_file, "rb") as f:
+            bytes_data = f.read()
+        seqr = parse_snapgene_history(bytes_data, file_name="circularize.dna")
+        assert seqr.name == "circularize"
+
+        # Can overwrite file_name, even for files
+        seqr = parse_snapgene_history(example_file, file_name="overwrite.dna")
+        assert seqr.name == "overwrite"
+
+        # Otherwise takes from file name
+        seqr = parse_snapgene_history(example_file)
+        assert seqr.name == "circularize"
