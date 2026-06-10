@@ -1,4 +1,8 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# SPDX-FileCopyrightText: 2013 Björn Johansson
+# SPDX-License-Identifier: BSD-3-Clause
+
 """
 This module provides classes that roughly map to the `OpenCloning <https://opencloning.org>`_
 data model, which is defined using `LinkML <https://linkml.io>`, and available as a python

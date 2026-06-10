@@ -1,5 +1,8 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-####### License: MIT
+# SPDX-FileCopyrightText: 2015 Aaron Hall
+# SPDX-License-Identifier: MIT
+
 """MIT License
 
 Copyright (c) 2015 Aaron Hall
