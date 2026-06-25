@@ -105,10 +105,10 @@ def findall(
         raise TypeError("needle and haystack must be strings")
 
     if not needle:
-        raise ValueError("Needle must not be empty")
+        raise ValueError("needle must not be empty")
 
     if not haystack:
-        raise ValueError("Haystack must not be empty")
+        raise ValueError("haystack must not be empty")
 
     if not isinstance(max_edits, int):
         raise TypeError("max_edits must be an integer")
