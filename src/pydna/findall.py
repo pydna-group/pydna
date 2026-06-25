@@ -91,7 +91,7 @@ def findall(
     >>> result["distance"]
     1
     >>> result["start"], result["stop"]
-    (3, 11)
+    (3, 12)
     >>> result["cigar"]
     '4=1D4='
 
@@ -99,7 +99,7 @@ def findall(
 
     >>> result = findall("TAAC", "ACGTTA", circular=True)[0]
     >>> result["start"], result["stop"]
-    (4, 1)
+    (4, 2)
     """
     if not isinstance(needle, str) or not isinstance(haystack, str):
         raise TypeError("needle and haystack must be strings")
