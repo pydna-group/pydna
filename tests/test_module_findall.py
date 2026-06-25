@@ -1,7 +1,50 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import pytest
 from pydna.findall import findall
+
+
+# if not isinstance(needle, str) or not isinstance(haystack, str):
+#     raise TypeError("needle and haystack must be strings")
+
+# if not needle:
+#     raise ValueError("Needle must not be empty")
+
+# if not haystack:
+#     raise ValueError("Haystack must not be empty")
+
+# if not isinstance(max_edits, int):
+#     raise TypeError("max_edits must be an integer")
+
+# if max_edits < 0:
+#     raise ValueError("max_edits must be a positive integer")
+
+
+def test_arguments():
+    with pytest.raises(TypeError, match="needle and haystack must be strings"):
+        findall(1, 2)
+
+    with pytest.raises(TypeError, match="needle and haystack must be strings"):
+        findall("ACGT", 2)
+
+    with pytest.raises(TypeError, match="needle and haystack must be strings"):
+        findall(1, "ACGT")
+
+    with pytest.raises(ValueError, match="needle must not be empty"):
+        findall("", "ACGT")
+
+    with pytest.raises(ValueError, match="haystack must not be empty"):
+        findall("ACGT", "")
+
+    with pytest.raises(TypeError, match="max_edits must be an integer"):
+        findall("ACGT", "ACGT", max_edits=1.5)
+
+    with pytest.raises(TypeError, match="max_edits must be an integer"):
+        findall("ACGT", "ACGT", max_edits="1")
+
+    with pytest.raises(ValueError, match="max_edits must be a positive integer"):
+        findall("ACGT", "ACGT", max_edits=-1)
 
 
 def test_find_with_deletion():
