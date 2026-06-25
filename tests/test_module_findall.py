@@ -4,6 +4,10 @@
 import pytest
 from pydna.findall import findall
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3052ee83 (added tests)
 def test_arguments():
     with pytest.raises(TypeError, match="needle and haystack must be strings"):
         findall(1, 2)
