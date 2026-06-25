@@ -5,22 +5,6 @@ import pytest
 from pydna.findall import findall
 
 
-# if not isinstance(needle, str) or not isinstance(haystack, str):
-#     raise TypeError("needle and haystack must be strings")
-
-# if not needle:
-#     raise ValueError("Needle must not be empty")
-
-# if not haystack:
-#     raise ValueError("Haystack must not be empty")
-
-# if not isinstance(max_edits, int):
-#     raise TypeError("max_edits must be an integer")
-
-# if max_edits < 0:
-#     raise ValueError("max_edits must be a positive integer")
-
-
 def test_arguments():
     with pytest.raises(TypeError, match="needle and haystack must be strings"):
         findall(1, 2)
@@ -45,6 +29,9 @@ def test_arguments():
 
     with pytest.raises(ValueError, match="max_edits must be a positive integer"):
         findall("ACGT", "ACGT", max_edits=-1)
+
+    assert findall("ACGT", "ACG") == []
+    assert findall("ACGT", "ACG", circular=True) == []
 
 
 def test_find_with_deletion():
