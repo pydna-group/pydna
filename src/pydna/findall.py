@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# SPDX-FileCopyrightText: 2013-2026 Björn Johansson
+# SPDX-FileCopyrightText: 2023-2026 The Project Contributors
+# SPDX-License-Identifier: BSD-3-Clause
 """
 Find approximate occurrences of a subsequence within a linear or circular sequence.
 
@@ -14,6 +16,34 @@ and a human-readable alignment.
 from typing import TypedDict
 
 import edlib
+
+
+IUPAC_DNA: dict[str, frozenset[str]] = {
+    "A": frozenset("A"),
+    "C": frozenset("C"),
+    "G": frozenset("G"),
+    "T": frozenset("T"),
+    "U": frozenset("T"),
+    "R": frozenset("GA"),
+    "Y": frozenset("TC"),
+    "K": frozenset("GT"),
+    "M": frozenset("AC"),
+    "S": frozenset("GC"),
+    "W": frozenset("AT"),
+    "B": frozenset("GTC"),
+    "D": frozenset("GAT"),
+    "H": frozenset("ACT"),
+    "V": frozenset("GCA"),
+    "N": frozenset("AGCT"),
+}
+
+
+IUPAC_EQUALITIES: list[tuple[str, str]] = [
+    (left, right)
+    for left, left_bases in IUPAC_DNA.items()
+    for right, right_bases in IUPAC_DNA.items()
+    if left < right and left_bases & right_bases
+]
 
 
 class FindResult(TypedDict):
@@ -34,7 +64,9 @@ def findall(
 
     Every distinct interval in ``haystack`` whose Levenshtein distance from
     ``needle`` is less than or equal to ``max_edits`` is returned. Edit
-    operations may be substitutions, insertions, or deletions.
+    operations may be substitutions, insertions, or deletions. Comparisons use
+    the extended IUPAC DNA alphabet, so ambiguous symbols match when their
+    possible concrete bases overlap.
 
     Parameters
     ----------
@@ -79,9 +111,9 @@ def findall(
 
     Notes
     -----
-    The search is case-sensitive because both input sequences are converted
-    to uppercase. Circular matches are restricted to at most one traversal of
-    ``haystack``.
+    The search is case-sensitive; input sequences are compared exactly as
+    provided. IUPAC ambiguity is only applied to uppercase IUPAC symbols.
+    Circular matches are restricted to at most one traversal of ``haystack``.
 
     Examples
     --------
@@ -160,6 +192,7 @@ def findall(
                 mode="NW",
                 task="path",
                 k=max_edits,
+                additionalEqualities=IUPAC_EQUALITIES,
             )
 
             distance = result["editDistance"]
