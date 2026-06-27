@@ -293,6 +293,7 @@ def test_iupac_n_matches_all_bases():
 
 
 def test_iupac_purine_r_matches_a_or_g():
+
     # R --> G A
     #
     # ART
@@ -300,6 +301,7 @@ def test_iupac_purine_r_matches_a_or_g():
     # AATAGTACTATT
     #    |||
     #    ART
+
     results = findall("ART", "AATAGTACTATT", max_edits=0)
 
     assert [(r["start"], r["stop"]) for r in results] == [
@@ -309,9 +311,11 @@ def test_iupac_purine_r_matches_a_or_g():
 
 
 def test_iupac_ambiguity_counts_as_zero_edits():
+
     # ANT
     # |||
     # AGT
+
     (result,) = findall("ANT", "AGT", max_edits=0)
 
     assert result["distance"] == 0
@@ -326,6 +330,7 @@ def test_iupac_still_allows_real_edits():
     assert result["distance"] == 1
     assert result["start"] == 0
     assert result["stop"] == 2
+
 
     assert result == {
         "distance": 1,
@@ -342,6 +347,7 @@ def test_iupac_circular_match_with_iupac():
     #    |||
     # AACGT
     #      AACGT
+
     results = findall("NTA", "AACGT", max_edits=0, circular=True)
 
     assert {
