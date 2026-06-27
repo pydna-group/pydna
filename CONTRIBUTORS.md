@@ -20,13 +20,12 @@ make a meaningful contribution.
 Add one entry per person or organization, using the name you want associated
 with your contribution. Keep entries respectful, factual, and easy to maintain.
 
-
 - BjornFJohansson
 - manulera
-- jan-glx
-- Daniel García Ruano
 - hiyama341 / Lucas Levassor
 - JeffXiePL / Pei-Lun Xie
+- Daniel García Ruano
+- jan-glx
 - louisabraham
 - hristog
 - amijalis
@@ -37,4 +36,5 @@ with your contribution. Keep entries respectful, factual, and easy to maintain.
 - timovwb
 - Jerry Xu
 - Kawin
+- mwbudde / Mark Budde - plasmidsaurus.com
 - bruno2git
