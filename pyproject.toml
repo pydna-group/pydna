@@ -23,6 +23,7 @@ classifiers = [
 dynamic = ["version"]
 name = "pydna"
 readme = "README.md"
+license-files = ["LICENSE.txt"]
 [tool.poetry.urls]
 Changelog = "https://github.com/pydna-group/pydna/blob/master/docs/CHANGELOG.md#changelog"
 [tool.poetry]

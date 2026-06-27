@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from pydna.gateway import annotate_gateway_sites, gateway_overlap, find_gateway_sites
 import pydna.assembly2 as assembly
 import glob

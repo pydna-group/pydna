@@ -1,4 +1,8 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2013-2026 Björn Johansson
+# SPDX-FileCopyrightText: 2023-2026 The Project Contributors
+# SPDX-License-Identifier: BSD-3-Clause
+
 from itertools import product
 from pydna.dseqrecord import Dseqrecord
 from Bio.Data.IUPACData import ambiguous_dna_values

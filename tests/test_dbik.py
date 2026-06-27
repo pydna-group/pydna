@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 from Bio.Seq import Seq
 from Bio.SeqFeature import (

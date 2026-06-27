@@ -1,5 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2013-2026 Björn Johansson
+# SPDX-FileCopyrightText: 2023-2026 The Project Contributors
+# SPDX-License-Identifier: BSD-3-Clause
+
 """docstring."""
 
 # PMID: 22645496

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from pydna.dseq import Dseq
 from pydna.dseqrecord import Dseqrecord
 from pydna.utils import eq

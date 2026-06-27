@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# Copyright 2013-2023 by Björn Johansson.  All rights reserved.
-# This code is part of the Python-dna distribution and governed by its
-# license.  Please see the LICENSE.txt file that should have been included
-# as part of this package.
+# SPDX-FileCopyrightText: 2013-2026 Björn Johansson
+# SPDX-FileCopyrightText: 2023-2026 The Project Contributors
+# SPDX-License-Identifier: BSD-3-Clause
+
 # doctest: +NORMALIZE_WHITESPACE
 # doctest: +SKIP
+
 """This module provide the :class:`Anneal` class and the :func:`pcr` function
 for PCR simulation. The pcr function is simpler to use, but expects only one
 PCR product. The Anneal class should be used if more flexibility is required.

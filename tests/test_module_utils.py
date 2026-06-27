@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import pytest
 from pydna.utils import cuts_overlap, cutsite_to_location

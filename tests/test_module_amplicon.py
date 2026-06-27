@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 def test_amplicon():
     from pydna.amplify import Anneal
     from pydna.dseqrecord import Dseqrecord
