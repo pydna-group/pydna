@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 from pydna.dseq import Dseq
 from pydna.parsers import parse, parse_primers

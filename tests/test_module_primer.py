@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 def test_primer():
     from pydna import primer
 

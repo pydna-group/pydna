@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 def test_contig(monkeypatch):
     monkeypatch.setenv("pydna_cached_funcs", "")
 

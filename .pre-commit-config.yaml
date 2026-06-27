@@ -14,8 +14,15 @@ repos:
       - id: trailing-whitespace
       # Prevent debug statements
       - id: debug-statements
-      - id: fix-encoding-pragma
+      #- id: fix-encoding-pragma
       - id: mixed-line-ending
+
+# This was recommended but seems very opinionated.
+#- repo: https://github.com/asottile/pyupgrade
+#  rev: v3.20.0
+#  hooks:
+#    - id: pyupgrade
+#      args: [--py310-plus]
 
   # Code formatting
   - repo: https://github.com/ambv/black

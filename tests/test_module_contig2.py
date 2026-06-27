@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import pytest
 from pydna.dseqrecord import Dseqrecord
 from pydna.assembly import Assembly

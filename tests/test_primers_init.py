@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from pydna.seq import Seq as pydnaSeq
 from pydna.primer import Primer
 from pydna.parsers import parse_primers

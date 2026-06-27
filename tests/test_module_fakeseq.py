@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 def test_fakeseq():
     from pydna.fakeseq import FakeSeq
 

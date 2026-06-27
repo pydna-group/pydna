@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from pydna.cre_lox import cre_loxP_overlap, annotate_loxP_sites
 from pydna.assembly2 import cre_lox_excision_or_inversion
 from Bio.Seq import reverse_complement
