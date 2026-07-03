@@ -2839,21 +2839,21 @@ virtualenv = ">=20.10.0"
 
 [[package]]
 name = "prettytable"
-version = "3.17.0"
+version = "3.18.0"
 description = "A simple Python library for easily displaying tabular data in a visually appealing ASCII table format"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "prettytable-3.17.0-py3-none-any.whl", hash = "sha256:aad69b294ddbe3e1f95ef8886a060ed1666a0b83018bbf56295f6f226c43d287"},
-    {file = "prettytable-3.17.0.tar.gz", hash = "sha256:59f2590776527f3c9e8cf9fe7b66dd215837cca96a9c39567414cbc632e8ddb0"},
+    {file = "prettytable-3.18.0-py3-none-any.whl", hash = "sha256:b3346e0e6f79180833aebaac088ae926340586cf6d7d991b9eb125b65f72313a"},
+    {file = "prettytable-3.18.0.tar.gz", hash = "sha256:439217116152244369caf3d9f1caf2f9fe29b03bd79e88d2928c8e718c95d680"},
 ]
 
 [package.dependencies]
-wcwidth = "*"
+wcwidth = ">=0.3.5"
 
 [package.extras]
-tests = ["pytest", "pytest-cov", "pytest-lazy-fixtures"]
+tests = ["pytest (>=9)", "pytest-cov", "pytest-lazy-fixtures"]
 
 [[package]]
 name = "prompt-toolkit"
