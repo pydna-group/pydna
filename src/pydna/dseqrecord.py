@@ -137,7 +137,6 @@ class Dseqrecord(SeqRecord):
         record,
         *args,
         circular=None,
-        n=5e-14,  # mol ( = 0.05 pmol)
         source=None,
         **kwargs,
     ):
@@ -147,7 +146,6 @@ class Dseqrecord(SeqRecord):
             super().__init__(
                 Dseq.quick(
                     record.encode("ascii"),
-                    # linear=linear,
                     circular=bool(circular),
                 ),
                 *args,
@@ -201,7 +199,7 @@ class Dseqrecord(SeqRecord):
             raise ValueError("don't know what to do with {}".format(record))
 
         self.map_target = None
-        self.n = n  # amount, set to 5E-14 which is 5 pmols
+        self.n = 5e-14  # amount, set to 5E-14 which is 5 pmols
         self.annotations.update({"molecule_type": "DNA"})
         self.annotations.setdefault("source", "")
         self.annotations.setdefault("organism", ".")
@@ -212,14 +210,10 @@ class Dseqrecord(SeqRecord):
         cls,
         record: str = "",
         *args,
-        # linear=True,
         circular=False,
-        n=5e-14,
         **kwargs,
     ):
         """docstring."""
-        # def from_string(cls, record:str="", *args,
-        # linear=True, circular=False, n = 5E-14, **kwargs):
         obj = cls.__new__(cls)  # Does not call __init__
         obj._per_letter_annotations = {}
         obj.seq = Dseq.quick(
@@ -234,7 +228,7 @@ class Dseqrecord(SeqRecord):
         obj.annotations = {"molecule_type": "DNA"}
         obj.features = []
         obj.map_target = None
-        obj.n = n
+        obj.n = 5e-14  # amount, set to 5E-14 which is 5 pmols
         obj.__dict__.update(kwargs)
         return obj
 
@@ -244,7 +238,6 @@ class Dseqrecord(SeqRecord):
         record: SeqRecord,
         *args,
         circular=None,
-        n=5e-14,
         **kwargs,
     ):
         obj = cls.__new__(cls)  # Does not call __init__
@@ -256,8 +249,8 @@ class Dseqrecord(SeqRecord):
         obj.annotations = {"molecule_type": "DNA"}
         obj.annotations.update(record.annotations)
         obj.features = record.features
+        obj.n = 5e-14  # amount, set to 5E-14 which is 5 pmols
         obj.map_target = None
-        obj.n = n
         obj.source = None
         if circular is None:
             circular = record.annotations.get("topology") == "circular"
@@ -273,7 +266,7 @@ class Dseqrecord(SeqRecord):
     def m(self):
         """This method returns the mass of the DNA molecule in grams. This is
         calculated as the product between the molecular weight of the Dseq object
-        and the"""
+        and the substance amount (moles) of the Dseqrecord object."""
         return self.seq.mw() * self.n  # Da(g/mol) * mol = g
 
     def extract_feature(self, n):
@@ -1518,7 +1511,9 @@ class Dseqrecord(SeqRecord):
 
         # This will need to be generalised to all types of cuts
         source = SequenceCutSource.from_parent(self, left_cut, right_cut)
-        return Dseqrecord(dseq, features=features, source=source)
+        result = Dseqrecord(dseq, features=features, source=source)
+        result.n = self.n
+        return result
 
     def history(self):
         """
