@@ -51,64 +51,6 @@ def test_arguments():
     assert findall("ACGT", "ACG", circular=True) == []
 
 
-def test_arguments():
-    with pytest.raises(TypeError, match="needle and haystack must be strings"):
-        findall(1, 2)
-
-    with pytest.raises(TypeError, match="needle and haystack must be strings"):
-        findall("ACGT", 2)
-
-    with pytest.raises(TypeError, match="needle and haystack must be strings"):
-        findall(1, "ACGT")
-
-    with pytest.raises(ValueError, match="needle must not be empty"):
-        findall("", "ACGT")
-
-    with pytest.raises(ValueError, match="haystack must not be empty"):
-        findall("ACGT", "")
-
-    with pytest.raises(TypeError, match="max_edits must be an integer"):
-        findall("ACGT", "ACGT", max_edits=1.5)
-
-    with pytest.raises(TypeError, match="max_edits must be an integer"):
-        findall("ACGT", "ACGT", max_edits="1")
-
-    with pytest.raises(ValueError, match="max_edits must be a positive integer"):
-        findall("ACGT", "ACGT", max_edits=-1)
-
-    assert findall("ACGT", "ACG") == []
-    assert findall("ACGT", "ACG", circular=True) == []
-
-
-def test_arguments():
-    with pytest.raises(TypeError, match="needle and haystack must be strings"):
-        findall(1, 2)
-
-    with pytest.raises(TypeError, match="needle and haystack must be strings"):
-        findall("ACGT", 2)
-
-    with pytest.raises(TypeError, match="needle and haystack must be strings"):
-        findall(1, "ACGT")
-
-    with pytest.raises(ValueError, match="needle must not be empty"):
-        findall("", "ACGT")
-
-    with pytest.raises(ValueError, match="haystack must not be empty"):
-        findall("ACGT", "")
-
-    with pytest.raises(TypeError, match="max_edits must be an integer"):
-        findall("ACGT", "ACGT", max_edits=1.5)
-
-    with pytest.raises(TypeError, match="max_edits must be an integer"):
-        findall("ACGT", "ACGT", max_edits="1")
-
-    with pytest.raises(ValueError, match="max_edits must be a positive integer"):
-        findall("ACGT", "ACGT", max_edits=-1)
-
-    assert findall("ACGT", "ACG") == []
-    assert findall("ACGT", "ACG", circular=True) == []
-
-
 def test_find_with_deletion():
     # ACGT-ACGT
     # ||||-||||
@@ -330,7 +272,6 @@ def test_iupac_still_allows_real_edits():
     assert result["distance"] == 1
     assert result["start"] == 0
     assert result["stop"] == 2
-
 
     assert result == {
         "distance": 1,
