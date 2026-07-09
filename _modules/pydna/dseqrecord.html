@@ -451,7 +451,6 @@
         <span class="n">record</span><span class="p">,</span>
         <span class="o">*</span><span class="n">args</span><span class="p">,</span>
         <span class="n">circular</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">n</span><span class="o">=</span><span class="mf">5e-14</span><span class="p">,</span>  <span class="c1"># mol ( = 0.05 pmol)</span>
         <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
@@ -461,7 +460,6 @@
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
                 <span class="n">Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span>
                     <span class="n">record</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span>
-                    <span class="c1"># linear=linear,</span>
                     <span class="n">circular</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">circular</span><span class="p">),</span>
                 <span class="p">),</span>
                 <span class="o">*</span><span class="n">args</span><span class="p">,</span>
@@ -515,7 +513,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;don&#39;t know what to do with </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">record</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">map_target</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>  <span class="c1"># amount, set to 5E-14 which is 5 pmols</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="mf">5e-14</span>  <span class="c1"># amount, set to 5E-14 which is 5 pmols</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">:</span> <span class="s2">&quot;DNA&quot;</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;organism&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
@@ -528,14 +526,10 @@
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">record</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="o">*</span><span class="n">args</span><span class="p">,</span>
-        <span class="c1"># linear=True,</span>
         <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">n</span><span class="o">=</span><span class="mf">5e-14</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;docstring.&quot;&quot;&quot;</span>
-        <span class="c1"># def from_string(cls, record:str=&quot;&quot;, *args,</span>
-        <span class="c1"># linear=True, circular=False, n = 5E-14, **kwargs):</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>  <span class="c1"># Does not call __init__</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">_per_letter_annotations</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="n">Dseq</span><span class="o">.</span><span class="n">quick</span><span class="p">(</span>
@@ -550,7 +544,7 @@
         <span class="n">obj</span><span class="o">.</span><span class="n">annotations</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">:</span> <span class="s2">&quot;DNA&quot;</span><span class="p">}</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">map_target</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="mf">5e-14</span>  <span class="c1"># amount, set to 5E-14 which is 5 pmols</span>
         <span class="n">obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
@@ -563,7 +557,6 @@
         <span class="n">record</span><span class="p">:</span> <span class="n">SeqRecord</span><span class="p">,</span>
         <span class="o">*</span><span class="n">args</span><span class="p">,</span>
         <span class="n">circular</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">n</span><span class="o">=</span><span class="mf">5e-14</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>  <span class="c1"># Does not call __init__</span>
@@ -575,8 +568,8 @@
         <span class="n">obj</span><span class="o">.</span><span class="n">annotations</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">:</span> <span class="s2">&quot;DNA&quot;</span><span class="p">}</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">annotations</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">features</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="mf">5e-14</span>  <span class="c1"># amount, set to 5E-14 which is 5 pmols</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">map_target</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">circular</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">circular</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;topology&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;circular&quot;</span>
@@ -595,7 +588,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">m</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;This method returns the mass of the DNA molecule in grams. This is</span>
 <span class="sd">        calculated as the product between the molecular weight of the Dseq object</span>
-<span class="sd">        and the&quot;&quot;&quot;</span>
+<span class="sd">        and the substance amount (moles) of the Dseqrecord object.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">mw</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span>  <span class="c1"># Da(g/mol) * mol = g</span></div>
 
 
@@ -1933,7 +1926,9 @@
 
         <span class="c1"># This will need to be generalised to all types of cuts</span>
         <span class="n">source</span> <span class="o">=</span> <span class="n">SequenceCutSource</span><span class="o">.</span><span class="n">from_parent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left_cut</span><span class="p">,</span> <span class="n">right_cut</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">dseq</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">)</span></div>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">dseq</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 
 
 <div class="viewcode-block" id="Dseqrecord.history">
