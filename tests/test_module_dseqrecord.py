@@ -380,6 +380,20 @@ def test_m():
     assert f"{s.m():.3e}" == "1.544e-07"
 
 
+def test_n_property():
+
+    with pytest.raises(TypeError):
+        Dseqrecord("A", n=5)
+
+    a = Dseqrecord("GGATCC")
+    assert a.n == 5e-14  # default value 5 pmol
+    a.n *= 10
+    assert a.n == 5e-13
+    x, y = a.cut(BamHI)
+    assert x.n == a.n == 5e-13
+    assert y.n == a.n == 5e-13
+
+
 def test_extract_feature():
 
     s = Dseqrecord("tttGGATCCaaa")
