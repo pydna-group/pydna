@@ -61,6 +61,8 @@ from pydna.types import DseqType, EnzymesType, CutSiteType
 length_limit_for_repr = 30
 placeholder = letters_not_in_dscode[-1]
 
+__all__ = ["Dseq", "CircularBytes"]
+
 
 class CircularBytes(bytes):
     """

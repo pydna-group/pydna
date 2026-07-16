@@ -52,6 +52,9 @@ except ImportError:
         return item
 
 
+__all__ = ["Dseqrecord"]
+
+
 class Dseqrecord(SeqRecord):
     """Dseqrecord is a double stranded version of the Biopython SeqRecord [#]_ class.
     The Dseqrecord object holds a Dseq object describing the sequence.
