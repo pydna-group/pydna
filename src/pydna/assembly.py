@@ -67,7 +67,6 @@ from pydna.opencloning_models import (
 )
 from pydna.crispr import cas9
 import warnings
-from pydna import _PydnaDeprecationWarning
 
 if TYPE_CHECKING:  # pragma: no cover
     from Bio.Restriction import AbstractCut
@@ -1299,22 +1298,6 @@ class Assembly:
         self.use_all_fragments = use_all_fragments
 
         return
-
-    def __getattr__(self, name):
-        # Only called for attributes not found normally. Warn users who invoke
-        # methods from the deprecated Assembly (e.g. ``Assembly(...).figure()``)
-        # instead of raising a bare AttributeError.
-        if name in {"figure", "detailed_figure", "figure_mpl"}:
-            warnings.warn(
-                f"Assembly.{name}() is deprecated; the current Assembly returns "
-                f"Dseqrecord objects. Use pydna.legacy.assembly.Assembly for the "
-                f"old behaviour.",
-                _PydnaDeprecationWarning,
-                stacklevel=2,
-            )
-        raise AttributeError(
-            f"{type(self).__name__!r} object has no attribute {name!r}"
-        )
 
     @classmethod
     def assembly_is_valid(

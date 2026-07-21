@@ -21,11 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org).
 ### Deprecated
 
 - The previous `Assembly` moved to `pydna.legacy.assembly` (raises
-  `_PydnaDeprecationWarning`). Import it there to keep the old `Contig`-returning
-  behaviour; it will be removed in a future version.
-- `Assembly.figure()`, `detailed_figure()` and `figure_mpl()` raise
-  `_PydnaDeprecationWarning` — the modern `Assembly` returns `Dseqrecord`, which has
-  no such methods; use `pydna.legacy.assembly` for the old `Contig` behaviour.
+  `_PydnaDeprecationWarning`); it will be removed in a future version.
+- Assembly products are now `Dseqrecord` instead of `Contig`. `Dseqrecord.figure()`
+  still works; the `Contig`-only `detailed_figure()` / `figure_mpl()` are not
+  available on products — use `pydna.legacy.assembly` if you need them.
 
 ## [6.0.0a01] - 2023-05-04
 
