@@ -1215,7 +1215,7 @@ class Dseqrecord(SeqRecord):
         Examples
         --------
         >>> from pydna.dseqrecord import Dseqrecord
-        >>> from pydna.assembly2 import in_vivo_assembly, pcr_assembly
+        >>> from pydna.assembly import in_vivo_assembly, pcr_assembly
         >>> from pydna.primer import Primer
         >>> # Generic example
         >>> a = Dseqrecord("tcgatgctatactgtgCCNCCtgtgctgtgctcta")
@@ -1532,7 +1532,7 @@ class Dseqrecord(SeqRecord):
         Examples
         --------
         >>> from pydna.dseqrecord import Dseqrecord
-        >>> from pydna.assembly2 import gibson_assembly
+        >>> from pydna.assembly import gibson_assembly
         >>> fragments = [
         ...    Dseqrecord("TTTTacgatAAtgctccCCCC", circular=False, name="fragment1"),
         ...    Dseqrecord("CCCCtcatGGGG", circular=False, name="fragment2"),

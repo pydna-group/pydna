@@ -2,7 +2,8 @@
 # flake8: noqa: B950
 
 from importlib import reload
-from pydna import assembly
+from pydna.legacy import assembly
+from pydna import _PydnaDeprecationWarning
 from pydna.dseqrecord import Dseqrecord
 from pydna.parsers import parse
 from pydna.utils import eq
@@ -14,15 +15,15 @@ from pydna.readers import read
 from Bio.Restriction import EcoRV, ZraI
 from Bio.Restriction import AjiI, AgeI
 from Bio.Restriction import SalI
-from pydna.assembly import Assembly
+from pydna.legacy.assembly import Assembly
 from Bio.Restriction import AatII
 import pytest
 
 
 def test_deprecated_warning():
     with pytest.warns(
-        DeprecationWarning,
-        match="The module pydna.assembly is deprecated and will be removed in a future version. Use pydna.assembly2 instead.",
+        _PydnaDeprecationWarning,
+        match="pydna.legacy.assembly is deprecated",
     ):
         reload(assembly)
 

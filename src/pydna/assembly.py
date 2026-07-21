@@ -67,6 +67,7 @@ from pydna.opencloning_models import (
 )
 from pydna.crispr import cas9
 import warnings
+from pydna import _PydnaDeprecationWarning
 
 if TYPE_CHECKING:  # pragma: no cover
     from Bio.Restriction import AbstractCut
@@ -219,7 +220,7 @@ def restriction_ligation_overlap(
         A list of overlaps between the two sequences
 
     >>> from pydna.dseqrecord import Dseqrecord
-    >>> from pydna.assembly2 import restriction_ligation_overlap
+    >>> from pydna.assembly import restriction_ligation_overlap
     >>> from Bio.Restriction import EcoRI, RgaI, DrdI, EcoRV
     >>> x = Dseqrecord("ccGAATTCaa")
     >>> y = Dseqrecord("aaaaGAATTCgg")
@@ -338,7 +339,7 @@ def blunt_overlap(
     list[SequenceOverlap]
         A list of overlaps between the two sequences
 
-    >>> from pydna.assembly2 import blunt_overlap
+    >>> from pydna.assembly import blunt_overlap
     >>> from pydna.dseqrecord import Dseqrecord
     >>> x = Dseqrecord("AAAAAA")
     >>> y = Dseqrecord("TTTTTT")
@@ -463,7 +464,7 @@ def terminal_overlap(
         A list of overlaps between the two sequences
 
     >>> from pydna.dseqrecord import Dseqrecord
-    >>> from pydna.assembly2 import terminal_overlap
+    >>> from pydna.assembly import terminal_overlap
     >>> x = Dseqrecord("ttactaAAAAAA")
     >>> y = Dseqrecord("AAAAAAcgcacg")
     >>> terminal_overlap(x, y, limit=5)
@@ -474,7 +475,7 @@ def terminal_overlap(
     Trimming the ends:
     >>> from pydna.dseq import Dseq
     >>> from pydna.dseqrecord import Dseqrecord
-    >>> from pydna.assembly2 import terminal_overlap
+    >>> from pydna.assembly import terminal_overlap
     >>> x = Dseqrecord(Dseq.from_full_sequence_and_overhangs("aaaACGT", 0, 3))
     >>> y = Dseqrecord(Dseq.from_full_sequence_and_overhangs("ACGTccc", 3, 0))
     >>> terminal_overlap(x, y, limit=4)
@@ -580,7 +581,7 @@ def sticky_end_sub_strings(seqx: Dseqrecord, seqy: Dseqrecord, limit: bool = Fal
 
     >>> from pydna.dseq import Dseq
     >>> from pydna.dseqrecord import Dseqrecord
-    >>> from pydna.assembly2 import sticky_end_sub_strings
+    >>> from pydna.assembly import sticky_end_sub_strings
     >>> x = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAAAA", 0, 3))
     >>> y = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAAAA", 3, 0))
     >>> sticky_end_sub_strings(x, y, limit=False)
@@ -722,7 +723,7 @@ def primer_template_overlap(
 
     >>> from pydna.dseqrecord import Dseqrecord
     >>> from pydna.primer import Primer
-    >>> from pydna.assembly2 import primer_template_overlap
+    >>> from pydna.assembly import primer_template_overlap
     >>> template = Dseqrecord("AATTAGCAGCGATCGAGT", circular=True)
     >>> primer = Primer("TTAGCAGC")
     >>> primer_template_overlap(primer, template, limit=8, mismatches=0)
@@ -1231,7 +1232,7 @@ class Assembly:
     Examples
     --------
 
-    from assembly2 import Assembly, assembly2str
+    from pydna.assembly import Assembly, assembly2str
     from pydna.dseqrecord import Dseqrecord
 
     example_fragments = (
@@ -1298,6 +1299,22 @@ class Assembly:
         self.use_all_fragments = use_all_fragments
 
         return
+
+    def __getattr__(self, name):
+        # Only called for attributes not found normally. Warn users who invoke
+        # methods from the deprecated Assembly (e.g. ``Assembly(...).figure()``)
+        # instead of raising a bare AttributeError.
+        if name in {"figure", "detailed_figure", "figure_mpl"}:
+            warnings.warn(
+                f"Assembly.{name}() is deprecated; the current Assembly returns "
+                f"Dseqrecord objects. Use pydna.legacy.assembly.Assembly for the "
+                f"old behaviour.",
+                _PydnaDeprecationWarning,
+                stacklevel=2,
+            )
+        raise AttributeError(
+            f"{type(self).__name__!r} object has no attribute {name!r}"
+        )
 
     @classmethod
     def assembly_is_valid(
@@ -2159,7 +2176,7 @@ class SingleFragmentAssembly(Assembly):
         Examples
         --------
         >>> from pydna.dseqrecord import Dseqrecord
-        >>> from pydna.assembly2 import SingleFragmentAssembly
+        >>> from pydna.assembly import SingleFragmentAssembly
         >>> seq1 = Dseqrecord("aaGAAGGaccCCTTCcc")
         >>> prod = SingleFragmentAssembly([seq1], limit=5).assemble_inversion()[0]
         >>> prod.seq
@@ -2439,7 +2456,7 @@ def restriction_ligation_assembly(
     and the desired part of the backbone (``cccccc``), the other contains the
     reversed insert (``tgga``) and the cut-out part of the backbone (``aaa``).
 
-    >>> from pydna.assembly2 import restriction_ligation_assembly
+    >>> from pydna.assembly import restriction_ligation_assembly
     >>> from pydna.dseqrecord import Dseqrecord
     >>> from Bio.Restriction import EcoRI, SalI
     >>> backbone = Dseqrecord("cccGAATTCaaaGTCGACccc", circular=True)
@@ -2572,7 +2589,7 @@ def ligation_assembly(
     using the EcoRI enzyme. The insert and insertion site in the backbone are flanked by
     EcoRI sites, so there are two possible products depending on the orientation of the insert.
 
-    >>> from pydna.assembly2 import ligation_assembly
+    >>> from pydna.assembly import ligation_assembly
     >>> from pydna.dseqrecord import Dseqrecord
     >>> from Bio.Restriction import EcoRI
     >>> backbone = Dseqrecord("cccGAATTCaaaGAATTCccc", circular=True)
@@ -2653,7 +2670,7 @@ def gateway_assembly(
     Below an example with dummy Gateway sequences, composed with minimal sequences and the consensus
     att sites.
 
-    >>> from pydna.assembly2 import gateway_assembly
+    >>> from pydna.assembly import gateway_assembly
     >>> from pydna.dseqrecord import Dseqrecord
     >>> attB1 = "ACAACTTTGTACAAAAAAGCAGAAG"
     >>> attP1 = "AAAATAATGATTTTATTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCTGAACGAGAAGCGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATCCAGTCACTATGAATCAACTACTTAGATGGTATTAGTGACCTGTA"
@@ -2847,7 +2864,7 @@ def homologous_recombination_integration(
 
     Below an example with a single insert.
 
-    >>> from pydna.assembly2 import homologous_recombination_integration
+    >>> from pydna.assembly import homologous_recombination_integration
     >>> from pydna.dseqrecord import Dseqrecord
     >>> homology = "AAGTCCGTTCGTTTTACCTG"
     >>> genome = Dseqrecord(f"aaaaaa{homology}ccccc{homology}aaaaaa")
@@ -2898,7 +2915,7 @@ def homologous_recombination_excision_or_inversion(
     genome (circular sequence of 25 bp), and that part is removed from the genome,
     leaving a shorter linear sequence (32 bp).
 
-    >>> from pydna.assembly2 import homologous_recombination_excision
+    >>> from pydna.assembly import homologous_recombination_excision
     >>> from pydna.dseqrecord import Dseqrecord
     >>> homology = "AAGTCCGTTCGTTTTACCTG"
     >>> genome = Dseqrecord(f"aaaaaa{homology}ccccc{homology}aaaaaa")
@@ -2950,7 +2967,7 @@ def cre_lox_integration(
     Below an example of reversible integration and excision.
 
     >>> from pydna.dseqrecord import Dseqrecord
-    >>> from pydna.assembly2 import cre_lox_integration, cre_lox_excision
+    >>> from pydna.assembly import cre_lox_integration, cre_lox_excision
     >>> from pydna.cre_lox import LOXP_SEQUENCE
     >>> a = Dseqrecord(f"cccccc{LOXP_SEQUENCE}aaaaa")
     >>> b = Dseqrecord(f"{LOXP_SEQUENCE}bbbbb", circular=True)
@@ -3003,7 +3020,7 @@ def cre_lox_excision_or_inversion(genome: Dseqrecord) -> list[Dseqrecord]:
     Below an example of reversible integration and excision.
 
     >>> from pydna.dseqrecord import Dseqrecord
-    >>> from pydna.assembly2 import cre_lox_integration, cre_lox_excision_or_inversion
+    >>> from pydna.assembly import cre_lox_integration, cre_lox_excision_or_inversion
     >>> from pydna.cre_lox import LOXP_SEQUENCE
     >>> a = Dseqrecord(f"cccccc{LOXP_SEQUENCE}aaaaa")
     >>> b = Dseqrecord(f"{LOXP_SEQUENCE}bbbbb", circular=True)
@@ -3109,7 +3126,7 @@ def recombinase_integration(
     Examples
     --------
     >>> from pydna.dseqrecord import Dseqrecord
-    >>> from pydna.assembly2 import recombinase_integration, recombinase_excision
+    >>> from pydna.assembly import recombinase_integration, recombinase_excision
     >>> from pydna.recombinase import Recombinase
     >>> site1 = "ATGCCCTAAaaTT"
     >>> site2 = "AAaaTTTTTTTCCCT"
@@ -3171,7 +3188,7 @@ def crispr_integration(
     --------
 
     >>> from pydna.dseqrecord import Dseqrecord
-    >>> from pydna.assembly2 import crispr_integration
+    >>> from pydna.assembly import crispr_integration
     >>> from pydna.primer import Primer
     >>> genome = Dseqrecord("aaccggttcaatgcaaacagtaatgatggatgacattcaaagcac", name="genome")
     >>> insert = Dseqrecord("aaccggttAAAAAAAAAttcaaagcac", name="insert")

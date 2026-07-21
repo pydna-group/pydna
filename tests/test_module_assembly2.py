@@ -20,7 +20,7 @@ from Bio.Restriction import (
 from pydna.amplify import pcr
 from pydna.dseq import Dseq
 from pydna.readers import read
-import pydna.assembly2 as assembly
+import pydna.assembly as assembly
 from Bio.SeqFeature import ExactPosition, FeatureLocation, SeqFeature, SimpleLocation
 from pydna.dseqrecord import Dseqrecord
 from pydna.parsers import parse

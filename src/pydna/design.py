@@ -602,7 +602,7 @@ def assembly_fragments(f, overlap=35, maxlink=40, circular=False):
     >>> [fa,fb,fc]
     [Amplicon(100), Amplicon(101), Amplicon(102)]
     >>> fa.name, fb.name, fc.name = "fa fb fc".split()
-    >>> from pydna.assembly import Assembly
+    >>> from pydna.legacy.assembly import Assembly
     >>> assemblyobj = Assembly([fa,fb,fc])
     >>> assemblyobj
     Assembly

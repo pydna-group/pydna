@@ -58,13 +58,15 @@ from copy import deepcopy
 from typing import Callable, Dict, List, NamedTuple, TypedDict
 import itertools
 
-from pydna.threading_timer_decorator_exit import exit_after
+from pydna.legacy.threading_timer_decorator_exit import exit_after
 
 import warnings
+from pydna import _PydnaDeprecationWarning
 
 warnings.warn(
-    "The module pydna.assembly is deprecated and will be removed in a future version. Use pydna.assembly2 instead.",
-    DeprecationWarning,
+    "pydna.legacy.assembly is deprecated and will be removed in a future version; "
+    "use pydna.assembly instead (it returns Dseqrecord objects, not Contig).",
+    _PydnaDeprecationWarning,
     stacklevel=2,
 )
 
@@ -89,7 +91,7 @@ class Assembly(object):
     Examples
     --------
 
-    >>> from pydna.assembly import Assembly
+    >>> from pydna.legacy.assembly import Assembly
     >>> from pydna.dseqrecord import Dseqrecord
     >>> a = Dseqrecord("acgatgctatactgCCCCCtgtgctgtgctcta")
     >>> b = Dseqrecord("tgtgctgtgctctaTTTTTtattctggctgtatc")

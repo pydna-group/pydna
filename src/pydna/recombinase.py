@@ -30,7 +30,7 @@ Integration and excision with a single recombinase::
 
     >>> from pydna.dseqrecord import Dseqrecord
     >>> from pydna.recombinase import Recombinase
-    >>> from pydna.assembly2 import recombinase_integration, recombinase_excision
+    >>> from pydna.assembly import recombinase_integration, recombinase_excision
     >>> site1 = "ATGCCCTAAaaCT"
     >>> site2 = "CAaaTTTTTTTCCCT"
     >>> genome = Dseqrecord("ccccccATGCCCTAAAACTaaaaa")
@@ -87,7 +87,7 @@ Using a Recombinase as Assembly algorithm::
 
     >>> from pydna.dseqrecord import Dseqrecord
     >>> from pydna.recombinase import Recombinase
-    >>> from pydna.assembly2 import Assembly
+    >>> from pydna.assembly import Assembly
     >>> site1 = "ATGCCCTAAaaTT"
     >>> site2 = "AAaaTTTTTTTCCCT"
     >>> seqA = Dseqrecord("aaaATGCCCTAAaaTTtt")
