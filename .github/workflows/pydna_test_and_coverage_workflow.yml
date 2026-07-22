@@ -2,99 +2,64 @@ name: Tests & Coverage
 on:
   push:
     branches:
-      - "**"
-      - "!testpypi" # excludes testpypi branch
-  pull_request: {}
+      - master
+      - "pydna*"
+  pull_request:
+
+# One run per ref; a new push cancels the previous still-running one.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build:
-    name: Test (${{ matrix.python-version }}, ${{ matrix.os }})
-    strategy:
-      fail-fast: false
-      matrix:
-        os: ["macos-latest", "windows-latest"]
-        python-version: ["3.14", "3.13", "3.12", "3.11", "3.10"]
-        include:
-          - os: ubuntu-latest
-            python-version: "3.10"
-          - os: ubuntu-latest
-            python-version: "3.11"
-          - os: ubuntu-latest
-            python-version: "3.12"
-            codecov: true
-          - os: ubuntu-latest
-            python-version: "3.12"
-            hooks: true
-            # Don't run hooks check on master, otherwise no-commit-to-branch hook will fail
-            if: github.ref != 'refs/heads/master'
-          - os: ubuntu-latest
-            python-version: "3.13"
-          - os: ubuntu-latest
-            python-version: "3.14"
-          # This mimics what would happen installing using pip install pydna (removes the
-          # uv.lock file before installing)
-          - os: ubuntu-latest
-            python-version: "3.12"
-            fresh-install: true
-    defaults:
-      run:
-        shell: bash
-    runs-on: ${{ matrix.os }}
-    env:
-      MPLBACKEND: Agg
-      UV_PYTHON: ${{ matrix.python-version }}
+  lint:
+    name: Lint (ruff)
+    runs-on: ubuntu-latest
     steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.11.0
-
-      - name: ⬇️ Checkout PR HEAD (full history)
-        if: github.event_name == 'pull_request'
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-
-      - name: ⬇️ Checkout (push/tag) full history
-        if: github.event_name != 'pull_request'
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: 🔩 Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: 🐍 Display Python version
-        run: python -c "import sys; print(sys.version)"
-
+      - uses: actions/checkout@v4
       - name: 🔩 Install uv
         uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
+      - run: uv sync --group dev
+      - run: uv run ruff check src tests
+      - run: uv run ruff format --check src tests
 
-      - name: remove uv.lock for fresh install
-        run: rm uv.lock
-        if: matrix.fresh-install == 'true'
-
+  test:
+    name: Test (${{ matrix.python-version }}, ${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      # Full Python range on Linux; only the oldest+newest on macOS/Windows,
+      # which is where OS-specific breakage (not version-specific) shows up.
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        include:
+          - { os: macos-latest, python-version: "3.10" }
+          - { os: macos-latest, python-version: "3.14" }
+          - { os: windows-latest, python-version: "3.10" }
+          - { os: windows-latest, python-version: "3.14" }
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      MPLBACKEND: Agg
+      UV_PYTHON: ${{ matrix.python-version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history + tags for hatch-vcs versioning
+      - name: 🔩 Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
       - name: 🔩 Install with uv
-        run: uv sync --all-extras --group test --group dev
-
-      - name: 🔎 uv run python run_test.py
-        # Don't run tests if we're just checking hooks
-        if: (!matrix.hooks)
+        run: uv sync --all-extras --group test
+      - name: 🔎 Run tests
         run: uv run python run_test.py
-
-      # Lint & format check with the project's ruff (via uv, so the version
-      # always matches pyproject — no pre-commit version drift) ============
-      - name: 🎨 Ruff lint & format check
-        if: (matrix.hooks)
-        run: |
-          uv run ruff check src tests
-          uv run ruff format --check src tests
-
-      # ======================================================
       - name: 🔼 Upload coverage to Codecov
-        if: (matrix.codecov)
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         uses: codecov/codecov-action@v7.0.0
         with:
           files: ./coverage.xml

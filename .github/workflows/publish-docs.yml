@@ -1,6 +1,15 @@
-on: [push, pull_request]
-
 name: "Documentation Status"
+
+on:
+  push:
+    branches:
+      - master
+      - "pydna*"
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
