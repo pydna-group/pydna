@@ -2,7 +2,7 @@ def test_contig(monkeypatch):
     monkeypatch.setenv("pydna_cached_funcs", "")
 
     from pydna import contig
-    from pydna.assembly import Assembly
+    from pydna.legacy.assembly import Assembly
     from pydna.dseqrecord import Dseqrecord
 
     a = Dseqrecord("acgatgctatactgCCCCCtgtgctgtgctcta", name="one")
@@ -81,7 +81,7 @@ def test_contig(monkeypatch):
 
 def test_reverse_complement(monkeypatch):
     from pydna._pretty import pretty_str
-    from pydna.assembly import Assembly
+    from pydna.legacy.assembly import Assembly
     from pydna.dseqrecord import Dseqrecord
 
     a = Dseqrecord("acgatgctatactgtgCCNCCtgtgctgtgctcta")
@@ -163,7 +163,7 @@ cacagtatagcatcgtaCCCCCgatacagccagaata
 
 
 def test_linear(monkeypatch):
-    from pydna.assembly import Assembly
+    from pydna.legacy.assembly import Assembly
     from pydna.dseqrecord import Dseqrecord
 
     a = Dseqrecord("acgatgctatactgtgCCNCCtgtgctgtgctcta")

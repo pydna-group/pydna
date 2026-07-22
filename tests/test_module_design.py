@@ -4,7 +4,7 @@ from Bio.Restriction import BamHI
 import pytest
 
 from pydna.amplify import pcr
-from pydna.assembly import Assembly
+from pydna.legacy.assembly import Assembly
 from pydna.dseqrecord import Dseqrecord
 from pydna.design import primer_design
 from pydna.design import user_assembly_design

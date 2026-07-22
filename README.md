@@ -454,7 +454,7 @@ poetry run pre-commit install
 > doctest will fail if `smallest_rotation("taaa")` does not return `'aaat'`. If you make changes to some function, you may break the doctests, and this can be a bit hard to understand. If this happens, the CI tests will fail, with a message similar to this:
 > ```
 > =================================== FAILURES ===================================
-> ___________________ [doctest] pydna.assembly2.blunt_overlap ____________________
+> ___________________ [doctest] pydna.assembly.blunt_overlap ____________________
 > ```
 > This means that the doctest of the function `blunt_overlap` failed. You can run the same test locally with `pytest src/pydna --doctest-modules` (use the appropriate path to the module file). That will give you information of what's failing. Fix, and re-run until it passes!
 

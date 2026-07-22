@@ -15,7 +15,7 @@ from opencloning_linkml.datamodel import (
 )
 from pydantic import BaseModel, ValidationError
 
-from pydna.assembly2 import (
+from pydna.assembly import (
     cre_lox_excision_or_inversion,
     cre_lox_integration,
     crispr_integration,

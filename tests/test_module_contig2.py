@@ -1,6 +1,6 @@
 import pytest
 from pydna.dseqrecord import Dseqrecord
-from pydna.assembly import Assembly
+from pydna.legacy.assembly import Assembly
 
 from pydna._pretty import pretty_str
 from pydna.amplify import pcr

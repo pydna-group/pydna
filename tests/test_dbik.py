@@ -9,8 +9,8 @@ from Bio.SeqFeature import (
     ExactPosition,
 )
 from Bio.SeqRecord import SeqRecord
-from pydna.assembly import Assembly
-from pydna.assembly2 import Assembly as Assembly2
+from pydna.legacy.assembly import Assembly
+from pydna.assembly import Assembly as Assembly2
 from pydna.dseqrecord import Dseqrecord
 
 

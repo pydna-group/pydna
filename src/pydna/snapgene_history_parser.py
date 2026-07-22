@@ -21,7 +21,7 @@ from sgffp.models.history import (
 )
 from pydna.dseq import Dseq
 import re
-from pydna.assembly2 import (
+from pydna.assembly import (
     gibson_assembly,
     pcr_assembly,
     restriction_ligation_assembly,
