@@ -185,7 +185,6 @@ def primer_design(
             return _design_primer(target_tm, template, limit, tm_func)
 
     if not fp and not rp:
-
         fp = Primer((design(target_tm, template)))
         target_tm = tm_func(str(fp.seq))
 
@@ -239,7 +238,9 @@ def primer_design(
         from pydna import _PydnaWarning
 
         warnings.warn(
-            "designed primers do not yield a unique PCR product", _PydnaWarning
+            "designed primers do not yield a unique PCR product",
+            _PydnaWarning,
+            stacklevel=2,
         )
 
     return prod
@@ -686,11 +687,9 @@ def assembly_fragments(f, overlap=35, maxlink=40, circular=False):
         secnd_len = len(secnd)
 
         if secnd_len <= maxlink:
-
             third = f[i + 2]
 
             if hasattr(f[i], "template") and hasattr(third, "template"):
-
                 #    "secnd is is flanked by amplicons, so half of secnd should be added each flanking primers"
                 # )
 
@@ -802,9 +801,7 @@ def user_assembly_design(
     )
 
     assert max_overlap > min_overlap, (
-        f"max_overlap ({max_overlap}) "
-        "has to be larger than min_overlap "
-        f"({min_overlap})"
+        f"max_overlap ({max_overlap}) has to be larger than min_overlap ({min_overlap})"
     )
     amplicons = []
 
@@ -814,12 +811,10 @@ def user_assembly_design(
     flag = True
 
     for ths, nxt in pairwise(amplicons):
-
         A_positions_in_ths = [m.start() for m in re.finditer("A|a", str(ths.seq))]
         T_positions_in_nxt = [m.start() for m in re.finditer("T|t", str(nxt.seq))]
 
         for ths_a, ths_t in zip(A_positions_in_ths[::-1], T_positions_in_nxt):
-
             sticky_length = ths_t + len(ths) - ths_a
 
             if sticky_length < min_overlap:

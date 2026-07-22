@@ -10,7 +10,6 @@ The function can be used if the environmental variable **pydna_email** has
 been set to a valid email address. The easiest way to do this permanantly is to edit the
 `pydna.ini` file. See the documentation of :func:`pydna.open_config_folder`"""
 
-
 from pydna.opencloning_models import NCBISequenceSource
 from pydna.readers import read
 from pydna.dseqrecord import Dseqrecord

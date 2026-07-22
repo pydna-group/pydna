@@ -98,7 +98,6 @@ class CustomGenBankScanner(GenBankScanner):
 
 
 class CustomGenBankIterator(GenBankIterator):
-
     def __init__(self, source):
         super(GenBankIterator, self).__init__(source, fmt="GenBank")
         self.records = CustomGenBankScanner(debug=0).parse_records(self.stream)

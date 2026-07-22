@@ -1688,7 +1688,7 @@ def test_restriction_ligation_partial_overlaps():
     )
     products = f.assemble_linear(only_adjacent_edges=True)
     assert len(products) == 6
-    products_seguid = set(p.seq.seguid() for p in products)
+    set(p.seq.seguid() for p in products)
     # assert products_seguid == set(
     #     [p1.seq.seguid(), p2.seq.seguid(), Dseqrecord("GGTCTCCCCAATT").seguid()]
     # )
@@ -1964,7 +1964,6 @@ def test_assemble_function():
     f2.features = [f2_feat1, f2_feat2]
 
     for shift in range(len(f1)):
-
         f1_shifted = f1.shifted(shift)
 
         # Re-order the features so that TTT is first
@@ -2596,7 +2595,6 @@ def test_zip_rightwards():
 def test_primer_template_overlap():
     template = Dseqrecord("AATTAGCAGCGATCGAGT", circular=True)
     for shift in range(len(template)):
-
         template_shifted = template.shifted(-shift)
 
         primer = Primer("TTAGCAGC")
@@ -3109,7 +3107,6 @@ def test_terminal_overlap():
     # The loop is just to show that the left overhang of the x sequence
     # and the right overhang of the y sequence don't affect the outcome
     for outside_ovhg in (0, 2, -2):
-
         # Cases where the overlap is on the overhang
         a = Dseqrecord(
             Dseq.from_full_sequence_and_overhangs("aaaACGT", outside_ovhg, 3)
@@ -3226,26 +3223,26 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatact
     x_rc = asm_rc.assemble_circular()[0]
     figure = """\
          -|aaa|14
-        |      \/
+        |      \\/
         |      /\\
         |      14|bbb|15
-        |             \/
+        |             \\/
         |             /\\
         |             15|ccc|15
-        |                    \/
+        |                    \\/
         |                    /\\
         |                    15-
         |                       |
          -----------------------"""
     figure_rc = """\
          -|aaa|14
-        |      \/
+        |      \\/
         |      /\\
         |      14|bbb_rc|15
-        |                \/
+        |                \\/
         |                /\\
         |                15|ccc|15
-        |                       \/
+        |                       \\/
         |                       /\\
         |                       15-
         |                          |
@@ -3273,10 +3270,10 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatact
     # Product where entire plasmid gets integrated into the otther plasmid
     figure_single_site = """\
              -|aaa|15
-            |      \/
+            |      \\/
             |      /\\
             |      15|bbb|15
-            |             \/
+            |             \\/
             |             /\\
             |             15-
             |                |
@@ -3285,10 +3282,10 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaGtattctggctgtatcGGGGGtacgatgctatact
     # Product where two different homology regions are used
     figure_multi_site = """\
              -|aaa|14
-            |      \/
+            |      \\/
             |      /\\
             |      14|bbb|15
-            |             \/
+            |             \\/
             |             /\\
             |             15-
             |                |
@@ -3339,7 +3336,7 @@ def test_integration_edge_case_collection():
 
     genome = Dseqrecord(f"aaaaaa{homology1}aattggaac{homology1}tttttttt")
 
-    products = assembly.homologous_recombination_integration(genome, [insert], 40)
+    assembly.homologous_recombination_integration(genome, [insert], 40)
 
 
 def test_common_core_and_trims_edge_case():

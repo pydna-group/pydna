@@ -58,7 +58,6 @@ class Seq(_Seq):
         cds: bool = False,
         gap: str = "-",
     ) -> _Seq:
-
         # TODO: is this method needed?
         """
         Translate into protein.

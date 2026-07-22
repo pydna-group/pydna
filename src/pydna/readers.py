@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 """Provides two functions, read and read_primer."""
+
 from pydna.parsers import parse
 from pydna.primer import Primer
 

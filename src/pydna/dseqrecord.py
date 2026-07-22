@@ -10,6 +10,7 @@ Seq and SeqRecord classes, respectively.
 
 The Dseq and Dseqrecord classes support the notion of circular and linear DNA topology.
 """
+
 from Bio.Restriction import RestrictionBatch
 from Bio.Restriction import CommOnly
 from pydna.dseq import Dseq
@@ -145,7 +146,6 @@ class Dseqrecord(SeqRecord):
     ):
 
         if isinstance(record, str):
-
             super().__init__(
                 Dseq.quick(
                     record.encode("ascii"),
@@ -166,7 +166,6 @@ class Dseqrecord(SeqRecord):
 
         # record is a Bio.Seq object ?
         elif hasattr(record, "transcribe"):
-
             super().__init__(
                 Dseq(
                     str(record),
@@ -179,7 +178,6 @@ class Dseqrecord(SeqRecord):
 
         # record is a Bio.SeqRecord or Dseqrecord object ?
         elif hasattr(record, "features"):
-
             for key, value in list(record.__dict__.items()):
                 setattr(self, key, value)
             self.letter_annotations = {}
@@ -321,7 +319,7 @@ class Dseqrecord(SeqRecord):
         if x and y and self.circular and x > y:
             pass
         else:
-            super().add_feature(x, y, seq, type_, strand=strand, *args, **kwargs)
+            super().add_feature(x, y, seq, type_, *args, strand=strand, **kwargs)
             return
 
         qualifiers = {}
@@ -433,10 +431,9 @@ class Dseqrecord(SeqRecord):
         from pydna import _PydnaDeprecationWarning
 
         warnings.warn(
-            "tolinear method is obsolete; "
-            "please use obj[:] "
-            "instead of obj.tolinear().",
+            "tolinear method is obsolete; please use obj[:] instead of obj.tolinear().",
             _PydnaDeprecationWarning,
+            stacklevel=2,
         )
         new = copy.copy(self)
         for key, value in list(self.__dict__.items()):
@@ -655,7 +652,7 @@ class Dseqrecord(SeqRecord):
         return s.find(o)
 
     def __str__(self):
-        return ("Dseqrecord\n" "circular: {}\n" "size: {}\n").format(
+        return ("Dseqrecord\ncircular: {}\nsize: {}\n").format(
             self.circular, len(self)
         ) + SeqRecord.__str__(self)
 
@@ -839,7 +836,7 @@ class Dseqrecord(SeqRecord):
             raise TypeError("TypeError: can't multiply circular Dseqrecord.")
         if number > 0:
             new = copy.deepcopy(self)
-            for i in range(1, number):
+            for _i in range(1, number):
                 new += self
             new._per_letter_annotations = self._per_letter_annotations
             return new
@@ -1293,7 +1290,7 @@ class Dseqrecord(SeqRecord):
         else:
             s1, s2 = c, w
 
-        wfe = [f"{highlight}{s1[part.start:part.end]}{plain}" for part in locations]
+        wfe = [f"{highlight}{s1[part.start : part.end]}{plain}" for part in locations]
 
         wfe.append("")
 

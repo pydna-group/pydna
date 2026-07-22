@@ -59,6 +59,7 @@ CTAG AU YRKMSWDVBHN ••••CTAG•U AGCTU----- ACGACTAGTCGTGCTUUU •
 GATC UO RYMKSWHBVDN PEXIQFZJ$% 0123456789 !#{}&*()<>@:?[]=_; •
 
 """
+
 import re
 from dataclasses import dataclass
 
@@ -147,7 +148,6 @@ letters_not_in_dscode = "lL\"',-./\\^`|+~"
 # ============================================================================
 
 for name, codestring in codestrings.items():
-
     lines = codestring.splitlines()
 
     assert len(lines) == 5, f'codestring["{name}"] does not have 5 lines'
@@ -158,30 +158,30 @@ for name, codestring in codestrings.items():
     watsn, pipes, crick, empty, symbl = lines
 
     # Check so that all letters are ascii symbols.
-    assert all(
-        ln.isascii() for ln in (watsn, crick, symbl)
-    ), f'codestring["{name}"] has non-ascii letters'
+    assert all(ln.isascii() for ln in (watsn, crick, symbl)), (
+        f'codestring["{name}"] has non-ascii letters'
+    )
 
     # Verify so that all chars that have uppercase are uppercase.
-    assert all(
-        ln.isupper() for ln in (watsn, crick, symbl) if ln.isalpha()
-    ), f'codestring["{name}"] has non-uppercase letters'
+    assert all(ln.isupper() for ln in (watsn, crick, symbl) if ln.isalpha()), (
+        f'codestring["{name}"] has non-uppercase letters'
+    )
 
     # check so that pipes contain only "|"
-    assert set(pipes) == set(
-        "|"
-    ), f'codestring["{name}"] has non-pipe character(s) in line 2'
+    assert set(pipes) == set("|"), (
+        f'codestring["{name}"] has non-pipe character(s) in line 2'
+    )
 
     # check so strings are the same length
-    assert all(
-        len(ln) == len(watsn) for ln in (watsn, pipes, crick, symbl)
-    ), f'codestring["{name}"] has lines of unequal length'
+    assert all(len(ln) == len(watsn) for ln in (watsn, pipes, crick, symbl)), (
+        f'codestring["{name}"] has lines of unequal length'
+    )
 
     # Check that the the letters in the letters_not_in_dscode string
     # are not used.
-    assert not any(
-        [letter in letters_not_in_dscode for letter in symbl]
-    ), f'codestring["{name}"] has chars outside alphabet'
+    assert not any([letter in letters_not_in_dscode for letter in symbl]), (
+        f'codestring["{name}"] has chars outside alphabet'
+    )
 
 
 # ============================================================================
@@ -195,7 +195,6 @@ for name, codestring in codestrings.items():
 codes = dict()
 
 for name, codestring in codestrings.items():
-
     lines = codestring.splitlines()
 
     watsons, _, cricks, _, symbols = lines
@@ -293,7 +292,6 @@ del d, temp
 temp = {}
 
 for (x, y), symbol in annealing_dict.items():
-
     temp[x, emptyspace] = x
     temp[emptyspace, y] = y
 

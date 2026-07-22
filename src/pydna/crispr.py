@@ -7,6 +7,7 @@
 Utilities for CRISPR/Cas target searching and protospacer extraction.
 
 """
+
 import re
 from abc import ABC
 from abc import abstractmethod
