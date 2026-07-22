@@ -7,9 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.release.target_commitish == 'master'
     steps:
-      - uses: actions/checkout@v3
-      - name: Build and publish to pypi
-        uses: JRubics/poetry-publish@v1.16
+      - uses: actions/checkout@v4
         with:
-          pypi_token: ${{ secrets.PYPI_TOKEN }}
-          plugins: "poetry-dynamic-versioning[plugin]"
+          fetch-depth: 0
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+      - name: Build distributions
+        run: uv build
+      - name: Publish to PyPI
+        run: uv publish
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}

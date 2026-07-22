@@ -24,18 +24,13 @@ repos:
 #    - id: pyupgrade
 #      args: [--py310-plus]
 
-  # Code formatting
-  - repo: https://github.com/ambv/black
-    rev: 25.1.0
+  # Linting and formatting with ruff (replaces black + flake8)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.0
     hooks:
-      - id: black
-
-  # Further linting (e.g. module imported but not used)
-  - repo: https://github.com/PyCQA/flake8
-    rev: 7.3.0
-    hooks:
-      - id: flake8
-        args: ["--max-line-length=88"]
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
 
   # Remove metadata from jupyter notebooks. This will always be triggered when you commit a change in a notebook.
   - repo: local

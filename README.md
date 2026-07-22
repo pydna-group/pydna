@@ -365,20 +365,15 @@ pip install --pre --upgrade pydna[clipboard,download,express,gel]
 
 Remove options inside the square brackets as required, but be sure not to leave spaces as pip will not recognize the options. See below under "Optional dependencies".
 
-### Installing with poetry 🧙‍♂️
+### Installing with uv ⚡
 
-If your project uses [poetry](https://python-poetry.org/) to manage dependencies, you can install pydna with the following commands:
+If your project uses [uv](https://docs.astral.sh/uv/) to manage dependencies, you can add pydna with:
 
 ```bash
 # Basic installation
-poetry add pydna
-# With optional dependencies (ommit the options you don't want)
-poetry add pydna --extras "clipboard download express gel"
-
-# If you already have it installed and you want to add or remove optional
-# dependencies, you have to uninstall and install again
-poetry remove pydna
-poetry add pydna --extras "express gel"
+uv add pydna
+# With optional dependencies (omit the options you don't want)
+uv add "pydna[clipboard,download,express,gel]"
 ```
 
 <!-- docs/installation.rst-end -->
@@ -408,32 +403,26 @@ git checkout -b issue_<number>
 
 ### Local development 💻
 
-#### Preferred method (using `poetry`) 🧙‍♂️
+#### Preferred method (using `uv`) ⚡
 
-This is the preferred method to develop on pydna, so if you plan to contribute regularly, it's worth taking this route. If you
-encounter any issues setting up the dev environment, create an issue on GitHub and we will be able to help.
-
-Use [Poetry](https://python-poetry.org/docs/#installation) to install dependencies and activate virtual environment. This is necessary
-if you want to edit the project dependencies. Install poetry using [pipx](https://github.com/pypa/pipx) following poetry's installation instructions, do not install it
-in the system python or the project environment.
+This is the preferred method to develop on pydna. Install
+[uv](https://docs.astral.sh/uv/getting-started/installation/), then let it create the
+virtual environment (in a local `.venv`) and install everything — the extras are
+required for the tests to pass:
 
 ```bash
-# If you want the virtual environment to be created in this folder
-# (this is now the default, see `poetry.toml`)
-poetry config virtualenvs.in-project true
+# Install all runtime extras plus the dev and test tool groups
+uv sync --all-extras --group test --group dev
 
-# Install dependencies (extras are required for tests to pass)
-poetry install --all-extras
-
-# Activate virtual environment (poetry version 2)
-poetry env activate
-
-# Activate virtual environment (poetry version 1)
-poetry shell
+# Run anything inside the environment with `uv run`, e.g. the tests
+uv run python run_test.py
 
 # Install pre-commit hooks
-poetry run pre-commit install
+uv run pre-commit install
 ```
+
+A `Makefile` wraps the common tasks: `make setup`, `make test`, `make test-all`,
+`make lint`, `make fmt`, `make build`, `make clean`.
 
 #### Contributing code 💻
 
@@ -480,7 +469,7 @@ To work locally with the documentation, check the [documentation README](docs/RE
 
 See the [releases](https://github.com/pydna-group/pydna/releases) for changes and releases.
 
-The build workflow builds a PyPI packages using poetry. This workflow is triggered by publishing a Github release manually from the Github web interface.
+The build workflow builds and publishes the PyPI package using `uv` (with the hatchling build backend). This workflow is triggered by publishing a Github release manually from the Github web interface.
 We keep future release names [here](https://docs.google.com/document/d/1PrBYKzDh6QBcqfH9ksjpgArJo3ibDhMRNcibfXtYmCc/edit?tab=t.0). Please edit to
 reflect used release names.
 

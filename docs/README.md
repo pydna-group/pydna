@@ -8,7 +8,7 @@ Below the commands to build the documentation locally.
 
 ```bash
 # Install docs dependency group
-poetry install --with docs
+uv sync --all-extras --group docs
 cd docs
 bash build_docs.sh
 ```
@@ -58,7 +58,7 @@ See [build_docs.sh](build_docs.sh) for the commands to build the documentation.
 If notebook execution fails, it might be that jupyter is using another Kernel than the one you want to use. In my case, I had to delete existing kernels which mapped to other python environments. You can find them:
 
 ```
-poetry run jupyter kernelspec list
+uv run jupyter kernelspec list
 ```
 
 Then, go to those folders and open the `kernel.json` file. You will see which env they use. I deleted all kernel folders and all envs, since I favour creating envs in the project directory.
