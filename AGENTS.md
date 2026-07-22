@@ -34,4 +34,4 @@ uv sync --all-extras --group test --group dev
 uv run pytest
 uv run pytest tests/path/to/test_file.py
 uv run pytest src/pydna/path/to/module.py
-uv run pre-commit run --all-files
+uv run ruff check . && uv run ruff format --check .

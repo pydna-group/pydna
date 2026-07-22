@@ -14,14 +14,14 @@ test:
 
 test-all:
 	uv run python run_test.py
-	uv run ruff check src/pydna
-	uv run ruff format --check src/pydna tests
+	uv run ruff check src tests
+	uv run ruff format --check src tests
 
 lint:
-	uv run ruff check src/pydna
+	uv run ruff check src tests
 
 fmt:
-	uv run ruff format src/pydna tests
+	uv run ruff format src tests
 
 clean:
 	rm -rf dist/ .pytest_cache/ .mypy_cache/ *.egg-info coverage.xml htmlcov/ prof/

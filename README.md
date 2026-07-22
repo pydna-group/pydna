@@ -416,9 +416,6 @@ uv sync --all-extras --group test --group dev
 
 # Run anything inside the environment with `uv run`, e.g. the tests
 uv run python run_test.py
-
-# Install pre-commit hooks
-uv run pre-commit install
 ```
 
 A `Makefile` wraps the common tasks: `make setup`, `make test`, `make test-all`,
@@ -430,8 +427,7 @@ A `Makefile` wraps the common tasks: `make setup`, `make test`, `make test-all`,
 2. Add the necessary tests in `tests/`.
 3. Run the tests from the root directory with `python run_test.py`.
    > **TIP:** You can run a particular test file with `pytest -vs test_file.py` (`-v` for verbose and `-s` to see print statements in the test). If you want to run just a single test, you can use `pytest -vs -k test_name`, where `test_name` is the name of the test function.
-4. Before committing, install `pre-commit` hooks if you haven't by running `pre-commit install`. `pre-commit` should be available in the environment regardless of the method you use to set up the dev environment.
-   > **TIP:** The hooks are a series of checks that will be run before you commit your code. If any of the checks fail, the commit will not be allowed. Some of them auto-fix the code (e.g., `black` formatting), so you can simply do `git add .` and commit again. Others like `flake8` will prevent the commit to happen until the code is compliant.  For instance, if you import a module in a file and not use it, `flake8` will complain. For a full list of checks, see `.pre-commit-config.yaml`.
+4. Before committing, format and lint with `make fmt` and `make lint` (both run `ruff`). CI runs the same `ruff` checks, so code must be formatted and lint-clean to pass.
 5. Push the changes to your fork
 
 > **TIP:** The continuous integration pipeline also runs doctests. These are tests that validate that the docstring examples are correct. For example, the docstring of the function `pydna.utils.smallest_rotation` looks like this:

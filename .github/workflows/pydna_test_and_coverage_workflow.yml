@@ -84,31 +84,13 @@ jobs:
         if: (!matrix.hooks)
         run: uv run python run_test.py
 
-      # Enforce pre-commit hooks ===========================
-      - name: Get changed files
+      # Lint & format check with the project's ruff (via uv, so the version
+      # always matches pyproject — no pre-commit version drift) ============
+      - name: 🎨 Ruff lint & format check
         if: (matrix.hooks)
-        id: changed-files
-        uses: tj-actions/changed-files@v45
-        with:
-          since_last_remote_commit: true
-
-      - uses: actions/cache@v4
-        if: (matrix.hooks)
-        id: cache-precommit
-        with:
-          path: ~/.cache/pre-commit
-          key: ${{ runner.os }}-precommit-hooks-v2-${{ hashFiles('**/.pre-commit-config.yaml') }}
-
-      - name: Installing pre-commit hooks (cached)
-        if: (matrix.hooks) && (steps.cache-precommit.outputs.cache-hit != 'true')
-        run: uv run pre-commit install --install-hooks
-
-      - name: Run style checking via pre-commit
-        if: (matrix.hooks && steps.changed-files.outputs.all_changed_files)
         run: |
-          echo "Changed files:"
-          echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n'
-          uv run pre-commit run --files ${{ steps.changed-files.outputs.all_changed_files }}
+          uv run ruff check src tests
+          uv run ruff format --check src tests
 
       # ======================================================
       - name: 🔼 Upload coverage to Codecov
