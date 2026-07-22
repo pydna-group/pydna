@@ -1,8 +1,8 @@
 # ![icon](https://github.com/pydna-group/pydna/blob/master/docs/_static/banner.png?raw=true)
 
-| [![Tests & Coverage](https://github.com/pydna-group/pydna/actions/workflows/pydna_test_and_coverage_workflow.yml/badge.svg?branch=master)](https://github.com/pydna-group/pydna/actions/workflows/pydna_test_and_coverage_workflow.yml) | [![codecov](https://codecov.io/gh/pydna-group/pydna/branch/master/graph/badge.svg)](https://codecov.io/gh/pydna-group/pydna/branch/master) | [![PyPI version](https://badge.fury.io/py/pydna.svg)](https://badge.fury.io/py/pydna)                                                  | [![Google group : pydna](https://img.shields.io/badge/Google%20Group-pydna-blue.svg)](https://groups.google.com/g/pydna)          |
+| [![Tests & Coverage](https://github.com/pydna-group/pydna/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/pydna-group/pydna/actions/workflows/tests.yml) | [![codecov](https://codecov.io/gh/pydna-group/pydna/branch/master/graph/badge.svg)](https://codecov.io/gh/pydna-group/pydna/branch/master) | [![PyPI version](https://badge.fury.io/py/pydna.svg)](https://badge.fury.io/py/pydna)                                                  | [![Google group : pydna](https://img.shields.io/badge/Google%20Group-pydna-blue.svg)](https://groups.google.com/g/pydna)          |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| [![Documentation Status](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml/badge.svg)](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml)                                                      | [![GitHub issues](https://img.shields.io/github/issues/pydna-group/pydna.svg)](https://github.com/pydna-group/pydna/issues)                    |  [![GitHub stars](https://img.shields.io/github/stars/pydna-group/pydna.svg)](https://github.com/pydna-group/pydna/stargazers) | |
+| [![Documentation Status](https://github.com/pydna-group/pydna/actions/workflows/docs.yml/badge.svg)](https://github.com/pydna-group/pydna/actions/workflows/docs.yml)                                                      | [![GitHub issues](https://img.shields.io/github/issues/pydna-group/pydna.svg)](https://github.com/pydna-group/pydna/issues)                    |  [![GitHub stars](https://img.shields.io/github/stars/pydna-group/pydna.svg)](https://github.com/pydna-group/pydna/stargazers) | |
 
 <!-- docs/index.rst-start -->
 
@@ -456,7 +456,7 @@ supported python versions.
 
 ### Building the documentation locally 📚
 
-Documentation is built using [Sphinx](http://www.sphinx-doc.org/) from [docstrings](https://www.python.org/dev/peps/pep-0257/) using a GitHub [action](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml) and also built in readthedocs.
+Documentation is built using [Sphinx](http://www.sphinx-doc.org/) from [docstrings](https://www.python.org/dev/peps/pep-0257/) using a GitHub [action](https://github.com/pydna-group/pydna/actions/workflows/docs.yml) and also built in readthedocs.
 The [numpy](https://www.numpy.org) [docstring format](https://numpy.org/doc/stable/dev/howto-docs.html#docstring-intro) is used.
 
 To work locally with the documentation, check the [documentation README](docs/README.md) for instructions.
