@@ -166,9 +166,10 @@ def test_format():
     from pydna.seqrecord import SeqRecord
 
     s = SeqRecord(Seq("GGATCC"))
-    s.format("gb")
-    s.format("genbank")
-    s.format("fasta")
+    assert s.format("gb").startswith("LOCUS")
+    assert s.format("genbank").startswith("LOCUS")
+    assert s.format("fasta").startswith(">")
+    assert "GGATCC" in s.format("fasta")
 
 
 def test_seqrecord():

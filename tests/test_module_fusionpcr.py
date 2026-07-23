@@ -81,22 +81,3 @@ def test_fusionpcr3():
     for arg in seqtuples:
         result = fuse_by_pcr(arg, limit=5).pop()
         assert eq(result, r)
-
-
-x = Dseqrecord(
-    Dseq("tctggtcaagctgaagggtattc"),
-    features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")],
-)
-y = Dseqrecord(
-    Dseq("tattcgtacacagatg"),
-    features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")],
-)
-z = Dseqrecord(
-    Dseq("acagatgacgtgt"),
-    features=[SeqFeature(SimpleLocation(5, 10, strand=1), type="misc_feature")],
-)
-
-
-seqtuples = [(x, y, z)]
-for arg in seqtuples:
-    result = fuse_by_pcr(arg, limit=5).pop()

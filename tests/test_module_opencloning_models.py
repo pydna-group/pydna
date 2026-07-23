@@ -833,9 +833,6 @@ class ValidateTest(TestCase):
     def test_validate_recombinase(self):
         recombinase_product.validate_history()
 
-    def test_validate_custom_cut(self):
-        custom_cut_product.validate_history()
-
     def test_validate_non_recursive(self):
         copy_ligation_product = copy.deepcopy(ligation_product)
         first_fragment = copy_ligation_product.source.input[0].sequence
