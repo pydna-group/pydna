@@ -109,7 +109,7 @@ class Contig(Dseqrecord):
         fragmentposition = 0
         nodeposition = 0
         mylist = []
-        for u, v, e in self.graph.edges(data=True):
+        for _u, v, e in self.graph.edges(data=True):
             nodeposition += e["piece"].stop - e["piece"].start
             fragmentposition -= e["piece"].start
             mylist.append([fragmentposition, e["seq"]])
@@ -191,7 +191,7 @@ class Contig(Dseqrecord):
 
             space2 = len(f[2]["name"])
 
-            fig = ("{name}|{o2:>2}\n" "{space2} \\/\n" "{space2} /\\\n").format(
+            fig = ("{name}|{o2:>2}\n{space2} \\/\n{space2} /\\\n").format(
                 name=f[2]["name"], o2=nodes[1][1]["length"], space2=" " * space2
             )
             space = space2  # len(f.name)
@@ -203,9 +203,7 @@ class Contig(Dseqrecord):
                 space2 = len(name)
 
                 fig += (
-                    "{space} {name}{o2:>2}\n"
-                    "{space} {space2}\\/\n"
-                    "{space} {space2}/\\\n"
+                    "{space} {name}{o2:>2}\n{space} {space2}\\/\n{space} {space2}/\\\n"
                 ).format(
                     name=name,
                     o2=nodes[i + 2][1]["length"],
@@ -241,7 +239,7 @@ class Contig(Dseqrecord):
 
             space = len(f[2]["name"]) + 3
 
-            fig = (" -|{name}|{o2:>2}\n" "|{space}\\/\n" "|{space}/\\\n").format(
+            fig = (" -|{name}|{o2:>2}\n|{space}\\/\n|{space}/\\\n").format(
                 name=f[2]["name"], o2=nodes[1][1]["length"], space=" " * space
             )
 
@@ -251,9 +249,7 @@ class Contig(Dseqrecord):
                 )
                 space2 = len(name)
                 fig += (
-                    "|{space}{name}{o2:>2}\n"
-                    "|{space}{space2}\\/\n"
-                    "|{space}{space2}/\\\n"
+                    "|{space}{name}{o2:>2}\n|{space}{space2}\\/\n|{space}{space2}/\\\n"
                 ).format(
                     o2=nodes[i + 2][1]["length"],
                     name=name,
@@ -319,7 +315,6 @@ class Contig(Dseqrecord):
             start = 0 - len(edges[0][0])
 
             for edge, radius, color in zip(edges, radii, colors):
-
                 node1, node2, meta = edge
                 slc = meta["piece"]
                 extra = len(node2)

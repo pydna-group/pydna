@@ -44,6 +44,6 @@ def genbank_accession(s: str) -> Dseqrecord:
         circular=False,
         id=s.name,
         name=s.name,
-        description=(f"{best_alignment.accession} " f"REGION: {start}..{stop}"),
+        description=(f"{best_alignment.accession} REGION: {start}..{stop}"),
     )
     return result

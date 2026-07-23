@@ -30,8 +30,8 @@ This project uses Poetry.
 Common commands:
 
 ```bash
-poetry install --with test,dev
-poetry run pytest
-poetry run pytest tests/path/to/test_file.py
-poetry run pytest src/pydna/path/to/module.py
-poetry run pre-commit run --all-files
+uv sync --all-extras --group test --group dev
+uv run pytest
+uv run pytest tests/path/to/test_file.py
+uv run pytest src/pydna/path/to/module.py
+uv run ruff check . && uv run ruff format --check .

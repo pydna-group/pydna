@@ -1199,8 +1199,8 @@ def test_features_change_ori():
         """
     )
 
-    bbfeat = Dseq.from_representation("cgggaaag\n" "gccctttc")
-    insfeat = Dseq.from_representation("GTACCTTTGGATC\n" "CATGGAAACCTAG")
+    bbfeat = Dseq.from_representation("cgggaaag\ngccctttc")
+    insfeat = Dseq.from_representation("GTACCTTTGGATC\nCATGGAAACCTAG")
 
     assert str(s3.features[0].extract(s3).seq) == str(bbfeat).upper()  # bb
     assert str(s3.features[1].extract(s3).seq) == str(insfeat).upper()  # ins
@@ -1221,8 +1221,8 @@ def test_features_change_ori():
             if f.qualifiers["label"][0] == "bb"
         ][0] == "CGGGAAAG"
 
-    inseq = Dseq.from_representation("GTACCTTTG\n" "    GAAACCTAG")
-    bbseq = Dseq.from_representation("GATCCGGGAAAG\n" "    GCCCTTTCCATG")
+    inseq = Dseq.from_representation("GTACCTTTG\n    GAAACCTAG")
+    bbseq = Dseq.from_representation("GATCCGGGAAAG\n    GCCCTTTCCATG")
 
     assert s3.seq.cut(Acc65I, BamHI) == (inseq, bbseq)
 

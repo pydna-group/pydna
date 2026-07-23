@@ -144,7 +144,13 @@ __license__ = "BSD"
 __maintainer__ = "Björn Johansson"
 __email__ = "bjorn_johansson@bio.uminho.pt"
 __status__ = "Development"  # "Production" #"Prototype"
-__version__ = "0.0.0"
+
+from importlib.metadata import PackageNotFoundError, version as _version
+
+try:
+    __version__ = _version("pydna")
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "0.0.0"
 
 
 class _PydnaWarning(Warning):

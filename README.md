@@ -1,8 +1,8 @@
 # ![icon](https://github.com/pydna-group/pydna/blob/master/docs/_static/banner.png?raw=true)
 
-| [![Tests & Coverage](https://github.com/pydna-group/pydna/actions/workflows/pydna_test_and_coverage_workflow.yml/badge.svg?branch=master)](https://github.com/pydna-group/pydna/actions/workflows/pydna_test_and_coverage_workflow.yml) | [![codecov](https://codecov.io/gh/pydna-group/pydna/branch/master/graph/badge.svg)](https://codecov.io/gh/pydna-group/pydna/branch/master) | [![PyPI version](https://badge.fury.io/py/pydna.svg)](https://badge.fury.io/py/pydna)                                                  | [![Google group : pydna](https://img.shields.io/badge/Google%20Group-pydna-blue.svg)](https://groups.google.com/g/pydna)          |
+| [![Tests & Coverage](https://github.com/pydna-group/pydna/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/pydna-group/pydna/actions/workflows/tests.yml) | [![codecov](https://codecov.io/gh/pydna-group/pydna/branch/master/graph/badge.svg)](https://codecov.io/gh/pydna-group/pydna/branch/master) | [![PyPI version](https://badge.fury.io/py/pydna.svg)](https://badge.fury.io/py/pydna)                                                  | [![Google group : pydna](https://img.shields.io/badge/Google%20Group-pydna-blue.svg)](https://groups.google.com/g/pydna)          |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| [![Documentation Status](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml/badge.svg)](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml)                                                      | [![GitHub issues](https://img.shields.io/github/issues/pydna-group/pydna.svg)](https://github.com/pydna-group/pydna/issues)                    |  [![GitHub stars](https://img.shields.io/github/stars/pydna-group/pydna.svg)](https://github.com/pydna-group/pydna/stargazers) | |
+| [![Documentation Status](https://github.com/pydna-group/pydna/actions/workflows/docs.yml/badge.svg)](https://github.com/pydna-group/pydna/actions/workflows/docs.yml)                                                      | [![GitHub issues](https://img.shields.io/github/issues/pydna-group/pydna.svg)](https://github.com/pydna-group/pydna/issues)                    |  [![GitHub stars](https://img.shields.io/github/stars/pydna-group/pydna.svg)](https://github.com/pydna-group/pydna/stargazers) | |
 
 <!-- docs/index.rst-start -->
 
@@ -365,20 +365,15 @@ pip install --pre --upgrade pydna[clipboard,download,express,gel]
 
 Remove options inside the square brackets as required, but be sure not to leave spaces as pip will not recognize the options. See below under "Optional dependencies".
 
-### Installing with poetry 🧙‍♂️
+### Installing with uv ⚡
 
-If your project uses [poetry](https://python-poetry.org/) to manage dependencies, you can install pydna with the following commands:
+If your project uses [uv](https://docs.astral.sh/uv/) to manage dependencies, you can add pydna with:
 
 ```bash
 # Basic installation
-poetry add pydna
-# With optional dependencies (ommit the options you don't want)
-poetry add pydna --extras "clipboard download express gel"
-
-# If you already have it installed and you want to add or remove optional
-# dependencies, you have to uninstall and install again
-poetry remove pydna
-poetry add pydna --extras "express gel"
+uv add pydna
+# With optional dependencies (omit the options you don't want)
+uv add "pydna[clipboard,download,express,gel]"
 ```
 
 <!-- docs/installation.rst-end -->
@@ -408,32 +403,23 @@ git checkout -b issue_<number>
 
 ### Local development 💻
 
-#### Preferred method (using `poetry`) 🧙‍♂️
+#### Preferred method (using `uv`) ⚡
 
-This is the preferred method to develop on pydna, so if you plan to contribute regularly, it's worth taking this route. If you
-encounter any issues setting up the dev environment, create an issue on GitHub and we will be able to help.
-
-Use [Poetry](https://python-poetry.org/docs/#installation) to install dependencies and activate virtual environment. This is necessary
-if you want to edit the project dependencies. Install poetry using [pipx](https://github.com/pypa/pipx) following poetry's installation instructions, do not install it
-in the system python or the project environment.
+This is the preferred method to develop on pydna. Install
+[uv](https://docs.astral.sh/uv/getting-started/installation/), then let it create the
+virtual environment (in a local `.venv`) and install everything — the extras are
+required for the tests to pass:
 
 ```bash
-# If you want the virtual environment to be created in this folder
-# (this is now the default, see `poetry.toml`)
-poetry config virtualenvs.in-project true
+# Install all runtime extras plus the dev and test tool groups
+uv sync --all-extras --group test --group dev
 
-# Install dependencies (extras are required for tests to pass)
-poetry install --all-extras
-
-# Activate virtual environment (poetry version 2)
-poetry env activate
-
-# Activate virtual environment (poetry version 1)
-poetry shell
-
-# Install pre-commit hooks
-poetry run pre-commit install
+# Run anything inside the environment with `uv run`, e.g. the tests
+uv run python run_test.py
 ```
+
+A `Makefile` wraps the common tasks: `make setup`, `make test`, `make test-all`,
+`make lint`, `make fmt`, `make build`, `make clean`.
 
 #### Contributing code 💻
 
@@ -441,8 +427,7 @@ poetry run pre-commit install
 2. Add the necessary tests in `tests/`.
 3. Run the tests from the root directory with `python run_test.py`.
    > **TIP:** You can run a particular test file with `pytest -vs test_file.py` (`-v` for verbose and `-s` to see print statements in the test). If you want to run just a single test, you can use `pytest -vs -k test_name`, where `test_name` is the name of the test function.
-4. Before committing, install `pre-commit` hooks if you haven't by running `pre-commit install`. `pre-commit` should be available in the environment regardless of the method you use to set up the dev environment.
-   > **TIP:** The hooks are a series of checks that will be run before you commit your code. If any of the checks fail, the commit will not be allowed. Some of them auto-fix the code (e.g., `black` formatting), so you can simply do `git add .` and commit again. Others like `flake8` will prevent the commit to happen until the code is compliant.  For instance, if you import a module in a file and not use it, `flake8` will complain. For a full list of checks, see `.pre-commit-config.yaml`.
+4. Before committing, format and lint with `make fmt` and `make lint` (both run `ruff`). CI runs the same `ruff` checks, so code must be formatted and lint-clean to pass.
 5. Push the changes to your fork
 
 > **TIP:** The continuous integration pipeline also runs doctests. These are tests that validate that the docstring examples are correct. For example, the docstring of the function `pydna.utils.smallest_rotation` looks like this:
@@ -471,7 +456,7 @@ supported python versions.
 
 ### Building the documentation locally 📚
 
-Documentation is built using [Sphinx](http://www.sphinx-doc.org/) from [docstrings](https://www.python.org/dev/peps/pep-0257/) using a GitHub [action](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml) and also built in readthedocs.
+Documentation is built using [Sphinx](http://www.sphinx-doc.org/) from [docstrings](https://www.python.org/dev/peps/pep-0257/) using a GitHub [action](https://github.com/pydna-group/pydna/actions/workflows/docs.yml) and also built in readthedocs.
 The [numpy](https://www.numpy.org) [docstring format](https://numpy.org/doc/stable/dev/howto-docs.html#docstring-intro) is used.
 
 To work locally with the documentation, check the [documentation README](docs/README.md) for instructions.
@@ -480,7 +465,7 @@ To work locally with the documentation, check the [documentation README](docs/RE
 
 See the [releases](https://github.com/pydna-group/pydna/releases) for changes and releases.
 
-The build workflow builds a PyPI packages using poetry. This workflow is triggered by publishing a Github release manually from the Github web interface.
+The build workflow builds and publishes the PyPI package using `uv` (with the hatchling build backend). This workflow is triggered by publishing a Github release manually from the Github web interface.
 We keep future release names [here](https://docs.google.com/document/d/1PrBYKzDh6QBcqfH9ksjpgArJo3ibDhMRNcibfXtYmCc/edit?tab=t.0). Please edit to
 reflect used release names.
 

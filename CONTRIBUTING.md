@@ -15,8 +15,8 @@ bug reports, documentation improvements, examples, tests, and code changes.
 This project uses Python and Poetry metadata. A typical local setup is:
 
 ```bash
-poetry install
-poetry run pytest
+uv sync --all-extras --group test --group dev
+uv run pytest
 ```
 
 If you do not use Poetry, install the package with the development dependencies

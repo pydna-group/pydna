@@ -1,14 +1,14 @@
 # Documentation
 
 Documentation is built using [Sphinx](http://www.sphinx-doc.org/) from [docstrings](https://www.python.org/dev/peps/pep-0257/)
-using a GitHub [action](https://github.com/pydna-group/pydna/actions/workflows/publish-docs.yml).
+using a GitHub [action](https://github.com/pydna-group/pydna/actions/workflows/docs.yml).
 The [numpy](www.numpy.org) [docstring format](https://numpy.org/doc/stable/dev/howto-docs.html#docstring-intro) is used.
 
 Below the commands to build the documentation locally.
 
 ```bash
 # Install docs dependency group
-poetry install --with docs
+uv sync --all-extras --group docs
 cd docs
 bash build_docs.sh
 ```
@@ -58,7 +58,7 @@ See [build_docs.sh](build_docs.sh) for the commands to build the documentation.
 If notebook execution fails, it might be that jupyter is using another Kernel than the one you want to use. In my case, I had to delete existing kernels which mapped to other python environments. You can find them:
 
 ```
-poetry run jupyter kernelspec list
+uv run jupyter kernelspec list
 ```
 
 Then, go to those folders and open the `kernel.json` file. You will see which env they use. I deleted all kernel folders and all envs, since I favour creating envs in the project directory.

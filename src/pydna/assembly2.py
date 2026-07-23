@@ -6,6 +6,7 @@ implementation became the canonical one. This shim forwards every attribute to
 ``pydna.assembly`` so existing ``from pydna.assembly2 import ...`` code keeps
 working. It will be removed in a future version.
 """
+
 import warnings
 
 from pydna import _PydnaDeprecationWarning
