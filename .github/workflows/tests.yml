@@ -1,9 +1,6 @@
 name: Tests & Coverage
 on:
   push:
-    branches:
-      - master
-      - "pydna*"
   pull_request:
 
 # One run per ref; a new push cancels the previous still-running one.

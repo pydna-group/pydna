@@ -2,9 +2,6 @@ name: "Documentation Status"
 
 on:
   push:
-    branches:
-      - master
-      - "pydna*"
   pull_request:
 
 concurrency:
