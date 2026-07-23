@@ -342,55 +342,6 @@ def test_dna2949():
     assert seqlist[0].source.sequence_file_format == "genbank"
 
 
-def proteins():
-    proteins = """\
-    >pdb|3VQM|V Chain V, C-terminal peptide from Small heat shock protein StHsp14.0
-    VIKIE
-
-    LOCUS       3VQM_W                     5 aa            linear   SYN 08-NOV-2023
-    DEFINITION  Chain W, C-terminal peptide from Small heat shock protein
-                StHsp14.0.
-    ACCESSION   3VQM_W
-    VERSION     3VQM_W
-    DBSOURCE    pdb: molecule 3VQM, chain W, release Nov 8, 2023;
-                deposition: Mar 26, 2012;
-                class: CHAPERONE;
-                source: Mmdb_id: 100300, Pdb_id 1: 3VQM;
-                Exp. method: X-ray Diffraction.
-    KEYWORDS    .
-    SOURCE      synthetic construct
-      ORGANISM  synthetic construct
-                other sequences; artificial sequences.
-    REFERENCE   1  (residues 1 to 5)
-      AUTHORS   Hanazono,Y., Takeda,K., Yohda,M. and Miki,K.
-      TITLE     Structural studies on the oligomeric transition of a small heat
-                shock protein, StHsp14.0
-      JOURNAL   J Mol Biol 422 (1), 100-108 (2012)
-       PUBMED   22613762
-    REFERENCE   2  (residues 1 to 5)
-      AUTHORS   Hanazono,Y., Takeda,K. and Miki,K.
-      TITLE     Direct Submission
-      JOURNAL   Submitted (26-MAR-2012)
-    COMMENT     Small heat shock protein hsp14.0 of C-terminal deletion variant
-                with C-terminal peptide.
-    FEATURES             Location/Qualifiers
-         source          1..5
-                         /organism="synthetic construct"
-                         /db_xref="taxon:32630"
-    ORIGIN
-            1 vikie
-    //
-    """
-
-    fa, gb = embl_gb_fasta(proteins)
-
-    assert fa.annotations["molecule_type"] == "protein"
-    assert gb.annotations["molecule_type"] == "protein"
-
-    assert fa.annotations["topology"] == "linear"
-    assert gb.annotations["topology"] == "linear"
-
-
 def test_parse_snapgene():
     circular_file = os.path.join(test_files, "gateway_manual_cloning/pDONRtm201.dna")
     linear_file = os.path.join(
@@ -458,6 +409,6 @@ def test_permissive_parser_base_count_misplaced():
     read(f"{test_files}/broken_genbank_files/base_count_misplaced.gb")
 
 
-def parse_protein_error():
-    with pytest.raises("AssertionError"):
+def test_parse_protein_error():
+    with pytest.raises(AssertionError):
         parse("sequence-OST4-Genbank.gp")

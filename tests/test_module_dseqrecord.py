@@ -1935,7 +1935,13 @@ def test___eq__():
 
 
 def test___ne__():
-    pass
+    s = Dseqrecord("GGATCC", circular=False)
+    t = Dseqrecord("GGATCC", circular=False)
+    u = Dseqrecord("GGATCC", circular=True)
+
+    assert not (s != t)  # identical -> equal
+    assert s != u  # different topology
+    assert s != Dseqrecord("GGATCA", circular=False)  # different sequence
 
 
 def test___hash__():
