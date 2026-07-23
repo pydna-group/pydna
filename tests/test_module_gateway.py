@@ -93,6 +93,7 @@ def test_gateway_manual_cloning():
     )
 
     out = asm.assemble_circular()
+    assert out  # manual gateway cloning yields at least one circular product
 
 
 def test_find_gateway_sites():
