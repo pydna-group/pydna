@@ -70,22 +70,6 @@ def test_pydna_Genbank_fresh(urlopenMock, monkeypatch):
     assert str(result.seq) == str(canned.seq)
 
 
-# @mock.patch("Bio.Entrez.urlopen")
-# def test_pydna_Genbank_from_cache(urlopenMock, monkeypatch):
-#    from pydna.genbank import Genbank
-#
-#    urlopenMock.return_value = make_mock_response("X60065.gb")
-#    gb = Genbank("bjornjobb@gmail.com")
-#    result = gb.nucleotide("X60065.1")
-#    from Bio import SeqIO
-#
-#    canned = SeqIO.read("X60065.gb", "genbank")
-#    assert str(result.seq) == str(canned.seq)
-#    urlopenMock.return_value = None
-#    result = gb.nucleotide("X60065.1")
-#    assert str(result.seq) == str(canned.seq)
-
-
 def test_genbank_function_set_email(monkeypatch):
     mock_Gb = mock.MagicMock()
     monkeypatch.setenv("pydna_email", "someoneelse@example.com")

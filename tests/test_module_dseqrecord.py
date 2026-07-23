@@ -54,48 +54,12 @@ def test_orfs():
         assert len(orf) == ln
 
 
-# def test_cas9():
-
-
-#     s = Dseqrecord("gattcatgcatgtagcttacgtagtct")
-
-#     RNA = "catgcatgtagcttacgtag"
-
-#     (f1, f2), (f3,) = s.cas9(RNA)
-
-#     assert f1.seq == Dseqrecord("gattcatgcatgtagcttacg").seq
-#     assert f2.seq == Dseqrecord("tagtct").seq
-#     assert f3.seq == Dseqrecord("gattcatgcatgtagcttacgtagtct").seq
-
-
 def test_FadiBakoura():
 
     dseq_record = Dseqrecord(Dseq("ACTCTTTCTCTCTCT", circular=True))
     dseq_record.features = [SeqFeature(FeatureLocation(start=2, end=4))]
     # below assert fails (not anymore)
     assert len(dseq_record[6:1].features) == 0
-
-
-# def test_IPython_missing(monkeypatch):
-#     import IPython
-#     from pydna import dseqrecord
-
-#     # assert dseqrecord._display is IPython.display.display
-#     assert dseqrecord._display_html == IPython.display.display_html
-#     import sys
-#     import copy
-
-#     fakesysmodules = copy.copy(sys.modules)
-#     fakesysmodules["IPython.display"] = None
-#     monkeypatch.delitem(sys.modules, "IPython.display")
-#     monkeypatch.setattr("sys.modules", fakesysmodules)
-#     from importlib import reload
-
-#     reload(dseqrecord)
-#     from pydna import dseqrecord
-
-#     assert dseqrecord._display_html("item") == "item"
-#     # assert dseqrecord._HTML("item") == "item"
 
 
 def test_initialization():
@@ -600,45 +564,6 @@ def test_write_different_file_to_stamped_existing_file2(monkeypatch):
     assert m.mock_calls[4]
 
 
-# [call('Ggatcc.gb', 'r', encoding='utf-8'),
-# call().__enter__(),
-# call().read(),
-# call().__exit__(None, None, None),
-# call('Ggatcc.gb', 'w'),
-# call().__enter__(),
-# call().write('LOCUS       name                       6 bp    DNA     circular UNK 01-JUN-2018\nDEFINITION  cSEGUID_N\n            cSEGUID_6WVYnCK97MOPMOlbLHvMnd4XIEY_2018-06-01T06:05:08.951398.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 ggatcc\n//'),  # noqa: B950
-# call().__exit__(None, None, None)]
-
-
-# monkeypatch.setitem(readers.__builtins__, 'open', open)
-# def test_write_to_existing_file():
-#
-#
-#
-#
-#
-#    s = Dseqrecord("GGATCC", circular=True)
-#    m = mock_open()
-#    m.read_data=Dseqrecord("GGATCC", circular=True).format()
-#    with patch('pydna.dseqrecord.open', m):
-#        s.write(filename="AAA.gb")
-#    m.mock_calls
-#    m.assert_called_once_with("AAA.gb", 'w')
-#    handle = m()
-#    handle.write.assert_called_once_with(Dseqrecord("GGATCC", circular=True).format())
-#
-#    s = Dseqrecord("GGATCC", circular=True)
-#    m = mock_open(read_data = s.format())
-#    with patch('pydna.readers.open')as d:
-#        x=read("AAA.gb")
-#
-#    #"ABC.gb"
-#    m.mock_calls
-#    m.assert_called_once_with("AAA.gb", 'w')
-#    handle = m()
-#    handle.write.assert_called_once_with(Dseqrecord("GGATCC", circular=True).format())
-
-
 def test_cut_args():
 
     s = Dseqrecord("GGATCC")
@@ -816,8 +741,7 @@ def test_Dseqrecord_cutting_adding_2():
 
 def test_Dseqrecord_cutting_adding_3():
 
-    a = read(
-        """
+    a = read("""
 
 LOCUS       New_DNA                   10 bp ds-DNA     linear       02-APR-2013
 DEFINITION
@@ -891,8 +815,7 @@ FEATURES             Location/Qualifiers
                      width 5 offset 0
 ORIGIN
         1 ttGGTACCgg
-//"""
-    )
+//""")
 
     b, c = a.cut(Acc65I)
 
@@ -918,8 +841,7 @@ ORIGIN
 
 def test_Dseqrecord_cutting_adding_4():
 
-    a = read(
-        """
+    a = read("""
 LOCUS       New_DNA                   33 bp ds-DNA     linear       08-NOV-2012
 DEFINITION  .
 ACCESSION   .
@@ -987,8 +909,7 @@ ORIGIN
         1 GAATTCacag ggtaccaGGT ACCagcgGAT ATC
 //
 
-    """
-    )
+    """)
 
     assert a.seguid() == "ldseguid=O1VPUWEeJ093UfmqTE5ObrI_2Yw"
 
@@ -1098,8 +1019,7 @@ def test_features_change_ori():
     assert s.shifted(0) == s
     assert s.shifted(0) is not s
 
-    s1 = read(
-        """
+    s1 = read("""
         LOCUS       New_DNA                   13 bp ds-DNA     circular     08-JAN-2018
         DEFINITION  .
         SOURCE      .
@@ -1116,15 +1036,13 @@ def test_features_change_ori():
                              width 5 offset 0"
         ORIGIN
                 1 atcaccgatt tta
-        //"""
-    )
+        //""")
 
     for i in range(1, len(s1)):
         b = s1.shifted(i)
         assert str(b.features[0].extract(b).seq).lower() == "tcccgtttt"
 
-    s2 = read(
-        """
+    s2 = read("""
         LOCUS       New_DNA                   13 bp ds-DNA     circular     08-JAN-2018
         DEFINITION  .
         SOURCE      .
@@ -1145,8 +1063,7 @@ def test_features_change_ori():
                 1 taaaatcggt gat
         //
 
-        """
-    )
+        """)
 
     assert str(s2.features[0].extract(s2).seq).lower() == "tcccgtttt"
 
@@ -1170,8 +1087,7 @@ def test_features_change_ori():
 
     # print(b.seq, b.features[0].extract(b).seq, b.features[0].location)
 
-    s3 = read(
-        """
+    s3 = read("""
             LOCUS       New_DNA                   21 bp ds-DNA     circular     03-APR-2013
             DEFINITION  a
             ACCESSION
@@ -1196,8 +1112,7 @@ def test_features_change_ori():
             ORIGIN
                     1 aaagGTACCT TTGGATCcggg
             //
-        """
-    )
+        """)
 
     bbfeat = Dseq.from_representation("cgggaaag\n" "gccctttc")
     insfeat = Dseq.from_representation("GTACCTTTGGATC\n" "CATGGAAACCTAG")
@@ -1290,12 +1205,10 @@ def test_figure():
 
     # broken feature linear
 
-    linearDseq = Dseq.from_representation(
-        """
+    linearDseq = Dseq.from_representation("""
     gatcggtaccgatcATGAAATAAgatcGGGCCCgatc
     ctagccatggctagTACTTTATTctagCCCGGGctag
-    """
-    )
+    """)
 
     linearDseqrecord = Dseqrecord(linearDseq)
 
@@ -1424,12 +1337,10 @@ def test_figure():
         linearDseqrecord.figure()
         == "Dseqrecord(-37)\ngatcg\x1b[48;5;11mgtaccgatcATGAAATAAgatcGGGCC\x1b[0mCgatc\nctagccatggctagTACTTTATTctagCCCGGGctag"
     )
-    feat = Dseq.from_representation(
-        """
+    feat = Dseq.from_representation("""
     gtaccgatcATGAAATAAgatcGGGCC
     catggctagTACTTTATTctagCCCGG
-    """
-    )
+    """)
     assert linearDseqrecord.features[0].extract(linearDseqrecord).seq == feat
 
     a10, b10, c10 = linearDseqrecord.cut(Acc65I, Bsp120I)
@@ -1437,12 +1348,10 @@ def test_figure():
         b10.figure()
         == "Dseqrecord(-27)\n\x1b[48;5;11mgtaccgatcATGAAATAAgatcG    \x1b[0m\n    gctagTACTTTATTctagCCCGG"
     )
-    feat10 = Dseq.from_representation(
-        """
+    feat10 = Dseq.from_representation("""
     gtaccgatcATGAAATAAgatcG
         gctagTACTTTATTctagCCCGG
-    """
-    )
+    """)
     assert b10.extract_feature(0).seq == feat10
     assert b10.rc().extract_feature(0).seq == feat10
     assert (
@@ -1455,12 +1364,10 @@ def test_figure():
         b11.figure()
         == "Dseqrecord(-27)\n\x1b[48;5;11m    cgatcATGAAATAAgatcG    \x1b[0m\ncatggctagTACTTTATTctagCCCGG"
     )
-    feat11 = Dseq.from_representation(
-        """
+    feat11 = Dseq.from_representation("""
         cgatcATGAAATAAgatcG
     catggctagTACTTTATTctagCCCGG
-    """
-    )
+    """)
     assert b11.extract_feature(0).seq == feat11
     assert b11.rc().extract_feature(0).seq == feat11
     assert (
@@ -1473,12 +1380,10 @@ def test_figure():
         b12.figure()
         == "Dseqrecord(-27)\n\x1b[48;5;11mgtaccgatcATGAAATAAgatcGGGCC\x1b[0m\n    gctagTACTTTATTctagC    "
     )
-    feat12 = Dseq.from_representation(
-        """
+    feat12 = Dseq.from_representation("""
     gtaccgatcATGAAATAAgatcGGGCC
         gctagTACTTTATTctagC
-    """
-    )
+    """)
     assert b12.extract_feature(0).seq == feat12
     assert b12.rc().extract_feature(0).seq == feat12
     assert (
@@ -1491,12 +1396,10 @@ def test_figure():
         b13.figure()
         == "Dseqrecord(-27)\n\x1b[48;5;11m    cgatcATGAAATAAgatcGGGCC\x1b[0m\ncatggctagTACTTTATTctagC    "
     )
-    feat13 = Dseq.from_representation(
-        """
+    feat13 = Dseq.from_representation("""
         cgatcATGAAATAAgatcGGGCC
     catggctagTACTTTATTctagC
-    """
-    )
+    """)
     assert b13.extract_feature(0).seq == feat13
     assert b13.rc().extract_feature(0).seq == feat13
     assert (
@@ -1513,12 +1416,10 @@ def test_figure():
         a14.figure()
         == "Dseqrecord(-27)\n\x1b[48;5;11m    cgatcATGAAATAAgatcG    \x1b[0m\ncatggctagTACTTTATTctagCCCGG"
     )
-    feat14 = Dseq.from_representation(
-        """
+    feat14 = Dseq.from_representation("""
         cgatcATGAAATAAgatcG
     catggctagTACTTTATTctagCCCGG
-    """
-    )
+    """)
     assert a14.extract_feature(0).seq == feat14
 
     a15, b15 = circularDseqrecord.cut(KpnI, ApaI)
@@ -1526,12 +1427,10 @@ def test_figure():
         a15.figure()
         == "Dseqrecord(-27)\n\x1b[48;5;11m    cgatcATGAAATAAgatcGGGCC\x1b[0m\ncatggctagTACTTTATTctagC    "
     )
-    feat15 = Dseq.from_representation(
-        """
+    feat15 = Dseq.from_representation("""
         cgatcATGAAATAAgatcGGGCC
     catggctagTACTTTATTctagC
-    """
-    )
+    """)
     assert a15.extract_feature(0).seq == feat15
 
     a16, b16 = circularDseqrecord.cut(Acc65I, Bsp120I)
@@ -1539,12 +1438,10 @@ def test_figure():
         a16.figure()
         == "Dseqrecord(-27)\n\x1b[48;5;11mgtaccgatcATGAAATAAgatcG    \x1b[0m\n    gctagTACTTTATTctagCCCGG"
     )
-    feat16 = Dseq.from_representation(
-        """
+    feat16 = Dseq.from_representation("""
     gtaccgatcATGAAATAAgatcG
         gctagTACTTTATTctagCCCGG
-    """
-    )
+    """)
     assert a16.extract_feature(0).seq == feat16
 
     a17, b17 = circularDseqrecord.cut(Acc65I, ApaI)
@@ -1552,12 +1449,10 @@ def test_figure():
         a17.figure()
         == "Dseqrecord(-27)\n\x1b[48;5;11mgtaccgatcATGAAATAAgatcGGGCC\x1b[0m\n    gctagTACTTTATTctagC    "
     )
-    feat17 = Dseq.from_representation(
-        """
+    feat17 = Dseq.from_representation("""
     gtaccgatcATGAAATAAgatcGGGCC
         gctagTACTTTATTctagC
-    """
-    )
+    """)
     assert a17.extract_feature(0).seq == feat17
 
     # Wrap around feature circular on watson
@@ -1569,12 +1464,10 @@ def test_figure():
         == "Dseqrecord(o37)\n\x1b[48;5;11mgatcg\x1b[0mgtaccgatcATGAAATAAgatcGGGCC\x1b[48;5;11mCgatc\x1b[0m\nctagccatggctagTACTTTATTctagCCCGGGctag"  # noqa: B950
     )
 
-    feat = Dseq.from_representation(
-        """
+    feat = Dseq.from_representation("""
     Cgatcgatcg
     Gctagctagc
-    """
-    )
+    """)
     assert circularDseqrecord.extract_feature(0).seq == feat
 
     a18, b18 = circularDseqrecord.cut(KpnI, Bsp120I)
@@ -1615,12 +1508,10 @@ def test_figure():
         == "Dseqrecord(o37)\ngatcGGGCCCgatcTTATTTCATgatcggtaccgatc\n\x1b[48;5;11mctagC\x1b[0mCCGGGctagAATAAAGTActagccatg\x1b[48;5;11mgctag\x1b[0m"  # noqa: B950
     )
 
-    feat = Dseq.from_representation(
-        """
+    feat = Dseq.from_representation("""
     Cgatcgatcg
     Gctagctagc
-    """
-    )
+    """)
     assert circularDseqrecord.extract_feature(0).seq == feat
 
     a22, b22 = circularDseqrecord.cut(KpnI, Bsp120I)
@@ -2021,8 +1912,7 @@ def test_reverse_complement():
     assert s.rc().seq == s.seq
     assert s.reverse_complement().seq == s.seq
 
-    s = read(
-        """
+    s = read("""
                 LOCUS       New_DNA                   13 bp ds-DNA     circular     12-NOV-2013
                 DEFINITION  .
                 ACCESSION
@@ -2040,8 +1930,7 @@ def test_reverse_complement():
                                      width 5 offset 0
                 ORIGIN
                         1 gattttaatc acc
-                //"""
-    )
+                //""")
 
 
 def test_shifted():
@@ -2152,70 +2041,6 @@ def test_lower():
     del l.__dict__["_seq"]
     del s.__dict__["_seq"]
     assert l.__dict__ == s.__dict__
-
-
-# def test_map():
-
-
-#     traces = []
-
-
-#     for name in glob.glob("*.ab1"):
-#         traces.append(abiread(name, "abi"))
-
-#     for t in traces:
-#         d = Dseqrecord(t.seq)
-
-#         if "ITVFFKEYPYDVPDYAIEGIFHAT" in d:
-#             tag = "tat cca tat gac gtt cca gac tat gca".replace(" ", "")
-#             trc = "ata ggt ata ctg caa ggt ctg ata cgt"[::-1].replace(" ", "")
-
-#             s = Dseqrecord(Dseq(tag, trc, 0))
-#             sl = s.find_aa("YPYDVPDYA")
-#             assert str(s[sl].seq.translate()) == "YPYDVPDYA"
-#             assert "YPYDVPDYA" in s
-
-#             tag = "AAA tat cca tat gac gtt cca gac tat gca".replace(" ", "")
-#             trc = "    ata ggt ata ctg caa ggt ctg ata cgt"[::-1].replace(" ", "")
-
-#             s = Dseqrecord(Dseq(tag, trc, 0))
-#             sl = s.find_aa("YPYDVPDYA")
-#             assert str(s[sl].seq.translate()) == "YPYDVPDYA"
-#             assert "YPYDVPDYA" in s
-
-#             tag = "    tat cca tat gac gtt cca gac tat gca".replace(" ", "")
-#             trc = "AAA ata ggt ata ctg caa ggt ctg ata cgt"[::-1].replace(" ", "")
-
-#             s = Dseqrecord(Dseq(tag, trc, 0))
-#             sl = s.find_aa("YPYDVPDYA")
-#             assert str(s[sl].seq.translate()) == "YPYDVPDYA"
-#             assert "YPYDVPDYA" in s
-
-#             tag = "    tat cca tat gac gtt cca gac tat gca".replace(" ", "")
-#             trc = "AAA ata ggt ata ctg caa ggt ctg ata cgt"[::-1].replace(" ", "")
-
-#             s = Dseqrecord(Dseq(tag, trc, 0))
-#             sl = s.find_aa("YPYDVPDYA")
-#             assert str(s[sl].seq.translate()) == "YPYDVPDYA"
-
-#             tag = "tat cca tat gac gtt cca gac tat gca".replace(" ", "")
-#             trc = "ata ggt ata ctg caa ggt ctg ata cgt"[::-1].replace(" ", "")
-
-#             tag, trc = trc, tag
-
-#             s = Dseqrecord(Dseq(tag, trc, 0))
-#             sl = s.rc().find_aa("YPYDVPDYA")
-
-#             assert str(s.rc()[sl].seq.translate()) == "YPYDVPDYA"
-#             assert "YPYDVPDYA" in s.rc()
-
-#             tag = "aaa tat cca tat gac gtt cca gac tat gca".replace(" ", "")
-#             trc = "ttt ata ggt ata ctg caa ggt ctg ata cgt"[::-1].replace(" ", "")
-
-#             s = Dseqrecord(Dseq(tag, trc, 0, circular=True))
-#             sl = s.find_aa("YPYDVPDYA")
-#             assert str(s[sl].seq.translate()) == "YPYDVPDYA"
-#             assert "YPYDVPDYA" in s
 
 
 def test_map():
