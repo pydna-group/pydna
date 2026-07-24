@@ -186,6 +186,7 @@ def program(amplicon: Union["Amplicon", "Dseqrecord"], tm=tm_default, ta=ta_defa
         |    |      \______/{0:2}:{1:0>2}|5min|GC {GC}%
         |    |       30s         |    |{size}bp
         """.format(
+            *map(int, divmod(extension_time_taq, 60)),
             rate=taq_extension_rate,
             size=len(amplicon.seq),
             ta=round(
@@ -199,7 +200,6 @@ def program(amplicon: Union["Amplicon", "Dseqrecord"], tm=tm_default, ta=ta_defa
             tmf=tm(fwd_footprint),
             tmr=tm(rev_footprint),
             GC=int(amplicon.gc() * 100),
-            *map(int, divmod(extension_time_taq, 60)),
         )
     ).strip()
 
@@ -270,12 +270,12 @@ def dbd_program(amplicon: Union["Amplicon", "Dseqrecord"], tm=tm_dbd, ta=ta_dbd)
                               |    |     \____|____|GC {GC_prod}%
                               |    |     {0:2}:{1:0>2}|5min|{size}bp
                               """.format(
+                *map(int, divmod(extension_time_PfuSso7d, 60)),
                 rate=PfuSso7d_extension_rate,
                 tmf=tmf,
                 tmr=tmr,
                 GC_prod=int(amplicon.gc() * 100),
                 size=len(amplicon.seq),
-                *map(int, divmod(extension_time_PfuSso7d, 60)),
             )
         ).strip()
     else:
@@ -287,6 +287,7 @@ def dbd_program(amplicon: Union["Amplicon", "Dseqrecord"], tm=tm_dbd, ta=ta_dbd)
              |    |      \______/{0:2}:{1:0>2}|5min|GC {GC}%
              |    |       10s         |    |{size}bp
              """.format(
+                *map(int, divmod(extension_time_PfuSso7d, 60)),
                 rate=PfuSso7d_extension_rate,
                 size=len(amplicon.seq),
                 ta=round(
@@ -300,7 +301,6 @@ def dbd_program(amplicon: Union["Amplicon", "Dseqrecord"], tm=tm_dbd, ta=ta_dbd)
                 tmf=tmf,
                 tmr=tmr,
                 GC=int(amplicon.gc() * 100),
-                *map(int, divmod(extension_time_PfuSso7d, 60)),
             )
         ).strip()
 

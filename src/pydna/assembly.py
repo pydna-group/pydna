@@ -773,7 +773,6 @@ def primer_template_overlap(
 
     out = set()
     for re_match in re_matches:
-
         start, end = re_match.span()
 
         # For circular sequences the same match is returned twice unless it falls
@@ -1375,9 +1374,7 @@ class Assembly:
                 isinstance(fragment, Primer) or not fragment.circular
             ) and location_boundaries(start_location)[1] >= location_boundaries(
                 end_location
-            )[
-                1
-            ]:
+            )[1]:
                 return False
 
         # Fragments are used only once
@@ -2719,7 +2716,7 @@ def gateway_assembly(
         for frag in frags:
             sites_in_fragments.append(list(find_gateway_sites(frag, greedy).keys()))
         formatted_strings = [
-            f'fragment {i + 1}: {", ".join(sites)}'
+            f"fragment {i + 1}: {', '.join(sites)}"
             for i, sites in enumerate(sites_in_fragments)
         ]
         raise ValueError(

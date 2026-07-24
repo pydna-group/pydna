@@ -53,7 +53,6 @@ def oligonucleotide_hybridization_overhangs(
     )
 
     for pos_fwd, pos_rvs, length in matches:
-
         if (pos_fwd != 0 and pos_rvs != 0) or (
             pos_fwd + length < len(fwd_oligo_seq)
             and pos_rvs + length < len(rvs_oligo_seq)

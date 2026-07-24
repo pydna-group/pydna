@@ -46,6 +46,16 @@ extensions = [
 #  https://myst-nb.readthedocs.io/en/latest/computation/execute.html
 nb_execution_mode = "cache"
 
+# These notebooks fetch sequences live from NCBI GenBank, which is slow and
+# intermittently unavailable. Skip executing them during the docs build (they
+# are rendered from their committed outputs) so the build stays reliable and
+# offline. The notebooks themselves are unchanged and still run for users.
+nb_execution_excludepatterns = [
+    "notebooks/Example_CRISPR.ipynb",
+    "notebooks/Example_Gibson.ipynb",
+    "notebooks/hackathon_copenhagen_2025.ipynb",
+]
+
 myst_enable_extensions = ["dollarmath", "amsmath"]
 
 # Plotly support through require javascript library

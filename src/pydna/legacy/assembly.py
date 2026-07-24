@@ -40,6 +40,7 @@ sequences separating the overlapping regions form edges.
 The NetworkX package is used to trace linear and circular paths through the
 graph.
 """
+
 import os
 from Bio.SeqFeature import SeqFeature
 from Bio.SeqFeature import ExactPosition

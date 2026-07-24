@@ -102,9 +102,7 @@ class SeqRecord(BioSeqRecordSeqRecord):
         if len(value) > 16:
             shortvalue = value[:16]
             warn(
-                ("locus property {} truncated" "to 16 chars {}").format(
-                    value, shortvalue
-                ),
+                ("locus property {} truncatedto 16 chars {}").format(value, shortvalue),
                 _PydnaWarning,
                 stacklevel=2,
             )
@@ -479,9 +477,10 @@ class SeqRecord(BioSeqRecordSeqRecord):
             warn(
                 f"Stamp change.\nNew: {chksum}\nOld: {oldstamp[0]}",
                 _PydnaWarning,
+                stacklevel=2,
             )
         self.annotations["comment"] = (
-            f"{oldcomment}\n" f"{tool} {chksum} {now()} {comment}"
+            f"{oldcomment}\n{tool} {chksum} {now()} {comment}"
         ).strip()
         return ps(chksum)
 
@@ -699,7 +698,6 @@ class SeqRecord(BioSeqRecordSeqRecord):
 
 
 class ProteinSeqRecord(SeqRecord):
-
     def reverse_complement(self, *args, **kwargs):
         raise NotImplementedError("Not defined for protein.")
 

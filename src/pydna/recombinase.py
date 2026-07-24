@@ -192,7 +192,7 @@ class Recombinase:
         if site1[off1 : off1 + len1] != site2[off2 : off2 + len2]:
             raise ValueError(
                 "Recombinase recognition sites do not have matching homology cores."
-                f"Expected {site1[off1:off1 + len1]} == {site2[off2:off2 + len2]}"
+                f"Expected {site1[off1 : off1 + len1]} == {site2[off2 : off2 + len2]}"
             )
         self._homology_len = len1
 

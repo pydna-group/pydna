@@ -265,6 +265,7 @@ def _handle_circularize_operation(
     ):  # pragma: no cover (I don't expect this to happen)
         warnings.warn(
             "Stopped at circularize operation without enzymes",
+            stacklevel=2,
             category=SnapgeneHistoryParserWarning,
         )
         return None, []
@@ -276,6 +277,7 @@ def _handle_circularize_operation(
     if len(original_fragments) != 1:  # pragma: no cover (I don't expect this to happen)
         warnings.warn(
             "Stopped at circularize operation not coming from a single fragment",
+            stacklevel=2,
             category=SnapgeneHistoryParserWarning,
         )
         return None, []
@@ -371,12 +373,14 @@ def _source_from_tree_node(  # noqa: C901
             if len(products) == 0:  # pragma: no cover (I don't expect this to happen)
                 warnings.warn(
                     "Stopped at change topology operation",
+                    stacklevel=2,
                     category=SnapgeneHistoryParserWarning,
                 )
                 return None, []
         else:
             warnings.warn(
                 "Stopped at change topology operation",
+                stacklevel=2,
                 category=SnapgeneHistoryParserWarning,
             )
             return None, []
@@ -397,6 +401,7 @@ def _source_from_tree_node(  # noqa: C901
         if len(rb) == 0:
             warnings.warn(
                 "Stopped at linearize operation without enzymes",
+                stacklevel=2,
                 category=SnapgeneHistoryParserWarning,
             )
             return None, []
@@ -445,12 +450,14 @@ def _source_from_tree_node(  # noqa: C901
     ]:
         warnings.warn(
             "Manual editing of sequences not supported",
+            stacklevel=2,
             category=SnapgeneHistoryParserWarning,
         )
         return None, []
     else:  # pragma: no cover (Tests will be updated when more are encountered)
         warnings.warn(
             f"Unknown operation: {node.operation}",
+            stacklevel=2,
             category=SnapgeneHistoryParserWarning,
         )
         return None, []

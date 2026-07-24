@@ -414,7 +414,6 @@ class SourceTest(TestCase):
 
 
 class AssemblySourceTest(TestCase):
-
     def test_input_field_validation(self):
         source = RepositoryIdSource(repository_id="1234567890")
         self.assertEqual(source.input, [])
@@ -1039,7 +1038,6 @@ def _replace_sequence(
 
 
 class NormalizeTest(TestCase):
-
     def _common_testing_function(self, product: Dseqrecord):
         product_seguid = product.seq.seguid()
         cs = CloningStrategy.from_dseqrecords([product])

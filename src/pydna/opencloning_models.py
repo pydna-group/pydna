@@ -244,7 +244,6 @@ class ConfiguredBaseModel(BaseModel):
 
 
 class TextFileSequence(_TextFileSequence):
-
     @classmethod
     def from_dseqrecord(cls, dseqr: "Dseqrecord"):
         return cls(
@@ -257,7 +256,6 @@ class TextFileSequence(_TextFileSequence):
 
 
 class PrimerModel(_PrimerModel):
-
     @classmethod
     def from_primer(cls, primer: "Primer"):
         return cls(
@@ -289,7 +287,6 @@ class SourceInput(ConfiguredBaseModel):
 
 
 class AssemblyFragment(SourceInput):
-
     left_location: Optional[Location] = Field(default=None)
     right_location: Optional[Location] = Field(default=None)
     reverse_complemented: bool
@@ -964,7 +961,6 @@ class PCRSource(AssemblySource):
 
 
 class RecombinaseSource(AssemblySource):
-
     TARGET_MODEL: ClassVar[Type[_RecombinaseSource]] = _RecombinaseSource
     recombinases: object
 
@@ -1227,7 +1223,6 @@ def read_dseqrecord_from_text_file_sequence(seq: TextFileSequence) -> Dseqrecord
 
 
 class CloningStrategy(_BaseCloningStrategy):
-
     # For now, we don't add anything, but the classes will not have the new
     # methods if this is used
     # It will be used for validation for now

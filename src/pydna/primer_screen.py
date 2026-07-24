@@ -64,6 +64,7 @@ warnings.warn(
     "The primer_screen module is experimental "
     "and not yet extensively tested. "
     "api may change in future versions.",
+    stacklevel=2,
     category=FutureWarning,
 )
 
@@ -737,7 +738,7 @@ def diff_primer_pairs(
             primer_pair_dict[frozenset((pp.fp, pp.rp))].append((pp, seq))
 
     result = []
-    for k, v in primer_pair_dict.items():
+    for _k, v in primer_pair_dict.items():
         # verify one pcr product per sequence
         if len(v) == number_of_sequences:
             # we need the closest pair to see if the bands are likely to resolve

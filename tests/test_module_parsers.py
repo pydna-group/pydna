@@ -270,7 +270,7 @@ def test_parse2():
 
 
 def test_parse_primers():
-    data = str(">1\n" "aaaa\n" ">2\n" "cccc\n")
+    data = str(">1\naaaa\n>2\ncccc\n")
     parse_primers(data)
 
     f0, r0 = parse_primers(
@@ -294,7 +294,7 @@ DATA_IS_NOT_A_SEQUENCE
 
 
 def test_parse_list():
-    data = str(">1\n" "aaaa\n" ">2\n" "cccc\n")
+    data = str(">1\naaaa\n>2\ncccc\n")
 
     assert [str(x.seq) for x in parse_primers([data, data])] == [
         "aaaa",

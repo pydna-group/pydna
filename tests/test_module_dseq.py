@@ -702,7 +702,7 @@ def test_dseq_circular_linear():
 
     assert obj1.find("tgtagta") == 9
 
-    assert obj1.find("gtcta" "tag") == 25  # find substring over origin
+    assert obj1.find("gtctatag") == 25  # find substring over origin
 
     assert (
         Dseq(
@@ -1151,7 +1151,6 @@ def test_apply_cut():
     # Rotating the sequence, apply the same cut
     seq = Dseq("acgtATGaatt", circular=True)
     for shift in range(len(seq)):
-
         seq_shifted = seq.shifted(shift)
 
         start = 4 - shift
@@ -1431,9 +1430,9 @@ def test_watson_ovhg():
         "EEAAEE",
         "EEAAFF",
     ]:
-        assert (
-            Dseq(seq).watson_ovhg == Dseq(seq).reverse_complement().ovhg
-        ), f"error for {seq}"
+        assert Dseq(seq).watson_ovhg == Dseq(seq).reverse_complement().ovhg, (
+            f"error for {seq}"
+        )
 
     # Single strand
     assert Dseq("EEEE").watson_ovhg is None
