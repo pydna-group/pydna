@@ -91,6 +91,7 @@ docs = [
 ]
 dev = [
   "ruff>=0.14",
+  "pre-commit>=4.0",
 ]
 
 [tool.pytest.ini_options]
