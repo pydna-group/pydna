@@ -1,0 +1,14 @@
+default_stages: [pre-commit]
+
+repos:
+  # Strip volatile metadata (execution counts, timestamps) from notebooks so
+  # git history does not fill up with churn. Outputs are kept for the docs.
+  - repo: local
+    hooks:
+      - id: nbstripout
+        name: nbstripout (keep outputs, strip metadata)
+        entry: nbstripout --keep-output
+        language: python
+        additional_dependencies: [nbstripout]
+        files: \.ipynb$
+        exclude: ^tests/

@@ -55,7 +55,7 @@ primer_screen = ["pyahocorasick>=2.2.0"]
 
 [project.urls]
 Homepage = "https://github.com/pydna-group/pydna#-pydna"
-Documentation = "https://pydna-group.github.io/pydna"
+Documentation = "https://pydna.readthedocs.io/latest/"
 Repository = "https://github.com/pydna-group/pydna"
 Changelog = "https://github.com/pydna-group/pydna/blob/master/docs/CHANGELOG.md#changelog"
 
@@ -91,6 +91,7 @@ docs = [
 ]
 dev = [
   "ruff>=0.14",
+  "pre-commit>=4.0",
 ]
 
 [tool.pytest.ini_options]
