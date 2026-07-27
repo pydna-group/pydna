@@ -81,3 +81,10 @@ def test_fusionpcr3():
     for arg in seqtuples:
         result = fuse_by_pcr(arg, limit=5).pop()
         assert eq(result, r)
+
+
+def test_fusionpcr_with_features():
+    seqtuples = [(x, y, z)]
+    for arg in seqtuples:
+        result = fuse_by_pcr(arg, limit=5).pop()
+        assert eq(result, r)
