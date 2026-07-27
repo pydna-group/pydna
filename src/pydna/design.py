@@ -19,7 +19,7 @@ import copy
 from pydna.amplicon import Amplicon
 from pydna.amplify import Anneal
 from pydna.amplify import pcr
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 from pydna.primer import Primer
 import operator
 from typing import Tuple
@@ -110,7 +110,7 @@ def primer_design(
     Parameters
     ----------
 
-    template : pydna.dseqrecord.Dseqrecord
+    template : pydna.core.dseqrecord.Dseqrecord
         a Dseqrecord object. The only required argument.
 
     fp, rp : pydna.primer.Primer, optional
@@ -132,7 +132,7 @@ def primer_design(
     Examples
     --------
 
-    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.core.dseqrecord import Dseqrecord
     >>> t=Dseqrecord("atgactgctaacccttccttggtgttgaacaagatcgacgacatttcgttcgaaacttacgatg")
     >>> t
     Dseqrecord(-64)
@@ -589,7 +589,7 @@ def assembly_fragments(f, overlap=35, maxlink=40, circular=False):
     Examples
     --------
 
-    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.core.dseqrecord import Dseqrecord
     >>> from pydna.design import primer_design
     >>> a=primer_design(Dseqrecord("atgactgctaacccttccttggtgttgaacaagatcgacgacatttcgttcgaaacttacgatg"))
     >>> b=primer_design(Dseqrecord("ccaaacccaccaggtaccttatgtaagtacttcaagtcgccagaagacttcttggtcaagttgcc"))

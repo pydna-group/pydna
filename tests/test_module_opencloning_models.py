@@ -33,8 +33,8 @@ from pydna.assembly import (
     recombinase_integration,
 )
 from pydna.cre_lox import LOXP_SEQUENCE
-from pydna.dseq import Dseq
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseq import Dseq
+from pydna.core.dseqrecord import Dseqrecord
 from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization
 from pydna.opencloning_models import (
     AssemblyFragment,

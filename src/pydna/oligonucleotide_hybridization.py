@@ -10,8 +10,8 @@ This module contains the functions for oligonucleotide hybridization.
 from pydna.common_sub_strings import common_sub_strings
 from Bio.Seq import reverse_complement
 from pydna.primer import Primer
-from pydna.dseqrecord import Dseqrecord
-from pydna.dseq import Dseq
+from pydna.core.dseqrecord import Dseqrecord
+from pydna.core.dseq import Dseq
 from pydna.opencloning_models import OligoHybridizationSource, SourceInput
 
 

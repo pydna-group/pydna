@@ -9,7 +9,7 @@ def test_cut_feat():
     from pydna.amplify import pcr
 
     from pydna.design import primer_design
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
 
     from Bio.Restriction import EcoRI
 

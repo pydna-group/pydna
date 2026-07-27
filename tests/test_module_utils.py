@@ -6,10 +6,10 @@ from pydna.utils import cuts_overlap, cutsite_to_location
 
 def test_flatten():
     from Bio.Seq import Seq as bSeq
-    from pydna.dseq import Dseq
+    from pydna.core.dseq import Dseq
     from Bio.SeqRecord import SeqRecord as bSeqRecord
-    from pydna.seqrecord import SeqRecord
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.seqrecord import SeqRecord
+    from pydna.core.dseqrecord import Dseqrecord
     from pydna.utils import flatten
 
     testtuple = (
@@ -31,11 +31,11 @@ def test_flatten():
 
 
 def test_eq():
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
     from pydna.utils import eq
     from Bio.Seq import Seq
-    from pydna.seq import Seq as Seq_
-    from pydna.seqrecord import SeqRecord as SeqRecord_
+    from pydna.core.seq import Seq as Seq_
+    from pydna.core.seqrecord import SeqRecord as SeqRecord_
     from Bio.SeqRecord import SeqRecord
 
     assert eq("AAA", "TTT", linear=True)

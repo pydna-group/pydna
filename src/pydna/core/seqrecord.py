@@ -14,14 +14,14 @@ nicer output in the IPython shell.
 from Bio.SeqFeature import SeqFeature
 from pydna._pretty import pretty_str as ps
 
-from pydna.seq import ProteinSeq
+from pydna.core.seq import ProteinSeq
 from pydna.common_sub_strings import common_sub_strings
 
 from Bio.Data.CodonTable import TranslationError
 from Bio.SeqRecord import SeqRecord as BioSeqRecordSeqRecord
 from Bio.SeqFeature import SimpleLocation
 from Bio.SeqFeature import CompoundLocation
-from pydna.seq import Seq
+from pydna.core.seq import Seq
 from pydna._pretty import PrettyTable
 
 import re
@@ -160,7 +160,7 @@ class SeqRecord(BioSeqRecordSeqRecord):
 
         Examples
         --------
-        >>> from pydna.seqrecord import SeqRecord
+        >>> from pydna.core.seqrecord import SeqRecord
         >>> a=SeqRecord("atgtaa")
         >>> a.isorf()
         True
@@ -246,7 +246,7 @@ class SeqRecord(BioSeqRecordSeqRecord):
 
         Examples
         --------
-        >>> from pydna.seqrecord import SeqRecord
+        >>> from pydna.core.seqrecord import SeqRecord
         >>> a=SeqRecord("atgtaa")
         >>> a.features
         []
@@ -311,8 +311,8 @@ class SeqRecord(BioSeqRecordSeqRecord):
 
         Examples
         --------
-        >>> from pydna.seq import Seq
-        >>> from pydna.seqrecord import SeqRecord
+        >>> from pydna.core.seq import Seq
+        >>> from pydna.core.seqrecord import SeqRecord
         >>> a=SeqRecord(Seq("atgtaa"))
         >>> a.add_feature(2,4)
         >>> print(a.list_features())
@@ -371,7 +371,7 @@ class SeqRecord(BioSeqRecordSeqRecord):
 
         Examples
         --------
-        >>> from pydna.seqrecord import SeqRecord
+        >>> from pydna.core.seqrecord import SeqRecord
         >>> a=SeqRecord("atgtaa")
         >>> a.add_feature(2,4)
         >>> b=a.extract_feature(0)
@@ -386,7 +386,7 @@ class SeqRecord(BioSeqRecordSeqRecord):
 
         Examples
         --------
-        >>> from pydna.seqrecord import SeqRecord
+        >>> from pydna.core.seqrecord import SeqRecord
         >>> a=SeqRecord("atgtaa")
         >>> a.add_feature(3,4)
         >>> a.add_feature(2,4)
@@ -417,7 +417,7 @@ class SeqRecord(BioSeqRecordSeqRecord):
 
         Examples
         --------
-        >>> from pydna.seqrecord import SeqRecord
+        >>> from pydna.core.seqrecord import SeqRecord
         >>> a=SeqRecord("gattaca")
         >>> a.seguid() # original seguid is +bKGnebMkia5kNg/gF7IORXMnIU
         'lsseguid=tp2jzeCM2e3W4yxtrrx09CMKa_8'
@@ -461,7 +461,7 @@ class SeqRecord(BioSeqRecordSeqRecord):
 
         Examples
         --------
-        >>> from pydna.seqrecord import SeqRecord
+        >>> from pydna.core.seqrecord import SeqRecord
         >>> a = SeqRecord("aa")
         >>> a.stamp()
         'lsseguid=gBw0Jp907Tg_yX3jNgS4qQWttjU'
@@ -495,7 +495,7 @@ class SeqRecord(BioSeqRecordSeqRecord):
 
         Examples
         --------
-        >>> from pydna.seqrecord import SeqRecord
+        >>> from pydna.core.seqrecord import SeqRecord
         >>> a = SeqRecord("GGATCC")
         >>> a.lcs("GGATCC", limit=6)
         SeqFeature(SimpleLocation(ExactPosition(0),

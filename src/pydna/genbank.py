@@ -12,7 +12,7 @@ been set to a valid email address. The easiest way to do this permanantly is to 
 
 from pydna.opencloning_models import NCBISequenceSource
 from pydna.readers import read
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 
 from Bio import Entrez
 from Bio.SeqFeature import SimpleLocation

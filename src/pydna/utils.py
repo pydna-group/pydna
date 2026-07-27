@@ -10,7 +10,7 @@ import keyword
 import collections
 import itertools
 from copy import deepcopy
-from pydna.types import CutSiteType
+from pydna.core.types import CutSiteType
 import sys
 import random
 import subprocess
@@ -19,8 +19,8 @@ from math import ceil
 
 from pydna.codon import weights
 from pydna.codon import rare_codons
-from pydna.alphabet import basepair_dict
-from pydna.alphabet import complement_table_for_dscode
+from pydna.core.alphabet import basepair_dict
+from pydna.core.alphabet import complement_table_for_dscode
 from Bio.SeqFeature import SimpleLocation
 from Bio.SeqFeature import CompoundLocation
 from Bio.SeqFeature import Location
@@ -588,7 +588,7 @@ def eq(*args, **kwargs):
 
     Examples
     --------
-    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.core.dseqrecord import Dseqrecord
     >>> from pydna.utils import eq
     >>> eq("aaa","AAA")
     True

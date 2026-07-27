@@ -4,7 +4,7 @@
 import pytest
 from pydna.assembly import pcr_assembly
 from pydna import tm
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 from pydna.primer import Primer
 from textwrap import dedent
 

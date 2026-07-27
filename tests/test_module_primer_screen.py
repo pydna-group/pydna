@@ -11,7 +11,7 @@ from pydna.primer import Primer
 from pydna.readers import read
 from pydna.amplify import pcr
 from pydna.parsers import parse_primers
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 from pydna.primer_screen import contained
 from pydna.primer_screen import closest_pair_and_diff
 from pydna.primer_screen import make_automaton

@@ -2,8 +2,8 @@
 
 from textwrap import dedent
 
-from pydna.dseq import Dseq
-from pydna.alphabet import (
+from pydna.core.dseq import Dseq
+from pydna.core.alphabet import (
     # dictionaries
     basepair_dict,
     annealing_dict,

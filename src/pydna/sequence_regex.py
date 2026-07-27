@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2023-2026 The Project Contributors
 # SPDX-License-Identifier: BSD-3-Clause
 
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 import re
 from Bio.Data.IUPACData import ambiguous_dna_values
 

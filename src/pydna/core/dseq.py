@@ -6,7 +6,7 @@
 """Provides the Dseq class for handling double stranded DNA sequences.
 
 Dseq is a subclass of :class:`Bio.Seq.Seq`. The Dseq class
-is mostly useful as a part of the :class:`pydna.dseqrecord.Dseqrecord` class
+is mostly useful as a part of the :class:`pydna.core.dseqrecord.Dseqrecord` class
 which can hold more meta data.
 
 The Dseq class support the notion of circular and linear DNA topology.
@@ -26,7 +26,7 @@ from Bio.Restriction import CommOnly
 from seguid import ldseguid
 from seguid import cdseguid
 
-from pydna.seq import Seq
+from pydna.core.seq import Seq
 from Bio.Seq import _SeqAbstractBaseClass
 from Bio.Data.IUPACData import unambiguous_dna_weights
 from Bio.Data.IUPACData import unambiguous_rna_weights
@@ -37,24 +37,24 @@ from pydna.utils import flatten
 from pydna.utils import cuts_overlap
 from pydna.utils import deduplicate
 
-from pydna.alphabet import basepair_dict
-from pydna.alphabet import dscode_to_watson_table
-from pydna.alphabet import dscode_to_crick_table
-from pydna.alphabet import regex_ds_melt_factory
-from pydna.alphabet import regex_ss_melt_factory
-from pydna.alphabet import dscode_to_full_sequence_table
-from pydna.alphabet import dscode_to_watson_tail_table
-from pydna.alphabet import dscode_to_crick_tail_table
-from pydna.alphabet import complement_table_for_dscode
-from pydna.alphabet import letters_not_in_dscode
-from pydna.alphabet import ss_letters_watson
-from pydna.alphabet import ss_letters_crick
-from pydna.alphabet import get_parts
-from pydna.alphabet import representation_tuple
-from pydna.alphabet import dsbreaks
+from pydna.core.alphabet import basepair_dict
+from pydna.core.alphabet import dscode_to_watson_table
+from pydna.core.alphabet import dscode_to_crick_table
+from pydna.core.alphabet import regex_ds_melt_factory
+from pydna.core.alphabet import regex_ss_melt_factory
+from pydna.core.alphabet import dscode_to_full_sequence_table
+from pydna.core.alphabet import dscode_to_watson_tail_table
+from pydna.core.alphabet import dscode_to_crick_tail_table
+from pydna.core.alphabet import complement_table_for_dscode
+from pydna.core.alphabet import letters_not_in_dscode
+from pydna.core.alphabet import ss_letters_watson
+from pydna.core.alphabet import ss_letters_crick
+from pydna.core.alphabet import get_parts
+from pydna.core.alphabet import representation_tuple
+from pydna.core.alphabet import dsbreaks
 
 from pydna.common_sub_strings import common_sub_strings
-from pydna.types import DseqType, EnzymesType, CutSiteType
+from pydna.core.types import DseqType, EnzymesType, CutSiteType
 
 
 # Sequences larger than this gets a truncated representation.
@@ -248,7 +248,7 @@ class Dseq(Seq):
     DNA molecule is circular.
 
     The most common usage of the Dseq class is probably not to use it directly, but to
-    create it as part of a Dseqrecord object (see :class:`pydna.dseqrecord.Dseqrecord`).
+    create it as part of a Dseqrecord object (see :class:`pydna.core.dseqrecord.Dseqrecord`).
     This works in the same way as for the relationship between the :class:`Bio.Seq.Seq` and
     :class:`Bio.SeqRecord.SeqRecord` classes in Biopython.
 
@@ -257,7 +257,7 @@ class Dseq(Seq):
 
     Two arguments (string, string), no overhang provided:
 
-    >>> from pydna.dseq import Dseq
+    >>> from pydna.core.dseq import Dseq
     >>> Dseq("gggaaat","ttt")
     Dseq(-7)
     gggaaat
@@ -407,7 +407,7 @@ class Dseq(Seq):
     ''
     >>> s[::2]
     'gac'
-    >>> from pydna.dseq import Dseq
+    >>> from pydna.core.dseq import Dseq
     >>> d=Dseq(s, circular=False)
     >>> d[2:3]
     Dseq(-1)
@@ -460,7 +460,7 @@ class Dseq(Seq):
 
     See Also
     --------
-    pydna.dseqrecord.Dseqrecord
+    pydna.core.dseqrecord.Dseqrecord
 
     """
 
@@ -485,7 +485,7 @@ class Dseq(Seq):
             """
             Giving only the watson string implies inferring the Crick complementary strand
             from the Watson sequence. The watson string can contain dscode letters wich will
-            be interpreted as outlined in the pydna.alphabet module.
+            be interpreted as outlined in the pydna.core.alphabet module.
 
             The _data property must be a byte string for compatibility with
             Biopython Bio.Seq.Seq
@@ -804,7 +804,7 @@ class Dseq(Seq):
 
         Examples
         --------
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> ds_lin_obj = Dseq("GATTACA")
         >>> ds_lin_obj
         Dseq(-7)
@@ -875,7 +875,7 @@ class Dseq(Seq):
 
         Examples
         --------
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> seq = Dseq("agtaagt")
         >>> seq
         Dseq(-7)
@@ -953,7 +953,7 @@ class Dseq(Seq):
 
         Examples
         --------
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> a=Dseq("catcgatc")
         >>> a
         Dseq(-8)
@@ -1003,7 +1003,7 @@ class Dseq(Seq):
 
         Examples
         --------
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> a=Dseq("catcgatc")
         >>> a
         Dseq(-8)
@@ -1083,7 +1083,7 @@ class Dseq(Seq):
 
         Examples
         --------
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> a = Dseq("aa", "tttg", ovhg=2)
         >>> a
         Dseq(-4)
@@ -1108,7 +1108,7 @@ class Dseq(Seq):
 
         See also
         --------
-        pydna.dseq.Dseq.three_prime_end
+        pydna.core.dseq.Dseq.three_prime_end
 
         """
 
@@ -1157,7 +1157,7 @@ class Dseq(Seq):
         tt
         >>> a.three_prime_end()
         ("3'", 'ac')
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> a=Dseq("aaa", "ttt")
         >>> a
         Dseq(-3)
@@ -1168,7 +1168,7 @@ class Dseq(Seq):
 
         See also
         --------
-        pydna.dseq.Dseq.five_prime_end
+        pydna.core.dseq.Dseq.five_prime_end
 
         """
 
@@ -1278,7 +1278,7 @@ class Dseq(Seq):
         if len(self_tail) != len(other_tail):
             raise err
 
-        # Each basepair is checked against the pydna.alphabet basepair_dict
+        # Each basepair is checked against the pydna.core.alphabet basepair_dict
         # which contains the permitted base pairings.
         for w, c in zip(self_tail, other_tail[::-1]):
             try:
@@ -1337,7 +1337,7 @@ class Dseq(Seq):
         Examples
         --------
 
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> b=Dseq("caaa", "cttt")
         >>> b
         Dseq(-5)
@@ -1409,7 +1409,7 @@ class Dseq(Seq):
               ggatcc   ->     ggatc
              tcctag           cctag
 
-         >>> from pydna.dseq import Dseq
+         >>> from pydna.core.dseq import Dseq
          >>> b=Dseq("caaa", "cttt")
          >>> b
          Dseq(-5)
@@ -1500,7 +1500,7 @@ class Dseq(Seq):
         Examples
         --------
 
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> a = Dseq.from_representation(
         ... '''
         ... gatcaaa
@@ -1595,7 +1595,7 @@ class Dseq(Seq):
             ctag         ctag
 
 
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> ds = Dseq("gatc")
         >>> ds
         Dseq(-4)
@@ -1675,7 +1675,7 @@ class Dseq(Seq):
             ctagtt       ctag
 
 
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> ds = Dseq("gatc")
         >>> ds
         Dseq(-4)
@@ -1744,7 +1744,7 @@ class Dseq(Seq):
           ttctag         ctag
 
 
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> ds = Dseq("gatc")
         >>> ds
         Dseq(-4)
@@ -1813,7 +1813,7 @@ class Dseq(Seq):
             ctag         ctag
 
 
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> ds = Dseq("gatc")
         >>> ds
         Dseq(-4)
@@ -1920,7 +1920,7 @@ class Dseq(Seq):
 
         Examples
         --------
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> a=Dseq("gat")
         >>> a
         Dseq(-3)
@@ -1981,7 +1981,7 @@ class Dseq(Seq):
 
 
 
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> a = Dseq("aa")
         >>> a = Dseq("gct")
         >>> a
@@ -2075,7 +2075,7 @@ class Dseq(Seq):
         Examples
         --------
 
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> seq=Dseq("ggatccnnngaattc")
         >>> seq
         Dseq(-15)
@@ -2119,7 +2119,7 @@ class Dseq(Seq):
 
         The ovhg (overhang, positive or negative integer or 0) has the same meaning as
         for restriction enzymes in the Bio.Restriction module and for
-        pydna.dseq.Dseq objects (see docstring for this module and example below)
+        pydna.core.dseq.Dseq objects (see docstring for this module and example below)
 
         Enzyme can be None.
 
@@ -2251,7 +2251,7 @@ class Dseq(Seq):
         --------
 
         >>> from Bio.Restriction import EcoRI
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> seq = Dseq('AAGAATTCAAGAATTC')
         >>> seq.get_cutsites(EcoRI)
         [((3, -4), EcoRI), ((11, -4), EcoRI)]
@@ -2357,7 +2357,7 @@ class Dseq(Seq):
 
         Examples
         --------
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> ds = Dseq("tagaaqtaqgtatg")
         >>> ds
         Dseq(-14)
@@ -2463,7 +2463,7 @@ class Dseq(Seq):
 
         Examples
         --------
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> ds = Dseq("tagaaptaqgtatg")
         >>> ds
         Dseq(-14)
@@ -2644,7 +2644,7 @@ class Dseq(Seq):
 
         Examples
         --------
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> ds = Dseq("tagaaqtaqgtatg")
         >>> ds
         Dseq(-14)
@@ -2691,7 +2691,7 @@ class Dseq(Seq):
 
         Examples
         --------
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> ds = Dseq("tagaagtaggtatg")
         >>> ds
         Dseq(-14)
@@ -2770,7 +2770,7 @@ class Dseq(Seq):
         Examples
         --------
         >>> from Bio.Restriction import EcoRI
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> dseq = Dseq('aaGAATTCaaGAATTCaa')
         >>> cutsites = dseq.get_cutsites([EcoRI])
         >>> cutsites
@@ -2851,7 +2851,7 @@ class Dseq(Seq):
         --------
 
         >>> from Bio.Restriction import EcoRI
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> dseq = Dseq('aaGAATTCaaGAATTCaa')
         >>> cutsites = dseq.get_cutsites([EcoRI])
         >>> cutsites
@@ -3019,7 +3019,7 @@ class Dseq(Seq):
 
         Examples
         --------
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> ds = Dseq("PPPATCFQZ")
         >>> ds
         Dseq(-9)
@@ -3100,7 +3100,7 @@ class Dseq(Seq):
         --------
         Blunt left end:
 
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> Dseq("AAA", "TTT", ovhg=0).get_left_end_as_cutsite()
         ((0, 0), None)
 
@@ -3143,7 +3143,7 @@ class Dseq(Seq):
         --------
         Blunt right end:
 
-        >>> from pydna.dseq import Dseq
+        >>> from pydna.core.dseq import Dseq
         >>> Dseq("AAA", "TTT", ovhg=0).get_right_end_as_cutsite()
         ((3, 0), None)
 

@@ -28,7 +28,7 @@ recombinase_excision functions from the assembly2 module.
 
 Integration and excision with a single recombinase::
 
-    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.core.dseqrecord import Dseqrecord
     >>> from pydna.recombinase import Recombinase
     >>> from pydna.assembly import recombinase_integration, recombinase_excision
     >>> site1 = "ATGCCCTAAaaCT"
@@ -48,7 +48,7 @@ Integration and excision with a single recombinase::
 
 Find and annotate sites in a sequence::
 
-    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.core.dseqrecord import Dseqrecord
     >>> from pydna.recombinase import Recombinase
     >>> site1, site2 = "ATGCCCTAAaaTT", "AAaaTTTTTTTCCCT"
     >>> rec = Recombinase(site1, site2, site1_name="mysite1", site2_name="mysite2")
@@ -60,7 +60,7 @@ When several sites are possible, or when using multiple recombinases, you can
 create a RecombinaseCollection. It has the methods overlap, find, and annotate,
 so you can use it as a single Recombinase. For an example, check the gateway module::
 
-    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.core.dseqrecord import Dseqrecord
     >>> from pydna.recombinase import Recombinase, RecombinaseCollection
     >>> rec1 = Recombinase("AAaaTTC", "CCaaTTC", site1_name="s1", site2_name="s2")
     >>> rec2 = Recombinase("GAccACC", "TCccAAC", site1_name="s3", site2_name="s4")
@@ -85,7 +85,7 @@ If the recombinase reaction is reversible, you can get the reverse recombinase w
 
 Using a Recombinase as Assembly algorithm::
 
-    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.core.dseqrecord import Dseqrecord
     >>> from pydna.recombinase import Recombinase
     >>> from pydna.assembly import Assembly
     >>> site1 = "ATGCCCTAAaaTT"
@@ -105,10 +105,10 @@ import copy
 from Bio.Seq import reverse_complement
 from Bio.SeqFeature import SimpleLocation, SeqFeature
 
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 from pydna.utils import shift_location
 from pydna.sequence_regex import compute_regex_site, dseqrecord_finditer
-from pydna.types import SequenceOverlap
+from pydna.core.types import SequenceOverlap
 from opencloning_linkml.datamodel import Recombinase as RecombinaseModel
 
 
@@ -163,7 +163,7 @@ class Recombinase:
 
     Examples
     --------
-    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.core.dseqrecord import Dseqrecord
     >>> from pydna.recombinase import Recombinase
     >>> rec = Recombinase("ATGCCCTAAaaTT", "AAaaTTTTTTTCCCT")
     >>> seqA = Dseqrecord("aaaATGCCCTAAaaTTtt")
@@ -235,7 +235,7 @@ class Recombinase:
 
         Examples
         --------
-        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.core.dseqrecord import Dseqrecord
         >>> from pydna.recombinase import Recombinase
         >>> rec = Recombinase("ATGCCCTAAaaTT", "AAaaTTTTTTTCCCT")
         >>> rec.get_reverse_recombinase()

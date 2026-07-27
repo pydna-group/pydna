@@ -18,16 +18,16 @@ from pydna.utils import flatten
 from pydna.utils import shift_feature
 from pydna.amplicon import Amplicon
 from pydna.primer import Primer
-from pydna.seqrecord import SeqRecord
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.seqrecord import SeqRecord
+from pydna.core.dseqrecord import Dseqrecord
 from Bio.SeqFeature import SeqFeature
 from Bio.SeqFeature import SimpleLocation
 from Bio.SeqFeature import CompoundLocation
-from pydna.seq import Seq
+from pydna.core.seq import Seq
 import re
 import copy
 import operator
-from pydna.alphabet import iupac_compl_regex
+from pydna.core.alphabet import iupac_compl_regex
 from pydna.utils import anneal_from_left
 
 
@@ -152,7 +152,7 @@ class Anneal(object):  # ), metaclass=_Memoize):
         --------
         >>> from pydna.readers import read
         >>> from pydna.amplify import Anneal
-        >>> from pydna.dseqrecord import Dseqrecord as Ds
+        >>> from pydna.core.dseqrecord import Dseqrecord as Ds
         >>> t = Ds("tacactcaccgtctatcattatcta" +
         ...        "gatc"*240 +
         ...        "ctatcgactgtatcatctgatagcac")
@@ -486,7 +486,7 @@ def pcr(*args, **kwargs) -> Amplicon:
     Examples
     --------
 
-    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.core.dseqrecord import Dseqrecord
     >>> from pydna.readers import read
     >>> from pydna.amplify import pcr
     >>> from pydna.primer import Primer

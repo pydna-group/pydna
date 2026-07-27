@@ -49,8 +49,8 @@
 # Cloning with Python
 
 import pydna
-from pydna.dseq import Dseq
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseq import Dseq
+from pydna.core.dseqrecord import Dseqrecord
 from Bio.Restriction import BamHI
 from Bio.Restriction import EcoRI
 from pydna.genbank import genbank

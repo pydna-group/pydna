@@ -1,5 +1,5 @@
-from pydna.dseq import Dseq
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseq import Dseq
+from pydna.core.dseqrecord import Dseqrecord
 from pydna.utils import eq
 from Bio.SeqFeature import SeqFeature, SimpleLocation
 from pydna.fusionpcr import fuse_by_pcr

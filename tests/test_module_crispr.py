@@ -2,8 +2,8 @@
 
 import pytest
 from Bio.Restriction import BamHI
-from pydna.dseqrecord import Dseqrecord
-from pydna.dseq import Dseq
+from pydna.core.dseqrecord import Dseqrecord
+from pydna.core.dseq import Dseq
 from Bio.Restriction import SapI
 from pydna.parsers import parse_primers
 from pydna.crispr import cas9, protospacer
