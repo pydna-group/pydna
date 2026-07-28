@@ -427,12 +427,13 @@ the pre-commit hooks (or run `make hooks` on its own).
 
 #### Contributing code 💻
 
-1. Make your changes.
-2. Add the necessary tests in `tests/`.
-3. Run the tests from the root directory with `python run_test.py`.
+1. Fork the pydna repository.
+2. Make your changes in the fork.
+3. Add the necessary tests in `tests/`.
+4. Run the tests from the root directory with `python run_test.py`.
    > **TIP:** You can run a particular test file with `pytest -vs test_file.py` (`-v` for verbose and `-s` to see print statements in the test). If you want to run just a single test, you can use `pytest -vs -k test_name`, where `test_name` is the name of the test function.
-4. With the pre-commit hooks installed (see above), `ruff` lint/format and notebook stripping run automatically on every commit, so you catch issues before CI does. You can also run them by hand with `make fmt` and `make lint`, or against everything with `uv run pre-commit run --all-files`. CI runs the same `ruff` checks, so code must be formatted and lint-clean to pass.
-5. Push the changes to your fork
+5. With the pre-commit hooks installed (see above), `ruff` lint/format and notebook stripping run automatically on every commit, so you catch issues before CI does. You can also run them by hand with `make fmt` and `make lint`, or against everything with `uv run pre-commit run --all-files`. CI runs the same `ruff` checks, so code must be formatted and lint-clean to pass.
+6. Push the changes to your fork
 
 > **TIP:** The continuous integration pipeline also runs doctests. These are tests that validate that the docstring examples are correct. For example, the docstring of the function `pydna.utils.smallest_rotation` looks like this:
 > ```python
