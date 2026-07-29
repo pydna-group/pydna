@@ -1,7 +1,11 @@
-.PHONY: setup dev build test test-all lint fmt clean
+.PHONY: setup dev build test test-all lint fmt clean hooks
 
 setup:
 	uv sync --all-extras --group test --group dev
+	uv run pre-commit install
+
+hooks:
+	uv run pre-commit install
 
 dev:
 	uv run python -c "import pydna; print(f'pydna {pydna.__version__} ready')"
