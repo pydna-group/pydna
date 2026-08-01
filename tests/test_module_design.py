@@ -227,9 +227,11 @@ def test_primer_Design_with_linker():
 
     asm1 = Assembly(frags)
 
-    assert asm1.assemble_linear()[0].seguid(), (
-        b + linker + c
-    ).seguid() == "l95igKB8iKAKrvvqE9CYksyNx40"
+    assert (
+        asm1.assemble_linear()[0].seguid()
+        == (b + linker + c).seguid()
+        == "ldseguid=bE5nT79whnhHSub-ejHe0CzkdPw"
+    )
 
     frags = assembly_fragments(
         (primer_design(b), linker, primer_design(c), primer_design(b))

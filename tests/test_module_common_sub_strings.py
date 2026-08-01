@@ -35,35 +35,3 @@ def test_fast():
     a, b = b, a
 
     assert common_sub_strings.terminal_overlap(a, b, lim) == [(0, 16, 13), (15, 0, 12)]
-
-    # x,y,l = terminal_overlap(a, b,lim).pop()
-
-    #    x='atctgaacgctttgaatgttgtctctattccacgaggcattcaaaaactggttaccgaacctcaagactaaaagattcttgaccaactctttacccaagtaatggtcaattctgtacaactcttcttctttaaagaggggccccaggtttttttgcagctccctggcagaggccaggtcgtggccgaaaggtttctctacgattacacgggtgatgccattctctgcgtacacacgactcttgatctgcttggccaccgtcaaaaaaacgcttggcggcaaggccagatagaagagacggtgtgggacatcgacgttggcacttttctcgaatttctcgatctgcgttcttaattcgtcgaagccttcatctgtgtcgtaatttcccgaaatgtagctgaccatcttgaagaactgttcgaccttagagtcatcggcttcaccgtgaggttttttcaagtggggtaggacacgggacttcaggtcctcctccatggacaatttggaccgggcataaccgaagatcttggtagatggatcaaggtaaccttctctgaaaagcccaaataaggcgggaaaagtcttcttctttgccagatcacctgacgcaccaaagacagatatgacggtatttttttcgaatttgacggggccttcactcatctgcagcccgggggatccactagttctagaa'
-    #    y='atcgataagcttgatatcgaattcctgcagctaattatccttcgtatcttctggcttagtcacgggccaagcgtaagggtgcttttcgggcataacatacttgtgtttttggtaatggtcaattctgtacaactcttcatatattccttcaatccctttggacctcttgatccgtaggggtaaatttccggtgttggaccgtccggacgctctatgtgcttcagtaatggggtgaatatgccccaactgatatccaattcgtcatctctgacaaagttggaatggtcacccagtagggcgtctcttatcaacacctcgtaagcctctggaatccaaaagtcttggtacctgcttgcgtaagttagattcagatctgtgacttgggtagcatttgacagaccaggggtcttagcattaaactttaggtacacagcggcatcgggctgcactctgatgaccagttcgttatttggaatgtctttgaagacacccgatgcgaccgctttgtactgcagtctgatctccaccttggactcattcaaagccttaccggcacgcatcatgatggggacgccctcccaacgctcgttttcgatgttgaaagtcattgctgcaaaagtgacacatttagagtccttgtctacagtgtcatcatccacgtaggcgggcttagacccgtcctcagatttaccgtactggcccaagaggacgtcgtccgtgtcgatgatctgaacgctttgaatgttgtctctattccacgaggcattcaaaaaggggccacggcctttagaaccttaaccttttcgtcacgaatagattccgggtcaaaagacaccggtctttccatagtcaagagagtcatgatttgtaacagatggttctgcatcacgtctctgattatgcctatagagtcgaaatagccgccacggccttcggtgccgaacctctctttaaacgaaatctgaacgctttgaatgttgtctctattccacgaggcattcaaaaa'
-    #    print common_sub_strings(x,y)
-    # a,b = "taaatc","aaataa"
-    # print common_sub_strings(a+a, b, limit = min(25, 25*(len(a)/25)+1))
-
-    # 1404
-
-    """
-    (1, 1, 2)
-    (2, 0, 2)
-    (7, 1, 2)
-    (8, 0, 2)
-    (2, 4, 2)
-    (8, 4, 2)
-
-    (1, 0, 2)
-    (1, 1, 2) 1
-    (1, 4, 2)
-    (2, 0, 2) 2
-    (2, 1, 2)
-    (2, 4, 2) 3
-    (7, 0, 2)
-    (7, 1, 2) 4
-    (7, 4, 2)
-    (8, 0, 2) 5
-    (8, 1, 2)
-    (8, 4, 2) 6
-    """
