@@ -28,7 +28,11 @@ def interpolator(mwstd):
 
 
 def gel(
-    samples=None, gel_length=600, margin=50, interpolator=interpolator(mwstd=_mwstd)
+    samples=None,
+    gel_length=600,
+    margin=50,
+    interpolator=interpolator(mwstd=_mwstd),
+    lane_width=50,
 ):
     import numpy as np
     from PIL import Image
@@ -36,7 +40,6 @@ def gel(
 
     """docstring."""
     max_intensity = 256
-    lane_width = 50
     lanesep = 10
     start = 10
     samples = samples or [interpolator.mwstd]
