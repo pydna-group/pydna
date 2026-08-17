@@ -52,7 +52,7 @@ from pydna._pretty import pretty_str as ps
 from pydna.contig import Contig
 from pydna.common_sub_strings import common_sub_strings, Match
 
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 import networkx as nx
 
 from copy import deepcopy
@@ -93,7 +93,7 @@ class Assembly(object):
     --------
 
     >>> from pydna.legacy.assembly import Assembly
-    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.core.dseqrecord import Dseqrecord
     >>> a = Dseqrecord("acgatgctatactgCCCCCtgtgctgtgctcta")
     >>> b = Dseqrecord("tgtgctgtgctctaTTTTTtattctggctgtatc")
     >>> c = Dseqrecord("tattctggctgtatcGGGGGtacgatgctatactg")

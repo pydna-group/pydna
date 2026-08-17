@@ -3,7 +3,7 @@
 import pytest
 import textwrap
 
-from pydna.dseq import Dseq
+from pydna.core.dseq import Dseq
 from pydna.utils import eq
 
 from Bio.Restriction import (
@@ -1697,7 +1697,7 @@ def test_cast_to_ds():
 
 def test_overlapping_cuts():
 
-    from pydna.dseq import Dseq
+    from pydna.core.dseq import Dseq
     from Bio.Restriction import PstI, SbfI, BamHI, DpnI, BcgI
 
     s = Dseq("CCTGCAGG")
@@ -1829,7 +1829,7 @@ def test_join():
 
 
 def tests_misc():
-    from pydna.dseq import Dseq
+    from pydna.core.dseq import Dseq
     from Bio.Restriction import Acc65I, NlaIV, KpnI, NotI
 
     assert Dseq("aa").cut(NotI) == ()
@@ -1872,7 +1872,7 @@ def tests_misc():
 
 
 def test_shifted2():
-    from pydna.dseq import Dseq
+    from pydna.core.dseq import Dseq
 
     a = Dseq("gatc", circular=True)
 

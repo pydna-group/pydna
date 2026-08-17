@@ -98,7 +98,7 @@ from typing import List
 
 from Bio.SeqIO.InsdcIO import _insdc_location_string as format_feature_location
 
-from pydna.types import CutSiteType, SubFragmentRepresentationAssembly
+from pydna.core.types import CutSiteType, SubFragmentRepresentationAssembly
 from pydna.utils import create_location, location_boundaries, shift_location
 from typing import TYPE_CHECKING
 import Bio.Restriction as _restr_module
@@ -107,7 +107,7 @@ import textwrap
 from pydna._pretty import pretty_str
 
 if TYPE_CHECKING:  # pragma: no cover
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
     from pydna.primer import Primer
     from pydna.recombinase import RecombinaseCollection, Recombinase
 
@@ -136,7 +136,7 @@ def id_mode(use_python_internal_id: bool = True):
 
     Examples
     --------
-    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.core.dseqrecord import Dseqrecord
     >>> from pydna.opencloning_models import get_id, id_mode
     >>> dseqr = Dseqrecord("ATGC")
     >>> dseqr.name = "my_sequence"
@@ -273,7 +273,7 @@ class SourceInput(ConfiguredBaseModel):
     def _validate_sequence_field(cls, value: Any):
         """Separate validation to avoid circular imports."""
 
-        from pydna.dseqrecord import Dseqrecord
+        from pydna.core.dseqrecord import Dseqrecord
         from pydna.primer import Primer
 
         if isinstance(value, (Dseqrecord, Primer)):
@@ -396,7 +396,7 @@ class Source(ConfiguredBaseModel):
         It does not use the get_id function, because it just uses it to have unique identifiers
         for graph nodes, not to store them anywhere.
         """
-        from pydna.dseqrecord import Dseqrecord
+        from pydna.core.dseqrecord import Dseqrecord
 
         history_graph.add_node(id(seq), label=f"{seq.name} ({repr(seq)})")
         history_graph.add_node(id(self), label=str(self.TARGET_MODEL.__name__))
@@ -522,7 +522,7 @@ class AssemblySource(Source):
 
     def _get_input_sequences(self, handle_insertion: bool = True) -> list["Dseqrecord"]:
         """Return Dseqrecord inputs (excludes Primers), preserving order, and handling insertion assemblies (removing the last fragment if the first and last are the same)."""
-        from pydna.dseqrecord import Dseqrecord
+        from pydna.core.dseqrecord import Dseqrecord
 
         seqs: list[Dseqrecord] = []
         for inp in self.input:
@@ -1137,7 +1137,7 @@ class PolymeraseExtensionSource(Source):
     )
 
     def _replay_products(self) -> list["Dseqrecord"]:
-        from pydna.dseqrecord import Dseqrecord
+        from pydna.core.dseqrecord import Dseqrecord
 
         inp = self.input[0].sequence
         if not isinstance(inp, Dseqrecord):
@@ -1163,7 +1163,7 @@ class AnnotationSource(Source):
 
     def validate(self, result: "Dseqrecord") -> None:
         """Just validates that there is a single input, and that its sequence is the same as the result."""
-        from pydna.dseqrecord import Dseqrecord
+        from pydna.core.dseqrecord import Dseqrecord
 
         if not isinstance(self.input[0].sequence, Dseqrecord):
             raise ValueError(
@@ -1173,7 +1173,7 @@ class AnnotationSource(Source):
             raise ValueError("AnnotationSource input sequence does not match result")
 
     def normalize(self, result: "Dseqrecord") -> "Dseqrecord":
-        from pydna.dseqrecord import Dseqrecord
+        from pydna.core.dseqrecord import Dseqrecord
 
         input_sequence = self.input[0].sequence
         if not isinstance(input_sequence, Dseqrecord):
@@ -1209,7 +1209,7 @@ class ReverseComplementSource(Source):
 
 def read_dseqrecord_from_text_file_sequence(seq: TextFileSequence) -> Dseqrecord:
     from pydna.parsers import parse
-    from pydna.dseq import Dseq
+    from pydna.core.dseq import Dseq
 
     out_dseq_record = parse(seq.file_content, ds=True)[0]
     if seq.overhang_watson_3prime != 0 or seq.overhang_crick_3prime != 0:
@@ -1241,7 +1241,7 @@ class CloningStrategy(_BaseCloningStrategy):
         self.primers.append(PrimerModel.from_primer(primer))
 
     def add_dseqrecord(self, dseqr: "Dseqrecord"):
-        from pydna.dseqrecord import Dseqrecord
+        from pydna.core.dseqrecord import Dseqrecord
 
         existing_ids = {seq.id for seq in self.sequences}
         if get_id(dseqr) in existing_ids:

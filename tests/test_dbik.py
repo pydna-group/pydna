@@ -11,7 +11,7 @@ from Bio.SeqFeature import (
 from Bio.SeqRecord import SeqRecord
 from pydna.legacy.assembly import Assembly
 from pydna.assembly import Assembly as Assembly2
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 
 
 def test_cut_dbik():

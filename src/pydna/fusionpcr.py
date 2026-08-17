@@ -4,8 +4,8 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 from pydna.common_sub_strings import terminal_overlap
-from pydna.dseq import Dseq
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseq import Dseq
+from pydna.core.dseqrecord import Dseqrecord
 from pydna.utils import rc
 from itertools import combinations
 from copy import copy

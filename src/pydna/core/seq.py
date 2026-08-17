@@ -234,7 +234,7 @@ class Seq(_Seq):
 
         Examples
         --------
-        >>> from pydna.seq import Seq
+        >>> from pydna.core.seq import Seq
         >>> a = Seq("aa")
         >>> a.seguid()
         'lsseguid=gBw0Jp907Tg_yX3jNgS4qQWttjU'
@@ -297,7 +297,7 @@ class ProteinSeq(_Seq):
 
         Examples
         --------
-        >>> from pydna.seq import ProteinSeq
+        >>> from pydna.core.seq import ProteinSeq
         >>> a = ProteinSeq("aa")
         >>> a.seguid()
         'lsseguid=gBw0Jp907Tg_yX3jNgS4qQWttjU'

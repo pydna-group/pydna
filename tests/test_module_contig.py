@@ -3,7 +3,7 @@ def test_contig(monkeypatch):
 
     from pydna import contig
     from pydna.legacy.assembly import Assembly
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
 
     a = Dseqrecord("acgatgctatactgCCCCCtgtgctgtgctcta", name="one")
     b = Dseqrecord("tgtgctgtgctctaTTTTTtattctggctgtatc", name="two")
@@ -70,7 +70,7 @@ def test_contig(monkeypatch):
 
     from Bio.Seq import Seq
 
-    from pydna.seqrecord import SeqRecord
+    from pydna.core.seqrecord import SeqRecord
 
     arg = SeqRecord(Seq("aaa"))
 
@@ -82,7 +82,7 @@ def test_contig(monkeypatch):
 def test_reverse_complement(monkeypatch):
     from pydna._pretty import pretty_str
     from pydna.legacy.assembly import Assembly
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
 
     a = Dseqrecord("acgatgctatactgtgCCNCCtgtgctgtgctcta")
     # 12345678901234
@@ -164,7 +164,7 @@ cacagtatagcatcgtaCCCCCgatacagccagaata
 
 def test_linear(monkeypatch):
     from pydna.legacy.assembly import Assembly
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
 
     a = Dseqrecord("acgatgctatactgtgCCNCCtgtgctgtgctcta")
     # 12345678901234

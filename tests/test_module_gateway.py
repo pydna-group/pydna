@@ -2,7 +2,7 @@ from pydna.gateway import annotate_gateway_sites, gateway_overlap, find_gateway_
 import pydna.assembly as assembly
 import glob
 from pydna.parsers import parse_snapgene
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 from Bio.SeqFeature import SimpleLocation
 import os
 

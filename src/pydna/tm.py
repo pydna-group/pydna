@@ -16,7 +16,7 @@ from typing import Union, TYPE_CHECKING
 
 if TYPE_CHECKING:  # pragma: no cover
     from pydna.amplicon import Amplicon
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
 
 # See the documentation for Bio.SeqUtils.MeltingTemp for more details
 # The 10X Taq Buffer with (NH4)2SO4 is commercialized by companies like

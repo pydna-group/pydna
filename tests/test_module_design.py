@@ -5,7 +5,7 @@ import pytest
 
 from pydna.amplify import pcr
 from pydna.legacy.assembly import Assembly
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 from pydna.design import primer_design
 from pydna.design import user_assembly_design
 from pydna.design import assembly_fragments
@@ -74,7 +74,7 @@ def test_primer_design_first_and_third_Dseqrecord():
 
 
 def test_primer_design_same_first_and_third_Dseqrecord():
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
 
     x = [primer_design(f) for f in frags]
     y = assembly_fragments([frags[0], x[1], frags[0]], 20)
@@ -311,7 +311,7 @@ def test_circular_assembly_fragments2():
 def test_too_short_template():
     from pydna.amplicon import Amplicon
     from pydna.design import primer_design
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
 
     fragment = Dseqrecord("GCCACCATGG")
     assert primer_design(fragment) == Amplicon("")

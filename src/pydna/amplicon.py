@@ -14,8 +14,8 @@ from pydna.tm import dbd_program
 from pydna.tm import program
 from pydna.primer import Primer
 from pydna._pretty import pretty_str
-from pydna.dseqrecord import Dseqrecord
-from pydna.seqrecord import SeqRecord
+from pydna.core.dseqrecord import Dseqrecord
+from pydna.core.seqrecord import SeqRecord
 import textwrap
 import copy
 

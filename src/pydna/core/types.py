@@ -22,9 +22,9 @@ from pydna.crispr import _cas
 
 if TYPE_CHECKING:
     from Bio.Restriction import RestrictionBatch
-    from pydna.dseq import Dseq
+    from pydna.core.dseq import Dseq
     from Bio.SeqFeature import Location
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
 
 
 # To represent any subclass of Dseq

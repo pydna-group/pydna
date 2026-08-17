@@ -17,7 +17,7 @@ from typing import List
 from typing import TypeVar
 
 if TYPE_CHECKING:  # pragma: no cover
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
 
 DseqrecordType = TypeVar("DseqrecordType", bound="Dseqrecord")
 
@@ -58,11 +58,11 @@ class _cas(ABC):
 
         dna must be an instance of:
 
-            - pydna.dseq.Dseq
+            - pydna.core.dseq.Dseq
             - Bio.Seq.Seq
             - Bio.Seq.MutableSeq
 
-        pydna.dseqrecord.Dseqrecord or Bio.SeqRecord.SeqRecord will not work.
+        pydna.core.dseqrecord.Dseqrecord or Bio.SeqRecord.SeqRecord will not work.
         This limitation is by design t omirror enzymes in the
         Biopython Bio.Restriction class
 
@@ -70,7 +70,7 @@ class _cas(ABC):
         Biopython Bio.Restriction class.
 
         An important caveat is that search ignores the circular property of
-        pydna.dseq.Dseq.
+        pydna.core.dseq.Dseq.
 
         If linear is False, the restriction sites that span over the boundaries
         will be included.
@@ -137,13 +137,13 @@ class cas9(_cas):
         Search for Cas9 target sites in a DNA sequence.
 
         Args:
-            dna: string, Bio.Seq.Seq or pydna.dseq.Dseq
+            dna: string, Bio.Seq.Seq or pydna.core.dseq.Dseq
             linear: Whether the DNA is linear or circular.
 
         Returns:
             A list of cut site positions.
         """
-        from pydna.dseqrecord import Dseqrecord
+        from pydna.core.dseqrecord import Dseqrecord
         from pydna.sequence_regex import dseqrecord_finditer
 
         if not hasattr(dna, "_data"):

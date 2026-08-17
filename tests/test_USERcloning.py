@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from pydna.dseq import Dseq
+from pydna.core.dseq import Dseq
 from pydna.parsers import parse, parse_primers
 from pydna.amplify import pcr
 from textwrap import dedent

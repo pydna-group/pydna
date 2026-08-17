@@ -544,7 +544,7 @@ class DseqParts:
     def __iter__(self):
         """
         Allow unpacking DseqParts instances.
-        >>> from pydna.alphabet import get_parts
+        >>> from pydna.core.alphabet import get_parts
         >>> sticky_left5, sticky_left3, middle, sticky_right3, sticky_right5, single_watson, single_crick = get_parts("eeATCGuggCCGgg")
         >>> sticky_left5
         'ee'
@@ -566,7 +566,7 @@ class DseqParts:
     def __getitem__(self, index: int) -> str:
         """
         Allow indexing DseqParts instances.
-        >>> from pydna.alphabet import get_parts
+        >>> from pydna.core.alphabet import get_parts
         >>> parts = get_parts("eeATCGuggCCGgg")
         >>> parts[0]
         'ee'
@@ -699,7 +699,7 @@ def dsbreaks(datastring: str) -> list[str]:
     leads to a discontinuous DNA. This function is used to show breaks in
     DNA in Dseq.__init__.
 
-    >>> from pydna.alphabet import dsbreaks
+    >>> from pydna.core.alphabet import dsbreaks
     >>> x, = dsbreaks("GATPFTAA")
     >>> print(x)
     [0:8]
@@ -742,7 +742,7 @@ def representation_tuple(
     """
     Two line string representation of a sequence of dscode symbols.
 
-    See pydna.alphabet module for the definition of the pydna dscode
+    See pydna.core.alphabet module for the definition of the pydna dscode
     alphabet. The dscode has a symbol (ascii) character for base pairs
     and single stranded DNA.
 
@@ -850,7 +850,7 @@ def regex_ss_melt_factory(length: int) -> re.Pattern:
 
     Examples
     --------
-    >>> from pydna.dseq import Dseq
+    >>> from pydna.core.dseq import Dseq
     >>> regex = regex_ss_melt_factory(3)
     >>> s = Dseq("GFTTAJA")
     >>> s
@@ -934,7 +934,7 @@ def regex_ds_melt_factory(length: int, circular: bool) -> re.Pattern:
     Examples
     --------
 
-    >>> from pydna.dseq import Dseq
+    >>> from pydna.core.dseq import Dseq
     >>> regex = regex_ds_melt_factory(3, False)
     >>> s = Dseq("aaaGFTTAIAttt")
     >>> s
@@ -984,7 +984,7 @@ def anneal_strands(strand_a: str, strand_b: str) -> bool:
     Examples
     --------
 
-    >>> from pydna.alphabet import anneal_strands
+    >>> from pydna.core.alphabet import anneal_strands
     >>> a = "TTA"
     >>> b = "AAT"[::-1]
     >>> anneal_strands(a, b)

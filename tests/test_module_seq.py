@@ -1,5 +1,5 @@
 import pytest
-from pydna.seq import Seq
+from pydna.core.seq import Seq
 
 
 def test_seguid():

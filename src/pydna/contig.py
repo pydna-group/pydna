@@ -6,7 +6,7 @@
 import textwrap
 import networkx as nx
 from pydna._pretty import pretty_str as ps
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 from pydna.utils import rc
 import numpy as np
 

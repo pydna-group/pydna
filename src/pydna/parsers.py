@@ -13,7 +13,7 @@ from Bio import SeqIO
 from Bio.SeqIO.InsdcIO import GenBankScanner, GenBankIterator
 import warnings
 
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 from Bio.SeqRecord import SeqRecord
 from pydna.opencloning_models import UploadedFileSource
 from pydna.primer import Primer

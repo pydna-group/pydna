@@ -46,8 +46,8 @@ from pydna.amplify import pcr
 from pydna.assembly import Assembly
 from pydna.genbank import genbank
 from pydna.genbank import Genbank
-from pydna.dseqrecord import Dseqrecord
-from pydna.dseq import Dseq
+from pydna.core.dseqrecord import Dseqrecord
+from pydna.core.dseq import Dseq
 from pydna.readers import read
 from pydna.readers import read_primer
 from pydna.parsers import parse

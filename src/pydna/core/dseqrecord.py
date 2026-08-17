@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 """This module provides the :class:`Dseqrecord` class, for handling double stranded
-DNA sequences. The Dseqrecord holds sequence information in the form of a :class:`pydna.dseq.Dseq`
+DNA sequences. The Dseqrecord holds sequence information in the form of a :class:`pydna.core.dseq.Dseq`
 object. The Dseq and Dseqrecord classes are subclasses of Biopythons
 Seq and SeqRecord classes, respectively.
 
@@ -13,7 +13,7 @@ The Dseq and Dseqrecord classes support the notion of circular and linear DNA to
 
 from Bio.Restriction import RestrictionBatch
 from Bio.Restriction import CommOnly
-from pydna.dseq import Dseq
+from pydna.core.dseq import Dseq
 from pydna._pretty import pretty_str
 from pydna.utils import flatten, location_boundaries
 
@@ -24,7 +24,7 @@ from Bio.SeqFeature import SeqFeature
 from Bio import SeqIO
 from Bio.SeqFeature import CompoundLocation
 from Bio.SeqFeature import SimpleLocation
-from pydna.seqrecord import SeqRecord
+from pydna.core.seqrecord import SeqRecord
 from Bio.Seq import translate
 from Bio.Seq import Seq as BPSeq
 import copy
@@ -101,7 +101,7 @@ class Dseqrecord(SeqRecord):
     Examples
     --------
 
-    >>> from pydna.dseqrecord import Dseqrecord
+    >>> from pydna.core.dseqrecord import Dseqrecord
     >>> a=Dseqrecord("aaa")
     >>> a
     Dseqrecord(-3)
@@ -109,7 +109,7 @@ class Dseqrecord(SeqRecord):
     Dseq(-3)
     aaa
     ttt
-    >>> from pydna.seq import Seq
+    >>> from pydna.core.seq import Seq
     >>> b=Dseqrecord(Seq("aaa"))
     >>> b
     Dseqrecord(-3)
@@ -280,7 +280,7 @@ class Dseqrecord(SeqRecord):
 
         Examples
         --------
-        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.core.dseqrecord import Dseqrecord
         >>> a=Dseqrecord("atgtaa")
         >>> a.add_feature(2,4)
         >>> b=a.extract_feature(0)
@@ -308,7 +308,7 @@ class Dseqrecord(SeqRecord):
 
         Examples
         --------
-        >>> from pydna.seqrecord import SeqRecord
+        >>> from pydna.core.seqrecord import SeqRecord
         >>> a=SeqRecord("atgtaa")
         >>> a.features
         []
@@ -352,7 +352,7 @@ class Dseqrecord(SeqRecord):
 
         Examples
         --------
-        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.core.dseqrecord import Dseqrecord
         >>> a = Dseqrecord("aa")
         >>> a.seguid()
         'ldseguid=TEwydy0ugvGXh3VJnVwgtxoyDQA'
@@ -368,7 +368,7 @@ class Dseqrecord(SeqRecord):
 
         Examples
         --------
-        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.core.dseqrecord import Dseqrecord
         >>> a=Dseqrecord("aaa")
         >>> a
         Dseqrecord(-3)
@@ -379,7 +379,7 @@ class Dseqrecord(SeqRecord):
 
         See Also
         --------
-        pydna.dseq.Dseq.looped
+        pydna.core.dseq.Dseq.looped
         """
         new = copy.deepcopy(self)
         new.seq = self.seq.looped()
@@ -417,7 +417,7 @@ class Dseqrecord(SeqRecord):
 
         Examples
         --------
-        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.core.dseqrecord import Dseqrecord
         >>> a=Dseqrecord("aaa", circular = True)
         >>> a
         Dseqrecord(o3)
@@ -472,7 +472,7 @@ class Dseqrecord(SeqRecord):
 
         Examples
         --------
-        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.core.dseqrecord import Dseqrecord
         >>> x=Dseqrecord("aaa")
         >>> x.annotations['date'] = '02-FEB-2013'
         >>> x
@@ -671,7 +671,7 @@ class Dseqrecord(SeqRecord):
 
     def find_aminoacids(self, other):
         """
-        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.core.dseqrecord import Dseqrecord
         >>> s=Dseqrecord("atgtacgatcgtatgctggttatattttag")
         >>> s.seq.translate()
         ProteinSeq('MYDRMLVIF*')
@@ -953,7 +953,7 @@ class Dseqrecord(SeqRecord):
 
         Examples
         --------
-        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.core.dseqrecord import Dseqrecord
         >>> a=Dseqrecord("ggaatt")
         >>> a
         Dseqrecord(-6)
@@ -969,7 +969,7 @@ class Dseqrecord(SeqRecord):
 
         See Also
         --------
-        pydna.dseq.Dseq.reverse_complement
+        pydna.core.dseq.Dseq.reverse_complement
 
         """
         answer = type(self)(super().reverse_complement())
@@ -983,7 +983,7 @@ class Dseqrecord(SeqRecord):
 
     rc = reverse_complement
 
-    # @_memorize("pydna.dseqrecord.Dseqrecord.synced")
+    # @_memorize("pydna.core.dseqrecord.Dseqrecord.synced")
     def synced(self, ref, limit=25):
         """This method returns a new circular sequence (Dseqrecord object), which has been rotated
         in such a way that there is maximum overlap between the sequence and
@@ -997,7 +997,7 @@ class Dseqrecord(SeqRecord):
         Examples
         --------
 
-        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.core.dseqrecord import Dseqrecord
         >>> a=Dseqrecord("gaat", circular=True)
         >>> a.seq
         Dseq(o4)
@@ -1072,7 +1072,7 @@ class Dseqrecord(SeqRecord):
 
     def upper(self):
         """Returns an uppercase copy.
-        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.core.dseqrecord import Dseqrecord
         >>> my_seq = Dseqrecord("aAa")
         >>> my_seq.seq
         Dseq(-3)
@@ -1094,7 +1094,7 @@ class Dseqrecord(SeqRecord):
 
         See also
         --------
-        pydna.dseqrecord.Dseqrecord.lower"""
+        pydna.core.dseqrecord.Dseqrecord.lower"""
 
         upper = copy.deepcopy(self)
         # This is because the @seq.setter methods otherwise sets the _per_letter_annotations to an empty dict
@@ -1104,7 +1104,7 @@ class Dseqrecord(SeqRecord):
         return upper
 
     def lower(self):
-        """>>> from pydna.dseqrecord import Dseqrecord
+        """>>> from pydna.core.dseqrecord import Dseqrecord
         >>> my_seq = Dseqrecord("aAa")
         >>> my_seq.seq
         Dseq(-3)
@@ -1127,7 +1127,7 @@ class Dseqrecord(SeqRecord):
 
         See also
         --------
-        pydna.dseqrecord.Dseqrecord.upper
+        pydna.core.dseqrecord.Dseqrecord.upper
 
         """
         lower = copy.deepcopy(self)
@@ -1211,7 +1211,7 @@ class Dseqrecord(SeqRecord):
 
         Examples
         --------
-        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.core.dseqrecord import Dseqrecord
         >>> from pydna.assembly import in_vivo_assembly, pcr_assembly
         >>> from pydna.primer import Primer
         >>> # Generic example
@@ -1337,7 +1337,7 @@ class Dseqrecord(SeqRecord):
 
         Examples
         --------
-        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.core.dseqrecord import Dseqrecord
         >>> a=Dseqrecord("aaat",circular=True)
         >>> a
         Dseqrecord(o4)
@@ -1394,7 +1394,7 @@ class Dseqrecord(SeqRecord):
 
         Examples
         --------
-        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.core.dseqrecord import Dseqrecord
         >>> a=Dseqrecord("ggatcc")
         >>> from Bio.Restriction import BamHI
         >>> a.cut(BamHI)
@@ -1528,7 +1528,7 @@ class Dseqrecord(SeqRecord):
 
         Examples
         --------
-        >>> from pydna.dseqrecord import Dseqrecord
+        >>> from pydna.core.dseqrecord import Dseqrecord
         >>> from pydna.assembly import gibson_assembly
         >>> fragments = [
         ...    Dseqrecord("TTTTacgatAAtgctccCCCC", circular=False, name="fragment1"),

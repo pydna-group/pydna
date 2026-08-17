@@ -1,5 +1,5 @@
 import pytest
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 from pydna.legacy.assembly import Assembly
 
 from pydna._pretty import pretty_str

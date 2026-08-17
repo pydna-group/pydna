@@ -5,7 +5,7 @@ test parse
 """
 
 import pytest
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 from pydna.parsers import parse, parse_primers
 from pydna.amplify import pcr, Anneal
 
@@ -75,7 +75,7 @@ def test_Seq_arguments():
 
 
 def test_Dseq_arguments():
-    from pydna.dseq import Dseq
+    from pydna.core.dseq import Dseq
 
     f0, r0 = parse_primers(
         """
@@ -794,7 +794,7 @@ def test_annotation():
     https://github.com/pydna-group/pydna/issues/279
     """
     from pydna.amplify import pcr
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
     from pydna.primer import Primer
 
     dsr = Dseqrecord("ATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATTCTATTGCTGAAAAAGATAAT")

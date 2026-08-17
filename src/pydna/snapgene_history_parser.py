@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 """Parse SnapGene .dna files and reconstruct their cloning history as
-:class:`~pydna.dseqrecord.Dseqrecord` objects.
+:class:`~pydna.core.dseqrecord.Dseqrecord` objects.
 
 The single public entry point is :func:`parse_snapgene_history`, which reads a
 ``.dna`` file, resolves every step recorded in its SnapGene history, and
@@ -19,7 +19,7 @@ from sgffp.models.history import (
     SgffInputSummary,
     SgffHistoryOligo,
 )
-from pydna.dseq import Dseq
+from pydna.core.dseq import Dseq
 import re
 from pydna.assembly import (
     gibson_assembly,
@@ -33,7 +33,7 @@ from pydna.assembly import (
 from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization
 from pydna.primer import Primer
 from Bio.SeqFeature import SeqFeature, SimpleLocation, CompoundLocation
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 import os
 from pydna.opencloning_models import (
     AssemblyFragment,
@@ -526,7 +526,7 @@ def _get_default_source(file_name: str) -> UploadedFileSource:
 
 
 def parse_snapgene_history(data: str | bytes, file_name: str = "") -> Dseqrecord:
-    """Parse a SnapGene ``.dna`` file and return a :class:`~pydna.dseqrecord.Dseqrecord`
+    """Parse a SnapGene ``.dna`` file and return a :class:`~pydna.core.dseqrecord.Dseqrecord`
     whose ``source`` attribute tree encodes the full cloning history.
 
     Parameters
@@ -539,7 +539,7 @@ def parse_snapgene_history(data: str | bytes, file_name: str = "") -> Dseqrecord
 
     Returns
     -------
-    :class:`~pydna.dseqrecord.Dseqrecord`
+    :class:`~pydna.core.dseqrecord.Dseqrecord`
         The root sequence with its provenance tree resolved.
 
     Raises

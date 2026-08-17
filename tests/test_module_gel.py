@@ -16,7 +16,7 @@ def test_gel():
 
     from pydna.ladders import HI_LO_DNA_MARKER
 
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
 
     mygel = gel([PennStateLadder, [Dseqrecord("A" * 2000)]])
 

@@ -3,12 +3,12 @@ from pydna import _PydnaWarning
 
 
 def test_add_feature():
-    from pydna.seq import Seq
+    from pydna.core.seq import Seq
     from Bio.Seq import Seq as BSeq
     from Bio.SeqRecord import SeqRecord as BSeqRecord
-    from pydna.dseq import Dseq
-    from pydna.dseqrecord import Dseqrecord
-    from pydna.seqrecord import SeqRecord
+    from pydna.core.dseq import Dseq
+    from pydna.core.dseqrecord import Dseqrecord
+    from pydna.core.seqrecord import SeqRecord
 
     s = SeqRecord("tttGGATCCaaa")
     s.add_feature(3, 9)
@@ -40,7 +40,7 @@ def test_add_feature():
 
     from Bio.Seq import Seq
 
-    from pydna.seqrecord import SeqRecord
+    from pydna.core.seqrecord import SeqRecord
 
     a = SeqRecord(Seq("atgtaa"))
 
@@ -64,7 +64,7 @@ def test_add_feature():
 
 
 def test_stamp():
-    from pydna.seqrecord import SeqRecord
+    from pydna.core.seqrecord import SeqRecord
     from Bio.Seq import Seq as bpSeq
 
     a = SeqRecord("attt")
@@ -94,7 +94,7 @@ def test_stamp():
 
 def test___hash__():
     from Bio.Seq import Seq
-    from pydna.seqrecord import SeqRecord
+    from pydna.core.seqrecord import SeqRecord
 
     s = SeqRecord(Seq("GGATCC"))
     t = SeqRecord(Seq("GGATCC"))
@@ -118,9 +118,9 @@ def test_lcs():
     from collections import OrderedDict
     from Bio.Seq import Seq
     from Bio.SeqRecord import SeqRecord as BSeqRecord
-    from pydna.dseq import Dseq
-    from pydna.dseqrecord import Dseqrecord
-    from pydna.seqrecord import SeqRecord
+    from pydna.core.dseq import Dseq
+    from pydna.core.dseqrecord import Dseqrecord
+    from pydna.core.seqrecord import SeqRecord
 
     from Bio.SeqFeature import SeqFeature
     from Bio.SeqFeature import FeatureLocation, ExactPosition
@@ -163,7 +163,7 @@ def test_lcs():
 
 def test_format():
     from Bio.Seq import Seq
-    from pydna.seqrecord import SeqRecord
+    from pydna.core.seqrecord import SeqRecord
 
     s = SeqRecord(Seq("GGATCC"))
     assert s.format("gb").startswith("LOCUS")
@@ -173,8 +173,8 @@ def test_format():
 
 
 def test_seqrecord():
-    from pydna import seqrecord
-    from pydna.seq import Seq
+    from pydna.core import seqrecord
+    from pydna.core.seq import Seq
 
     s = seqrecord.SeqRecord("gatt")
     assert s.name == s.locus == "name"
@@ -334,8 +334,8 @@ def test_seqrecord():
 
 def test_cai():
     pytest.importorskip("cai2")
-    from pydna import seqrecord
-    from pydna.seq import Seq
+    from pydna.core import seqrecord
+    from pydna.core.seq import Seq
     from pydna.codon import rare_codons
 
     assert seqrecord.SeqRecord("atgtaa").cai() == 1.0

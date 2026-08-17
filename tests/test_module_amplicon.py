@@ -1,6 +1,6 @@
 def test_amplicon():
     from pydna.amplify import Anneal
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
     from pydna.primer import Primer
 
     template = Dseqrecord("AAAtacactcaccgtctatcattatctactatcgactgtatcatctgatagcacTTT")
@@ -50,7 +50,7 @@ def test_amplicon():
 
     from Bio.Seq import Seq
 
-    from pydna.seqrecord import SeqRecord
+    from pydna.core.seqrecord import SeqRecord
 
     arg = SeqRecord(Seq("aaa"))
 
@@ -59,7 +59,7 @@ def test_amplicon():
 
 def test_amplicon_dbd():
     from pydna.amplify import Anneal
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
     from pydna.primer import Primer
     from textwrap import dedent
 
@@ -101,7 +101,7 @@ def test_amplicon_dbd():
 
 def test_amplicon_dbd_low_gc():
     from pydna.amplify import Anneal
-    from pydna.dseqrecord import Dseqrecord
+    from pydna.core.dseqrecord import Dseqrecord
     from pydna.primer import Primer
     from textwrap import dedent
 

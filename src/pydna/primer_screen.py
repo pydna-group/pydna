@@ -12,7 +12,7 @@ algorithm. It is useful for PCR diagnostic purposes when given a list of primers
 and a single sequence or list of sequences to analyze.
 
 The primer list can consist of `Primer` objects returned by :func:`pydna.parsers.parse_primers`
-or any objects with a ``seq`` attribute, such as :class:`pydna.seqrecord.SeqRecord`
+or any objects with a ``seq`` attribute, such as :class:`pydna.core.seqrecord.SeqRecord`
 or :class:`Bio.SeqRecord.SeqRecord`.
 
 The Aho-Corasick algorithm efficiently finds all occurrences of a set of sequences
@@ -50,7 +50,7 @@ from collections import namedtuple
 from collections.abc import Callable
 from collections.abc import Sequence
 
-from pydna.dseqrecord import Dseqrecord
+from pydna.core.dseqrecord import Dseqrecord
 from pydna.primer import Primer
 from pydna.utils import _directed_interval_overlap
 
