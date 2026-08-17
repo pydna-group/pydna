@@ -71,6 +71,26 @@ def test_find_with_deletion():
     ]
 
 
+def test_equal():
+    # ACGTTACGT
+    # |||||||||
+    # ACGTTACGT
+    needle = "ACGTTACGT"
+    haystack = "ACGTTACGT"
+
+    results = findall(needle, haystack, 0, circular=False)
+
+    assert results == [
+        {
+            "distance": 0,
+            "start": 0,
+            "stop": 9,
+            "cigar": "9=",
+            "alignment": "ACGTTACGT\n|||||||||\nACGTTACGT",
+        }
+    ]
+
+
 def test_find_with_insert():
     # ACGTTACGT
     # ||||-||||
