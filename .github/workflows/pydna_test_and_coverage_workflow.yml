@@ -31,7 +31,7 @@ jobs:
           - os: ubuntu-latest
             python-version: "3.14"
           # This mimics what would happen installing using pip install pydna (removes the
-          # poetry.lock file before installing)
+          # uv.lock file before installing)
           - os: ubuntu-latest
             python-version: "3.12"
             fresh-install: true
@@ -66,25 +66,23 @@ jobs:
       - name: 🐍 Display Python version
         run: python -c "import sys; print(sys.version)"
 
-      - name: Install Poetry
-        run: |
-          python -m pip install --upgrade pip
-          pip install poetry==2.3.2
+      - name: Install uv
+        uses: astral-sh/setup-uv@v9
+        with:
+          version: "0.12.5"
+          enable-cache: true
 
-      - name: 🔩 list Poetry settings
-        run: poetry config --list
-
-      - name: remove poetry.lock for fresh install
-        run: rm poetry.lock
+      - name: Remove uv.lock for fresh install
+        run: rm -f uv.lock
         if: matrix.fresh-install == 'true'
 
-      - name: 🔩 Install with Poetry
-        run: poetry cache clear --all && poetry install --all-extras
+      - name: 🔩 Install with uv
+        run: uv sync --all-extras
 
-      - name: 🔎 poetry run python run_test.py
+      - name: 🔎 uv run python run_test.py
         # Don't run tests if we're just checking hooks
         if: (!matrix.hooks)
-        run: poetry run python run_test.py
+        run: uv run python run_test.py
 
       # Enforce pre-commit hooks ===========================
       - name: Get changed files
@@ -103,14 +101,14 @@ jobs:
 
       - name: Installing pre-commit hooks (cached)
         if: (matrix.hooks) && (steps.cache-precommit.outputs.cache-hit != 'true')
-        run: poetry run pre-commit install --install-hooks
+        run: uv run pre-commit install --install-hooks
 
       - name: Run style checking via pre-commit
         if: (matrix.hooks && steps.changed-files.outputs.all_changed_files)
         run: |
           echo "Changed files:"
           echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n'
-          poetry run pre-commit run --files ${{ steps.changed-files.outputs.all_changed_files }}
+          uv run pre-commit run --files ${{ steps.changed-files.outputs.all_changed_files }}
 
       # ======================================================
       - name: 🔼 Upload coverage to Codecov
