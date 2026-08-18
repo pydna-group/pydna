@@ -268,6 +268,12 @@ wheels = [
 ]
 
 [[package]]
+name = "mutalyzer-algebra"
+version = "1.5.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/83/a7/2a08553bb877ee527d99db123967e461a273b75f2941a489a238a7a856fd/mutalyzer_algebra-1.5.2.tar.gz", hash = "sha256:b7f5d6c1ee65a86dcc3042b6dc6e125a52cee507e9e265cdf630c2441a6f2b02", size = 20612, upload-time = "2025-01-07T09:45:04.577Z" }
+
+[[package]]
 name = "networkx"
 version = "3.6.1"
 source = { registry = "https://pypi.org/simple" }
@@ -493,6 +499,7 @@ source = { editable = "." }
 dependencies = [
     { name = "appdirs" },
     { name = "biopython" },
+    { name = "mutalyzer-algebra" },
     { name = "networkx" },
     { name = "numpy" },
     { name = "opencloning-linkml" },
@@ -530,6 +537,7 @@ requires-dist = [
     { name = "biopython", specifier = ">=1.87,<2.0" },
     { name = "cai2", marker = "extra == 'express'", specifier = ">=1.0.5" },
     { name = "matplotlib", marker = "extra == 'gel'", specifier = ">=3.4.3" },
+    { name = "mutalyzer-algebra", specifier = ">=1.5.2,<2.0.0" },
     { name = "networkx", specifier = ">=2.8.8" },
     { name = "numpy", marker = "python_full_version < '3.12'", specifier = ">1.26" },
     { name = "numpy", marker = "python_full_version >= '3.12'", specifier = ">=2.3.0" },
