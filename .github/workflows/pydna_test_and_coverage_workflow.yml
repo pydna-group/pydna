@@ -77,7 +77,7 @@ jobs:
         if: matrix.fresh-install == 'true'
 
       - name: 🔩 Install with uv
-        run: uv sync --all-extras
+        run: uv sync --all-extras --all-groups
 
       - name: 🔎 uv run python run_test.py
         # Don't run tests if we're just checking hooks
