@@ -87,7 +87,7 @@ jobs:
       - name: 🔎 uv run --all-extras --group test python run_test.py
         # Don't run tests if we're just checking hooks
         if: (!matrix.hooks)
-        run: uv run --all-extras --group test python run_test.py
+        run: uv run python run_test.py
 
       # Enforce pre-commit hooks ===========================
       - name: Get changed files
