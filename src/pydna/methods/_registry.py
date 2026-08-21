@@ -74,8 +74,6 @@ def get(name: str) -> Method:
     return _REGISTRY[name]
 
 
-
-
 def available() -> list[str]:
     """Sorted list of registered method names."""
     return sorted(_REGISTRY)

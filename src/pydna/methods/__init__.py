@@ -68,10 +68,6 @@ __all__ = [
     "get",
     "available",
     "methods",
-<<<<<<< HEAD
-=======
-    "for_source",
-    "entrypoint_for",
     # techniques
     "gibson_assembly",
     "in_fusion_assembly",
@@ -94,5 +90,4 @@ __all__ = [
     "recombinase_assembly",
     "crispr_integration",
     "pcr_assembly",
->>>>>>> 57832a81 (refactor: declare every cloning technique over the engine)
 ]
