@@ -152,7 +152,7 @@ cre_lox_integration = register(
         doc="""Returns the products resulting from the integration of an insert (or inserts joined
     through cre-lox recombination among them) into the genome through cre-lox integration.
 
-    Also works with lox66 and lox71 (see ``pydna.cre_lox`` for more details).
+    Also works with lox66 and lox71 (see ``pydna.methods.cre_lox`` for more details).
 
     Parameters
     ----------
