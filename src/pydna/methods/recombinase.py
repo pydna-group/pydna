@@ -30,7 +30,7 @@ Integration and excision with a single recombinase::
 
     >>> from pydna.core.dseqrecord import Dseqrecord
     >>> from pydna.methods.recombinase import Recombinase
-    >>> from pydna.assembly import recombinase_integration, recombinase_excision
+    >>> from pydna.methods import recombinase_integration, recombinase_excision
     >>> site1 = "ATGCCCTAAaaCT"
     >>> site2 = "CAaaTTTTTTTCCCT"
     >>> genome = Dseqrecord("ccccccATGCCCTAAAACTaaaaa")
@@ -110,6 +110,11 @@ from pydna.utils import shift_location
 from pydna.sequence_regex import compute_regex_site, dseqrecord_finditer
 from pydna.core.types import SequenceOverlap
 from opencloning_linkml.datamodel import Recombinase as RecombinaseModel
+from pydna.assembly import common_handle_insertion_fragments
+from pydna.methods._engine import Method, Shape
+from pydna.methods._registry import register
+from pydna.opencloning_models import RecombinaseSource
+import warnings
 
 
 def _recombinase_homology_offset_and_length(site: str) -> tuple[int, int]:
@@ -424,3 +429,119 @@ class RecombinaseCollection:
 
     def to_opencloning_model(self) -> list[RecombinaseModel]:
         return sum((r.to_opencloning_model() for r in self.recombinases), [])
+
+
+def _genome_and_inserts(params: dict) -> list[Dseqrecord]:
+    """The genome first, then the inserts, as the integration shape expects."""
+    return common_handle_insertion_fragments(
+        params.pop("genome"), params.pop("inserts")
+    )
+
+
+def _genome_only(params: dict) -> list[Dseqrecord]:
+    return [params.pop("genome")]
+
+
+# --- generic recombinase -----------------------------------------------------
+
+
+def _recombinase_algorithm(params: dict):
+    """The recombinase itself decides which of its sites may recombine."""
+    return params["recombinase"].overlap
+
+
+def _annotate_sites(products, inputs, params):
+    """Mark the sites the recombinase acted on."""
+    recombinase = params["recombinase"]
+    return [recombinase.annotate(p) for p in products]
+
+
+def _recombinase_source_fields(inputs, params):
+    """Record which recombinase produced the products."""
+    return {"recombinases": params["recombinase"]}
+
+
+recombinase_integration = register(
+    Method(
+        name="recombinase_integration",
+        doc="""Returns the products resulting from recombinase-mediated integration.
+
+    Parameters
+    ----------
+    genome : Dseqrecord
+        Target genome sequence.
+    inserts : list[Dseqrecord]
+        DNA fragment(s) to insert.
+    recombinase : Recombinase | RecombinaseCollection
+        Recombinase object.
+
+    Returns
+    -------
+    list[Dseqrecord]
+        List of integrated DNA molecules.
+
+    Examples
+    --------
+    >>> from pydna.core.dseqrecord import Dseqrecord
+    >>> from pydna.methods import recombinase_integration, recombinase_excision
+    >>> from pydna.methods.recombinase import Recombinase
+    >>> site1 = "ATGCCCTAAaaTT"
+    >>> site2 = "AAaaTTTTTTTCCCT"
+    >>> genome = Dseqrecord(f"cccccc{site1.upper()}aaaaa")
+    >>> insert = Dseqrecord(f"{site2.upper()}bbbbb", circular=True)
+    >>> recombinase = Recombinase(site1, site2)
+    >>> products = recombinase_integration(genome, [insert], recombinase)
+    >>> len(products) >= 1
+    True
+        """,
+        shape=Shape.INTEGRATION,
+        algorithm_factory=_recombinase_algorithm,
+        source=RecombinaseSource,
+        limit=None,
+        annotate=_annotate_sites,
+        source_fields=_recombinase_source_fields,
+        prepare_inputs=_genome_and_inserts,
+        positional=("genome", "inserts", "recombinase"),
+        summary="Integrate insert(s) at recombinase attachment sites.",
+    )
+)
+
+recombinase_excision_or_inversion = register(
+    Method(
+        name="recombinase_excision_or_inversion",
+        shape=Shape.EXCISION,
+        algorithm_factory=_recombinase_algorithm,
+        source=RecombinaseSource,
+        limit=None,
+        annotate=_annotate_sites,
+        source_fields=_recombinase_source_fields,
+        prepare_inputs=_genome_only,
+        positional=("genome", "recombinase"),
+        summary="Excise or invert the region between recombinase sites.",
+    )
+)
+
+recombinase_assembly = register(
+    Method(
+        name="recombinase_assembly",
+        shape=Shape.ASSEMBLY,
+        algorithm_factory=_recombinase_algorithm,
+        source=RecombinaseSource,
+        limit=None,
+        annotate=_annotate_sites,
+        source_fields=_recombinase_source_fields,
+        positional=("frags", "recombinase", "circular_only"),
+        summary="Join fragments at recombinase attachment sites.",
+    )
+)
+
+
+def recombinase_excision(genome: Dseqrecord, recombinase) -> list[Dseqrecord]:
+    """Deprecated alias of recombinase_excision_or_inversion."""
+    warnings.warn(
+        "`recombinase_excision` is deprecated and will be removed in a future version; use "
+        "`recombinase_excision_or_inversion` instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return recombinase_excision_or_inversion(genome, recombinase)

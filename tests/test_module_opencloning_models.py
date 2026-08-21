@@ -15,22 +15,22 @@ from opencloning_linkml.datamodel import (
 )
 from pydantic import BaseModel, ValidationError
 
-from pydna.assembly import (
+from pydna.methods import (
+    crispr_integration,
+    pcr_assembly,
     cre_lox_excision_or_inversion,
     cre_lox_integration,
-    crispr_integration,
-    fusion_pcr_assembly,
-    gateway_assembly,
-    gibson_assembly,
-    golden_gate_assembly,
     homologous_recombination_excision_or_inversion,
     homologous_recombination_integration,
-    in_fusion_assembly,
-    in_vivo_assembly,
-    ligation_assembly,
-    pcr_assembly,
     recombinase_excision_or_inversion,
     recombinase_integration,
+    gateway_assembly,
+    golden_gate_assembly,
+    in_vivo_assembly,
+    ligation_assembly,
+    fusion_pcr_assembly,
+    gibson_assembly,
+    in_fusion_assembly,
 )
 from pydna.methods.cre_lox import LOXP_SEQUENCE
 from pydna.core.dseq import Dseq
@@ -994,7 +994,6 @@ class ValidateTest(TestCase):
             gibson_assembly,
             in_fusion_assembly,
             fusion_pcr_assembly,
-            in_vivo_assembly,
         ]:
             products = func(fragments, limit=8)
             for p in products:

@@ -2,7 +2,7 @@
 # flake8: noqa: B950
 
 import pytest
-from pydna.assembly import pcr_assembly
+from pydna.methods import pcr_assembly
 from pydna import tm
 from pydna.core.dseqrecord import Dseqrecord
 from pydna.primer import Primer

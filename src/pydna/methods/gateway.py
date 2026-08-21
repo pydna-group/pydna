@@ -4,6 +4,10 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 from pydna.core.dseqrecord import Dseqrecord
+from pydna.assembly import assembly_is_multi_site
+from pydna.methods._engine import Method, Shape
+from pydna.methods._registry import register
+from pydna.opencloning_models import GatewaySource
 from Bio.SeqFeature import SimpleLocation
 from pydna.methods.recombinase import Recombinase, RecombinaseCollection
 
@@ -126,3 +130,134 @@ def annotate_gateway_sites(seq: Dseqrecord, greedy: bool) -> Dseqrecord:
         + recombinase_dict["LR"][mode].recombinases
     )
     return collection.annotate(seq)
+
+
+def _validate(inputs, params):
+    reaction_type = params.get("reaction_type")
+    if reaction_type not in ["BP", "LR"]:
+        raise ValueError(
+            f"Invalid reaction type: {reaction_type}, can only be BP or LR"
+        )
+
+
+def _algorithm(params: dict):
+    reaction_type = params["reaction_type"]
+    greedy = params.get("greedy", False)
+
+    def algorithm_fn(x, y, _l):
+        return gateway_overlap(x, y, reaction_type, greedy)
+
+    return algorithm_fn
+
+
+def _filter_assemblies(params: dict):
+    return assembly_is_multi_site if params.get("multi_site_only", False) else None
+
+
+def _explain_incompatible(inputs, params):
+    """Report the att sites present, so a failed reaction is diagnosable."""
+    greedy = params.get("greedy", False)
+    sites_in_fragments = list()
+    for frag in inputs:
+        sites_in_fragments.append(list(find_gateway_sites(frag, greedy).keys()))
+    formatted_strings = [
+        f"fragment {i + 1}: {', '.join(sites)}"
+        for i, sites in enumerate(sites_in_fragments)
+    ]
+    raise ValueError(
+        f"Inputs are not compatible for {params['reaction_type']} reaction.\n\n"
+        + "\n".join(formatted_strings),
+    )
+
+
+gateway_assembly = register(
+    Method(
+        name="gateway",
+        doc="""Returns the products for Gateway assembly / Gateway cloning.
+
+    Parameters
+    ----------
+    frags : list[Dseqrecord]
+        List of DNA fragments to assemble
+    reaction_type : Literal['BP', 'LR']
+        Type of Gateway reaction
+    greedy : bool, optional
+        If True, use greedy gateway consensus sites, by default False
+    circular_only : bool, optional
+        If True, only return circular assemblies, by default False
+    multi_site_only : bool, optional
+        If True, only return products that where 2 sites recombined. Even if input sequences
+        contain multiple att sites (typically 2), a product could be generated where only one
+        site recombines. That's typically not what you want, so you can set this to True to
+        only return products where both att sites recombined.
+
+    Returns
+    -------
+    list[Dseqrecord]
+        List of assembled DNA molecules
+
+
+    Examples
+    --------
+
+    Below an example with dummy Gateway sequences, composed with minimal sequences and the consensus
+    att sites.
+
+    >>> from pydna.methods import gateway_assembly
+    >>> from pydna.core.dseqrecord import Dseqrecord
+    >>> attB1 = "ACAACTTTGTACAAAAAAGCAGAAG"
+    >>> attP1 = "AAAATAATGATTTTATTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCTGAACGAGAAGCGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATCCAGTCACTATGAATCAACTACTTAGATGGTATTAGTGACCTGTA"
+    >>> attR1 = "ACAACTTTGTACAAAAAAGCTGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATGCAGTCACTATG"
+    >>> attL1 = "CAAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATAAGCAATGCTTTCTTATAATGCCAACTTTGTACAAAAAAGCAGGCT"
+    >>> seq1 = Dseqrecord("aaa" + attB1 + "ccc")
+    >>> seq2 = Dseqrecord("aaa" + attP1 + "ccc")
+    >>> seq3 = Dseqrecord("aaa" + attR1 + "ccc")
+    >>> seq4 = Dseqrecord("aaa" + attL1 + "ccc")
+    >>> products_BP = gateway_assembly([seq1, seq2], "BP")
+    >>> products_LR = gateway_assembly([seq3, seq4], "LR")
+    >>> len(products_BP)
+    2
+    >>> len(products_LR)
+    2
+
+    Now let's understand the ``multi_site_only`` parameter. Let's consider a case where we are swapping fragments
+    between two plasmids using an LR reaction. Experimentally, we expect to obtain two plasmids, resulting from the
+    swapping between the two att sites. That's what we get if we set ``multi_site_only`` to True.
+
+    >>> attL2 = 'aaataatgattttattttgactgatagtgacctgttcgttgcaacaaattgataagcaatgctttcttataatgccaactttgtacaagaaagctg'
+    >>> attR2 = 'accactttgtacaagaaagctgaacgagaaacgtaaaatgatataaatatcaatatattaaattagattttgcataaaaaacagactacataatactgtaaaacacaacatatccagtcactatg'
+    >>> insert = Dseqrecord("cccccc" + attL1 + "ccc" + attL2 + "cccccc", circular=True)
+    >>> backbone = Dseqrecord("ttttt" + attR1 + "aaa" + attR2, circular=True)
+    >>> products = gateway_assembly([insert, backbone], "LR", multi_site_only=True)
+    >>> len(products)
+    2
+
+    However, if we set ``multi_site_only`` to False, we get 4 products, which also include the intermediate products
+    where the two plasmids are combined into a single one through recombination of a single att site. This is an
+    intermediate of the reaction, and typically we don't want it:
+
+    >>> products = gateway_assembly([insert, backbone], "LR", multi_site_only=False)
+    >>> print([len(p) for p in products])
+    [469, 237, 232, 469]
+        """,
+        shape=Shape.ASSEMBLY,
+        algorithm_factory=_algorithm,
+        source=GatewaySource,
+        limit=None,
+        validate=_validate,
+        filter_assemblies_factory=_filter_assemblies,
+        on_empty=_explain_incompatible,
+        source_fields=lambda inputs, params: {
+            "reaction_type": params["reaction_type"],
+            "greedy": params.get("greedy", False),
+        },
+        positional=(
+            "frags",
+            "reaction_type",
+            "greedy",
+            "circular_only",
+            "multi_site_only",
+        ),
+        summary="Gateway cloning: recombine att sites in a BP or LR reaction.",
+    )
+)

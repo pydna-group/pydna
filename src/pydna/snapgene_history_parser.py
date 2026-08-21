@@ -21,13 +21,13 @@ from sgffp.models.history import (
 )
 from pydna.core.dseq import Dseq
 import re
-from pydna.assembly import (
-    gibson_assembly,
+from pydna.methods import (
     pcr_assembly,
+    ligation_assembly,
     restriction_ligation_assembly,
     gateway_assembly,
+    gibson_assembly,
     in_fusion_assembly,
-    ligation_assembly,
     fusion_pcr_assembly,
 )
 from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization
@@ -58,6 +58,7 @@ UNSUPPORTED_OPERATIONS = [
     "topoBlunt",
     "destroyRestrictionFragment",
 ]
+# SnapGene overlap-assembly operations mapped to the pydna technique.
 GIBSON_LIKE_FUNCTION_DICT = {
     "gibsonAssembly": gibson_assembly,
     "inFusionCloning": in_fusion_assembly,

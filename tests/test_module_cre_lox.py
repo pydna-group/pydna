@@ -1,5 +1,5 @@
 from pydna.methods.cre_lox import cre_loxP_overlap, annotate_loxP_sites
-from pydna.assembly import cre_lox_excision_or_inversion
+from pydna.methods import cre_lox_excision_or_inversion
 from Bio.Seq import reverse_complement
 from pydna.core.dseqrecord import Dseqrecord
 from pydna.parsers import parse
