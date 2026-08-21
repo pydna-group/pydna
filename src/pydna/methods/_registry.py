@@ -3,12 +3,13 @@
 
 Every :class:`~pydna.methods._engine.Method` declared anywhere in
 :mod:`pydna.methods` registers itself here, so the set of available techniques
-is discoverable at runtime rather than hardcoded in a table::
+is discoverable at runtime rather than hardcoded in a table:
 
-    from pydna.methods import available, get
-
-    available()                     # every technique's name
-    get("gibson").source            # the provenance it records
+    >>> from pydna.methods import available, get
+    >>> "gibson" in available()
+    True
+    >>> get("gibson").source.__name__
+    'GibsonAssemblySource'
 
 Adding a technique means declaring a ``Method`` in its own module — nothing
 central needs editing.

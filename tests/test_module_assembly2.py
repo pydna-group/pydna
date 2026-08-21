@@ -20,7 +20,14 @@ from Bio.Restriction import (
 from pydna.amplify import pcr
 from pydna.core.dseq import Dseq
 from pydna.readers import read
+from functools import partial
 import pydna.assembly as assembly
+import pydna.methods as methods
+from pydna.methods import (
+    gibson_assembly,
+    in_fusion_assembly,
+    fusion_pcr_assembly,
+)
 from Bio.SeqFeature import ExactPosition, FeatureLocation, SeqFeature, SimpleLocation
 from pydna.core.dseqrecord import Dseqrecord
 from pydna.parsers import parse
@@ -1322,7 +1329,7 @@ def test_fragments_only_once():
     asm = assembly.Assembly(
         fragments,
         limit=4,
-        algorithm=assembly.gibson_overlap,
+        algorithm=partial(assembly.terminal_overlap, trim_ends="5'"),
         use_all_fragments=True,
         use_fragment_order=False,
     )
@@ -1455,7 +1462,7 @@ def test_restriction_ligation_assembly():
             a2.reverse_complement() + b2,
         ]
 
-        products2 = assembly.restriction_ligation_assembly([a, b], [enz])
+        products2 = methods.restriction_ligation_assembly([a, b], [enz])
 
         assert sorted(dseqrecord_list_to_dseq_list(products)) == sorted(
             dseqrecord_list_to_dseq_list(products2)
@@ -1477,7 +1484,7 @@ def test_restriction_ligation_assembly():
     # We shift
     for shift in range(len(f2)):
         f2_shifted = f2.shifted(shift)
-        products2 = assembly.restriction_ligation_assembly(
+        products2 = methods.restriction_ligation_assembly(
             [f1, f2_shifted], [EcoRI], circular_only=True
         )
         observed_seguids = sorted(x.seguid() for x in products2)
@@ -1501,7 +1508,7 @@ def test_restriction_ligation_assembly():
     # We shift
     for shift in range(len(f1)):
         f1_shifted = f1.shifted(shift)
-        products2 = assembly.restriction_ligation_assembly(
+        products2 = methods.restriction_ligation_assembly(
             [f1_shifted, f2], [EcoRI, SalI], circular_only=True
         )
         observed_seguids = sorted(x.seguid() for x in products2)
@@ -1532,7 +1539,7 @@ def test_restriction_ligation_assembly():
     # Partial overlaps -> enzyme with positive overhang
     fragments = [Dseqrecord("GACACCAGAGTC"), Dseqrecord("GACTAACGGGTC")]
 
-    assert len(assembly.restriction_ligation_assembly(fragments, [DrdI])) == 0
+    assert len(methods.restriction_ligation_assembly(fragments, [DrdI])) == 0
 
     # Allowing partial overlaps
     def algo(x, y, _l):
@@ -1546,7 +1553,7 @@ def test_restriction_ligation_assembly():
     # Single fragment assemblies
 
     f1 = Dseqrecord("aaGAATTCtccGAATTCaa", circular=True)
-    products = assembly.restriction_ligation_assembly([f1], [EcoRI], circular_only=True)
+    products = methods.restriction_ligation_assembly([f1], [EcoRI], circular_only=True)
     assert len(products) == 3
     assert all(p.circular for p in products)
     assert str(products[0].seq) == "AATTCaaaaG"
@@ -1557,9 +1564,7 @@ def test_restriction_ligation_assembly():
     )
 
     f1 = Dseqrecord("aaGAATTCtccGAATTCaa", circular=False)
-    products = assembly.restriction_ligation_assembly(
-        [f1], [EcoRI], circular_only=False
-    )
+    products = methods.restriction_ligation_assembly([f1], [EcoRI], circular_only=False)
     assert len(products) == 3
     assert products[0].seq == Dseq("AATTCtccG", circular=True)
     assert products[1].seq == Dseq("aaGAATTCaa")
@@ -1568,7 +1573,7 @@ def test_restriction_ligation_assembly():
 
     # Mixing blunt and normal overhangs
     fragments = [Dseqrecord("aaaGATATCccGAATTCaa"), Dseqrecord("cgcGATATCataGAATTCtta")]
-    products = assembly.restriction_ligation_assembly(
+    products = methods.restriction_ligation_assembly(
         fragments, [EcoRI, EcoRV], circular_only=True
     )
     assert len(products) == 1
@@ -1579,12 +1584,12 @@ def test_restriction_ligation_assembly_partially_digested():
 
     backbone = Dseqrecord("cccGAATTCaaaGTCGACccc")
     insert = Dseqrecord("ggGAATTCaggtGTCGACgg")
-    products = assembly.restriction_ligation_assembly(
+    products = methods.restriction_ligation_assembly(
         [backbone, insert], [EcoRI, SalI], circular_only=True
     )
     restriction_products = insert.cut([EcoRI, SalI])
     cut_insert = restriction_products[1]
-    products2 = assembly.restriction_ligation_assembly(
+    products2 = methods.restriction_ligation_assembly(
         [backbone, cut_insert], [EcoRI, SalI], circular_only=True
     )
     assert len(products) == 1
@@ -1592,14 +1597,14 @@ def test_restriction_ligation_assembly_partially_digested():
 
     # Also in circular
     backbone = Dseqrecord("cccGAATTCaaaGTCGACccc", circular=True)
-    products_no_precut = assembly.restriction_ligation_assembly(
+    products_no_precut = methods.restriction_ligation_assembly(
         [backbone, insert], [EcoRI, SalI]
     )
     assert len(products_no_precut) == 2
     product_seguids = set(p.seguid() for p in products_no_precut)
     for shift in range(len(backbone)):
         backbone_shifted = backbone.shifted(shift)
-        products3 = assembly.restriction_ligation_assembly(
+        products3 = methods.restriction_ligation_assembly(
             [backbone_shifted, cut_insert], [EcoRI, SalI]
         )
         assert len(products3) == 2
@@ -1616,7 +1621,7 @@ def test_restriction_ligation_assembly_only_adjacent_edges():
     # this is better because the partial digest is there to mostly to warn about
     # internal cutsites from Type IIS restriction enzymes that may not produce any edge
     # see https://github.com/pydna-group/pydna/issues/426
-    products = assembly.restriction_ligation_assembly(
+    products = methods.restriction_ligation_assembly(
         [plasmid, multi_insert], [EcoRI], circular_only=True
     )
     assert len(products) == 4
@@ -1642,9 +1647,7 @@ def test_restriction_ligation_assembly_only_adjacent_edges():
 
     assert (
         len(
-            assembly.restriction_ligation_assembly(
-                [f1, f2], [EcoRI], circular_only=True
-            )
+            methods.restriction_ligation_assembly([f1, f2], [EcoRI], circular_only=True)
         )
         == 2
     )
@@ -1652,7 +1655,7 @@ def test_restriction_ligation_assembly_only_adjacent_edges():
     with pytest.warns(UserWarning):
         assert (
             len(
-                assembly.restriction_ligation_assembly(
+                methods.restriction_ligation_assembly(
                     [f1, f2], [EcoRI, EcoRV], circular_only=True
                 )
             )
@@ -1665,7 +1668,7 @@ def test_restriction_ligation_partial_overlaps():
 
     # Partial overlaps
     fragments = [Dseqrecord("GGTCTCCCCAATT"), Dseqrecord("GGTCTCCAACCAA")]
-    products = assembly.restriction_ligation_assembly(
+    products = methods.restriction_ligation_assembly(
         fragments, [BsaI], allow_partial_overlap=True
     )
 
@@ -1722,7 +1725,7 @@ def test_golden_gate():
     i3_pre, i3, i3_post = insert3.cut(BsaI)
     _, v = vector.cut(BsaI)
 
-    assembly_output = assembly.golden_gate_assembly(
+    assembly_output = methods.golden_gate_assembly(
         [insert1, insert2, insert3, vector], [BsaI], circular_only=True
     )
 
@@ -1742,11 +1745,7 @@ def test_gibson_assembly():
 
     # Should return the same thing for gibson and equivalent functions:
     for i, gibson_like_function in enumerate(
-        [
-            assembly.gibson_assembly,
-            assembly.in_fusion_assembly,
-            assembly.fusion_pcr_assembly,
-        ]
+        [gibson_assembly, in_fusion_assembly, fusion_pcr_assembly]
     ):
         mult = 1 if i == 0 else -1
         for fragments_str, expected_outputs in test_cases:
@@ -1800,9 +1799,9 @@ def test_gibson_assembly_circular_only():
     seq1 = Dseqrecord("AAAA" + hom)
     seq2 = Dseqrecord(hom + "CCCC")
     for gibson_like_function in [
-        assembly.gibson_assembly,
-        assembly.in_fusion_assembly,
-        assembly.fusion_pcr_assembly,
+        gibson_assembly,
+        in_fusion_assembly,
+        fusion_pcr_assembly,
     ]:
         products = gibson_like_function([seq1, seq2], 7, circular_only=True)
         assert len(products) == 0
@@ -2323,10 +2322,10 @@ def test_blunt_overlap():
 def test_ligation_assembly():
 
     fragments = Dseqrecord("AAAGAATTCAAA").cut(EcoRI)
-    assert assembly.ligation_assembly(fragments)[0].seq == Dseq("AAAGAATTCAAA")
+    assert methods.ligation_assembly(fragments)[0].seq == Dseq("AAAGAATTCAAA")
 
     fragments = Dseqrecord("TTGCGATCGCTT").cut(RgaI)
-    assert assembly.ligation_assembly(fragments)[0].seq == Dseq("TTGCGATCGCTT")
+    assert methods.ligation_assembly(fragments)[0].seq == Dseq("TTGCGATCGCTT")
 
     # Circular ligation
     fragments = Dseqrecord("AAGAATTCTTGAATTCCC", circular=True).cut(EcoRI)
@@ -2334,7 +2333,7 @@ def test_ligation_assembly():
         (fragments[0] + fragments[1]).looped(),
         (fragments[0] + fragments[1].reverse_complement()).looped(),
     ]
-    products = assembly.ligation_assembly(fragments, circular_only=True)
+    products = methods.ligation_assembly(fragments, circular_only=True)
     assert sorted(dseqrecord_list_to_dseq_list(products)) == sorted(
         dseqrecord_list_to_dseq_list(expected_result)
     )
@@ -2342,21 +2341,21 @@ def test_ligation_assembly():
     # Partial ligation
     a = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAGAA", 0, 3))
     b = Dseqrecord(Dseq.from_full_sequence_and_overhangs("AAAGAA", 3, 0))
-    assert assembly.ligation_assembly([a, b]) == []
+    assert methods.ligation_assembly([a, b]) == []
     assert (
-        str(assembly.ligation_assembly([a, b], allow_partial_overlap=True)[0].seq)
+        str(methods.ligation_assembly([a, b], allow_partial_overlap=True)[0].seq)
         == "AAAGAAAGAA"
     )
 
     # Single fragment assemblies
     fragments = Dseqrecord("AAGAATTCTTGAATTCCC").cut(EcoRI)
-    result = assembly.ligation_assembly([fragments[1]])
+    result = methods.ligation_assembly([fragments[1]])
     assert len(result) == 1
     assert result[0].seq == fragments[1].looped().seq
 
     # Blunt ligation combined with sticky end
     fragments = Dseqrecord("AAAGAATTCAAA").cut(EcoRI)
-    result = assembly.ligation_assembly(fragments, allow_blunt=True)
+    result = methods.ligation_assembly(fragments, allow_blunt=True)
     result_str = [str(x.seq) for x in result]
     assert sorted(result_str) == sorted(["AAAGAATTCAAA"])
     assert result[0].circular
@@ -2548,7 +2547,7 @@ def test_single_site_integration_location_collapse():
     insert2 = Dseqrecord(f"t{homology}tc{homology}c")
 
     def annotations(insert):
-        products = assembly.homologous_recombination_integration(genome, [insert], 6)
+        products = methods.homologous_recombination_integration(genome, [insert], 6)
         assert len(products) == 1
         return [
             (str(i.left_location), str(i.right_location))
@@ -2797,7 +2796,7 @@ def test_insertion_edge_case():
     for repair_template, expected_seq in zip(
         [del_G, add_G], ["CCGAGGGAATC", "CCGAGGGGGAATC"]
     ):
-        products = assembly.homologous_recombination_integration(
+        products = methods.homologous_recombination_integration(
             genome, [repair_template], 4
         )
         assert [str(p.seq) for p in products] == [expected_seq]
@@ -2844,7 +2843,7 @@ def test_in_vivo_assembly():
                     )
                     for f in fragments_str
                 ]
-            products = assembly.in_vivo_assembly(fragments, 7, circular_only=True)
+            products = methods.in_vivo_assembly(fragments, 7, circular_only=True)
             products_str = [str(p.seq) for p in products]
             assert products_str == expected_outputs
 
@@ -2853,13 +2852,13 @@ def test_homologous_recombination_excision_deprecated_alias_warns_and_matches_ne
     homology = "AAGTCCGTTCGTTTTACCTG"
     genome = Dseqrecord(f"aaaaaa{homology}cccc", name="genome")
     insert = Dseqrecord(f"{homology}tttt{homology}", name="insert")
-    integrated = assembly.homologous_recombination_integration(genome, [insert], 20)[0]
+    integrated = methods.homologous_recombination_integration(genome, [insert], 20)[0]
 
     with pytest.warns(
         DeprecationWarning, match="homologous_recombination_excision_or_inversion"
     ):
-        products_old = assembly.homologous_recombination_excision(integrated, 20)
-    products_new = assembly.homologous_recombination_excision_or_inversion(
+        products_old = methods.homologous_recombination_excision(integrated, 20)
+    products_new = methods.homologous_recombination_excision_or_inversion(
         integrated, 20
     )
 
@@ -2882,7 +2881,7 @@ def test_gateway_assembly():
     product_BP = "aaaACAACTTTGTACAAAAAAGCTGAACGAGAAGCGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATCCAGTCACTATGAATCAACTACTTAGATGGTATTAGTGACCTGTAccc"
     product_PB = "aaaAAAATAATGATTTTATTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATGAGCAATGCTTTTTTATAATGCCAACTTTGTACAAAAAAGCAGAAGccc"
 
-    products_BP = assembly.gateway_assembly([seq1, seq2], "BP")
+    products_BP = methods.gateway_assembly([seq1, seq2], "BP")
     assert [product_BP, product_PB] == [str(s.seq) for s in products_BP]
 
     seq3 = Dseqrecord("aaa" + attR1 + "ccc")
@@ -2890,32 +2889,32 @@ def test_gateway_assembly():
     product_RL = "aaaACAACTTTGTACAAAAAAGCAGGCTccc"
     product_LR = "aaaCAAATAATGATTTTATTTTGACTGATAGTGACCTGTTCGTTGCAACAAATTGATAAGCAATGCTTTCTTATAATGCCAACTTTGTACAAAAAAGCTGAACGAGAAACGTAAAATGATATAAATATCAATATATTAAATTAGATTTTGCATAAAAAACAGACTACATAATACTGTAAAACACAACATATGCAGTCACTATGccc"
 
-    products_LR = assembly.gateway_assembly([seq3, seq4], "LR")
+    products_LR = methods.gateway_assembly([seq3, seq4], "LR")
     assert [product_RL, product_LR] == [str(s.seq) for s in products_LR]
 
     # Products are not valid inputs for the parent reaction
     with pytest.raises(ValueError):
-        assembly.gateway_assembly(products_BP, "BP")
+        methods.gateway_assembly(products_BP, "BP")
     with pytest.raises(ValueError):
-        assembly.gateway_assembly(products_LR, "LR")
+        methods.gateway_assembly(products_LR, "LR")
 
     # Test that greedy is being used (finds)
     with pytest.raises(ValueError) as e:
-        assembly.gateway_assembly(products_LR, "LR", greedy=True)
+        methods.gateway_assembly(products_LR, "LR", greedy=True)
     assert "fragment 2: attB1, attP1, attL1, attR1" in str(e.value)
 
     # Test multi site only
     seq1 = Dseqrecord("aaa" + attB1 + "ggg" + attB2 + "ccc", circular=True)
     seq2 = Dseqrecord("aaa" + attP1 + "ggg" + attP2 + "ccc", circular=True)
 
-    products = assembly.gateway_assembly([seq1, seq2], "BP")
+    products = methods.gateway_assembly([seq1, seq2], "BP")
     assert len(products) == 4
-    products = assembly.gateway_assembly([seq1, seq2], "BP", multi_site_only=True)
+    products = methods.gateway_assembly([seq1, seq2], "BP", multi_site_only=True)
     assert len(products) == 2
 
     # Test single input
     seq1 = Dseqrecord("aaa" + attB1 + "ccc" + attP1)
-    products = assembly.gateway_assembly([seq1], "BP")
+    products = methods.gateway_assembly([seq1], "BP")
     assert len(products) == 2
     assert (
         str(products[0].seq)
@@ -2956,22 +2955,22 @@ def test_crispr_integration():
     )
     insert = Dseqrecord("aaccggttAAAAAAAAAttcaaagcac", name="insert")
     guide = Primer("ttcaatgcaaacagtaatga", name="guide")
-    product, *_ = assembly.crispr_integration(genome, [insert], [guide], 8)
+    product, *_ = methods.crispr_integration(genome, [insert], [guide], 8)
     assert product.seq == Dseq("AAaaccggttAAAAAAAAAttcaaagcacTT")
 
     # Same result if primer in caps
     guide_caps = Primer(str(guide.seq).upper())
-    product, *_ = assembly.crispr_integration(genome, [insert], [guide_caps], 8)
+    product, *_ = methods.crispr_integration(genome, [insert], [guide_caps], 8)
     assert product.seq == Dseq("AAaaccggttAAAAAAAAAttcaaagcacTT")
 
     # Value error if no guides passed
     with pytest.raises(ValueError):
-        assembly.crispr_integration(genome, [insert], [], 8)
+        methods.crispr_integration(genome, [insert], [], 8)
 
     guide2 = Primer("ttcaatgcTTTcagtaatga")
     # Value error if it does not cut
     with pytest.raises(ValueError):
-        assembly.crispr_integration(genome, [insert], [guide, guide2], 8)
+        methods.crispr_integration(genome, [insert], [guide, guide2], 8)
 
     # If all guides cut outside, no products
     genome = Dseqrecord(
@@ -2980,13 +2979,13 @@ def test_crispr_integration():
     )
     guide_outside = Primer("CTGAACTCGGTGTTGAGCCC")
     with pytest.warns(UserWarning):
-        products = assembly.crispr_integration(genome, [insert], [guide_outside], 8)
+        products = methods.crispr_integration(genome, [insert], [guide_outside], 8)
     # Empty products
     assert len(products) == 0
 
     # If some guides cut outside and others don't, empty list and warning
     with pytest.warns(UserWarning):
-        products = assembly.crispr_integration(
+        products = methods.crispr_integration(
             genome, [insert], [guide_outside, guide], 8
         )
     assert len(products) == 0
@@ -3001,16 +3000,16 @@ def test_crispr_integration():
     insert = Dseqrecord(f"{homology1}gggg{homology2}", circular=True)
 
     with pytest.raises(ValueError):
-        assembly.crispr_integration(genome, [insert], [guide], 20)
+        methods.crispr_integration(genome, [insert], [guide], 20)
 
     # Off-targets for the single integrations, but not for the one that uses both homology sites
     genome = Dseqrecord(
         f"aaaaaaaa{homology1}aaattcaatgcaaacagtaatgaTGGaa{homology2}aaaaaa"
     )
-    assembly.crispr_integration(genome, [insert], [guide], 20)
+    methods.crispr_integration(genome, [insert], [guide], 20)
 
     with pytest.warns(UserWarning):
-        products = assembly.crispr_integration(genome, [insert], [guide], 20)
+        products = methods.crispr_integration(genome, [insert], [guide], 20)
     assert len(products) == 1
 
 
@@ -3021,7 +3020,7 @@ def test_crispr_integration_edge_case():
 
     insert = Dseqrecord(f"{homology1}acaa{homology1}")
 
-    products = assembly.crispr_integration(genome, [insert], [guide], 40)
+    products = methods.crispr_integration(genome, [insert], [guide], 40)
     assert len(products) == 1
     assert str(products[0].seq) == f"aaaaaa{homology1}acaa{homology1}tttttttt"
 
@@ -3032,13 +3031,13 @@ def test_pcr_assembly():
     primer_fwd = Primer("ACGTACGT", name="forward")
     primer_rvs = Primer("GCGCGCGC", name="reverse")
 
-    products = assembly.pcr_assembly(template, primer_fwd, primer_rvs, limit=8)
+    products = methods.pcr_assembly(template, primer_fwd, primer_rvs, limit=8)
     assert len(products) == 1
     assert str(products[0].seq) == "ACGTACGTAAAAAAGCGCGCGC"
 
     # Works with the reverse complement as well, and directionality
     # is determined by forward primer
-    products = assembly.pcr_assembly(
+    products = methods.pcr_assembly(
         template.reverse_complement(), primer_fwd, primer_rvs, limit=8
     )
     assert len(products) == 1
@@ -3049,7 +3048,7 @@ def test_pcr_assembly():
     # By default, this should be false
     assert products[0].source.add_primer_features is False
     # Now with add_primer_features
-    product, *_ = assembly.pcr_assembly(
+    product, *_ = methods.pcr_assembly(
         template, primer_fwd, primer_rvs, limit=8, add_primer_features=True
     )
     assert product.source.add_primer_features is True
@@ -3063,7 +3062,7 @@ def test_pcr_assembly():
     # Test with two identical primers
     template = Dseqrecord("TTTTACGTACGTAAAAAAACGTACGTTTTTT")
     primer_fwd = Primer("ACGTACGT")
-    products = assembly.pcr_assembly(template, primer_fwd, primer_fwd, limit=8)
+    products = methods.pcr_assembly(template, primer_fwd, primer_fwd, limit=8)
     assert len(products) == 1
 
 
@@ -3073,7 +3072,7 @@ def test_is_amplicon():
     p1 = Primer("CCCtacactcaccgtctatcattatc")
     p2 = Primer("GGGgtgctatcagatgatacagtcg")
 
-    product = assembly.pcr_assembly(template, p1, p2)[0]
+    product = methods.pcr_assembly(template, p1, p2)[0]
     assert product.is_amplicon()
     assert not template.is_amplicon()
 
@@ -3085,8 +3084,8 @@ def test_pcr_assembly_figure():
     p1 = Primer("CCCtacactcaccgtctatcattatc")
     p2 = Primer("GGGgtgctatcagatgatacagtcg")
 
-    product = assembly.pcr_assembly(template, p1, p2)[0]
-    product_circ = assembly.pcr_assembly(template_circ, p1, p2)[0]
+    product = methods.pcr_assembly(template, p1, p2)[0]
+    product_circ = methods.pcr_assembly(template_circ, p1, p2)[0]
 
     fig = textwrap.dedent(
         """\
@@ -3174,7 +3173,7 @@ def test_inversion_homologous_recombination():
         len("ggg" + hom), len("ggg" + hom) + 3, strand=1, label=["payload"]
     )
 
-    prods = assembly.homologous_recombination_excision_or_inversion(seq1, limit=20)
+    prods = methods.homologous_recombination_excision_or_inversion(seq1, limit=20)
     expected = (
         "ggg" + hom + reverse_complement("cca") + reverse_complement(hom) + "tttt"
     )
@@ -3186,7 +3185,7 @@ def test_inversion_homologous_recombination():
     assert payload_feature.location.strand == -1
 
     seq1 = seq1.looped()
-    prods = assembly.homologous_recombination_excision_or_inversion(seq1, limit=20)
+    prods = methods.homologous_recombination_excision_or_inversion(seq1, limit=20)
     assert len(prods) == 1
     assert prods[0].seq.seguid() == Dseq(expected, circular=True).seguid()
 
@@ -3325,8 +3324,8 @@ def test_integration_edge_case_collection():
     homology1 = "ATGCAAAT"
     seq1 = Dseqrecord(f"g{homology1}gg{homology1}g")
     seq2 = Dseqrecord(f"{homology1}")
-    products1 = assembly.homologous_recombination_integration(seq2, [seq1], 6)
-    products2 = assembly.homologous_recombination_integration(seq1, [seq2], 6)
+    products1 = methods.homologous_recombination_integration(seq2, [seq1], 6)
+    products2 = methods.homologous_recombination_integration(seq1, [seq2], 6)
     assert len(products1) == len(products2) == 1
 
     # Too many results? perhaps wrong products
@@ -3336,7 +3335,7 @@ def test_integration_edge_case_collection():
 
     genome = Dseqrecord(f"aaaaaa{homology1}aattggaac{homology1}tttttttt")
 
-    assembly.homologous_recombination_integration(genome, [insert], 40)
+    methods.homologous_recombination_integration(genome, [insert], 40)
 
 
 def test_common_core_and_trims_edge_case():
