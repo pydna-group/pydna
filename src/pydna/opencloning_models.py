@@ -109,7 +109,7 @@ from pydna._pretty import pretty_str
 if TYPE_CHECKING:  # pragma: no cover
     from pydna.core.dseqrecord import Dseqrecord
     from pydna.primer import Primer
-    from pydna.recombinase import RecombinaseCollection, Recombinase
+    from pydna.methods.recombinase import RecombinaseCollection, Recombinase
 
 
 # Thread-local storage for ID strategy
@@ -967,7 +967,7 @@ class RecombinaseSource(AssemblySource):
     @field_validator("recombinases")
     @classmethod
     def _validate_recombinases(cls, value: "RecombinaseCollection" | "Recombinase"):
-        from pydna.recombinase import RecombinaseCollection, Recombinase
+        from pydna.methods.recombinase import RecombinaseCollection, Recombinase
 
         if isinstance(value, RecombinaseCollection) or isinstance(value, Recombinase):
             return value
@@ -985,7 +985,7 @@ class RecombinaseSource(AssemblySource):
     def _get_deserialization_overrides(
         cls, model: "_RecombinaseSource", sequences, primers
     ):
-        from pydna.recombinase import (
+        from pydna.methods.recombinase import (
             RecombinaseCollection,
             Recombinase as _RecombinaseClass,
         )

@@ -9,7 +9,7 @@ from pydna.assembly import (
     recombinase_excision_or_inversion,
     recombinase_assembly,
 )
-from pydna.recombinase import (
+from pydna.methods.recombinase import (
     _recombinase_homology_offset_and_length,
     Recombinase,
     RecombinaseCollection,

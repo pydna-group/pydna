@@ -1,4 +1,4 @@
-from pydna.gateway import annotate_gateway_sites, gateway_overlap, find_gateway_sites
+from pydna.methods.gateway import annotate_gateway_sites, gateway_overlap, find_gateway_sites
 import pydna.assembly as assembly
 import glob
 from pydna.parsers import parse_snapgene

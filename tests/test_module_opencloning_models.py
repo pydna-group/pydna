@@ -32,7 +32,7 @@ from pydna.assembly import (
     recombinase_excision_or_inversion,
     recombinase_integration,
 )
-from pydna.cre_lox import LOXP_SEQUENCE
+from pydna.methods.cre_lox import LOXP_SEQUENCE
 from pydna.core.dseq import Dseq
 from pydna.core.dseqrecord import Dseqrecord
 from pydna.oligonucleotide_hybridization import oligonucleotide_hybridization
@@ -61,7 +61,7 @@ from pydna.opencloning_models import (
     read_dseqrecord_from_text_file_sequence,
 )
 from pydna.primer import Primer
-from pydna.recombinase import Recombinase
+from pydna.methods.recombinase import Recombinase
 from pydna.utils import shift_location
 
 import glob

@@ -5,7 +5,7 @@
 
 from pydna.core.dseqrecord import Dseqrecord
 from Bio.SeqFeature import SimpleLocation
-from pydna.recombinase import Recombinase, RecombinaseCollection
+from pydna.methods.recombinase import Recombinase, RecombinaseCollection
 
 
 def create_recombinase_dict() -> dict[str, dict[str, RecombinaseCollection]]:

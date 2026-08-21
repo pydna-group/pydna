@@ -43,10 +43,10 @@ from pydna.core.types import (
     SequenceOverlap,
     AssemblyEdgeType,
 )
-from pydna.gateway import gateway_overlap, find_gateway_sites
-from pydna.cre_lox import cre_loxP_overlap
+from pydna.methods.gateway import gateway_overlap, find_gateway_sites
+from pydna.methods.cre_lox import cre_loxP_overlap
 from pydna.core.alphabet import anneal_strands
-from pydna.recombinase import Recombinase, RecombinaseCollection
+from pydna.methods.recombinase import Recombinase, RecombinaseCollection
 
 from typing import TYPE_CHECKING, Callable, Literal
 from pydna.opencloning_models import (
@@ -65,7 +65,7 @@ from pydna.opencloning_models import (
     SourceInput,
     CRISPRSource,
 )
-from pydna.crispr import cas9
+from pydna.methods.crispr import cas9
 import warnings
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -2948,7 +2948,7 @@ def cre_lox_integration(
 
     >>> from pydna.core.dseqrecord import Dseqrecord
     >>> from pydna.assembly import cre_lox_integration, cre_lox_excision
-    >>> from pydna.cre_lox import LOXP_SEQUENCE
+    >>> from pydna.methods.cre_lox import LOXP_SEQUENCE
     >>> a = Dseqrecord(f"cccccc{LOXP_SEQUENCE}aaaaa")
     >>> b = Dseqrecord(f"{LOXP_SEQUENCE}bbbbb", circular=True)
     >>> [a, b]
@@ -3001,7 +3001,7 @@ def cre_lox_excision_or_inversion(genome: Dseqrecord) -> list[Dseqrecord]:
 
     >>> from pydna.core.dseqrecord import Dseqrecord
     >>> from pydna.assembly import cre_lox_integration, cre_lox_excision_or_inversion
-    >>> from pydna.cre_lox import LOXP_SEQUENCE
+    >>> from pydna.methods.cre_lox import LOXP_SEQUENCE
     >>> a = Dseqrecord(f"cccccc{LOXP_SEQUENCE}aaaaa")
     >>> b = Dseqrecord(f"{LOXP_SEQUENCE}bbbbb", circular=True)
     >>> [a, b]
@@ -3107,7 +3107,7 @@ def recombinase_integration(
     --------
     >>> from pydna.core.dseqrecord import Dseqrecord
     >>> from pydna.assembly import recombinase_integration, recombinase_excision
-    >>> from pydna.recombinase import Recombinase
+    >>> from pydna.methods.recombinase import Recombinase
     >>> site1 = "ATGCCCTAAaaTT"
     >>> site2 = "AAaaTTTTTTTCCCT"
     >>> genome = Dseqrecord(f"cccccc{site1.upper()}aaaaa")

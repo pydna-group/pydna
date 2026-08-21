@@ -18,7 +18,7 @@ from typing import (
 
 # Import AbstractCut at runtime for CutSiteType
 from Bio.Restriction.Restriction import AbstractCut
-from pydna.crispr import _cas
+from pydna.methods.crispr import _cas
 
 if TYPE_CHECKING:
     from Bio.Restriction import RestrictionBatch

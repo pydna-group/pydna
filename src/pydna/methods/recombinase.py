@@ -29,7 +29,7 @@ recombinase_excision functions from the assembly2 module.
 Integration and excision with a single recombinase::
 
     >>> from pydna.core.dseqrecord import Dseqrecord
-    >>> from pydna.recombinase import Recombinase
+    >>> from pydna.methods.recombinase import Recombinase
     >>> from pydna.assembly import recombinase_integration, recombinase_excision
     >>> site1 = "ATGCCCTAAaaCT"
     >>> site2 = "CAaaTTTTTTTCCCT"
@@ -49,7 +49,7 @@ Integration and excision with a single recombinase::
 Find and annotate sites in a sequence::
 
     >>> from pydna.core.dseqrecord import Dseqrecord
-    >>> from pydna.recombinase import Recombinase
+    >>> from pydna.methods.recombinase import Recombinase
     >>> site1, site2 = "ATGCCCTAAaaTT", "AAaaTTTTTTTCCCT"
     >>> rec = Recombinase(site1, site2, site1_name="mysite1", site2_name="mysite2")
     >>> seq = Dseqrecord("gggATGCCCTAAaaTTttt")
@@ -61,7 +61,7 @@ create a RecombinaseCollection. It has the methods overlap, find, and annotate,
 so you can use it as a single Recombinase. For an example, check the gateway module::
 
     >>> from pydna.core.dseqrecord import Dseqrecord
-    >>> from pydna.recombinase import Recombinase, RecombinaseCollection
+    >>> from pydna.methods.recombinase import Recombinase, RecombinaseCollection
     >>> rec1 = Recombinase("AAaaTTC", "CCaaTTC", site1_name="s1", site2_name="s2")
     >>> rec2 = Recombinase("GAccACC", "TCccAAC", site1_name="s3", site2_name="s4")
     >>> collection = RecombinaseCollection([rec1, rec2])
@@ -86,7 +86,7 @@ If the recombinase reaction is reversible, you can get the reverse recombinase w
 Using a Recombinase as Assembly algorithm::
 
     >>> from pydna.core.dseqrecord import Dseqrecord
-    >>> from pydna.recombinase import Recombinase
+    >>> from pydna.methods.recombinase import Recombinase
     >>> from pydna.assembly import Assembly
     >>> site1 = "ATGCCCTAAaaTT"
     >>> site2 = "AAaaTTTTTTTCCCT"
@@ -164,7 +164,7 @@ class Recombinase:
     Examples
     --------
     >>> from pydna.core.dseqrecord import Dseqrecord
-    >>> from pydna.recombinase import Recombinase
+    >>> from pydna.methods.recombinase import Recombinase
     >>> rec = Recombinase("ATGCCCTAAaaTT", "AAaaTTTTTTTCCCT")
     >>> seqA = Dseqrecord("aaaATGCCCTAAaaTTtt")
     >>> seqB = Dseqrecord("tataAAaaTTTTTTTCCCTaaa")
@@ -236,7 +236,7 @@ class Recombinase:
         Examples
         --------
         >>> from pydna.core.dseqrecord import Dseqrecord
-        >>> from pydna.recombinase import Recombinase
+        >>> from pydna.methods.recombinase import Recombinase
         >>> rec = Recombinase("ATGCCCTAAaaTT", "AAaaTTTTTTTCCCT")
         >>> rec.get_reverse_recombinase()
         Recombinase(site1=ATGCCCTAAaaTTTTTTTCCCT, site2=AAaaTT, site1_name=site12, site2_name=site21)

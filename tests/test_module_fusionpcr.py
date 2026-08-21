@@ -2,7 +2,7 @@ from pydna.core.dseq import Dseq
 from pydna.core.dseqrecord import Dseqrecord
 from pydna.utils import eq
 from Bio.SeqFeature import SeqFeature, SimpleLocation
-from pydna.fusionpcr import fuse_by_pcr
+from pydna.methods.fusionpcr import fuse_by_pcr
 
 
 x = Dseqrecord(

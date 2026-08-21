@@ -6,7 +6,7 @@ from pydna.core.dseqrecord import Dseqrecord
 from pydna.core.dseq import Dseq
 from Bio.Restriction import SapI
 from pydna.parsers import parse_primers
-from pydna.crispr import cas9, protospacer
+from pydna.methods.crispr import cas9, protospacer
 from pydna.legacy.assembly import Assembly
 from textwrap import dedent
 from Bio.Seq import Seq
