@@ -127,7 +127,7 @@ class Seq(_Seq):
         """
 
         p = _Seq(self._data).translate(
-            stop_symbol=stop_symbol, to_stop=to_stop, cds=cds, gap=gap
+            table=table, stop_symbol=stop_symbol, to_stop=to_stop, cds=cds, gap=gap
         )
         return ProteinSeq(p._data)
 

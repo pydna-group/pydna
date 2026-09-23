@@ -2,6 +2,12 @@ import pytest
 from pydna.seq import Seq
 
 
+def test_translate_table():
+    seq = Seq("ATGTGATAA")
+    assert str(seq.translate()) == "M**"
+    assert str(seq.translate(table=2)) == "MW*"
+
+
 def test_seguid():
     assert Seq("gattaca").seguid() == "lsseguid=tp2jzeCM2e3W4yxtrrx09CMKa_8"
 
