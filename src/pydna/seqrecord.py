@@ -185,9 +185,9 @@ class SeqRecord(BioSeqRecordSeqRecord):
         else:
             return True
 
-    def translate(self):
+    def translate(self, *args, **kwargs):
         """docstring."""
-        p = super().translate()
+        p = super().translate(*args, **kwargs)
         return ProteinSeqRecord(ProteinSeq(p.seq))
 
     def add_colors_to_features_for_ape(self):
