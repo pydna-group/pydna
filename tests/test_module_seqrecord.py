@@ -2,6 +2,15 @@ import pytest
 from pydna import _PydnaWarning
 
 
+def test_translate_forwards_arguments():
+    from pydna.seqrecord import SeqRecord
+
+    record = SeqRecord("ATGTGATAA")
+    assert str(record.translate("Standard", "@").seq) == "M@@"
+    assert str(record.translate(table="Standard", stop_symbol="@").seq) == "M@@"
+    assert str(record.translate(to_stop=True).seq) == "M"
+
+
 def test_add_feature():
     from pydna.seq import Seq
     from Bio.Seq import Seq as BSeq
