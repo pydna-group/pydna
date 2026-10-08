@@ -1001,6 +1001,27 @@ class ValidateTest(TestCase):
             for p in products:
                 p.validate_history()
 
+    def test_validate_gibson_like_terminal_mismatches(self):
+        homology1 = "GAGTCTCC"
+        homology2 = "TCAGAAGT"
+        homology3 = "TTCTTCAG"
+        # Non-homologous bases at some of the ends
+        fragments = [
+            Dseqrecord(f"{homology1}acgatAAtgctcc{homology2}gc", name="f1"),
+            Dseqrecord(f"a{homology2}tcatGGGG{homology3}", name="f2"),
+            Dseqrecord(f"{homology3}atataTTTT{homology1}ttt", name="f3"),
+        ]
+        for func in [
+            gibson_assembly,
+            in_fusion_assembly,
+            fusion_pcr_assembly,
+        ]:
+            self.assertEqual(func(fragments, limit=8, circular_only=True), [])
+            products = func(fragments, limit=8, terminal_mismatches=3)
+            self.assertEqual(len(products), 1)
+            for p in products:
+                p.validate_history()
+
     def test_validate_examples_opencloning(self):
 
         for file in glob.glob(f"{test_folder}/examples_opencloning/*.json"):

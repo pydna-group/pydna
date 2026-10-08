@@ -427,7 +427,11 @@ def _get_trim_end_info(
 
 
 def terminal_overlap(
-    seqx: Dseqrecord, seqy: Dseqrecord, limit=25, trim_ends: None | str = None
+    seqx: Dseqrecord,
+    seqy: Dseqrecord,
+    limit=25,
+    trim_ends: None | str = None,
+    terminal_mismatches: int = 0,
 ):
     """
     Assembly algorithm to find terminal overlaps (e.g. for Gibson assembly).
@@ -456,6 +460,12 @@ def terminal_overlap(
     trim_ends : str
         The ends to trim, either '5' or '3'
         If None, no trimming is done
+    terminal_mismatches : int
+        Maximum number of non-homologous bases tolerated at the right end of seqx
+        and at the left end of seqy (after trimming), each end counted separately.
+        These bases are not part of the overlap, and are removed in the assembly
+        product (e.g. the 3' flaps removed by the polymerase in HiFi assembly).
+        By default 0, meaning the overlap must reach the very ends of both sequences.
 
     Returns
     -------
@@ -483,10 +493,23 @@ def terminal_overlap(
     [(3, 0, 4)]
     >>> terminal_overlap(x, y, limit=4, trim_ends="3'")
     []
+
+    Tolerating non-homologous bases at the ends (2 at the end of x, 1 at the start of y):
+    >>> x = Dseqrecord("ttactaGTCGACTGCAgg")
+    >>> y = Dseqrecord("cGTCGACTGCAcgcacg")
+    >>> terminal_overlap(x, y, limit=8)
+    []
+    >>> terminal_overlap(x, y, limit=8, terminal_mismatches=1)
+    []
+    >>> terminal_overlap(x, y, limit=8, terminal_mismatches=2)
+    [(6, 1, 10)]
     """
 
     if trim_ends is not None and trim_ends not in ["5'", "3'"]:
         raise ValueError("trim_ends must be '5' or '3'")
+
+    if terminal_mismatches < 0:
+        raise ValueError("terminal_mismatches must be a non-negative integer")
 
     if trim_ends is None:
         trim_x_left, trim_x_right, trim_y_left, trim_y_right = (0, None, 0, None)
@@ -513,11 +536,16 @@ def terminal_overlap(
         stringx = str(seqx.seq[trim_x_left:trim_x_right]).upper()
         stringy = str(seqy.seq[trim_y_left:trim_y_right]).upper()
 
-    # We have to convert to list because we need to modify the matches
+    # We have to convert to list because we need to modify the matches.
+    # The match must start within the first terminal_mismatches bases of y and
+    # end within the last terminal_mismatches bases of x.
     matches = [
         list(m)
         for m in common_sub_strings_str(stringx, stringy, limit)
-        if (m[1] == 0 and m[0] + m[2] == len(stringx))
+        if (
+            m[1] <= terminal_mismatches
+            and m[0] + m[2] >= len(stringx) - terminal_mismatches
+        )
     ]
 
     # Shift the matches if the left end has been trimmed
@@ -529,29 +557,103 @@ def terminal_overlap(
     return [tuple(m) for m in matches]
 
 
-def gibson_overlap(seqx: Dseqrecord, seqy: Dseqrecord, limit=25):
+def get_gibson_overlap_algorithm(
+    terminal_mismatches: int = 0,
+) -> AssemblyAlgorithmType:
     """
-    Assembly algorithm to find terminal overlaps for Gibson assembly.
+    Returns an assembly algorithm to find terminal overlaps for Gibson assembly.
     It is a wrapper around terminal_overlap with trim_ends="5'".
+
+    Parameters
+    ----------
+    terminal_mismatches : int
+        Maximum number of non-homologous bases tolerated at each end of the
+        overlap, see terminal_overlap. By default 0.
+
+    Returns
+    -------
+    AssemblyAlgorithmType
+        A function with signature (seqx, seqy, limit) that returns the overlaps.
     """
 
-    return terminal_overlap(seqx, seqy, limit, trim_ends="5'")
+    def gibson_overlap(seqx: Dseqrecord, seqy: Dseqrecord, limit=25):
+        return terminal_overlap(
+            seqx,
+            seqy,
+            limit,
+            trim_ends="5'",
+            terminal_mismatches=terminal_mismatches,
+        )
+
+    return gibson_overlap
 
 
-def in_fusion_overlap(seqx: Dseqrecord, seqy: Dseqrecord, limit=25):
+def get_in_fusion_overlap_algorithm(
+    terminal_mismatches: int = 0,
+) -> AssemblyAlgorithmType:
     """
-    Assembly algorithm to find terminal overlaps for in-fusion assembly.
+    Returns an assembly algorithm to find terminal overlaps for in-fusion assembly.
     It is a wrapper around terminal_overlap with trim_ends="3'".
+
+    Parameters
+    ----------
+    terminal_mismatches : int
+        Maximum number of non-homologous bases tolerated at each end of the
+        overlap, see terminal_overlap. By default 0.
+
+    Returns
+    -------
+    AssemblyAlgorithmType
+        A function with signature (seqx, seqy, limit) that returns the overlaps.
     """
-    return terminal_overlap(seqx, seqy, limit, trim_ends="3'")
+
+    def in_fusion_overlap(seqx: Dseqrecord, seqy: Dseqrecord, limit=25):
+        return terminal_overlap(
+            seqx,
+            seqy,
+            limit,
+            trim_ends="3'",
+            terminal_mismatches=terminal_mismatches,
+        )
+
+    return in_fusion_overlap
 
 
-def pcr_fusion_overlap(seqx: Dseqrecord, seqy: Dseqrecord, limit=25):
+def get_pcr_fusion_overlap_algorithm(
+    terminal_mismatches: int = 0,
+) -> AssemblyAlgorithmType:
     """
-    Assembly algorithm to find terminal overlaps for PCR fusion assembly.
+    Returns an assembly algorithm to find terminal overlaps for PCR fusion assembly.
     It is a wrapper around terminal_overlap with trim_ends=None.
+
+    Parameters
+    ----------
+    terminal_mismatches : int
+        Maximum number of non-homologous bases tolerated at each end of the
+        overlap, see terminal_overlap. By default 0.
+
+    Returns
+    -------
+    AssemblyAlgorithmType
+        A function with signature (seqx, seqy, limit) that returns the overlaps.
     """
-    return terminal_overlap(seqx, seqy, limit, trim_ends=None)
+
+    def pcr_fusion_overlap(seqx: Dseqrecord, seqy: Dseqrecord, limit=25):
+        return terminal_overlap(
+            seqx,
+            seqy,
+            limit,
+            trim_ends=None,
+            terminal_mismatches=terminal_mismatches,
+        )
+
+    return pcr_fusion_overlap
+
+
+# Default algorithms (no terminal mismatches), kept for backward compatibility
+gibson_overlap = get_gibson_overlap_algorithm()
+in_fusion_overlap = get_in_fusion_overlap_algorithm()
+pcr_fusion_overlap = get_pcr_fusion_overlap_algorithm()
 
 
 def sticky_end_sub_strings(seqx: Dseqrecord, seqy: Dseqrecord, limit: bool = False):
@@ -2263,7 +2365,10 @@ def _recast_sources(
 
 
 def gibson_assembly(
-    frags: list[Dseqrecord], limit: int = 25, circular_only: bool = False
+    frags: list[Dseqrecord],
+    limit: int = 25,
+    circular_only: bool = False,
+    terminal_mismatches: int = 0,
 ) -> list[Dseqrecord]:
     """Returns the products for Gibson assembly.
 
@@ -2275,6 +2380,11 @@ def gibson_assembly(
         Minimum overlap length required, by default 25
     circular_only : bool, optional
         If True, only return circular assemblies, by default False
+    terminal_mismatches : int, optional
+        Maximum number of non-homologous bases tolerated at each end of an
+        overlap, which are removed in the product, by default 0. NEB HiFi assembly
+        tolerates up to 10 mismatched bases at the 3' ends.
+        See terminal_overlap.
 
     Returns
     -------
@@ -2283,13 +2393,19 @@ def gibson_assembly(
     """
 
     products = common_function_assembly_products(
-        frags, limit, gibson_overlap, circular_only
+        frags,
+        limit,
+        get_gibson_overlap_algorithm(terminal_mismatches),
+        circular_only,
     )
     return _recast_sources(products, GibsonAssemblySource)
 
 
 def in_fusion_assembly(
-    frags: list[Dseqrecord], limit: int = 25, circular_only: bool = False
+    frags: list[Dseqrecord],
+    limit: int = 25,
+    circular_only: bool = False,
+    terminal_mismatches: int = 0,
 ) -> list[Dseqrecord]:
     """Returns the products for in-fusion assembly. This is the same as Gibson
     assembly, but with a different name.
@@ -2302,6 +2418,10 @@ def in_fusion_assembly(
         Minimum overlap length required, by default 25
     circular_only : bool, optional
         If True, only return circular assemblies, by default False
+    terminal_mismatches : int, optional
+        Maximum number of non-homologous bases tolerated at each end of an
+        overlap, which are removed in the product, by default 0.
+        See terminal_overlap.
 
     Returns
     -------
@@ -2310,13 +2430,19 @@ def in_fusion_assembly(
     """
 
     products = common_function_assembly_products(
-        frags, limit, in_fusion_overlap, circular_only
+        frags,
+        limit,
+        get_in_fusion_overlap_algorithm(terminal_mismatches),
+        circular_only,
     )
     return _recast_sources(products, InFusionSource)
 
 
 def fusion_pcr_assembly(
-    frags: list[Dseqrecord], limit: int = 25, circular_only: bool = False
+    frags: list[Dseqrecord],
+    limit: int = 25,
+    circular_only: bool = False,
+    terminal_mismatches: int = 0,
 ) -> list[Dseqrecord]:
     """Returns the products for fusion PCR assembly. This is the same as Gibson
     assembly, but with a different name.
@@ -2329,6 +2455,10 @@ def fusion_pcr_assembly(
         Minimum overlap length required, by default 25
     circular_only : bool, optional
         If True, only return circular assemblies, by default False
+    terminal_mismatches : int, optional
+        Maximum number of non-homologous bases tolerated at each end of an
+        overlap, which are removed in the product, by default 0.
+        See terminal_overlap.
 
     Returns
     -------
@@ -2336,7 +2466,10 @@ def fusion_pcr_assembly(
         List of assembled DNA molecules
     """
     products = common_function_assembly_products(
-        frags, limit, pcr_fusion_overlap, circular_only
+        frags,
+        limit,
+        get_pcr_fusion_overlap_algorithm(terminal_mismatches),
+        circular_only,
     )
     return _recast_sources(products, OverlapExtensionPCRLigationSource)
 
