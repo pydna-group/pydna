@@ -557,6 +557,25 @@ class AssemblySource(Source):
             raise ValueError("Assembly is not complete")
         return min(overlaps)
 
+    def _maximal_terminal_mismatches(self) -> int:
+        """Return the largest number of bases between an overlap and the end of a
+        linear fragment (see terminal_mismatches in assembly2.terminal_overlap).
+
+        This may overestimate the value used to create the assembly (e.g. if there
+        are trimmed overhangs), but it is enough to replay the assembly.
+        """
+        mismatches = [0]
+        for inp in self.input:
+            if not isinstance(inp, AssemblyFragment) or inp.sequence.circular:
+                continue
+            if inp.left_location is not None:
+                mismatches.append(location_boundaries(inp.left_location)[0])
+            if inp.right_location is not None:
+                mismatches.append(
+                    len(inp.sequence) - location_boundaries(inp.right_location)[1]
+                )
+        return max(mismatches)
+
     def validate(self, result: "Dseqrecord") -> None:
         products = self._replay_products(True)
         try:
@@ -799,6 +818,7 @@ class GibsonAssemblySource(AssemblySource):
         return gibson_assembly(
             self._get_input_sequences(handle_insertion),
             limit=self._minimal_assembly_overlap(),
+            terminal_mismatches=self._maximal_terminal_mismatches(),
         )
 
 
@@ -811,6 +831,7 @@ class InFusionSource(AssemblySource):
         return in_fusion_assembly(
             self._get_input_sequences(handle_insertion),
             limit=self._minimal_assembly_overlap(),
+            terminal_mismatches=self._maximal_terminal_mismatches(),
         )
 
 
@@ -825,6 +846,7 @@ class OverlapExtensionPCRLigationSource(AssemblySource):
         return fusion_pcr_assembly(
             self._get_input_sequences(handle_insertion),
             limit=self._minimal_assembly_overlap(),
+            terminal_mismatches=self._maximal_terminal_mismatches(),
         )
 
 

@@ -1811,6 +1811,35 @@ def test_gibson_assembly_circular_only():
         assert str(products[0].seq) == "AAAA" + hom + "CCCC"
 
 
+def test_gibson_assembly_terminal_mismatches():
+    hom = "GTCGACTGCA"
+    hom2 = "TCAGAAGTCC"
+
+    for gibson_like_function in [
+        assembly.gibson_assembly,
+        assembly.in_fusion_assembly,
+        assembly.fusion_pcr_assembly,
+    ]:
+        # Linear: the non-homologous terminal bases are removed in the product
+        seq1 = Dseqrecord("AAAA" + hom + "tt")
+        seq2 = Dseqrecord("g" + hom + "CCCC")
+        assert gibson_like_function([seq1, seq2], 8) == []
+        products = gibson_like_function([seq1, seq2], 8, terminal_mismatches=2)
+        assert len(products) == 1
+        assert str(products[0].seq) == "AAAA" + hom + "CCCC"
+
+        # Circular: one junction is exact, the other has terminal mismatches
+        seq1 = Dseqrecord(hom2 + "aaaa" + hom + "tt")
+        seq2 = Dseqrecord("g" + hom + "cccc" + hom2)
+        assert gibson_like_function([seq1, seq2], 8, circular_only=True) == []
+        products = gibson_like_function(
+            [seq1, seq2], 8, circular_only=True, terminal_mismatches=2
+        )
+        assert len(products) == 1
+        expected = Dseqrecord(hom2 + "aaaa" + hom + "cccc", circular=True)
+        assert products[0].seguid() == expected.seguid()
+
+
 def test_insertion_assembly():
 
     # Insertion of linear sequence into linear sequence (like
@@ -3160,6 +3189,64 @@ def test_terminal_overlap():
 def test_terminal_overlap_error():
     with pytest.raises(ValueError):
         assembly.terminal_overlap(Dseqrecord("A"), Dseqrecord("A"), trim_ends="dummy")
+    with pytest.raises(ValueError):
+        assembly.terminal_overlap(
+            Dseqrecord("A"), Dseqrecord("A"), terminal_mismatches=-1
+        )
+
+
+def test_terminal_overlap_terminal_mismatches():
+    hom = "GTCGACTGCA"
+    # 2 non-homologous bases at the end of x, 1 at the start of y
+    x = Dseqrecord("aaaa" + hom + "tt")
+    y = Dseqrecord("g" + hom + "cccc")
+
+    assert assembly.terminal_overlap(x, y, limit=8) == []
+    assert assembly.terminal_overlap(x, y, limit=8, terminal_mismatches=1) == []
+    assert assembly.terminal_overlap(x, y, limit=8, terminal_mismatches=2) == [
+        (4, 1, 10)
+    ]
+    assert assembly.terminal_overlap(x, y, limit=8, terminal_mismatches=3) == [
+        (4, 1, 10)
+    ]
+    # The order still matters
+    assert assembly.terminal_overlap(y, x, limit=8, terminal_mismatches=3) == []
+
+    # Mismatches are counted after trimming: the 5' overhang (3 bases) is removed
+    # for trim_ends="5'", leaving only the 2 non-homologous bases
+    x = Dseqrecord(Dseq.from_full_sequence_and_overhangs("aaaa" + hom + "ttggg", 0, -3))
+    assert assembly.terminal_overlap(x, y, limit=8, terminal_mismatches=2) == []
+    assert assembly.terminal_overlap(
+        x, y, limit=8, trim_ends="5'", terminal_mismatches=2
+    ) == [(4, 1, 10)]
+    assert (
+        assembly.terminal_overlap(x, y, limit=8, trim_ends="3'", terminal_mismatches=2)
+        == []
+    )
+    assert assembly.terminal_overlap(
+        x, y, limit=8, trim_ends="3'", terminal_mismatches=5
+    ) == [(4, 1, 10)]
+
+
+def test_overlap_algorithm_factories():
+    hom = "GTCGACTGCA"
+    x = Dseqrecord("aaaa" + hom + "tt")
+    y = Dseqrecord("g" + hom + "cccc")
+
+    for factory, trim_ends, name in [
+        (assembly.get_gibson_overlap_algorithm, "5'", "gibson_overlap"),
+        (assembly.get_in_fusion_overlap_algorithm, "3'", "in_fusion_overlap"),
+        (assembly.get_pcr_fusion_overlap_algorithm, None, "pcr_fusion_overlap"),
+    ]:
+        algorithm = factory(2)
+        assert algorithm.__name__ == name
+        assert algorithm(x, y, 8) == [(4, 1, 10)]
+        assert algorithm(x, y, 8) == assembly.terminal_overlap(
+            x, y, 8, trim_ends=trim_ends, terminal_mismatches=2
+        )
+        # Default has no mismatches, same as the module-level algorithm
+        assert factory()(x, y, 8) == []
+        assert getattr(assembly, name)(x, y, 8) == []
 
 
 def test_inversion_homologous_recombination():
