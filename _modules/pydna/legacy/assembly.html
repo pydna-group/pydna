@@ -1,0 +1,989 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pydna.legacy.assembly &#8212; pydna 5.5.17.dev26+g0627ace7c documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=4418a689" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=b530ca2f" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../_static/documentation_options.js?v=735db142"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydna/legacy/assembly';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="5.5.17" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydna 5.5.17.dev26+g0627ace7c documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    Pydna
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../getting_started.html">Getting started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/Dseq.html">Representing sequences in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/Dseq_Features.html">Working with Features using the Dseqrecord class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/Importing_Seqs.html">Importing and viewing sequence files in pydna</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/Restrict_Ligate_Cloning.html">Restriction and Ligation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/PCR.html">PCR</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/primer_design.html">Primer design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/Gibson.html">Gibson Assembly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/CRISPR.html">CRISPR-Cas9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/history.html">Cloning history / Cloning strategy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../example_gallery.html">Example gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/Example_Restriction.html">Plasmid Restriction/Ligation Cloning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/Example_Gibson.html">Gibson Assembly from the original publication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/Example_CRISPR.html">Designing a CRISPR-Cas9 toolbox for genome engineering.</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../how_pydna_works.html">How pydna works</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/new_assemblies.html">How assemblies work</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../reference/pydna.html">pydna package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/pydna.legacy.html">pydna.legacy package</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/pydna-group/pydna" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pydna.legacy.assembly</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># SPDX-FileCopyrightText: 2013-2026 Björn Johansson</span>
+<span class="c1"># SPDX-FileCopyrightText: 2023-2026 The Project Contributors</span>
+<span class="c1"># SPDX-License-Identifier: BSD-3-Clause</span>
+
+<span class="sd">"""Assembly of sequences by homologous recombination.</span>
+
+<span class="sd">Should also be useful for related techniques such as Gibson assembly and fusion</span>
+<span class="sd">PCR. Given a list of sequences (Dseqrecords), all sequences are analyzed for</span>
+<span class="sd">shared homology longer than the set limit.</span>
+
+<span class="sd">A graph is constructed where each overlapping region form a node and</span>
+<span class="sd">sequences separating the overlapping regions form edges.</span>
+
+
+<span class="sd">::</span>
+
+
+<span class="sd">                -- A --</span>
+<span class="sd">    catgatctacgtatcgtgt     -- B --</span>
+<span class="sd">                atcgtgtactgtcatattc</span>
+<span class="sd">                            catattcaaagttct</span>
+
+
+
+<span class="sd">    --x--&gt; A --y--&gt; B --z--&gt;   (Graph)</span>
+
+<span class="sd">    Nodes:</span>
+
+<span class="sd">    A : atcgtgt</span>
+<span class="sd">    B : catattc</span>
+
+<span class="sd">    Edges:</span>
+
+<span class="sd">    x : catgatctacgt</span>
+<span class="sd">    y : actgt</span>
+<span class="sd">    z : aaagttct</span>
+
+
+<span class="sd">The NetworkX package is used to trace linear and circular paths through the</span>
+<span class="sd">graph.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqFeature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExactPosition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleLocation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqFeature</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompoundLocation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rc</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna._pretty</span><span class="w"> </span><span class="kn">import</span> <span class="n">pretty_str</span> <span class="k">as</span> <span class="n">ps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.contig</span><span class="w"> </span><span class="kn">import</span> <span class="n">Contig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.common_sub_strings</span><span class="w"> </span><span class="kn">import</span> <span class="n">common_sub_strings</span><span class="p">,</span> <span class="n">Match</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">TypedDict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.legacy.threading_timer_decorator_exit</span><span class="w"> </span><span class="kn">import</span> <span class="n">exit_after</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna</span><span class="w"> </span><span class="kn">import</span> <span class="n">_PydnaDeprecationWarning</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+    <span class="s2">"pydna.legacy.assembly is deprecated and will be removed in a future version; "</span>
+    <span class="s2">"use pydna.assembly instead (it returns Dseqrecord objects, not Contig)."</span><span class="p">,</span>
+    <span class="n">_PydnaDeprecationWarning</span><span class="p">,</span>
+    <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="Assembly">
+<a class="viewcode-back" href="../../../reference/pydna.legacy.html#pydna.legacy.assembly.Assembly">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Assembly</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Assembly of a list of linear DNA fragments into linear or circular</span>
+<span class="sd">    constructs. The Assembly is meant to replace the Assembly method as it</span>
+<span class="sd">    is easier to use. Accepts a list of Dseqrecords (source fragments) to</span>
+<span class="sd">    initiate an Assembly object. Several methods are available for analysis</span>
+<span class="sd">    of overlapping sequences, graph construction and assembly.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    fragments : list</span>
+<span class="sd">        a list of Dseqrecord objects.</span>
+<span class="sd">    limit : int, optional</span>
+<span class="sd">        The shortest shared homology to be considered</span>
+<span class="sd">    algorithm : function, optional</span>
+<span class="sd">        The algorithm used to determine the shared sequences.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; from pydna.legacy.assembly import Assembly</span>
+<span class="sd">    &gt;&gt;&gt; from pydna.dseqrecord import Dseqrecord</span>
+<span class="sd">    &gt;&gt;&gt; a = Dseqrecord("acgatgctatactgCCCCCtgtgctgtgctcta")</span>
+<span class="sd">    &gt;&gt;&gt; b = Dseqrecord("tgtgctgtgctctaTTTTTtattctggctgtatc")</span>
+<span class="sd">    &gt;&gt;&gt; c = Dseqrecord("tattctggctgtatcGGGGGtacgatgctatactg")</span>
+<span class="sd">    &gt;&gt;&gt; x = Assembly((a,b,c), limit=14)</span>
+<span class="sd">    &gt;&gt;&gt; x</span>
+<span class="sd">    Assembly</span>
+<span class="sd">    fragments....: 33bp 34bp 35bp</span>
+<span class="sd">    limit(bp)....: 14</span>
+<span class="sd">    G.nodes......: 6</span>
+<span class="sd">    algorithm....: common_sub_strings</span>
+<span class="sd">    &gt;&gt;&gt; x.assemble_circular()</span>
+<span class="sd">    [Contig(o59), Contig(o59)]</span>
+<span class="sd">    &gt;&gt;&gt; x.assemble_circular()[0].seq.watson</span>
+<span class="sd">    'acgatgctatactgCCCCCtgtgctgtgctctaTTTTTtattctggctgtatcGGGGGt'</span>
+
+
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">frags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dseqrecord</span><span class="p">],</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+        <span class="n">algorithm</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Match</span><span class="p">]]</span> <span class="o">=</span> <span class="n">common_sub_strings</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Fragments is a string subclass with some extra properties</span>
+        <span class="c1"># The order of the fragments has significance</span>
+        <span class="n">fragments</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">_FragmentDict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">"upper"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+                <span class="s2">"mixed"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">"features"</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">features</span><span class="p">,</span>
+                <span class="s2">"nodes"</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="p">}</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">frags</span>
+        <span class="p">]</span>
+
+        <span class="c1"># rcfragments is a dict with fragments as keys and the reverse</span>
+        <span class="c1"># complement as value</span>
+        <span class="n">rcfragments</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">_FragmentDict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">f</span><span class="p">[</span><span class="s2">"mixed"</span><span class="p">]:</span> <span class="p">{</span>
+                <span class="s2">"upper"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">frc</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+                <span class="s2">"mixed"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">frc</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="n">frc</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">"features"</span><span class="p">:</span> <span class="n">frc</span><span class="o">.</span><span class="n">features</span><span class="p">,</span>
+                <span class="s2">"nodes"</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="p">}</span>
+            <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">frc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">rc</span><span class="p">()</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">frags</span><span class="p">))</span>
+        <span class="p">}</span>
+
+        <span class="c1"># The nodemap dict holds nodes and their reverse complements</span>
+        <span class="n">nodemap</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"begin"</span><span class="p">:</span> <span class="s2">"end"</span><span class="p">,</span>
+            <span class="s2">"end"</span><span class="p">:</span> <span class="s2">"begin"</span><span class="p">,</span>
+            <span class="s2">"begin_rc"</span><span class="p">:</span> <span class="s2">"end_rc"</span><span class="p">,</span>
+            <span class="s2">"end_rc"</span><span class="p">:</span> <span class="s2">"begin_rc"</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="c1"># all combinations of fragments are compared.</span>
+        <span class="c1"># see https://docs.python.org/3.10/library/itertools.html</span>
+        <span class="c1"># itertools.combinations('ABCD', 2)--&gt;  AB AC AD BC BD CD</span>
+        <span class="k">for</span> <span class="n">first</span><span class="p">,</span> <span class="n">secnd</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">first</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">]</span> <span class="o">==</span> <span class="n">secnd</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">]:</span>
+                <span class="k">continue</span>
+
+            <span class="n">firrc</span> <span class="o">=</span> <span class="n">rcfragments</span><span class="p">[</span><span class="n">first</span><span class="p">[</span><span class="s2">"mixed"</span><span class="p">]]</span>
+            <span class="n">secrc</span> <span class="o">=</span> <span class="n">rcfragments</span><span class="p">[</span><span class="n">secnd</span><span class="p">[</span><span class="s2">"mixed"</span><span class="p">]]</span>
+
+            <span class="c1"># matches is a list of tuples of three integers describing</span>
+            <span class="c1"># overlapping sequences:</span>
+            <span class="c1"># (start position in first, start position in secnd, length)</span>
+            <span class="c1"># This comparison is done using uppercase strings, see _</span>
+            <span class="c1"># Fragment class</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="n">algorithm</span><span class="p">(</span><span class="n">first</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">],</span> <span class="n">secnd</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">],</span> <span class="n">limit</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">start_in_first</span><span class="p">,</span> <span class="n">start_in_secnd</span><span class="p">,</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+                <span class="c1"># node is a string and represent the shared sequence in upper</span>
+                <span class="c1"># case.</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">first</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">][</span><span class="n">start_in_first</span> <span class="p">:</span> <span class="n">start_in_first</span> <span class="o">+</span> <span class="n">length</span><span class="p">]</span>
+
+                <span class="n">first</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_NodeTuple</span><span class="p">(</span><span class="n">start_in_first</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">node</span><span class="p">))</span>
+                <span class="n">secnd</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_NodeTuple</span><span class="p">(</span><span class="n">start_in_secnd</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">node</span><span class="p">))</span>
+
+                <span class="c1"># The same node exists between the reverse complements of</span>
+                <span class="c1"># first and secnd</span>
+                <span class="c1"># The new positions are calculated from the length of the</span>
+                <span class="c1"># fragment and</span>
+                <span class="c1"># the overlapping sequence</span>
+                <span class="n">start_in_firrc</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">first</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">])</span> <span class="o">-</span> <span class="n">start_in_first</span> <span class="o">-</span> <span class="n">length</span>
+                <span class="n">start_in_secrc</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">secnd</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">])</span> <span class="o">-</span> <span class="n">start_in_secnd</span> <span class="o">-</span> <span class="n">length</span>
+                <span class="c1"># noderc is the reverse complement of node</span>
+                <span class="n">noderc</span> <span class="o">=</span> <span class="n">firrc</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">][</span><span class="n">start_in_firrc</span> <span class="p">:</span> <span class="n">start_in_firrc</span> <span class="o">+</span> <span class="n">length</span><span class="p">]</span>
+                <span class="n">firrc</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_NodeTuple</span><span class="p">(</span><span class="n">start_in_firrc</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">noderc</span><span class="p">))</span>
+                <span class="n">secrc</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_NodeTuple</span><span class="p">(</span><span class="n">start_in_secrc</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">noderc</span><span class="p">))</span>
+                <span class="n">nodemap</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">noderc</span>
+
+            <span class="c1"># first is also compared to the rc of secnd</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="n">algorithm</span><span class="p">(</span><span class="n">first</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">],</span> <span class="n">secrc</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">],</span> <span class="n">limit</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">start_in_first</span><span class="p">,</span> <span class="n">start_in_secrc</span><span class="p">,</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">first</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">][</span><span class="n">start_in_first</span> <span class="p">:</span> <span class="n">start_in_first</span> <span class="o">+</span> <span class="n">length</span><span class="p">]</span>
+                <span class="n">first</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_NodeTuple</span><span class="p">(</span><span class="n">start_in_first</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">node</span><span class="p">))</span>
+                <span class="n">secrc</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_NodeTuple</span><span class="p">(</span><span class="n">start_in_secrc</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">node</span><span class="p">))</span>
+
+                <span class="n">start_in_firrc</span><span class="p">,</span> <span class="n">start_in_secnd</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">first</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">])</span> <span class="o">-</span> <span class="n">start_in_first</span> <span class="o">-</span> <span class="n">length</span><span class="p">,</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">secnd</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">])</span> <span class="o">-</span> <span class="n">start_in_secrc</span> <span class="o">-</span> <span class="n">length</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">noderc</span> <span class="o">=</span> <span class="n">firrc</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">][</span><span class="n">start_in_firrc</span> <span class="p">:</span> <span class="n">start_in_firrc</span> <span class="o">+</span> <span class="n">length</span><span class="p">]</span>
+                <span class="n">firrc</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_NodeTuple</span><span class="p">(</span><span class="n">start_in_firrc</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">noderc</span><span class="p">))</span>
+                <span class="n">secnd</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_NodeTuple</span><span class="p">(</span><span class="n">start_in_secnd</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">noderc</span><span class="p">))</span>
+                <span class="n">nodemap</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">noderc</span>
+
+        <span class="c1"># A directed graph class that can store multiedges.</span>
+        <span class="c1"># Multiedges are multiple edges between two nodes. Each edge can hold</span>
+        <span class="c1"># optional data or attributes.</span>
+        <span class="c1"># https://networkx.github.io/documentation/stable/reference/classes/</span>
+        <span class="c1"># multidigraph.html</span>
+
+        <span class="n">order</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">()</span>
+        <span class="c1"># loop through all fragments their and reverse complements</span>
+
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fragments</span><span class="p">:</span>
+            <span class="n">f</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">]))</span>
+
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">rcfragments</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">f</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">]))</span>
+
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">rcfragments</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="c1"># nodes are sorted in place in the order of their position</span>
+            <span class="c1"># duplicates are removed (same position and sequence)</span>
+            <span class="c1"># along the fragment since nodes are a tuple (position(int),</span>
+            <span class="c1"># sequence(str))</span>
+
+            <span class="n">before</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">order</span><span class="p">()</span>
+            <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="p">{</span><span class="s2">"order"</span><span class="p">:</span> <span class="n">order</span> <span class="o">+</span> <span class="n">od</span><span class="p">,</span> <span class="s2">"length"</span><span class="p">:</span> <span class="n">length</span><span class="p">})</span>
+                <span class="k">for</span> <span class="n">od</span><span class="p">,</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+                    <span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">f</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">]</span> <span class="k">if</span> <span class="n">n</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">G</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">order</span> <span class="o">+=</span> <span class="n">G</span><span class="o">.</span><span class="n">order</span><span class="p">()</span> <span class="o">-</span> <span class="n">before</span>
+
+            <span class="k">for</span> <span class="p">(</span><span class="n">start1</span><span class="p">,</span> <span class="n">length1</span><span class="p">,</span> <span class="n">node1</span><span class="p">),</span> <span class="p">(</span>
+                <span class="n">start2</span><span class="p">,</span>
+                <span class="n">length2</span><span class="p">,</span>
+                <span class="n">node2</span><span class="p">,</span>
+            <span class="p">)</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">],</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="n">feats</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">ft</span>
+                    <span class="k">for</span> <span class="n">ft</span> <span class="ow">in</span> <span class="n">f</span><span class="p">[</span><span class="s2">"features"</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">start1</span> <span class="o">&lt;=</span> <span class="n">ft</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span>
+                    <span class="ow">and</span> <span class="n">start2</span> <span class="o">+</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node2</span><span class="p">][</span><span class="s2">"length"</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">ft</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span>
+                <span class="p">]</span>
+
+                <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span>
+                    <span class="n">node1</span><span class="p">,</span>
+                    <span class="n">node2</span><span class="p">,</span>  <span class="c1"># nodes (strings)</span>
+                    <span class="n">piece</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">start1</span><span class="p">,</span> <span class="n">start2</span><span class="p">),</span>  <span class="c1"># slice</span>
+                    <span class="n">features</span><span class="o">=</span><span class="n">feats</span><span class="p">,</span>  <span class="c1"># features</span>
+                    <span class="n">seq</span><span class="o">=</span><span class="n">f</span><span class="p">[</span><span class="s2">"mixed"</span><span class="p">],</span>  <span class="c1"># mixed case string</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">f</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+                <span class="p">)</span>  <span class="c1"># string</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">create_empty_copy</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span>
+            <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"seq"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodemap</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">nodemap</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">nodemap</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nodemap</span><span class="p">}}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limit</span> <span class="o">=</span> <span class="n">limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span> <span class="o">=</span> <span class="n">fragments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rcfragments</span> <span class="o">=</span> <span class="n">rcfragments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span> <span class="o">=</span> <span class="n">algorithm</span>
+
+    <span class="nd">@exit_after</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"pydna_assembly_limit"</span><span class="p">,</span> <span class="mi">10</span><span class="p">)))</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">assemble_linear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">MultiDiGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">)</span>
+
+        <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">([</span><span class="s2">"begin"</span><span class="p">,</span> <span class="s2">"begin_rc"</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">,</span> <span class="s2">"end_rc"</span><span class="p">],</span> <span class="n">length</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># add edges from "begin" to nodes in the first</span>
+        <span class="c1"># sequence in self.fragments</span>
+        <span class="n">firstfragment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">firstfragment</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span>
+                <span class="s2">"begin"</span><span class="p">,</span>
+                <span class="n">node</span><span class="p">,</span>
+                <span class="n">piece</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">start</span><span class="p">),</span>
+                <span class="n">features</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">f</span>
+                    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">firstfragment</span><span class="p">[</span><span class="s2">"features"</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">start</span> <span class="o">+</span> <span class="n">length</span> <span class="o">&gt;=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span>
+                <span class="p">],</span>
+                <span class="n">seq</span><span class="o">=</span><span class="n">firstfragment</span><span class="p">[</span><span class="s2">"mixed"</span><span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">firstfragment</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+            <span class="p">)</span>
+
+        <span class="c1"># add edges from "begin_rc" to nodes in the reverse complement of the</span>
+        <span class="c1"># first sequence</span>
+        <span class="n">firstfragmentrc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rcfragments</span><span class="p">[</span><span class="n">firstfragment</span><span class="p">[</span><span class="s2">"mixed"</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">firstfragmentrc</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span>
+                <span class="s2">"begin_rc"</span><span class="p">,</span>
+                <span class="n">node</span><span class="p">,</span>
+                <span class="n">piece</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">start</span><span class="p">),</span>
+                <span class="n">features</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">f</span>
+                    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">firstfragmentrc</span><span class="p">[</span><span class="s2">"features"</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">start</span> <span class="o">+</span> <span class="n">length</span> <span class="o">&gt;=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span>
+                <span class="p">],</span>
+                <span class="n">seq</span><span class="o">=</span><span class="n">firstfragmentrc</span><span class="p">[</span><span class="s2">"mixed"</span><span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">firstfragmentrc</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+            <span class="p">)</span>
+
+        <span class="c1"># add edges from nodes in last sequence to "end"</span>
+        <span class="n">lastfragment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">lastfragment</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">]:</span>
+            <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span>
+                <span class="n">node</span><span class="p">,</span>
+                <span class="s2">"end"</span><span class="p">,</span>
+                <span class="n">piece</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lastfragment</span><span class="p">[</span><span class="s2">"mixed"</span><span class="p">])),</span>
+                <span class="n">features</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">lastfragment</span><span class="p">[</span><span class="s2">"features"</span><span class="p">]</span> <span class="k">if</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span>
+                <span class="p">],</span>
+                <span class="n">seq</span><span class="o">=</span><span class="n">lastfragment</span><span class="p">[</span><span class="s2">"mixed"</span><span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">lastfragment</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+            <span class="p">)</span>
+
+        <span class="c1"># add edges from nodes in last reverse complement sequence to "end_rc"</span>
+        <span class="n">lastfragmentrc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rcfragments</span><span class="p">[</span><span class="n">lastfragment</span><span class="p">[</span><span class="s2">"mixed"</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">lastfragmentrc</span><span class="p">[</span><span class="s2">"nodes"</span><span class="p">]:</span>
+            <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span>
+                <span class="n">node</span><span class="p">,</span>
+                <span class="s2">"end_rc"</span><span class="p">,</span>
+                <span class="n">piece</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lastfragmentrc</span><span class="p">[</span><span class="s2">"mixed"</span><span class="p">])),</span>
+                <span class="n">features</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">lastfragmentrc</span><span class="p">[</span><span class="s2">"features"</span><span class="p">]</span> <span class="k">if</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span>
+                <span class="p">],</span>
+                <span class="n">seq</span><span class="o">=</span><span class="n">lastfragmentrc</span><span class="p">[</span><span class="s2">"mixed"</span><span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">lastfragmentrc</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+            <span class="p">)</span>
+
+        <span class="n">linearpaths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span>
+                <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">"begin"</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">),</span>
+                <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">"begin"</span><span class="p">,</span> <span class="s2">"end_rc"</span><span class="p">),</span>
+                <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">"begin_rc"</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">),</span>
+                <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="s2">"begin_rc"</span><span class="p">,</span> <span class="s2">"end_rc"</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">lps</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">lp</span> <span class="ow">in</span> <span class="n">linearpaths</span><span class="p">:</span>
+            <span class="n">edgelol</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">lp</span><span class="p">,</span> <span class="n">lp</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+                <span class="n">e</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
+                <span class="n">edgelol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">edges</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">edgelol</span><span class="p">):</span>
+                <span class="c1"># TODO explain</span>
+                <span class="k">if</span> <span class="p">[</span>
+                    <span class="kc">True</span>
+                    <span class="k">for</span> <span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e</span><span class="p">),</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">edges</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+                    <span class="k">if</span> <span class="p">((</span><span class="n">e</span><span class="p">[</span><span class="s2">"seq"</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="s2">"piece"</span><span class="p">]</span><span class="o">.</span><span class="n">stop</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="s2">"seq"</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="s2">"piece"</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">))</span>
+                <span class="p">]:</span>
+                    <span class="k">continue</span>
+                <span class="n">ct</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s2">"seq"</span><span class="p">][</span><span class="n">e</span><span class="p">[</span><span class="s2">"piece"</span><span class="p">]]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">)</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">lps</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+                    <span class="k">continue</span>  <span class="c1"># TODO: is this test needed?</span>
+                <span class="n">sg</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+                <span class="n">sg</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+                <span class="n">sg</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">lp</span><span class="p">)</span>
+
+                <span class="n">edgefeatures</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+                    <span class="n">feats</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s2">"features"</span><span class="p">])</span>
+                    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">feats</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">+=</span> <span class="n">offset</span> <span class="o">-</span> <span class="n">e</span><span class="p">[</span><span class="s2">"piece"</span><span class="p">]</span><span class="o">.</span><span class="n">start</span>
+                    <span class="n">edgefeatures</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">feats</span><span class="p">)</span>
+                    <span class="n">offset</span> <span class="o">+=</span> <span class="n">e</span><span class="p">[</span><span class="s2">"piece"</span><span class="p">]</span><span class="o">.</span><span class="n">stop</span> <span class="o">-</span> <span class="n">e</span><span class="p">[</span><span class="s2">"piece"</span><span class="p">]</span><span class="o">.</span><span class="n">start</span>
+
+                <span class="n">lps</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">ct</span><span class="p">,</span> <span class="n">edgefeatures</span><span class="p">,</span> <span class="n">sg</span><span class="p">,</span> <span class="p">{</span><span class="n">n</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodemap</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">lp</span><span class="p">}</span>
+
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">Contig</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span>
+                    <span class="n">lp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">features</span><span class="o">=</span><span class="n">lp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="n">graph</span><span class="o">=</span><span class="n">lp</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                    <span class="n">nodemap</span><span class="o">=</span><span class="n">lp</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                    <span class="n">linear</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">lp</span> <span class="ow">in</span> <span class="n">lps</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <span class="p">),</span>
+            <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span>
+            <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="nd">@exit_after</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"pydna_assembly_limit"</span><span class="p">,</span> <span class="mi">10</span><span class="p">)))</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">assemble_circular</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cps</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># circular assembly</span>
+        <span class="n">cpsrc</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">cpaths</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
+        <span class="n">cpaths_sorted</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cpath</span> <span class="ow">in</span> <span class="n">cpaths</span><span class="p">:</span>
+            <span class="n">order</span><span class="p">,</span> <span class="n">node</span> <span class="o">=</span> <span class="nb">min</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s2">"order"</span><span class="p">],</span> <span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">cpath</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">cpath</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="n">cpaths_sorted</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">order</span><span class="p">,</span> <span class="n">cpath</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span> <span class="o">+</span> <span class="n">cpath</span><span class="p">[:</span><span class="n">i</span><span class="p">]))</span>
+        <span class="n">cpaths_sorted</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="p">(</span>
+            <span class="n">_</span><span class="p">,</span>
+            <span class="n">cp</span><span class="p">,</span>
+        <span class="p">)</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="n">cpaths_sorted</span>
+        <span class="p">):</span>  <span class="c1"># cpaths is a list of nodes representing a circular assembly</span>
+            <span class="n">edgelol</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># edgelol is a list of lists of all edges along cp</span>
+            <span class="n">cp</span> <span class="o">+=</span> <span class="n">cp</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cp</span><span class="p">,</span> <span class="n">cp</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+                <span class="n">e</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
+                <span class="n">edgelol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">edges</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">edgelol</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">[</span>
+                    <span class="kc">True</span>
+                    <span class="k">for</span> <span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e</span><span class="p">),</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">edges</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+                    <span class="k">if</span> <span class="p">((</span><span class="n">e</span><span class="p">[</span><span class="s2">"seq"</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="s2">"piece"</span><span class="p">]</span><span class="o">.</span><span class="n">stop</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="s2">"seq"</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="s2">"piece"</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="p">))</span>
+                <span class="p">]:</span>
+                    <span class="k">continue</span>
+                <span class="n">ct</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s2">"seq"</span><span class="p">][</span><span class="n">e</span><span class="p">[</span><span class="s2">"piece"</span><span class="p">]]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">)</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">cps</span> <span class="ow">or</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">cpsrc</span><span class="p">:</span>
+                    <span class="k">continue</span>  <span class="c1"># TODO: is test in cpsrc needed?</span>
+                <span class="n">sg</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+                <span class="n">sg</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+                <span class="n">sg</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">cp</span><span class="p">)</span>
+
+                <span class="n">edgefeatures</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+                    <span class="n">feats</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s2">"features"</span><span class="p">])</span>
+                    <span class="k">for</span> <span class="n">feat</span> <span class="ow">in</span> <span class="n">feats</span><span class="p">:</span>
+                        <span class="n">feat</span><span class="o">.</span><span class="n">location</span> <span class="o">+=</span> <span class="n">offset</span>
+                    <span class="n">edgefeatures</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">feats</span><span class="p">)</span>
+                    <span class="n">offset</span> <span class="o">+=</span> <span class="n">e</span><span class="p">[</span><span class="s2">"piece"</span><span class="p">]</span><span class="o">.</span><span class="n">stop</span> <span class="o">-</span> <span class="n">e</span><span class="p">[</span><span class="s2">"piece"</span><span class="p">]</span><span class="o">.</span><span class="n">start</span>
+                    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">edgefeatures</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span> <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">):</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">+=</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">):</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">CompoundLocation</span><span class="p">(</span>
+                                <span class="p">(</span>
+                                    <span class="n">SimpleLocation</span><span class="p">(</span>
+                                        <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">,</span>
+                                        <span class="n">ExactPosition</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">)),</span>
+                                        <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span><span class="p">,</span>
+                                    <span class="p">),</span>
+                                    <span class="n">SimpleLocation</span><span class="p">(</span>
+                                        <span class="n">ExactPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                                        <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">ct</span><span class="p">),</span>
+                                        <span class="n">f</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span><span class="p">,</span>
+                                    <span class="p">),</span>
+                                <span class="p">)</span>
+                            <span class="p">)</span>
+
+                <span class="n">cps</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">cpsrc</span><span class="p">[</span><span class="n">rc</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">ct</span><span class="p">,</span>
+                    <span class="n">edgefeatures</span><span class="p">,</span>
+                    <span class="n">sg</span><span class="p">,</span>
+                    <span class="p">{</span><span class="n">n</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodemap</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">cp</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]},</span>
+                    <span class="n">cp</span><span class="p">,</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">Contig</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span>
+                    <span class="n">cp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">features</span><span class="o">=</span><span class="n">cp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="n">graph</span><span class="o">=</span><span class="n">cp</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                    <span class="n">nodemap</span><span class="o">=</span><span class="n">cp</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                    <span class="n">linear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">cp</span> <span class="ow">in</span> <span class="n">cps</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <span class="p">),</span>
+            <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span>
+            <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ps</span><span class="p">:</span>
+        <span class="c1"># https://pyformat.info</span>
+        <span class="k">return</span> <span class="n">ps</span><span class="p">(</span>
+            <span class="s2">"Assembly</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"fragments..: </span><span class="si">{sequences}</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"limit(bp)..: </span><span class="si">{limit}</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"G.nodes....: </span><span class="si">{nodes}</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"algorithm..: </span><span class="si">{al}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">sequences</span><span class="o">=</span><span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="s2">"</span><span class="si">{}</span><span class="s2">bp"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">"mixed"</span><span class="p">]))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span>
+                <span class="p">),</span>
+                <span class="n">limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">limit</span><span class="p">,</span>
+                <span class="n">nodes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">order</span><span class="p">(),</span>
+                <span class="n">al</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+
+<span class="n">example_fragments</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"AacgatCAtgctcc"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"a"</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"TtgctccTAAattctgc"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"b"</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"CattctgcGAGGacgatG"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"c"</span><span class="p">),</span>
+<span class="p">)</span>
+
+
+<span class="n">linear_results</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"AacgatCAtgctccTAAattctgcGAGGacgatG"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"abc"</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"ggagcaTGatcgtCCTCgcagaatG"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"ac_rc"</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"AacgatG"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"ac"</span><span class="p">),</span>
+<span class="p">)</span>
+
+
+<span class="n">circular_results</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"acgatCAtgctccTAAattctgcGAGG"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"abc"</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"ggagcaTGatcgtCCTCgcagaatTTA"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"abc_rc"</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_NodeTuple</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+    <span class="n">start</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">length</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">shared_seq</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># uppercase</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_FragmentDict</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">upper</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">mixed</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">features</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SeqFeature</span><span class="p">]</span>
+    <span class="n">nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">_NodeTuple</span><span class="p">]</span>
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Björn F. Johansson
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Björn F. Johansson.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

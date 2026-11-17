@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Importing and viewing sequence files in pydna &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+    <title>Importing and viewing sequence files in pydna &#8212; pydna 5.5.17.dev26+g0627ace7c documentation</title>
   
   
   
@@ -27,25 +27,26 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=4418a689" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b530ca2f" />
   
   <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../_static/documentation_options.js?v=735db142"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/Importing_Seqs';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -54,21 +55,27 @@
     <link rel="prev" title="Working with Features using the Dseqrecord class" href="Dseq_Features.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="6.0.0a24" />
+  <meta name="docsearch:version" content="5.5.17" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
+  <body data-default-mode="">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -94,7 +101,51 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
     </header>
   
 
@@ -129,7 +180,7 @@
   
   
   
-    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+    <p class="title logo__title">pydna 5.5.17.dev26+g0627ace7c documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><ul class="navbar-icon-links"
@@ -143,8 +194,7 @@
           
           
           
-          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
         <div class="sidebar-primary-item">
@@ -195,7 +245,10 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../reference/pydna.html">pydna package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/pydna.html">pydna package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/pydna.legacy.html">pydna.legacy package</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -386,11 +439,18 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div>
 
 
 <button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -418,7 +478,7 @@
                 <h2> Contents </h2>
             </div>
             <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-sequence-files">Importing Sequence Files</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#text-based-files">Text-based files</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snapgene-files">SnapGene files</a></li>
@@ -464,11 +524,11 @@
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
 <span class="c1"># Install pydna (only when running on Colab)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+<span class="k">if</span> <span class="s1">'google.colab'</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
     <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span><span class="p">[</span><span class="n">clipboard</span><span class="p">,</span><span class="n">download</span><span class="p">,</span><span class="n">express</span><span class="p">,</span><span class="n">gel</span><span class="p">]</span>
-    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/U49845.fasta&quot;</span>
-    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/U49845.gb&quot;</span>
-    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/pDONRtm201.dna&quot;</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">"https://github.com/pydna-group/pydna/raw/master/docs/notebooks/U49845.fasta"</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">"https://github.com/pydna-group/pydna/raw/master/docs/notebooks/U49845.gb"</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">"https://github.com/pydna-group/pydna/raw/master/docs/notebooks/pDONRtm201.dna"</span>
 </pre></div>
 </div>
 </div>
@@ -478,11 +538,11 @@
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
 
 <span class="c1">#Import your file into python using its path</span>
-<span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;./U49845.fasta&quot;</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="s2">"./U49845.fasta"</span>
 <span class="n">files</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
 
 <span class="c1">#Show your FASTA file in python</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;fasta&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">"fasta"</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -503,16 +563,16 @@ ACCGCCAATAGACAACATATGTAA
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
 
-<span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;./U49845.gb&quot;</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="s2">"./U49845.gb"</span>
 <span class="n">files</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
 
 <span class="c1"># Convert the Dseqrecord object into a formatted string in GenBank format</span>
-<span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;gb&quot;</span><span class="p">)</span>
+<span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">"gb"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;LOCUS       SCU49845                5028 bp    DNA     linear   PLN 29-OCT-2018\nDEFINITION  Saccharomyces cerevisiae TCP1-beta gene, partial cds; and Axl2p\n            (AXL2) and Rev7p (REV7) genes, complete cds.\nACCESSION   U49845\nVERSION     U49845.1\nKEYWORDS    .\nSOURCE      Saccharomyces cerevisiae (brewer\&#39;s yeast)\n  ORGANISM  Saccharomyces cerevisiae\n            Eukaryota; Fungi; Dikarya; Ascomycota; Saccharomycotina;\n            Saccharomycetes; Saccharomycetales; Saccharomycetaceae;\n            Saccharomyces.\nREFERENCE   1  (bases 1 to 5028)\n  AUTHORS   Roemer,T., Madden,K., Chang,J. and Snyder,M.\n  TITLE     Selection of axial growth sites in yeast requires Axl2p, a novel\n            plasma membrane glycoprotein\n  JOURNAL   Genes Dev. 10 (7), 777-793 (1996)\n   PUBMED   8846915\nREFERENCE   2  (bases 1 to 5028)\n  AUTHORS   Roemer,T.\n  TITLE     Direct Submission\n  JOURNAL   Submitted (22-FEB-1996) Biology, Yale University, New Haven, CT\n            06520, USA\nFEATURES             Location/Qualifiers\n     source          1..5028\n                     /organism=&quot;Saccharomyces cerevisiae&quot;\n                     /mol_type=&quot;genomic DNA&quot;\n                     /db_xref=&quot;taxon:4932&quot;\n                     /chromosome=&quot;IX&quot;\n     mRNA            &lt;1..&gt;206\n                     /product=&quot;TCP1-beta&quot;\n     CDS             &lt;1..206\n                     /codon_start=3\n                     /product=&quot;TCP1-beta&quot;\n                     /protein_id=&quot;AAA98665.1&quot;\n                     /translation=&quot;SSIYNGISTSGLDLNNGTIADMRQLGIVESYKLKRAVVSSASEAA\n                     EVLLRVDNIIRARPRTANRQHM&quot;\n     gene            &lt;687..&gt;3158\n                     /gene=&quot;AXL2&quot;\n     mRNA            &lt;687..&gt;3158\n                     /gene=&quot;AXL2&quot;\n                     /product=&quot;Axl2p&quot;\n     CDS             687..3158\n                     /gene=&quot;AXL2&quot;\n                     /note=&quot;plasma membrane glycoprotein&quot;\n                     /codon_start=1\n                     /product=&quot;Axl2p&quot;\n                     /protein_id=&quot;AAA98666.1&quot;\n                     /translation=&quot;MTQLQISLLLTATISLLHLVVATPYEAYPIGKQYPPVARVNESFT\n                     FQISNDTYKSSVDKTAQITYNCFDLPSWLSFDSSSRTFSGEPSSDLLSDANTTLYFNVI\n                     LEGTDSADSTSLNNTYQFVVTNRPSISLSSDFNLLALLKNYGYTNGKNALKLDPNEVFN\n                     VTFDRSMFTNEESIVSYYGRSQLYNAPLPNWLFFDSGELKFTGTAPVINSAIAPETSYS\n                     FVIIATDIEGFSAVEVEFELVIGAHQLTTSIQNSLIINVTDTGNVSYDLPLNYVYLDDD\n                     PISSDKLGSINLLDAPDWVALDNATISGSVPDELLGKNSNPANFSVSIYDTYGDVIYFN\n                     FEVVSTTDLFAISSLPNINATRGEWFSYYFLPSQFTDYVNTNVSLEFTNSSQDHDWVKF\n                     QSSNLTLAGEVPKNFDKLSLGLKANQGSQSQELYFNIIGMDSKITHSNHSANATSTRSS\n                     HHSTSTSSYTSSTYTAKISSTSAAATSSAPAALPAANKTSSHNKKAVAIACGVAIPLGV\n                     ILVALICFLIFWRRRRENPDDENLPHAISGPDLNNPANKPNQENATPLNNPFDDDASSY\n                     DDTSIARRLAALNTLKLDNHSATESDISSVDEKRDSLSGMNTYNDQFQSQSKEELLAKP\n                     PVQPPESPFFDPQNRSSSVYMDSEPAVNKSWRYTGNLSPVSDIVRDSYGSQKTVDTEKL\n                     FDLEAPEKEKRTSRDVTMSSLDPWNSNISPSPVRKSVTPSPYNVTKHRNRHLQNIQDSQ\n                     SGKNGITPTTMSTSSSDDFVPVKDGENFCWVHSMEPDRRPSKKRLVDFSNKSNVNVGQV\n                     KDIHGRIPEML&quot;\n     gene            complement(&lt;3300..&gt;4037)\n                     /gene=&quot;REV7&quot;\n     mRNA            complement(&lt;3300..&gt;4037)\n                     /gene=&quot;REV7&quot;\n                     /product=&quot;Rev7p&quot;\n     CDS             complement(3300..4037)\n                     /gene=&quot;REV7&quot;\n                     /codon_start=1\n                     /product=&quot;Rev7p&quot;\n                     /protein_id=&quot;AAA98667.1&quot;\n                     /translation=&quot;MNRWVEKWLRVYLKCYINLILFYRNVYPPQSFDYTTYQSFNLPQF\n                     VPINRHPALIDYIEELILDVLSKLTHVYRFSICIINKKNDLCIEKYVLDFSELQHVDKD\n                     DQIITETEVFDEFRSSLNSLIMHLEKLPKVNDDTITFEAVINAIELELGHKLDRNRRVD\n                     SLEEKAEIERDSNWVKCQEDENLPDNNGFQPPKIKLTSLVGSDVGPLIIHQFSEKLISG\n                     DDKILNGVYSQYEEGESIFGSLF&quot;\nORIGIN\n        1 gatcctccat atacaacggt atctccacct caggtttaga tctcaacaac ggaaccattg\n       61 ccgacatgag acagttaggt atcgtcgaga gttacaagct aaaacgagca gtagtcagct\n      121 ctgcatctga agccgctgaa gttctactaa gggtggataa catcatccgt gcaagaccaa\n      181 gaaccgccaa tagacaacat atgtaacata tttaggatat acctcgaaaa taataaaccg\n      241 ccacactgtc attattataa ttagaaacag aacgcaaaaa ttatccacta tataattcaa\n      301 agacgcgaaa aaaaaagaac aacgcgtcat agaacttttg gcaattcgcg tcacaaataa\n      361 attttggcaa cttatgtttc ctcttcgagc agtactcgag ccctgtctca agaatgtaat\n      421 aatacccatc gtaggtatgg ttaaagatag catctccaca acctcaaagc tccttgccga\n      481 gagtcgccct cctttgtcga gtaattttca cttttcatat gagaacttat tttcttattc\n      541 tttactctca catcctgtag tgattgacac tgcaacagcc accatcacta gaagaacaga\n      601 acaattactt aatagaaaaa ttatatcttc ctcgaaacga tttcctgctt ccaacatcta\n      661 cgtatatcaa gaagcattca cttaccatga cacagcttca gatttcatta ttgctgacag\n      721 ctactatatc actactccat ctagtagtgg ccacgcccta tgaggcatat cctatcggaa\n      781 aacaataccc cccagtggca agagtcaatg aatcgtttac atttcaaatt tccaatgata\n      841 cctataaatc gtctgtagac aagacagctc aaataacata caattgcttc gacttaccga\n      901 gctggctttc gtttgactct agttctagaa cgttctcagg tgaaccttct tctgacttac\n      961 tatctgatgc gaacaccacg ttgtatttca atgtaatact cgagggtacg gactctgccg\n     1021 acagcacgtc tttgaacaat acataccaat ttgttgttac aaaccgtcca tccatctcgc\n     1081 tatcgtcaga tttcaatcta ttggcgttgt taaaaaacta tggttatact aacggcaaaa\n     1141 acgctctgaa actagatcct aatgaagtct tcaacgtgac ttttgaccgt tcaatgttca\n     1201 ctaacgaaga atccattgtg tcgtattacg gacgttctca gttgtataat gcgccgttac\n     1261 ccaattggct gttcttcgat tctggcgagt tgaagtttac tgggacggca ccggtgataa\n     1321 actcggcgat tgctccagaa acaagctaca gttttgtcat catcgctaca gacattgaag\n     1381 gattttctgc cgttgaggta gaattcgaat tagtcatcgg ggctcaccag ttaactacct\n     1441 ctattcaaaa tagtttgata atcaacgtta ctgacacagg taacgtttca tatgacttac\n     1501 ctctaaacta tgtttatctc gatgacgatc ctatttcttc tgataaattg ggttctataa\n     1561 acttattgga tgctccagac tgggtggcat tagataatgc taccatttcc gggtctgtcc\n     1621 cagatgaatt actcggtaag aactccaatc ctgccaattt ttctgtgtcc atttatgata\n     1681 cttatggtga tgtgatttat ttcaacttcg aagttgtctc cacaacggat ttgtttgcca\n     1741 ttagttctct tcccaatatt aacgctacaa ggggtgaatg gttctcctac tattttttgc\n     1801 cttctcagtt tacagactac gtgaatacaa acgtttcatt agagtttact aattcaagcc\n     1861 aagaccatga ctgggtgaaa ttccaatcat ctaatttaac attagctgga gaagtgccca\n     1921 agaatttcga caagctttca ttaggtttga aagcgaacca aggttcacaa tctcaagagc\n     1981 tatattttaa catcattggc atggattcaa agataactca ctcaaaccac agtgcgaatg\n     2041 caacgtccac aagaagttct caccactcca cctcaacaag ttcttacaca tcttctactt\n     2101 acactgcaaa aatttcttct acctccgctg ctgctacttc ttctgctcca gcagcgctgc\n     2161 cagcagccaa taaaacttca tctcacaata aaaaagcagt agcaattgcg tgcggtgttg\n     2221 ctatcccatt aggcgttatc ctagtagctc tcatttgctt cctaatattc tggagacgca\n     2281 gaagggaaaa tccagacgat gaaaacttac cgcatgctat tagtggacct gatttgaata\n     2341 atcctgcaaa taaaccaaat caagaaaacg ctacaccttt gaacaacccc tttgatgatg\n     2401 atgcttcctc gtacgatgat acttcaatag caagaagatt ggctgctttg aacactttga\n     2461 aattggataa ccactctgcc actgaatctg atatttccag cgtggatgaa aagagagatt\n     2521 ctctatcagg tatgaataca tacaatgatc agttccaatc ccaaagtaaa gaagaattat\n     2581 tagcaaaacc cccagtacag cctccagaga gcccgttctt tgacccacag aataggtctt\n     2641 cttctgtgta tatggatagt gaaccagcag taaataaatc ctggcgatat actggcaacc\n     2701 tgtcaccagt ctctgatatt gtcagagaca gttacggatc acaaaaaact gttgatacag\n     2761 aaaaactttt cgatttagaa gcaccagaga aggaaaaacg tacgtcaagg gatgtcacta\n     2821 tgtcttcact ggacccttgg aacagcaata ttagcccttc tcccgtaaga aaatcagtaa\n     2881 caccatcacc atataacgta acgaagcatc gtaaccgcca cttacaaaat attcaagact\n     2941 ctcaaagcgg taaaaacgga atcactccca caacaatgtc aacttcatct tctgacgatt\n     3001 ttgttccggt taaagatggt gaaaattttt gctgggtcca tagcatggaa ccagacagaa\n     3061 gaccaagtaa gaaaaggtta gtagattttt caaataagag taatgtcaat gttggtcaag\n     3121 ttaaggacat tcacggacgc atcccagaaa tgctgtgatt atacgcaacg atattttgct\n     3181 taattttatt ttcctgtttt attttttatt agtggtttac agatacccta tattttattt\n     3241 agtttttata cttagagaca tttaatttta attccattct tcaaatttca tttttgcact\n     3301 taaaacaaag atccaaaaat gctctcgccc tcttcatatt gagaatacac tccattcaaa\n     3361 attttgtcgt caccgctgat taatttttca ctaaactgat gaataatcaa aggccccacg\n     3421 tcagaaccga ctaaagaagt gagttttatt ttaggaggtt gaaaaccatt attgtctggt\n     3481 aaattttcat cttcttgaca tttaacccag tttgaatccc tttcaatttc tgctttttcc\n     3541 tccaaactat cgaccctcct gtttctgtcc aacttatgtc ctagttccaa ttcgatcgca\n     3601 ttaataactg cttcaaatgt tattgtgtca tcgttgactt taggtaattt ctccaaatgc\n     3661 ataatcaaac tatttaagga agatcggaat tcgtcgaaca cttcagtttc cgtaatgatc\n     3721 tgatcgtctt tatccacatg ttgtaattca ctaaaatcta aaacgtattt ttcaatgcat\n     3781 aaatcgttct ttttattaat aatgcagatg gaaaatctgt aaacgtgcgt taatttagaa\n     3841 agaacatcca gtataagttc ttctatatag tcaattaaag caggatgcct attaatggga\n     3901 acgaactgcg gcaagttgaa tgactggtaa gtagtgtagt cgaatgactg aggtgggtat\n     3961 acatttctat aaaataaaat caaattaatg tagcatttta agtataccct cagccacttc\n     4021 tctacccatc tattcataaa gctgacgcaa cgattactat tttttttttc ttcttggatc\n     4081 tcagtcgtcg caaaaacgta taccttcttt ttccgacctt ttttttagct ttctggaaaa\n     4141 gtttatatta gttaaacagg gtctagtctt agtgtgaaag ctagtggttt cgattgactg\n     4201 atattaagaa agtggaaatt aaattagtag tgtagacgta tatgcatatg tatttctcgc\n     4261 ctgtttatgt ttctacgtac ttttgattta tagcaagggg aaaagaaata catactattt\n     4321 tttggtaaag gtgaaagcat aatgtaaaag ctagaataaa atggacgaaa taaagagagg\n     4381 cttagttcat cttttttcca aaaagcaccc aatgataata actaaaatga aaaggatttg\n     4441 ccatctgtca gcaacatcag ttgtgtgagc aataataaaa tcatcacctc cgttgccttt\n     4501 agcgcgtttg tcgtttgtat cttccgtaat tttagtctta tcaatgggaa tcataaattt\n     4561 tccaatgaat tagcaatttc gtccaattct ttttgagctt cttcatattt gctttggaat\n     4621 tcttcgcact tcttttccca ttcatctctt tcttcttcca aagcaacgat ccttctaccc\n     4681 atttgctcag agttcaaatc ggcctctttc agtttatcca ttgcttcctt cagtttggct\n     4741 tcactgtctt ctagctgttg ttctagatcc tggtttttct tggtgtagtt ctcattatta\n     4801 gatctcaagt tattggagtc ttcagccaat tgctttgtat cagacaattg actctctaac\n     4861 ttctccactt cactgtcgag ttgctcgttt ttagcggaca aagatttaat ctcgttttct\n     4921 ttttcagtgt tagattgctc taattctttg agctgttctc tcagctcctc atatttttct\n     4981 tgccatgact cagattctaa ttttaagcta ttcaatttct ctttgatc\n//&#39;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'LOCUS       SCU49845                5028 bp    DNA     linear   PLN 29-OCT-2018\nDEFINITION  Saccharomyces cerevisiae TCP1-beta gene, partial cds; and Axl2p\n            (AXL2) and Rev7p (REV7) genes, complete cds.\nACCESSION   U49845\nVERSION     U49845.1\nKEYWORDS    .\nSOURCE      Saccharomyces cerevisiae (brewer\'s yeast)\n  ORGANISM  Saccharomyces cerevisiae\n            Eukaryota; Fungi; Dikarya; Ascomycota; Saccharomycotina;\n            Saccharomycetes; Saccharomycetales; Saccharomycetaceae;\n            Saccharomyces.\nREFERENCE   1  (bases 1 to 5028)\n  AUTHORS   Roemer,T., Madden,K., Chang,J. and Snyder,M.\n  TITLE     Selection of axial growth sites in yeast requires Axl2p, a novel\n            plasma membrane glycoprotein\n  JOURNAL   Genes Dev. 10 (7), 777-793 (1996)\n   PUBMED   8846915\nREFERENCE   2  (bases 1 to 5028)\n  AUTHORS   Roemer,T.\n  TITLE     Direct Submission\n  JOURNAL   Submitted (22-FEB-1996) Biology, Yale University, New Haven, CT\n            06520, USA\nFEATURES             Location/Qualifiers\n     source          1..5028\n                     /organism="Saccharomyces cerevisiae"\n                     /mol_type="genomic DNA"\n                     /db_xref="taxon:4932"\n                     /chromosome="IX"\n     mRNA            &lt;1..&gt;206\n                     /product="TCP1-beta"\n     CDS             &lt;1..206\n                     /codon_start=3\n                     /product="TCP1-beta"\n                     /protein_id="AAA98665.1"\n                     /translation="SSIYNGISTSGLDLNNGTIADMRQLGIVESYKLKRAVVSSASEAA\n                     EVLLRVDNIIRARPRTANRQHM"\n     gene            &lt;687..&gt;3158\n                     /gene="AXL2"\n     mRNA            &lt;687..&gt;3158\n                     /gene="AXL2"\n                     /product="Axl2p"\n     CDS             687..3158\n                     /gene="AXL2"\n                     /note="plasma membrane glycoprotein"\n                     /codon_start=1\n                     /product="Axl2p"\n                     /protein_id="AAA98666.1"\n                     /translation="MTQLQISLLLTATISLLHLVVATPYEAYPIGKQYPPVARVNESFT\n                     FQISNDTYKSSVDKTAQITYNCFDLPSWLSFDSSSRTFSGEPSSDLLSDANTTLYFNVI\n                     LEGTDSADSTSLNNTYQFVVTNRPSISLSSDFNLLALLKNYGYTNGKNALKLDPNEVFN\n                     VTFDRSMFTNEESIVSYYGRSQLYNAPLPNWLFFDSGELKFTGTAPVINSAIAPETSYS\n                     FVIIATDIEGFSAVEVEFELVIGAHQLTTSIQNSLIINVTDTGNVSYDLPLNYVYLDDD\n                     PISSDKLGSINLLDAPDWVALDNATISGSVPDELLGKNSNPANFSVSIYDTYGDVIYFN\n                     FEVVSTTDLFAISSLPNINATRGEWFSYYFLPSQFTDYVNTNVSLEFTNSSQDHDWVKF\n                     QSSNLTLAGEVPKNFDKLSLGLKANQGSQSQELYFNIIGMDSKITHSNHSANATSTRSS\n                     HHSTSTSSYTSSTYTAKISSTSAAATSSAPAALPAANKTSSHNKKAVAIACGVAIPLGV\n                     ILVALICFLIFWRRRRENPDDENLPHAISGPDLNNPANKPNQENATPLNNPFDDDASSY\n                     DDTSIARRLAALNTLKLDNHSATESDISSVDEKRDSLSGMNTYNDQFQSQSKEELLAKP\n                     PVQPPESPFFDPQNRSSSVYMDSEPAVNKSWRYTGNLSPVSDIVRDSYGSQKTVDTEKL\n                     FDLEAPEKEKRTSRDVTMSSLDPWNSNISPSPVRKSVTPSPYNVTKHRNRHLQNIQDSQ\n                     SGKNGITPTTMSTSSSDDFVPVKDGENFCWVHSMEPDRRPSKKRLVDFSNKSNVNVGQV\n                     KDIHGRIPEML"\n     gene            complement(&lt;3300..&gt;4037)\n                     /gene="REV7"\n     mRNA            complement(&lt;3300..&gt;4037)\n                     /gene="REV7"\n                     /product="Rev7p"\n     CDS             complement(3300..4037)\n                     /gene="REV7"\n                     /codon_start=1\n                     /product="Rev7p"\n                     /protein_id="AAA98667.1"\n                     /translation="MNRWVEKWLRVYLKCYINLILFYRNVYPPQSFDYTTYQSFNLPQF\n                     VPINRHPALIDYIEELILDVLSKLTHVYRFSICIINKKNDLCIEKYVLDFSELQHVDKD\n                     DQIITETEVFDEFRSSLNSLIMHLEKLPKVNDDTITFEAVINAIELELGHKLDRNRRVD\n                     SLEEKAEIERDSNWVKCQEDENLPDNNGFQPPKIKLTSLVGSDVGPLIIHQFSEKLISG\n                     DDKILNGVYSQYEEGESIFGSLF"\nORIGIN\n        1 gatcctccat atacaacggt atctccacct caggtttaga tctcaacaac ggaaccattg\n       61 ccgacatgag acagttaggt atcgtcgaga gttacaagct aaaacgagca gtagtcagct\n      121 ctgcatctga agccgctgaa gttctactaa gggtggataa catcatccgt gcaagaccaa\n      181 gaaccgccaa tagacaacat atgtaacata tttaggatat acctcgaaaa taataaaccg\n      241 ccacactgtc attattataa ttagaaacag aacgcaaaaa ttatccacta tataattcaa\n      301 agacgcgaaa aaaaaagaac aacgcgtcat agaacttttg gcaattcgcg tcacaaataa\n      361 attttggcaa cttatgtttc ctcttcgagc agtactcgag ccctgtctca agaatgtaat\n      421 aatacccatc gtaggtatgg ttaaagatag catctccaca acctcaaagc tccttgccga\n      481 gagtcgccct cctttgtcga gtaattttca cttttcatat gagaacttat tttcttattc\n      541 tttactctca catcctgtag tgattgacac tgcaacagcc accatcacta gaagaacaga\n      601 acaattactt aatagaaaaa ttatatcttc ctcgaaacga tttcctgctt ccaacatcta\n      661 cgtatatcaa gaagcattca cttaccatga cacagcttca gatttcatta ttgctgacag\n      721 ctactatatc actactccat ctagtagtgg ccacgcccta tgaggcatat cctatcggaa\n      781 aacaataccc cccagtggca agagtcaatg aatcgtttac atttcaaatt tccaatgata\n      841 cctataaatc gtctgtagac aagacagctc aaataacata caattgcttc gacttaccga\n      901 gctggctttc gtttgactct agttctagaa cgttctcagg tgaaccttct tctgacttac\n      961 tatctgatgc gaacaccacg ttgtatttca atgtaatact cgagggtacg gactctgccg\n     1021 acagcacgtc tttgaacaat acataccaat ttgttgttac aaaccgtcca tccatctcgc\n     1081 tatcgtcaga tttcaatcta ttggcgttgt taaaaaacta tggttatact aacggcaaaa\n     1141 acgctctgaa actagatcct aatgaagtct tcaacgtgac ttttgaccgt tcaatgttca\n     1201 ctaacgaaga atccattgtg tcgtattacg gacgttctca gttgtataat gcgccgttac\n     1261 ccaattggct gttcttcgat tctggcgagt tgaagtttac tgggacggca ccggtgataa\n     1321 actcggcgat tgctccagaa acaagctaca gttttgtcat catcgctaca gacattgaag\n     1381 gattttctgc cgttgaggta gaattcgaat tagtcatcgg ggctcaccag ttaactacct\n     1441 ctattcaaaa tagtttgata atcaacgtta ctgacacagg taacgtttca tatgacttac\n     1501 ctctaaacta tgtttatctc gatgacgatc ctatttcttc tgataaattg ggttctataa\n     1561 acttattgga tgctccagac tgggtggcat tagataatgc taccatttcc gggtctgtcc\n     1621 cagatgaatt actcggtaag aactccaatc ctgccaattt ttctgtgtcc atttatgata\n     1681 cttatggtga tgtgatttat ttcaacttcg aagttgtctc cacaacggat ttgtttgcca\n     1741 ttagttctct tcccaatatt aacgctacaa ggggtgaatg gttctcctac tattttttgc\n     1801 cttctcagtt tacagactac gtgaatacaa acgtttcatt agagtttact aattcaagcc\n     1861 aagaccatga ctgggtgaaa ttccaatcat ctaatttaac attagctgga gaagtgccca\n     1921 agaatttcga caagctttca ttaggtttga aagcgaacca aggttcacaa tctcaagagc\n     1981 tatattttaa catcattggc atggattcaa agataactca ctcaaaccac agtgcgaatg\n     2041 caacgtccac aagaagttct caccactcca cctcaacaag ttcttacaca tcttctactt\n     2101 acactgcaaa aatttcttct acctccgctg ctgctacttc ttctgctcca gcagcgctgc\n     2161 cagcagccaa taaaacttca tctcacaata aaaaagcagt agcaattgcg tgcggtgttg\n     2221 ctatcccatt aggcgttatc ctagtagctc tcatttgctt cctaatattc tggagacgca\n     2281 gaagggaaaa tccagacgat gaaaacttac cgcatgctat tagtggacct gatttgaata\n     2341 atcctgcaaa taaaccaaat caagaaaacg ctacaccttt gaacaacccc tttgatgatg\n     2401 atgcttcctc gtacgatgat acttcaatag caagaagatt ggctgctttg aacactttga\n     2461 aattggataa ccactctgcc actgaatctg atatttccag cgtggatgaa aagagagatt\n     2521 ctctatcagg tatgaataca tacaatgatc agttccaatc ccaaagtaaa gaagaattat\n     2581 tagcaaaacc cccagtacag cctccagaga gcccgttctt tgacccacag aataggtctt\n     2641 cttctgtgta tatggatagt gaaccagcag taaataaatc ctggcgatat actggcaacc\n     2701 tgtcaccagt ctctgatatt gtcagagaca gttacggatc acaaaaaact gttgatacag\n     2761 aaaaactttt cgatttagaa gcaccagaga aggaaaaacg tacgtcaagg gatgtcacta\n     2821 tgtcttcact ggacccttgg aacagcaata ttagcccttc tcccgtaaga aaatcagtaa\n     2881 caccatcacc atataacgta acgaagcatc gtaaccgcca cttacaaaat attcaagact\n     2941 ctcaaagcgg taaaaacgga atcactccca caacaatgtc aacttcatct tctgacgatt\n     3001 ttgttccggt taaagatggt gaaaattttt gctgggtcca tagcatggaa ccagacagaa\n     3061 gaccaagtaa gaaaaggtta gtagattttt caaataagag taatgtcaat gttggtcaag\n     3121 ttaaggacat tcacggacgc atcccagaaa tgctgtgatt atacgcaacg atattttgct\n     3181 taattttatt ttcctgtttt attttttatt agtggtttac agatacccta tattttattt\n     3241 agtttttata cttagagaca tttaatttta attccattct tcaaatttca tttttgcact\n     3301 taaaacaaag atccaaaaat gctctcgccc tcttcatatt gagaatacac tccattcaaa\n     3361 attttgtcgt caccgctgat taatttttca ctaaactgat gaataatcaa aggccccacg\n     3421 tcagaaccga ctaaagaagt gagttttatt ttaggaggtt gaaaaccatt attgtctggt\n     3481 aaattttcat cttcttgaca tttaacccag tttgaatccc tttcaatttc tgctttttcc\n     3541 tccaaactat cgaccctcct gtttctgtcc aacttatgtc ctagttccaa ttcgatcgca\n     3601 ttaataactg cttcaaatgt tattgtgtca tcgttgactt taggtaattt ctccaaatgc\n     3661 ataatcaaac tatttaagga agatcggaat tcgtcgaaca cttcagtttc cgtaatgatc\n     3721 tgatcgtctt tatccacatg ttgtaattca ctaaaatcta aaacgtattt ttcaatgcat\n     3781 aaatcgttct ttttattaat aatgcagatg gaaaatctgt aaacgtgcgt taatttagaa\n     3841 agaacatcca gtataagttc ttctatatag tcaattaaag caggatgcct attaatggga\n     3901 acgaactgcg gcaagttgaa tgactggtaa gtagtgtagt cgaatgactg aggtgggtat\n     3961 acatttctat aaaataaaat caaattaatg tagcatttta agtataccct cagccacttc\n     4021 tctacccatc tattcataaa gctgacgcaa cgattactat tttttttttc ttcttggatc\n     4081 tcagtcgtcg caaaaacgta taccttcttt ttccgacctt ttttttagct ttctggaaaa\n     4141 gtttatatta gttaaacagg gtctagtctt agtgtgaaag ctagtggttt cgattgactg\n     4201 atattaagaa agtggaaatt aaattagtag tgtagacgta tatgcatatg tatttctcgc\n     4261 ctgtttatgt ttctacgtac ttttgattta tagcaagggg aaaagaaata catactattt\n     4321 tttggtaaag gtgaaagcat aatgtaaaag ctagaataaa atggacgaaa taaagagagg\n     4381 cttagttcat cttttttcca aaaagcaccc aatgataata actaaaatga aaaggatttg\n     4441 ccatctgtca gcaacatcag ttgtgtgagc aataataaaa tcatcacctc cgttgccttt\n     4501 agcgcgtttg tcgtttgtat cttccgtaat tttagtctta tcaatgggaa tcataaattt\n     4561 tccaatgaat tagcaatttc gtccaattct ttttgagctt cttcatattt gctttggaat\n     4621 tcttcgcact tcttttccca ttcatctctt tcttcttcca aagcaacgat ccttctaccc\n     4681 atttgctcag agttcaaatc ggcctctttc agtttatcca ttgcttcctt cagtttggct\n     4741 tcactgtctt ctagctgttg ttctagatcc tggtttttct tggtgtagtt ctcattatta\n     4801 gatctcaagt tattggagtc ttcagccaat tgctttgtat cagacaattg actctctaac\n     4861 ttctccactt cactgtcgag ttgctcgttt ttagcggaca aagatttaat ctcgttttct\n     4921 ttttcagtgt tagattgctc taattctttg agctgttctc tcagctcctc atatttttct\n     4981 tgccatgact cagattctaa ttttaagcta ttcaatttct ctttgatc\n//'
 </pre></div>
 </div>
 </div>
@@ -522,7 +582,7 @@ ACCGCCAATAGACAACATATGTAA
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_snapgene</span>
 
-<span class="n">seq</span> <span class="o">=</span> <span class="n">parse_snapgene</span><span class="p">(</span><span class="s1">&#39;pDONRtm201.dna&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">seq</span> <span class="o">=</span> <span class="n">parse_snapgene</span><span class="p">(</span><span class="s1">'pDONRtm201.dna'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">seq</span>
 </pre></div>
 </div>
@@ -544,7 +604,7 @@ ACCGCCAATAGACAACATATGTAA
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
 
 <span class="n">my_record</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span>
-<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">'''</span>
 <span class="sd">&gt;lcl|U49845.1_cds_AAA98667.1_3 [gene=REV7] [protein=Rev7p] [protein_id=AAA98667.1] [location=complement(3300..4037)] [gbkey=CDS]</span>
 <span class="sd">ATGAATAGATGGGTAGAGAAGTGGCTGAGGGTATACTTAAAATGCTACATTAATTTGATTTTATTTTATA</span>
 <span class="sd">GAAATGTATACCCACCTCAGTCATTCGACTACACTACTTACCAGTCATTCAACTTGCCGCAGTTCGTTCC</span>
@@ -557,9 +617,9 @@ ACCGCCAATAGACAACATATGTAA
 <span class="sd">AGACAATAATGGTTTTCAACCTCCTAAAATAAAACTCACTTCTTTAGTCGGTTCTGACGTGGGGCCTTTG</span>
 <span class="sd">ATTATTCATCAGTTTAGTGAAAAATTAATCAGCGGTGACGACAAAATTTTGAATGGAGTGTATTCTCAAT</span>
 <span class="sd">ATGAAGAGGGCGAGAGCATTTTTGGATCTTTGTTTTAA</span>
-<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">'''</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">my_record</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;fasta&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_record</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">"fasta"</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -591,13 +651,13 @@ TTTGGATCTTTGTTTTAA
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Bio.SeqIO</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span> <span class="k">as</span> <span class="n">seqio_parse</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
 
-<span class="n">file_path</span> <span class="o">=</span> <span class="s1">&#39;./U49845.gb&#39;</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="s1">'./U49845.gb'</span>
 
 <span class="c1"># Extract the first Seqrecord of the SeqIO.parse iterator</span>
-<span class="n">seq_record</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">seqio_parse</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;genbank&#39;</span><span class="p">))</span>
+<span class="n">seq_record</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">seqio_parse</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">'genbank'</span><span class="p">))</span>
 
-<span class="c1"># This is how circularity is stored in biopython&#39;s seqrecord</span>
-<span class="n">is_circular</span> <span class="o">=</span> <span class="s1">&#39;topology&#39;</span> <span class="ow">in</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s1">&#39;topology&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;circular&#39;</span>
+<span class="c1"># This is how circularity is stored in biopython's seqrecord</span>
+<span class="n">is_circular</span> <span class="o">=</span> <span class="s1">'topology'</span> <span class="ow">in</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s1">'topology'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'circular'</span>
 
 <span class="c1"># Convert into Dseqrecord</span>
 <span class="n">dseq_record</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="n">seq_record</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="n">is_circular</span><span class="p">)</span>
@@ -661,7 +721,7 @@ TTTGGATCTTTGTTTTAA
     <i class="fa-solid fa-list"></i> Contents
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-sequence-files">Importing Sequence Files</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#text-based-files">Text-based files</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snapgene-files">SnapGene files</a></li>
@@ -717,8 +777,8 @@ By Björn F. Johansson
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
 
   <footer class="bd-footer">
   </footer>

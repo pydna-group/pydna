@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Plasmid Restriction/Ligation Cloning &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+    <title>Plasmid Restriction/Ligation Cloning &#8212; pydna 5.5.17.dev26+g0627ace7c documentation</title>
   
   
   
@@ -27,25 +27,26 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=4418a689" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b530ca2f" />
   
   <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../_static/documentation_options.js?v=735db142"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/Example_Restriction';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -54,21 +55,27 @@
     <link rel="prev" title="Example gallery" href="../example_gallery.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="6.0.0a24" />
+  <meta name="docsearch:version" content="5.5.17" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
+  <body data-default-mode="">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -94,7 +101,47 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
     </header>
   
 
@@ -129,7 +176,7 @@
   
   
   
-    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+    <p class="title logo__title">pydna 5.5.17.dev26+g0627ace7c documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><ul class="navbar-icon-links"
@@ -143,8 +190,7 @@
           
           
           
-          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
         <div class="sidebar-primary-item">
@@ -195,7 +241,10 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../reference/pydna.html">pydna package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/pydna.html">pydna package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/pydna.legacy.html">pydna.legacy package</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -386,11 +435,18 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div>
 
 
 <button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -440,10 +496,10 @@
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
 <span class="c1"># Install pydna (only when running on Colab)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+<span class="k">if</span> <span class="s1">'google.colab'</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
     <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span><span class="p">[</span><span class="n">clipboard</span><span class="p">,</span><span class="n">download</span><span class="p">,</span><span class="n">express</span><span class="p">,</span><span class="n">gel</span><span class="p">]</span>
-    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/pFA6a-kanMX6.gb&quot;</span>
-    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/CU329670.gb&quot;</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">"https://github.com/pydna-group/pydna/raw/master/docs/notebooks/pFA6a-kanMX6.gb"</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">"https://github.com/pydna-group/pydna/raw/master/docs/notebooks/CU329670.gb"</span>
 </pre></div>
 </div>
 </div>
@@ -464,15 +520,15 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parsing the files</span>
-<span class="n">pFA6akanMX6_path</span> <span class="o">=</span> <span class="s2">&quot;./pFA6a-kanMX6.gb&quot;</span>
-<span class="n">ase1_path</span> <span class="o">=</span> <span class="s2">&quot;./CU329670.gb&quot;</span>
+<span class="n">pFA6akanMX6_path</span> <span class="o">=</span> <span class="s2">"./pFA6a-kanMX6.gb"</span>
+<span class="n">ase1_path</span> <span class="o">=</span> <span class="s2">"./CU329670.gb"</span>
 <span class="n">vector</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">pFA6akanMX6_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">pombe_chromosome_I</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">ase1_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="c1"># Printing the parsed files</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;gb&quot;</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">pombe_chromosome_I</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;gb&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">"gb"</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pombe_chromosome_I</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">"gb"</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -499,85 +555,85 @@ REFERENCE   2  (bases 1 to 3938)
             http://www.snapgene.com
 FEATURES             Location/Qualifiers
      source          1..3938
-                     /organism=&quot;synthetic DNA construct&quot;
-                     /mol_type=&quot;other DNA&quot;
+                     /organism="synthetic DNA construct"
+                     /mol_type="other DNA"
      primer_bind     complement(35..52)
-                     /label=&quot;L4440&quot;
-                     /note=&quot;L4440 vector, forward primer&quot;
+                     /label="L4440"
+                     /note="L4440 vector, forward primer"
      rep_origin      complement(206..794)
                      /direction=LEFT
-                     /label=&quot;ori&quot;
-                     /note=&quot;high-copy-number ColE1/pMB1/pBR322/pUC origin of
-                     replication&quot;
+                     /label="ori"
+                     /note="high-copy-number ColE1/pMB1/pBR322/pUC origin of
+                     replication"
      primer_bind     complement(286..305)
-                     /label=&quot;pBR322ori-F&quot;
-                     /note=&quot;pBR322 origin, forward primer&quot;
+                     /label="pBR322ori-F"
+                     /note="pBR322 origin, forward primer"
      CDS             complement(965..1825)
                      /codon_start=1
-                     /gene=&quot;bla&quot;
-                     /product=&quot;beta-lactamase&quot;
-                     /label=&quot;AmpR&quot;
-                     /note=&quot;confers resistance to ampicillin, carbenicillin, and
-                     related antibiotics&quot;
-                     /translation=&quot;MSIQHFRVALIPFFAAFCLPVFAHPETLVKVKDAEDQLGARVGYI
+                     /gene="bla"
+                     /product="beta-lactamase"
+                     /label="AmpR"
+                     /note="confers resistance to ampicillin, carbenicillin, and
+                     related antibiotics"
+                     /translation="MSIQHFRVALIPFFAAFCLPVFAHPETLVKVKDAEDQLGARVGYI
                      ELDLNSGKILESFRPEERFPMMSTFKVLLCGAVLSRIDAGQEQLGRRIHYSQNDLVEYS
                      PVTEKHLTDGMTVRELCSAAITMSDNTAANLLLTTIGGPKELTAFLHNMGDHVTRLDRW
                      EPELNEAIPNDERDTTMPVAMATTLRKLLTGELLTLASRQQLIDWMEADKVAGPLLRSA
                      LPAGWFIADKSGAGERGSRGIIAALGPDGKPSRIVVIYTTGSQATMDERNRQIAEIGAS
-                     LIKHW&quot;
+                     LIKHW"
      primer_bind     1588..1607
-                     /label=&quot;Amp-R&quot;
-                     /note=&quot;Ampicillin resistance gene, reverse primer&quot;
+                     /label="Amp-R"
+                     /note="Ampicillin resistance gene, reverse primer"
      promoter        complement(1826..1930)
-                     /gene=&quot;bla&quot;
-                     /label=&quot;AmpR promoter&quot;
+                     /gene="bla"
+                     /label="AmpR promoter"
      primer_bind     1998..2016
-                     /label=&quot;pBRforEco&quot;
-                     /note=&quot;pBR322 vectors, upsteam of EcoRI site, forward
-                     primer&quot;
+                     /label="pBRforEco"
+                     /note="pBR322 vectors, upsteam of EcoRI site, forward
+                     primer"
      primer_bind     complement(2054..2076)
-                     /label=&quot;pGEX 3&#39;&quot;
-                     /note=&quot;pGEX vectors, reverse primer&quot;
+                     /label="pGEX 3'"
+                     /note="pGEX vectors, reverse primer"
      primer_bind     2176..2195
-                     /label=&quot;pRS-marker&quot;
-                     /note=&quot;pRS vectors, use to sequence yeast selectable
-                     marker&quot;
+                     /label="pRS-marker"
+                     /note="pRS vectors, use to sequence yeast selectable
+                     marker"
      promoter        2276..2294
-                     /label=&quot;SP6 promoter&quot;
-                     /note=&quot;promoter for bacteriophage SP6 RNA polymerase&quot;
+                     /label="SP6 promoter"
+                     /note="promoter for bacteriophage SP6 RNA polymerase"
      primer_bind     2276..2293
-                     /label=&quot;SP6&quot;
-                     /note=&quot;SP6 promoter, forward primer&quot;
+                     /label="SP6"
+                     /note="SP6 promoter, forward primer"
      gene            2407..3763
-                     /label=&quot;kanMX&quot;
-                     /note=&quot;yeast selectable marker conferring kanamycin
-                     resistance (Wach et al., 1994)&quot;
+                     /label="kanMX"
+                     /note="yeast selectable marker conferring kanamycin
+                     resistance (Wach et al., 1994)"
      promoter        2407..2750
-                     /label=&quot;TEF promoter&quot;
-                     /note=&quot;Ashbya gossypii TEF promoter&quot;
+                     /label="TEF promoter"
+                     /note="Ashbya gossypii TEF promoter"
      CDS             2751..3560
                      /codon_start=1
-                     /gene=&quot;aph(3&#39;)-Ia&quot;
-                     /product=&quot;aminoglycoside phosphotransferase&quot;
-                     /label=&quot;KanR&quot;
-                     /note=&quot;confers resistance to kanamycin&quot;
-                     /translation=&quot;MGKEKTHVSRPRLNSNMDADLYGYKWARDNVGQSGATIYRLYGKP
+                     /gene="aph(3')-Ia"
+                     /product="aminoglycoside phosphotransferase"
+                     /label="KanR"
+                     /note="confers resistance to kanamycin"
+                     /translation="MGKEKTHVSRPRLNSNMDADLYGYKWARDNVGQSGATIYRLYGKP
                      DAPELFLKHGKGSVANDVTDEMVRLNWLTEFMPLPTIKHFIRTPDDAWLLTTAIPGKTA
                      FQVLEEYPDSGENIVDALAVFLRRLHSIPVCNCPFNSDRVFRLAQAQSRMNNGLVDASD
                      FDDERNGWPVEQVWKEMHKLLPFSPDSVVTHGDFSLDNLIFDEGKLIGCIDVGRVGIAD
-                     RYQDLAILWNCLGEFSPSLQKRLFQKYGIDNPDMNKLQFHLMLDEFF&quot;
+                     RYQDLAILWNCLGEFSPSLQKRLFQKYGIDNPDMNKLQFHLMLDEFF"
      primer_bind     complement(2818..2837)
-                     /label=&quot;Kan-R&quot;
-                     /note=&quot;Kanamycin resistance gene, reverse primer&quot;
+                     /label="Kan-R"
+                     /note="Kanamycin resistance gene, reverse primer"
      terminator      3566..3763
-                     /label=&quot;TEF terminator&quot;
-                     /note=&quot;Ashbya gossypii TEF terminator&quot;
+                     /label="TEF terminator"
+                     /note="Ashbya gossypii TEF terminator"
      primer_bind     complement(3867..3886)
-                     /label=&quot;T7&quot;
-                     /note=&quot;T7 promoter, forward primer&quot;
+                     /label="T7"
+                     /note="T7 promoter, forward primer"
      promoter        complement(3868..3886)
-                     /label=&quot;T7 promoter&quot;
-                     /note=&quot;promoter for bacteriophage T7 RNA polymerase&quot;
+                     /label="T7 promoter"
+                     /note="promoter for bacteriophage T7 RNA polymerase"
 ORIGIN
         1 gaggcggttt gcgtattggg cgctcttccg cttcctcgct cactgactcg ctgcgctcgg
        61 tcgttcggct gcggcgagcg gtatcagctc actcaaaggc ggtaatacgg ttatccacag
@@ -698,7 +754,7 @@ REFERENCE   5  (bases 1 to 4538)
             Holroyd,S., Hornsby,T., Howarth,S., Huckle,E.J., Hunt,S., Jagels,K.,
             James,K., Jones,L., Jones,M., Leather,S., McDonald,S., McLean,J.,
             Mooney,P., Moule,S., Mungall,K., Murphy,L., Niblett,D., Odell,C.,
-            Oliver,K., O&#39;Neil,S., Pearson,D., Quail,M.A., Rabbinowitsch,E.,
+            Oliver,K., O'Neil,S., Pearson,D., Quail,M.A., Rabbinowitsch,E.,
             Rutherford,K., Rutter,S., Saunders,D., Seeger,K., Sharp,S.,
             Skelton,J., Simmonds,M., Squares,R., Squares,S., Stevens,K.,
             Taylor,K., Taylor,R.G., Tivey,A., Walsh,S., Warren,T., Whitehead,S.,
@@ -729,7 +785,7 @@ REFERENCE   6
             Holroyd,S., Hornsby,T., Howarth,S., Huckle,E.J., Hunt,S., Jagels,K.,
             James,K., Jones,L., Jones,M., Leather,S., McDonald,S., McLean,J.,
             Mooney,P., Moule,S., Mungall,K., Murphy,L., Niblett,D., Odell,C.,
-            Oliver,K., O&#39;Neil,S., Pearson,D., Quail,M.A., Rabbinowitsch,E.,
+            Oliver,K., O'Neil,S., Pearson,D., Quail,M.A., Rabbinowitsch,E.,
             Rutherford,K., Rutter,S., Saunders,D., Seeger,K., Sharp,S.,
             Skelton,J., Simmonds,M., Squares,R., Squares,S., Stevens,K.,
             Taylor,K., Taylor,R.G., Tivey,A., Walsh,S., Warren,T., Whitehead,S.,
@@ -816,48 +872,48 @@ COMMENT     On or before Jan 26, 2012 this sequence version replaced
             Z99753.1.
 FEATURES             Location/Qualifiers
      source          1..4538
-                     /organism=&quot;Schizosaccharomyces pombe&quot;
-                     /mol_type=&quot;genomic DNA&quot;
-                     /strain=&quot;972h-&quot;
-                     /db_xref=&quot;taxon:4896&quot;
-                     /chromosome=&quot;I&quot;
+                     /organism="Schizosaccharomyces pombe"
+                     /mol_type="genomic DNA"
+                     /strain="972h-"
+                     /db_xref="taxon:4896"
+                     /chromosome="I"
      gene            &lt;1..676
-                     /locus_tag=&quot;SPOM_SPAPB1A10.08&quot;
+                     /locus_tag="SPOM_SPAPB1A10.08"
      CDS             &lt;1..393
-                     /locus_tag=&quot;SPOM_SPAPB1A10.08&quot;
+                     /locus_tag="SPOM_SPAPB1A10.08"
                      /codon_start=1
-                     /product=&quot;conserved fungal protein&quot;
-                     /protein_id=&quot;CAC21481.2&quot;
-                     /translation=&quot;MMTRMELRPLEIGFSKALTEVAPVTCQCECWDHNLCSSQASEMDL
+                     /product="conserved fungal protein"
+                     /protein_id="CAC21481.2"
+                     /translation="MMTRMELRPLEIGFSKALTEVAPVTCQCECWDHNLCSSQASEMDL
                      IYQSQDTHSCASKQDAVFQLLSETKIPVPNRYRKISHRLSTLSNKKTLKSQLDRFLSSS
                      KKLHNDDVNRGDYCFLLSTPVECSASTNSHSYDCLWNFSCNSFPEYSSYSASETSSVAS
                      YSYYSGPNPATPSSSSCNLVNANSLDIYLNINNLKKSKSVPRLRGQFMEPVEHNHPLSK
                      SLEEQSSFLEQSKDASSNLTACNRSGSSLSSNFYSSRLSKKTSLASLNKSRASLQHKIM
                      SLSRNIIRRVFHKPEVHLDPSASILNLSSSHGESNLTNGLLCQNFKLFQDDWLMEDCAP
                      DANFTLYTPLQPWEKRSVKPEIRRPRLNPNFFRVFVLEAQMRRAGKLSANTAGRAQLIY
-                     LPKPAVTFSTSPLHVEL&quot;
+                     LPKPAVTFSTSPLHVEL"
      gene            complement(&lt;1..1972)
-                     /locus_tag=&quot;SPOM_SPNCRNA.2846&quot;
+                     /locus_tag="SPOM_SPNCRNA.2846"
      ncRNA           complement(&lt;1..1972)
-                     /ncRNA_class=&quot;lncRNA&quot;
-                     /locus_tag=&quot;SPOM_SPNCRNA.2846&quot;
-                     /product=&quot;non-coding RNA&quot;
-     3&#39;UTR           394..676
-                     /locus_tag=&quot;SPOM_SPAPB1A10.08&quot;
+                     /ncRNA_class="lncRNA"
+                     /locus_tag="SPOM_SPNCRNA.2846"
+                     /product="non-coding RNA"
+     3'UTR           394..676
+                     /locus_tag="SPOM_SPAPB1A10.08"
      gene            1001..3538
-                     /gene=&quot;ase1&quot;
-                     /locus_tag=&quot;SPOM_SPAPB1A10.09&quot;
-     5&#39;UTR           1001..1173
-                     /gene=&quot;ase1&quot;
-                     /locus_tag=&quot;SPOM_SPAPB1A10.09&quot;
+                     /gene="ase1"
+                     /locus_tag="SPOM_SPAPB1A10.09"
+     5'UTR           1001..1173
+                     /gene="ase1"
+                     /locus_tag="SPOM_SPAPB1A10.09"
      CDS             join(1174..1597,1645..3416)
-                     /gene=&quot;ase1&quot;
-                     /locus_tag=&quot;SPOM_SPAPB1A10.09&quot;
+                     /gene="ase1"
+                     /locus_tag="SPOM_SPAPB1A10.09"
                      /codon_start=1
-                     /product=&quot;antiparallel microtubule cross-linking factor
-                     Ase1&quot;
-                     /protein_id=&quot;CAC21482.1&quot;
-                     /translation=&quot;MQTVMMDDIQSTDSIAEKDNHSNNESNFTWKAFREQVEKHFSKIE
+                     /product="antiparallel microtubule cross-linking factor
+                     Ase1"
+                     /protein_id="CAC21482.1"
+                     /translation="MQTVMMDDIQSTDSIAEKDNHSNNESNFTWKAFREQVEKHFSKIE
                      RLHQVLGTDGDNSSLFELFTTAMNAQLHEMEQCQKKLEDDCQQRIDSIRFLVSSLKLTD
                      DTSSLKIESPLIQCLNRLSMVEGQYMAQYDQKLSTIKEMYHKLESYCNRLGSPFVLPDF
                      ENSFLSDVSDAFTESLRGRINEAEKEIDARLEVINSFEEEILGLWSELGVEPADVPQYE
@@ -869,32 +925,32 @@ FEATURES             Location/Qualifiers
                      SPRTPLPRVKNTQNPSRSISAEPPSATSTANRRHPTANRIDINARLNSASRSRSANMIR
                      QGANGSDSNMSSSPVSGNSNTPFNKFPNSVSRNTHFESKSPHPNYSRTPHETYSKASSK
                      NVPLSPPKQRVVNEHALNIMSEKLQRTNLKEQTPEMDIENSSQNLPFSPMKISPIRASP
-                     VKTIPSSPSPTTNIFSAPLNNITNCTPMEDEWGEEGF&quot;
-     3&#39;UTR           3417..3538
-                     /gene=&quot;ase1&quot;
-                     /locus_tag=&quot;SPOM_SPAPB1A10.09&quot;
+                     VKTIPSSPSPTTNIFSAPLNNITNCTPMEDEWGEEGF"
+     3'UTR           3417..3538
+                     /gene="ase1"
+                     /locus_tag="SPOM_SPAPB1A10.09"
      gene            complement(3510..&gt;4538)
-                     /gene=&quot;ypt71&quot;
-                     /locus_tag=&quot;SPOM_SPAPB1A10.10C&quot;
-     3&#39;UTR           complement(3510..3690)
-                     /gene=&quot;ypt71&quot;
-                     /locus_tag=&quot;SPOM_SPAPB1A10.10C&quot;
+                     /gene="ypt71"
+                     /locus_tag="SPOM_SPAPB1A10.10C"
+     3'UTR           complement(3510..3690)
+                     /gene="ypt71"
+                     /locus_tag="SPOM_SPAPB1A10.10C"
      CDS             complement(join(3691..4137,4192..&gt;4290))
-                     /gene=&quot;ypt71&quot;
-                     /locus_tag=&quot;SPOM_SPAPB1A10.10C&quot;
+                     /gene="ypt71"
+                     /locus_tag="SPOM_SPAPB1A10.10C"
                      /codon_start=1
-                     /product=&quot;GTPase Ypt71&quot;
-                     /protein_id=&quot;CAC21483.1&quot;
-                     /translation=&quot;MSAQKRVFLKVVILGDSGVGKTCLMNQFVNQKFSREYKATIGADF
+                     /product="GTPase Ypt71"
+                     /protein_id="CAC21483.1"
+                     /translation="MSAQKRVFLKVVILGDSGVGKTCLMNQFVNQKFSREYKATIGADF
                      LTKDVVVDDKLVTLQLWDTAGQERFQSLGMAFYRGADCCVIVYNVNNSKSFDSVENWRQ
                      EFLYQTSQDECAFPFIIVGNQIDKDASKRAVSLHRALDYCKSKHGSNMIHFEASAKENT
-                     NVTDLFETVSRLALENESSRDDFVNDFSEPLLLSKPLNNTSSCNC&quot;
+                     NVTDLFETVSRLALENESSRDDFVNDFSEPLLLSKPLNNTSSCNC"
      gene            4049..&gt;4538
-                     /locus_tag=&quot;SPOM_SPNCRNA.2847&quot;
+                     /locus_tag="SPOM_SPNCRNA.2847"
      ncRNA           4049..&gt;4538
-                     /ncRNA_class=&quot;lncRNA&quot;
-                     /locus_tag=&quot;SPOM_SPNCRNA.2847&quot;
-                     /product=&quot;non-coding RNA&quot;
+                     /ncRNA_class="lncRNA"
+                     /locus_tag="SPOM_SPNCRNA.2847"
+                     /product="non-coding RNA"
 ORIGIN
         1 atcatcagac gtgtatttca caagccagaa gtgcatttgg atccaagtgc ctccatttta
        61 aatctctcat cttcgcatgg cgaaagcaac ctgacaaatg gtttgctttg tcaaaatttc
@@ -981,9 +1037,9 @@ ORIGIN
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.design</span><span class="w"> </span><span class="kn">import</span> <span class="n">primer_design</span>
 <span class="c1">#Finding the feature containing the CDS with ase1 as a type qualifier</span>
-<span class="n">gene</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">pombe_chromosome_I</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CDS&quot;</span> <span class="ow">and</span>
-                <span class="s2">&quot;gene&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span> <span class="ow">and</span>
-                <span class="s2">&quot;ase1&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">[</span><span class="s2">&quot;gene&quot;</span><span class="p">])</span>
+<span class="n">gene</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">pombe_chromosome_I</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"CDS"</span> <span class="ow">and</span>
+                <span class="s2">"gene"</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span> <span class="ow">and</span>
+                <span class="s2">"ase1"</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">[</span><span class="s2">"gene"</span><span class="p">])</span>
 
 <span class="c1"># Using the primer_design function to design primers to amplify the CDS</span>
 <span class="c1"># `min` and `max` can be used on a SeqFeature to get the start (leftmost) and end (rightmost) positions</span>
@@ -991,13 +1047,13 @@ ORIGIN
 <span class="n">amplicon</span> <span class="o">=</span> <span class="n">primer_design</span><span class="p">(</span><span class="n">pombe_chromosome_I</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">gene</span><span class="p">):</span><span class="nb">max</span><span class="p">(</span><span class="n">gene</span><span class="p">)],</span> <span class="n">target_tm</span><span class="o">=</span><span class="mi">55</span><span class="p">)</span>
 
 <span class="n">fwd_align</span><span class="p">,</span> <span class="n">rvs_align</span> <span class="o">=</span> <span class="n">amplicon</span><span class="o">.</span><span class="n">primers</span><span class="p">()</span>
-<span class="n">fwd_primer_ase1</span> <span class="o">=</span> <span class="s2">&quot;ACCATGTCGAC&quot;</span> <span class="o">+</span> <span class="n">fwd_align</span> <span class="c1"># Adding a SalI cut site</span>
-<span class="n">rvs_primer_ase1</span> <span class="o">=</span> <span class="s2">&quot;GGCGCGCCAT&quot;</span> <span class="o">+</span> <span class="n">rvs_align</span> <span class="c1"># Adding a AscI cut site</span>
+<span class="n">fwd_primer_ase1</span> <span class="o">=</span> <span class="s2">"ACCATGTCGAC"</span> <span class="o">+</span> <span class="n">fwd_align</span> <span class="c1"># Adding a SalI cut site</span>
+<span class="n">rvs_primer_ase1</span> <span class="o">=</span> <span class="s2">"GGCGCGCCAT"</span> <span class="o">+</span> <span class="n">rvs_align</span> <span class="c1"># Adding a AscI cut site</span>
 
 <span class="c1"># Printing out the primers</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">fwd_primer_ase1</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="s1">&#39;, Tm: &#39;</span><span class="p">,</span> <span class="n">tm_default</span><span class="p">(</span><span class="n">fwd_align</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">rvs_primer_ase1</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="s1">&#39;, Tm: &#39;</span><span class="p">,</span> <span class="n">tm_default</span><span class="p">(</span><span class="n">rvs_align</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fwd_primer_ase1</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="s1">', Tm: '</span><span class="p">,</span> <span class="n">tm_default</span><span class="p">(</span><span class="n">fwd_align</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rvs_primer_ase1</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="s1">', Tm: '</span><span class="p">,</span> <span class="n">tm_default</span><span class="p">(</span><span class="n">rvs_align</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1016,7 +1072,7 @@ GGCGCGCCATTAAAAGCCTTCTTCTCCC , Tm:  58.36015907667411
 
 <span class="c1"># Printing out the PCR results</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">pcr_product</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;gb&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pcr_product</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">"gb"</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1033,13 +1089,13 @@ SOURCE
             .
 FEATURES             Location/Qualifiers
      CDS             join(12..435,483..2254)
-                     /gene=&quot;ase1&quot;
-                     /locus_tag=&quot;SPOM_SPAPB1A10.09&quot;
+                     /gene="ase1"
+                     /locus_tag="SPOM_SPAPB1A10.09"
                      /codon_start=1
-                     /product=&quot;antiparallel microtubule cross-linking factor
-                     Ase1&quot;
-                     /protein_id=&quot;CAC21482.1&quot;
-                     /translation=&quot;MQTVMMDDIQSTDSIAEKDNHSNNESNFTWKAFREQVEKHFSKIE
+                     /product="antiparallel microtubule cross-linking factor
+                     Ase1"
+                     /protein_id="CAC21482.1"
+                     /translation="MQTVMMDDIQSTDSIAEKDNHSNNESNFTWKAFREQVEKHFSKIE
                      RLHQVLGTDGDNSSLFELFTTAMNAQLHEMEQCQKKLEDDCQQRIDSIRFLVSSLKLTD
                      DTSSLKIESPLIQCLNRLSMVEGQYMAQYDQKLSTIKEMYHKLESYCNRLGSPFVLPDF
                      ENSFLSDVSDAFTESLRGRINEAEKEIDARLEVINSFEEEILGLWSELGVEPADVPQYE
@@ -1051,19 +1107,19 @@ FEATURES             Location/Qualifiers
                      SPRTPLPRVKNTQNPSRSISAEPPSATSTANRRHPTANRIDINARLNSASRSRSANMIR
                      QGANGSDSNMSSSPVSGNSNTPFNKFPNSVSRNTHFESKSPHPNYSRTPHETYSKASSK
                      NVPLSPPKQRVVNEHALNIMSEKLQRTNLKEQTPEMDIENSSQNLPFSPMKISPIRASP
-                     VKTIPSSPSPTTNIFSAPLNNITNCTPMEDEWGEEGF&quot;
+                     VKTIPSSPSPTTNIFSAPLNNITNCTPMEDEWGEEGF"
      primer_bind     12..31
-                     /label=&quot;f2242&quot;
-                     /PCR_conditions=&quot;primer
-                     sequence:ACCATGTCGACATGCAAACAGTAATGATGGA&quot;
-                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;
-                     /ApEinfo_revcolor=&quot;#ffbaba&quot;
+                     /label="f2242"
+                     /PCR_conditions="primer
+                     sequence:ACCATGTCGACATGCAAACAGTAATGATGGA"
+                     /ApEinfo_fwdcolor="#baffa3"
+                     /ApEinfo_revcolor="#ffbaba"
      primer_bind     complement(2236..2254)
-                     /label=&quot;r2242&quot;
-                     /PCR_conditions=&quot;primer
-                     sequence:GGCGCGCCATTAAAAGCCTTCTTCTCCC&quot;
-                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;
-                     /ApEinfo_revcolor=&quot;#ffbaba&quot;
+                     /label="r2242"
+                     /PCR_conditions="primer
+                     sequence:GGCGCGCCATTAAAAGCCTTCTTCTCCC"
+                     /ApEinfo_fwdcolor="#baffa3"
+                     /ApEinfo_revcolor="#ffbaba"
 ORIGIN
         1 accatgtcga catgcaaaca gtaatgatgg atgacattca aagcactgat tctattgctg
        61 aaaaagataa tcactctaat aatgaatcta actttacttg gaaagcgttt cgtgaacaag
@@ -1140,7 +1196,7 @@ ORIGIN
 
 <span class="c1"># Printing out the completed cloning vector</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">synthetic_vector</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;gb&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">synthetic_vector</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">"gb"</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1155,90 +1211,90 @@ SOURCE
             .
 FEATURES             Location/Qualifiers
      gene            52..1408
-                     /label=&quot;kanMX&quot;
-                     /note=&quot;yeast selectable marker conferring kanamycin
-                     resistance (Wach et al., 1994)&quot;
+                     /label="kanMX"
+                     /note="yeast selectable marker conferring kanamycin
+                     resistance (Wach et al., 1994)"
      promoter        52..395
-                     /label=&quot;TEF promoter&quot;
-                     /note=&quot;Ashbya gossypii TEF promoter&quot;
+                     /label="TEF promoter"
+                     /note="Ashbya gossypii TEF promoter"
      CDS             396..1205
                      /codon_start=1
-                     /gene=&quot;aph(3&#39;)-Ia&quot;
-                     /product=&quot;aminoglycoside phosphotransferase&quot;
-                     /label=&quot;KanR&quot;
-                     /note=&quot;confers resistance to kanamycin&quot;
-                     /translation=&quot;MGKEKTHVSRPRLNSNMDADLYGYKWARDNVGQSGATIYRLYGKP
+                     /gene="aph(3')-Ia"
+                     /product="aminoglycoside phosphotransferase"
+                     /label="KanR"
+                     /note="confers resistance to kanamycin"
+                     /translation="MGKEKTHVSRPRLNSNMDADLYGYKWARDNVGQSGATIYRLYGKP
                      DAPELFLKHGKGSVANDVTDEMVRLNWLTEFMPLPTIKHFIRTPDDAWLLTTAIPGKTA
                      FQVLEEYPDSGENIVDALAVFLRRLHSIPVCNCPFNSDRVFRLAQAQSRMNNGLVDASD
                      FDDERNGWPVEQVWKEMHKLLPFSPDSVVTHGDFSLDNLIFDEGKLIGCIDVGRVGIAD
-                     RYQDLAILWNCLGEFSPSLQKRLFQKYGIDNPDMNKLQFHLMLDEFF&quot;
+                     RYQDLAILWNCLGEFSPSLQKRLFQKYGIDNPDMNKLQFHLMLDEFF"
      primer_bind     complement(463..482)
-                     /label=&quot;Kan-R&quot;
-                     /note=&quot;Kanamycin resistance gene, reverse primer&quot;
+                     /label="Kan-R"
+                     /note="Kanamycin resistance gene, reverse primer"
      terminator      1211..1408
-                     /label=&quot;TEF terminator&quot;
-                     /note=&quot;Ashbya gossypii TEF terminator&quot;
+                     /label="TEF terminator"
+                     /note="Ashbya gossypii TEF terminator"
      primer_bind     complement(1512..1531)
-                     /label=&quot;T7&quot;
-                     /note=&quot;T7 promoter, forward primer&quot;
+                     /label="T7"
+                     /note="T7 promoter, forward primer"
      promoter        complement(1513..1531)
-                     /label=&quot;T7 promoter&quot;
-                     /note=&quot;promoter for bacteriophage T7 RNA polymerase&quot;
+                     /label="T7 promoter"
+                     /note="promoter for bacteriophage T7 RNA polymerase"
      primer_bind     complement(1618..1635)
-                     /label=&quot;L4440&quot;
-                     /note=&quot;L4440 vector, forward primer&quot;
+                     /label="L4440"
+                     /note="L4440 vector, forward primer"
      rep_origin      complement(1789..2377)
                      /direction=LEFT
-                     /label=&quot;ori&quot;
-                     /note=&quot;high-copy-number ColE1/pMB1/pBR322/pUC origin of
-                     replication&quot;
+                     /label="ori"
+                     /note="high-copy-number ColE1/pMB1/pBR322/pUC origin of
+                     replication"
      primer_bind     complement(1869..1888)
-                     /label=&quot;pBR322ori-F&quot;
-                     /note=&quot;pBR322 origin, forward primer&quot;
+                     /label="pBR322ori-F"
+                     /note="pBR322 origin, forward primer"
      CDS             complement(2548..3408)
                      /codon_start=1
-                     /gene=&quot;bla&quot;
-                     /product=&quot;beta-lactamase&quot;
-                     /label=&quot;AmpR&quot;
-                     /note=&quot;confers resistance to ampicillin, carbenicillin, and
-                     related antibiotics&quot;
-                     /translation=&quot;MSIQHFRVALIPFFAAFCLPVFAHPETLVKVKDAEDQLGARVGYI
+                     /gene="bla"
+                     /product="beta-lactamase"
+                     /label="AmpR"
+                     /note="confers resistance to ampicillin, carbenicillin, and
+                     related antibiotics"
+                     /translation="MSIQHFRVALIPFFAAFCLPVFAHPETLVKVKDAEDQLGARVGYI
                      ELDLNSGKILESFRPEERFPMMSTFKVLLCGAVLSRIDAGQEQLGRRIHYSQNDLVEYS
                      PVTEKHLTDGMTVRELCSAAITMSDNTAANLLLTTIGGPKELTAFLHNMGDHVTRLDRW
                      EPELNEAIPNDERDTTMPVAMATTLRKLLTGELLTLASRQQLIDWMEADKVAGPLLRSA
                      LPAGWFIADKSGAGERGSRGIIAALGPDGKPSRIVVIYTTGSQATMDERNRQIAEIGAS
-                     LIKHW&quot;
+                     LIKHW"
      primer_bind     3171..3190
-                     /label=&quot;Amp-R&quot;
-                     /note=&quot;Ampicillin resistance gene, reverse primer&quot;
+                     /label="Amp-R"
+                     /note="Ampicillin resistance gene, reverse primer"
      promoter        complement(3409..3513)
-                     /gene=&quot;bla&quot;
-                     /label=&quot;AmpR promoter&quot;
+                     /gene="bla"
+                     /label="AmpR promoter"
      primer_bind     3581..3599
-                     /label=&quot;pBRforEco&quot;
-                     /note=&quot;pBR322 vectors, upsteam of EcoRI site, forward
-                     primer&quot;
+                     /label="pBRforEco"
+                     /note="pBR322 vectors, upsteam of EcoRI site, forward
+                     primer"
      primer_bind     complement(3637..3659)
-                     /label=&quot;pGEX 3&#39;&quot;
-                     /note=&quot;pGEX vectors, reverse primer&quot;
+                     /label="pGEX 3'"
+                     /note="pGEX vectors, reverse primer"
      primer_bind     3759..3778
-                     /label=&quot;pRS-marker&quot;
-                     /note=&quot;pRS vectors, use to sequence yeast selectable
-                     marker&quot;
+                     /label="pRS-marker"
+                     /note="pRS vectors, use to sequence yeast selectable
+                     marker"
      promoter        3859..3877
-                     /label=&quot;SP6 promoter&quot;
-                     /note=&quot;promoter for bacteriophage SP6 RNA polymerase&quot;
+                     /label="SP6 promoter"
+                     /note="promoter for bacteriophage SP6 RNA polymerase"
      primer_bind     3859..3876
-                     /label=&quot;SP6&quot;
-                     /note=&quot;SP6 promoter, forward primer&quot;
+                     /label="SP6"
+                     /note="SP6 promoter, forward primer"
      CDS             join(3918..4341,4389..6160)
-                     /gene=&quot;ase1&quot;
-                     /locus_tag=&quot;SPOM_SPAPB1A10.09&quot;
+                     /gene="ase1"
+                     /locus_tag="SPOM_SPAPB1A10.09"
                      /codon_start=1
-                     /product=&quot;antiparallel microtubule cross-linking factor
-                     Ase1&quot;
-                     /protein_id=&quot;CAC21482.1&quot;
-                     /translation=&quot;MQTVMMDDIQSTDSIAEKDNHSNNESNFTWKAFREQVEKHFSKIE
+                     /product="antiparallel microtubule cross-linking factor
+                     Ase1"
+                     /protein_id="CAC21482.1"
+                     /translation="MQTVMMDDIQSTDSIAEKDNHSNNESNFTWKAFREQVEKHFSKIE
                      RLHQVLGTDGDNSSLFELFTTAMNAQLHEMEQCQKKLEDDCQQRIDSIRFLVSSLKLTD
                      DTSSLKIESPLIQCLNRLSMVEGQYMAQYDQKLSTIKEMYHKLESYCNRLGSPFVLPDF
                      ENSFLSDVSDAFTESLRGRINEAEKEIDARLEVINSFEEEILGLWSELGVEPADVPQYE
@@ -1250,19 +1306,19 @@ FEATURES             Location/Qualifiers
                      SPRTPLPRVKNTQNPSRSISAEPPSATSTANRRHPTANRIDINARLNSASRSRSANMIR
                      QGANGSDSNMSSSPVSGNSNTPFNKFPNSVSRNTHFESKSPHPNYSRTPHETYSKASSK
                      NVPLSPPKQRVVNEHALNIMSEKLQRTNLKEQTPEMDIENSSQNLPFSPMKISPIRASP
-                     VKTIPSSPSPTTNIFSAPLNNITNCTPMEDEWGEEGF&quot;
+                     VKTIPSSPSPTTNIFSAPLNNITNCTPMEDEWGEEGF"
      primer_bind     3918..3937
-                     /label=&quot;f2242&quot;
-                     /PCR_conditions=&quot;primer
-                     sequence:ACCATGTCGACATGCAAACAGTAATGATGGA&quot;
-                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;
-                     /ApEinfo_revcolor=&quot;#ffbaba&quot;
+                     /label="f2242"
+                     /PCR_conditions="primer
+                     sequence:ACCATGTCGACATGCAAACAGTAATGATGGA"
+                     /ApEinfo_fwdcolor="#baffa3"
+                     /ApEinfo_revcolor="#ffbaba"
      primer_bind     complement(6142..6160)
-                     /label=&quot;r2242&quot;
-                     /PCR_conditions=&quot;primer
-                     sequence:GGCGCGCCATTAAAAGCCTTCTTCTCCC&quot;
-                     /ApEinfo_fwdcolor=&quot;#baffa3&quot;
-                     /ApEinfo_revcolor=&quot;#ffbaba&quot;
+                     /label="r2242"
+                     /PCR_conditions="primer
+                     sequence:GGCGCGCCATTAAAAGCCTTCTTCTCCC"
+                     /ApEinfo_fwdcolor="#baffa3"
+                     /ApEinfo_revcolor="#ffbaba"
 ORIGIN
         1 cgcgccagat ctgtttagct tgcctcgtcc ccgccgggtc acccggccag cgacatggag
        61 gcccagaata ccctccttga cagtcttgac gtgcgcagct caggggcatg atgtgactgt
@@ -1453,8 +1509,8 @@ By Björn F. Johansson
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
 
   <footer class="bd-footer">
   </footer>

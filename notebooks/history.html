@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Cloning history / Cloning strategy &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+    <title>Cloning history / Cloning strategy &#8212; pydna 5.5.17.dev26+g0627ace7c documentation</title>
   
   
   
@@ -27,25 +27,26 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=4418a689" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b530ca2f" />
   
   <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../_static/documentation_options.js?v=735db142"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/history';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -54,21 +55,27 @@
     <link rel="prev" title="CRISPR-Cas9" href="CRISPR.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="6.0.0a24" />
+  <meta name="docsearch:version" content="5.5.17" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
+  <body data-default-mode="">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -94,7 +101,51 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
     </header>
   
 
@@ -129,7 +180,7 @@
   
   
   
-    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+    <p class="title logo__title">pydna 5.5.17.dev26+g0627ace7c documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><ul class="navbar-icon-links"
@@ -143,8 +194,7 @@
           
           
           
-          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
         <div class="sidebar-primary-item">
@@ -195,7 +245,10 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../reference/pydna.html">pydna package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/pydna.html">pydna package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/pydna.legacy.html">pydna.legacy package</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -386,11 +439,18 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div>
 
 
 <button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -418,7 +478,7 @@
                 <h2> Contents </h2>
             </div>
             <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#golden-gate-assembly-bsai">Golden Gate assembly (BsaI)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gibson-assembly">Gibson assembly</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#restriction-then-ligation-assembly-ecori-sali">Restriction, then ligation assembly (EcoRI/SalI)</a><ul class="nav section-nav flex-column">
@@ -459,13 +519,13 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
 <span class="c1"># Install pydna (only when running on Colab)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+<span class="k">if</span> <span class="s1">'google.colab'</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
     <span class="c1"># Install the last version of pydna</span>
-    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="s2">&quot;git+https://github.com/pydna-group/pydna.git&quot;</span>
+    <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="s2">"git+https://github.com/pydna-group/pydna.git"</span>
     <span class="c1"># Use curl to get the files for gateway:</span>
-    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/tests/gateway_manual_cloning/pDONRtm221.dna&quot;</span>
-    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/tests/gateway_manual_cloning/pcr_product-attP1_1-attP2_1.dna&quot;</span>
-    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/tests/gateway_manual_cloning/pET-53-DESTtm.dna&quot;</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">"https://github.com/pydna-group/pydna/raw/master/tests/gateway_manual_cloning/pDONRtm221.dna"</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">"https://github.com/pydna-group/pydna/raw/master/tests/gateway_manual_cloning/pcr_product-attP1_1-attP2_1.dna"</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">"https://github.com/pydna-group/pydna/raw/master/tests/gateway_manual_cloning/pET-53-DESTtm.dna"</span>
 </pre></div>
 </div>
 </div>
@@ -474,7 +534,7 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">golden_gate_assembly</span><span class="p">,</span>
     <span class="n">gibson_assembly</span><span class="p">,</span>
     <span class="n">ligation_assembly</span><span class="p">,</span>
@@ -501,20 +561,20 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <p>This section assembles three inserts into a circular vector using Golden Gate with BsaI and exports the design as JSON.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">insert1</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;GGTCTCAattaAAAAAttaaAGAGACC&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;insert1&quot;</span><span class="p">)</span>
-<span class="n">insert2</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;GGTCTCAttaaCCCCCatatAGAGACC&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;insert2&quot;</span><span class="p">)</span>
-<span class="n">insert3</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;GGTCTCAatatGGGGGccggAGAGACC&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;insert3&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">insert1</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"GGTCTCAattaAAAAAttaaAGAGACC"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"insert1"</span><span class="p">)</span>
+<span class="n">insert2</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"GGTCTCAttaaCCCCCatatAGAGACC"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"insert2"</span><span class="p">)</span>
+<span class="n">insert3</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"GGTCTCAatatGGGGGccggAGAGACC"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"insert3"</span><span class="p">)</span>
 
-<span class="n">vector</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;TTTTattaAGAGACCTTTTTGGTCTCAccggTTTT&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;vector&quot;</span><span class="p">)</span>
+<span class="n">vector</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"TTTTattaAGAGACCTTTTTGGTCTCAccggTTTT"</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"vector"</span><span class="p">)</span>
 
 <span class="n">product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">golden_gate_assembly</span><span class="p">(</span>
     <span class="p">[</span><span class="n">insert1</span><span class="p">,</span> <span class="n">insert2</span><span class="p">,</span> <span class="n">insert3</span><span class="p">,</span> <span class="n">vector</span><span class="p">],</span> <span class="p">[</span><span class="n">BsaI</span><span class="p">],</span> <span class="n">circular_only</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
-<span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;product&quot;</span>
+<span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"product"</span>
 
 <span class="n">cs</span> <span class="o">=</span> <span class="n">CloningStrategy</span><span class="o">.</span><span class="n">from_dseqrecords</span><span class="p">([</span><span class="n">product</span><span class="p">])</span>
 
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;golden_gate.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"golden_gate.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">())</span>
 
 
@@ -540,16 +600,16 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;TTTTacgatAAtgctccCCCC&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;fragment1&quot;</span><span class="p">),</span>
-    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;CCCCtcatGGGG&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;fragment2&quot;</span><span class="p">),</span>
-    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;GGGGatataTTTT&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;fragment3&quot;</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"TTTTacgatAAtgctccCCCC"</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"fragment1"</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"CCCCtcatGGGG"</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"fragment2"</span><span class="p">),</span>
+    <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"GGGGatataTTTT"</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"fragment3"</span><span class="p">),</span>
 <span class="p">]</span>
 
 <span class="n">product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">gibson_assembly</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-<span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;product&quot;</span>
+<span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"product"</span>
 
 <span class="n">cs</span> <span class="o">=</span> <span class="n">CloningStrategy</span><span class="o">.</span><span class="n">from_dseqrecords</span><span class="p">([</span><span class="n">product</span><span class="p">])</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;gibson.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"gibson.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">())</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">history</span><span class="p">())</span>
@@ -572,21 +632,21 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <p>This section cuts a template with EcoRI and SalI, ligates compatible fragments, and exports the result as JSON.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;aaGAATTCccGTCGACaa&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"aaGAATTCccGTCGACaa"</span><span class="p">)</span>
 
 <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">EcoRI</span><span class="p">,</span> <span class="n">SalI</span><span class="p">)</span>
 
 <span class="n">product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">ligation_assembly</span><span class="p">([</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">])</span>
 
-<span class="n">a</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span>
-<span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;c&quot;</span>
-<span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;d&quot;</span>
-<span class="n">e</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;e&quot;</span>
-<span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;product&quot;</span>
+<span class="n">a</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"a"</span>
+<span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"c"</span>
+<span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"d"</span>
+<span class="n">e</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"e"</span>
+<span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"product"</span>
 
 <span class="n">cs</span> <span class="o">=</span> <span class="n">CloningStrategy</span><span class="o">.</span><span class="n">from_dseqrecords</span><span class="p">([</span><span class="n">product</span><span class="p">])</span>
 
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;restriction_ligation.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"restriction_ligation.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">())</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">history</span><span class="p">())</span>
@@ -614,13 +674,13 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <p>This section creates an Entry vector via BP reaction, then generates an Expression clone via LR reaction using test SnapGene files.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
-    <span class="n">files_path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s1">'google.colab'</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+    <span class="n">files_path</span> <span class="o">=</span> <span class="s2">""</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="n">files_path</span> <span class="o">=</span> <span class="s2">&quot;../../tests/gateway_manual_cloning&quot;</span>
+    <span class="n">files_path</span> <span class="o">=</span> <span class="s2">"../../tests/gateway_manual_cloning"</span>
 
-<span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;pDONRtm221.dna	pcr_product-attP1_1-attP2_1.dna	entry-attP1_1-attP2_1.dna	pET-53-DESTtm.dna	expression-attP1_1-attP2_1.dna&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
-    <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
+<span class="n">line</span> <span class="o">=</span> <span class="s2">"pDONRtm221.dna	pcr_product-attP1_1-attP2_1.dna	entry-attP1_1-attP2_1.dna	pET-53-DESTtm.dna	expression-attP1_1-attP2_1.dna"</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+    <span class="s2">"</span><span class="se">\t</span><span class="s2">"</span>
 <span class="p">)</span>
 <span class="n">backbone</span><span class="p">,</span> <span class="n">pcr_product</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">backbone_expression</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">line</span>
 <span class="n">backbone</span> <span class="o">=</span> <span class="n">parse_snapgene</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">files_path</span><span class="p">,</span> <span class="n">backbone</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
@@ -629,21 +689,21 @@ of the cloning strategy like below. See an example in <a class="reference extern
 
 <span class="c1"># Works with the right reaction</span>
 <span class="n">entry_vector</span> <span class="o">=</span> <span class="n">gateway_assembly</span><span class="p">(</span>
-    <span class="p">[</span><span class="n">backbone</span><span class="p">,</span> <span class="n">pcr_product</span><span class="p">],</span> <span class="s2">&quot;BP&quot;</span><span class="p">,</span> <span class="n">multi_site_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">circular_only</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">[</span><span class="n">backbone</span><span class="p">,</span> <span class="n">pcr_product</span><span class="p">],</span> <span class="s2">"BP"</span><span class="p">,</span> <span class="n">multi_site_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">circular_only</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="n">expression_clone</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gateway_assembly</span><span class="p">(</span>
-    <span class="p">[</span><span class="n">backbone_expression</span><span class="p">,</span> <span class="n">entry_vector</span><span class="p">],</span> <span class="s2">&quot;LR&quot;</span><span class="p">,</span> <span class="n">multi_site_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">circular_only</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">[</span><span class="n">backbone_expression</span><span class="p">,</span> <span class="n">entry_vector</span><span class="p">],</span> <span class="s2">"LR"</span><span class="p">,</span> <span class="n">multi_site_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">circular_only</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
 
-<span class="n">expression_clone</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;expression_clone&quot;</span>
-<span class="n">backbone_expression</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;backbone_expression&quot;</span>
-<span class="n">entry_vector</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;entry_vector&quot;</span>
-<span class="n">backbone</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;backbone&quot;</span>
-<span class="n">pcr_product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;pcr_product&quot;</span>
+<span class="n">expression_clone</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"expression_clone"</span>
+<span class="n">backbone_expression</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"backbone_expression"</span>
+<span class="n">entry_vector</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"entry_vector"</span>
+<span class="n">backbone</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"backbone"</span>
+<span class="n">pcr_product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"pcr_product"</span>
 
 <span class="n">cs</span> <span class="o">=</span> <span class="n">CloningStrategy</span><span class="o">.</span><span class="n">from_dseqrecords</span><span class="p">([</span><span class="n">expression_clone</span><span class="p">])</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;gateway.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"gateway.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">())</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">expression_clone</span><span class="o">.</span><span class="n">history</span><span class="p">())</span>
@@ -672,20 +732,20 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <p>This section performs homologous recombination integration of two inserts into a genome and exports the result as JSON.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">homology</span> <span class="o">=</span> <span class="s2">&quot;AAGTCCGTTCGTTTTACCTG&quot;</span>
-<span class="n">genome</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aaaaaa</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">ccccc</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">aaaaaa&quot;</span><span class="p">)</span>
-<span class="n">insert</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">gggg</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">homology</span> <span class="o">=</span> <span class="s2">"AAGTCCGTTCGTTTTACCTG"</span>
+<span class="n">genome</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">"aaaaaa</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">ccccc</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">aaaaaa"</span><span class="p">)</span>
+<span class="n">insert</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">gggg</span><span class="si">{</span><span class="n">homology</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">integration_product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">homologous_recombination_integration</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="p">[</span><span class="n">insert</span><span class="p">],</span> <span class="mi">20</span><span class="p">)</span>
 
 <span class="n">excision_product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">homologous_recombination_excision_or_inversion</span><span class="p">(</span><span class="n">integration_product</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 
-<span class="n">genome</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;genome&quot;</span>
-<span class="n">insert</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;insert&quot;</span>
-<span class="n">integration_product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;integration_product&quot;</span>
-<span class="n">excision_product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;excision_product&quot;</span>
+<span class="n">genome</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"genome"</span>
+<span class="n">insert</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"insert"</span>
+<span class="n">integration_product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"integration_product"</span>
+<span class="n">excision_product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"excision_product"</span>
 
 <span class="n">cs</span> <span class="o">=</span> <span class="n">CloningStrategy</span><span class="o">.</span><span class="n">from_dseqrecords</span><span class="p">([</span><span class="n">excision_product</span><span class="p">])</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;homologous_recombination.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"homologous_recombination.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">())</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">excision_product</span><span class="o">.</span><span class="n">history</span><span class="p">())</span>
@@ -710,18 +770,18 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.cre_lox</span><span class="w"> </span><span class="kn">import</span> <span class="n">LOXP_SEQUENCE</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cccccc</span><span class="si">{</span><span class="n">LOXP_SEQUENCE</span><span class="si">}</span><span class="s2">aaaaa&quot;</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">LOXP_SEQUENCE</span><span class="si">}</span><span class="s2">bbbbb&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">"cccccc</span><span class="si">{</span><span class="n">LOXP_SEQUENCE</span><span class="si">}</span><span class="s2">aaaaa"</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">LOXP_SEQUENCE</span><span class="si">}</span><span class="s2">bbbbb"</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">integration_product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">cre_lox_integration</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="n">b</span><span class="p">])</span>
 <span class="n">excision_product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">cre_lox_excision_or_inversion</span><span class="p">(</span><span class="n">integration_product</span><span class="p">)</span>
 
-<span class="n">a</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;genome&quot;</span>
-<span class="n">b</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;plasmid&quot;</span>
-<span class="n">integration_product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;integration_product&quot;</span>
-<span class="n">excision_product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;excision_product&quot;</span>
+<span class="n">a</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"genome"</span>
+<span class="n">b</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"plasmid"</span>
+<span class="n">integration_product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"integration_product"</span>
+<span class="n">excision_product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"excision_product"</span>
 
 <span class="n">cs</span> <span class="o">=</span> <span class="n">CloningStrategy</span><span class="o">.</span><span class="n">from_dseqrecords</span><span class="p">([</span><span class="n">excision_product</span><span class="p">])</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;cre_lox.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"cre_lox.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">())</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">excision_product</span><span class="o">.</span><span class="n">history</span><span class="p">())</span>
@@ -745,21 +805,21 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <p>This section performs PCR assembly and exports the result as JSON.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">primer1</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="s2">&quot;ACGTACGT&quot;</span><span class="p">)</span>
-<span class="n">primer2</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="n">reverse_complement</span><span class="p">(</span><span class="s2">&quot;GCGCGCGC&quot;</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">primer1</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="s2">"ACGTACGT"</span><span class="p">)</span>
+<span class="n">primer2</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="n">reverse_complement</span><span class="p">(</span><span class="s2">"GCGCGCGC"</span><span class="p">))</span>
 
-<span class="n">seq</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;ccccACGTACGTAAAAAAGCGCGCGCcccc&quot;</span><span class="p">)</span>
+<span class="n">seq</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"ccccACGTACGTAAAAAAGCGCGCGCcccc"</span><span class="p">)</span>
 
 <span class="n">product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">pcr_assembly</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">primer1</span><span class="p">,</span> <span class="n">primer2</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 
-<span class="n">primer1</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;primer1&quot;</span>
-<span class="n">primer2</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;primer2&quot;</span>
-<span class="n">seq</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;seq&quot;</span>
-<span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;product&quot;</span>
+<span class="n">primer1</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"primer1"</span>
+<span class="n">primer2</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"primer2"</span>
+<span class="n">seq</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"seq"</span>
+<span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"product"</span>
 
 <span class="n">cs</span> <span class="o">=</span> <span class="n">CloningStrategy</span><span class="o">.</span><span class="n">from_dseqrecords</span><span class="p">([</span><span class="n">product</span><span class="p">])</span>
 
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;pcr.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"pcr.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">())</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">history</span><span class="p">())</span>
@@ -769,9 +829,9 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>╙── product (Dseqrecord(-22))
     └─╼ PCRSource
-        ├─╼ primer1 (id 8-mer:5&#39;-ACGTACGT-3&#39;)
+        ├─╼ primer1 (id 8-mer:5'-ACGTACGT-3')
         ├─╼ seq (Dseqrecord(-30))
-        └─╼ primer2 (id 8-mer:5&#39;-GCGCGCGC-3&#39;)
+        └─╼ primer2 (id 8-mer:5'-GCGCGCGC-3')
 </pre></div>
 </div>
 </div>
@@ -782,16 +842,16 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <p>Works like homologous recombination, but takes a list of guides and inserts. The guides must be primers</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">genome</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;aaccggttcaatgcaaacagtaatgatggatgacattcaaagcac&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;genome&quot;</span><span class="p">)</span>
-<span class="n">insert</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">&quot;aaccggttAAAAAAAAAttcaaagcac&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;insert&quot;</span><span class="p">)</span>
-<span class="n">guide</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="s2">&quot;ttcaatgcaaacagtaatga&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;guide&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">genome</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"aaccggttcaatgcaaacagtaatgatggatgacattcaaagcac"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"genome"</span><span class="p">)</span>
+<span class="n">insert</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="s2">"aaccggttAAAAAAAAAttcaaagcac"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"insert"</span><span class="p">)</span>
+<span class="n">guide</span> <span class="o">=</span> <span class="n">Primer</span><span class="p">(</span><span class="s2">"ttcaatgcaaacagtaatga"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"guide"</span><span class="p">)</span>
 
 <span class="n">product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">crispr_integration</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="p">[</span><span class="n">insert</span><span class="p">],</span> <span class="p">[</span><span class="n">guide</span><span class="p">],</span> <span class="mi">8</span><span class="p">)</span>
-<span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;product&quot;</span>
+<span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"product"</span>
 
 <span class="n">cs</span> <span class="o">=</span> <span class="n">CloningStrategy</span><span class="o">.</span><span class="n">from_dseqrecords</span><span class="p">([</span><span class="n">product</span><span class="p">])</span>
 
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;crispr.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"crispr.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">())</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">history</span><span class="p">())</span>
@@ -803,7 +863,7 @@ of the cloning strategy like below. See an example in <a class="reference extern
     └─╼ CRISPRSource
         ├─╼ genome (Dseqrecord(-45))
         ├─╼ insert (Dseqrecord(-27))
-        └─╼ guide (id 20-mer:5&#39;-ttcaatgcaaacagtaatga-3&#39;)
+        └─╼ guide (id 20-mer:5'-ttcaatgcaaacagtaatga-3')
 </pre></div>
 </div>
 </div>
@@ -816,24 +876,24 @@ of the cloning strategy like below. See an example in <a class="reference extern
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.recombinase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Recombinase</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.dseqrecord</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dseqrecord</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly2</span><span class="w"> </span><span class="kn">import</span> <span class="n">recombinase_integration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydna.assembly</span><span class="w"> </span><span class="kn">import</span> <span class="n">recombinase_integration</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydna.opencloning_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">CloningStrategy</span>
 
-<span class="n">site1</span> <span class="o">=</span> <span class="s2">&quot;ATGCCCTAAaaCT&quot;</span>
-<span class="n">site2</span> <span class="o">=</span> <span class="s2">&quot;CAaaTTTTTTTCCCT&quot;</span>
+<span class="n">site1</span> <span class="o">=</span> <span class="s2">"ATGCCCTAAaaCT"</span>
+<span class="n">site2</span> <span class="o">=</span> <span class="s2">"CAaaTTTTTTTCCCT"</span>
 
-<span class="n">genome</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cccccc</span><span class="si">{</span><span class="n">site1</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">aaaaa&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;genome&quot;</span><span class="p">)</span>
-<span class="n">insert</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">site2</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">bbbbb&quot;</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;insert&quot;</span><span class="p">)</span>
-<span class="n">rec</span> <span class="o">=</span> <span class="n">Recombinase</span><span class="p">(</span><span class="n">site1</span><span class="p">,</span> <span class="n">site2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_recombinase&quot;</span><span class="p">,</span> <span class="n">site1_name</span><span class="o">=</span><span class="s2">&quot;attB&quot;</span><span class="p">,</span> <span class="n">site2_name</span><span class="o">=</span><span class="s2">&quot;attP&quot;</span><span class="p">)</span>
+<span class="n">genome</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">"cccccc</span><span class="si">{</span><span class="n">site1</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">aaaaa"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"genome"</span><span class="p">)</span>
+<span class="n">insert</span> <span class="o">=</span> <span class="n">Dseqrecord</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">site2</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">bbbbb"</span><span class="p">,</span> <span class="n">circular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"insert"</span><span class="p">)</span>
+<span class="n">rec</span> <span class="o">=</span> <span class="n">Recombinase</span><span class="p">(</span><span class="n">site1</span><span class="p">,</span> <span class="n">site2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"my_recombinase"</span><span class="p">,</span> <span class="n">site1_name</span><span class="o">=</span><span class="s2">"attB"</span><span class="p">,</span> <span class="n">site2_name</span><span class="o">=</span><span class="s2">"attP"</span><span class="p">)</span>
 
 <span class="n">product</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">recombinase_integration</span><span class="p">(</span><span class="n">genome</span><span class="p">,</span> <span class="p">[</span><span class="n">insert</span><span class="p">],</span> <span class="n">rec</span><span class="p">)</span>
 
-<span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;engineered_allele&quot;</span>
+<span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"engineered_allele"</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">history</span><span class="p">())</span>
 
 <span class="n">cs</span> <span class="o">=</span> <span class="n">CloningStrategy</span><span class="o">.</span><span class="n">from_dseqrecords</span><span class="p">([</span><span class="n">product</span><span class="p">])</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;recombinase.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"recombinase.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">())</span>
 </pre></div>
 </div>
@@ -896,7 +956,7 @@ of the cloning strategy like below. See an example in <a class="reference extern
     <i class="fa-solid fa-list"></i> Contents
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#golden-gate-assembly-bsai">Golden Gate assembly (BsaI)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gibson-assembly">Gibson assembly</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#restriction-then-ligation-assembly-ecori-sali">Restriction, then ligation assembly (EcoRI/SalI)</a><ul class="nav section-nav flex-column">
@@ -956,8 +1016,8 @@ By Björn F. Johansson
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
 
   <footer class="bd-footer">
   </footer>

@@ -6,6 +6,14 @@ pydna package
    :show-inheritance:
    :undoc-members:
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   pydna.legacy
+
 Submodules
 ----------
 
@@ -269,14 +277,6 @@ pydna.snapgene\_history\_parser module
 --------------------------------------
 
 .. automodule:: pydna.snapgene_history_parser
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
-pydna.threading\_timer\_decorator\_exit module
-----------------------------------------------
-
-.. automodule:: pydna.threading_timer_decorator_exit
    :members:
    :show-inheritance:
    :undoc-members:

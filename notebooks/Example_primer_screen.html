@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Fast primer screening with the pydna.primer_screen module &#8212; pydna 6.0.0a24.post17+b7b559bd66 documentation</title>
+    <title>Fast primer screening with the pydna.primer_screen module &#8212; pydna 5.5.17.dev26+g0627ace7c documentation</title>
   
   
   
@@ -27,46 +27,53 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=4418a689" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b530ca2f" />
   
   <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../_static/documentation_options.js?v=9eea9577"></script>
+    <script src="../_static/documentation_options.js?v=735db142"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/Example_primer_screen';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="6.0.0a24" />
+  <meta name="docsearch:version" content="5.5.17" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
+  <body data-default-mode="">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -92,7 +99,51 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
     </header>
   
 
@@ -129,7 +180,7 @@
   
   
   
-    <p class="title logo__title">pydna 6.0.0a24.post17+b7b559bd66 documentation</p>
+    <p class="title logo__title">pydna 5.5.17.dev26+g0627ace7c documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><ul class="navbar-icon-links"
@@ -143,8 +194,7 @@
           
           
           
-          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
-            <span class="sr-only">GitHub</span></a>
+          <a href="https://github.com/pydna-group/pydna" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
         </li>
 </ul></div>
         <div class="sidebar-primary-item">
@@ -195,7 +245,10 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../reference/pydna.html">pydna package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/pydna.html">pydna package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/pydna.legacy.html">pydna.legacy package</a></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
@@ -386,11 +439,18 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div>
 
 
 <button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
@@ -418,7 +478,7 @@
                 <h2> Contents </h2>
             </div>
             <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#primer-list">Primer list</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#read-data-files">Read data files</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#most-important-functions-provided-by-pydna-primer-screen">Most important functions provided by <code class="docutils literal notranslate"><span class="pre">pydna.primer_screen</span></code></a></li>
@@ -457,13 +517,13 @@
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
 <span class="c1"># Install pydna and download data files from the pydna Github repository (only when running on Colab)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+<span class="k">if</span> <span class="s1">'google.colab'</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
     <span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pydna</span><span class="p">[</span><span class="n">clipboard</span><span class="p">,</span><span class="n">download</span><span class="p">,</span><span class="n">express</span><span class="p">,</span><span class="n">gel</span><span class="p">]</span>
-    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/FAS2_S288C_wild-type_locus.gb&quot;</span>
-    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/fas2__NatMX4_locus.gb&quot;</span>
-    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/fas2__KanMX4_locus.gb&quot;</span>
-    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/pIL68.gb&quot;</span>
-    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">&quot;https://github.com/pydna-group/pydna/raw/master/docs/notebooks/pIL75.gb&quot;</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">"https://github.com/pydna-group/pydna/raw/master/docs/notebooks/FAS2_S288C_wild-type_locus.gb"</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">"https://github.com/pydna-group/pydna/raw/master/docs/notebooks/fas2__NatMX4_locus.gb"</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">"https://github.com/pydna-group/pydna/raw/master/docs/notebooks/fas2__KanMX4_locus.gb"</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">"https://github.com/pydna-group/pydna/raw/master/docs/notebooks/pIL68.gb"</span>
+    <span class="err">!</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span> <span class="s2">"https://github.com/pydna-group/pydna/raw/master/docs/notebooks/pIL75.gb"</span>
 </pre></div>
 </div>
 </div>
@@ -477,7 +537,7 @@ The number in the first part of the primer name indicate the index of that prime
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydna.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_primers</span>
 
 <span class="c1"># Eleven primers in FASTA format</span>
-<span class="n">primers</span> <span class="o">=</span> <span class="n">parse_primers</span> <span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="n">primers</span> <span class="o">=</span> <span class="n">parse_primers</span> <span class="p">(</span><span class="s2">"""</span>
 <span class="s2">&gt;51_TefTermFwd A.gos 20-mer</span>
 <span class="s2">CAGATGCGAAGTTAAGTGCG</span>
 <span class="s2">&gt;82_MSW_fwd this primer sits inside the loxP of pUG6</span>
@@ -500,14 +560,14 @@ The number in the first part of the primer name indicate the index of that prime
 <span class="s2">CGGTTTCTTTGAAATTTTTTTGATTCG</span>
 <span class="s2">&gt;1564_KANMX_rev</span>
 <span class="s2">CACTCGCATCAACCAAACC</span>
-<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="s2">"""</span><span class="p">)</span>
 
 <span class="c1"># A list of None is created</span>
 <span class="n">pl</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1565</span><span class="p">)]</span>
 
 <span class="k">for</span> <span class="n">primer</span> <span class="ow">in</span> <span class="n">primers</span><span class="p">:</span>
     <span class="c1"># Extract the number from the name</span>
-    <span class="n">number</span><span class="p">,</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">primer</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">number</span><span class="p">,</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">primer</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="c1"># put the primer in the correct location in the list</span>
     <span class="n">pl</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">)]</span> <span class="o">=</span> <span class="n">primer</span>
 </pre></div>
@@ -546,9 +606,9 @@ where the coding sequence of a gene has been replaced by two different
 marker genes. These were made in the lab by one of my students.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wt</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s2">&quot;FAS2_S288C_wild-type_locus.gb&quot;</span><span class="p">)</span>
-<span class="n">nat</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s2">&quot;fas2__NatMX4_locus.gb&quot;</span><span class="p">)</span>
-<span class="n">kan</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s2">&quot;fas2__KanMX4_locus.gb&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wt</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s2">"FAS2_S288C_wild-type_locus.gb"</span><span class="p">)</span>
+<span class="n">nat</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s2">"fas2__NatMX4_locus.gb"</span><span class="p">)</span>
+<span class="n">kan</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s2">"fas2__KanMX4_locus.gb"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -557,8 +617,8 @@ marker genes. These were made in the lab by one of my students.</p>
 yeasts. FEMS Yeast Res. 14(2):364–367 (<a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/24205893/">pubmed</a>).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pIL68</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s2">&quot;pIL68.gb&quot;</span><span class="p">)</span>
-<span class="n">pIL75</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s2">&quot;pIL75.gb&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pIL68</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s2">"pIL68.gb"</span><span class="p">)</span>
+<span class="n">pIL75</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s2">"pIL75.gb"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -579,8 +639,8 @@ yeasts. FEMS Yeast Res. 14(2):364–367 (<a class="reference external" href="htt
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/pydna/pydna/src/pydna/primer_screen.py:63: FutureWarning: The primer_screen module is experimental and not yet extensively tested. api may change in future versions.
-  warnings.warn(
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2600/2728937179.py:1: FutureWarning: The primer_screen module is experimental and not yet extensively tested. api may change in future versions.
+  from pydna.primer_screen import forward_primers
 </pre></div>
 </div>
 </div>
@@ -623,7 +683,7 @@ yeasts. FEMS Yeast Res. 14(2):364–367 (<a class="reference external" href="htt
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span> 5-gtcatgatctagtcgatgtta-3
    |||||||||||||||||||||
 
-         5&#39;-tagtcg-3&#39;      &lt;=== forward primer, location = 14
+         5'-tagtcg-3'      &lt;=== forward primer, location = 14
             ||||||
    |||||||||||||||||||||
  3-cagtactagatcagctacaat-5
@@ -822,7 +882,7 @@ objects for faster primer search.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># save automaton</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span> <span class="c1"># The standard lib pickle </span>
-<span class="n">atm</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;atm.automaton&quot;</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">)</span>
+<span class="n">atm</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"atm.automaton"</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -831,7 +891,7 @@ objects for faster primer search.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load automaton</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">ahocorasick</span>
-<span class="n">atm</span> <span class="o">=</span> <span class="n">ahocorasick</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;atm.automaton&quot;</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span>
+<span class="n">atm</span> <span class="o">=</span> <span class="n">ahocorasick</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">"atm.automaton"</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -975,7 +1035,7 @@ It has to be rebuilt if a different limit is needed.</p>
     <i class="fa-solid fa-list"></i> Contents
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#primer-list">Primer list</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#read-data-files">Read data files</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#most-important-functions-provided-by-pydna-primer-screen">Most important functions provided by <code class="docutils literal notranslate"><span class="pre">pydna.primer_screen</span></code></a></li>
@@ -1034,8 +1094,8 @@ By Björn F. Johansson
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
 
   <footer class="bd-footer">
   </footer>
