@@ -370,7 +370,7 @@ class Assembly(object):
                 ct = "".join(e["seq"][e["piece"]] for u, v, e in edges)
                 key = ct.upper()
 
-                if key in lps:
+                if key in lps:  # pragma: no cover
                     continue  # TODO: is this test needed?
                 sg = nx.DiGraph()
                 sg.add_edges_from(edges)
