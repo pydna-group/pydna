@@ -102,7 +102,9 @@ class SeqRecord(BioSeqRecordSeqRecord):
         if len(value) > 16:
             shortvalue = value[:16]
             warn(
-                ("locus property {} truncated to 16 chars {}").format(value, shortvalue),
+                ("locus property {} truncated to 16 chars {}").format(
+                    value, shortvalue
+                ),
                 _PydnaWarning,
                 stacklevel=2,
             )
