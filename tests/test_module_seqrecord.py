@@ -2,6 +2,33 @@ import pytest
 from pydna import _PydnaWarning
 
 
+@pytest.mark.parametrize("sequence_type", [str, "bio", "pydna", "protein"])
+def test_protein_record_seguid(sequence_type):
+    from Bio.Seq import Seq as BioSeq
+    from Bio.SeqFeature import SeqFeature, SimpleLocation
+    from pydna.seq import ProteinSeq, Seq
+    from pydna.seqrecord import ProteinSeqRecord
+
+    factory = {str: str, "bio": BioSeq, "pydna": Seq, "protein": ProteinSeq}[
+        sequence_type
+    ]
+    feature = SeqFeature(SimpleLocation(0, 3), type="domain")
+    record = ProteinSeqRecord(
+        factory("QQQ"),
+        id="protein1",
+        features=[feature],
+        annotations={"organism": "example"},
+        letter_annotations={"quality": [1, 2, 3]},
+    )
+    assert isinstance(record.seq, ProteinSeq)
+    assert record.seguid() == ProteinSeq("QQQ").seguid()
+    assert record.annotations["molecule_type"] == "protein"
+    assert record.id == "protein1"
+    assert record.features == [feature]
+    assert record.annotations["organism"] == "example"
+    assert record.letter_annotations == {"quality": [1, 2, 3]}
+
+
 def test_translate_forwards_arguments():
     from pydna.seqrecord import SeqRecord
 

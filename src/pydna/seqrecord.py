@@ -700,6 +700,14 @@ class SeqRecord(BioSeqRecordSeqRecord):
 
 
 class ProteinSeqRecord(SeqRecord):
+    """A protein record accepting strings or sequence objects."""
+
+    def _fix_attributes(self):
+        super()._fix_attributes()
+        if not isinstance(self.seq, ProteinSeq):
+            self.seq = ProteinSeq(self.seq)
+        self.annotations["molecule_type"] = "protein"
+
     def reverse_complement(self, *args, **kwargs):
         raise NotImplementedError("Not defined for protein.")
 
