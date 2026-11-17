@@ -2,7 +2,8 @@
 # flake8: noqa: B950
 
 from importlib import reload
-from pydna import assembly
+from pydna.legacy import assembly
+from pydna import _PydnaDeprecationWarning
 from pydna.dseqrecord import Dseqrecord
 from pydna.parsers import parse
 from pydna.utils import eq
@@ -14,15 +15,15 @@ from pydna.readers import read
 from Bio.Restriction import EcoRV, ZraI
 from Bio.Restriction import AjiI, AgeI
 from Bio.Restriction import SalI
-from pydna.assembly import Assembly
+from pydna.legacy.assembly import Assembly
 from Bio.Restriction import AatII
 import pytest
 
 
 def test_deprecated_warning():
     with pytest.warns(
-        DeprecationWarning,
-        match="The module pydna.assembly is deprecated and will be removed in a future version. Use pydna.assembly2 instead.",
+        _PydnaDeprecationWarning,
+        match="pydna.legacy.assembly is deprecated",
     ):
         reload(assembly)
 
@@ -518,40 +519,6 @@ algorithm..: common_sub_strings"""
     assert eq(correct, candidate, circular=True)
 
     assert repr(candidate) == "Contig(o7911)"
-
-    h = """\
- -|5681|61
-|       \\/
-|       /\\
-|       61|650_rc|32
-|                 \\/
-|                 /\\
-|                 32|1196_rc|49
-|                            \\/
-|                            /\\
-|                            49|630_rc|98
-|                                      \\/
-|                                      /\\
-|                                      98-
-|                                         |
- -----------------------------------------"""
-
-    h = """\
- -|630|49
-|      \\/
-|      /\\
-|      49|1196|32
-|              \\/
-|              /\\
-|              32|650|61
-|                     \\/
-|                     /\\
-|                     61|5681_rc|98
-|                                \\/
-|                                /\\
-|                                98-
-|                                   |
- -----------------------------------"""
 
     # assert h == candidate.small_figure()
 

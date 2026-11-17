@@ -79,5 +79,8 @@ target/
 # mac files
 .DS_Store
 
+# sphinx build artifact
+.buildinfo
+
 # Snapgene local file
 .sglock/

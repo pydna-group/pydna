@@ -937,7 +937,7 @@ class Dseq(Seq):
 
     def __repr__(self, lim: int = length_limit_for_repr) -> pretty_str:
 
-        header = f"{self.__class__.__name__}({({False: '-', True: 'o'}[self.circular])}{len(self)})"
+        header = f"{self.__class__.__name__}({ ({False: '-', True: 'o'}[self.circular]) }{len(self)})"
 
         w, c = representation_tuple(
             self._data.decode("ascii"), length_limit_for_repr=length_limit_for_repr
@@ -1053,7 +1053,7 @@ class Dseq(Seq):
         type3, sticky3 = self.three_prime_end()
 
         err = TypeError(
-            "DNA cannot be circularized.\n" "5' and 3' sticky ends not compatible!"
+            "DNA cannot be circularized.\n5' and 3' sticky ends not compatible!"
         )
 
         if type5 != type3:
@@ -1293,7 +1293,7 @@ class Dseq(Seq):
     def __mul__(self: DseqType, number: int) -> DseqType:
         if not isinstance(number, int):
             raise TypeError(
-                "TypeError: can't multiply Dseq" f" by non-int of type {type(number)}"
+                f"TypeError: can't multiply Dseq by non-int of type {type(number)}"
             )
         return Dseq("").join(list(itertools.repeat(self, number)))
 
@@ -2393,7 +2393,6 @@ class Dseq(Seq):
         crick_cuts = []
 
         for m in regex.finditer(cutfrom):
-
             if m.lastgroup == "watson":
                 cut1 = m.start() - spacer
                 cut2 = m.end() - spacer
@@ -2491,7 +2490,6 @@ class Dseq(Seq):
         cuts = []
 
         for m in regex.finditer(cutfrom):
-
             if m.lastgroup == "watson":
                 cut = (m.end() - spacer, m.end() - m.start()), None
             else:

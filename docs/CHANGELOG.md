@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org).
 
 ## [Unreleased]
 
+## [6.0.0]
+
+### Changed
+
+- `pydna.assembly2` is now `pydna.assembly` — the rewritten implementation is
+  canonical and owns the name. `from pydna.assembly2 import ...` still works via a
+  shim (raises `_PydnaDeprecationWarning`); update to `from pydna.assembly import ...`.
+- `pydna.all` now exposes the modern `Assembly` (returns `Dseqrecord`, not `Contig`).
+
+### Deprecated
+
+- The previous `Assembly` moved to `pydna.legacy.assembly` (raises
+  `_PydnaDeprecationWarning`); it will be removed in a future version.
+- Assembly products are now `Dseqrecord` instead of `Contig`. `Dseqrecord.figure()`
+  still works; the `Contig`-only `detailed_figure()` / `figure_mpl()` are not
+  available on products — use `pydna.legacy.assembly` if you need them.
+
 ## [6.0.0a01] - 2023-05-04
 
 ### Added

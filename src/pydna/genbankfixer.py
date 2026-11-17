@@ -23,7 +23,6 @@ This should not be a difficult fix. The returned result has two properties,
 .jseq which is the intermediate JSON produced by the parser and .gbtext
 which is the formatted genbank string."""
 
-
 import re
 import pyparsing as pp
 

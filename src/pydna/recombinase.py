@@ -30,7 +30,7 @@ Integration and excision with a single recombinase::
 
     >>> from pydna.dseqrecord import Dseqrecord
     >>> from pydna.recombinase import Recombinase
-    >>> from pydna.assembly2 import recombinase_integration, recombinase_excision
+    >>> from pydna.assembly import recombinase_integration, recombinase_excision
     >>> site1 = "ATGCCCTAAaaCT"
     >>> site2 = "CAaaTTTTTTTCCCT"
     >>> genome = Dseqrecord("ccccccATGCCCTAAAACTaaaaa")
@@ -87,7 +87,7 @@ Using a Recombinase as Assembly algorithm::
 
     >>> from pydna.dseqrecord import Dseqrecord
     >>> from pydna.recombinase import Recombinase
-    >>> from pydna.assembly2 import Assembly
+    >>> from pydna.assembly import Assembly
     >>> site1 = "ATGCCCTAAaaTT"
     >>> site2 = "AAaaTTTTTTTCCCT"
     >>> seqA = Dseqrecord("aaaATGCCCTAAaaTTtt")
@@ -192,7 +192,7 @@ class Recombinase:
         if site1[off1 : off1 + len1] != site2[off2 : off2 + len2]:
             raise ValueError(
                 "Recombinase recognition sites do not have matching homology cores."
-                f"Expected {site1[off1:off1 + len1]} == {site2[off2:off2 + len2]}"
+                f"Expected {site1[off1 : off1 + len1]} == {site2[off2 : off2 + len2]}"
             )
         self._homology_len = len1
 

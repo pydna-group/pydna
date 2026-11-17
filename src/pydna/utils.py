@@ -47,7 +47,6 @@ def three_frame_orfs(
     orfs = []
 
     for frame in (0, 1, 2):
-
         codons = [dna[i : i + 3] for i in range(frame, len(dna), 3)]
 
         startdindices = [i for i, cd in enumerate(codons) if cd in startcodons]

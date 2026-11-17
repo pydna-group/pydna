@@ -14,7 +14,6 @@ distance from fragment length. The Rf values are calculated manually from
 a gel image. Exampel can be found in scripts/molecular_weight_standards.ods.
 """
 
-
 from pydna.fakeseq import FakeSeq
 
 

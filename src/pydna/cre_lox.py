@@ -96,7 +96,6 @@ def find_loxP_sites(seq: Dseqrecord) -> dict[str, list[Location]]:
     out = dict()
     regex_dict = get_regex_dict(loxP_dict)
     for site in loxP_dict:
-
         for pattern in ["forward_regex", "reverse_regex"]:
             # Palindromic sequences have no reverse complement
             if regex_dict[site][pattern] is None:

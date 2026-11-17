@@ -42,7 +42,6 @@ EXPECTED_VALUE_ERROR = [
 
 
 class TestSnapgeneHistoryParser:
-
     def test_files_exist(self):
         assert len(TEST_FILES) == 50
 

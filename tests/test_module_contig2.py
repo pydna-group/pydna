@@ -1,6 +1,6 @@
 import pytest
 from pydna.dseqrecord import Dseqrecord
-from pydna.assembly import Assembly
+from pydna.legacy.assembly import Assembly
 
 from pydna._pretty import pretty_str
 from pydna.amplify import pcr
@@ -193,11 +193,11 @@ def test_linear():
 def test_mpl1():
 
     a = Dseqrecord(
-        "GCCGATTCTCATCCGGGCCT" "CACTATAGGACCATTCCGTT" "GCCCTGCGCTGCGCTGTATA", name="1"
+        "GCCGATTCTCATCCGGGCCTCACTATAGGACCATTCCGTTGCCCTGCGCTGCGCTGTATA", name="1"
     )
 
     b = Dseqrecord(
-        "GCCCTGCGCTGCGCTGTATA" "TCCCCAGGAACAGACTTCCT" "GCCGATTCTCATCCGGGCCT", name="2"
+        "GCCCTGCGCTGCGCTGTATATCCCCAGGAACAGACTTCCTGCCGATTCTCATCCGGGCCT", name="2"
     )
 
     asm = Assembly((a, b), limit=20)
@@ -211,15 +211,15 @@ def test_mpl1():
 def test_mpl2():
 
     x = Dseqrecord(
-        "CTAAGATATTCTTACGTGTA" "CACTATAGGACCATTCCGTT" "GCCCTGCGCTGCGCTGTATA", name="x"
+        "CTAAGATATTCTTACGTGTACACTATAGGACCATTCCGTTGCCCTGCGCTGCGCTGTATA", name="x"
     )
 
     y = Dseqrecord(
-        "GCCCTGCGCTGCGCTGTATA" "TCCCCAGGAACAGACTTCCT" "GCCGATTCTCATCCGGGCCT", name="y"
+        "GCCCTGCGCTGCGCTGTATATCCCCAGGAACAGACTTCCTGCCGATTCTCATCCGGGCCT", name="y"
     )
 
     z = Dseqrecord(
-        "GCCGATTCTCATCCGGGCCT" "GGATGCAATGCGATCCTCCG" "CTAAGATATTCTTACGTGTA", name="z"
+        "GCCGATTCTCATCCGGGCCTGGATGCAATGCGATCCTCCGCTAAGATATTCTTACGTGTA", name="z"
     )
 
     asm2 = Assembly((x, y, z), limit=20)

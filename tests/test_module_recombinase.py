@@ -2,7 +2,7 @@ import pytest
 from Bio.SeqFeature import SimpleLocation
 from pydna.dseqrecord import Dseqrecord
 from pydna.dseq import Dseq
-from pydna.assembly2 import (
+from pydna.assembly import (
     Assembly,
     recombinase_excision,
     recombinase_integration,

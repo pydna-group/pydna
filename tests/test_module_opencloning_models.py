@@ -15,7 +15,7 @@ from opencloning_linkml.datamodel import (
 )
 from pydantic import BaseModel, ValidationError
 
-from pydna.assembly2 import (
+from pydna.assembly import (
     cre_lox_excision_or_inversion,
     cre_lox_integration,
     crispr_integration,
@@ -414,7 +414,6 @@ class SourceTest(TestCase):
 
 
 class AssemblySourceTest(TestCase):
-
     def test_input_field_validation(self):
         source = RepositoryIdSource(repository_id="1234567890")
         self.assertEqual(source.input, [])
@@ -1039,7 +1038,6 @@ def _replace_sequence(
 
 
 class NormalizeTest(TestCase):
-
     def _common_testing_function(self, product: Dseqrecord):
         product_seguid = product.seq.seguid()
         cs = CloningStrategy.from_dseqrecords([product])
