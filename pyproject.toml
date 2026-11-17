@@ -9,6 +9,7 @@ dynamic = ["version"]
 authors = [
   { name = "Björn F. Johansson", email = "bjornjobb@gmail.com" },
   { name = "Manuel Lera-Ramirez", email = "manulera14@gmail.com" },
+  { name = "Oleksii Stroganov", email = "merv1n@proton.me" },
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -91,7 +92,10 @@ docs = [
   "pandas",
 ]
 dev = [
+  "nbstripout>=0.9.1",
+  "pre-commit>=4.6.2",
   "ruff>=0.14",
+  "spyder-kernels>=3.1.7",
 ]
 
 [tool.pytest.ini_options]
