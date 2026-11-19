@@ -3344,3 +3344,21 @@ def test_common_core_and_trims_edge_case():
     loc2 = SimpleLocation(20, 30)
     seq_len = 20
     assert assembly._common_core_and_trims(loc1, loc2, seq_len) is None
+
+
+def test_restriction_ligation_assembly_ambiguous_overhang():
+    """N-containing overhangs must not be proposed for ligation (#691).
+
+    Previously the join was proposed on a string match, then the product
+    build failed with TypeError at the internal join or at circular
+    closure."""
+
+    a = Dseqrecord("ccGGTCTCaggaaAAAAAcNcctGAGACCcc")
+    b = Dseqrecord("ccGGTCTCacNccTTTTTggaatGAGACCcc")
+    c = Dseqrecord("ccGGTCTCacNccAAAAAggaatGAGACCcc")
+    d = Dseqrecord("ccGGTCTCaggaaTTTTTcNcctGAGACCcc")
+
+    with pytest.warns(UserWarning):
+        assembly.restriction_ligation_assembly([a, b], [BsaI])
+    with pytest.warns(UserWarning):
+        assembly.restriction_ligation_assembly([c, d], [BsaI])

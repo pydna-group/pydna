@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import pytest
-from pydna.utils import cuts_overlap, cutsite_to_location
+from pydna.utils import cuts_overlap, cutsite_to_location, sum_is_sticky
 
 
 def test_flatten():
@@ -438,3 +438,16 @@ def test_cutsite_to_location():
 
     # Zero overhang: empty interval at watson
     assert str(cutsite_to_location(((5, 0), None), seq_len)) == "[5:5]"
+
+def test_sum_is_sticky_ambiguous_overhang():
+    """Overhangs with ambiguous bases must not be proposed for ligation.
+
+    An N in a single-stranded overhang cannot be represented in the
+    product, so a match that only holds string-wise leads to a TypeError
+    downstream (issue #691)."""
+
+    assert sum_is_sticky(("5'", "cNcc"), ("5'", "ggNg")) == 0
+    assert sum_is_sticky(("5'", "cAcc"), ("5'", "ggNg")) == 0
+    # Unambiguous overhangs still match, full and partial
+    assert sum_is_sticky(("5'", "cAcc"), ("5'", "ggTg")) == 4
+    assert sum_is_sticky(("5'", "cAc"), ("5'", "ggT"), partial=True) == 1

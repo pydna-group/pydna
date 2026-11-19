@@ -890,6 +890,13 @@ def sum_is_sticky(
     type_seq1, sticky_seq1 = three_prime_end
     type_seq2, sticky_seq2 = five_prime_end
 
+    # Overhangs containing ambiguous bases compare equal as strings but
+    # cannot be represented in a single-stranded region of the product,
+    # so such joins must not be proposed.
+    unambiguous = re.compile(r"[ACGT]+\Z", re.IGNORECASE)
+    if not (unambiguous.match(str(sticky_seq1)) and unambiguous.match(str(sticky_seq2))):
+        return 0
+
     if (
         "blunt" != type_seq2
         and type_seq2 == type_seq1
